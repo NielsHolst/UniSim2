@@ -1,0 +1,16 @@
+abs_path 	::= "/" path?
+path 		::= id (separator id)* port?
+object		::= id ("{" id "}")?
+port 		::= "[" id "]"
+separator 	::= ("/"|":")
+
+/path	->	* with at root
+path	->	descendants:a at root
+a[v]	-> descendants:a/v{Port}
+Descendants{Organ}/
+
+plant/fruit/area[v]		-> 	Root:		descendants:plant{Box}/children:fruit{Box}/children:area/children:v{Port}
+./plant/fruit/area[v]	-> 	Current:	self:*{box}/children:plant{Box}/children:fruit{Box}/children:area/children:v{Port}
+../plant/fruit/area[v]	-> 	Current:	parent:*{Box}/children:plant{Box}/children:fruit{Box}/children:area/children:v{Port}
+/plant/fruit/area[v]	-> 	Root:		children:plant{Box}/children:fruit{Box}/children:area/children:v{Port}
+.[v]					->  Current:	self:*{Box}/children:v{Port}

@@ -1,0 +1,6 @@
+*.user
+*.user.*
+*.autosave
+bin/
+build*/
+tmp/
