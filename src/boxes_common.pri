@@ -34,5 +34,6 @@ INCLUDEPATH += "$$(BOOST_ROOT)"
 !equals(BOXES_PLUGIN_NAME, "boxes") {
     win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxes
     else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxesd
-    else:unix: LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxes
+    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxes
+    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxesd
 }
