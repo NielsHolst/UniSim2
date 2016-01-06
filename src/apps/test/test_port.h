@@ -44,6 +44,12 @@ private slots:
     // Old-fashioned C-string
     void testFixedCString();
 
+    // Reset
+    void testResetBool();
+    void testResetBoolVector();
+    void testResetLongInt();
+    void testResetString();
+
     // All conversion combinations
     CONV_ALL(Bool)
     CONV_ALL(Char)

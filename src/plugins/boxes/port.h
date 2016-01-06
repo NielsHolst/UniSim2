@@ -8,140 +8,98 @@
 #include <QString>
 #include <QVector>
 #include "exception.h"
+#include "port_type.h"
+
 
 using boost::numeric_cast;
 using std::exception;
 
 namespace boxes {
 
+class Box;
+
 const char dateFormat[] = "dd/MM/yyyy";
 const char timeFormat[] = "hh:mm:ss";
 const char dateTimeFormat[] = "dd/MM/yyyy hh:mm:ss";
 
-#define TYPEDEF(X,Y) typedef QVector<X> Y;
-TYPEDEF(bool, VectorBool)
-TYPEDEF(char, VectorChar)
-TYPEDEF(int, VectorInt)
-TYPEDEF(long int, VectorLongInt)
-TYPEDEF(long long int, VectorLongLongInt)
-TYPEDEF(float, VectorFloat)
-TYPEDEF(double, VectorDouble)
-TYPEDEF(long double, VectorLongDouble)
-TYPEDEF(QString, VectorString)
-TYPEDEF(QDate, VectorDate)
-TYPEDEF(QTime, VectorTime)
-TYPEDEF(QDateTime, VectorDateTime)
-
-#define TYPE(X) X, X##Vector,
-enum Type {
-    TYPE(Bool)
-    TYPE(Char)
-    TYPE(Int)
-    TYPE(LongInt)
-    TYPE(LongLongInt)
-    TYPE(Float)
-    TYPE(Double)
-    TYPE(LongDouble)
-    TYPE(String)
-    TYPE(Date)
-    TYPE(Time)
-    TYPE(DateTime)
-    Null
-};
-
-//bool isVector(Type x) { return int(x)%2==0; }
-
-template <class T> Type typeOf() { return Null; }
-
-#define TYPEOF(X,Y) \
-    template <> inline Type typeOf<X>() { return Y; } \
-    template <> inline Type typeOf<Vector##Y>() { return Y##Vector; }
-
-TYPEOF(bool, Bool)
-TYPEOF(char, Char)
-TYPEOF(int, Int)
-TYPEOF(long int, LongInt)
-TYPEOF(long long int, LongLongInt)
-TYPEOF(float, Float)
-TYPEOF(double, Double)
-TYPEOF(long double, LongDouble)
-TYPEOF(QString, String)
-TYPEOF(QDate, Date)
-TYPEOF(QTime, Time)
-TYPEOF(QDateTime, DateTime)
-
-#define NAMEOF(Y,Z) \
-    case Z: \
-        s = #Y; \
-        break; \
-    case Z##Vector: \
-        s = "QVector<" #Y ">"; \
-        break;
-
-class Box;
 
 class Port : public QObject {
 public:
     enum Access{Read, ReadWrite};
 private:
     QString _name;
-    const void *_data;
-    void *_myData;
-    Type _type;
+    void *_value; //, *_myValue;
+    const Port *_import;
+    PortType _type;
     Box *_parent;
     Access _access;
+    bool _doReset;
 
 public:
-    Port(QString name="noname", Box *parent=0);
-    ~Port();
+    Port(QString name="noname", QObject *parent=0);
     QString name() { return _name; }
-    Box* parent() { return _parent; }
-    Port& access(Access a) { _access = a; return *this;}
+    Port& access(Access a) { _access = a; return *this; }
     Access access() { return _access; }
+    Port& doReset(bool reset) { _doReset = reset; return *this; }
+    bool doReset() { return _doReset; }
 
-    template <class T> Port& equals(T x)
+    template <class T> Port& equals(T )
     {
-        _type = typeOf<T>();
-        if (!_myData) _myData = new T{x};
-        _data = _myData;
+//        T value(x);
+//        PortType xType = typeOf<T>();
+//        if (xType != _type) {
+//            Port *cached = portCache()->port( typeOf<T>() );
+//            cached->equals(x);
+//            value = cached->value<T>();
+//        };
+////        *reinterpret_cast<T*>(_value) = value;
+//        assign(value);
+//        _import = 0;
         return *this;
     }
 
-    template <class T> Port& data(const T *x)
+    template <class T> void assign(T value)
+    {
+        throw Exception("Missing assign<T>() implementation for this type", nameOf( typeOf<T>), this);
+        return T();
+    }
+
+    template <class T> Port& data(T *x)
     {
         _type = typeOf<T>();
-        _data = x;
+        _value = x;
         return *this;
     }
 
     template <class T> T value() const
     {
-        throw Exception("Missing value<T>() implementation");
+        throw Exception("Missing value<T>() implementation for this type", nameOf( typeOf<T>), this);
         return T();
     }
-private:
-    static QString nameOf(Type type) {
-        QString s;
-        switch (type) {
-            NAMEOF(bool, Bool)
-            NAMEOF(char, Char)
-            NAMEOF(int, Int)
-            NAMEOF(long int, LongInt)
-            NAMEOF(long long int, LongLongInt)
-            NAMEOF(float, Float)
-            NAMEOF(double, Double)
-            NAMEOF(long double, LongDouble)
-            NAMEOF(QString, String)
-            NAMEOF(QDate, Date)
-            NAMEOF(QTime, Time)
-            NAMEOF(QDateTime, DateTime)
-            case Null:
-                s = "Null";
+
+    template <class T> const T* valuePtr() const
+    {
+        if (_type != typeOf<T>()) {
+            QString msg("Port of type %1 cannot be converted to type %2");
+            throw Exception(msg.arg(nameOf(_type)).arg(nameOf(typeOf<T>())), "", this);
         }
-        return s;
+        return reinterpret_cast<const T*>(_value);
     }
 
-    Exception conversionError(Type destination) const {
+    void import(const Port *source)
+    {
+        _import = source;
+    }
+
+    void doImport();
+
+    void reset();
+
+private:
+
+//    template <class T> void assign(T x);
+
+    Exception conversionError(PortType destination) const {
         QString s{"Cannot convert %1 to %2"};
         return Exception(s.arg(nameOf(_type)).arg(nameOf(destination)));
     }
@@ -168,14 +126,24 @@ private:
 
 };
 
+
 //
 // SetFixed C-string
 //
 
 template <> Port& Port::equals<const char*>(const char* x);
-//{
-//    equals<QString>(x);
+
+//
+// Assignment
+//
+
+//template <> void Port::assign<int>(int value) {
+//    *reinterpret_cast<int*>(_value) = value;
 //}
+
+//
+// Conversions from String
+//
 
 #define INCOMPATIBLE_CONVERT1(X,Y) \
 template <> Y Port::convert<X, Y>(X);
@@ -186,10 +154,6 @@ template <> Y Port::convert<X, Y>(X) { \
     Y y{}; \
     return y; \
 }
-
-//
-// Conversions from String
-//
 
 #define NUMBER_TO_STRING_CONVERT1(X, Z) \
 template <> X Port::convert<QString, X>(QString x);
@@ -364,9 +328,9 @@ template <> QString Port::convert<QString, QString>(QString x);
 
 #define CASE_CONVERT(X,Y,Z) \
 case Y: \
-    return Port::convert<X,Z>(*static_cast<const X*>(_data)); \
+    return Port::convert<X,Z>(*static_cast<const X*>(_value)); \
 case Y##Vector: \
-    p.vec##Y = static_cast<const Vector##Y*>(_data); \
+    p.vec##Y = static_cast<const Vector##Y*>(_value); \
     if (p.vec##Y->length()!=1) { \
         QString s{"%1 (length=%2) must have length one to be used as a scalar"}; \
         throw Exception(s.arg(nameOf(Y##Vector)).arg(p.vec##Y->length())); \
@@ -377,15 +341,15 @@ case Y##Vector: \
 case Y: \
     return QVector<Z>(1, value<Z>()); \
 case Y##Vector: \
-    for (auto v : *static_cast<const Vector##Y*>(_data)) \
+    for (auto v : *static_cast<const Vector##Y*>(_value)) \
         val << Port::convert<X,Z>(v); \
     break;
 
 #define CASE_CONVERT_TO_VECTOR_SELF(X,Y) \
 case Y: \
-    return QVector<X>(1, *static_cast<const X*>(_data)); \
+    return QVector<X>(1, *static_cast<const X*>(_value)); \
 case Y##Vector: \
-    return *static_cast<const QVector<X>*>(_data);
+    return *static_cast<const QVector<X>*>(_value);
 
 #define VECTOR_PTR(X,Y) const QVector<X> *vec##Y;
 
@@ -409,7 +373,7 @@ template <> X Port::value<X>() const;
 #define TEMPLATE_VALUE2(X,Y) \
 template <> X Port::value<X>() const \
 { \
-    Q_ASSERT(_data); \
+    Q_ASSERT(_value); \
     VectorPointer p; \
     switch (_type) { \
     CASE_CONVERT(bool, Bool, X) \

@@ -8,6 +8,7 @@ class TestBox : public QObject
     Q_OBJECT
 private slots:
     void test_create();
+    void test_run();
 };
 
 DECLARE_TEST(TestBox)

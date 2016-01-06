@@ -6,8 +6,8 @@
 #include "general.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite)
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read)
+#define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite).doReset(false)
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).doReset(true)
 
 namespace boxes {
 
@@ -22,8 +22,14 @@ public:
     void addPort(Port *port);
     void run();
     static Box* currentRoot();
-    Port* peekPort(QString name);
-    Port* seekPort(QString name);
+    Port* port(QString name);
+
+    virtual void amend() {}
+    virtual void initialize() {}
+    virtual void reset() {}
+    virtual void update() {}
+    virtual void cleanup() {}
+    virtual void debrief() {}
 
 private:
     // Inputs
@@ -32,28 +38,22 @@ private:
     int iteration, step;
     // Data
     QString _name;
-    bool amended;
-    QMap<QString,Port*> ports;
+    bool _amended;
+    QMap<QString,Port*> _ports;
 
     static Box *_currentRoot;
     static bool _currentRootIsDirty;
 
     // Methods
-    virtual void amend() {}
-    virtual void initialize();
-    virtual void reset();
-    virtual void update() {}
-    virtual void cleanup() {}
-    virtual void debrief() {}
     void updateImports();
+    void initializePorts();
+    void resetPorts();
     void doAmend();
     void doInitialize();
     void doReset();
     void doUpdate();
     void doCleanup();
     void doDebrief();
-
-    template <class T> static QList<T> filterSearch(QString name, const QList<QObject*> &candidates);
 };
 
 }

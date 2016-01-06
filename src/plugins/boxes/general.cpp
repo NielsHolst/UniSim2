@@ -4,9 +4,16 @@
 #include <QVariant>
 namespace boxes {
 
-void setClassName(QObject *object, QString className) {
+void setClassName(QObject *object, QString myClassName) {
     assert(object);
-    object->setProperty("boxes::Class", QVariant(className));
+    QString curClassName;
+    try {
+        curClassName = className(object);
+    }
+    catch (Exception &) {
+    }
+    object->setProperty("boxes::Class", QVariant(myClassName));
+    object->setProperty("boxes::ClassInheritance", QVariant(curClassName + "/" + myClassName));
 }
 
 QString className(const QObject *object) {
@@ -15,6 +22,14 @@ QString className(const QObject *object) {
     if (!className.isValid())
         throw Exception("Object has no class name (did you forget ID in the constructor?)", "", object);
     return className.toString();
+}
+
+QString classInheritance(const QObject *object) {
+    if (!object) return "NULL";
+    QVariant classInheritance = object->property("boxes::ClassInheritance");
+    if (!classInheritance.isValid())
+        throw Exception("Object has no class name (did you forget ID in the constructor?)", "", object);
+    return classInheritance.toString();
 }
 
 QString fullName(const QObject *object) {

@@ -2,55 +2,77 @@
 #include "general.h"
 #include "port.h"
 
-//
-// Macros
-//
-
-#define DELETE(X,Y) \
-case Y: \
-    delete static_cast<X*>(_myData); \
-    break; \
-case Y##Vector: \
-    delete static_cast<Vector##Y*>(_myData); \
-    break;
-
 namespace boxes {
 
 //
 // Constructor
 //
 
-Port::Port(QString name, Box *parent)
-    : QObject(parent), _name(name), _myData(0), _type(Null), _parent(parent), _access(Read)
+Port::Port(QString name, QObject *parent)
+    : QObject(parent), _name(name), _import(0), _type(Null), _access(Read), _doReset(false)
 {
     Class(Port);
     setObjectName(name);
-    if (parent)
-        parent->addPort(this);
+    Box *boxParent = dynamic_cast<Box*>(parent);
+    if (boxParent)
+        boxParent->addPort(this);
 }
 
 //
-// Destructor
+// Reset
 //
 
-Port::~Port()
-{
-    if (_myData!=0) switch (_type) {
-        DELETE(bool, Bool)
-        DELETE(char, Char)
-        DELETE(int, Int)
-        DELETE(long int, LongInt)
-        DELETE(long long int, LongLongInt)
-        DELETE(float, Float)
-        DELETE(double, Double)
-        DELETE(long double, LongDouble)
-        DELETE(QString, String)
-        DELETE(QDate, Date)
-        DELETE(QTime, Time)
-        DELETE(QDateTime, DateTime)
+#define RESET(X,Y) \
+    case Y:         *reinterpret_cast<X*>(_value) = X(); break; \
+    case Y##Vector: reinterpret_cast<QVector<X>*>(_value)->fill(X()); break;
+
+#define RESET_VALUE(X,Y,Z) \
+    case Y:         *reinterpret_cast<X*>(_value) = Z; break; \
+    case Y##Vector: reinterpret_cast<QVector<X>*>(_value)->fill(Z); break;
+
+
+void Port::reset() {
+    if (_value!=0) switch (_type) {
+        RESET(bool, Bool)
+        RESET(char, Char)
+        RESET(int, Int)
+        RESET_VALUE(long int, LongInt, 0)
+        RESET_VALUE(long long int, LongLongInt, 0)
+        RESET(float, Float)
+        RESET(double, Double)
+        RESET_VALUE(long double, LongDouble, 0)
+        RESET(QString, String)
+        RESET_VALUE(QTime, Time, QTime(0,0,0))
+        RESET_VALUE(QDate, Date, QDate(2001,1,1))
+        RESET_VALUE(QDateTime, DateTime, QDateTime(QDate(2001,1,1)))
         case Null: break;
     }
-    _myData = 0;
+}
+
+//
+// Import
+//
+
+#define IMPORT(X,Y) \
+    case Y:         *reinterpret_cast<X*>(_value) = _import->value<X>(); break; \
+    case Y##Vector: *reinterpret_cast<QVector<X>*>(_value) = _import->value<QVector<X>>(); break;
+
+void Port::doImport() {
+    if (_import!=0 && _value!=0) switch (_type) {
+        IMPORT(bool, Bool)
+        IMPORT(char, Char)
+        IMPORT(int, Int)
+        IMPORT(long int, LongInt)
+        IMPORT(long long int, LongLongInt)
+        IMPORT(float, Float)
+        IMPORT(double, Double)
+        IMPORT(long double, LongDouble)
+        IMPORT(QString, String)
+        IMPORT(QTime, Time)
+        IMPORT(QDate, Date)
+        IMPORT(QDateTime, DateTime)
+        case Null: break;
+    }
 }
 
 //
@@ -232,7 +254,7 @@ TEMPLATE_VALUE2(QDateTime,Time)
 
 template <> VectorBool Port::value<VectorBool>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorBool val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR_SELF(bool, Bool)
@@ -255,7 +277,7 @@ template <> VectorBool Port::value<VectorBool>() const
 
 template <> VectorChar Port::value<VectorChar>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorChar val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, char)
@@ -278,7 +300,7 @@ template <> VectorChar Port::value<VectorChar>() const
 
 template <> VectorInt Port::value<VectorInt>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorInt val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, int)
@@ -301,7 +323,7 @@ template <> VectorInt Port::value<VectorInt>() const
 
 template <> VectorLongInt Port::value<VectorLongInt>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorLongInt val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, long int)
@@ -324,7 +346,7 @@ template <> VectorLongInt Port::value<VectorLongInt>() const
 
 template <> VectorLongLongInt Port::value<VectorLongLongInt>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorLongLongInt val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, long long int)
@@ -347,7 +369,7 @@ template <> VectorLongLongInt Port::value<VectorLongLongInt>() const
 
 template <> VectorFloat Port::value<VectorFloat>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorFloat val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, float)
@@ -370,7 +392,7 @@ template <> VectorFloat Port::value<VectorFloat>() const
 
 template <> VectorDouble Port::value<VectorDouble>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorDouble val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, double)
@@ -393,7 +415,7 @@ template <> VectorDouble Port::value<VectorDouble>() const
 
 template <> VectorLongDouble Port::value<VectorLongDouble>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorLongDouble val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, long double)
@@ -416,7 +438,7 @@ template <> VectorLongDouble Port::value<VectorLongDouble>() const
 
 template <> VectorString Port::value<VectorString>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorString val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, QString)
@@ -439,7 +461,7 @@ template <> VectorString Port::value<VectorString>() const
 
 template <> VectorDate Port::value<VectorDate>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorDate val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, QDate)
@@ -462,7 +484,7 @@ template <> VectorDate Port::value<VectorDate>() const
 
 template <> VectorTime Port::value<VectorTime>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorTime val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, QTime)
@@ -485,7 +507,7 @@ template <> VectorTime Port::value<VectorTime>() const
 
 template <> VectorDateTime Port::value<VectorDateTime>() const
 {
-    Q_ASSERT(_data);
+    Q_ASSERT(_value);
     VectorDateTime val;
     switch (_type) {
     CASE_CONVERT_TO_VECTOR(bool, Bool, QDateTime)

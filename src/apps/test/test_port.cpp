@@ -36,7 +36,10 @@ void TestPort::initTestCase() {
 
 void TestPort::testFixedInt() {
     Port j;
+    int i;
+    j.data(&i);
     j.equals(5);
+    QCOMPARE(i, 5);
     QCOMPARE(j.value<int>(), 5);
 }
 
@@ -104,12 +107,57 @@ void TestPort::testPtrStringVector() {
     QCOMPARE(val, i);
 }
 
+//
+// Old-fashioned C-string
+//
+
 void TestPort::testFixedCString() {
     Port j;
     j.equals("aBc");
     QCOMPARE(j.value<QString>(), QString("aBc"));
 }
 
+//
+// Reset
+//
+
+void TestPort::testResetBool() {
+    Port j;
+    j.equals(true);
+    QCOMPARE(j.value<bool>(), true);
+    j.reset();
+    QCOMPARE(j.value<bool>(), false);
+}
+
+void TestPort::testResetBoolVector() {
+    typedef QVector<bool> vbool;
+    Port j;
+    vbool i{true, false, true},
+          f{false, false, false};
+    j.equals(i);
+    QCOMPARE(j.value<vbool>(), i);
+    j.reset();
+    QCOMPARE(j.value<vbool>(), f);
+    QCOMPARE(i.size(), 3);
+}
+
+void TestPort::testResetLongInt() {
+    Port j;
+    long int i(7), zero(0);
+    j.equals(i);
+    QCOMPARE(j.value<long int>(), i);
+    j.reset();
+    QCOMPARE(j.value<long int>(), zero);
+}
+
+void TestPort::testResetString() {
+    Port j;
+    QString s("abc"), empty;
+    j.equals(s);
+    QCOMPARE(j.value<QString>(), s);
+    j.reset();
+    QCOMPARE(j.value<QString>(), empty);
+}
 
 //
 // All conversions

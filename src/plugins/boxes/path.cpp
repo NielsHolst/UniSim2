@@ -156,7 +156,8 @@ QString Path::normalisePort() {
 namespace {
 
     inline bool matches(QObject* candidate, QString box, QString type) {
-        return (box=="*" || candidate->objectName()==box) && className(candidate)==type;
+        QStringList types = classInheritance(candidate).split("/");
+        return (box=="*" || candidate->objectName()==box) && types.contains(type);
     }
 
     void findAncestors(QObject *p, QList<QObject*> &ancestors) {
