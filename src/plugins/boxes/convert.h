@@ -40,6 +40,17 @@ template<class T> T convert(double source)        { NUMERIC_CAST(Double); }
 template<class T> T convert(long double source)   { NUMERIC_CAST(LongDouble); }
 
 //
+// Numerical conversions to Bool
+//
+template<> bool convert(char source);
+template<> bool convert(int source);
+template<> bool convert(long int source);
+template<> bool convert(long long int source);
+template<> bool convert(float source);
+template<> bool convert(double source);
+template<> bool convert(long double source);
+
+//
 // Numerical conversions to String
 //
 
@@ -113,6 +124,12 @@ template<> QString convert(QString source);
 template<> QDate convert(QString source);
 template<> QDateTime convert(QString source);
 template<> QTime convert(QString source);
+
+//
+// Conversions from C string
+//
+
+template<class T> T convert(const char *s) { return convert<T>(QString(s)); }
 
 //
 // Conversions from QDate

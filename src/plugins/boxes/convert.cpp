@@ -7,6 +7,18 @@ throw Exception("Cannot convert " #sourceT " to " #destT)
 namespace boxes {
 
 //
+// Numerical conversions to Bool
+//
+
+template<> bool convert(char source)            { return source!=0; }
+template<> bool convert(int source)             { return source!=0; }
+template<> bool convert(long int source)        { return source!=0; }
+template<> bool convert(long long int source)   { return source!=0; }
+template<> bool convert(float source)           { return source!=0; }
+template<> bool convert(double source)          { return source!=0; }
+template<> bool convert(long double source)     { return source!=0; }
+
+//
 // Numerical conversions to String
 //
 

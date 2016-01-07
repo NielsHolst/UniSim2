@@ -52,7 +52,9 @@ void TestPort::testPtrInt() {
 }
 
 void TestPort::testFixedString() {
+    QString s;
     Port j;
+    j.data(&s);
     j.equals(QString("aBc"));
     QCOMPARE(j.value<QString>(), QString("aBc"));
 }
@@ -69,42 +71,23 @@ void TestPort::testPtrString() {
 // Vector
 //
 
-void TestPort::testFixedIntVector() {
+void TestPort::testIntVector() {
     Port j;
-    QVector<int> i, val;
-    i << 7 << 9 << 13;
-    j.equals(i);
-    val = j.value< QVector<int> >();
-    QCOMPARE(val, i);
+    QVector<int> data, val;
+    data.fill(0,3);
+    j.data(&data);
+    val << 7 << 9 << 13;
+    j.equals(val);
+    QCOMPARE(j.value<QVector<int>>(), val);
 }
 
-void TestPort::testPtrIntVector() {
+void TestPort::testStringVector() {
     Port j;
-    QVector<int> i, val;
-    i << 7 << 9 << 13;
-    j.data(&i);
-    i << 22;
-    val = j.value< QVector<int> >();
-    QCOMPARE(val, i);
-}
-
-void TestPort::testFixedStringVector() {
-    Port j;
-    QVector<QString> i, val;
-    i << "7" << "9" << "13";
-    j.equals(i);
-    val = j.value< QVector<QString> >();
-    QCOMPARE(val, i);
-}
-
-void TestPort::testPtrStringVector() {
-    Port j;
-    QVector<QString> i, val;
-    i << "7" << "9" << "13";
-    j.data(&i);
-    i << "22";
-    val = j.value< QVector<QString> >();
-    QCOMPARE(val, i);
+    QVector<QString> data, val;
+    j.data(&data);
+    val << "7" << "9" << "13";
+    j.equals(val);
+    QCOMPARE(j.value<QVector<QString>>(), val);
 }
 
 //
@@ -113,9 +96,25 @@ void TestPort::testPtrStringVector() {
 
 void TestPort::testFixedCString() {
     Port j;
+    QString data;
+    j.data(&data);
     j.equals("aBc");
     QCOMPARE(j.value<QString>(), QString("aBc"));
 }
+
+//
+// US Date
+//
+void TestPort::testUSDate() {
+    Port j;
+    QDate data;
+    j.data(&data);
+    j.equals("/12/24/2015");
+    QCOMPARE(j.value<QDate>(), QDate(2015,12,24));
+    j.equals("/12/24/15");
+    QCOMPARE(j.value<QDate>(), QDate(1915,12,24));
+}
+
 
 //
 // Reset
@@ -123,38 +122,38 @@ void TestPort::testFixedCString() {
 
 void TestPort::testResetBool() {
     Port j;
-    j.equals(true);
+    bool data(true);
+    j.data(&data).zeroAtReset();
     QCOMPARE(j.value<bool>(), true);
     j.reset();
     QCOMPARE(j.value<bool>(), false);
 }
 
 void TestPort::testResetBoolVector() {
-    typedef QVector<bool> vbool;
+    typedef QVector<bool> BoolVector;
     Port j;
-    vbool i{true, false, true},
-          f{false, false, false};
-    j.equals(i);
-    QCOMPARE(j.value<vbool>(), i);
+    BoolVector data{true, false, true},
+               value{false, false, false};
+    j.data(&data).zeroAtReset();
+    QCOMPARE(j.value<BoolVector>(), data);
     j.reset();
-    QCOMPARE(j.value<vbool>(), f);
-    QCOMPARE(i.size(), 3);
+    QCOMPARE(j.value<BoolVector>(), value);
 }
 
 void TestPort::testResetLongInt() {
     Port j;
-    long int i(7), zero(0);
-    j.equals(i);
-    QCOMPARE(j.value<long int>(), i);
+    long int data(7), zero(0);
+    j.data(&data).zeroAtReset();
+    QCOMPARE(j.value<long int>(), 7L);
     j.reset();
     QCOMPARE(j.value<long int>(), zero);
 }
 
 void TestPort::testResetString() {
     Port j;
-    QString s("abc"), empty;
-    j.equals(s);
-    QCOMPARE(j.value<QString>(), s);
+    QString data("abc"), empty;
+    j.data(&data).zeroAtReset();
+    QCOMPARE(j.value<QString>(), QString("abc"));
     j.reset();
     QCOMPARE(j.value<QString>(), empty);
 }
@@ -259,10 +258,10 @@ void TestPort::testResetString() {
 const bool BOOL = true;
 const char CHAR = 'X';
 const QDate DATE = QDate(2001,2,10);
-const QTime TIME = QTime(10,30);
+const int TIME_HOURS = 11;
+const QTime TIME = QTime(TIME_HOURS, 0);
 const QDateTime DATE_TIME = QDateTime(DATE);
 const QDateTime DATE_AND_TIME = QDateTime(DATE, TIME);
-const int TIME_SECS = (10*60+30)*60;
 
 // Convert to bool
 CONV2(Bool, bool, BOOL, Bool, bool, true)
@@ -276,7 +275,7 @@ CONV2(LongDouble, long double, 7, Bool, bool, true)
 CONV2_FAIL(Date, QDate, DATE, Bool, bool, )
 CONV2_FAIL(Time, QTime, TIME, Bool, bool, )
 CONV2_FAIL(DateTime, QDateTime, DATE_TIME, Bool, bool, )
-CONV2(String, QString, "True", Bool, bool, true)
+CONV2(String, QString, "TRUE", Bool, bool, true)
 CONV2_FAIL(String, QString, "X", Bool, bool, SyntaxError)
 CONV2_FAIL(String, QString, "", Bool, bool, Empty)
 
@@ -306,7 +305,7 @@ CONV2(Float, float, 7, Int, int, 7)
 CONV2(Double, double, 7, Int, int, 7)
 CONV2(LongDouble, long double, 7, Int, int, 7)
 CONV2(Date, QDate, DATE, Int, int, 41)
-CONV2(Time, QTime, TIME, Int, int, TIME_SECS)
+CONV2(Time, QTime, TIME, Int, int, TIME_HOURS)
 CONV2(DateTime, QDateTime, DATE_TIME, Int, int, 41)
 CONV2(String, QString, QString::number(7), Int, int, 7)
 CONV2_FAIL(LongLongInt, long long int, MAX_LONG_LONG_INT, Int, int, Overflow)
@@ -326,7 +325,7 @@ CONV2(Float, float, 7, LongInt, long int, 7L)
 CONV2(Double, double, 7, LongInt, long int, 7L)
 CONV2(LongDouble, long double, 7, LongInt, long int, 7L)
 CONV2(Date, QDate, DATE, LongInt, long int, 41L)
-CONV2(Time, QTime, TIME, LongInt, long int, TIME_SECS*1L)
+CONV2(Time, QTime, TIME, LongInt, long int, TIME_HOURS*1L)
 CONV2(DateTime, QDateTime, DATE_TIME, LongInt, long int, 41L)
 CONV2(String, QString, QString::number(7), LongInt, long int, 7L)
 CONV2_FAIL(LongLongInt, long long int, MAX_LONG_LONG_INT, LongInt, long int, Overflow)
@@ -345,7 +344,7 @@ CONV2(Float, float, 7, LongLongInt, long long int, 7LL)
 CONV2(Double, double, 7, LongLongInt, long long int, 7LL)
 CONV2(LongDouble, long double, 7, LongLongInt, long long int, 7LL)
 CONV2(Date, QDate, DATE, LongLongInt, long long int, 41LL)
-CONV2(Time, QTime, TIME, LongLongInt, long long int, TIME_SECS*1LL)
+CONV2(Time, QTime, TIME, LongLongInt, long long int, TIME_HOURS*1LL)
 CONV2(DateTime, QDateTime, DATE_TIME, LongLongInt, long long int, 41LL)
 CONV2(String, QString, QString::number(7), LongLongInt, long long int, 7LL)
 CONV2_FAIL(Float, float, MAX_FLOAT, LongLongInt, long long int, Overflow)
@@ -363,7 +362,7 @@ CONV2(Float, float, 7, Float, float, 7.)
 CONV2(Double, double, 7, Float, float, 7.)
 CONV2(LongDouble, long double, 7., Float, float, 7.)
 CONV2(Date, QDate, DATE, Float, float, 41.)
-CONV2(Time, QTime, TIME, Float, float, TIME_SECS*1.)
+CONV2(Time, QTime, TIME, Float, float, TIME_HOURS*1.)
 CONV2(DateTime, QDateTime, DATE_TIME, Float, float, 41.)
 CONV2(String, QString, QString::number(7), Float, float, 7.)
 CONV2_FAIL(LongDouble, long double, MAX_LONG_DOUBLE, Float, float, Overflow)
@@ -379,7 +378,7 @@ CONV2(Float, float, 7, Double, double, 7.)
 CONV2(Double, double, 7, Double, double, 7.)
 CONV2(LongDouble, long double, 3.12, Double, double, 3.12)
 CONV2(Date, QDate, DATE, Double, double, 41.)
-CONV2(Time, QTime, TIME, Double, double, TIME_SECS*1.)
+CONV2(Time, QTime, TIME, Double, double, TIME_HOURS*1.)
 CONV2(DateTime, QDateTime, DATE_TIME, Double, double, 41.)
 CONV2(String, QString, QString::number(7), Double, double, 7.)
 CONV2_FAIL(LongDouble, long double, MAX_LONG_DOUBLE, Double, double, Overflow)
@@ -395,7 +394,7 @@ CONV2(Float, float, 7, LongDouble, long double, 7.0L)
 CONV2(Double, double, 7, LongDouble, long double, 7.0L)
 CONV2(LongDouble, long double, 3.12L, LongDouble, long double, 3.12L)
 CONV2(Date, QDate, DATE, LongDouble, long double, 41.0L)
-CONV2(Time, QTime, TIME, LongDouble, long double, TIME_SECS*1.0L)
+CONV2(Time, QTime, TIME, LongDouble, long double, TIME_HOURS*1.0L)
 CONV2(DateTime, QDateTime, DATE_TIME, LongDouble, long double, 41.0L)
 CONV2(String, QString, QString::number(7), LongDouble, long double, 7.0L)
 CONV2_FAIL(String, QString, QString("7a"), LongDouble, long double, SyntaxError)
@@ -403,50 +402,48 @@ CONV2_FAIL(String, QString, QString("7a"), LongDouble, long double, SyntaxError)
 // Convert to QDate
 CONV2_FAIL(Bool, bool, BOOL, Date, QDate, )
 CONV2_FAIL(Char, char, CHAR, Date, QDate, )
-CONV2(Int, int, 41, Date, QDate, DATE)
-CONV2(LongInt, long int, 41, Date, QDate, DATE)
-CONV2(LongLongInt, long long int, 41, Date, QDate, DATE)
-CONV2(Float, float, 41, Date, QDate, DATE)
-CONV2(Double, double, 41, Date, QDate, DATE)
-CONV2(LongDouble, long double, 41, Date, QDate, DATE)
+CONV2_FAIL(Int, int, 41, Date, QDate, )
+CONV2_FAIL(LongInt, long int, 41, Date, QDate, )
+CONV2_FAIL(LongLongInt, long long int, 41, Date, QDate, )
+CONV2_FAIL(Float, float, 41, Date, QDate, )
+CONV2_FAIL(Double, double, 41, Date, QDate, )
+CONV2_FAIL(LongDouble, long double, 41, Date, QDate, )
 CONV2(Date, QDate, DATE, Date, QDate, DATE)
 CONV2_FAIL(Time, QTime, TIME, Date, QDate, )
 CONV2(DateTime, QDateTime, DATE_TIME, Date, QDate, DATE)
 CONV2(String, QString, "10/2/2001", Date, QDate, DATE)
-CONV2_FAIL(String, QString, "10-2-2001", Date, QDate, SyntaxError)
 CONV2_FAIL(String, QString, "13/13/2001", Date, QDate, Illegal)
 CONV2_FAIL(String, QString, "", Date, QDate, Empty)
 
 // Convert to QTime
 CONV2_FAIL(Bool, bool, BOOL, Time, QTime, )
-CONV2_FAIL(Char, char, CHAR, Time, QTime, )
-CONV2(Int, int, TIME_SECS, Time, QTime, TIME)
-CONV2(LongInt, long int, TIME_SECS, Time, QTime, TIME)
-CONV2(LongLongInt, long long int, TIME_SECS, Time, QTime, TIME)
-CONV2(Float, float, TIME_SECS, Time, QTime, TIME)
-CONV2(Double, double, TIME_SECS, Time, QTime, TIME)
-CONV2(LongDouble, long double, TIME_SECS, Time, QTime, TIME)
+CONV2(Char, char, TIME_HOURS, Time, QTime, TIME)
+CONV2(Int, int, TIME_HOURS, Time, QTime, TIME)
+CONV2(LongInt, long int, TIME_HOURS, Time, QTime, TIME)
+CONV2(LongLongInt, long long int, TIME_HOURS, Time, QTime, TIME)
+CONV2(Float, float, TIME_HOURS, Time, QTime, TIME)
+CONV2(Double, double, TIME_HOURS, Time, QTime, TIME)
+CONV2(LongDouble, long double, TIME_HOURS, Time, QTime, TIME)
 CONV2_FAIL(Date, QDate, DATE, Time, QTime, )
 CONV2(Time, QTime, TIME, Time, QTime, TIME)
 CONV2(DateTime, QDateTime, DATE_AND_TIME, Time, QTime, TIME)
-CONV2(String, QString, "10:30:00", Time, QTime, TIME)
-CONV2_FAIL(String, QString, "10-30", Time, QTime, SyntaxError)
+CONV2(String, QString, "11:00:00", Time, QTime, TIME)
+CONV2_FAIL(String, QString, "11-00", Time, QTime, SyntaxError)
 CONV2_FAIL(String, QString, "30:30", Time, QTime, Illegal)
 CONV2_FAIL(String, QString, "", Time, QTime, Empty)
 
 // Convert to QDateTime
 CONV2_FAIL(Bool, bool, BOOL, DateTime, QDateTime, )
 CONV2_FAIL(Char, char, CHAR, DateTime, QDateTime, )
-CONV2(Int, int, 41, DateTime, QDateTime, DATE_TIME)
-CONV2(LongInt, long int, 41, DateTime, QDateTime, DATE_TIME)
-CONV2(LongLongInt, long long int, 41, DateTime, QDateTime, DATE_TIME)
-CONV2(Float, float, 41, DateTime, QDateTime, DATE_TIME)
-CONV2(Double, double, 41, DateTime, QDateTime, DATE_TIME)
-CONV2(LongDouble, long double, 41, DateTime, QDateTime, DATE_TIME)
+CONV2_FAIL(Int, int, 41, DateTime, QDateTime, )
+CONV2_FAIL(LongInt, long int, 41, DateTime, QDateTime, )
+CONV2_FAIL(LongLongInt, long long int, 41, DateTime, QDateTime, )
+CONV2_FAIL(Float, float, 41, DateTime, QDateTime, )
+CONV2_FAIL(Double, double, 41, DateTime, QDateTime, )
+CONV2_FAIL(LongDouble, long double, 41, DateTime, QDateTime, )
 CONV2(Date, QDate, DATE, DateTime, QDateTime, DATE_TIME)
 CONV2_FAIL(Time, QTime, TIME, DateTime, QDateTime, )
 CONV2(DateTime, QDateTime, DATE_AND_TIME, DateTime, QDateTime, DATE_AND_TIME)
-CONV2(String, QString, "10/2/2001 10:30:00", DateTime, QDateTime, DATE_AND_TIME)
-CONV2_FAIL(String, QString, "10-2-2001", DateTime, QDateTime, SyntaxError)
+CONV2(String, QString, "10/2/2001 11:00:00", DateTime, QDateTime, DATE_AND_TIME)
 CONV2_FAIL(String, QString, "13/13/2001", DateTime, QDateTime, Illegal)
 CONV2_FAIL(String, QString, "", DateTime, QDateTime, Empty)

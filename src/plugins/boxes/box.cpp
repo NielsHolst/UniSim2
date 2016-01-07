@@ -20,7 +20,7 @@ Box::Box(QString name, QObject *parent)
     Class(Box);
     Input(iterations).equals(1);
     Input(steps).equals(1);
-    Output(iteration).doReset(false);
+    Output(iteration).noReset();
     Output(step);
 }
 
@@ -30,7 +30,7 @@ Box::~Box() {
 }
 
 void Box::addPort(Port *port) {
-    QString name{port->name()};
+    QString name{port->objectName()};
     if (_ports.contains(name))
         throw Exception("Box already has a port with this name", name, this);
     _ports[name] = port;
@@ -48,23 +48,19 @@ Port* Box::port(QString name) {
 }
 
 void Box::run() {
-    std::cout << "run A\n";
     if (!_amended) {
         doAmend();
         _amended = true;
     }
     doInitialize();
-    std::cout << "run B\n";
     for (iteration = 0; iteration < iterations; ++iteration) {
         doReset();
-        std::cout << "run C" << iteration << " " << iterations << "\n";
         for (step = 0; step < steps; ++step) {
             doUpdate();
         }
         doCleanup();
     }
     doDebrief();
-    std::cout << "run Z\n";
 }
 
 Box* Box::currentRoot() {
@@ -121,18 +117,13 @@ void Box::updateImports() {
 }
 
 void Box::resetPorts() {
-    std::cout << "resetPorts A\n";
-    for (Port *port : _ports.values()) {
-        if (port->doReset()) port->reset();
-    }
-    std::cout << "resetPorts Z\n";
+    for (Port *port : _ports.values())
+        port->reset();
 }
 
 void Box::initializePorts() {
-    std::cout << "initializePorts A\n";
-    for (Port *port : _ports.values()) {
-        port->reset();
-    }
-    std::cout << "initializePorts Z\n";
+    for (Port *port : _ports.values())
+        port->initialize();
 }
+
 }

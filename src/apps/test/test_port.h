@@ -37,12 +37,12 @@ private slots:
     void testFixedString();
     void testPtrString();
     // Vector
-    void testFixedIntVector();
-    void testPtrIntVector();
-    void testFixedStringVector();
-    void testPtrStringVector();
+    void testIntVector();
+    void testStringVector();
     // Old-fashioned C-string
     void testFixedCString();
+    // US Date
+    void testUSDate();
 
     // Reset
     void testResetBool();
@@ -90,9 +90,7 @@ private slots:
     CONV(String, Float, SyntaxError)
     CONV(String, Double, SyntaxError)
     CONV(String, LongDouble, SyntaxError)
-    CONV(String, Date, SyntaxError)
     CONV(String, Time, SyntaxError)
-    CONV(String, DateTime, SyntaxError)
 
     // Empty string
     CONV(String, Bool, Empty)

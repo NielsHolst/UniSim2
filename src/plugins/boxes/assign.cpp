@@ -83,29 +83,39 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
     DEST(destT) = convert<destT>(value);
 }
 
-#define CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(destT, sourceT) \
-template <> void assignToScalarFromVector<destT, sourceT>(void *, const void *, PortTransform) { \
-    throw Exception("Cannot convert " #sourceT "Vector to " #destT); \
+#define ASSIGN_SCALAR_TO_VECTOR_SIZE_1(destT, sourceT) \
+template <> void assignToScalarFromVector<destT, sourceT>(void *destPtr, const void *sourcePtr, PortTransform transform) { \
+    const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>); \
+    int n = sourceVector->size(); \
+    switch (transform) { \
+    case Identity: \
+        if (n != 1) \
+            throw Exception("Cannot assign to scalar from vector. Expected vector size = 1", QString::number(n) + " =! 1"); \
+        DEST(destT) = convert<destT>(sourceVector->at(0)); \
+        break; \
+    default: \
+        throw Exception("Transform cannot be applied when assigning a vector to a scalar", nameOf(transform)); \
+    } \
 }
 
-#define CANNOT_ASSIGN_TO_ANY_SCALAR_FROM_VECTOR(sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(bool, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(char, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(int, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(long int, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(long long int, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(float, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(double, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(long double, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(QString, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(QDate, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(QTime, sourceT) \
-CANNOT_ASSIGN_TO_SCALAR_FROM_VECTOR(QDateTime, sourceT)
+#define ASSIGN_ANY_SCALAR_TO_VECTOR_SIZE_1(sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(bool, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(char, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(int, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(long int, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(long long int, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(float, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(double, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(long double, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(QString, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(QDate, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(QTime, sourceT) \
+ASSIGN_SCALAR_TO_VECTOR_SIZE_1(QDateTime, sourceT)
 //
-CANNOT_ASSIGN_TO_ANY_SCALAR_FROM_VECTOR(QString)
-CANNOT_ASSIGN_TO_ANY_SCALAR_FROM_VECTOR(QDate)
-CANNOT_ASSIGN_TO_ANY_SCALAR_FROM_VECTOR(QTime)
-CANNOT_ASSIGN_TO_ANY_SCALAR_FROM_VECTOR(QDateTime)
+ASSIGN_ANY_SCALAR_TO_VECTOR_SIZE_1(QString)
+ASSIGN_ANY_SCALAR_TO_VECTOR_SIZE_1(QDate)
+ASSIGN_ANY_SCALAR_TO_VECTOR_SIZE_1(QTime)
+ASSIGN_ANY_SCALAR_TO_VECTOR_SIZE_1(QDateTime)
 
 // Bypass division for Split transform below
 QString operator/(QString x, int) { return x; }
@@ -119,19 +129,19 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
     if (transform != Identity)
         throw Exception("Expected 'Identity' transform when assigning to vector", nameOf(transform));
     QVector<destT> *destVector = DEST_PTR(QVector<destT>);
-    destT *destData = destVector->data();
-    int n = destVector->size();
     sourceT source = SOURCE(sourceT);
-    if (n == 1)
-        *destData = convert<destT>(source);
-    else if (transform == Copy) {
-        destVector->fill(convert<destT>(source));
-    }
+    destT destValue = convert<destT>(source);
+
+    int n = destVector->size();
+    if (n <= 1)
+        destVector->fill(destValue, 1);
+    else if (transform == Copy)
+        destVector->fill(destValue);
     else if (transform == Split) {
         if (n>0) destVector->fill(convert<destT>(source/n));
     }
     else {
-        QString msg("When assigning a scalar to a vector, vector size must be one 1,"
+        QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
                     "\nor scalar must be transformed by Copy or Split"),
                 value("Vector size = %1, Transform = %2");
         throw Exception(msg, value.arg(QString::number(n)).arg(nameOf(transform)));
@@ -143,19 +153,16 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
         throw Exception("Expected 'Identity' transform when assigning Vector to Vector", nameOf(transform)); \
 \
     QVector<destT> *destVector = DEST_PTR(QVector<destT>); \
-    const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>); \
-\
-    int n = destVector->size(), \
-        n2 = sourceVector->size(); \
-    if (n != n2) \
-        throw Exception("Cannot assign vectors of unequal lengths", QString::number(n) + " =! " + QString::number(n2))
+    const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>);
 
 template <class destT, class sourceT>
 void assignToVectorFromVector(void *destPtr, const void *sourcePtr, PortTransform transform) {
     ASSIGN_TO_VECTOR_FROM_VECTOR_INTRO(destT, sourceT);
-    destT *destData = destVector->data();
     const sourceT *sourceData = sourceVector->data();
-    int i = 0;
+    int i = 0,
+        n = sourceVector->size();
+    destVector->resize(n);
+    destT *destData = destVector->data();
     while (i++<n)
         *destData++ = convert<destT>(*sourceData++);
 }

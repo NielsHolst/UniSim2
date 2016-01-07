@@ -15,6 +15,7 @@ public:
     BoxBuilder();
     BoxBuilder& box(QString name);
     BoxBuilder& port(QString name);
+    template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
     BoxBuilder& endbox();
     Box* content();
@@ -23,6 +24,13 @@ private:
     Port *_currentPort;
     QStack<Box*> _stack;
 };
+
+template <class T> BoxBuilder& BoxBuilder::data(T *valuePtr) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder:'data' must follow 'port'");
+    _currentPort->data(valuePtr);
+    return *this;
+}
 
 template <class T> BoxBuilder& BoxBuilder::equals(T value) {
     if (!_currentPort)

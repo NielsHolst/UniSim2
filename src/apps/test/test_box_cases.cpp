@@ -9,12 +9,13 @@ namespace TestBoxCases {
 
     Box* case1() {
         BoxBuilder builder;
+        QString Av1, Av3,A1v1;
         builder.
             box("A").
-                port("v1").equals("ape").
-                port("v3").equals("monkey").
+                port("v1").data(&Av1).equals(QString("ape")).
+                port("v3").data(&Av3).equals("monkey").
                 box("A1").
-                    port("v1").equals(100).
+                    port("v1").data(&A1v1).equals(100).
                     box("a").
                         port("v1").
                     endbox().

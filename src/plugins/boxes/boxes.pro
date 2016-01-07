@@ -37,7 +37,8 @@ HEADERS +=  \
     port_type.h \
     port_cache.h \
     product_base.h \
-    product.h
+    product.h \
+    initialize.h
 #    string_conversion.h
 
 SOURCES +=  \
@@ -54,7 +55,8 @@ SOURCES +=  \
     port.cpp \
     port_transform.cpp \
     port_type.cpp \
-    product_base.cpp
+    product_base.cpp \
+    initialize.cpp
 #    string_conversion.cpp
 
 

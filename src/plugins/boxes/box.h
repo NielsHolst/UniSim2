@@ -6,8 +6,8 @@
 #include "general.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite).doReset(false)
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).doReset(true)
+#define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite)
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtInitialize().zeroAtReset()
 
 namespace boxes {
 
