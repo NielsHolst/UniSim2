@@ -20,7 +20,7 @@ QString className(const QObject *object) {
     if (!object) return "NULL";
     QVariant className = object->property("boxes::Class");
     if (!className.isValid())
-        throw Exception("Object has no class name (did you forget ID in the constructor?)", "", object);
+        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
     return className.toString();
 }
 
@@ -28,7 +28,7 @@ QString classInheritance(const QObject *object) {
     if (!object) return "NULL";
     QVariant classInheritance = object->property("boxes::ClassInheritance");
     if (!classInheritance.isValid())
-        throw Exception("Object has no class name (did you forget ID in the constructor?)", "", object);
+        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
     return classInheritance.toString();
 }
 

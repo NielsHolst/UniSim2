@@ -9,6 +9,7 @@ class TestSavanna : public QObject
 private slots:
     void testDirectCreate();
     void testPort();
+    void testImport();
 };
 
 DECLARE_TEST(TestSavanna)

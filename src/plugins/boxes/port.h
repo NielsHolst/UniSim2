@@ -2,6 +2,8 @@
 #define PORT_H
 #include <QObject>
 #include <QString>
+#include <QStringList>
+#include <QVector>
 #include "assign.h"
 #include "convert.h"
 #include "exception.h"
@@ -21,7 +23,8 @@ private:
     void *_valuePtr;
     PortType _valueType;
     PortTransform _transform;
-    Port *_importPort;
+    QStringList _importPortPaths;
+    QVector<Port *> _importPorts;
     Access _access;
     bool _reset, _initialize;
 
@@ -31,7 +34,7 @@ public:
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value) { return equals(QString(value)); }
-    Port& import(Port *port);
+    Port& import(QString pathToPort);
     Port& transform(PortTransform t);
     Port& access(Access a);
     Port& zeroAtReset();
@@ -40,6 +43,7 @@ public:
     Port& noInitialize();
 
     // Change
+    void resolveImports();
     void reset();
     void initialize();
     void copyFromImport();
@@ -49,6 +53,7 @@ public:
     template <class T> const T* valuePtr() const;
 
     // Attributes
+    bool hasImport() const;
     PortTransform transform() const;
     Access access() const;
 };
@@ -63,7 +68,7 @@ template <class T> Port& Port::equals(T value)
 {
     if (_valuePtr == 0)
         throw Exception("Cannot set port value by 'equals' because port 'data' has not been set", "", this);
-    _importPort = 0;
+    _importPortPaths.clear();
     assign(_valueType, _valuePtr, typeOf<T>(), &value, _transform);
     return *this;
 }

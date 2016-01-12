@@ -48,6 +48,11 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
 {
     FactoryPlugIn *factory;
     QObject *creation;
+    if (className == "Box") {
+        creation = new Box(objectName, parent);
+        creation->setProperty("classLabel", className);
+        return creation;
+    }
     switch (me()->productIndex.count(className)) {
     case 0:
         throw Exception("No model of class: " + className);

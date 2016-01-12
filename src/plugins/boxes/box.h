@@ -45,9 +45,10 @@ private:
     static bool _currentRootIsDirty;
 
     // Methods
-    void updateImports();
+    void resolvePorts();
     void initializePorts();
     void resetPorts();
+    void updateImports();
     void doAmend();
     void doInitialize();
     void doReset();

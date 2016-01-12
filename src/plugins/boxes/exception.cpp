@@ -10,8 +10,8 @@
 
 namespace boxes {
 
-Exception::Exception(QString message, QString value, const QObject *context)
-    : _message(message), _value(value), _context(context)
+Exception::Exception(QString message, QString value, const QObject *context, QString hint)
+    : _message(message), _value(value), _hint(hint), _context(context)
 {
 }
 
@@ -32,6 +32,8 @@ const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
     QString msg = _value.isEmpty() ?
                   QString{"Error: '%1'\nObject: '%2'"}.arg(_message).arg(name) :
                   QString{"Error: '%1'\nValue: '%2'\nObject: '%3'"}.arg(_message).arg(_value).arg(name);
+    if (!_hint.isEmpty())
+        msg += "\nHint: " + _hint;
     return msg.toLocal8Bit();
 }
 

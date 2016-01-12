@@ -9,8 +9,8 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
-#include <QRegExp>
 #include <QStringList>
+#include <QVector>
 
 namespace boxes {
 
@@ -20,13 +20,15 @@ class Path {
 public:
     Path(QString path, QObject *context = 0);
     QString normalise();
-    QObjectList resolve();
     void validateName(QString name);
     void validateStep(QString step);
+    template<class T=QObject> QVector<T*> resolve(int number = -1, QObject* caller = 0);
+    template<class T=QObject> T* resolveOne(QObject* caller = 0);
+    template<class T=QObject> T* resolveMaybeOne(QObject* caller = 0);
 private:
     // Data
     QString _originalPath, _normalisedPath;
-    QObject *_context, *_normalisedContext;
+    QObject *_context, *_normalisedContext, *_caller;
     QList<QObject*> _candidates;
 
     enum Directive {
@@ -36,17 +38,44 @@ private:
     static QMap<QString, Directive> _directives;
 
     // Methods
+    QObjectList _resolve(int number = -1, QObject* caller = 0);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
     QString normaliseBox(QString s);
     QStringList splitBox(QString s);
     QString normalisePort();
+    QObjectList nearest(QObject *p, QString tail);
     QObject* findContext();
     void addCandidates(QString path);
     void removeEmptyCandidates();
     Directive parseDirective(QString s);
     bool isAbsolute();
 };
+
+template<class T> QVector<T*> Path::resolve(int number, QObject* caller) {
+    QObjectList objs = _resolve(number, caller);
+    QVector<T*> objsT;
+    for (QObject *obj : objs) {
+        T *objT = dynamic_cast<T*>(obj);
+        if (objT)
+            objsT << objT;
+    }
+    return objsT;
+}
+
+template<class T> T* Path::resolveOne(QObject* caller) {
+    return resolve<T>(1,caller).at(0);
+}
+
+template<class T> T* Path::resolveMaybeOne(QObject* caller) {
+    QVector<T*> objsT = resolve<T>(-1,caller);
+    switch (objsT.size()) {
+    case 0: return 0;
+    case 1: return objsT.at(0);
+    }
+    QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(0 or 1)"};
+    throw Exception(msg.arg(objsT.size()), _originalPath, _caller);
+}
 
 }
 

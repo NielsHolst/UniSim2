@@ -1,12 +1,13 @@
 #include "box.h"
 #include "general.h"
 #include "initialize.h"
+#include "path.h"
 #include "port.h"
 
 namespace boxes {
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity), _importPort(0),
+    : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
       _access(Read), _reset(false), _initialize(false)
 {
     Class(Port);
@@ -16,8 +17,8 @@ Port::Port(QString name, QObject *parent)
         boxParent->addPort(this);
 }
 
-Port& Port::import(Port *port) {
-    _importPort = port;
+Port& Port::import(QString pathToPort) {
+    _importPortPaths << pathToPort;
     return *this;
 }
 
@@ -51,25 +52,41 @@ Port& Port::noReset() {
     return *this;
 }
 
+void Port::resolveImports() {
+    // Assume only one import (preliminary)
+    if (hasImport()) {
+        QString p = _importPortPaths.at(0);
+        Path path(p, parent());
+        Port *port = path.resolveOne<Port>(this);
+        _importPorts << port;
+    }
+}
+
 void Port::reset() {
-    if (!_importPort && _reset)
+    if (!hasImport() && _reset)
         boxes::initialize(_valueType, _valuePtr);
 }
 
 void Port::initialize() {
-    if (!_importPort && _initialize)
+    if (!hasImport() && _initialize)
         boxes::initialize(_valueType, _valuePtr);
 }
 
 
 void Port::copyFromImport() {
-    if (_importPort == 0)
+    // Assume only one import (preliminary)
+    if (!hasImport())
         return;
     if (_valuePtr == 0)
         throw Exception("Cannot copy from import because 'data' has not been set in destination port", "", this);
-    if (_importPort->_valuePtr == 0)
+    Port *port =  _importPorts.at(0);
+    if (port->_valuePtr == 0)
         throw Exception("Cannot copy from import because 'data' has not been set in source port", "", this);
-    assign(_valueType, _valuePtr, _importPort->_valueType, _importPort->_valuePtr, _transform);
+    assign(_valueType, _valuePtr, port->_valueType, port->_valuePtr, _transform);
+}
+
+bool Port::hasImport() const {
+    return !_importPortPaths.isEmpty();
 }
 
 PortTransform Port::transform() const {

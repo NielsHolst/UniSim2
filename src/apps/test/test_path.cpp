@@ -23,7 +23,7 @@ void TestPath::setContext(QString path) {
         return;
     }
     Path p{path};
-    QObjectList objects;
+    QVector<QObject*> objects;
     try {
         objects = p.resolve();
     }
@@ -47,9 +47,9 @@ namespace {
     }
 }
 
-void TestPath::compareLists(QObjectList l1, QObjectList l2, int size) {
-    QSet<QObject*> set1 = QSet<QObject*>::fromList(l1),
-                   set2 = QSet<QObject*>::fromList(l2);
+void TestPath::compareVectors(QVector<QObject*> v1, QVector<QObject*> v2, int size) {
+    QSet<QObject*> set1 = QSet<QObject*>::fromList( QList<QObject*>::fromVector(v1) ),
+                   set2 = QSet<QObject*>::fromList( QList<QObject*>::fromVector(v2) );
     QString msgNames = "Object sets differ:\n(%1)\n(%2)",
             msgSize = "Object set(s) of wrong size. Excepted %1 got %2 and %3.\nExpected: '%4'";
     QString s1 = msgNames.arg(names(set1)).arg(names(set2));
@@ -149,127 +149,127 @@ void TestPath::testSetContext() {
 
 void TestPath::testSelf() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("self:*", _context).resolve(),
     absolute = Path("/A/A2").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("self:*{Box}", _context).resolve(),
     absolute = Path("/A/A2").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path(".[v2]", _context).resolve(),
     absolute = Path("/A/A2[v2]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("./b[v1]", _context).resolve(),
     absolute = Path("/A/A2/b[v1]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("./*[*]", _context).resolve(),
     absolute = Path("/A/A2/*[*]").resolve();
-    compareLists(relative, absolute, 14);
+    compareVectors(relative, absolute, 14);
 
     QCOMPARE(Path("self:X", _context).resolve().size(), 0);
 }
 
 void TestPath::testChildren() {
     setContext("A1");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("children:a[v1]", _context).resolve(),
     absolute = Path("/A/A1/a[v1]").resolve();
-    compareLists(relative, absolute, 2);
+    compareVectors(relative, absolute, 2);
 
     QVERIFY(Path("children:x[v1]", _context).resolve().isEmpty());
 }
 
 void TestPath::testParent() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("../*", _context).resolve(),
     absolute = Path("/A/*").resolve();
-    compareLists(relative, absolute, 3);
+    compareVectors(relative, absolute, 3);
 
     relative = Path("..[v3]", _context).resolve(),
     absolute = Path("/A[v3]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     QVERIFY(Path("parent:X", _context).resolve().isEmpty());
 }
 
 void TestPath::testNearest() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path(".../c[v2]", _context).resolve(),
     absolute = Path("/A/A2/c[v2]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("...[v2]", _context).resolve(),
     absolute = Path("/A/A2[v2]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("...[v3]", _context).resolve(),
     absolute = Path("/A[v3]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path(".../*{Port}", _context).resolve(),
     absolute = Path("/A/A2[iterations]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path(".../*{Box}", _context).resolve(),
     absolute = Path("/A/A2/a").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 }
 
 void TestPath::testDescendants() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("descendants:c[v2]", _context).resolve(),
     absolute = Path("/A/A2/c[v2]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("descendants:*[*]", _context).resolve(),
     absolute = Path("/A/A2/*[*]").resolve();
-    compareLists(relative, absolute, 14);
+    compareVectors(relative, absolute, 14);
 
     QVERIFY(Path("descendants:x[*]", _context).resolve().isEmpty());
 }
 
 void TestPath::testAncestors() {
     setContext("A2/c");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("ancestors:A", _context).resolve(),
     absolute = Path("/A").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("ancestors:A2", _context).resolve(),
     absolute = Path("/A/A2").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     relative = Path("ancestors:*", _context).resolve(),
     absolute = Path("/A/A2").resolve() << Path("/A").resolve();
-    compareLists(relative, absolute, 2);
+    compareVectors(relative, absolute, 2);
 
     relative = Path("ancestors:A[v1]", _context).resolve(),
     absolute = Path("/A[v1]").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     QVERIFY(Path("ancestors:A3", _context).resolve().isEmpty());
 }
 
 void TestPath::testAllSiblings() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("allSiblings:*", _context).resolve(),
     absolute = Path("/A/*").resolve();
-    compareLists(relative, absolute, 3);
+    compareVectors(relative, absolute, 3);
 
     setContext("/A");
     QVERIFY(Path("allSiblings:*", _context).resolve().isEmpty());
@@ -277,11 +277,11 @@ void TestPath::testAllSiblings() {
 
 void TestPath::testOtherSiblings() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("otherSiblings:*", _context).resolve(),
     absolute = Path("/A/A1").resolve() << Path("/A/A3").resolve();
-    compareLists(relative, absolute, 2);
+    compareVectors(relative, absolute, 2);
 
     setContext("/A");
     QVERIFY(Path("otherSiblings:*", _context).resolve().isEmpty());
@@ -289,11 +289,11 @@ void TestPath::testOtherSiblings() {
 
 void TestPath::testPreceedingSibling() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("preceedingSibling:*", _context).resolve(),
     absolute = Path("/A/A1").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     setContext("/A");
     QVERIFY(Path("preceedingSibling:*", _context).resolve().isEmpty());
@@ -301,14 +301,45 @@ void TestPath::testPreceedingSibling() {
 
 void TestPath::testFollowingSibling() {
     setContext("A2");
-    QObjectList relative, absolute;
+    QVector<QObject*> relative, absolute;
 
     relative = Path("followingSibling:*", _context).resolve(),
     absolute = Path("/A/A3").resolve();
-    compareLists(relative, absolute, 1);
+    compareVectors(relative, absolute, 1);
 
     setContext("/A");
     QVERIFY(Path("followingSibling:*", _context).resolve().isEmpty());
+}
+
+void TestPath::testGlobal() {
+    setContext("A2");
+    QVector<QObject*> relative, absolute;
+
+    relative = Path("A3[v3]", _context).resolve(),
+    absolute = Path("/A/A3[v3]").resolve();
+    compareVectors(relative, absolute, 1);
+}
+
+void TestPath::testNumberOfMatches() {
+    QString path("/A/A2/*[*]");
+
+    bool excepted{false};
+    try {
+        Path(path).resolve(1);
+    }
+    catch (Exception &) {
+        excepted = true;
+    }
+    QVERIFY(excepted);
+
+    excepted = false;
+    try {
+        Path(path).resolve(14);
+    }
+    catch (Exception &) {
+        excepted = true;
+    }
+    QVERIFY(!excepted);
 }
 
 void TestPath::testResolveInvalid() {

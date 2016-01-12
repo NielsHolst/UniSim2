@@ -7,6 +7,7 @@ namespace boxes {
 
 namespace TestBoxCases {
     boxes::Box* case1();
+    boxes::Box* case2();
 }
 
 #endif

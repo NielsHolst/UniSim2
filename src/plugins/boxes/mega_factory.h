@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QObject>
 #include <QStringList>
+#include "box.h"
 #include "exception.h"
 
 namespace boxes {

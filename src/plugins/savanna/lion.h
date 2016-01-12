@@ -12,9 +12,10 @@ public:
     void update();
 private:
     // Inputs
-    double initialDensity, growthRate, carryingCapacity;
+    double initialDensity, growthRate,
+        preyDensity, searchRate, demand;
     // Outputs
-    double density;
+    double density, killRate;
 };
 
 }

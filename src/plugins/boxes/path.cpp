@@ -19,7 +19,7 @@ QMap<QString, Path::Directive> Path::_directives;
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
 Path::Path(QString path, QObject *context)
-    : _originalPath(path.trimmed()), _context(context)
+    : _originalPath(path.trimmed()), _context(context), _caller(0)
 {
     if (_directives.isEmpty()) {
         DIR(Self);
@@ -35,14 +35,19 @@ Path::Path(QString path, QObject *context)
     }
 }
 
-QObjectList Path::resolve() {
+QObjectList Path::_resolve(int number, QObject *caller) {
+    _caller = caller;
     _normalisedPath = normalise();
     _candidates.clear();
     _candidates << _normalisedContext;
     if (_normalisedContext == 0)
-        throw Exception("Path misses a context object", _originalPath);
+        throw Exception("Path misses a context object", _originalPath, _caller);
     addCandidates(_normalisedPath);
     removeEmptyCandidates();
+    if (number > -1 && _candidates.size() != number) {
+        QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
+        throw Exception(msg.arg(_candidates.size()).arg(number), _originalPath, _caller);
+    }
     return _candidates;
 }
 
@@ -134,7 +139,7 @@ QStringList Path::splitBox(QString s) {
         directive = "nearest";
     if (isSelf || isParent || isNearest) {
         if (hasDirective)
-            throw Exception("Dot notation cannot follow directive", _originalPath);
+            throw Exception("Dot notation cannot follow directive", _originalPath, _caller);
         box = "*";
     }
 
@@ -153,6 +158,17 @@ QString Path::normalisePort() {
             "{Port}";
 }
 
+QObjectList Path::nearest(QObject *p, QString tail) {
+    Path path(tail, p);
+    QObjectList candidates = path._resolve();
+    if (candidates.isEmpty()) {
+        QObject *parent = p->parent();
+        if (parent)
+            return nearest(parent, tail);
+    }
+    return candidates;
+}
+
 namespace {
 
     inline bool matches(QObject* candidate, QString box, QString type) {
@@ -164,17 +180,6 @@ namespace {
         QObject *parent = p->parent();
         if (parent)
             findAncestors(parent, ancestors << parent);
-    }
-
-    QObjectList nearest(QObject *p, QString tail) {
-        Path path(tail, p);
-        QObjectList candidates = path.resolve();
-        if (candidates.isEmpty()) {
-            QObject *parent = p->parent();
-            if (parent)
-                return nearest(parent, tail);
-        }
-        return candidates;
     }
 
     QList<QObject*> allSiblings(QObject *p) {
@@ -321,7 +326,7 @@ void Path::removeEmptyCandidates() {
 Path::Directive Path::parseDirective(QString s) {
     QString dir = s.toLower();
     if (!_directives.contains(dir))
-        throw Exception("Unknown directive: '" + s + "'", _originalPath);
+        throw Exception("Unknown directive: '" + s + "'", _originalPath, _caller);
     return _directives.value(dir);
 }
 

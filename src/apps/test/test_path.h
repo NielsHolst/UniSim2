@@ -13,7 +13,7 @@ class TestPath : public QObject
     Q_OBJECT
 private:
     void setContext(QString path = "");
-    void compareLists(QObjectList l1, QObjectList l2, int size);
+    void compareVectors(QVector<QObject*> v1, QVector<QObject*> v2, int size);
     QObject *_root, *_context;
 
 private slots:
@@ -37,6 +37,9 @@ private slots:
     void testOtherSiblings();
     void testPreceedingSibling();
     void testFollowingSibling();
+
+    void testGlobal();
+    void testNumberOfMatches();
 
     void testResolveInvalid();
 };

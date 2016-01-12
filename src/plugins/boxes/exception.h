@@ -15,14 +15,14 @@ namespace boxes {
 	
 class Exception : public std::exception {
 public:
-    Exception(QString message, QString value = "", const QObject *context = 0);
+    Exception(QString message, QString value = "", const QObject *context = 0, QString hint = "");
     QString message();
     QString value();
     const QObject* context();
     const char* what() const _GLIBCXX_USE_NOEXCEPT;
 
 private:
-    QString _message, _value;
+    QString _message, _value, _hint;
     const QObject *_context;
 };
 

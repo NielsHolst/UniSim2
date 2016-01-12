@@ -4,7 +4,6 @@
 #include "path.h"
 #include "port.h"
 
-
 namespace boxes {
 
 Box *Box::_currentRoot = 0;
@@ -38,7 +37,7 @@ void Box::addPort(Port *port) {
 
 Port* Box::port(QString name) {
     Path path(".[" + name + "]", this);
-    QObjectList ports = (path.resolve());
+    auto ports = (path.resolve());
     switch (ports.size()) {
     case 0: return 0;
     case 1: return dynamic_cast<Port*>(ports.at(0));
@@ -79,6 +78,7 @@ void Box::doInitialize() {
             box->doInitialize();
     }
     initializePorts();
+    resolvePorts();
     updateImports();
     initialize();
 }
@@ -116,14 +116,19 @@ void Box::updateImports() {
 
 }
 
+void Box::initializePorts() {
+    for (Port *port : _ports.values())
+        port->initialize();
+}
+
+void Box::resolvePorts() {
+    for (Port *port : _ports.values())
+        port->resolveImports();
+}
 void Box::resetPorts() {
     for (Port *port : _ports.values())
         port->reset();
 }
 
-void Box::initializePorts() {
-    for (Port *port : _ports.values())
-        port->initialize();
-}
 
 }
