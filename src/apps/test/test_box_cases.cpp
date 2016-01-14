@@ -57,10 +57,15 @@ namespace TestBoxCases {
                     port("steps").equals(2).
                     box("Lion").name("juvenile").endbox().
                     box("Lion").name("adult").
-                        port("preyDensity").import("zebra[density]").
+                        port("preyDensity").import("zebra[density]").import("gnu[density]").transform(Sum).
                     endbox().
                 endbox().
                 box("Grazer").name("zebra").
+                    port("density").equals(100).
+                    port("killRate").import("lion/adult[killRate]").
+                endbox().
+                box("Grazer").name("gnu").
+                port("density").equals(20).
                     port("killRate").import("lion/adult[killRate]").
                 endbox().
             endbox();

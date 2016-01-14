@@ -61,6 +61,8 @@ TYPEOF(QTime, Time)
 TYPEOF(QDateTime, DateTime)
 
 QString nameOf(PortType type);
+bool isVector(PortType type);
+PortType asVector(PortType type);
 
 }
 

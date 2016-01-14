@@ -19,13 +19,27 @@ QMap<QString, Path::Directive> Path::_directives;
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
 Path::Path(QString path, QObject *context)
-    : _originalPath(path.trimmed()), _context(context), _caller(0)
+    : _originalContext(context), _caller(0)
 {
+    initDirectives();
+    _originalPaths << path;
+}
+
+Path::Path(QStringList paths, QObject *context)
+    : _originalContext(context), _caller(0)
+{
+    initDirectives();
+    _originalPaths = paths;
+}
+
+void Path::initDirectives() {
+    // Construct singular directives map
     if (_directives.isEmpty()) {
         DIR(Self);
         DIR(Children);
         DIR(Parent);
         DIR(Nearest);
+        DIR(SelfOrDescendants);
         DIR(Descendants);
         DIR(Ancestors);
         DIR(AllSiblings);
@@ -37,24 +51,28 @@ Path::Path(QString path, QObject *context)
 
 QObjectList Path::_resolve(int number, QObject *caller) {
     _caller = caller;
-    _normalisedPath = normalise();
     _candidates.clear();
-    _candidates << _normalisedContext;
-    if (_normalisedContext == 0)
-        throw Exception("Path misses a context object", _originalPath, _caller);
-    addCandidates(_normalisedPath);
+    for (int i = 0; i <_originalPaths.size(); ++i) {
+        normalise(i);
+        if (_current.normalisedContext == 0)
+            throw Exception("Path misses a context object", _current.originalPath, _caller);
+        QObjectList nextCandidates = (QObjectList() << _current.normalisedContext);
+        addCandidates(_current.normalisedPath, nextCandidates);
+        _candidates << nextCandidates;
+    }
     removeEmptyCandidates();
     if (number > -1 && _candidates.size() != number) {
         QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
-        throw Exception(msg.arg(_candidates.size()).arg(number), _originalPath, _caller);
+        throw Exception(msg.arg(_candidates.size()).arg(number), _current.originalPath, _caller);
     }
     return _candidates;
 }
 
-QString Path::normalise() {
+QString Path::normalise(int ix) {
     QString result;
-    int leftBracket = _originalPath.indexOf('[');
-    QStringList boxes = _originalPath.left(leftBracket).split('/');
+     _current.originalPath = _originalPaths.at(ix);
+    int leftBracket = _current.originalPath.indexOf('[');
+    QStringList boxes = _current.originalPath.left(leftBracket).split('/');
 
     if (isAbsolute()) {
         boxes.removeAt(0);
@@ -69,7 +87,7 @@ QString Path::normalise() {
     if (!port.isEmpty())
         result += "/" + port;
 
-    return result;
+    return _current.normalisedPath = result;
 }
 
 void Path::validateName(QString name) {
@@ -83,7 +101,7 @@ void Path::validateStep(QString step) {
 void Path::validate(QRegExp rx, QString s) {
     QString value = "'%1'' in '%2'";
     if (!rx.exactMatch(s))
-        throw Exception("Bad path format", value.arg(s).arg(_originalPath), _context);
+        throw Exception("Bad path format", value.arg(s).arg(_current.originalPath), _originalContext);
 }
 
 QString Path::normaliseFirstBox(QString s) {
@@ -92,14 +110,15 @@ QString Path::normaliseFirstBox(QString s) {
 
     if (isAbsolute()) {
         directive = "self";
-        _normalisedContext = Box::currentRoot();
+        _current.normalisedContext = Box::currentRoot();
     }
     else if (directive.isEmpty()) {
-        directive = "descendants";
-        _normalisedContext = Box::currentRoot();
+        directive = "selfordescendants";
+//        directive = "descendants";
+        _current.normalisedContext = Box::currentRoot();
     }
     else {
-        _normalisedContext = _context;
+        _current.normalisedContext = _originalContext;
     }
 
     return directive + ":" + parts.at(1) + "{" + parts.at(2) + "}";
@@ -139,7 +158,7 @@ QStringList Path::splitBox(QString s) {
         directive = "nearest";
     if (isSelf || isParent || isNearest) {
         if (hasDirective)
-            throw Exception("Dot notation cannot follow directive", _originalPath, _caller);
+            throw Exception("Dot notation cannot follow directive", _current.originalPath, _caller);
         box = "*";
     }
 
@@ -148,13 +167,13 @@ QStringList Path::splitBox(QString s) {
 }
 
 QString Path::normalisePort() {
-    int leftBracket = _originalPath.indexOf('['),
-        rightBracket = _originalPath.indexOf(']');
+    int leftBracket = _current.originalPath.indexOf('['),
+        rightBracket = _current.originalPath.indexOf(']');
     if (leftBracket*rightBracket < 0)
-        throw Exception("Missing matching bracket", _originalPath, _context);
+        throw Exception("Missing matching bracket", _current.originalPath, _originalContext);
     if (leftBracket == -1) return "";
     return "children:" +
-            _originalPath.mid(leftBracket+1, rightBracket-leftBracket-1) +
+            _current.originalPath.mid(leftBracket+1, rightBracket-leftBracket-1) +
             "{Port}";
 }
 
@@ -222,14 +241,6 @@ namespace {
         return 0;
     }
 
-//    QObject* filterFirst(QList<QObject*> candidates, QString box, QString type) {
-//        for (QObject *candidate : candidates) {
-//            if (matches(candidate, box, type))
-//                return candidate;
-//        }
-//        return 0;
-//    }
-
     QList<QObject*> filter(QList<QObject*> candidates, QString box, QString type) {
         QObjectList filtered;
         for (QObject *candidate : candidates) {
@@ -245,7 +256,7 @@ namespace {
 
 } // namespace
 
-void Path::addCandidates(QString path) {
+void Path::addCandidates(QString path, QObjectList &candidates) {
     // Split
     int slash = path.indexOf('/');
     bool hasTail = (slash > -1),
@@ -258,7 +269,7 @@ void Path::addCandidates(QString path) {
             type = parts.at(2);
 
     QObjectList newCandidates;
-    for (QObject *candidate : _candidates) {
+    for (QObject *candidate : candidates) {
         if (!candidate) continue;
         QObjectList ancestors;
         QString findBoxName = (box == "*") ? QString() : box;
@@ -276,6 +287,9 @@ void Path::addCandidates(QString path) {
             newCandidates << nearest(candidate, tail);
             isNearest = true;
             break;
+        case SelfOrDescendants:
+            newCandidates << filter(candidate, box, type);
+            // no break
         case Descendants:
             newCandidates << filter(candidate->findChildren<QObject*>(findBoxName, Qt::FindChildrenRecursively), box, type);
             break;
@@ -297,21 +311,21 @@ void Path::addCandidates(QString path) {
             break;
         }
     }
-    _candidates = newCandidates;
+    candidates = newCandidates;
 
     // For nearest objects, shorten list to the very nearest
     if (isNearest) {
-        for (QObject *candidate : _candidates) {
+        for (QObject *candidate : candidates) {
             if (candidate) {
-                _candidates.clear();
-                _candidates << candidate;
+                candidates.clear();
+                candidates << candidate;
                 break;
             }
         }
     }
     // For all others, resolve tail
     else if (hasTail)
-        addCandidates(tail);
+        addCandidates(tail, candidates);
 }
 
 void Path::removeEmptyCandidates() {
@@ -326,12 +340,13 @@ void Path::removeEmptyCandidates() {
 Path::Directive Path::parseDirective(QString s) {
     QString dir = s.toLower();
     if (!_directives.contains(dir))
-        throw Exception("Unknown directive: '" + s + "'", _originalPath, _caller);
+        throw Exception("Unknown directive: '" + s + "'", _current.originalPath, _caller);
     return _directives.value(dir);
 }
 
 bool Path::isAbsolute() {
-    return (_originalPath.at(0) == '/');
+    return (!_current.originalPath.isEmpty() &&
+            _current.originalPath.at(0) == '/');
 }
 
 } //namespace

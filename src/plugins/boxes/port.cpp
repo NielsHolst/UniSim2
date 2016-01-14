@@ -3,6 +3,7 @@
 #include "initialize.h"
 #include "path.h"
 #include "port.h"
+#include "vectorize.h"
 
 namespace boxes {
 
@@ -53,13 +54,14 @@ Port& Port::noReset() {
 }
 
 void Port::resolveImports() {
-    // Assume only one import (preliminary)
-    if (hasImport()) {
-        QString p = _importPortPaths.at(0);
-        Path path(p, parent());
-        Port *port = path.resolveOne<Port>(this);
-        _importPorts << port;
-    }
+    if (_importPortPaths.isEmpty())
+        return;
+    _importPorts = Path(_importPortPaths).resolve<Port>(-1,this);
+    if (_importPorts.isEmpty())
+        throw Exception("No matching import ports found", _importPortPaths.join(" "), this);
+    _importType = commonType(_importPorts);
+    if (_importType == Null)
+        _importType = _valueType;
 }
 
 void Port::reset() {
@@ -72,21 +74,25 @@ void Port::initialize() {
         boxes::initialize(_valueType, _valuePtr);
 }
 
-
 void Port::copyFromImport() {
-    // Assume only one import (preliminary)
     if (!hasImport())
         return;
-    if (_valuePtr == 0)
-        throw Exception("Cannot copy from import because 'data' has not been set in destination port", "", this);
-    Port *port =  _importPorts.at(0);
-    if (port->_valuePtr == 0)
-        throw Exception("Cannot copy from import because 'data' has not been set in source port", "", this);
-    assign(_valueType, _valuePtr, port->_valueType, port->_valuePtr, _transform);
+    assign(_importPorts);
 }
 
-bool Port::hasImport() const {
-    return !_importPortPaths.isEmpty();
+void Port::assign(const QVector<Port*> &sources) {
+    if (sources.size() == 1) {
+        const Port *source = sources.at(0);
+        boxes::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
+    }
+    else {
+        const void *sourceVector = vectorize(_importType, sources);
+        boxes::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
+    }
+}
+
+PortType Port::type() const {
+    return _valueType;
 }
 
 PortTransform Port::transform() const {
@@ -95,6 +101,25 @@ PortTransform Port::transform() const {
 
 Port::Access Port::access() const {
     return _access;
+}
+
+bool Port::hasImport() const {
+    return !_importPortPaths.isEmpty();
+}
+
+template <> const void* Port::valuePtr() const {
+    return _valuePtr;
+}
+
+PortType Port::commonType(const QVector<Port*> &ports) {
+    PortType commonType = ports.at(0)->_valueType;
+    for (Port *port : ports) {
+        if (port->_valueType != commonType) {
+            commonType = Null;
+            break;
+        }
+    }
+    return commonType;
 }
 
 }

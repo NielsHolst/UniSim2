@@ -23,4 +23,21 @@ QString nameOf(PortTransform transform) {
     return s;
 }
 
+//#define LOOKUP_TRANSFORM(x) lookupTransform[#x] = x
+
+//namespace {
+//    QMap<QString, PortTransform> lookupTransform;
+//    void init() {
+//        LOOKUP_TRANSFORM(Identity);
+//        LOOKUP_TRANSFORM(Sum);
+//        LOOKUP_TRANSFORM(Average);
+//        LOOKUP_TRANSFORM(Min);
+//        LOOKUP_TRANSFORM(Max);
+//        LOOKUP_TRANSFORM(Copy);
+//        LOOKUP_TRANSFORM(Split);
+//        LOOKUP_TRANSFORM(All);
+//        LOOKUP_TRANSFORM(Any);
+//    }
+//}
+
 }

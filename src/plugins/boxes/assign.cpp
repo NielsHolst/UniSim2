@@ -3,6 +3,7 @@
 #include <string>
 #include <QDate>
 #include <QDateTime>
+#include <QObject>
 #include <QStringList>
 #include <QTime>
 #include <QVector>
@@ -250,7 +251,11 @@ case destPortType##Vector: \
     CASE_ASSIGN_TO_VECTOR(destCppType) \
     break
 
-void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform) {
+void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, QObject *context) {
+    if (destPtr==0)
+        throw Exception("Port data has not been set", "", context);
+    if (sourcePtr==0)
+        throw Exception("Port source of import has not been set", "", context);
     switch (destT) {
         CASE_ASSIGN(Bool, bool);
         CASE_ASSIGN(Char, char);

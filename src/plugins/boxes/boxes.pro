@@ -29,6 +29,7 @@ HEADERS +=  \
     exception.h \
     factory_plug_in.h \
     general.h \
+    initialize.h \
     mega_factory.h \
     object_pool.h \
     path.h \
@@ -38,8 +39,7 @@ HEADERS +=  \
     port_cache.h \
     product_base.h \
     product.h \
-    initialize.h
-#    string_conversion.h
+    vectorize.h
 
 SOURCES +=  \
     assign.cpp \
@@ -49,6 +49,7 @@ SOURCES +=  \
     convert.cpp \
     exception.cpp \
     general.cpp \
+    initialize.cpp \
     mega_factory.cpp \
     object_pool.cpp \
     path.cpp \
@@ -56,7 +57,6 @@ SOURCES +=  \
     port_transform.cpp \
     port_type.cpp \
     product_base.cpp \
-    initialize.cpp
-#    string_conversion.cpp
+    vectorize.cpp
 
 

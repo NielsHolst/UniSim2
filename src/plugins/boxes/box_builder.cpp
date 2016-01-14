@@ -43,7 +43,16 @@ BoxBuilder& BoxBuilder::port(QString name) {
 }
 
 BoxBuilder& BoxBuilder::import(QString pathToPort) {
+    if (!_currentBox)
+        throw Exception("BoxBuilder: 'port' missing before 'import'");
     _currentPort->import(pathToPort);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::transform(PortTransform pt) {
+    if (!_currentBox)
+        throw Exception("BoxBuilder: 'port' missing before 'transform'");
+    _currentPort->transform(pt);
     return *this;
 }
 

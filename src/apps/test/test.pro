@@ -20,7 +20,8 @@ HEADERS +=  \
     test_path.h \
     test_port_type.h \
     test_port.h \
-    test_savanna.h
+    test_savanna.h \
+    test_vectorization.h
 
 SOURCES +=  \
     main.cpp \
@@ -31,4 +32,5 @@ SOURCES +=  \
     test_path.cpp \
     test_port_type.cpp \
     test_port.cpp \
-    test_savanna.cpp
+    test_savanna.cpp \
+    test_vectorization.cpp

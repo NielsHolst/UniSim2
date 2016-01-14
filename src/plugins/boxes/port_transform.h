@@ -1,5 +1,6 @@
 #ifndef PORT_TRANSFORM_H
 #define PORT_TRANSFORM_H
+#include <QMap>
 #include <QString>
 
 namespace boxes {
@@ -17,6 +18,8 @@ enum PortTransform {
 };
 
 QString nameOf(PortTransform transform);
+
+//PortTransform convert(QString s);
 
 }
 

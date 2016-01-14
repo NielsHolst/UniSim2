@@ -38,9 +38,12 @@ private slots:
     void testPreceedingSibling();
     void testFollowingSibling();
 
+    void testPathList();
     void testGlobal();
+    void testRoot();
     void testNumberOfMatches();
 
+    void testEmpty();
     void testResolveInvalid();
 };
 

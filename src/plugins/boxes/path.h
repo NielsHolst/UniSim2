@@ -19,7 +19,8 @@ class Box;
 class Path {
 public:
     Path(QString path, QObject *context = 0);
-    QString normalise();
+    Path(QStringList paths, QObject *context = 0);
+    QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
     template<class T=QObject> QVector<T*> resolve(int number = -1, QObject* caller = 0);
@@ -27,17 +28,22 @@ public:
     template<class T=QObject> T* resolveMaybeOne(QObject* caller = 0);
 private:
     // Data
-    QString _originalPath, _normalisedPath;
-    QObject *_context, *_normalisedContext, *_caller;
-    QList<QObject*> _candidates;
+    QStringList _originalPaths;
+    QObject *_originalContext, *_caller;
+    struct {
+        QString originalPath, normalisedPath;
+        QObject *normalisedContext;
+    } _current;
+    QObjectList _candidates;
 
     enum Directive {
         Self, Children, Parent, Nearest,
-        Descendants, Ancestors,
+        SelfOrDescendants, Descendants, Ancestors,
         AllSiblings, OtherSiblings, PreceedingSibling, FollowingSibling};
     static QMap<QString, Directive> _directives;
 
     // Methods
+    void initDirectives();
     QObjectList _resolve(int number = -1, QObject* caller = 0);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
@@ -46,7 +52,7 @@ private:
     QString normalisePort();
     QObjectList nearest(QObject *p, QString tail);
     QObject* findContext();
-    void addCandidates(QString path);
+    void addCandidates(QString path, QObjectList &candidates);
     void removeEmptyCandidates();
     Directive parseDirective(QString s);
     bool isAbsolute();
@@ -74,7 +80,7 @@ template<class T> T* Path::resolveMaybeOne(QObject* caller) {
     case 1: return objsT.at(0);
     }
     QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(0 or 1)"};
-    throw Exception(msg.arg(objsT.size()), _originalPath, _caller);
+    throw Exception(msg.arg(objsT.size()), _current.originalPath, _caller);
 }
 
 }

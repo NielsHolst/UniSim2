@@ -4,6 +4,7 @@
 #include <QString>
 #include "exception.h"
 #include "port.h"
+#include "port_transform.h"
 
 namespace boxes {
 
@@ -21,6 +22,7 @@ public:
     BoxBuilder& endbox();
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
+    BoxBuilder& transform(PortTransform pt);
     Box* content();
 private:
     Box *_content, *_currentBox;

@@ -1,3 +1,4 @@
+#include "exception.h"
 #include "port_type.h"
 
 namespace boxes {
@@ -29,6 +30,17 @@ QString nameOf(PortType type) {
             s = "Null";
     }
     return s;
+}
+
+bool isVector(PortType type) {
+    return int(type)%2 == 1;
+}
+
+PortType asVector(PortType type) {
+    if (type==Null)
+        throw Exception("Cannot convert 'Null' to vector type");
+    int i(type);
+    return (i%2 == 0) ? PortType(i+1) : type;
 }
 
 }

@@ -108,8 +108,9 @@ void TestPath::testValidateStep() {
 }
 
 void TestPath::testNormalise() {
-    QCOMPARE(Path("plant/fruit/area[v]").normalise(),
-         QString("descendants:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+    QString s = Path("plant/fruit/area[v]").normalise();
+    QCOMPARE(s,
+         QString("selfordescendants:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
 
     QCOMPARE(Path("./plant/fruit/area[v]").normalise(),
         QString("self:*{Box}/children:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
@@ -311,6 +312,18 @@ void TestPath::testFollowingSibling() {
     QVERIFY(Path("followingSibling:*", _context).resolve().isEmpty());
 }
 
+void TestPath::testPathList() {
+    setContext("A2");
+    QStringList relPaths, absPaths;
+    relPaths << "A3[v3]" << "A[*]";
+    absPaths << "/A/A3[v3]" << "/A[*]";
+
+    QVector<QObject*> relative, absolute;
+    relative = Path(relPaths, _context).resolve(),
+    absolute = Path(absPaths).resolve();
+    compareVectors(relative, absolute, 7);
+}
+
 void TestPath::testGlobal() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
@@ -318,6 +331,27 @@ void TestPath::testGlobal() {
     relative = Path("A3[v3]", _context).resolve(),
     absolute = Path("/A/A3[v3]").resolve();
     compareVectors(relative, absolute, 1);
+}
+
+void TestPath::testRoot() {
+    setContext("A2");
+    QVector<QObject*> relative, absolute;
+
+    relative = Path("A", _context).resolve(),
+    absolute = Path("/").resolve();
+    compareVectors(relative, absolute, 1);
+
+    relative = Path("A", _context).resolve(),
+    absolute = Path("/A").resolve();
+    compareVectors(relative, absolute, 1);
+
+    relative = Path("A[v1]", _context).resolve(),
+    absolute = Path("/A[v1]").resolve();
+    compareVectors(relative, absolute, 1);
+
+    relative = Path("A[*]", _context).resolve(),
+    absolute = Path("/A[*]").resolve();
+    compareVectors(relative, absolute, 6);
 }
 
 void TestPath::testNumberOfMatches() {
@@ -340,6 +374,18 @@ void TestPath::testNumberOfMatches() {
         excepted = true;
     }
     QVERIFY(!excepted);
+}
+
+void TestPath::testEmpty() {
+    QVector<QObject*> none;
+    try {
+        Path("").resolve(0);
+        none = Path("").resolve();
+    }
+    catch (Exception &ex) {
+        QFAIL(ex.what());
+    }
+    QCOMPARE(none.size(), 0);
 }
 
 void TestPath::testResolveInvalid() {
