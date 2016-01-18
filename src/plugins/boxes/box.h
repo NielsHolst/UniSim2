@@ -7,7 +7,7 @@
 
 #define RETURN_PLUGIN_NAME(x) #x
 #define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite)
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtInitialize().zeroAtReset()
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset()
 
 namespace boxes {
 
@@ -46,7 +46,7 @@ private:
 
     // Methods
     void resolvePorts();
-    void initializePorts();
+//    void initializePorts();
     void resetPorts();
     void updateImports();
     void doAmend();

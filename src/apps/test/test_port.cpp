@@ -56,14 +56,15 @@ void TestPort::testFixedString() {
     Port j;
     j.data(&s);
     j.equals(QString("aBc"));
+    QCOMPARE(s, QString("aBc"));
     QCOMPARE(j.value<QString>(), QString("aBc"));
 }
 
 void TestPort::testPtrString() {
-    QString s{"aBc"};
+    QString s{};
     Port j;
     j.data(&s);
-    s += "6";
+    s = "aBc6";
     QCOMPARE(j.value<QString>(), QString("aBc6"));
 }
 
@@ -124,7 +125,8 @@ void TestPort::testResetBool() {
     Port j;
     bool data(true);
     j.data(&data).zeroAtReset();
-    QCOMPARE(j.value<bool>(), true);
+    QCOMPARE(j.value<bool>(), false);
+    data = true;
     j.reset();
     QCOMPARE(j.value<bool>(), false);
 }
@@ -142,18 +144,20 @@ void TestPort::testResetBoolVector() {
 
 void TestPort::testResetLongInt() {
     Port j;
-    long int data(7), zero(0);
+    long int data;
     j.data(&data).zeroAtReset();
-    QCOMPARE(j.value<long int>(), 7L);
+    QCOMPARE(j.value<long int>(), 0L);
+    data = 7L;
     j.reset();
-    QCOMPARE(j.value<long int>(), zero);
+    QCOMPARE(j.value<long int>(), 0L);
 }
 
 void TestPort::testResetString() {
     Port j;
-    QString data("abc"), empty;
+    QString data, empty;
     j.data(&data).zeroAtReset();
-    QCOMPARE(j.value<QString>(), QString("abc"));
+    QCOMPARE(j.value<QString>(), empty);
+    data = "abc";
     j.reset();
     QCOMPARE(j.value<QString>(), empty);
 }
@@ -164,11 +168,12 @@ void TestPort::testResetString() {
 
 #define CONV2(X,X2,X3,Y,Y2,Y3) \
     void TestPort::test##X##To##Y##ScalarToScalar() { \
-        X2 x{X3}; \
+        X2 x; \
         Y2 y2; \
         bool escaped{false}; \
         Port y; \
         y.data(&x); \
+        x = X3; \
         try { \
             y2 = y.value<Y2>(); \
         } \
@@ -180,31 +185,33 @@ void TestPort::testResetString() {
     } \
     void TestPort::test##X##To##Y##VectorToScalar() { \
         QVector<X2> x; \
-        x << X3; \
         Port y; \
         y.data(&x); \
+        x << X3; \
         QCOMPARE(y.value<Y2>(), Y3); \
     } \
     void TestPort::test##X##To##Y##ScalarToVector() { \
-        X2 x{X3}; \
+        X2 x; \
         Port y; \
         y.data(&x); \
+        x = X3; \
         QCOMPARE(y.value<QVector<Y2>>(), QVector<Y2>() << Y3); \
     } \
     void TestPort::test##X##To##Y##VectorToVector() { \
         QVector<X2> x; \
-        x << X3 << X3; \
         Port y; \
         y.data(&x); \
+        x << X3 << X3; \
         QCOMPARE(y.value<QVector<Y2>>(), QVector<Y2>() << Y3 << Y3); \
     }
 
 #define CONV2_FAIL(X,X2,X3,Y,Y2,Z) \
     void TestPort::test##X##To##Y##ScalarToScalar##Z() { \
         bool escaped{false}; \
-        X2 x{X3}; \
+        X2 x; \
         Port y; \
         y.data(&x); \
+        x = X3; \
         try { \
             y.value<Y2>(); \
         } \
@@ -216,9 +223,9 @@ void TestPort::testResetString() {
     void TestPort::test##X##To##Y##VectorToScalar##Z() { \
         bool escaped{false}; \
         QVector<X2> x; \
-        x << X3; \
         Port y; \
         y.data(&x); \
+        x << X3; \
         try { \
             y.value<Y2>(); \
         } \
@@ -229,9 +236,10 @@ void TestPort::testResetString() {
     } \
     void TestPort::test##X##To##Y##ScalarToVector##Z() { \
         bool escaped{false}; \
-        X2 x{X3}; \
+        X2 x; \
         Port y; \
         y.data(&x); \
+        x = X3; \
         try { \
             y.value<QVector<Y2>>(); \
         } \
@@ -243,9 +251,9 @@ void TestPort::testResetString() {
     void TestPort::test##X##To##Y##VectorToVector##Z() { \
         bool escaped{false}; \
         QVector<X2> x; \
-        x << X3 << X3; \
         Port y; \
         y.data(&x); \
+        x << X3 << X3; \
         try { \
             y.value<QVector<Y2>>(); \
         } \

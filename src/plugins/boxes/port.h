@@ -7,6 +7,7 @@
 #include "assign.h"
 #include "convert.h"
 #include "exception.h"
+#include "initialize.h"
 #include "port_transform.h"
 #include "port_type.h"
 
@@ -25,7 +26,7 @@ private:
     QStringList _importPortPaths;
     QVector<Port *> _importPorts;
     Access _access;
-    bool _reset, _initialize;
+    bool _reset; //, _initialize;
 
 public:
     // Configure
@@ -39,12 +40,12 @@ public:
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
-    Port& noInitialize();
+//    Port& noInitialize();
 
     // Change
     void resolveImports();
     void reset();
-    void initialize();
+//    void initialize();
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
 
@@ -64,6 +65,7 @@ public:
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
     _valueType = typeOf<T>();
+    boxes::initialize(_valueType, _valuePtr);
     return *this;
 }
 

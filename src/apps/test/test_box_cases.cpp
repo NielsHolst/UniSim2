@@ -7,9 +7,11 @@ using namespace boxes;
 
 namespace TestBoxCases {
 
+    QString Av1, Av3,A1v1;
+    int sum, sum2;
+
     Box* case1() {
         BoxBuilder builder;
-        QString Av1, Av3,A1v1;
         builder.
             box().name("A").
                 newPort("v1").data(&Av1).equals(QString("ape")).
@@ -54,9 +56,14 @@ namespace TestBoxCases {
         builder.
             box().name("savanna").
                 box().name("lion").
+                    newPort("sum").data(&sum).equals(77).
+                    newPort("sum2").data(&sum2).import("./juvenile[n]").import("./adult[n]").transform(Sum).
                     port("steps").equals(2).
-                    box("Lion").name("juvenile").endbox().
+                    box("Lion").name("juvenile").
+                        port("n").equals(25).
+                    endbox().
                     box("Lion").name("adult").
+                        port("n").equals(7).
                         port("preyDensity").import("zebra[density]").import("gnu[density]").transform(Sum).
                     endbox().
                 endbox().

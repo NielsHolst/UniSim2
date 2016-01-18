@@ -12,6 +12,7 @@ public:
     void update();
 private:
     // Inputs
+    int n;
     double initialDensity, growthRate,
         preyDensity, searchRate, demand;
     // Outputs

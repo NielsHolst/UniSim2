@@ -12,6 +12,7 @@ Lion::Lion(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(Lion);
+    Input(n);
     Input(initialDensity).equals(0.01);
     Input(growthRate).equals(1.5);
     Input(preyDensity).equals(0);

@@ -39,10 +39,9 @@ Port* Box::port(QString name) {
     Path path(".[" + name + "]", this);
     auto ports = (path.resolve());
     switch (ports.size()) {
-    case 0: return 0;
-    case 1: return dynamic_cast<Port*>(ports.at(0));
-    default:
-        throw Exception("Port name not unique within box", name, this);
+    case 0:  throw Exception("No port of that name in this box", name, this);
+    case 1:  return dynamic_cast<Port*>(ports.at(0));
+    default: throw Exception("Port name not unique within box", name, this);
     }
 }
 
@@ -71,13 +70,22 @@ Box* Box::currentRoot() {
    return p;
 }
 
+void Box::doAmend() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->doAmend();
+    }
+    amend();
+}
+
 void Box::doInitialize() {
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
             box->doInitialize();
     }
-    initializePorts();
+//    initializePorts();
     resolvePorts();
     updateImports();
     initialize();
@@ -88,7 +96,7 @@ void Box::doReset() {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
             box->doReset();
-    } \
+    }
     resetPorts();
     updateImports();
     reset();
@@ -105,21 +113,19 @@ void Box::doReset() {
         method(); \
     }
 
-RECURSE(amend, doAmend)
-//RECURSE(initialize,doInitialize)
-//RECURSE(reset, doReset)
 RECURSE(update, doUpdate)
 RECURSE(cleanup, doCleanup)
 RECURSE(debrief, doDebrief)
 
 void Box::updateImports() {
-
-}
-
-void Box::initializePorts() {
     for (Port *port : _ports.values())
-        port->initialize();
+        port->copyFromImport();
 }
+
+//void Box::initializePorts() {
+//    for (Port *port : _ports.values())
+//        port->initialize();
+//}
 
 void Box::resolvePorts() {
     for (Port *port : _ports.values())

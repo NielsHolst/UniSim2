@@ -5,18 +5,27 @@
 using namespace boxes;
 
 void TestVectorization::testDifferentTypes() {
+    QVector<Port*> source;
+    QVector<int> dest, expected;
+    const void *destResult;
     Port a("A"), b("B"), c("C");
-    int i(8), j(12);
-    double x(100.2);
+    int i, j;
+    double x;
     a.data(&i);
     b.data(&j);
     c.data(&x);
-
-    QVector<Port*> source;
     source << &a << &b << &c;
-    QVector<int> dest, expected;
-    const void *destResult = vectorize(Int, source);
+
+    destResult = vectorize(Int, source);
+    expected.fill(0, 3);
     dest = *reinterpret_cast<const QVector<int>*>(destResult);
+    QCOMPARE(dest, expected);
+
+    i = 8; j = 12;
+    x = 100.2;
+    destResult = vectorize(Int, source);
+    dest = *reinterpret_cast<const QVector<int>*>(destResult);
+    expected.clear();
     expected << 8 << 12 << 100;
     QCOMPARE(dest, expected);
 }

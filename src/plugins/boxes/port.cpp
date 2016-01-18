@@ -1,6 +1,5 @@
 #include "box.h"
 #include "general.h"
-#include "initialize.h"
 #include "path.h"
 #include "port.h"
 #include "vectorize.h"
@@ -9,7 +8,7 @@ namespace boxes {
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
-      _access(Read), _reset(false), _initialize(false)
+      _access(Read), _reset(false) //, _initialize(false)
 {
     Class(Port);
     setObjectName(name);
@@ -33,15 +32,15 @@ Port& Port::access(Access a) {
     return *this;
 }
 
-Port& Port::zeroAtInitialize() {
-    _initialize = true;
-    return *this;
-}
+//Port& Port::zeroAtInitialize() {
+//    _initialize = true;
+//    return *this;
+//}
 
-Port& Port::noInitialize() {
-    _initialize = false;
-    return *this;
-}
+//Port& Port::noInitialize() {
+//    _initialize = false;
+//    return *this;
+//}
 
 Port& Port::zeroAtReset() {
     _reset = true;
@@ -56,7 +55,8 @@ Port& Port::noReset() {
 void Port::resolveImports() {
     if (_importPortPaths.isEmpty())
         return;
-    _importPorts = Path(_importPortPaths).resolve<Port>(-1,this);
+    Box *context = dynamic_cast<Box*>(parent());
+    _importPorts = Path(_importPortPaths, context).resolve<Port>(-1,this);
     if (_importPorts.isEmpty())
         throw Exception("No matching import ports found", _importPortPaths.join(" "), this);
     _importType = commonType(_importPorts);
@@ -69,10 +69,10 @@ void Port::reset() {
         boxes::initialize(_valueType, _valuePtr);
 }
 
-void Port::initialize() {
-    if (!hasImport() && _initialize)
-        boxes::initialize(_valueType, _valuePtr);
-}
+//void Port::initialize() {
+//    if (!hasImport() && _initialize)
+//        boxes::initialize(_valueType, _valuePtr);
+//}
 
 void Port::copyFromImport() {
     if (!hasImport())
@@ -81,13 +81,20 @@ void Port::copyFromImport() {
 }
 
 void Port::assign(const QVector<Port*> &sources) {
-    if (sources.size() == 1) {
-        const Port *source = sources.at(0);
-        boxes::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
+    int *i = reinterpret_cast<int*>(_valuePtr);
+    try {
+        if (sources.size() == 1) {
+            const Port *source = sources.at(0);
+            boxes::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
+        }
+        else {
+            const void *sourceVector = vectorize(_importType, sources);
+            const QVector<int> *v = reinterpret_cast<const QVector<int> *>(sourceVector);
+            boxes::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
+        }
     }
-    else {
-        const void *sourceVector = vectorize(_importType, sources);
-        boxes::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
+    catch (Exception &ex) {
+        throw Exception(ex.message(), ex.value(), this);
     }
 }
 
