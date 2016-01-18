@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVariant>
 #include "general.h"
+#include "port.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
 #define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite)
@@ -20,6 +21,7 @@ public:
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
+    Port* peakPort(QString name);
     Port* port(QString name);
 
     static Box* currentRoot();
@@ -47,7 +49,8 @@ private:
     static Box *_currentRoot;
     static bool _currentRootIsDirty;
     // Methods
-    void resolvePorts();
+    void resolvePortImports();
+    void allocatePortBuffers();
     void resetPorts();
     void updateImports();
 

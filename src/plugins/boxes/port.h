@@ -26,7 +26,8 @@ private:
     QStringList _importPortPaths;
     QVector<Port *> _importPorts;
     Access _access;
-    bool _reset; //, _initialize;
+    bool _reset;
+    QVector<double> outputBuffer;
 
 public:
     // Configure
@@ -40,16 +41,16 @@ public:
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
-//    Port& noInitialize();
 
     // Change
     void resolveImports();
+    void allocatePortBuffer();
     void reset();
-//    void initialize();
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
 
     // Access
+    Box *boxParent();
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
 

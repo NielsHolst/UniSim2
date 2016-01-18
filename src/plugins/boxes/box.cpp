@@ -31,14 +31,24 @@ void Box::addPort(Port *port) {
     _ports[name] = port;
 }
 
-Port* Box::port(QString name) {
+Port* Box::peakPort(QString name) {
     Path path(".[" + name + "]", this);
     auto ports = (path.resolve());
     switch (ports.size()) {
-    case 0:  throw Exception("No port of that name in this box", name, this);
-    case 1:  return dynamic_cast<Port*>(ports.at(0));
-    default: throw Exception("Port name not unique within box", name, this);
+    case 0:
+        return 0;
+    case 1:
+        return dynamic_cast<Port*>(ports.at(0));
+    default:
+        throw Exception("Port name not unique within box", name, this);
     }
+}
+
+Port* Box::port(QString name) {
+    Port *port = peakPort(name);
+    if (!port)
+        throw Exception("No port of that name in this box", name, this);
+    return port;
 }
 
 Box* Box::currentRoot() {
@@ -71,7 +81,8 @@ void Box::initializeFamily() {
         if (box)
             box->initializeFamily();
     }
-    resolvePorts();
+    resolvePortImports();
+    allocatePortBuffers();
     updateImports();
     initialize();
 }
@@ -102,9 +113,14 @@ RECURSE(update)
 RECURSE(cleanup)
 RECURSE(debrief)
 
-void Box::resolvePorts() {
+void Box::resolvePortImports() {
     for (Port *port : _ports.values())
         port->resolveImports();
+}
+
+void Box::allocatePortBuffers(){
+    for (Port *port : _ports.values())
+        port->allocatePortBuffer();
 }
 
 void Box::updateImports() {

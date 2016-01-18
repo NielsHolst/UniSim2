@@ -55,7 +55,7 @@ Port& Port::noReset() {
 void Port::resolveImports() {
     if (_importPortPaths.isEmpty())
         return;
-    Box *context = dynamic_cast<Box*>(parent());
+    Box *context = boxParent();
     _importPorts = Path(_importPortPaths, context).resolve<Port>(-1,this);
     if (_importPorts.isEmpty())
         throw Exception("No matching import ports found", _importPortPaths.join(" "), this);
@@ -64,15 +64,19 @@ void Port::resolveImports() {
         _importType = _valueType;
 }
 
+void Port::allocatePortBuffer() {
+    Box *root = boxParent()->currentRoot();
+    Port *iterations = root->peakPort("iterations"),
+         *steps = root->peakPort("steps");
+    int ite = iterations ? iterations->value<int>() : 1,
+        ste = steps ? steps->value<int>() : 1;
+    outputBuffer.reserve(ite*ste);
+}
+
 void Port::reset() {
     if (!hasImport() && _reset)
         boxes::initialize(_valueType, _valuePtr);
 }
-
-//void Port::initialize() {
-//    if (!hasImport() && _initialize)
-//        boxes::initialize(_valueType, _valuePtr);
-//}
 
 void Port::copyFromImport() {
     if (!hasImport())
@@ -94,6 +98,13 @@ void Port::assign(const QVector<Port*> &sources) {
     catch (Exception &ex) {
         throw Exception(ex.message(), ex.value(), this);
     }
+}
+
+Box *Port::boxParent() {
+    Box *par = dynamic_cast<Box*>(parent());
+    if (!par)
+        throw Exception("Application error: Port has no Box parent", "", this);
+    return par;
 }
 
 PortType Port::type() const {
