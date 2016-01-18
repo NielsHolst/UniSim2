@@ -20,9 +20,9 @@ public:
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
-    void run();
-    static Box* currentRoot();
     Port* port(QString name);
+
+    static Box* currentRoot();
 
     virtual void amend() {}
     virtual void initialize() {}
@@ -30,31 +30,27 @@ public:
     virtual void update() {}
     virtual void cleanup() {}
     virtual void debrief() {}
+    virtual void run();
+
+    void amendFamily();
+    void initializeFamily();
+    void resetFamily();
+    void updateFamily();
+    void cleanupFamily();
+    void debriefFamily();
 
 private:
-    // Inputs
-    int iterations, steps;
-    // Outputs
-    int iteration, step;
     // Data
     QString _name;
-    bool _amended;
     QMap<QString,Port*> _ports;
-
+    bool _amended;
     static Box *_currentRoot;
     static bool _currentRootIsDirty;
-
     // Methods
     void resolvePorts();
-//    void initializePorts();
     void resetPorts();
     void updateImports();
-    void doAmend();
-    void doInitialize();
-    void doReset();
-    void doUpdate();
-    void doCleanup();
-    void doDebrief();
+
 };
 
 }

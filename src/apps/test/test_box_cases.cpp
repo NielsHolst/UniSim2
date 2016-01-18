@@ -54,11 +54,11 @@ namespace TestBoxCases {
     Box* case2() {
         BoxBuilder builder;
         builder.
-            box().name("savanna").
+            box("Simulation").name("savanna").
+                port("steps").equals(2).
                 box().name("lion").
                     newPort("sum").data(&sum).equals(77).
                     newPort("sum2").data(&sum2).import("./juvenile[n]").import("./adult[n]").transform(Sum).
-                    port("steps").equals(2).
                     box("Lion").name("juvenile").
                         port("n").equals(25).
                     endbox().

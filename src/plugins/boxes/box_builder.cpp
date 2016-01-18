@@ -37,8 +37,6 @@ BoxBuilder& BoxBuilder::port(QString name) {
         throw Exception("BoxBuilder: 'port' must be between 'box' and 'endbox'");
     }
     _currentPort = _currentBox->port(name);
-    if (!_currentPort)
-        throw Exception("BoxBuilder: box has no port with this name", name, _currentBox);
     return *this;
 }
 

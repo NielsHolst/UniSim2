@@ -9,7 +9,7 @@
 using std::unique_ptr;
 using namespace boxes;
 
-void TestBox::test_create() {
+void TestBox::testCreate() {
     auto mother = new Box("Mother",0),
         boy = new Box("Boy", mother),
         daughter = new Box("Daughter", mother);
@@ -21,9 +21,14 @@ void TestBox::test_create() {
     delete mother;
 }
 
-void TestBox::test_run() {
+void TestBox::testNoRun() {
     unique_ptr<Box> lion( MegaFactory::create<Box>("Lion", "king", 0) );
-    lion->run();
-    QCOMPARE(lion->port("iteration")->value<int>(), 1);
-    QCOMPARE(lion->port("step")->value<int>(), 1);
+    bool excepted{false};
+    try {
+        lion->run();
+    }
+    catch(Exception &) {
+        excepted = true;
+    }
+    QVERIFY(excepted);
 }

@@ -170,7 +170,7 @@ void TestPath::testSelf() {
 
     relative = Path("./*[*]", _context).resolve(),
     absolute = Path("/A/A2/*[*]").resolve();
-    compareVectors(relative, absolute, 14);
+    compareVectors(relative, absolute, 2);
 
     QCOMPARE(Path("self:X", _context).resolve().size(), 0);
 }
@@ -218,7 +218,7 @@ void TestPath::testNearest() {
     compareVectors(relative, absolute, 1);
 
     relative = Path(".../*{Port}", _context).resolve(),
-    absolute = Path("/A/A2[iterations]").resolve();
+    absolute = Path("/A/A2[v2]").resolve();
     compareVectors(relative, absolute, 1);
 
     relative = Path(".../*{Box}", _context).resolve(),
@@ -236,7 +236,7 @@ void TestPath::testDescendants() {
 
     relative = Path("descendants:*[*]", _context).resolve(),
     absolute = Path("/A/A2/*[*]").resolve();
-    compareVectors(relative, absolute, 14);
+    compareVectors(relative, absolute, 2);
 
     QVERIFY(Path("descendants:x[*]", _context).resolve().isEmpty());
 }
@@ -321,7 +321,7 @@ void TestPath::testPathList() {
     QVector<QObject*> relative, absolute;
     relative = Path(relPaths, _context).resolve(),
     absolute = Path(absPaths).resolve();
-    compareVectors(relative, absolute, 7);
+    compareVectors(relative, absolute, 3);
 }
 
 void TestPath::testGlobal() {
@@ -351,7 +351,7 @@ void TestPath::testRoot() {
 
     relative = Path("A[*]", _context).resolve(),
     absolute = Path("/A[*]").resolve();
-    compareVectors(relative, absolute, 6);
+    compareVectors(relative, absolute, 2);
 }
 
 void TestPath::testNumberOfMatches() {
@@ -368,7 +368,7 @@ void TestPath::testNumberOfMatches() {
 
     excepted = false;
     try {
-        Path(path).resolve(14);
+        Path(path).resolve(2);
     }
     catch (Exception &) {
         excepted = true;

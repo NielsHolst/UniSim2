@@ -3,12 +3,10 @@
 #include <boxes/mega_factory.h>
 #include <boxes/path.h>
 #include <boxes/port.h>
-#include <savanna/lion.h>
 #include "test_box_cases.h"
 #include "test_savanna.h"
 
 using namespace boxes;
-using savanna::Lion;
 
 void TestSavanna::testDirectCreate() {
     Box *lion = MegaFactory::create<Box>("Lion", "king", 0);
@@ -53,12 +51,12 @@ void TestSavanna::testNoPort() {
         savanna = TestBoxCases::case2();
         Box *lion = Path("lion").resolveOne<Box>(this);
         lion->port("killRate");
+        delete savanna;
     }
     catch (Exception &ex) {
         excepted = true;
     }
     QVERIFY(excepted);
-    delete savanna;
 }
 
 void TestSavanna::testNewPort() {
@@ -70,11 +68,11 @@ void TestSavanna::testNewPort() {
         QCOMPARE(port->value<int>(), 77);
         savanna->run();
         QCOMPARE(port->value<int>(), 77);
+        delete savanna;
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
     }
-    delete savanna;
 }
 
 void TestSavanna::testNewPortSum() {
@@ -86,11 +84,11 @@ void TestSavanna::testNewPortSum() {
         QCOMPARE(port->value<int>(), 0);
         savanna->run();
         QCOMPARE(port->value<int>(), 32);
+        delete savanna;
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
     }
-    delete savanna;
 }
 
 void TestSavanna::testImport() {
@@ -103,10 +101,10 @@ void TestSavanna::testImport() {
             *zebra = Path("zebra").resolveOne<Box>(this);
         killRateLion = lionAdult->port("killRate")->value<double>();
         killRateZebra = zebra->port("killRate")->value<double>();
+        delete savanna;
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
     }
     QCOMPARE(killRateLion, killRateZebra);
-    delete savanna;
 }

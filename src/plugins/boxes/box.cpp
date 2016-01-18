@@ -1,6 +1,7 @@
 #include <iostream>
 #include "box.h"
 #include "exception.h"
+#include "general.h"
 #include "path.h"
 #include "port.h"
 
@@ -12,15 +13,10 @@ bool Box::_currentRootIsDirty = true;
 Box::Box(QString name, QObject *parent)
     : QObject(parent), _name(name), _amended(false)
 {
+    Class(Box);
     setObjectName(name);
     _currentRoot = this;
     _currentRootIsDirty = true;
-
-    Class(Box);
-    Input(iterations).equals(1);
-    Input(steps).equals(1);
-    Output(iteration).noReset();
-    Output(step);
 }
 
 Box::~Box() {
@@ -45,22 +41,6 @@ Port* Box::port(QString name) {
     }
 }
 
-void Box::run() {
-    if (!_amended) {
-        doAmend();
-        _amended = true;
-    }
-    doInitialize();
-    for (iteration = 0; iteration < iterations; ++iteration) {
-        doReset();
-        for (step = 0; step < steps; ++step) {
-            doUpdate();
-        }
-        doCleanup();
-    }
-    doDebrief();
-}
-
 Box* Box::currentRoot() {
     if (!_currentRootIsDirty || _currentRoot==0)
         return _currentRoot;
@@ -70,67 +50,68 @@ Box* Box::currentRoot() {
    return p;
 }
 
-void Box::doAmend() {
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->doAmend();
-    }
-    amend();
+void Box::run() {
+    throw Exception("Method 'run' not defined for this class", className(this), this);
 }
 
-void Box::doInitialize() {
+void Box::amendFamily() {
+    if (_amended) return;
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
-            box->doInitialize();
+            box->amendFamily();
     }
-//    initializePorts();
+    amend();
+    _amended = true;
+}
+
+void Box::initializeFamily() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->initializeFamily();
+    }
     resolvePorts();
     updateImports();
     initialize();
 }
 
-void Box::doReset() {
+void Box::resetFamily() {
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
-            box->doReset();
+            box->resetFamily();
     }
     resetPorts();
     updateImports();
     reset();
 }
 
-#define RECURSE(method, doMethod) \
-    void Box::doMethod() { \
+#define RECURSE(method) \
+    void Box::method##Family() { \
         for (auto child : children()) { \
             Box *box = dynamic_cast<Box*>(child); \
             if (box) \
-                box->doMethod(); \
+                box->method##Family(); \
         } \
         updateImports(); \
         method(); \
     }
 
-RECURSE(update, doUpdate)
-RECURSE(cleanup, doCleanup)
-RECURSE(debrief, doDebrief)
+RECURSE(update)
+RECURSE(cleanup)
+RECURSE(debrief)
+
+void Box::resolvePorts() {
+    for (Port *port : _ports.values())
+        port->resolveImports();
+}
 
 void Box::updateImports() {
     for (Port *port : _ports.values())
         port->copyFromImport();
 }
 
-//void Box::initializePorts() {
-//    for (Port *port : _ports.values())
-//        port->initialize();
-//}
-
-void Box::resolvePorts() {
-    for (Port *port : _ports.values())
-        port->resolveImports();
-}
 void Box::resetPorts() {
     for (Port *port : _ports.values())
         port->reset();

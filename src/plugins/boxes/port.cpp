@@ -81,7 +81,6 @@ void Port::copyFromImport() {
 }
 
 void Port::assign(const QVector<Port*> &sources) {
-    int *i = reinterpret_cast<int*>(_valuePtr);
     try {
         if (sources.size() == 1) {
             const Port *source = sources.at(0);
@@ -89,7 +88,6 @@ void Port::assign(const QVector<Port*> &sources) {
         }
         else {
             const void *sourceVector = vectorize(_importType, sources);
-            const QVector<int> *v = reinterpret_cast<const QVector<int> *>(sourceVector);
             boxes::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
         }
     }
