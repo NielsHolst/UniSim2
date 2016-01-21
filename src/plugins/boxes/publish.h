@@ -1,5 +1,6 @@
 #ifndef PUBLISH_H
 #define PUBLISH_H
+#include <boxes/general.h>
 #include <boxes/product_base.h>
 #include <boxes/product.h>
 

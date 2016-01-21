@@ -13,6 +13,9 @@ QString classInheritance(const QObject *object);
 
 QString fullName(const QObject *object);
 
+QStringList split(QString s, QObject *context = 0);
+QStringList split(const char *s, QObject *context = 0);
+
 } //namespace
 
 #endif

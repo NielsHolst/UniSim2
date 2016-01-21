@@ -7,7 +7,7 @@
 #define RANDOM_NORMAL_H
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boxes/random.h>
+#include <boxes/random_generator.h>
 #include "random_base.h"
 
 namespace base {
@@ -25,7 +25,7 @@ private:
     double drawValue();
     // Random number generation
     typedef boost::normal_distribution<double> Distribution;
-    typedef boost::variate_generator<boxes::Random::Generator&, Distribution> Variate;
+    typedef boost::variate_generator<boxes::RandomGenerator::Generator&, Distribution> Variate;
     Distribution *distribution;
     Variate *variate;
 };

@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QSettings>
+#include "box.h"
 #include "exception.h"
 #include "factory_plug_in.h"
 #include "mega_factory.h"
@@ -30,10 +31,6 @@ MegaFactory::MegaFactory() {
             }
         }
     }
-}
-
-QString MegaFactory::id() {
-    return "MegaFactory";
 }
 
 namespace {
@@ -73,8 +70,10 @@ const QList<FactoryPlugIn*>& MegaFactory::factories() {
 }
 
 MegaFactory* MegaFactory::me() {
-    if (!_me)
-        _me = objectPool()->find<MegaFactory*>(id());
+    if (!_me) {
+        _me = new MegaFactory;
+        objectPool()->attach("MegaFactory", _me);
+    }
     return _me;
 }
 

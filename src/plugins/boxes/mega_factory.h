@@ -3,8 +3,6 @@
 
 #include <QMap>
 #include <QObject>
-#include <QStringList>
-#include "box.h"
 #include "exception.h"
 
 namespace boxes {
@@ -14,9 +12,6 @@ class FactoryPlugIn;
 class MegaFactory : public QObject
 {
 public:
-    MegaFactory();
-    static QString id();
-
     template <class T>
     static T* create(QString className, QString objectName, QObject *parent);
 
@@ -24,6 +19,7 @@ public:
 
 private:
     // methods
+    MegaFactory();
     static MegaFactory* me();
     static QObject* createObject(QString className, QString objectName, QObject *parent=0);
     // data

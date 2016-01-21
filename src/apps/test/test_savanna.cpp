@@ -1,4 +1,5 @@
 #include <iostream>
+#include <boxes/box.h>
 #include <boxes/general.h>
 #include <boxes/mega_factory.h>
 #include <boxes/path.h>

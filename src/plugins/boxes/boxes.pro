@@ -39,7 +39,7 @@ HEADERS +=  \
     port_cache.h \
     product_base.h \
     product.h \
-    random.h \
+    random_generator.h \
     vectorize.h
 
 SOURCES +=  \
@@ -58,7 +58,7 @@ SOURCES +=  \
     port_transform.cpp \
     port_type.cpp \
     product_base.cpp \
-    random.cpp \
+    random_generator.cpp \
     vectorize.cpp
 
 

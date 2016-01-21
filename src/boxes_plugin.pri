@@ -31,7 +31,7 @@ unix {
 # Additional folders with header files
 INCLUDEPATH += "$$_PRO_FILE_PWD_/.."
 
-# Common pluging headers and soruces
+# Common plugin headers and sources
 HEADERS +=  \
     ../boxes/publish.h \
     ../boxes/factory.h

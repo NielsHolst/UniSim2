@@ -1,6 +1,5 @@
 #include "mega_factory.h"
 #include "object_pool.h"
-#include "random.h"
 
 namespace boxes {
 
@@ -12,12 +11,11 @@ ObjectPool* objectPool() {
 
 ObjectPool::ObjectPool()
 {
-    attach(MegaFactory::id(), new MegaFactory);
-    attach(Random::id(), new Random);
 }
 
 void ObjectPool::attach(QString id, QObject *object) {
     objects[id] = object;
+    // Attached object will be deleted when its parent is deleted
     object->setParent(this);
 }
 
