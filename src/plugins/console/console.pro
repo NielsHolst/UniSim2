@@ -8,6 +8,8 @@ BOXES_PLUGIN_NAME = console
 
 include("$$_PRO_FILE_PWD_/../../boxes_common.pri")
 
+QT += widgets
+
 # What we are building
 TEMPLATE = lib
 DESTDIR = "$$_PRO_FILE_PWD_/../../../bin"
@@ -27,9 +29,11 @@ INCLUDEPATH += "$$_PRO_FILE_PWD_/../../plugins"
 
 HEADERS +=  \
     environment.h \
-    history.h
+    history.h \
+    text_edit.h
 	
 SOURCES +=  \
     environment.cpp \
-    history.cpp
+    history.cpp \
+    text_edit.cpp
 
