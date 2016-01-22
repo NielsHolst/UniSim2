@@ -1,16 +1,16 @@
 #include <memory>
-#include <boxes/assign.h>
-#include <boxes/box.h>
-#include <boxes/box_builder.h>
-#include <boxes/mega_factory.h>
-#include <boxes/path.h>
-#include <boxes/port.h>
-#include <boxes/vector.h>
-#include <boxes/vector_vector.h>
+#include <base/assign.h>
+#include <base/box.h>
+#include <base/box_builder.h>
+#include <base/mega_factory.h>
+#include <base/path.h>
+#include <base/port.h>
+#include <base/vector.h>
+#include <base/vector_vector.h>
 #include "test_vector.h"
 
 using std::unique_ptr;
-using namespace boxes;
+using namespace base;
 
 void TestVector::testWithBox() {
     unique_ptr<Box> fibonacci( MegaFactory::create<Box>("Fibonacci", "fibonacci", 0) );

@@ -1,7 +1,7 @@
-#include <boxes/exception.h>
+#include <base/exception.h>
 #include "command.h"
 
-using namespace boxes;
+using namespace base;
 
 namespace command {
 

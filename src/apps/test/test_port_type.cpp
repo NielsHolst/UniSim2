@@ -1,7 +1,7 @@
-#include <boxes/port_type.h>
+#include <base/port_type.h>
 #include "test_port_type.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestPortType::testInt() {
     QCOMPARE(typeOf<int>(), Int);

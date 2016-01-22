@@ -1,11 +1,11 @@
 #include <QDir>
 #include <QStringList>
-#include <boxes/mega_factory.h>
+#include <base/mega_factory.h>
 #include <command/command.h>
 #include <console/environment.h>
 #include "test_command.h"
 
-using namespace boxes;
+using namespace base;
 using namespace command;
 using namespace console;
 

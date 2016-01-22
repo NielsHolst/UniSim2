@@ -1,9 +1,9 @@
-#include <boxes/box.h>
-#include <boxes/box_builder.h>
-#include <boxes/exception.h>
+#include <base/box.h>
+#include <base/box_builder.h>
+#include <base/exception.h>
 #include "test_box_cases.h"
 
-using namespace boxes;
+using namespace base;
 
 namespace TestBoxCases {
 

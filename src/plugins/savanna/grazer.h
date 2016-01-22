@@ -1,10 +1,10 @@
 #ifndef GRAZER_H
 #define GRAZER_H
-#include <boxes/box.h>
+#include <base/box.h>
 
 namespace savanna {
 
-class Grazer : public boxes::Box
+class Grazer : public base::Box
 {
 public:
     Grazer(QString name, QObject *parent);

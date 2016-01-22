@@ -1,7 +1,7 @@
-#include <boxes/general.h>
+#include <base/general.h>
 #include "history.h"
 
-using namespace boxes;
+using namespace base;
 
 namespace console {
 

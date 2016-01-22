@@ -1,13 +1,13 @@
 #ifndef TEST_BOX_CASES_H
 #define TEST_BOX_CASES_H
 
-namespace boxes {
+namespace base {
     class  Box;
 }
 
 namespace TestBoxCases {
-    boxes::Box* case1();
-    boxes::Box* case2();
+    base::Box* case1();
+    base::Box* case2();
 }
 
 #endif

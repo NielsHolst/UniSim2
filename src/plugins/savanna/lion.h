@@ -1,10 +1,10 @@
 #ifndef LION_H
 #define LION_H
-#include <boxes/box.h>
+#include <base/box.h>
 
 namespace savanna {
 
-class Lion : public boxes::Box
+class Lion : public base::Box
 {
 public:
     Lion(QString name, QObject *parent);

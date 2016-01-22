@@ -1,12 +1,12 @@
 #include <QSet>
-#include <boxes/box.h>
-#include <boxes/exception.h>
-#include <boxes/general.h>
-#include <boxes/path.h>
+#include <base/box.h>
+#include <base/exception.h>
+#include <base/general.h>
+#include <base/path.h>
 #include "test_box_cases.h"
 #include "test_path.h"
 
-using namespace boxes;
+using namespace base;
 using namespace std;
 
 void TestPath::initTestCase() {

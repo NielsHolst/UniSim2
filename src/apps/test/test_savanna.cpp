@@ -1,13 +1,13 @@
 #include <iostream>
-#include <boxes/box.h>
-#include <boxes/general.h>
-#include <boxes/mega_factory.h>
-#include <boxes/path.h>
-#include <boxes/port.h>
+#include <base/box.h>
+#include <base/general.h>
+#include <base/mega_factory.h>
+#include <base/path.h>
+#include <base/port.h>
 #include "test_box_cases.h"
 #include "test_savanna.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestSavanna::testDirectCreate() {
     Box *lion = MegaFactory::create<Box>("Lion", "king", 0);

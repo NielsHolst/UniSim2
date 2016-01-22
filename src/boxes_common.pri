@@ -31,9 +31,9 @@ QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wattributes
 INCLUDEPATH += "$$(BOOST_ROOT)"
 
 # Own libraries that we use, except boxes does not itself use boxes
-!equals(BOXES_PLUGIN_NAME, "boxes") {
-    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxes
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxesd
-    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxes
-    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lboxesd
+!equals(BOXES_PLUGIN_NAME, "base") {
+    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
+    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
+    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
 }

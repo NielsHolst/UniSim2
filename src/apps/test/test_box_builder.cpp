@@ -1,12 +1,12 @@
 #include <iostream>
-#include <boxes/box.h>
-#include <boxes/box_builder.h>
-#include <boxes/box_output.h>
-#include <boxes/exception.h>
+#include <base/box.h>
+#include <base/box_builder.h>
+#include <base/box_output.h>
+#include <base/exception.h>
 #include "test_box_builder.h"
 #include "test_box_cases.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestBoxBuilder::initTestCase() {
     try {

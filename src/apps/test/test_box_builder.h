@@ -3,7 +3,7 @@
 
 #include "autotest.h"
 
-namespace boxes {
+namespace base {
     class  Box;
 }
 
@@ -15,7 +15,7 @@ private slots:
     void cleanupTestCase();
     void testBuild1();
 private:
-    boxes::Box *tree;
+    base::Box *tree;
 };
 
 DECLARE_TEST(TestBoxBuilder)

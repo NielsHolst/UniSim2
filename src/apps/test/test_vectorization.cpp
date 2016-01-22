@@ -1,8 +1,8 @@
-#include <boxes/port.h>
-#include <boxes/vectorize.h>
+#include <base/port.h>
+#include <base/vectorize.h>
 #include "test_vectorization.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestVectorization::testDifferentTypes() {
     QVector<Port*> source;

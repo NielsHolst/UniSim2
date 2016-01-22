@@ -1,9 +1,9 @@
 #include <iostream>
 #include <QVector>
-#include <boxes/assign.h>
+#include <base/assign.h>
 #include "test_assign.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestAssign::testToCharFromBool() {
     char dest(0);

@@ -2,7 +2,7 @@
 #define ENVIRONMENT_H
 #include <QDir>
 
-namespace boxes {
+namespace base {
     class Box;
 }
 
@@ -17,7 +17,7 @@ public:
     void execute(command::Command *com);
     struct {
         QDir workingDirectory;
-        boxes::Box *boxRoot;
+        base::Box *boxRoot;
     } state;
 };
 

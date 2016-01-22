@@ -3,7 +3,7 @@
 
 #include "autotest.h"
 
-namespace boxes {
+namespace base {
     class  Box;
 }
 

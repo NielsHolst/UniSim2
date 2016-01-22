@@ -1,9 +1,9 @@
 #include <console/environment.h>
-#include <boxes/exception.h>
-#include <boxes/publish.h>
+#include <base/exception.h>
+#include <base/publish.h>
 #include "setwd.h"
 
-using namespace boxes;
+using namespace base;
 using console::Environment;
 
 namespace command {

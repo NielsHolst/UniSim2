@@ -1,7 +1,7 @@
-#include <boxes/general.h>
+#include <base/general.h>
 #include "test_general.h"
 
-using namespace boxes;
+using namespace base;
 
 void TestGeneral::testEmpty() {
     QStringList list;

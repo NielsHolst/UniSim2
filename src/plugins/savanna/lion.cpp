@@ -1,8 +1,8 @@
-#include <boxes/port.h>
-#include <boxes/publish.h>
+#include <base/port.h>
+#include <base/publish.h>
 #include "lion.h"
 
-using namespace boxes;
+using namespace base;
 
 namespace savanna {
 

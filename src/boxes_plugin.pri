@@ -20,7 +20,7 @@ DEFINES += "BOXES_PLUGIN_NAME=$$BOXES_PLUGIN_NAME"
 #CONFIG += dll ??
 
 # Own library source code on which we depend
-DEPENDPATH += $$_PRO_FILE_PWD_/../boxes
+DEPENDPATH += $$_PRO_FILE_PWD_/../base
 
 # Location of library when installed on Unix
 unix {
@@ -33,12 +33,12 @@ INCLUDEPATH += "$$_PRO_FILE_PWD_/.."
 
 # Common plugin headers and sources
 HEADERS +=  \
-    ../boxes/publish.h \
-    ../boxes/factory.h
+    ../base/publish.h \
+    ../base/factory.h
 
 SOURCES +=  \
-    ../boxes/publish.cpp \
-    ../boxes/factory.cpp
+    ../base/publish.cpp \
+    ../base/factory.cpp
 
 
 

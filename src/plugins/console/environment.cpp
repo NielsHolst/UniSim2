@@ -2,7 +2,7 @@
 #include <command/command.h>
 #include "environment.h"
 
-using namespace boxes;
+using namespace base;
 using command::Command;
 
 namespace console {

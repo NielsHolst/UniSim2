@@ -3,13 +3,13 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
-#include <boxes/exception.h>
-#include <boxes/port.h>
+#include <base/exception.h>
+#include <base/port.h>
 #include "test_port.h"
 
 using std::exception;
 using std::numeric_limits;
-using namespace boxes;
+using namespace base;
 
 #define MAX_NUMBER(X,Y) const X Y = numeric_limits<X>::max();
 MAX_NUMBER(int, MAX_INT)

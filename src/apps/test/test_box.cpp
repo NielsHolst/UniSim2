@@ -1,13 +1,13 @@
 #include <iostream>
 #include <memory>
-#include <boxes/box.h>
-#include <boxes/general.h>
-#include <boxes/mega_factory.h>
-#include <boxes/port.h>
+#include <base/box.h>
+#include <base/general.h>
+#include <base/mega_factory.h>
+#include <base/port.h>
 #include "test_box.h"
 
 using std::unique_ptr;
-using namespace boxes;
+using namespace base;
 
 void TestBox::testCreate() {
     auto mother = new Box("Mother",0),
