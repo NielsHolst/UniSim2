@@ -8,7 +8,8 @@ namespace boxes {
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
-      _access(Read), _reset(false) //, _initialize(false)
+      _access(Read), _reset(false),
+      _track(this)
 {
     Class(Port);
     setObjectName(name);
@@ -31,16 +32,6 @@ Port& Port::access(Access a) {
     _access = a;
     return *this;
 }
-
-//Port& Port::zeroAtInitialize() {
-//    _initialize = true;
-//    return *this;
-//}
-
-//Port& Port::noInitialize() {
-//    _initialize = false;
-//    return *this;
-//}
 
 Port& Port::zeroAtReset() {
     _reset = true;
@@ -70,7 +61,7 @@ void Port::allocatePortBuffer() {
          *steps = root->peakPort("steps");
     int ite = iterations ? iterations->value<int>() : 1,
         ste = steps ? steps->value<int>() : 1;
-    outputBuffer.reserve(ite*ste);
+    _track.reserve(ite*ste);
 }
 
 void Port::reset() {
@@ -83,6 +74,7 @@ void Port::copyFromImport() {
         return;
     assign(_importPorts);
 }
+
 
 void Port::assign(const QVector<Port*> &sources) {
     try {
@@ -100,11 +92,20 @@ void Port::assign(const QVector<Port*> &sources) {
     }
 }
 
+void Port::track(Step step) {
+    if (step == Reset || step == Update)
+        _track.append(_valuePtr);
+}
+
 Box *Port::boxParent() {
     Box *par = dynamic_cast<Box*>(parent());
     if (!par)
         throw Exception("Application error: Port has no Box parent", "", this);
     return par;
+}
+
+const Vector* Port::trackPtr() const {
+    return &_track;
 }
 
 PortType Port::type() const {

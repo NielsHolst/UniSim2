@@ -40,7 +40,10 @@ HEADERS +=  \
     product_base.h \
     product.h \
     random_generator.h \
-    vectorize.h
+    vector.h \
+    vector_vector.h \
+    vectorize.h \
+    box_step.h
 
 SOURCES +=  \
     assign.cpp \
@@ -59,6 +62,8 @@ SOURCES +=  \
     port_type.cpp \
     product_base.cpp \
     random_generator.cpp \
+    vector.cpp \
+    vector_vector.cpp \
     vectorize.cpp
 
 

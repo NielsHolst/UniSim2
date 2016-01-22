@@ -5,12 +5,13 @@
 #include <QStringList>
 #include <QVector>
 #include "assign.h"
+#include "box_step.h"
 #include "convert.h"
 #include "exception.h"
 #include "initialize.h"
 #include "port_transform.h"
 #include "port_type.h"
-
+#include "vector.h"
 
 namespace boxes {
 
@@ -27,7 +28,7 @@ private:
     QVector<Port *> _importPorts;
     Access _access;
     bool _reset;
-    QVector<double> outputBuffer;
+    Vector _track;
 
 public:
     // Configure
@@ -48,11 +49,13 @@ public:
     void reset();
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
+    void track(Step step);
 
     // Access
     Box *boxParent();
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
+    const Vector* trackPtr() const;
 
     // Attributes
     PortType type() const;

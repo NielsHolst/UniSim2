@@ -96,22 +96,40 @@ void Box::resetFamily() {
     resetPorts();
     updateImports();
     reset();
+    trackPorts(Reset);
 }
 
-#define RECURSE(method) \
-    void Box::method##Family() { \
-        for (auto child : children()) { \
-            Box *box = dynamic_cast<Box*>(child); \
-            if (box) \
-                box->method##Family(); \
-        } \
-        updateImports(); \
-        method(); \
+void Box::updateFamily() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->updateFamily();
     }
+    updateImports();
+    update();
+    trackPorts(Update);
+}
 
-RECURSE(update)
-RECURSE(cleanup)
-RECURSE(debrief)
+void Box::cleanupFamily() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->cleanupFamily();
+    }
+    updateImports();
+    cleanup();
+    trackPorts(Cleanup);
+}
+
+void Box::debriefFamily() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->debriefFamily();
+    }
+    updateImports();
+    debrief();
+}
 
 void Box::resolvePortImports() {
     for (Port *port : _ports.values())
@@ -131,6 +149,11 @@ void Box::updateImports() {
 void Box::resetPorts() {
     for (Port *port : _ports.values())
         port->reset();
+}
+
+void Box::trackPorts(Step step) {
+    for (Port *port : _ports.values())
+        port->track(step);
 }
 
 

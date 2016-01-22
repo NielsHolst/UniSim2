@@ -23,7 +23,7 @@ void Simulation::run() {
     initializeFamily();
     for (iteration = 0; iteration < iterations; ++iteration) {
         resetFamily();
-        for (step = 0; step < steps; ++step)
+        for (step = 1; step <= steps; ++step)
             updateFamily();
         cleanupFamily();
     }

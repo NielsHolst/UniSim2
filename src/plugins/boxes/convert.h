@@ -102,7 +102,6 @@ template<> QDateTime convert(float source);
 template<> QDateTime convert(double source);
 template<> QDateTime convert(long double source);
 
-
 //
 // Conversions from String
 //
@@ -174,6 +173,41 @@ template<> QDateTime convert(QDateTime source);
 template<> QTime convert(QDateTime);
 
 
+//
+// Vector conversions
+//
+#define CANNOT_CONVERT_VECTOR(sourceT) \
+throw Exception("Could not convert " #sourceT "Vector to " + nameOf(typeOf<T>()))
+
+template<class T> T convert(QVector<bool>)          { CANNOT_CONVERT_VECTOR(Bool); }
+template<class T> T convert(QVector<char>)          { CANNOT_CONVERT_VECTOR(Char); }
+template<class T> T convert(QVector<int>)           { CANNOT_CONVERT_VECTOR(Int); }
+template<class T> T convert(QVector<long int>)      { CANNOT_CONVERT_VECTOR(LongInt); }
+template<class T> T convert(QVector<long long int>) { CANNOT_CONVERT_VECTOR(LongLongInt); }
+template<class T> T convert(QVector<float>)         { CANNOT_CONVERT_VECTOR(Float); }
+template<class T> T convert(QVector<double>)        { CANNOT_CONVERT_VECTOR(Double); }
+template<class T> T convert(QVector<long double>)   { CANNOT_CONVERT_VECTOR(LongDouble); }
+template<class T> T convert(QVector<QString>)       { CANNOT_CONVERT_VECTOR(QString); }
+template<class T> T convert(QVector<QDate>)         { CANNOT_CONVERT_VECTOR(QDate); }
+template<class T> T convert(QVector<QTime>)         { CANNOT_CONVERT_VECTOR(QTime); }
+template<class T> T convert(QVector<QDateTime>)     { CANNOT_CONVERT_VECTOR(QDateTime); }
+
+//
+// Vector conversions to QStringList
+//
+
+template<> QStringList convert(QVector<bool> source);
+template<> QStringList convert(QVector<char> source);
+template<> QStringList convert(QVector<int> source);
+template<> QStringList convert(QVector<long int> source);
+template<> QStringList convert(QVector<long long int> source);
+template<> QStringList convert(QVector<float> source);
+template<> QStringList convert(QVector<double> source);
+template<> QStringList convert(QVector<long double> source);
+template<> QStringList convert(QVector<QString> source);
+template<> QStringList convert(QVector<QDate> source);
+template<> QStringList convert(QVector<QTime> source);
+template<> QStringList convert(QVector<QDateTime> source);
 
 } // namespace
 

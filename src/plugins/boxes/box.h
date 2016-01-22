@@ -3,6 +3,7 @@
 #include <QMap>
 #include <QObject>
 #include <QVariant>
+#include "box_step.h"
 #include "general.h"
 #include "port.h"
 
@@ -52,8 +53,8 @@ private:
     void resolvePortImports();
     void allocatePortBuffers();
     void resetPorts();
+    void trackPorts(Step step);
     void updateImports();
-
 };
 
 }
