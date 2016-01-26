@@ -7,7 +7,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    _textEdit = new console::TextEdit;
+    _textEdit = new console::TextEdit(this);
     setCentralWidget(_textEdit);
     resize(500, 300);
     setWindowTitle("Universal Simulator 2.0");
