@@ -8,7 +8,13 @@ class TestHistory : public QObject
     Q_OBJECT
 private slots:
     void testAddOne();
-    void testAddMany();
+    void testOverFullHistoryPrevious();
+    void testNotFullHistoryPrevious();
+    void testJustFullHistoryPrevious();
+
+    void testOverFullHistoryNext();
+    void testNotFullHistoryNext();
+    void testJustFullHistoryNext();
 };
 
 DECLARE_TEST(TestHistory)

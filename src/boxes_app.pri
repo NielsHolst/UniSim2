@@ -12,6 +12,8 @@
 
 include("$$_PRO_FILE_PWD_/../../boxes_common.pri")
 
+QT += widgets
+
 # What we are building
 TEMPLATE = app
 DESTDIR = "$$_PRO_FILE_PWD_/../../../bin"

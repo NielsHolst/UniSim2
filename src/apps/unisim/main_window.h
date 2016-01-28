@@ -3,11 +3,9 @@
 
 #include <QMainWindow>
 
-namespace console {
-    class TextEdit;
+namespace base {
+    class Dialog;
 }
-
-class TextEdit;
 
 class MainWindow : public QMainWindow
 {
@@ -15,7 +13,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
 private:
-    console::TextEdit *_textEdit;
+    base::Dialog *_dialog;
 };
 
 #endif

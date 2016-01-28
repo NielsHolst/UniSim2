@@ -1,14 +1,11 @@
 #include <QtWidgets>
-#include <console/text_edit.h>
+#include <base/dialog.h>
 #include "main_window.h"
-
-//using console::TextEdit;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    _textEdit = new console::TextEdit(this);
-    setCentralWidget(_textEdit);
+    setCentralWidget( _dialog = new base::Dialog(this) );
     resize(500, 300);
     setWindowTitle("Universal Simulator 2.0");
 }

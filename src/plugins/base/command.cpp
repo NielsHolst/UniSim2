@@ -1,9 +1,7 @@
-#include <base/exception.h>
+#include "exception.h"
 #include "command.h"
 
-using namespace base;
-
-namespace command {
+namespace base {
 
 Command::Command(QString name, QObject *parent)
     : QObject(parent)

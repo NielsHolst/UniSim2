@@ -1,33 +1,33 @@
 #include <QDir>
 #include <QStringList>
+#include <base/command.h>
+#include <base/dialog_stub.h>
+#include <base/environment.h>
 #include <base/mega_factory.h>
-#include <command/command.h>
-#include <console/environment.h>
 #include "test_command.h"
 
 using namespace base;
-using namespace command;
-using namespace console;
 
 void TestCommand::testSetwdCreate() {
-    Command *setwd = MegaFactory::create<Command>("Setwd", "setwd", 0);
-    QVERIFY(setwd);
-    delete setwd;
+    Command *cd = MegaFactory::create<Command>("cd", "cd", 0);
+    QVERIFY(cd);
+    delete cd;
 }
 void TestCommand::testSetwdExecute() {
-    Command *setwd = MegaFactory::create<Command>("Setwd", "setwd", 0);
-    QVERIFY(setwd);
-    setwd->arguments(QStringList() << "setwd" << QDir::rootPath());
+    Command *cd = MegaFactory::create<Command>("cd", "cd", 0);
+    QVERIFY(cd);
+    cd->arguments(QStringList() << "cd" << QDir::rootPath());
 
+    DialogStub *dialog = new DialogStub(0);
     Environment env;
     try {
-        env.execute(setwd);
+        cd->execute(dialog, &env);
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
     }
-    QCOMPARE(env.state.workingDirectory, QDir(QDir::rootPath()));
+    QCOMPARE(dialog->getInformation(), QDir::rootPath());
 
-    delete setwd;
+    delete cd;
 }
 

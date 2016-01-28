@@ -42,9 +42,3 @@ SOURCES +=  \
     test_savanna.cpp \
     test_vector.cpp \
     test_vectorization.cpp
-
-# Load console library
-win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lconsole
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lconsoled
-else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lconsole
-else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lconsoled

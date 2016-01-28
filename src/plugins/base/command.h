@@ -3,10 +3,11 @@
 #include <QObject>
 #include <QStringList>
 
-namespace console {
-    class Environment;
-}
-namespace command {
+
+namespace base {
+
+class DialogBase;
+class Environment;
 
 class Command : public QObject
 {
@@ -19,7 +20,7 @@ public:
     QStringList arguments() const
         { return _args; }
 
-    virtual void execute(console::Environment *env) = 0;
+    virtual void execute(DialogBase *dialog, Environment *env) = 0;
 
 protected:
     void checkArgsNumber(int min, int max);

@@ -8,12 +8,18 @@ BOXES_PLUGIN_NAME = command
 
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
+QT += widgets
+
 HEADERS +=  \
-    command.h \
-    setwd.h
+    cd.h \
+    list.h \
+    set.h \
+    quit.h
 	
 SOURCES +=  \
-    command.cpp \
-    setwd.cpp
+    cd.cpp \
+    list.cpp \
+    set.cpp \
+    quit.cpp
 
 

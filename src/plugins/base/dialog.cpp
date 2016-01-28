@@ -4,33 +4,34 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
-#include "text_edit.h"
+#include "command.h"
+#include "dialog.h"
+#include "exception.h"
+#include "general.h"
+#include "mega_factory.h"
 
-namespace console {
+namespace base {
 
-TextEdit::TextEdit(QWidget *parent)
-    : QTextEdit(parent), _prompt("> ")
+Dialog::Dialog(QWidget *parent)
+    : DialogBase(parent),
+      _prompt("> "),
+      _informationColor(QColor("blue")),
+      _errorColor(QColor("red"))
 {
     setDocument(_textDocument = new QTextDocument(this));
     writePrompt();
 }
 
-void TextEdit::keyPressEvent(QKeyEvent *event) {
-    QStringList s;
-    for (int i=0; i<numLines(); ++i)
-        s << QString::number(linePosition(i));
+void Dialog::information(QString s) {
+    insertText("\n" + s, _informationColor);
+}
 
-    QTextCursor cursor = textCursor();
-    int cpos = cursor.position();
+void Dialog::error(QString s) {
+    insertText("\n" + s, _errorColor);
+}
 
-
-    QString msg("n: %1 cpos: %2 cline: %3 L: %4 [%5]");
-    mainWindow()->statusBar()->showMessage(msg.
-                                           arg(_textDocument->characterCount()).
-                                           arg(QString::number(cpos)).
-                                           arg(QString::number(cursorLine())).
-                                           arg(numLines()).
-                                           arg(s.join(" ")));
+void Dialog::keyPressEvent(QKeyEvent *event) {
+    QTextCursor cursor;
     switch (event->key()) {
     case Qt::Key_Escape:
         event->accept();
@@ -51,11 +52,12 @@ void TextEdit::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Return:
     case Qt::Key_Enter:
         event->accept();
-        insertText("EXEC");
+        submitCommand();
         cursor = textCursor();
         cursor.movePosition(QTextCursor::EndOfLine);
         setTextCursor(cursor);
         writePrompt();
+        mainWindow()->statusBar()->showMessage(QString::number(numLines()));
         break;
     case Qt::Key_Insert:
     case Qt::Key_Pause:
@@ -85,11 +87,13 @@ void TextEdit::keyPressEvent(QKeyEvent *event) {
         break;
     case Qt::Key_Up:
         event->accept();
-        insertText("UP");
+        clearLine();
+        insertText(_history.previous());
         break;
     case Qt::Key_Down:
         event->accept();
-        insertText("DN");
+        clearLine();
+        insertText(_history.next());
         break;
     default:
         QTextEdit::keyPressEvent(event);
@@ -97,34 +101,35 @@ void TextEdit::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-QMainWindow* TextEdit::mainWindow() {
+QMainWindow* Dialog::mainWindow() {
     return dynamic_cast<QMainWindow*>(parent());
 }
 
-void TextEdit::writePrompt() {
+void Dialog::writePrompt() {
    insertText("\n> ");
 }
 
-void TextEdit::insertText(QString text) {
+void Dialog::insertText(QString text, QColor color) {
+    setTextColor(color);
     QTextCursor cursor = textCursor();
     cursor.insertText(text);
     setTextCursor(cursor);
 }
 
-int TextEdit::numLines() {
+int Dialog::numLines() {
     return _textDocument->lineCount();
 }
 
-int TextEdit::linePosition(int i) {
+int Dialog::linePosition(int i) {
     Q_ASSERT(i<numLines());
     return _textDocument->findBlockByLineNumber(i).position();
 }
 
-int TextEdit::cursorPosition() {
+int Dialog::cursorPosition() {
     return textCursor().position();
 }
 
-int TextEdit::cursorLine() {
+int Dialog::cursorLine() {
     for (int i = numLines()-1; i>=0; --i) {
         if (cursorPosition() > linePosition(i))
             return i;
@@ -132,7 +137,7 @@ int TextEdit::cursorLine() {
     Q_ASSERT(false);
 }
 
-bool TextEdit::bounceCursor(bool sticky) {
+bool Dialog::bounceCursor(bool sticky) {
     int start = linePosition(cursorLine()) + _prompt.size();
     QTextCursor cursor = textCursor();
     int pos = cursor.position();
@@ -145,5 +150,42 @@ bool TextEdit::bounceCursor(bool sticky) {
     return false;
 }
 
+void Dialog::clearLine() {
+    QTextCursor cursor;
+    while (!bounceCursor(true)) {
+        cursor = textCursor();
+        cursor.movePosition(QTextCursor::EndOfLine);
+        cursor.deletePreviousChar();
+        setTextCursor(cursor);
+    }
+}
+
+void Dialog::submitCommand() {
+    Command *command;
+    QTextBlock block = _textDocument->findBlock(cursorPosition());
+    QString line = block.text().mid(_prompt.size()).simplified();
+    QStringList items;
+    try {
+        items = base::split(line);
+    }
+    catch(Exception &ex) {
+        error(ex.what());
+        return;
+    }
+
+    if (!items.isEmpty()) {
+        try {
+            command = MegaFactory::create<Command>(items.first(), items.first(), this);
+        }
+        catch (Exception &ex) {
+            error(QString("Unknown command: '%1'").arg(items.first()));
+            return;
+        }
+    }
+    Q_ASSERT(command);
+    command->arguments(items);
+    command->execute(this, &_environment);
+    _history.add(line);
+}
 
 }
