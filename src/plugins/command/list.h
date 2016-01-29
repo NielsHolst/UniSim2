@@ -8,7 +8,7 @@ class list : public base::Command
 {
 public:
     list(QString name, QObject *parent);
-    void execute(base::DialogBase *dialog, base::Environment *env);
+    void execute();
 };
 
 }

@@ -60,6 +60,7 @@ SOURCES +=  \
     command.cpp \
     convert.cpp \
     dialog.cpp \
+    dialog_base.cpp \
     dialog_stub.cpp \
     environment.cpp \
     exception.cpp \

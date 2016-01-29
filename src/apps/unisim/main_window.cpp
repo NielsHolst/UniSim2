@@ -9,3 +9,4 @@ MainWindow::MainWindow(QWidget *parent)
     resize(500, 300);
     setWindowTitle("Universal Simulator 2.0");
 }
+

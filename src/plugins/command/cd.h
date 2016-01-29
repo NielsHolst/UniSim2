@@ -9,7 +9,7 @@ class cd : public base::Command
 {
 public:
     cd(QString name, QObject *parent);
-    void execute(base::DialogBase *dialog, base::Environment *env);
+    void execute();
 };
 
 }

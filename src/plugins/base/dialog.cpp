@@ -1,3 +1,5 @@
+#include <QFont>
+#include <QFontDatabase>
 #include <QKeyEvent>
 #include <QMainWindow>
 #include <QStatusBar>
@@ -18,7 +20,15 @@ Dialog::Dialog(QWidget *parent)
       _informationColor(QColor("blue")),
       _errorColor(QColor("red"))
 {
+    // Associate text document
     setDocument(_textDocument = new QTextDocument(this));
+    // Set font size
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFontPointSize(10);
+    cursor.setCharFormat(format);
+    setTextCursor(cursor);
+    // Say hello
     writePrompt();
 }
 
@@ -52,11 +62,12 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Return:
     case Qt::Key_Enter:
         event->accept();
-        submitCommand();
-        cursor = textCursor();
+        cursor = getCursor();
         cursor.movePosition(QTextCursor::EndOfLine);
         setTextCursor(cursor);
-        writePrompt();
+        submitCommand();
+        insertText("\n" + _prompt);
+//        getCursor().insertText("\n" + _prompt);
         mainWindow()->statusBar()->showMessage(QString::number(numLines()));
         break;
     case Qt::Key_Insert:
@@ -105,8 +116,19 @@ QMainWindow* Dialog::mainWindow() {
     return dynamic_cast<QMainWindow*>(parent());
 }
 
+QTextCursor Dialog::getCursor() {
+    QTextCursor cursor = dialog().textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    QFont font = format.font();
+    QString family = font.family();
+    int pt = font.pointSize();
+    format.setFont(QFontDatabase().font(family, QString(), pt));
+    cursor.setCharFormat(format);
+    return cursor;
+}
+
 void Dialog::writePrompt() {
-   insertText("\n> ");
+   insertText("\n" + _prompt);
 }
 
 void Dialog::insertText(QString text, QColor color) {
@@ -184,7 +206,7 @@ void Dialog::submitCommand() {
     }
     Q_ASSERT(command);
     command->arguments(items);
-    command->execute(this, &_environment);
+    command->execute();
     _history.add(line);
 }
 

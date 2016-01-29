@@ -19,9 +19,8 @@ void TestCommand::testSetwdExecute() {
     cd->arguments(QStringList() << "cd" << QDir::rootPath());
 
     DialogStub *dialog = new DialogStub(0);
-    Environment env;
     try {
-        cd->execute(dialog, &env);
+        cd->execute();
     }
     catch (Exception &ex) {
         QFAIL(ex.what());

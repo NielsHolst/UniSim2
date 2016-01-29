@@ -9,10 +9,15 @@ namespace base {
 class DialogBase : public QTextEdit
 {
 public:
-    DialogBase(QWidget *parent) : QTextEdit(parent) {}
+    DialogBase(QWidget *parent);
     virtual void information(QString s) = 0;
     virtual void error(QString s) = 0;
+    friend DialogBase& dialog();
+private:
+    static DialogBase *_dialog;
 };
+
+DialogBase& dialog();
 
 }
 

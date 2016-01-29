@@ -1,9 +1,8 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <QVector>
+#include <QTextCursor>
 #include "dialog_base.h"
-#include "environment.h"
 #include "history.h"
 
 class QMainWindow;
@@ -18,19 +17,18 @@ public:
     Dialog(QWidget *parent);
     void information(QString s);
     void error(QString s);
-
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     // Data
-    Environment _environment;
     History _history;
     QTextDocument *_textDocument;
     QString _prompt;
     QColor _informationColor, _errorColor;
     // Methods
     QMainWindow* mainWindow();
+    QTextCursor getCursor();
     void writePrompt();
     void insertText(QString text, QColor color = QColor("black"));
     int numLines();

@@ -1,8 +1,5 @@
 #include <QMainWindow>
-#include <base/command.h>
 #include <base/dialog.h>
-#include <base/environment.h>
-#include <base/exception.h>
 #include <base/publish.h>
 #include "quit.h"
 
@@ -18,12 +15,12 @@ quit::quit(QString name, QObject *parent)
     Class(quit);
 }
 
-void quit::execute(DialogBase *dialog, Environment *) {
-    QMainWindow *mainWindow = dynamic_cast<QMainWindow*>(dialog->parent());
+void quit::execute() {
+    QMainWindow *mainWindow = dynamic_cast<QMainWindow*>(dialog().parent());
     if (mainWindow)
         mainWindow->close();
     else
-        dialog->error("Cannot close main window");
+        dialog().error("Cannot close main window");
 }
 
 }

@@ -20,7 +20,7 @@ public:
     QStringList arguments() const
         { return _args; }
 
-    virtual void execute(DialogBase *dialog, Environment *env) = 0;
+    virtual void execute() = 0;
 
 protected:
     void checkArgsNumber(int min, int max);
