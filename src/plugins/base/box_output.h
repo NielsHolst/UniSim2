@@ -1,6 +1,7 @@
 #ifndef BOX_OUTPUT_H
 #define BOX_OUTPUT_H
 
+#include <QObject>
 #include <QStack>
 #include <QString>
 
@@ -21,9 +22,9 @@ private:
     QString _output;
 
     void addOutput(const QObject *box);
-    QString name(const QObject *box);
-    QString beforeName();
-    QString afterName();
+    QString entry(const QObject *box);
+    QString beforeEntry();
+    QString afterEntry();
     QString indent();
 
     QString beginLevel();

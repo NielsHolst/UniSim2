@@ -24,6 +24,7 @@ public:
 
 protected:
     void checkArgsNumber(int min, int max);
+    bool hasCommandParent() const;
     QStringList _args;
 };
 

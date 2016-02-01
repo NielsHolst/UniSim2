@@ -11,11 +11,17 @@ class Box;
 class Environment : public QObject {
 public:
     Environment();
+    ~Environment();
     struct {
         QDir dir;
-        Box *boxRoot;
+        QString outputFolder;
+        Box *root;
     } state;
 private:
+    // Methods
+    void setDir();
+    void setOutputFolder();
+    // Singleton
     static Environment *_environment;
     friend Environment& environment();
 };

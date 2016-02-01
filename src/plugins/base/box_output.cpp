@@ -3,6 +3,7 @@
 #include "box_output.h"
 #include "exception.h"
 #include "general.h"
+#include "port.h"
 
 namespace base {
 
@@ -14,28 +15,39 @@ BoxOutput::BoxOutput(const Box *box, Format format)
 QString BoxOutput::asText() {
     _output = "";
     addOutput(_box);
+    // remove superflous newline at end
+    int n = _output.size();
+    if (n > 0)
+        _output.remove(n-1, 1);
     return _output;
 }
 
 void BoxOutput::addOutput(const QObject *box) {
-    _output += name(box);
+    _output += entry(box);
     auto children = box->findChildren<const QObject*>(QString(), Qt::FindDirectChildrenOnly);
     if (!children.isEmpty()) {
         _output += beginLevel();
-        for (const QObject *child : children) {
-//            auto box = dynamic_cast<const Box*>(child);
-//            if (box) addOutput(box);
+        for (const QObject *child : children)
             addOutput(child);
-        }
         _output += endLevel();
     }
 }
 
-QString BoxOutput::name(const QObject *box) {
-    return beforeName() + className(box) + " " + box->objectName() + afterName();
+QString BoxOutput::entry(const QObject *box) {
+    const Port *port = dynamic_cast<const Port*>(box);
+    QString value;
+    if (port) {
+        value = port->value<QString>();
+        if (port->type() == String || port->type() == StringVector)
+            value = "\"" + value + "\"";
+    }
+    QString s = beforeEntry() + className(box) + " " + box->objectName();
+    if (port)
+        s += ": " + value;
+    return s + afterEntry();
 }
 
-QString BoxOutput::beforeName() {
+QString BoxOutput::beforeEntry() {
     QString s;
     switch (_format) {
     case Indented:
@@ -48,7 +60,7 @@ QString BoxOutput::beforeName() {
     return s;
 }
 
-QString BoxOutput::afterName() {
+QString BoxOutput::afterEntry() {
     QString s;
     switch (_format) {
     case Indented:
@@ -64,7 +76,7 @@ QString BoxOutput::afterName() {
 QString BoxOutput::indent() {
     QString s;
     for (int i=0; i<_level; ++i)
-        s += "\t";
+        s += "  ";
     return s;
 }
 

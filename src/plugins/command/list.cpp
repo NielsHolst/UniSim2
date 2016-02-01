@@ -1,4 +1,6 @@
+#include <base/box_output.h>
 #include <base/dialog.h>
+#include <base/environment.h>
 #include <base/publish.h>
 #include "list.h"
 
@@ -15,7 +17,13 @@ list::list(QString name, QObject *parent)
 }
 
 void list::execute() {
-    dialog().error("Nothing to list");
+    Box *root = environment().state.root;
+    if (root) {
+        BoxOutput output(root, BoxOutput::Indented);
+        dialog().information(output.asText());
+    }
+    else
+        dialog().information("No box loaded");
 }
 
 }

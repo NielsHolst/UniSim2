@@ -15,6 +15,7 @@ class Dialog : public DialogBase
     Q_OBJECT
 public:
     Dialog(QWidget *parent);
+    ~Dialog();
     void information(QString s);
     void error(QString s);
 protected:
@@ -28,6 +29,8 @@ private:
     QColor _informationColor, _errorColor;
     // Methods
     QMainWindow* mainWindow();
+    void saveFont();
+    void restoreFont();
     QTextCursor getCursor();
     void writePrompt();
     void insertText(QString text, QColor color = QColor("black"));

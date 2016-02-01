@@ -12,8 +12,12 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 private:
+    // Date
     base::Dialog *_dialog;
+    // Methods
+    void restore();
 };
 
 #endif

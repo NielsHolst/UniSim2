@@ -66,7 +66,8 @@ Vector::~Vector() {
 }
 
 void Vector::reserve(int size) {
-    Q_ASSERT(!_vectorPtr);
+    if (_vectorPtr)
+        erase();
     _vectorType = _parent->type();
     Q_ASSERT(_vectorType != Null);
     switch(_vectorType) {

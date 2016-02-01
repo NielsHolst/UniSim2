@@ -29,7 +29,11 @@ void cd::execute() {
         break;
     case 2:
         dirName = _args.at(1);
-        if ( current.cd(dirName) ) {
+        if (dirName == "~") {
+            env.state.dir = QDir::home();
+            dia.information(env.state.dir.absolutePath());
+        }
+        else if ( current.cd(dirName) ) {
             env.state.dir = current;
             dia.information(env.state.dir.absolutePath());
         }

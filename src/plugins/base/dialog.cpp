@@ -2,6 +2,7 @@
 #include <QFontDatabase>
 #include <QKeyEvent>
 #include <QMainWindow>
+#include <QSettings>
 #include <QStatusBar>
 #include <QTextBlock>
 #include <QTextCursor>
@@ -20,16 +21,36 @@ Dialog::Dialog(QWidget *parent)
       _informationColor(QColor("blue")),
       _errorColor(QColor("red"))
 {
-    // Associate text document
     setDocument(_textDocument = new QTextDocument(this));
-    // Set font size
+    restoreFont();
+    writePrompt();
+}
+
+
+Dialog::~Dialog() {
+    saveFont();
+}
+
+void Dialog::saveFont() {
     QTextCursor cursor = textCursor();
     QTextCharFormat format = cursor.charFormat();
-    format.setFontPointSize(10);
+    QSettings settings;
+    settings.setValue("font/family", format.font().family());
+    settings.setValue("font/size", format.fontPointSize());
+}
+
+void Dialog::restoreFont() {
+    QSettings settings;
+    QString family = settings.value("font/family", QString()).toString();
+    bool ok;
+    int pt = settings.value("font/size", 0).toInt(&ok);
+    if (!ok) pt = 0;
+
+    QTextCursor cursor = textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFont(QFontDatabase().font(family, QString(), pt));
     cursor.setCharFormat(format);
     setTextCursor(cursor);
-    // Say hello
-    writePrompt();
 }
 
 void Dialog::information(QString s) {
@@ -183,31 +204,35 @@ void Dialog::clearLine() {
 }
 
 void Dialog::submitCommand() {
-    Command *command;
+    Command *command(0);
     QTextBlock block = _textDocument->findBlock(cursorPosition());
     QString line = block.text().mid(_prompt.size()).simplified();
     QStringList items;
     try {
         items = base::split(line);
+        if (!items.isEmpty()) {
+            try {
+                if (items.first().contains("_"))
+                    throw Exception("Illegal characted in command");
+                command = MegaFactory::create<Command>(items.first(), items.first(), this);
+            }
+            catch (Exception &ex) {
+                error("Unknown command: '" + line + "'");
+                command = 0;
+            }
+        }
     }
     catch(Exception &ex) {
         error(ex.what());
-        return;
+        command = 0;
     }
 
-    if (!items.isEmpty()) {
-        try {
-            command = MegaFactory::create<Command>(items.first(), items.first(), this);
-        }
-        catch (Exception &ex) {
-            error(QString("Unknown command: '%1'").arg(items.first()));
-            return;
-        }
+    if (command) {
+        command->arguments(items);
+        command->execute();
     }
-    Q_ASSERT(command);
-    command->arguments(items);
-    command->execute();
-    _history.add(line);
+    if (!line.isEmpty())
+        _history.add(line);
 }
 
 }

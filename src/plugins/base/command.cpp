@@ -23,4 +23,8 @@ void Command::checkArgsNumber(int min, int max) {
     }
 }
 
+bool Command::hasCommandParent() const {
+    return dynamic_cast<Command*>(parent());
+}
+
 }
