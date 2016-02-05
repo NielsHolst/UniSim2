@@ -35,16 +35,10 @@ void BoxOutput::addOutput(const QObject *box) {
 
 QString BoxOutput::entry(const QObject *box) {
     const Port *port = dynamic_cast<const Port*>(box);
-    QString value;
-    if (port) {
-        value = port->value<QString>();
-        if (port->type() == String || port->type() == StringVector)
-            value = "\"" + value + "\"";
-    }
-    QString s = beforeEntry() + className(box) + " " + box->objectName();
-    if (port)
-        s += ": " + value;
-    return s + afterEntry();
+    QString text = beforeEntry() + className(box) + " " + box->objectName();
+    if (port && port->hasValue())
+        text += ": " + port->value<QString>();
+    return text + afterEntry();
 }
 
 QString BoxOutput::beforeEntry() {

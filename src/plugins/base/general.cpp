@@ -77,4 +77,22 @@ QStringList split(const char *s, QObject *context) {
     return split(QString(s), context);
 }
 
+QDir locateDir(QDir baseDir, QDir specificDir) {
+    if (!baseDir.isAbsolute())
+        throw Exception("Base directory must be an absolute path", baseDir.path());
+
+    QString path = (specificDir.isAbsolute()) ?
+                specificDir.absolutePath() :
+                (baseDir.absolutePath() + "/" + specificDir.path());
+    QDir dir(path);
+    return dir;
+}
+
+QDir makeDir(QDir baseDir, QDir specificDir) {
+    QDir dir = locateDir(baseDir, specificDir);
+    if (!dir.mkpath("."))
+        throw Exception("Could not create folder", dir.path());
+    return dir;
+}
+
 } //namespace

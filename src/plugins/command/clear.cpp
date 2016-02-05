@@ -2,6 +2,7 @@
 #include <QFontDatabase>
 #include <QTextCharFormat>
 #include <QTextCursor>
+#include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/publish.h>
 #include "clear.h"
@@ -11,6 +12,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(clear)
+HELP(clear, "clear", "clears console window")
 
 clear::clear(QString name, QObject *parent)
     : Command(name, parent)
@@ -18,7 +20,7 @@ clear::clear(QString name, QObject *parent)
     Class(clear);
 }
 
-void clear::execute() {
+void clear::doExecute() {
     QTextCursor cursor = dialog().textCursor();
     QTextCharFormat format = cursor.charFormat();
     QFont font = format.font();

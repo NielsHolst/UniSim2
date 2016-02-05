@@ -8,7 +8,11 @@ class run : public base::Command
 {
 public:
     run(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
+    void doLoad();
+    void doRun();
+    void doSave();
 };
 
 }

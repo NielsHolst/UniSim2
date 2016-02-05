@@ -8,6 +8,7 @@ namespace base {
 namespace TestBoxCases {
     base::Box* case1();
     base::Box* case2();
+    base::Box* case3a();
 }
 
 #endif

@@ -6,10 +6,12 @@
 
 namespace base {
 
+unsigned Port::_trackFlags = Reset | Update;
+
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
-      _access(Read), _reset(false),
-      _track(this)
+      _accessFlags(Read), _reset(false),
+      _track(this), _trackOn(true)
 {
     Class(Port);
     setObjectName(name);
@@ -19,6 +21,8 @@ Port::Port(QString name, QObject *parent)
 }
 
 Port& Port::import(QString pathToPort) {
+    if (!(_accessFlags & Write))
+        throw Exception("Cannot import port value because port is not for input", "", this);
     _importPortPaths << pathToPort;
     return *this;
 }
@@ -28,8 +32,8 @@ Port& Port::transform(PortTransform t) {
     return *this;
 }
 
-Port& Port::access(Access a) {
-    _access = a;
+Port& Port::access(unsigned accessFlags) {
+    _accessFlags = accessFlags;
     return *this;
 }
 
@@ -40,6 +44,16 @@ Port& Port::zeroAtReset() {
 
 Port& Port::noReset() {
     _reset = false;
+    return *this;
+}
+
+Port& Port::trackOn() {
+    _trackOn = true;
+    return *this;
+}
+
+Port& Port::trackOff() {
+    _trackOn = false;
     return *this;
 }
 
@@ -56,12 +70,14 @@ void Port::resolveImports() {
 }
 
 void Port::allocatePortBuffer() {
-    Box *root = boxParent()->currentRoot();
-    Port *iterations = root->peakPort("iterations"),
-         *steps = root->peakPort("steps");
-    int ite = iterations ? iterations->value<int>() : 1,
-        ste = steps ? steps->value<int>() : 1;
-    _track.reserve(ite*ste);
+    if (_trackOn) {
+         Box *root = boxParent()->currentRoot();
+        Port *iterations = root->peakPort("iterations"),
+             *steps = root->peakPort("steps");
+        int ite = iterations ? iterations->value<int>() : 1,
+            ste = steps ? steps->value<int>() : 1;
+        _track.reserve(ite*ste);
+    }
 }
 
 void Port::reset() {
@@ -93,7 +109,7 @@ void Port::assign(const QVector<Port*> &sources) {
 }
 
 void Port::track(Step step) {
-    if (step == Reset || step == Update)
+    if (_trackOn && (step & _trackFlags))
         _track.append(_valuePtr);
 }
 
@@ -104,8 +120,12 @@ Box *Port::boxParent() {
     return par;
 }
 
+bool Port::hasValue() const {
+    return _valuePtr != 0;
+}
+
 const Vector* Port::trackPtr() const {
-    return &_track;
+    return _trackOn ? & _track : 0;
 }
 
 PortType Port::type() const {
@@ -116,8 +136,8 @@ PortTransform Port::transform() const {
     return _transform;
 }
 
-Port::Access Port::access() const {
-    return _access;
+unsigned Port::accessFlags() const {
+    return _accessFlags;
 }
 
 bool Port::hasImport() const {

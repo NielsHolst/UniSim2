@@ -9,7 +9,8 @@ class set_output_folder : public base::Command
 {
 public:
     set_output_folder(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

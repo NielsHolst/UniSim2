@@ -60,8 +60,16 @@ Box* Box::currentRoot() {
    return p;
 }
 
+QString Box::className() const {
+    return base::className(this);
+}
+
+QString Box::fullName() const {
+    return base::fullName(this);
+}
+
 void Box::run() {
-    throw Exception("Method 'run' not defined for this class", className(this), this);
+    throw Exception("Method 'run' not defined for this class", className(), this);
 }
 
 void Box::amendFamily() {

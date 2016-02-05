@@ -1,4 +1,5 @@
 #include <base/box.h>
+#include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -10,6 +11,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(update)
+HELP(update, "update", "updates the root box")
 
 update::update(QString name, QObject *parent)
     : Command(name, parent)
@@ -17,22 +19,22 @@ update::update(QString name, QObject *parent)
     Class(update);
 }
 
-void update::execute() {
+void update::doExecute() {
     Box *root = environment().state.root;
     if (_args.size() > 1) {
-        dialog().error("Command 'update' takes no arguments");
+        throw Exception("Command 'update' takes no arguments");
     }
     else if (root) {
         try {
             root->updateFamily();
         }
         catch (Exception &ex) {
-            dialog().error(root->objectName() + " interrupted\n" + ex.what());
+            throw Exception("Update: " + root->objectName() + " interrupted\n" + ex.what());
         }
-        dialog().information(root->objectName() + " finished");
+        dialog().information("Update: " + root->objectName() + " finished");
     }
     else
-        dialog().error("No box loaded");
+        throw Exception("No box loaded");
 }
 
 }

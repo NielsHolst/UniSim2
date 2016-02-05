@@ -1,30 +1,50 @@
-#include "exception.h"
 #include "command.h"
+#include "dialog.h"
+#include "environment.h"
+#include "exception.h"
 
 namespace base {
 
+QStringList Command::_help;
+
 Command::Command(QString name, QObject *parent)
-    : QObject(parent)
+    : QObject(parent), _error(false)
 {
     setObjectName(name);
 }
 
-void Command::checkArgsNumber(int min, int max) {
-    int n = _args.size();
-    if (n<min || n>max) {
-        QString msg = (min == max) ?
-                    QString("Command '%1' takes %2 arguments. Got %3.").
-                    arg(objectName()).arg(min).arg(n)
-                    :
-                    QString("Command '%1' takes between %2 and %3 arguments. Got %4.").
-                    arg(objectName()).arg(min).arg(max).arg(n);
-
-        throw Exception(msg, "", this);
-    }
+void Command::arguments(QStringList args) {
+    _args = args;
 }
 
-bool Command::hasCommandParent() const {
-    return dynamic_cast<Command*>(parent());
+QStringList Command::arguments() const {
+    return _args;
+}
+
+void Command::execute() {
+    try {
+        doExecute();
+        _error = false;
+    }
+    catch (Exception &ex) {
+        _error = true;
+        dialog().error(ex.what());
+    }
+    environment().state.command = this;
+}
+
+bool Command::hasError() const {
+    Command *parentCommand = dynamic_cast<Command*>(parent());
+    return _error || (parentCommand && parentCommand->hasError());
+}
+
+void Command::helpText(QString help) {
+    _help << help;
+}
+
+QStringList Command::help() {
+    _help.sort();
+    return _help;
 }
 
 }

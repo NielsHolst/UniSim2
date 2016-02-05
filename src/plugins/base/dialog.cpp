@@ -88,8 +88,6 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
         setTextCursor(cursor);
         submitCommand();
         insertText("\n" + _prompt);
-//        getCursor().insertText("\n" + _prompt);
-        mainWindow()->statusBar()->showMessage(QString::number(numLines()));
         break;
     case Qt::Key_Insert:
     case Qt::Key_Pause:
@@ -131,6 +129,7 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
         QTextEdit::keyPressEvent(event);
         break;
     }
+    mainWindow()->statusBar()->showMessage(QString::number(numLines()));
 }
 
 QMainWindow* Dialog::mainWindow() {

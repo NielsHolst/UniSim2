@@ -19,6 +19,8 @@ public:
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
     BoxBuilder& import(QString pathToPort);
+    BoxBuilder& trackOn();
+    BoxBuilder& trackOff();
     BoxBuilder& endbox();
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);

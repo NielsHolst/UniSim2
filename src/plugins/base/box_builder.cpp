@@ -1,6 +1,7 @@
 #include <iostream>
 #include "box.h"
 #include "box_builder.h"
+#include "box_step.h"
 #include "mega_factory.h"
 
 namespace base {
@@ -29,6 +30,8 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
         throw Exception("BoxBuilder: 'newPort' must be between 'box' and 'endbox'");
     }
     _currentPort = new Port(name, _currentBox);
+    _currentPort->access(Port::Read|Port::Write);
+    _currentPort->trackOff();
     return *this;
 }
 
@@ -47,8 +50,22 @@ BoxBuilder& BoxBuilder::import(QString pathToPort) {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::trackOn() {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'trackOn'");
+    _currentPort->trackOn();
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::trackOff() {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'trackOff'");
+    _currentPort->trackOff();
+    return *this;
+}
+
 BoxBuilder& BoxBuilder::transform(PortTransform pt) {
-    if (!_currentBox)
+    if (!_currentPort)
         throw Exception("BoxBuilder: 'port' missing before 'transform'");
     _currentPort->transform(pt);
     return *this;

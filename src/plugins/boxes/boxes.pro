@@ -9,6 +9,7 @@ BOXES_PLUGIN_NAME = boxes
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
+    calendar.h \
     fibonacci.h \
     random_base.h \
     random_lognormal.h \
@@ -18,6 +19,7 @@ HEADERS +=  \
     simulation.h
 	
 SOURCES +=  \
+    calendar.cpp \
     fibonacci.cpp \
     random_base.cpp \
     random_lognormal.cpp \

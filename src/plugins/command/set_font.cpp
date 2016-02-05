@@ -1,4 +1,6 @@
+#include <base/command_help.h>
 #include <base/dialog.h>
+#include <base/exception.h>
 #include <base/publish.h>
 #include "set_font.h"
 
@@ -9,6 +11,10 @@ namespace command {
 QFontDatabase set_font::_fontDatabase;
 
 PUBLISH(set_font)
+HELP(set_font, "set font", "shows console font name and size")
+HELP(set_font_name, "set font <font-name>", "sets console font name")
+HELP(set_font_size, "set font <integer>", "sets console font size")
+HELP(set_font_name_size, "set font <font-name> <integer>", "sets console font name and size")
 
 set_font::set_font(QString name, QObject *parent)
     : set(name, parent)
@@ -16,7 +22,7 @@ set_font::set_font(QString name, QObject *parent)
     Class(set_font);
 }
 
-void set_font::execute() {
+void set_font::doExecute() {
     _cursor = dialog().textCursor();
     _format = _cursor.charFormat();
     _font = _format.font();
@@ -41,11 +47,11 @@ void set_font::execute() {
         if (ok)
             setFont(a[2], pt);
         else
-            dialog().error("Last argument must be a number: " + _args.join(" ") + hint);
+            throw Exception("Last argument must be a number", _args.join(" "), 0,  hint);
         break;
     default:
-        QString s{"Too many arguments (%1): %2" + hint};
-        dialog().error(s.arg(a.size()).arg(a.join(" ")));
+        QString s{"Too many arguments (%1): %2"};
+        throw Exception(s.arg(a.size()).arg(a.join(" ")), "", 0, hint);
     }
 }
 

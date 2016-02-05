@@ -7,20 +7,22 @@
 namespace base {
 
 class Box;
+class Command;
 
 class Environment : public QObject {
 public:
     Environment();
     ~Environment();
     struct {
-        QDir dir;
-        QString outputFolder;
+        struct {
+            QDir work, input, output, script;
+        } dir;
+        bool autosave;
+        QString latestLoadArg, latestOutputFilePath;
         Box *root;
+        Command *command;
     } state;
 private:
-    // Methods
-    void setDir();
-    void setOutputFolder();
     // Singleton
     static Environment *_environment;
     friend Environment& environment();

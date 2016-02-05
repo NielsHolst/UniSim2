@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QCoreApplication>
+#include <base/organisation.h>
 #include "autotest.h"
 
 

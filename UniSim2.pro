@@ -15,11 +15,16 @@ SUBDIRS += savanna
 savanna.subdir = src/plugins/savanna
 savanna.depends = base
 
+SUBDIRS += test_boxes
+test_boxes.subdir = src/plugins/test_boxes
+test_boxes.depends = base
+
 SUBDIRS += test
 test.subdir = src/apps/test
 test.depends = boxes
 test.depends = command
 test.depends = savanna
+test.depends = test_boxes
 
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim

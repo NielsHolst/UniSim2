@@ -9,7 +9,8 @@ class cd : public base::Command
 {
 public:
     cd(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

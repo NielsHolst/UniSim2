@@ -12,12 +12,14 @@ class set_font : public set
 {
 public:
     set_font(QString name, QObject *parent);
-    void execute();
 private:
+    // Data
     static QFontDatabase _fontDatabase;
     QFont _font;
     QTextCursor _cursor;
     QTextCharFormat _format;
+    // Methods
+    void doExecute();
     void showFont();
     void setFont(int pt);
     void setFont(QString family);

@@ -8,7 +8,8 @@ class update : public base::Command
 {
 public:
     update(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

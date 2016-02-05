@@ -8,7 +8,8 @@ class quit : public base::Command
 {
 public:
     quit(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

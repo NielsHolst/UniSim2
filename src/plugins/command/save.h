@@ -8,7 +8,8 @@ class save : public base::Command
 {
 public:
     save(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

@@ -1,7 +1,8 @@
-#include <base/command.h>
+#include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/general.h>
 #include <base/publish.h>
 #include "set_output_folder.h"
 
@@ -10,6 +11,8 @@ using namespace base;
 namespace command {
 
 PUBLISH(set_output_folder)
+HELP(set_output_folder, "set output folder", "shows output folder")
+HELP(set_output_folder_path, "set output folder <path>", "sets output folder")
 
 set_output_folder::set_output_folder(QString name, QObject *parent)
     : Command(name, parent)
@@ -17,7 +20,8 @@ set_output_folder::set_output_folder(QString name, QObject *parent)
     Class(set_output_folder);
 }
 
-void set_output_folder::execute() {
+
+void set_output_folder::doExecute() {
     Environment &env(environment());
     DialogBase &dia(dialog());
 
@@ -25,21 +29,26 @@ void set_output_folder::execute() {
     case 3:
         break;
     case 4:
-        env.state.outputFolder = _args.at(3);
+        env.state.dir.output = QDir(_args.at(3));
         break;
     default:
-        dia.error("Command 'set output folder' takes at most 1 argument");
-        return;
+        throw Exception("Command 'set output folder' takes at most 1 argument");
     }
 
-    QDir output = env.state.dir;
-    bool exists = output.cd(env.state.outputFolder);
-    QString info = output.absolutePath();
-    if (!exists) {
-        QString absPath = env.state.dir.absolutePath() + "/" + env.state.outputFolder;
-        absPath = QDir::toNativeSeparators(absPath);
-        info = "'" + absPath +  "' will be created when needed";
+    QDir dir = locateDir(env.state.dir.work, env.state.dir.output);
+
+    QString info;
+    if (QDir(env.state.dir.output).isRelative()) {
+        info = "Relative path '%1' resolves to '%2";
+        info = info.arg(env.state.dir.output.path()).arg(dir.absolutePath());
     }
+    else {
+        info = "Absolute path '%1'";
+        info = dir.absolutePath();
+    }
+    if (!dir.exists())
+        info += "\n'" + dir.absolutePath() +  "' will be created when needed";
+
     dia.information(info);
 }
 

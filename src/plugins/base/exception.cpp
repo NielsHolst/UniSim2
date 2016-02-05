@@ -28,10 +28,11 @@ const QObject* Exception::context() {
 }
 
 const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
-    QString name = fullName(_context);
-    QString msg = _value.isEmpty() ?
-                  QString{"Error: '%1'\nObject: '%2'"}.arg(_message).arg(name) :
-                  QString{"Error: '%1'\nValue: '%2'\nObject: '%3'"}.arg(_message).arg(_value).arg(name);
+    QString msg = QString{"Error: '%1'"}.arg(_message);
+    if (!_value.isEmpty())
+        msg += QString("\nValue: '%1'").arg(_value);
+    if (_context)
+        msg += QString("\nObject: '%1'").arg(fullName(_context));
     if (!_hint.isEmpty())
         msg += "\nHint: " + _hint;
     return msg.toLocal8Bit();

@@ -68,12 +68,27 @@ namespace TestBoxCases {
                     endbox().
                 endbox().
                 box("Grazer").name("zebra").
-                    port("density").equals(100).
+                    port("initialDensity").equals(100).
                     port("killRate").import("lion/adult[killRate]").
                 endbox().
                 box("Grazer").name("gnu").
-                port("density").equals(20).
+                port("initialDensity").equals(20).
                     port("killRate").import("lion/adult[killRate]").
+                endbox().
+            endbox();
+        return builder.content();
+    }
+
+    Box* case3a() {
+        BoxBuilder builder;
+        builder.
+            box("Simulation").name("test_box_cases_3a").
+                port("steps").equals(2).
+                box("ModelA").name("A").
+                    port("input2").trackOn().
+                    port("input4").trackOn().
+                    port("output2").trackOff().
+                    port("output4").trackOff().
                 endbox().
             endbox();
         return builder.content();

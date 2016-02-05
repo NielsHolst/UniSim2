@@ -8,7 +8,8 @@ class list : public base::Command
 {
 public:
     list(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

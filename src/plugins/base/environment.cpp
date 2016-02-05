@@ -17,42 +17,27 @@ Environment& environment() {
 }
 
 Environment::Environment() {
-    setDir();
-    setOutputFolder();
+    QSettings settings;
+    state.dir.work = QDir(settings.value("environment/dir-work", QString(".")).toString());
+    state.dir.input = QDir(settings.value("environment/dir-input", QString(".")).toString());
+    state.dir.output = QDir(settings.value("environment/dir-output", QString(".")).toString());
+    state.dir.script = QDir(settings.value("environment/dir-script", QString(".")).toString());
+    state.autosave = settings.value("environment/autosave", true).toBool();
+    state.latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
+    state.latestOutputFilePath = settings.value("environment/latest-output-file-path", QString()).toString();
     state.root = 0;
+    state.command = 0;
 }
 
 Environment::~Environment() {
     QSettings settings;
-    settings.setValue("environment/working-directory", state.dir.absolutePath());
-    settings.setValue("environment/output-folder", state.outputFolder);
-}
-
-void Environment::setDir() {
-    QSettings settings;
-    QString path = settings.value("environment/working-directory", "~").toString();
-    if (path.isEmpty())
-        state.dir = QDir::home();
-    else {
-        state.dir = QDir(path);
-        if (!state.dir.exists())
-            state.dir = QDir::home();
-    }
-}
-
-void Environment::setOutputFolder() {
-    QSettings settings;
-    state.outputFolder = settings.value("environment/output-folder", QString("output")).toString();
-//    QDir output(state.outputFolder),
-//         path;
-//    if (output.isAbsolute())
-//        path = output;
-//    else {
-//        path = dir;
-//        if (!path.mkpath(output)) {
-//            path.mkpath( state.outputFolder = "output" );
-//        }
-//    }
+    settings.setValue("environment/dir-work", state.dir.work.path());
+    settings.setValue("environment/dir-input", state.dir.input.path());
+    settings.setValue("environment/dir-output", state.dir.output.path());
+    settings.setValue("environment/dir-script", state.dir.script.path());
+    settings.setValue("environment/autosave", state.autosave);
+    settings.setValue("environment/latest-load-arg", state.latestLoadArg);
+    settings.setValue("environment/latest-output-file-path", state.latestOutputFilePath);
 }
 
 }

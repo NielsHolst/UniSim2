@@ -8,7 +8,8 @@ class clear : public base::Command
 {
 public:
     clear(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

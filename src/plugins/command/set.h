@@ -8,7 +8,8 @@ class set : public base::Command
 {
 public:
     set(QString name, QObject *parent);
-    void execute();
+private:
+    void doExecute();
 };
 
 }

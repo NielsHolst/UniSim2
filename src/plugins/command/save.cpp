@@ -1,4 +1,5 @@
 #include <base/dialog.h>
+#include <base/exception.h>
 #include <base/publish.h>
 #include "save.h"
 #include "save_output.h"
@@ -15,12 +16,11 @@ save::save(QString name, QObject *parent)
     Class(save);
 }
 
-void save::execute() {
+void save::doExecute() {
     Command *command(0);
     int n = _args.size();
     if (n == 1) {
-        dialog().error("Write: save <something>");
-        return;
+        throw Exception("Write: save <something>");
     }
     else {
         Q_ASSERT(n > 1);
@@ -28,7 +28,7 @@ void save::execute() {
         if (a1 == "output")
             command = new save_output("save_output", this);
         else
-            dialog().error("Unknown command: set " + a1);
+            throw Exception("Unknown command: set " + a1);
     }
     if (command) {
         command->arguments(_args);

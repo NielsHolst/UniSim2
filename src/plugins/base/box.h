@@ -8,7 +8,7 @@
 #include "port.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::ReadWrite)
+#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Read|Port::Write).trackOff()
 #define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset()
 
 namespace base {
@@ -26,6 +26,8 @@ public:
     Port* port(QString name);
 
     static Box* currentRoot();
+    QString className() const;
+    QString fullName() const;
 
     virtual void amend() {}
     virtual void initialize() {}

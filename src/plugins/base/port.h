@@ -19,16 +19,18 @@ class Box;
 
 class Port : public QObject {
 public:
-    enum Access{Read, ReadWrite};
+    enum Access{Read=1, Write=2};
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
     PortTransform _transform;
     QStringList _importPortPaths;
     QVector<Port *> _importPorts;
-    Access _access;
+    unsigned _accessFlags;
     bool _reset;
     Vector _track;
+    bool _trackOn;
+    static unsigned _trackFlags;
 
 public:
     // Configure
@@ -38,10 +40,12 @@ public:
     Port& equals(const char *value) { return equals(QString(value)); }
     Port& import(QString pathToPort);
     Port& transform(PortTransform t);
-    Port& access(Access a);
+    Port& access(unsigned accessFlags);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
+    Port& trackOn();
+    Port& trackOff();
 
     // Change
     void resolveImports();
@@ -53,6 +57,7 @@ public:
 
     // Access
     Box *boxParent();
+    bool hasValue() const;
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
     const Vector* trackPtr() const;
@@ -60,7 +65,7 @@ public:
     // Attributes
     PortType type() const;
     PortTransform transform() const;
-    Access access() const;
+    unsigned accessFlags() const;
     bool hasImport() const;
     static PortType commonType(const QVector<Port *> &ports);
 };
@@ -77,6 +82,8 @@ template <class T> Port& Port::equals(T value)
 {
     if (_valuePtr == 0)
         throw Exception("Cannot set port value by 'equals' because port 'data' has not been set", "", this);
+    if (!(_accessFlags & Write))
+        throw Exception("Cannot set port value by 'equals' because port is not for input", "", this);
     _importPortPaths.clear();
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, _transform);
     return *this;

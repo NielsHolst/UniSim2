@@ -26,9 +26,11 @@ HEADERS +=  \
     assign.h \
     box.h \
     box_builder.h \
-    box_step.h \
+    box_reader_xml.h \
     box_output.h \
+    box_step.h \
     command.h  \
+    command_help.h  \
     convert.h \
     dialog.h \
     dialog_base.h \
@@ -48,16 +50,22 @@ HEADERS +=  \
     product_base.h \
     product.h \
     random_generator.h \
+    test_num.h \
+    time_with_units.h \
     vector.h \
     vector_vector.h \
-    vectorize.h
+    vectorize.h \
+    organisation.h
 
 SOURCES +=  \
     assign.cpp \
     box.cpp \
     box_builder.cpp \
     box_output.cpp \
+    box_reader_xml.cpp \
+    box_step.cpp \
     command.cpp \
+    command_help.cpp  \
     convert.cpp \
     dialog.cpp \
     dialog_base.cpp \
@@ -75,6 +83,7 @@ SOURCES +=  \
     port_type.cpp \
     product_base.cpp \
     random_generator.cpp \
+    time_with_units.cpp \
     vector.cpp \
     vector_vector.cpp \
     vectorize.cpp
