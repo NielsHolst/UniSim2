@@ -354,6 +354,14 @@ void TestPath::testRoot() {
     compareVectors(relative, absolute, 2);
 }
 
+void TestPath::testBarePort() {
+    setContext("A2");
+    QVector<QObject*> relative;
+
+    relative = Path("*{Port}", _context).resolve();
+    QCOMPARE(relative.size(), 12);
+}
+
 void TestPath::testNumberOfMatches() {
     QString path("/A/A2/*[*]");
 

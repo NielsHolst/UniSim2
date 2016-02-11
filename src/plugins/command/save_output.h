@@ -31,6 +31,7 @@ private:
     QString scriptFolderPath();
     QString fileName();
     void writeTracks(QTextStream &stream);
+    void writeColumnLabels(QTextStream &stream);
     void writeScriptCode(QTextStream &stream);
     QString keyOutputNumber();
     int getOutputNumber();

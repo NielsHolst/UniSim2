@@ -10,6 +10,7 @@
 #include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
+#include <base/unique_name.h>
 #include "save_output.h"
 
 using namespace base;
@@ -121,8 +122,27 @@ void save_output::writeTracks(QTextStream &stream) {
     Port *last = _ports.last();
 
     // Write columns labels
+    writeColumnLabels(stream);
+
+    // Write columns format
     for (Port *port : _ports) {
-        stream << port->objectName();
+        stream << port->Rformat();
+        if (port != last)
+            stream << "\t";
+    }
+    stream << "\n";
+
+    // Write axis
+    for (Port *port : _ports) {
+        stream << port->axis();
+        if (port != last)
+            stream << "\t";
+    }
+    stream << "\n";
+
+    // Write page
+    for (Port *port : _ports) {
+        stream << port->page();
         if (port != last)
             stream << "\t";
     }
@@ -140,12 +160,21 @@ void save_output::writeTracks(QTextStream &stream) {
     }
 }
 
+void save_output::writeColumnLabels(QTextStream &stream) {
+//    QStringList labels;
+//    for (Port *port : _ports)
+//        labels << port->label();
+    UniqueName unique(_ports);
+    QStringList labels = unique.resolve();
+    stream << labels.join("\t") << "\n";
+}
+
 void save_output::writeScriptCode(QTextStream &stream) {
     stream << "# Generated on " << QDateTime::currentDateTime().toString() << "\n";
-    stream << "outputFilePath <- \"" << outputFilePath() << "\"\n";
-    stream << "scriptFolderPath <- \"" << scriptFolderPath() << "\"\n";
-    stream << "output <- read.table(outputFilePath, header=TRUE, sep=\"\\t\")\n";
-    stream << "setwd(scriptFolderPath)\n";
+    stream << "output_file_path <- \"" << outputFilePath() << "\"\n";
+    stream << "script_folder_path <- \"" << scriptFolderPath() << "\"\n";
+    stream << "setwd(script_folder_path)\n";
+    stream << "source(\"common.R\")\n";
 }
 
 QString save_output::keyOutputNumber() {

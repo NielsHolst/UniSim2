@@ -10,8 +10,8 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
-      _accessFlags(Read), _reset(false),
-      _track(this), _trackOn(true)
+      _accessFlags(Read), _label(name), _Rformat("NA"), _axis("y"), _page("NA"), _group("NA"),
+      _reset(false), _track(this), _trackOn(true)
 {
     Class(Port);
     setObjectName(name);
@@ -20,7 +20,7 @@ Port::Port(QString name, QObject *parent)
         boxParent->addPort(this);
 }
 
-Port& Port::import(QString pathToPort) {
+Port& Port::imports(QString pathToPort) {
     if (!(_accessFlags & Write))
         throw Exception("Cannot import port value because port is not for input", "", this);
     _importPortPaths << pathToPort;
@@ -34,6 +34,33 @@ Port& Port::transform(PortTransform t) {
 
 Port& Port::access(unsigned accessFlags) {
     _accessFlags = accessFlags;
+    return *this;
+}
+
+Port& Port::label(QString la) {
+    _label = la;
+    return *this;
+}
+
+Port& Port::Rformat(QString format) {
+    _Rformat = format;
+    return *this;
+}
+
+Port& Port::axis(QString ax) {
+    if (ax != "x" && ax != "y" && ax != "facet")
+        throw Exception("Port axis must be one of 'x', 'y' or 'facet'", ax);
+    _axis = ax;
+    return *this;
+}
+
+Port& Port::page(QString pa) {
+    _page = pa;
+    return *this;
+}
+
+Port& Port::group(QString gr) {
+    _group = gr;
     return *this;
 }
 
@@ -113,6 +140,25 @@ void Port::track(Step step) {
         _track.append(_valuePtr);
 }
 
+void Port::Rformat(PortType type) {
+    switch (type) {
+        case Date:
+        case DateVector:
+            Rformat("ymd");
+            break;
+        case Time:
+        case TimeVector:
+            Rformat("hms");
+            break;
+        case DateTime:
+        case DateTimeVector:
+            Rformat("ymdhms");
+            break;
+        default:
+            Rformat("NA");
+    }
+}
+
 Box *Port::boxParent() {
     Box *par = dynamic_cast<Box*>(parent());
     if (!par)
@@ -138,6 +184,26 @@ PortTransform Port::transform() const {
 
 unsigned Port::accessFlags() const {
     return _accessFlags;
+}
+
+QString Port::label() const {
+    return _label;
+}
+
+QString Port::Rformat() const {
+    return _Rformat;
+}
+
+QString Port::axis() const {
+    return _axis;
+}
+
+QString Port::page() const {
+    return _page;
+}
+
+QString Port::group() const {
+    return _group;
 }
 
 bool Port::hasImport() const {

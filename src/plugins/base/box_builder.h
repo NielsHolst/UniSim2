@@ -18,13 +18,20 @@ public:
     BoxBuilder& name(QString boxName);
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
-    BoxBuilder& import(QString pathToPort);
+    BoxBuilder& imports(QString pathToPort);
+    BoxBuilder& label(QString la);
+    BoxBuilder& Rformat(QString format);
+    BoxBuilder& axis(QString ax);
+    BoxBuilder& page(QString pa);
+    BoxBuilder& group(QString gr);
     BoxBuilder& trackOn();
     BoxBuilder& trackOff();
     BoxBuilder& endbox();
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
     BoxBuilder& transform(PortTransform pt);
+    const Box* currentBox() const;
+    const Port* currentPort() const;
     Box* content();
 private:
     Box *_content, *_currentBox;

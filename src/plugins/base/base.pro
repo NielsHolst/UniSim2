@@ -52,6 +52,7 @@ HEADERS +=  \
     random_generator.h \
     test_num.h \
     time_with_units.h \
+    unique_name.h \
     vector.h \
     vector_vector.h \
     vectorize.h \
@@ -84,6 +85,7 @@ SOURCES +=  \
     product_base.cpp \
     random_generator.cpp \
     time_with_units.cpp \
+    unique_name.cpp \
     vector.cpp \
     vector_vector.cpp \
     vectorize.cpp

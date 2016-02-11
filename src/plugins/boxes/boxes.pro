@@ -16,6 +16,8 @@ HEADERS +=  \
     random_normal.h \
     random_poisson.h \
     random_uniform.h \
+    sandy.h \
+    sequence.h \
     simulation.h
 	
 SOURCES +=  \
@@ -26,6 +28,8 @@ SOURCES +=  \
     random_normal.cpp \
     random_poisson.cpp \
     random_uniform.cpp \
+    sandy.cpp \
+    sequence.cpp \
     simulation.cpp
 
 

@@ -158,7 +158,7 @@ template<> QTime convert(QString source) {
 
 template<> bool convert(QDate)              { throw Exception("Cannot convert Date to Bool"); }
 template<> char convert(QDate)              { throw Exception("Cannot convert Date to Char"); }
-template<> QString convert(QDate source)    { return source.toString("d/M/yyyy"); }
+template<> QString convert(QDate source)    { return source.toString("yyyy/M/d"); }
 template<> QDate convert(QDate source)      { return source; }
 template<> QDateTime convert(QDate source)  { return QDateTime(source); }
 template<> QTime convert(QDate)             { throw Exception("Cannot convert Date to Time"); }
@@ -169,7 +169,7 @@ template<> QTime convert(QDate)             { throw Exception("Cannot convert Da
 
 template<> bool convert(QDateTime)              { throw Exception("Cannot convert DateTime to Bool"); }
 template<> char convert(QDateTime)              { throw Exception("Cannot convert DateTime to Char"); }
-template<> QString convert(QDateTime source)    { return source.toString("d/M/yyyy 0:0:0"); }
+template<> QString convert(QDateTime source)    { return source.toString("yyyy/M/d hh:mm:ss"); }
 template<> QDate convert(QDateTime source)      { return source.date(); }
 template<> QDateTime convert(QDateTime source)  { return source; }
 template<> QTime convert(QDateTime source)      { return source.time(); }
@@ -180,7 +180,7 @@ template<> QTime convert(QDateTime source)      { return source.time(); }
 
 template<> bool convert(QTime)              { throw Exception("Cannot convert Time to Bool"); }
 template<> char convert(QTime)              { throw Exception("Cannot convert Time to Char"); }
-template<> QString convert(QTime source)    { return source.toString("0:0:0"); }
+template<> QString convert(QTime source)    { return source.toString("hh:mm:ss"); }
 template<> QDate convert(QTime)             { throw Exception("Cannot convert Time to Date"); }
 template<> QDateTime convert(QTime)         { throw Exception("Cannot convert Time to DateTime"); }
 template<> QTime convert(QTime source)      { return source; }

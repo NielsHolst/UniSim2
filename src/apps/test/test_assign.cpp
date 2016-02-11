@@ -65,7 +65,7 @@ void TestAssign::testToStringFromDate() {
     QString dest;
     QDate source(2015, 12, 24);
     assign(String, &dest, Date, &source);
-    QCOMPARE(dest, QString("24/12/2015"));
+    QCOMPARE(dest, QString("2015/12/24"));
 }
 
 void TestAssign::testToIntFromDate() {

@@ -16,9 +16,10 @@ namespace base {
 class Exception : public std::exception {
 public:
     Exception(QString message, QString value = "", const QObject *context = 0, QString hint = "");
-    QString message();
-    QString value();
-    const QObject* context();
+    QString message() const;
+    QString value() const;
+    QString fullText() const;
+    const QObject* context() const;
     const char* what() const _GLIBCXX_USE_NOEXCEPT;
 
 private:

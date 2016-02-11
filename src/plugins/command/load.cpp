@@ -49,7 +49,7 @@ void load::readXml(QString fileName) {
         builder = reader.parse(filePath(fileName));
     }
     catch (Exception &ex) {
-        throw Exception(QString("Load failed.\n") + ex.what());
+        throw Exception(QString("Load failed\n") + ex.fullText());
     }
     Box *newRoot = builder.content();
     environment().state.root = newRoot;

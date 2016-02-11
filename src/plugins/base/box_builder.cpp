@@ -12,6 +12,9 @@ BoxBuilder::BoxBuilder()
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
+    if (_content && _stack.isEmpty()) {
+        throw Exception("BoxBuilder: Boxes miss a common root");
+    }
     _stack.push(_currentBox);
     _currentBox =  MegaFactory::create<Box>(className, "", _currentBox);
     if (!_content)
@@ -43,10 +46,45 @@ BoxBuilder& BoxBuilder::port(QString name) {
     return *this;
 }
 
-BoxBuilder& BoxBuilder::import(QString pathToPort) {
+BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
-        throw Exception("BoxBuilder: 'port' missing before 'import'");
-    _currentPort->import(pathToPort);
+        throw Exception("BoxBuilder: 'port' missing before 'imports'");
+    _currentPort->imports(pathToPort);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::label(QString la) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'label'");
+    _currentPort->label(la);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::Rformat(QString format) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'Rformat'");
+    _currentPort->Rformat(format);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::axis(QString ax) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'axis'");
+    _currentPort->axis(ax);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::page(QString pa) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'page'");
+    _currentPort->page(pa);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::group(QString gr) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'group'");
+    _currentPort->group(gr);
     return *this;
 }
 
@@ -77,6 +115,14 @@ BoxBuilder& BoxBuilder::endbox() {
     _currentBox = _stack.pop();
     _currentPort = 0;
     return *this;
+}
+
+const Box* BoxBuilder::currentBox() const {
+    return _currentBox;
+}
+
+const Port* BoxBuilder::currentPort() const {
+    return _currentPort;
 }
 
 Box* BoxBuilder::content() {

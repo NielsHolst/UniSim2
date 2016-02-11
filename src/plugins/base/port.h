@@ -27,6 +27,7 @@ private:
     QStringList _importPortPaths;
     QVector<Port *> _importPorts;
     unsigned _accessFlags;
+    QString _label, _Rformat, _axis, _page, _group;
     bool _reset;
     Vector _track;
     bool _trackOn;
@@ -38,9 +39,14 @@ public:
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value) { return equals(QString(value)); }
-    Port& import(QString pathToPort);
+    Port& imports(QString pathToPort);
     Port& transform(PortTransform t);
     Port& access(unsigned accessFlags);
+    Port& label(QString la);
+    Port& Rformat(QString format);
+    Port& axis(QString ax);
+    Port& page(QString pa);
+    Port& group(QString gr);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
@@ -54,6 +60,7 @@ public:
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
     void track(Step step);
+    void Rformat(PortType type);
 
     // Access
     Box *boxParent();
@@ -66,6 +73,11 @@ public:
     PortType type() const;
     PortTransform transform() const;
     unsigned accessFlags() const;
+    QString label() const;
+    QString Rformat() const;
+    QString axis() const;
+    QString page() const;
+    QString group() const;
     bool hasImport() const;
     static PortType commonType(const QVector<Port *> &ports);
 };
@@ -74,6 +86,7 @@ public:
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
     _valueType = typeOf<T>();
+    Rformat(_valueType);
     base::initialize(_valueType, _valuePtr);
     return *this;
 }

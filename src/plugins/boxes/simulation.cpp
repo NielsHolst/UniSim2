@@ -14,8 +14,8 @@ Simulation::Simulation(QString name, QObject *parent)
     Class(Simulation);
     Input(iterations).equals(1);
     Input(steps).equals(1);
-    Output(iteration).noReset();
-    Output(step);
+    Output(iteration).noReset().Rformat("factor").axis("facet");
+    Output(step).axis("x");
 }
 
 void Simulation::run() {

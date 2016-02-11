@@ -41,6 +41,7 @@ private slots:
     void testPathList();
     void testGlobal();
     void testRoot();
+    void testBarePort();
     void testNumberOfMatches();
 
     void testEmpty();

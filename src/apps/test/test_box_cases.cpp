@@ -58,22 +58,22 @@ namespace TestBoxCases {
                 port("steps").equals(2).
                 box().name("lion").
                     newPort("sum").data(&sum).equals(77).
-                    newPort("sum2").data(&sum2).import("./juvenile[n]").import("./adult[n]").transform(Sum).
+                    newPort("sum2").data(&sum2).imports("./juvenile[n]").imports("./adult[n]").transform(Sum).
                     box("Lion").name("juvenile").
                         port("n").equals(25).
                     endbox().
                     box("Lion").name("adult").
                         port("n").equals(7).
-                        port("preyDensity").import("zebra[density]").import("gnu[density]").transform(Sum).
+                        port("preyDensity").imports("zebra[density]").imports("gnu[density]").transform(Sum).
                     endbox().
                 endbox().
                 box("Grazer").name("zebra").
                     port("initialDensity").equals(100).
-                    port("killRate").import("lion/adult[killRate]").
+                    port("killRate").imports("lion/adult[killRate]").
                 endbox().
                 box("Grazer").name("gnu").
                 port("initialDensity").equals(20).
-                    port("killRate").import("lion/adult[killRate]").
+                    port("killRate").imports("lion/adult[killRate]").
                 endbox().
             endbox();
         return builder.content();

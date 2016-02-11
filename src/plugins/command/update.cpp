@@ -29,7 +29,7 @@ void update::doExecute() {
             root->updateFamily();
         }
         catch (Exception &ex) {
-            throw Exception("Update: " + root->objectName() + " interrupted\n" + ex.what());
+            throw Exception("Update: " + root->objectName() + " interrupted\n" + ex.fullText());
         }
         dialog().information("Update: " + root->objectName() + " finished");
     }

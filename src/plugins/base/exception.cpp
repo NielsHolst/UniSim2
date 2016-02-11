@@ -15,27 +15,31 @@ Exception::Exception(QString message, QString value, const QObject *context, QSt
 {
 }
 
-QString Exception::message() {
+QString Exception::message() const{
     return _message;
 }
 
-QString Exception::value() {
+QString Exception::value() const{
     return _value;
 }
 
-const QObject* Exception::context() {
+const QObject* Exception::context() const{
     return _context;
 }
 
-const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
-    QString msg = QString{"Error: '%1'"}.arg(_message);
+QString Exception::fullText() const{
+    QString text = QString{"Error: %1"}.arg(_message);
     if (!_value.isEmpty())
-        msg += QString("\nValue: '%1'").arg(_value);
+        text += QString("\nValue: '%1'").arg(_value);
     if (_context)
-        msg += QString("\nObject: '%1'").arg(fullName(_context));
+        text += QString("\nObject: %1").arg(fullName(_context));
     if (!_hint.isEmpty())
-        msg += "\nHint: " + _hint;
-    return msg.toLocal8Bit();
+        text += "\nHint: " + _hint;
+    return text;
+}
+
+const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
+    return fullText().toLocal8Bit();
 }
 
 }

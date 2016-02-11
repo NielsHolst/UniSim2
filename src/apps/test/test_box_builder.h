@@ -14,6 +14,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void testBuild1();
+    void testMissingRoot();
 private:
     base::Box *tree;
 };

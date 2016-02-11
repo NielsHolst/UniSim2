@@ -27,3 +27,27 @@ void TestBoxBuilder::testBuild1() {
             << qPrintable(BoxOutput(tree, BoxOutput::Indented).asText())
             << "\n\n";
 }
+
+void TestBoxBuilder::testMissingRoot() {
+    BoxBuilder builder;
+    bool excepted{false};
+    try {
+        builder.
+            box().name("A").
+                box().name("a").
+                endbox().
+                box().name("b").
+                endbox().
+            endbox().
+            box().name("B").
+                box().name("a").
+                endbox().
+                box().name("b").
+                endbox().
+            endbox();
+    }
+    catch (Exception &) {
+        excepted = true;
+    }
+    QVERIFY(excepted);
+}

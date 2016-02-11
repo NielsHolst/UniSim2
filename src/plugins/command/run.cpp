@@ -50,7 +50,7 @@ void run::doRun() {
         root->run();
     }
     catch (Exception &ex) {
-        throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.what());
+        throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.fullText());
     }
     dialog().information("Run: " + root->objectName() + " finished");
 }
