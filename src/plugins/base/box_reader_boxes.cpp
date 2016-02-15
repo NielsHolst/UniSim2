@@ -15,55 +15,70 @@ namespace fusion = boost::fusion;
 namespace phoenix = boost::phoenix;
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
+using qi::lexeme;
+using ascii::char_;
 
 namespace grammar {
-
-    namespace qi = boost::spirit::qi;
-    namespace ascii = boost::spirit::ascii;
-
-    struct name_value_pair {
+    struct NameValuePair {
         std::string name, value;
     };
 
-    struct node {
+    struct Node;
+    typedef boost::recursive_wrapper<Node> CompositeNode;
+    struct Node {
         std::string className, objectName;
-        std::vector<name_value_pair> parameters;
+        std::vector<NameValuePair> parameters;
+        std::vector<CompositeNode> children;
+
+        void print(QString &s, int level = 0) const {
+            s += QString().fill(' ', 2*level);
+            s += QString::fromStdString(className + " " + objectName);
+            s += "\n";
+            for (auto parameter : parameters) {
+                s += QString().fill(' ', 2*(level+1));
+                s += QString::fromStdString(parameter.name + " is '" + parameter.value + "'\n");
+            }
+            for (auto child : children) {
+                const Node *node = child.get_pointer();
+                node->print(s,level+1);
+            }
+        }
     };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
-    grammar::node,
+    grammar::Node,
     (std::string, className)
     (std::string, objectName)
-    (std::vector<grammar::name_value_pair>, parameters)
+    (std::vector<grammar::NameValuePair>, parameters)
+    (std::vector<grammar::CompositeNode>, children)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
-    grammar::name_value_pair,
+    grammar::NameValuePair,
     (std::string, name)
     (std::string, value)
 )
 
 namespace grammar {
     template <typename Iterator>
-    struct node_parser : qi::grammar<Iterator, ascii::space_type, node()>
+    struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     {
-        qi::rule<Iterator, ascii::space_type, node()> start;
+        qi::rule<Iterator, ascii::space_type, Node()> node;
         qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value;
-        qi::rule<Iterator, ascii::space_type, name_value_pair()> parameter;
-        qi::rule<Iterator, ascii::space_type, std::vector<name_value_pair>()> parameters;
+        qi::rule<Iterator, ascii::space_type, NameValuePair()> parameter;
+        qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> parameters;
+        qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
 
-        node_parser() : node_parser::base_type(start) {
-            using qi::lexeme;
-            using ascii::char_;
-
-            start %= class_name >> -object_name >> parameters  >> '{' >> '}';
+        node_parser() : node_parser::base_type(node) {
+            node %= class_name >> -object_name >> -parameters  >> -body;
             class_name %= identifier;
             object_name %= identifier;
             identifier %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
             value %= lexeme[+(char_ - char_(" )"))];
-            parameter %= identifier >> '=' >> value;
             parameters %= '(' >> *parameter >> ')';
+            parameter %= identifier >> '=' >> value;
+            body %= '{' >> *node >> '}';
         }
 
     };
@@ -92,20 +107,13 @@ BoxBuilder BoxReaderBoxes::parse(QString filePath) {
              end = storage.end();
     grammar::node_parser<Iterator> parser;
     using boost::spirit::ascii::space;
-    grammar::node ast;
+    grammar::Node ast;
 
     bool ok = phrase_parse(iter, end, parser, space, ast);
     if (ok && iter == end) {
-        std::string s = "Parse success\n  ";
-        s += ast.className + " ";
-        s += ast.objectName + ": ";
-        if (ast.parameters.size() == 0)
-            s+= "No parameters";
-        else {
-            for (auto it=ast.parameters.begin(); it!=ast.parameters.end(); ++it)
-                s += it->name + " equals '" + it->value + "' ";
-        }
-        dialog().information(QString::fromStdString(s));
+        QString s;
+        ast.print(s);
+        dialog().information(s);
     }
     else
         dialog().information("Parse failure");
