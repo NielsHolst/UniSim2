@@ -1,12 +1,13 @@
 #include <QXmlStreamAttributes>
 #include "box.h"
 #include "box_reader_xml.h"
-#include "dialog.h"
+//#include "dialog.h"
 #include "exception.h"
 
 namespace base {
 
 BoxReaderXml::BoxReaderXml()
+    : BoxReaderBase()
 {
     validAttributes[BoxElement]
             << "class" << "name";
@@ -21,7 +22,6 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
         throw Exception("XML syntax error at start of document");
     _reader.readNext();
     while (!_reader.atEnd()) {
-        dialog().information(_reader.tokenString()+":");
         switch (_reader.tokenType()) {
             case QXmlStreamReader::StartElement:
             setElementType();
@@ -30,7 +30,6 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
                 case BoxElement:
                     _builder.box(_attr.className);
                     _builder.name(_attr.name);
-                    dialog().information("box "+_attr.className+" "+_attr.name);
                     break;
                 case PortElement:
                     setPortName();
@@ -49,7 +48,6 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
                 switch (_elementType) {
                     case BoxElement:
                         _builder.endbox();
-                        dialog().information("endbox");
                         break;
                     case PortElement:
                         break;
@@ -154,15 +152,5 @@ void BoxReaderXml::setTrackOnOff() {
     }
 }
 
-QString BoxReaderXml::currentInfo() const {
-    QString info{"\n  Last box: '%1'\n  Last port: '%2'"};
-    QString lastBox = _builder.currentBox() ? _builder.currentBox()->objectName() : QString();
-    QString lastPort = _builder.currentPort() ? _builder.currentPort()->objectName() : QString();
-    return info.arg(lastBox).arg(lastPort);
-}
-
-QString BoxReaderXml::blankAsNa(QString s) {
-    return (s.isEmpty()) ? QString("NA") : s;
-}
 
 } // namespace

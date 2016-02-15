@@ -5,11 +5,11 @@
 #include <QMap>
 #include <QSet>
 #include <QXmlStreamReader>
-#include "box_builder.h"
+#include "box_reader_base.h"
 
 namespace base {
 
-class BoxReaderXml
+class BoxReaderXml : public BoxReaderBase
 {
 public:
     BoxReaderXml();
@@ -17,7 +17,6 @@ public:
 private:
     // Data
     QXmlStreamReader _reader;
-    BoxBuilder _builder;
     QFile _file;
     enum ElementType {BoxElement, PortElement};
     ElementType _elementType;
@@ -36,9 +35,6 @@ private:
     void setLabel();
     void setAxis();
     void setTrackOnOff();
-    QString currentInfo() const;
-    QString blankAsNa(QString s);
-
 };
 
 }

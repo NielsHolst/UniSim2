@@ -26,6 +26,8 @@ HEADERS +=  \
     assign.h \
     box.h \
     box_builder.h \
+    box_reader_base.h \
+    box_reader_boxes.h \
     box_reader_xml.h \
     box_output.h \
     box_step.h \
@@ -63,6 +65,8 @@ SOURCES +=  \
     box.cpp \
     box_builder.cpp \
     box_output.cpp \
+    box_reader_base.cpp \
+    box_reader_boxes.cpp \
     box_reader_xml.cpp \
     box_step.cpp \
     command.cpp \

@@ -14,8 +14,10 @@ public:
 private:
     // Methods
     void doExecute();
-    void readXml(QString fileName);
+    void readFile(QString fileName);
     QString filePath(QString fileName);
+    enum FileType {Boxes, Xml};
+    FileType fileType(QString fileName);
 };
 
 }

@@ -65,23 +65,18 @@ create_unisim_plots = function() {
 	llply(L$pages, 
 		function(M) {
 			ggplot(M, aes_string(x=L$x_name, y="value",colour="variable")) +
-			geom_line() 
+			geom_line(size=1.1) 
 		}
 	)
 }
 
 print_unisim_plots = function() {
-	P = create_unisim_plots()
-	n = length(P)
-	if (n>0) {
-		print(P[[1]])
-		if (n>1) {
-			for (i in 2:n) {
-				print(P[[i]])
-				windows()
-			}
+	l_ply(create_unisim_plots(), 
+		function(p) { 
+			windows(14,10)
+			print(p)
 		}
-	}
+	)
 }
 
 print_unisim_plots()

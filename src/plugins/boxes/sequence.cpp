@@ -21,12 +21,13 @@ Sequence::Sequence(QString name, QObject *parent)
 
 void Sequence::reset() {
     if (counterMax < 1)
-        throw Exception("'counterMax' must > 0", QString::number(counterMax), this);
+        throw Exception("'counterMax' must be > 0", QString::number(counterMax), this);
     update();
 }
 
 void Sequence::update() {
-    value = min + (max - min)*counter/counterMax;
+    // Make certain that final 'value' is exactly at 'max'
+    value = (counter == counterMax) ? max : min + (max - min)*counter/counterMax;
 }
 
 

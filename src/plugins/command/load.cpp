@@ -1,6 +1,9 @@
+#include <memory>
 #include <stdio.h>
+#include <QFileInfo>
 #include "base/box.h"
 #include "base/box_builder.h"
+#include "base/box_reader_boxes.h"
 #include "base/box_reader_xml.h"
 #include <base/command_help.h>
 #include <base/dialog.h>
@@ -10,6 +13,7 @@
 #include <base/publish.h>
 #include "load.h"
 
+using std::unique_ptr;
 using namespace base;
 
 namespace command {
@@ -33,7 +37,7 @@ void load::doExecute() {
     case 2:
         delete env.state.root;
         env.state.root = 0;
-        readXml(_args.at(1));
+        readFile(_args.at(1));
         env.state.latestLoadArg = _args.at(1);
         break;
     default:
@@ -42,19 +46,42 @@ void load::doExecute() {
     }
 }
 
-void load::readXml(QString fileName) {
-    BoxReaderXml reader;
+void load::readFile(QString fileName) {
+    BoxReaderBase *reader;
+    switch(fileType(fileName)) {
+    case Boxes:
+        reader = new BoxReaderBoxes;
+        break;
+    case Xml:
+        reader = new BoxReaderXml;
+        break;
+    }
+
     BoxBuilder builder;
     try {
-        builder = reader.parse(filePath(fileName));
+        builder = reader->parse(filePath(fileName));
     }
     catch (Exception &ex) {
         throw Exception(QString("Load failed\n") + ex.fullText());
     }
     Box *newRoot = builder.content();
-    environment().state.root = newRoot;
-    QString info("New root: %1 %2");
-    dialog().information(info.arg(newRoot->className()).arg(newRoot->objectName()));
+    if (newRoot) {
+        environment().state.root = newRoot;
+        QString info("New root: %1 %2");
+        dialog().information(info.arg(newRoot->className()).arg(newRoot->objectName()));
+    }
+    else
+        dialog().error("Box is empty");
+    delete reader;
+}
+
+load::FileType load::fileType(QString fileName) {
+    QString suffix = QFileInfo(fileName).suffix().toLower();
+    if (suffix == "box")
+        return Boxes;
+    else if (suffix == "xml")
+        return Xml;
+    throw Exception("Wrong file type. Must be 'box' or 'xml'", suffix, this);
 }
 
 QString load::filePath(QString fileName) {

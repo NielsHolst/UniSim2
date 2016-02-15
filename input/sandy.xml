@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box class="Simulation" name ="sandy_demo">
-	<port name="steps" value="100"/>
+	<port name="steps" value="1000"/>
 	<port name="step" track="off"/>
 	<box class="Sequence" name ="seq">
 		<port name="min" value="10"/>
@@ -29,6 +29,7 @@
 		<port name="xMax" ref="seq[max]"/>
 		<port name="a" value="1"/>
 		<port name="b" value="1"/>
+		<port name="value" label="C"/>
 	</box>
 	<box class="Sandy" name ="D">
 		<port name="x" ref="seq[value]"/>
@@ -36,6 +37,7 @@
 		<port name="xMax" ref="seq[max]"/>
 		<port name="a" value="5"/>
 		<port name="b" value="5"/>
+		<port name="value" label="D"/>
 	</box>
 	<box class="Sandy" name ="E">
 		<port name="x" ref="seq[value]"/>
@@ -43,6 +45,7 @@
 		<port name="xMax" ref="seq[max]"/>
 		<port name="a" value="2"/>
 		<port name="b" value="1"/>
+		<port name="value" label="E"/>
 	</box>
 	<box class="Sandy" name ="F">
 		<port name="x" ref="seq[value]"/>
@@ -50,5 +53,6 @@
 		<port name="xMax" ref="seq[max]"/>
 		<port name="a" value="4"/>
 		<port name="b" value="0.5"/>
+		<port name="value" label="F"/>
 	</box>
 </box>
