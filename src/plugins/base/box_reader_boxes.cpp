@@ -18,19 +18,42 @@ namespace ascii = boost::spirit::ascii;
 using qi::lexeme;
 using ascii::char_;
 
+QString toString(std::vector<std::string> vec) {
+    QStringList list;
+    for (auto s : vec)
+        list << QString::fromStdString(s);
+    return list.join("&");
+}
+
 namespace grammar {
-//    struct NameValuePair {
-//        std::string name, value;
-//    };
+    struct NameValuePair {
+        std::string name, value;
+        QString toString() const {
+            return QString::fromStdString(name + "~" + value);
+        }
+    };
 
     struct ParameterWithAttributes {
         std::string name;
-        std::string attributes;
+        std::vector<NameValuePair> attributes;
+        QString toString() const {
+            QString s = QString::fromStdString(name);
+            if (attributes.size() > 0) {
+                s += " with";
+                for (auto attr : attributes)
+                    s += " " + attr.toString();
+            }
+            return s;
+        }
     };
 
     struct Parameter {
         ParameterWithAttributes attributedName;
         std::string value;
+        QString toString() const {
+            return attributedName.toString() + " equals '" +
+                   QString::fromStdString(value) + "'";
+        }
     };
 
     struct Node;
@@ -46,12 +69,7 @@ namespace grammar {
             s += "\n";
             for (auto parameter : parameters) {
                 s += QString().fill(' ', 2*(level+1));
-                s += QString::fromStdString(parameter.attributedName.name +
-                                            " with '"  +
-                                            parameter.attributedName.attributes +
-                                            " equals '"  +
-                                            parameter.value +
-                                            "'\n");
+                s += parameter.toString() + "\n";
             }
             for (auto child : children) {
                 const Node *node = child.get_pointer();
@@ -69,16 +87,16 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::vector<grammar::CompositeNode>, children)
 )
 
-//BOOST_FUSION_ADAPT_STRUCT(
-//    grammar::NameValuePair,
-//    (std::string, name)
-//    (std::string, value)
-//)
+BOOST_FUSION_ADAPT_STRUCT(
+    grammar::NameValuePair,
+    (std::string, name)
+    (std::string, value)
+)
 
 BOOST_FUSION_ADAPT_STRUCT(
     grammar::ParameterWithAttributes,
     (std::string, name)
-    (std::string, attributes)
+    (std::vector<grammar::NameValuePair>, attributes)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -92,7 +110,9 @@ namespace grammar {
     struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     {
         qi::rule<Iterator, ascii::space_type, Node()> node;
-        qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value, attributes;
+        qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value;
+        qi::rule<Iterator, ascii::space_type, NameValuePair()> nameValuePair;
+        qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> attributes;
         qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributedName;
         qi::rule<Iterator, ascii::space_type, Parameter()> parameter;
         qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
@@ -103,11 +123,12 @@ namespace grammar {
             class_name %= identifier;
             object_name %= identifier;
             identifier %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
-            value %= lexeme[+(char_ - char_(" )"))];
+            value %= lexeme[+(char_ - char_(" (){}"))];
             parameters %= '(' >> *parameter >> ')';
-            parameter %= attributedName >> '=' >> value;
-            attributedName %= identifier >> attributes;
-            attributes %= '{' >> identifier >> '}';
+            parameter %= attributedName >> -('=' >> value);
+            attributedName %= identifier >> -attributes;
+            attributes %= '{' >> *nameValuePair >> '}';
+            nameValuePair %= identifier >> '=' >> value;
             body %= '{' >> *node >> '}';
         }
 
