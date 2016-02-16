@@ -1,0 +1,7 @@
+Simulation(a{xxx}=2 b{yyy}=5 c{zzz}=-3)
+{
+	Sandy A()
+	Sandy B{}
+	Sandy C
+	Sandy D(){}
+}

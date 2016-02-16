@@ -19,15 +19,25 @@ using qi::lexeme;
 using ascii::char_;
 
 namespace grammar {
-    struct NameValuePair {
-        std::string name, value;
+//    struct NameValuePair {
+//        std::string name, value;
+//    };
+
+    struct ParameterWithAttributes {
+        std::string name;
+        std::string attributes;
+    };
+
+    struct Parameter {
+        ParameterWithAttributes attributedName;
+        std::string value;
     };
 
     struct Node;
     typedef boost::recursive_wrapper<Node> CompositeNode;
     struct Node {
         std::string className, objectName;
-        std::vector<NameValuePair> parameters;
+        std::vector<Parameter> parameters;
         std::vector<CompositeNode> children;
 
         void print(QString &s, int level = 0) const {
@@ -36,7 +46,12 @@ namespace grammar {
             s += "\n";
             for (auto parameter : parameters) {
                 s += QString().fill(' ', 2*(level+1));
-                s += QString::fromStdString(parameter.name + " is '" + parameter.value + "'\n");
+                s += QString::fromStdString(parameter.attributedName.name +
+                                            " with '"  +
+                                            parameter.attributedName.attributes +
+                                            " equals '"  +
+                                            parameter.value +
+                                            "'\n");
             }
             for (auto child : children) {
                 const Node *node = child.get_pointer();
@@ -50,13 +65,25 @@ BOOST_FUSION_ADAPT_STRUCT(
     grammar::Node,
     (std::string, className)
     (std::string, objectName)
-    (std::vector<grammar::NameValuePair>, parameters)
+    (std::vector<grammar::Parameter>, parameters)
     (std::vector<grammar::CompositeNode>, children)
 )
 
+//BOOST_FUSION_ADAPT_STRUCT(
+//    grammar::NameValuePair,
+//    (std::string, name)
+//    (std::string, value)
+//)
+
 BOOST_FUSION_ADAPT_STRUCT(
-    grammar::NameValuePair,
+    grammar::ParameterWithAttributes,
     (std::string, name)
+    (std::string, attributes)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    grammar::Parameter,
+    (grammar::ParameterWithAttributes, attributedName)
     (std::string, value)
 )
 
@@ -65,9 +92,10 @@ namespace grammar {
     struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     {
         qi::rule<Iterator, ascii::space_type, Node()> node;
-        qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value;
-        qi::rule<Iterator, ascii::space_type, NameValuePair()> parameter;
-        qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> parameters;
+        qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value, attributes;
+        qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributedName;
+        qi::rule<Iterator, ascii::space_type, Parameter()> parameter;
+        qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
         qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
 
         node_parser() : node_parser::base_type(node) {
@@ -77,7 +105,9 @@ namespace grammar {
             identifier %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
             value %= lexeme[+(char_ - char_(" )"))];
             parameters %= '(' >> *parameter >> ')';
-            parameter %= identifier >> '=' >> value;
+            parameter %= attributedName >> '=' >> value;
+            attributedName %= identifier >> attributes;
+            attributes %= '{' >> identifier >> '}';
             body %= '{' >> *node >> '}';
         }
 
