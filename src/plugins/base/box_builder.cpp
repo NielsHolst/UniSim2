@@ -28,13 +28,11 @@ BoxBuilder& BoxBuilder::name(QString boxName) {
     return *this;
 }
 
-BoxBuilder& BoxBuilder::newPort(QString name) {
-    if (!_currentBox) {
-        throw Exception("BoxBuilder: 'newPort' must be between 'box' and 'endbox'");
-    }
-    _currentPort = new Port(name, _currentBox);
-    _currentPort->access(Port::Read|Port::Write);
-    _currentPort->trackOff();
+BoxBuilder& BoxBuilder::endbox() {
+    if (_stack.isEmpty())
+        throw Exception("BoxBuilder: 'endbox' without matching 'box'");
+    _currentBox = _stack.pop();
+    _currentPort = 0;
     return *this;
 }
 
@@ -46,10 +44,44 @@ BoxBuilder& BoxBuilder::port(QString name) {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::newPort(QString name) {
+    if (!_currentBox) {
+        throw Exception("BoxBuilder: 'newPort' must be between 'box' and 'endbox'");
+    }
+    _currentPort = new Port(name, _currentBox);
+    _currentPort->access(Port::Read|Port::Write);
+    _currentPort->trackOff();
+    return *this;
+}
+
 BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
         throw Exception("BoxBuilder: 'port' missing before 'imports'");
     _currentPort->imports(pathToPort);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
+    if (name == "axis") return axis(value);
+    if (name == "group") return group(value);
+    if (name == "label") return label(value);
+    if (name == "page") return page(value);
+    if (name == "Rformat") return Rformat(value);
+    if (name == "track") return track(value);
+    throw Exception("Unknown port attribute", name);
+}
+
+BoxBuilder& BoxBuilder::axis(QString ax) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'axis'");
+    _currentPort->axis(ax);
+    return *this;
+}
+
+BoxBuilder& BoxBuilder::group(QString gr) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'group'");
+    _currentPort->group(gr);
     return *this;
 }
 
@@ -60,20 +92,6 @@ BoxBuilder& BoxBuilder::label(QString la) {
     return *this;
 }
 
-BoxBuilder& BoxBuilder::Rformat(QString format) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'Rformat'");
-    _currentPort->Rformat(format);
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::axis(QString ax) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'axis'");
-    _currentPort->axis(ax);
-    return *this;
-}
-
 BoxBuilder& BoxBuilder::page(QString pa) {
     if (!_currentPort)
         throw Exception("BoxBuilder: 'port' missing before 'page'");
@@ -81,11 +99,13 @@ BoxBuilder& BoxBuilder::page(QString pa) {
     return *this;
 }
 
-BoxBuilder& BoxBuilder::group(QString gr) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'group'");
-    _currentPort->group(gr);
-    return *this;
+BoxBuilder& BoxBuilder::track(QString tr) {
+    if (tr == "on")
+        return trackOn();
+    else if (tr == "off")
+        return trackOff();
+    else
+        throw Exception("Track value must be 'on' or 'off'", tr);
 }
 
 BoxBuilder& BoxBuilder::trackOn() {
@@ -102,18 +122,17 @@ BoxBuilder& BoxBuilder::trackOff() {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::Rformat(QString format) {
+    if (!_currentPort)
+        throw Exception("BoxBuilder: 'port' missing before 'Rformat'");
+    _currentPort->Rformat(format);
+    return *this;
+}
+
 BoxBuilder& BoxBuilder::transform(PortTransform pt) {
     if (!_currentPort)
         throw Exception("BoxBuilder: 'port' missing before 'transform'");
     _currentPort->transform(pt);
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::endbox() {
-    if (_stack.isEmpty())
-        throw Exception("BoxBuilder: 'endbox' without matching 'box'");
-    _currentBox = _stack.pop();
-    _currentPort = 0;
     return *this;
 }
 

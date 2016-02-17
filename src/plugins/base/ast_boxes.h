@@ -1,11 +1,9 @@
-#ifndef AST_H
-#define AST_H
+#ifndef AST_BOXES_H
+#define AST_BOXES_H
 #include <boost/fusion/include/adapt_struct.hpp>
-#include <boost/optional.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/variant.hpp>
-#include <boost/variant/recursive_variant.hpp>
-#include <QString>
+#include "ast_common.h"
 
 namespace fusion = boost::fusion;
 namespace phoenix = boost::phoenix;
@@ -13,42 +11,6 @@ namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 using qi::lexeme;
 using ascii::char_;
-
-namespace ast {
-
-typedef boost::optional<std::string> OptionalValue;
-
-struct NameValuePair {
-    std::string name, value;
-    QString toString() const;
-};
-
-struct ParameterWithAttributes {
-    std::string name;
-    std::vector<NameValuePair> attributes;
-    QString toString() const;
-};
-
-struct Parameter {
-    ParameterWithAttributes attributedName;
-    OptionalValue value;
-    QString toString() const;
-};
-
-struct Node;
-typedef boost::recursive_wrapper<Node> CompositeNode;
-
-struct Node {
-    std::string className, objectName;
-    std::vector<Parameter> parameters;
-    std::vector<CompositeNode> children;
-    QString toString() const;
-    void clear();
-private:
-    void addToString(QString &s, int level) const;
-};
-
-}
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::Node,
@@ -124,13 +86,8 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     }
 };
 
-typedef std::string::const_iterator Iterator;
+bool parse_boxes(Iterator begin, Iterator end, Node &result);
 
-bool parse(Iterator begin, Iterator end, Node &result);
-
-
-
-} //ast
-
+}
 
 #endif

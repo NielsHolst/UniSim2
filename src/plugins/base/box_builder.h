@@ -14,22 +14,30 @@ class BoxBuilder
 {
 public:
     BoxBuilder();
+    // Box
     BoxBuilder& box(QString className="Box");
     BoxBuilder& name(QString boxName);
+    BoxBuilder& endbox();
+    // Port
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
     BoxBuilder& imports(QString pathToPort);
+    // Attributes by name
+    BoxBuilder& attribute(QString name, QString value);
+    // Attributes direct
     BoxBuilder& label(QString la);
-    BoxBuilder& Rformat(QString format);
     BoxBuilder& axis(QString ax);
     BoxBuilder& page(QString pa);
     BoxBuilder& group(QString gr);
+    BoxBuilder& track(QString tr);
     BoxBuilder& trackOn();
     BoxBuilder& trackOff();
-    BoxBuilder& endbox();
+    BoxBuilder& Rformat(QString format);
+    BoxBuilder& transform(PortTransform pt);
+    // Data templates
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
-    BoxBuilder& transform(PortTransform pt);
+    // State
     const Box* currentBox() const;
     const Port* currentPort() const;
     Box* content();

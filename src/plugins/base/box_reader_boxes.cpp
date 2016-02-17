@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include "ast.h"
+#include "ast_boxes.h"
 #include "box.h"
 #include "box_reader_boxes.h"
 #include "dialog.h"
@@ -23,11 +23,13 @@ BoxBuilder BoxReaderBoxes::parse(QString filePath) {
         std::back_inserter(storage));
 
     ast::Node ast;
-    bool ok = ast::parse(storage.begin(), storage.end(), ast);
+    bool ok = ast::parse_boxes(storage.begin(), storage.end(), ast);
     if (ok)
         dialog().information(ast.toString());
     else
         dialog().information("Parse failure");
+
+    ast.addToBuilder(_builder);
 
     return _builder;
 }
