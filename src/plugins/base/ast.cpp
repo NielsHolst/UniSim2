@@ -2,7 +2,7 @@
 
 namespace ast {
 
-Node _ast;
+//Node _ast;
 
 QString NameValuePair::toString() const {
     return QString::fromStdString(name + "~" + value);
@@ -19,8 +19,10 @@ QString ParameterWithAttributes::toString() const {
 }
 
 QString Parameter::toString() const {
-    return attributedName.toString() + " equals '" +
-           QString::fromStdString(value) + "'";
+    QString val = value.is_initialized() ?
+                  QString::fromStdString(value.get()) :
+                  QString("na");
+    return attributedName.toString() + " equals '" + val + "'";
 }
 
 QString Node::toString() const {
@@ -48,6 +50,13 @@ void Node::addToString(QString &s, int level) const {
         const Node *node = child.get_pointer();
         node->addToString(s,level+1);
     }
+}
+
+bool parse(Iterator begin, Iterator end, Node &result) {
+    ast::node_parser<Iterator> parser;
+    using boost::spirit::ascii::space;
+    bool ok = phrase_parse(begin, end, parser, space, result);
+    return (ok && begin == end);
 }
 
 } // ast

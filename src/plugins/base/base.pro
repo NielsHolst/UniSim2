@@ -24,6 +24,7 @@ unix {
 # Our project header and source code
 HEADERS +=  \
     assign.h \
+    ast.h \
     box.h \
     box_builder.h \
     box_reader_base.h \
@@ -62,6 +63,7 @@ HEADERS +=  \
 
 SOURCES +=  \
     assign.cpp \
+    ast.cpp \
     box.cpp \
     box_builder.cpp \
     box_output.cpp \
