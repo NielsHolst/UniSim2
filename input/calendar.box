@@ -1,0 +1,6 @@
+Simulation calendar_demo(steps=240 step{track="off"})
+{
+	Calendar cal(dayLength{track="on" page="Day" empty=""} 
+	             sunrise{track="on" page="Sun"}
+				 sunset{track="on" page="Sun"})
+}

@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/optional.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/variant.hpp>
 #include <boost/variant/recursive_variant.hpp>
@@ -18,15 +19,11 @@ namespace ascii = boost::spirit::ascii;
 using qi::lexeme;
 using ascii::char_;
 
-QString toString(std::vector<std::string> vec) {
-    QStringList list;
-    for (auto s : vec)
-        list << QString::fromStdString(s);
-    return list.join("&");
-}
-
 namespace grammar {
-    struct NameValuePair {
+
+    typedef boost::optional<std::string> OptionalValue;
+
+struct NameValuePair {
         std::string name, value;
         QString toString() const {
             return QString::fromStdString(name + "~" + value);
@@ -49,23 +46,26 @@ namespace grammar {
 
     struct Parameter {
         ParameterWithAttributes attributedName;
-        std::string value;
+        OptionalValue value;
         QString toString() const {
-            return attributedName.toString() + " equals '" +
-                   QString::fromStdString(value) + "'";
+            QString val = value.is_initialized() ?
+                          QString::fromStdString(value.get()) :
+                          QString("na");
+            return attributedName.toString() + " equals '" + val + "'";
         }
     };
 
     struct Node;
     typedef boost::recursive_wrapper<Node> CompositeNode;
     struct Node {
-        std::string className, objectName;
+        std::string className;
+        std::string objectName;
         std::vector<Parameter> parameters;
         std::vector<CompositeNode> children;
 
         void print(QString &s, int level = 0) const {
             s += QString().fill(' ', 2*level);
-            s += QString::fromStdString(className + " " + objectName);
+            s += QString::fromStdString(className + " " + objectName + " ");
             s += "\n";
             for (auto parameter : parameters) {
                 s += QString().fill(' ', 2*(level+1));
@@ -102,7 +102,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     grammar::Parameter,
     (grammar::ParameterWithAttributes, attributedName)
-    (std::string, value)
+    (grammar::OptionalValue, value)
 )
 
 namespace grammar {
@@ -110,26 +110,45 @@ namespace grammar {
     struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     {
         qi::rule<Iterator, ascii::space_type, Node()> node;
-        qi::rule<Iterator, ascii::space_type, std::string()> class_name, object_name, identifier, value;
-        qi::rule<Iterator, ascii::space_type, NameValuePair()> nameValuePair;
+        qi::rule<Iterator, ascii::space_type, std::string()>
+                class_name, object_name, name, value, unquoted_value, quoted_value;
+        qi::rule<Iterator, ascii::space_type, OptionalValue()> optional_value;
+        qi::rule<Iterator, ascii::space_type, NameValuePair()> name_value_pair;
         qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> attributes;
-        qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributedName;
+        qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributed_name;
         qi::rule<Iterator, ascii::space_type, Parameter()> parameter;
         qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
         qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
 
         node_parser() : node_parser::base_type(node) {
-            node %= class_name >> -object_name >> -parameters  >> -body;
-            class_name %= identifier;
-            object_name %= identifier;
-            identifier %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
-            value %= lexeme[+(char_ - char_(" (){}"))];
+            // A name has C++ identifier style
+            name %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
+            // Classes and objects have a name
+            class_name %= name;
+            object_name %= name;
+            // A value may be quotes or unquoted
+            value = (quoted_value | unquoted_value);
+            // A quoted value is a string of any characters, except apostrophes;
+            // bracing apostrophes are kept in the string
+            quoted_value %= lexeme[char_('"') >> *(char_ - '"') >> char_('"')];
+            // An unquoted value is for numbers, dates and times (booleans??)
+            unquoted_value %= lexeme[+(char_ - char_(" \"(){}"))];
+            // A value may be optional
+            optional_value %= value;
+            // A name-value pair
+            name_value_pair %= name >> '=' >> value;
+            // Attributes as a list of name-value pairs
+            attributes %= '{' >> *name_value_pair >> '}';
+            // A name with optional attributes
+            attributed_name %= name >> -attributes;
+            // A parameter has a name, maybe with attributes, and maybe with a value
+            parameter %= attributed_name >> -('=' >> optional_value);
+            // A list of parameters
             parameters %= '(' >> *parameter >> ')';
-            parameter %= attributedName >> -('=' >> value);
-            attributedName %= identifier >> -attributes;
-            attributes %= '{' >> *nameValuePair >> '}';
-            nameValuePair %= identifier >> '=' >> value;
+            // A body with some nodes
             body %= '{' >> *node >> '}';
+            // A node has a class name, maybe an object name, maybe parameters, and maybe a body
+            node %= class_name >> -object_name >> -parameters  >> -body;
         }
 
     };
