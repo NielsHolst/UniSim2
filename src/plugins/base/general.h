@@ -11,6 +11,7 @@ namespace base {
 void setClassName(QObject *object, QString className);
 QString className(const QObject *object);
 QString classInheritance(const QObject *object);
+bool hasClassName(const QObject *object);
 
 QString fullName(const QObject *object);
 

@@ -32,6 +32,10 @@ QString classInheritance(const QObject *object) {
     return classInheritance.toString();
 }
 
+bool hasClassName(const QObject *object) {
+    return object->property("base::Class").isValid();
+}
+
 QString fullName(const QObject *object) {
     if (!object) return "NULL";
     QString name = object->objectName(),

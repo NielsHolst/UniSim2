@@ -4,6 +4,9 @@
 #include <fstream>
 #include "box_reader_base.h"
 
+namespace ast {
+    class Node;
+}
 namespace base {
 
 class BoxReaderBoxes : public BoxReaderBase
@@ -16,12 +19,7 @@ private:
     std::ifstream _file;
     // Methods
     void openFile(QString filePath);
-    void setPortName();
-    void setValue();
-    void setRef();
-    void setLabel();
-    void setAxis();
-    void setTrackOnOff();
+    bool parse(ast::Node &astRoot);
 };
 
 }

@@ -15,15 +15,7 @@ protected:
     // Data
     BoxBuilder _builder;
     // Methods
-    virtual void setPortName() = 0;
-    virtual void setValue() = 0;
-    virtual void setRef() = 0;
-    virtual void setLabel() = 0;
-    virtual void setAxis() = 0;
-    virtual void setTrackOnOff() = 0;
     QString currentInfo() const;
-    static QString blankAsNa(QString s);
-
 };
 
 }

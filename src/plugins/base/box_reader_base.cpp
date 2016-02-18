@@ -15,8 +15,4 @@ QString BoxReaderBase::currentInfo() const {
     return info.arg(lastBox).arg(lastPort);
 }
 
-QString BoxReaderBase::blankAsNa(QString s) {
-    return (s.isEmpty()) ? QString("NA") : s;
-}
-
 } // namespace

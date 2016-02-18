@@ -47,23 +47,23 @@ void load::doExecute() {
 }
 
 void load::readFile(QString fileName) {
-    BoxReaderBase *reader;
-    switch(fileType(fileName)) {
-    case Boxes:
-        reader = new BoxReaderBoxes;
-        break;
-    case Xml:
-        reader = new BoxReaderXml;
-        break;
-    }
-
+    BoxReaderBase *reader{0};
     BoxBuilder builder;
     try {
+        switch(fileType(fileName)) {
+        case Boxes:
+            reader = new BoxReaderBoxes;
+            break;
+        case Xml:
+            reader = new BoxReaderXml;
+            break;
+        }
         builder = reader->parse(filePath(fileName));
     }
     catch (Exception &ex) {
-        throw Exception(QString("Load failed\n") + ex.fullText());
+        dialog().error(QString("Load failed\n") + ex.fullText());
     }
+
     Box *newRoot = builder.content();
     if (newRoot) {
         environment().state.root = newRoot;
@@ -81,7 +81,8 @@ load::FileType load::fileType(QString fileName) {
         return Boxes;
     else if (suffix == "xml")
         return Xml;
-    throw Exception("Wrong file type. Must be 'box' or 'xml'", suffix, this);
+    QString s = suffix.isEmpty() ? "Missing" : "Wrong";
+    throw Exception(s + " file type. Must be '.box' or '.xml'", fileName);
 }
 
 QString load::filePath(QString fileName) {

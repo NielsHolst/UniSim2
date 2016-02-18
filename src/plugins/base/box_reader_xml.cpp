@@ -9,10 +9,6 @@ namespace base {
 BoxReaderXml::BoxReaderXml()
     : BoxReaderBase()
 {
-    validAttributes[BoxElement]
-            << "class" << "name";
-    validAttributes[PortElement]
-            << "name" << "value" << "ref" << "label" << "axis" << "track" << "page" << "group";
 }
 
 BoxBuilder BoxReaderXml::parse(QString filePath) {
@@ -25,21 +21,12 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
         switch (_reader.tokenType()) {
             case QXmlStreamReader::StartElement:
             setElementType();
-            setAttributes();
             switch (_elementType) {
                 case BoxElement:
-                    _builder.box(_attr.className);
-                    _builder.name(_attr.name);
+                    setBoxAttributes();
                     break;
                 case PortElement:
-                    setPortName();
-                    setValue();
-                    setRef();
-                    setLabel();
-                    setAxis();
-                    setTrackOnOff();
-                    _builder.page(_attr.page);
-                    _builder.group(_attr.group);
+                    setPortAttributes();
                     break;
             }
             break;
@@ -83,74 +70,41 @@ void BoxReaderXml::setElementType() {
         throw Exception("Unknown XML element. " + currentInfo(), name);
 }
 
-void BoxReaderXml::setAttributes() {
-    checkAttributes();
-    QXmlStreamAttributes attr = _reader.attributes();
-    _attr.className = attr.value("class").toString();
-    _attr.name = attr.value("name").toString();
-    _attr.value = attr.value("value").toString();
-    _attr.ref = attr.value("ref").toString();
-    _attr.label = attr.value("label").toString();
-    _attr.axis = attr.value("axis").toString();
-    _attr.track = attr.value("track").toString();
-    _attr.page = blankAsNa(attr.value("page").toString());
-    _attr.group = blankAsNa(attr.value("group").toString());
-}
-
-void BoxReaderXml::checkAttributes() {
-    QSet<QString> attributes;
-    for (QXmlStreamAttribute attr : _reader.attributes()) {
-        QString name = attr.name().toString();
-        if (!name.isEmpty())
-            attributes << name;
-    }
-
-    QSet<QString> difference = attributes.subtract(validAttributes.value(_elementType));
-
-    if (!difference.isEmpty()) {
-        QStringList invalidAttr = QStringList(difference.toList());
-        QString msg = "Invalid attribute(s). "  + currentInfo();
-        QString value = invalidAttr.join(" ");
-        throw Exception(msg, value);
-    }
-}
-
-void BoxReaderXml::setPortName() {
-    if (_attr.name.isEmpty())
-        throw Exception("Missing port name. " + currentInfo());
-    _builder.port(_attr.name);
-}
-
-void BoxReaderXml::setValue() {
-    if (_reader.attributes().hasAttribute("value"))
-        _builder.equals(_attr.value);
-}
-
-void BoxReaderXml::setRef() {
-    if (_reader.attributes().hasAttribute("ref"))
-        _builder.imports(_attr.ref);
-}
-
-void BoxReaderXml::setLabel() {
-    if (_reader.attributes().hasAttribute("label"))
-        _builder.label(_attr.label);
-}
-
-void BoxReaderXml::setAxis() {
-    if (_reader.attributes().hasAttribute("axis"))
-        _builder.axis(_attr.axis);
-}
-
-void BoxReaderXml::setTrackOnOff() {
-    if (!_attr.track.isEmpty()) {
-        if (_attr.track == "on")
-            _builder.trackOn();
-        else if (_attr.track == "off")
-            _builder.trackOff();
+void BoxReaderXml::setBoxAttributes() {
+    // If box has no "class" attribute the default to "box" class
+    if (!_reader.attributes().hasAttribute("class"))
+        _builder.box("box");
+    // Otherwise the "class" attribute will be picked up in the loop
+    for (QXmlStreamAttribute attribute : _reader.attributes()) {
+        QString name = attribute.name().toString(),
+                value = _reader.attributes().value(name).toString();
+        if (name == "class")
+            _builder.box(value);
+        else if (name == "name")
+            _builder.name(value);
         else
-            throw Exception("Track value must be 'on' or 'off'. " + currentInfo(), _attr.track);
+            throw Exception("Unexpected class attribute" + currentInfo(), name);
     }
 }
 
+void BoxReaderXml::setPortAttributes() {
+    bool nameSet{false};
+    for (QXmlStreamAttribute attribute : _reader.attributes()) {
+        QString name = attribute.name().toString(),
+                value = _reader.attributes().value(name).toString();
+        if (name == "name"){
+            _builder.port(value);
+            nameSet = true;
+        }
+        else if (name == "value")
+            _builder.equals(value);
+        else if (name == "ref")
+            _builder.imports(value);
+        else
+            _builder.attribute(name, value);
+    }
+    if (!nameSet)
+        throw Exception("Port misses \"name\" attribute" + currentInfo());
+}
 
 } // namespace

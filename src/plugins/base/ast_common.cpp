@@ -55,20 +55,6 @@ namespace {
         catch (Exception &) {}
         return false;
     }
-
-//    struct Attributes : public QMap<QString, optional<QString>> {
-
-//        Attributes() : QMap<QString, optional<QString>>()
-//        {
-//            _attributes["axis"]  = optional<QString>();
-//            _attributes["group"] = optional<QString>();
-//            _attributes["label"] = optional<QString>();
-//            _attributes["page"]  = optional<QString>();
-//            _attributes["track"] = optional<QString>();
-//        }
-//    };
-
-//    typedef QMapIterator<QString, optional<QString>> AttributesIterator;
 }
 
 namespace ast {
@@ -94,27 +80,14 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
     else
         builder.port(nam);
 
-//    Attributes attr;
     for (NameValuePair pair : attributes) {
         QString name = QString::fromStdString(pair.name),
                 value = QString::fromStdString(pair.value);
         if (isApostrophed(value))
             value = removeApostrophes(value);
         builder.attribute(name, value);
-//        if (attr.contains(name))
-//            attr[name] = value;
-//        else
-//            throw Exception("Unknown port attribute", name);
     }
 
-//    AttributesIterator it(attr);
-//    while (it.hasNext()) {
-//        it.next();
-//        QString &name(it.key());
-//        optional<QString> &value(it.value());
-//        if (value.is_initialized())
-//            _builder.attribute(name, value.get());
-//    }
 }
 
 QString Parameter::toString() const {

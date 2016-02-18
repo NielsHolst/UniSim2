@@ -24,3 +24,7 @@ DEPENDPATH += $$_PRO_FILE_PWD_/../../plugins/base
 
 # Additional folders with header files
 INCLUDEPATH += "$$_PRO_FILE_PWD_/../../plugins"
+
+# Load application icon
+RC_FILE = "$$_PRO_FILE_PWD_/../../resources/unisim.rc"
+

@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QObject>
 #include "exception.h"
+#include "general.h"
 
 namespace base {
 	
@@ -34,6 +35,8 @@ template <class T>
 T* MegaFactory::create(QString className, QString objectName, QObject *parent)
 {
     QObject *object = MegaFactory::createObject(className, objectName, parent);
+    if (!hasClassName(object))
+        setClassName(object, className);
     QString msg = "MegaFactory cannot create object '%1' of class '%2'";
     msg = msg.arg(objectName).arg(className);
     if (!object) {

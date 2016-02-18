@@ -1,5 +1,4 @@
 #include <string>
-#include <vector>
 #include "ast_boxes.h"
 #include "box.h"
 #include "box_reader_boxes.h"
@@ -15,22 +14,12 @@ BoxReaderBoxes::BoxReaderBoxes()
 
 BoxBuilder BoxReaderBoxes::parse(QString filePath) {
     openFile(filePath);
-
-    std::string storage;
-    std::copy(
-        std::istream_iterator<char>(_file),
-        std::istream_iterator<char>(),
-        std::back_inserter(storage));
-
-    ast::Node ast;
-    bool ok = ast::parse_boxes(storage.begin(), storage.end(), ast);
-    if (ok)
-        dialog().information(ast.toString());
+    ast::Node astRoot;
+    if (parse(astRoot))
+        dialog().information(astRoot.toString());
     else
-        dialog().information("Parse failure");
-
-    ast.addToBuilder(_builder);
-
+        dialog().error("Parse failure");
+    astRoot.addToBuilder(_builder);
     return _builder;
 }
 
@@ -44,42 +33,13 @@ void BoxReaderBoxes::openFile(QString filePath) {
     _file.unsetf(std::ios::skipws);
 }
 
-void BoxReaderBoxes::setPortName() {
-//    if (_attr.name.isEmpty())
-//        throw Exception("Missing port name. " + currentInfo());
-//    _builder.port(_attr.name);
+bool BoxReaderBoxes::parse(ast::Node &astRoot) {
+    std::string storage;
+    std::copy(
+        std::istream_iterator<char>(_file),
+        std::istream_iterator<char>(),
+        std::back_inserter(storage));
+    return ast::parse_boxes(storage.begin(), storage.end(), astRoot);
 }
-
-void BoxReaderBoxes::setValue() {
-//    if (_reader.attributes().hasAttribute("value"))
-//        _builder.equals(_attr.value);
-}
-
-void BoxReaderBoxes::setRef() {
-//    if (_reader.attributes().hasAttribute("ref"))
-//        _builder.imports(_attr.ref);
-}
-
-void BoxReaderBoxes::setLabel() {
-//    if (_reader.attributes().hasAttribute("label"))
-//        _builder.label(_attr.label);
-}
-
-void BoxReaderBoxes::setAxis() {
-//    if (_reader.attributes().hasAttribute("axis"))
-//        _builder.axis(_attr.axis);
-}
-
-void BoxReaderBoxes::setTrackOnOff() {
-//    if (!_attr.track.isEmpty()) {
-//        if (_attr.track == "on")
-//            _builder.trackOn();
-//        else if (_attr.track == "off")
-//            _builder.trackOff();
-//        else
-//            throw Exception("Track value must be 'on' or 'off'. " + currentInfo(), _attr.track);
-//    }
-}
-
 
 } // namespace
