@@ -16,11 +16,18 @@ class OutputR : public base::Box
 {
 public:
     OutputR(QString name, QObject *parent);
+    void amend();
     void initialize();
     void debrief();
     QString toString();
     QString toScript();
 private:
+    // Input
+    QString xAxis;
+
+    // Methods
+    void setTrackX();
+
     // Data
     QFile _file;
 
@@ -56,11 +63,7 @@ private:
     QVector<const base::Port*> collectPorts(QString pageName, QString plotName);
 
     void writeScript();
-    void openFile(QString filePath);
-    QString scriptFilePath();
-    QString scriptFolderPath();
-    QString fileName();
-
+    void openFile();
 };
 
 }

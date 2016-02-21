@@ -83,8 +83,8 @@ print_unisim_plots = function() {
 
 # print_unisim_plots()
 
-unisim_plot = function(df, cols) {
-	M = melt(df[1:5 ,cols], id.vars=cols[1], value.name="Value", variable.name="Variable")
+unisim_plot = function(df, id.x, cols) {
+	M = melt(df[ ,c(id.x, cols)], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=cols[1], y="Value", color="Variable")) +
 		geom_line(size=1.1) +
 		theme(legend.position="none") +

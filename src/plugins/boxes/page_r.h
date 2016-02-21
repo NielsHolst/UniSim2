@@ -10,7 +10,7 @@ public:
     PageR(QString name, QObject *parent);
 private:
     // Inputs
-    QString xPath;
+    QString xAxis;
     int width, height, nrow;
 };
 

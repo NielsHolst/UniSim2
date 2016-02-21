@@ -1,12 +1,18 @@
 #include <QDir>
+#include <QMap>
+#include <QMapIterator>
+#include <QSet>
 #include <QTextStream>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/general.h>
+#include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
 #include "output_r.h"
+#include "page_r.h"
+#include "plot_r.h"
 
 using namespace base;
 
@@ -18,7 +24,50 @@ OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(OutputR);
+    Input(xAxis).imports("/*[step]");
 }
+
+//
+// amend
+//
+
+void OutputR::amend() {
+    // Collect names of pages and plots attributed to tracked ports
+    QVector<Port*> trackedPorts = Port::trackedPorts();
+    QMap<QString, QSet<QString>> pagesWithPlots;
+    for (Port *port : trackedPorts) {
+        pagesWithPlots[port->page()] << port->plot();
+    }
+    // If more than one page exists then remove default page named "page"
+    if (pagesWithPlots.size() > 1)
+        pagesWithPlots.remove("page");
+    // Create pages with plots
+    QMapIterator<QString, QSet<QString>> it(pagesWithPlots);
+    while (it.hasNext()) {
+        it.next();
+        QString pageName = it.key();
+        QSet<QString> plotNames = it.value();
+        Box *page = MegaFactory::create<PageR>("PageR", pageName, this);
+        // The page imports the same axis as the general one for OutputR
+        page->port("xAxis")->imports( port("xAxis")->importPath() );
+        for (QString plotName : plotNames)
+            MegaFactory::create<PlotR>("PlotR", plotName, page);
+    }
+    // Make certain that x-axis is include in output data frame
+    setTrackX();
+}
+
+void OutputR::setTrackX() {
+    Port *xPort = port("xAxis");
+    xPort->resolveImports();
+    QVector<Port*> importPorts = xPort->importPorts();
+    if (importPorts.size() != 1) {
+        QString msg{"Expected one x-axis, got '%1'"};
+        throw Exception(msg.arg(importPorts.size()), port("xAxis")->importPath(), this);
+    }
+    importPorts[0]->trackOn();
+}
+
 
 //
 // initialize
@@ -97,8 +146,7 @@ void OutputR::PlotInfo::collectPorts() {
     QString pageName = parent->objectName(),
             plotName = _plot->objectName();
 
-    QVector<base::Port*> all = Path("*{Port}").resolve<Port>();
-    for (const Port *port : all) {
+    for (Port *port : Port::trackedPorts()) {
         if (port->page() == pageName && port->plot() == plotName && port->trackPtr())
             _ports << port;
     }
@@ -116,17 +164,17 @@ inline QString apostrophed(QString s) {
 }
 
 QString OutputR::PlotInfo::toScript() {
-    QStringList portLabels ;
-    portLabels << apostrophed(xPortLabel());
+    QStringList portLabels;
     for (const Port *port : _ports)
         portLabels << apostrophed(port->label());
-    return "    unisim_plot(df, c(" + portLabels.join(", ") + ")),\n";
+    QString xLabel = apostrophed(xPortLabel());
+    return "    unisim_plot(df, " + xLabel + ", c(" + portLabels.join(", ") + ")),\n";
 }
 
 QString OutputR::PlotInfo::xPortLabel() {
     Box *parent = dynamic_cast<Box*>(_plot->parent());
     Q_ASSERT(parent);
-    QString xPath = parent->port("xPath")->value<QString>();
+    QString xPath = parent->port("xAxis")->importPath();
     Port *xPort = Path(xPath).resolveOne<Port>();
     return xPort->label();
 }
@@ -140,36 +188,19 @@ void OutputR::debrief() {
 }
 
 void OutputR::writeScript() {
-    QString filePath = scriptFilePath();
-    openFile(filePath);
+    openFile();
     QTextStream script(&_file);
     script << toScript();
     _file.close();
 }
 
-void OutputR::openFile(QString filePath) {
+void OutputR::openFile() {
+    QString filePath = environment().outputFilePath(".R");
+    filePath.replace("\\", "/");
     _file.setFileName(filePath);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
         throw Exception("Cannot open file for output", filePath, this);
-}
-
-QString OutputR::fileName() {
-    QString objectName = environment().state.root->objectName(),
-            className  = environment().state.root->className();
-    return objectName.isEmpty() ? className : objectName;
-}
-
-QString OutputR::scriptFilePath() {
-    QString filePath = scriptFolderPath() + "/" + fileName() + "_outputR.R";
-    filePath.replace("\\", "/");
-    return filePath;
-}
-
-QString OutputR::scriptFolderPath() {
-    QDir dir = makeDir(environment().state.dir.work, environment().state.dir.script);
-    QString folderPath = dir.absolutePath();
-    folderPath.replace("\\", "/");
-    return folderPath;
+    environment().copyToClipboard("source(\""+filePath+"\")\n");
 }
 
 

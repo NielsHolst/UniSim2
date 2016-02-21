@@ -13,6 +13,10 @@ class Environment : public QObject {
 public:
     Environment();
     ~Environment();
+    QString outputFilePath(QString extension);
+    void incrementFileCounter();
+    void copyToClipboard(QString text);
+
     struct {
         struct {
             QDir work, input, output, script;
@@ -26,6 +30,10 @@ private:
     // Singleton
     static Environment *_environment;
     friend Environment& environment();
+    // Methods
+    QString fileCounterKey();
+    int fileCountervalue();
+    static QDir makeDir(QDir baseDir, QDir specificDir);
 };
 
 Environment& environment();

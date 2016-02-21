@@ -24,7 +24,7 @@ private:
     void *_valuePtr;
     PortType _valueType, _importType;
     PortTransform _transform;
-    QStringList _importPortPaths;
+    QString _importPath;
     QVector<Port *> _importPorts;
     unsigned _accessFlags;
     QString _label, _Rformat, _axis, _page, _plot;
@@ -79,6 +79,9 @@ public:
     QString page() const;
     QString plot() const;
     bool hasImport() const;
+    QString importPath() const;
+    QVector<Port*> importPorts() const;
+    static QVector<Port*> trackedPorts();
     static PortType commonType(const QVector<Port *> &ports);
 };
 
@@ -97,7 +100,7 @@ template <class T> Port& Port::equals(T value)
         throw Exception("Cannot set port value by 'equals' because port 'data' has not been set", "", this);
     if (!(_accessFlags & Write))
         throw Exception("Cannot set port value by 'equals' because port is not for input", "", this);
-    _importPortPaths.clear();
+    _importPath.clear();
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, _transform);
     return *this;
 }

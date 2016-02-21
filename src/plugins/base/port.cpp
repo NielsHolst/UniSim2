@@ -9,7 +9,7 @@ namespace base {
 unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
+    : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity), _importPath(""),
       _accessFlags(Read), _label(name), _Rformat("NA"), _axis("y"), _page("page"), _plot("plot"),
       _reset(false), _track(this), _trackOn(true)
 {
@@ -23,7 +23,7 @@ Port::Port(QString name, QObject *parent)
 Port& Port::imports(QString pathToPort) {
     if (!(_accessFlags & Write))
         throw Exception("Cannot import port value because port is not for input", "", this);
-    _importPortPaths << pathToPort;
+    _importPath = pathToPort;
     return *this;
 }
 
@@ -85,12 +85,12 @@ Port& Port::trackOff() {
 }
 
 void Port::resolveImports() {
-    if (_importPortPaths.isEmpty())
+    if (_importPath.isEmpty())
         return;
     Box *context = boxParent();
-    _importPorts = Path(_importPortPaths, context).resolve<Port>(-1,this);
+    _importPorts = Path(_importPath, context).resolve<Port>(-1,this);
     if (_importPorts.isEmpty())
-        throw Exception("No matching import ports found", _importPortPaths.join(" "), this);
+        throw Exception("No matching import ports found", _importPath, this);
     _importType = commonType(_importPorts);
     if (_importType == Null)
         _importType = _valueType;
@@ -170,6 +170,10 @@ bool Port::hasValue() const {
     return _valuePtr != 0;
 }
 
+template <> const void* Port::valuePtr() const {
+    return _valuePtr;
+}
+
 const Vector* Port::trackPtr() const {
     return _trackOn ? & _track : 0;
 }
@@ -207,11 +211,24 @@ QString Port::plot() const {
 }
 
 bool Port::hasImport() const {
-    return !_importPortPaths.isEmpty();
+    return !_importPath.isEmpty();
 }
 
-template <> const void* Port::valuePtr() const {
-    return _valuePtr;
+QString Port::importPath() const {
+    return _importPath;
+}
+
+QVector<Port*> Port::importPorts() const {
+    return _importPorts;
+}
+
+QVector<Port*> Port::trackedPorts() {
+    QVector<base::Port*> result, all = Path("*{Port}").resolve<Port>();
+    for (Port *port : all) {
+        if (port->trackPtr())
+            result << port;
+    }
+    return result;
 }
 
 PortType Port::commonType(const QVector<Port*> &ports) {

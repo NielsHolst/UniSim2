@@ -11,7 +11,7 @@ PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(PageR);
-    Input(xPath).equals("/*[step]");
+    Input(xAxis).imports("/*[step]");
     Input(width).equals(14);
     Input(height).equals(10);
     Input(nrow).equals(2);
