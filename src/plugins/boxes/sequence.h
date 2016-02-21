@@ -1,5 +1,5 @@
-#ifndef SEQUENCEW_H
-#define SEQUENCEW_H
+#ifndef SEQUENCE_H
+#define SEQUENCE_H
 #include <base/box.h>
 
 namespace boxes {

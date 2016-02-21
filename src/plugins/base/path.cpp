@@ -18,14 +18,15 @@ QMap<QString, Path::Directive> Path::_directives;
 
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
-Path::Path(QString path, QObject *context)
+Path::Path(QString path, const QObject *context)
     : _originalContext(context), _caller(0)
 {
     initDirectives();
-    _originalPaths << path;
+    // Accept double-colons as single-colons
+    _originalPaths << path.replace("::", ":");
 }
 
-Path::Path(QStringList paths, QObject *context)
+Path::Path(QStringList paths, const QObject *context)
     : _originalContext(context), _caller(0)
 {
     initDirectives();
@@ -49,14 +50,14 @@ void Path::initDirectives() {
     }
 }
 
-QObjectList Path::_resolve(int number, QObject *caller) {
+Path::QObjects Path::_resolve(int number, const QObject *caller) {
     _caller = caller;
     _candidates.clear();
     for (int i = 0; i <_originalPaths.size(); ++i) {
         normalise(i);
         if (_current.normalisedContext == 0)
             throw Exception("Path misses a context object", _current.originalPath, _caller);
-        QObjectList nextCandidates = (QObjectList() << _current.normalisedContext);
+        QObjects nextCandidates = (QObjects() << _current.normalisedContext);
         addCandidates(_current.normalisedPath, nextCandidates);
         _candidates << nextCandidates;
     }
@@ -177,11 +178,11 @@ QString Path::normalisePort() {
             "{Port}";
 }
 
-QObjectList Path::nearest(QObject *p, QString tail) {
+Path::QObjects Path::nearest(const QObject *p, QString tail) {
     Path path(tail, p);
-    QObjectList candidates = path._resolve();
+    QObjects candidates = path._resolve();
     if (candidates.isEmpty()) {
-        QObject *parent = p->parent();
+        const QObject *parent = p->parent();
         if (parent)
             return nearest(parent, tail);
     }
@@ -190,38 +191,39 @@ QObjectList Path::nearest(QObject *p, QString tail) {
 
 namespace {
 
-    inline bool matches(QObject* candidate, QString box, QString type) {
+    inline bool matches(const QObject* candidate, QString box, QString type) {
         QStringList types = classInheritance(candidate).split("/");
         return (box=="*" || candidate->objectName()==box) && types.contains(type);
     }
 
-    void findAncestors(QObject *p, QList<QObject*> &ancestors) {
+    void findAncestors(const QObject *p, Path::QObjects &ancestors) {
         QObject *parent = p->parent();
         if (parent)
             findAncestors(parent, ancestors << parent);
     }
 
-    QList<QObject*> allSiblings(QObject *p) {
-        QObject *parent = p->parent();
-        return (parent) ? parent->children() : QList<QObject*>();
+    Path::QObjects allSiblings(const QObject *p) {
+        const QObject *parent = p->parent();
+        return (parent) ? parent->findChildren<const QObject*>(QString(), Qt::FindDirectChildrenOnly)
+                        : Path::QObjects();
     }
 
-    QList<QObject*> otherSiblings(QObject *p) {
-        QObject *parent = p->parent();
-        QList<QObject*> sib;
+    Path::QObjects otherSiblings(const QObject *p) {
+        const QObject *parent = p->parent();
+        Path::QObjects sib;
         if (parent) {
-            for (QObject *child : parent->children()) {
+            for (const QObject *child : parent->children()) {
                 if (child != p) sib << child;
             }
         }
         return sib;
     }
 
-    QObject* preceedingSibling(QObject *p) {
-        QObject *parent = p->parent();
-        QObject *sib{0};
+    const QObject* preceedingSibling(const QObject *p) {
+        const QObject *parent = p->parent();
+        const QObject *sib{0};
         if (parent) {
-            for (QObject *child : parent->children()) {
+            for (const QObject *child : parent->children()) {
                 if (child == p) break;
                 sib = child;
             }
@@ -229,11 +231,11 @@ namespace {
         return sib;
     }
 
-    QObject* followingSibling(QObject *p) {
-        QObject *parent = p->parent();
-        QObject *sib{0};
+    const QObject* followingSibling(const QObject *p) {
+        const QObject *parent = p->parent();
+        const QObject *sib{0};
         if (parent) {
-            for (QObject *child : parent->children()) {
+            for (const QObject *child : parent->children()) {
                 if (sib == p) return child;
                 sib = child;
             }
@@ -241,22 +243,22 @@ namespace {
         return 0;
     }
 
-    QList<QObject*> filter(QList<QObject*> candidates, QString box, QString type) {
-        QObjectList filtered;
-        for (QObject *candidate : candidates) {
+    Path::QObjects filter(Path::QObjects candidates, QString box, QString type) {
+        Path::QObjects filtered;
+        for (const QObject *candidate : candidates) {
             if (matches(candidate, box, type))
                 filtered << candidate;
         }
         return filtered;
     }
 
-    QList<QObject*> filter(QObject *candidate, QString box, QString type) {
-        return filter(QList<QObject*>() << candidate, box, type);
+    Path::QObjects filter(const QObject *candidate, QString box, QString type) {
+        return filter(Path::QObjects() << candidate, box, type);
     }
 
 } // namespace
 
-void Path::addCandidates(QString path, QObjectList &candidates) {
+void Path::addCandidates(QString path, QObjects &candidates) {
     // Split
     int slash = path.indexOf('/');
     bool hasTail = (slash > -1),
@@ -268,17 +270,17 @@ void Path::addCandidates(QString path, QObjectList &candidates) {
             box = parts.at(1),
             type = parts.at(2);
 
-    QObjectList newCandidates;
-    for (QObject *candidate : candidates) {
+    QObjects newCandidates;
+    for (const QObject *candidate : candidates) {
         if (!candidate) continue;
-        QObjectList ancestors;
+        QObjects ancestors;
         QString findBoxName = (box == "*") ? QString() : box;
         switch (parseDirective(directive)) {
         case Self:
             newCandidates << filter(candidate, box, type);
             break;
         case Children:
-            newCandidates << filter(candidate->findChildren<QObject*>(findBoxName, Qt::FindDirectChildrenOnly), box, type);
+            newCandidates << filter(candidate->findChildren<const QObject*>(findBoxName, Qt::FindDirectChildrenOnly), box, type);
             break;
         case Parent:
             newCandidates << filter(candidate->parent(), box, type);
@@ -291,7 +293,7 @@ void Path::addCandidates(QString path, QObjectList &candidates) {
             newCandidates << filter(candidate, box, type);
             // no break
         case Descendants:
-            newCandidates << filter(candidate->findChildren<QObject*>(findBoxName, Qt::FindChildrenRecursively), box, type);
+            newCandidates << filter(candidate->findChildren<const QObject*>(findBoxName, Qt::FindChildrenRecursively), box, type);
             break;
         case Ancestors:
             findAncestors(candidate, ancestors);
@@ -315,7 +317,7 @@ void Path::addCandidates(QString path, QObjectList &candidates) {
 
     // For nearest objects, shorten list to the very nearest
     if (isNearest) {
-        for (QObject *candidate : candidates) {
+        for (const QObject *candidate : candidates) {
             if (candidate) {
                 candidates.clear();
                 candidates << candidate;
@@ -329,8 +331,8 @@ void Path::addCandidates(QString path, QObjectList &candidates) {
 }
 
 void Path::removeEmptyCandidates() {
-    QObjectList filtered;
-    for (QObject *candidate : _candidates) {
+    QObjects filtered;
+    for (const QObject *candidate : _candidates) {
         if (candidate)
             filtered << candidate;
     }

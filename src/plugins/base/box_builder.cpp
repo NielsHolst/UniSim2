@@ -30,7 +30,7 @@ BoxBuilder& BoxBuilder::name(QString boxName) {
 
 BoxBuilder& BoxBuilder::endbox() {
     if (_stack.isEmpty())
-        throw Exception("BoxBuilder: 'endbox' without matching 'box'");
+        throw Exception("BoxBuilder: box body ended twice");
     _currentBox = _stack.pop();
     _currentPort = 0;
     return *this;
@@ -38,7 +38,7 @@ BoxBuilder& BoxBuilder::endbox() {
 
 BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox) {
-        throw Exception("BoxBuilder: 'port' must be between 'box' and 'endbox'");
+        throw Exception("BoxBuilder: port declaration outside of box context");
     }
     _currentPort = _currentBox->port(name);
     return *this;
@@ -46,7 +46,7 @@ BoxBuilder& BoxBuilder::port(QString name) {
 
 BoxBuilder& BoxBuilder::newPort(QString name) {
     if (!_currentBox) {
-        throw Exception("BoxBuilder: 'newPort' must be between 'box' and 'endbox'");
+        throw Exception("BoxBuilder: new port declaration out of context");
     }
     _currentPort = new Port(name, _currentBox);
     _currentPort->access(Port::Read|Port::Write);
@@ -56,14 +56,14 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
 
 BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
-        throw Exception("BoxBuilder: 'port' missing before 'imports'");
+        throw Exception("BoxBuilder: import out of context");
     _currentPort->imports(pathToPort);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
     if (name == "axis") return axis(value);
-    if (name == "group") return group(value);
+    if (name == "plot") return plot(value);
     if (name == "label") return label(value);
     if (name == "page") return page(value);
     if (name == "Rformat") return Rformat(value);
@@ -73,28 +73,28 @@ BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
 
 BoxBuilder& BoxBuilder::axis(QString ax) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'axis'");
+        throw Exception("BoxBuilder: axis out of context");
     _currentPort->axis(ax);
     return *this;
 }
 
-BoxBuilder& BoxBuilder::group(QString gr) {
+BoxBuilder& BoxBuilder::plot(QString pl) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'group'");
-    _currentPort->group(gr);
+        throw Exception("BoxBuilder: plot out of context");
+    _currentPort->plot(pl);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::label(QString la) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'label'");
+        throw Exception("BoxBuilder: label out of context");
     _currentPort->label(la);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::page(QString pa) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'page'");
+        throw Exception("BoxBuilder: page out of context");
     _currentPort->page(pa);
     return *this;
 }
@@ -110,28 +110,28 @@ BoxBuilder& BoxBuilder::track(QString tr) {
 
 BoxBuilder& BoxBuilder::trackOn() {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'trackOn'");
+        throw Exception("BoxBuilder: track out of context");
     _currentPort->trackOn();
     return *this;
 }
 
 BoxBuilder& BoxBuilder::trackOff() {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'trackOff'");
+        throw Exception("BoxBuilder: track out of context");
     _currentPort->trackOff();
     return *this;
 }
 
 BoxBuilder& BoxBuilder::Rformat(QString format) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'Rformat'");
+        throw Exception("BoxBuilder: Rformat out of context");
     _currentPort->Rformat(format);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::transform(PortTransform pt) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: 'port' missing before 'transform'");
+        throw Exception("BoxBuilder: transform out of context");
     _currentPort->transform(pt);
     return *this;
 }

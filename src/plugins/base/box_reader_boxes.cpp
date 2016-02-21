@@ -15,11 +15,12 @@ BoxReaderBoxes::BoxReaderBoxes()
 BoxBuilder BoxReaderBoxes::parse(QString filePath) {
     openFile(filePath);
     ast::Node astRoot;
-    if (parse(astRoot))
-        dialog().information(astRoot.toString());
+    if (parse(astRoot)) {
+//        dialog().information(astRoot.toString());
+        astRoot.addToBuilder(_builder);
+    }
     else
         dialog().error("Parse failure");
-    astRoot.addToBuilder(_builder);
     return _builder;
 }
 

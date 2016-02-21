@@ -10,7 +10,7 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity),
-      _accessFlags(Read), _label(name), _Rformat("NA"), _axis("y"), _page("NA"), _group("NA"),
+      _accessFlags(Read), _label(name), _Rformat("NA"), _axis("y"), _page("page"), _plot("plot"),
       _reset(false), _track(this), _trackOn(true)
 {
     Class(Port);
@@ -59,8 +59,8 @@ Port& Port::page(QString pa) {
     return *this;
 }
 
-Port& Port::group(QString gr) {
-    _group = gr;
+Port& Port::plot(QString pl) {
+    _plot = pl;
     return *this;
 }
 
@@ -202,8 +202,8 @@ QString Port::page() const {
     return _page;
 }
 
-QString Port::group() const {
-    return _group;
+QString Port::plot() const {
+    return _plot;
 }
 
 bool Port::hasImport() const {

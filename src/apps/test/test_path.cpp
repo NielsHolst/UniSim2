@@ -108,9 +108,11 @@ void TestPath::testValidateStep() {
 }
 
 void TestPath::testNormalise() {
-    QString s = Path("plant/fruit/area[v]").normalise();
-    QCOMPARE(s,
+    QCOMPARE(Path("plant/fruit/area[v]").normalise(),
          QString("selfordescendants:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+
+    QCOMPARE(Path("children::plant/fruit/nearest:area[v]").normalise(),
+         QString("children:plant{Box}/children:fruit{Box}/nearest:area{Box}/children:v{Port}"));
 
     QCOMPARE(Path("./plant/fruit/area[v]").normalise(),
         QString("self:*{Box}/children:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));

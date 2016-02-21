@@ -1,5 +1,7 @@
+#include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
+#include <base/unique_name.h>
 #include "simulation.h"
 
 using namespace base;
@@ -16,6 +18,31 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(steps).equals(1);
     Output(iteration).noReset().Rformat("factor").axis("facet");
     Output(step).axis("x");
+}
+
+void Simulation::initialize() {
+    collectTrackedPorts();
+    makePortLabelsUnique();
+}
+
+void Simulation::collectTrackedPorts() {
+    _trackedPorts.clear();
+    QVector<Port*> all = Path("*{Port}").resolve<Port>();
+    for (Port *port : all) {
+        if (port->trackPtr())
+            _trackedPorts << port;
+    }
+}
+
+void Simulation::makePortLabelsUnique() {
+    UniqueName unique(_trackedPorts);
+    QStringList labels = unique.resolve();
+    int i{0};
+    for (Port *port : _trackedPorts)  {
+        QString label = labels.at(i++);
+        label.replace("/", ".");
+        port->label(label);
+    }
 }
 
 void Simulation::run() {

@@ -57,8 +57,8 @@ void save_output::writeOutput() {
     DialogBase &dia(dialog());
     dia.information(QString("Writing output to '%1'").arg(filePath));
 
-    QTextStream output(&_file);
-    writeTracks(output);
+    QTextStream os(&_file);
+    writeTracks(os);
     _file.close();
     environment().state.latestOutputFilePath = filePath;
 }

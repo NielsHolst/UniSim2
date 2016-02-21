@@ -5,13 +5,8 @@
 namespace base {
 
 void setClassName(QObject *object, QString myClassName) {
-    assert(object);
-    QString curClassName;
-    try {
-        curClassName = className(object);
-    }
-    catch (Exception &) {
-    }
+    Q_ASSERT(object);
+    QString curClassName = hasClassName(object) ? className(object) : QString();
     object->setProperty("base::Class", QVariant(myClassName));
     object->setProperty("base::ClassInheritance", QVariant(curClassName + "/" + myClassName));
 }
@@ -19,17 +14,17 @@ void setClassName(QObject *object, QString myClassName) {
 QString className(const QObject *object) {
     if (!object) return "NULL";
     QVariant className = object->property("base::Class");
-    if (!className.isValid())
-        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
-    return className.toString();
+//    if (!className.isValid())
+//        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
+    return className.isValid() ? className.toString() : QString("UnknownClass");
 }
 
 QString classInheritance(const QObject *object) {
     if (!object) return "NULL";
     QVariant classInheritance = object->property("base::ClassInheritance");
-    if (!classInheritance.isValid())
-        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
-    return classInheritance.toString();
+//    if (!classInheritance.isValid())
+//        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
+    return classInheritance.isValid() ? classInheritance.toString() : QString("UnknownClass");
 }
 
 bool hasClassName(const QObject *object) {

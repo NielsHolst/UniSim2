@@ -27,7 +27,7 @@ private:
     QStringList _importPortPaths;
     QVector<Port *> _importPorts;
     unsigned _accessFlags;
-    QString _label, _Rformat, _axis, _page, _group;
+    QString _label, _Rformat, _axis, _page, _plot;
     bool _reset;
     Vector _track;
     bool _trackOn;
@@ -46,7 +46,7 @@ public:
     Port& Rformat(QString format);
     Port& axis(QString ax);
     Port& page(QString pa);
-    Port& group(QString gr);
+    Port& plot(QString pl);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
@@ -77,7 +77,7 @@ public:
     QString Rformat() const;
     QString axis() const;
     QString page() const;
-    QString group() const;
+    QString plot() const;
     bool hasImport() const;
     static PortType commonType(const QVector<Port *> &ports);
 };

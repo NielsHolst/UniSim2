@@ -1,6 +1,19 @@
-Simulation calendar_demo(steps=240 step{track="off"})
-{
-	Calendar cal(dayLength{track="on" page="Day"} 
-	             sunrise{track="on" page="Sun"}
-				 sunset{track="on" page="Sun"})
+Simulation calendar_demo(steps=240 step{track=off}) {
+	Calendar cal(dayLength{track=on page=solar plot=day} 
+				 azimuth{track=on page=solar plot=azimuth}
+	             sunrise{track=on page=time plot=sun}
+				 sunset{track=on page=time plot=sun}
+				 trueSolarTime{axis=y track=on page=time plot=sunTime}
+				) {
+	}
+	OutputR {
+		PageR solar (xPath="cal[dateTime]" width=14 height=10 nrow=1) {
+			PlotR day()
+			PlotR azimuth()
+		}
+		PageR time (xPath="cal[dateTime]" width=14 height=10 nrow=2) {
+			PlotR sunTime()
+			PlotR sun()
+		}
+	}
 }

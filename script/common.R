@@ -1,4 +1,5 @@
 library(ggplot2)
+library(gridExtra)
 library(lubridate)
 library(plyr)
 library(reshape2)
@@ -33,31 +34,32 @@ read_unisim_output = function() {
 		}
 	}
 	
-	# Vector of y-columns and of shared columns, i.e. those that are not y-columns
-	y_columns = which(cl$axis=="y")
-	shared_columns = which(cl$axis!="y")
+	# # Vector of y-columns and of shared columns, i.e. those that are not y-columns
+	# y_columns = which(cl$axis=="y")
+	# shared_columns = which(cl$axis!="y")
 
-	# Vector of unique, non-NA page names, default to one page called 'Output'
-	if (all(is.na(cl$page[y_columns])))  cl$page[y_columns] = "Output"
-	pages = unique(cl$page)
-	pages = pages[!is.na(pages)]
+	# # Vector of unique, non-NA page names, default to one page called 'Output'
+	# if (all(is.na(cl$page[y_columns])))  cl$page[y_columns] = "Output"
+	# pages = unique(cl$page)
+	# pages = pages[!is.na(pages)]
 	
 	
-	# Create a list of data frames, one for each page
-	L = alply(pages, 1, 
-			function(page_name) { 
-				cols = c(shared_columns, which(cl$page==page_name))
-				V = data.frame(U[,cols])
-				colnames(V)=colnames(U)[cols]
-				V 
-			}
-		)
+	# # Create a list of data frames, one for each page
+	# L = alply(pages, 1, 
+			# function(page_name) { 
+				# cols = c(shared_columns, which(cl$page==page_name))
+				# V = data.frame(U[,cols])
+				# colnames(V)=colnames(U)[cols]
+				# V 
+			# }
+		# )
 	
-	# Melt each data frame in the list
-	M = llply(L, function(X) melt(X, id.vars=colnames(U)[shared_columns]))
+	# # Melt each data frame in the list
+	# M = llply(L, function(X) melt(X, id.vars=colnames(U)[shared_columns]))
 	
-	# List of melted data frames, one for each page, and name of x-axis
-	list(pages=M, x_name=colnames(U)[cl$axis=="x"])
+	# # List of melted data frames, one for each page, and name of x-axis
+	# list(pages=M, x_name=colnames(U)[cl$axis=="x"])
+	U
 }
 
 create_unisim_plots = function() {
@@ -79,7 +81,16 @@ print_unisim_plots = function() {
 	)
 }
 
-print_unisim_plots()
+# print_unisim_plots()
+
+unisim_plot = function(df, cols) {
+	M = melt(df[1:5 ,cols], id.vars=cols[1], value.name="Value", variable.name="Variable")
+	ggplot(M, aes_string(x=cols[1], y="Value", color="Variable")) +
+		geom_line(size=1.1) +
+		theme(legend.position="none") +
+		xlab("") + ylab("") +
+		facet_wrap(~Variable, ncol=1, scales="free_y")
+}
 
 
 

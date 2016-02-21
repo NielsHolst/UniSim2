@@ -28,7 +28,7 @@ public:
     BoxBuilder& label(QString la);
     BoxBuilder& axis(QString ax);
     BoxBuilder& page(QString pa);
-    BoxBuilder& group(QString gr);
+    BoxBuilder& plot(QString pl);
     BoxBuilder& track(QString tr);
     BoxBuilder& trackOn();
     BoxBuilder& trackOff();

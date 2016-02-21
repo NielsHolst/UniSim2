@@ -31,7 +31,7 @@ void Box::addPort(Port *port) {
     _ports[name] = port;
 }
 
-Port* Box::peakPort(QString name) {
+Port* Box::peakPort(QString name) const {
     Path path(".[" + name + "]", this);
     auto ports = (path.resolve());
     switch (ports.size()) {
@@ -44,7 +44,7 @@ Port* Box::peakPort(QString name) {
     }
 }
 
-Port* Box::port(QString name) {
+Port* Box::port(QString name) const {
     Port *port = peakPort(name);
     if (!port)
         throw Exception("No port of that name in this box", name, this);

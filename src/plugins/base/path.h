@@ -11,6 +11,7 @@
 #include <QMap>
 #include <QStringList>
 #include <QVector>
+#include "exception.h"
 
 namespace base {
 
@@ -18,23 +19,25 @@ class Box;
 
 class Path {
 public:
-    Path(QString path, QObject *context = 0);
-    Path(QStringList paths, QObject *context = 0);
+    Path(QString path, const QObject *context = 0);
+    Path(QStringList paths, const QObject *context = 0);
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
-    template<class T=QObject> QVector<T*> resolve(int number = -1, QObject* caller = 0);
-    template<class T=QObject> T* resolveOne(QObject* caller = 0);
-    template<class T=QObject> T* resolveMaybeOne(QObject* caller = 0);
+    template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = 0);
+    template<class T=QObject> T* resolveOne(const QObject* caller = 0);
+    template<class T=QObject> T* resolveMaybeOne(const QObject* caller = 0);
+
+    typedef QList<const QObject*> QObjects;
 private:
     // Data
     QStringList _originalPaths;
-    QObject *_originalContext, *_caller;
+    const QObject *_originalContext, *_caller;
     struct {
         QString originalPath, normalisedPath;
-        QObject *normalisedContext;
+        const QObject *normalisedContext;
     } _current;
-    QObjectList _candidates;
+    QObjects _candidates;
 
     enum Directive {
         Self, Children, Parent, Nearest,
@@ -44,36 +47,36 @@ private:
 
     // Methods
     void initDirectives();
-    QObjectList _resolve(int number = -1, QObject* caller = 0);
+    QObjects _resolve(int number = -1, const QObject* caller = 0);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
     QString normaliseBox(QString s);
     QStringList splitBox(QString s);
     QString normalisePort();
-    QObjectList nearest(QObject *p, QString tail);
+    QObjects nearest(const QObject *p, QString tail);
     QObject* findContext();
-    void addCandidates(QString path, QObjectList &candidates);
+    void addCandidates(QString path, QObjects &candidates);
     void removeEmptyCandidates();
     Directive parseDirective(QString s);
     bool isAbsolute();
 };
 
-template<class T> QVector<T*> Path::resolve(int number, QObject* caller) {
-    QObjectList objs = _resolve(number, caller);
+template<class T> QVector<T*> Path::resolve(int number, const QObject* caller) {
+    QObjects objs = _resolve(number, caller);
     QVector<T*> objsT;
-    for (QObject *obj : objs) {
-        T *objT = dynamic_cast<T*>(obj);
+    for (const QObject *obj : objs) {
+        const T *objT = dynamic_cast<const T*>(obj);
         if (objT)
-            objsT << objT;
+            objsT << const_cast<T*>(objT);
     }
     return objsT;
 }
 
-template<class T> T* Path::resolveOne(QObject* caller) {
+template<class T> T* Path::resolveOne(const QObject* caller) {
     return resolve<T>(1,caller).at(0);
 }
 
-template<class T> T* Path::resolveMaybeOne(QObject* caller) {
+template<class T> T* Path::resolveMaybeOne(const QObject* caller) {
     QVector<T*> objsT = resolve<T>(-1,caller);
     switch (objsT.size()) {
     case 0: return 0;
