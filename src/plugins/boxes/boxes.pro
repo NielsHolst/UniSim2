@@ -10,6 +10,8 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
     calendar.h \
+    distributed_delay_base.h \
+    distributed_delay.h \
     fibonacci.h \
     output_r.h \
     page_r.h \
@@ -21,10 +23,14 @@ HEADERS +=  \
     random_uniform.h \
     sandy.h \
     sequence.h \
-    simulation.h
+    simulation.h \
+    stage_base.h \
+    stage.h
 	
 SOURCES +=  \
     calendar.cpp \
+    distributed_delay_base.cpp \
+    distributed_delay.cpp \
     fibonacci.cpp \
     output_r.cpp \
     page_r.cpp \
@@ -36,6 +42,8 @@ SOURCES +=  \
     random_uniform.cpp \
     sandy.cpp \
     sequence.cpp \
-    simulation.cpp
+    simulation.cpp \
+    stage_base.cpp \
+    stage.cpp
 
 

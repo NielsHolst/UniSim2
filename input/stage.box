@@ -1,0 +1,6 @@
+Simulation one_stage(steps=50) {
+	Stage egg(initial=100 duration=15 dt=0.5) {
+	}
+	OutputR (overlay=FALSE) { 
+	}
+}

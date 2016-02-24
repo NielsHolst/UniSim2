@@ -12,6 +12,7 @@ PageR::PageR(QString name, QObject *parent)
 {
     Class(PageR);
     Input(xAxis).imports("/*[step]");
+    Input(overlay).equals(true);
     Input(width).equals(14);
     Input(height).equals(10);
     Input(ncol).equals(1);

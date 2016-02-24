@@ -25,6 +25,7 @@ OutputR::OutputR(QString name, QObject *parent)
 {
     Class(OutputR);
     Input(xAxis).imports("/*[step]");
+    Input(overlay).equals(true);
 }
 
 //
@@ -49,6 +50,7 @@ void OutputR::amend() {
         QSet<QString> plotNames = it.value();
         Box *page = MegaFactory::create<PageR>("PageR", pageName, this);
         // The page imports the same axis as the general one for OutputR
+        // Generalize to copy function; also use this for 'overlay'
         page->port("xAxis")->imports( port("xAxis")->importPath() );
         for (QString plotName : plotNames)
             MegaFactory::create<PlotR>("PlotR", plotName, page);
@@ -182,7 +184,10 @@ QString OutputR::PlotInfo::toScript() {
         if (port->label() != xLabel)
             portLabels << apostrophed(port->label());
     }
-    return "    unisim_plot(df, " + xLabel + ", c(" + portLabels.join(", ") + ")),\n";
+    // OutputR should be PageR !!
+    Port *overlay = Path("ancestors::*{OutputR}[overlay]", _plot).resolveOne<Port>(_plot);
+    QString functionName = overlay->value<bool>() ? "unisim_plot_overlaid" : "unisim_plot";
+    return "    " + functionName + "(df, " + xLabel + ", c(" + portLabels.join(", ") + ")),\n";
 }
 
 QString OutputR::PlotInfo::xPortLabel() {

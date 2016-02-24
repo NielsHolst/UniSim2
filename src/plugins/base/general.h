@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QObject>
 #include <QString>
+#include <QVector>
 
 #define Class(x) setClassName(this, #x)
 
@@ -20,6 +21,10 @@ QStringList split(const char *s, QObject *context = 0);
 
 QDir locateDir(QDir baseDir, QDir specificDir);
 QDir makeDir(QDir baseDir, QDir specificDir);
+
+double accum(const QVector<double> &x);
+void increment(QVector<double> &x, const QVector<double> &toAdd);
+void increment(double *x, const double *toAdd, int n);
 
 } //namespace
 

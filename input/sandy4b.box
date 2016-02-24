@@ -7,5 +7,5 @@ Simulation sandy_demo(steps=1000 step{track=off})
 	Sandy D(x=seq[value] xMin=seq[min] xMax=seq[max] value{label="D"} a=5 b=5)
 	Sandy E(x=seq[value] xMin=seq[min] xMax=seq[max] value{label="E"} a=2 b=1)
 	Sandy F(x=seq[value] xMin=seq[min] xMax=seq[max] value{label="F"} a=4 b=0.5)
-	OutputR(xAxis = seq[value])
+	OutputR(xAxis = seq[value], overlay=FALSE)
 }

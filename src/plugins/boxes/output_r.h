@@ -24,6 +24,7 @@ public:
 private:
     // Input
     QString xAxis;
+    bool overlay;
 
     // Data
     QFile _file;

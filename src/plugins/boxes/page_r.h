@@ -11,6 +11,7 @@ public:
 private:
     // Inputs
     QString xAxis;
+    bool overlay;
     int width, height, ncol;
 };
 

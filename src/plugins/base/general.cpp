@@ -94,4 +94,24 @@ QDir makeDir(QDir baseDir, QDir specificDir) {
     return dir;
 }
 
+double accum(const QVector<double> &x) {
+    double sum = 0.;
+    const double *p = x.data();
+    int n = x.size();
+    for (int i = 0; i < n; ++i, ++p)
+        sum += *p;
+    return sum;
+}
+
+void increment(QVector<double> &x, const QVector<double> &toAdd) {
+    int n = x.size();
+    Q_ASSERT(n == toAdd.size());
+    increment(const_cast<double*>(x.data()), toAdd.data(), n);
+}
+
+void increment(double *x, const double *toAdd, int n) {
+    for (int i = 0; i < n; ++i, ++x, ++toAdd)
+        *x += *toAdd;
+}
+
 } //namespace

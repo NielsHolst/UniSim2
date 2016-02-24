@@ -66,5 +66,12 @@ unisim_plot = function(df, id.x, cols) {
 		facet_wrap(~Variable, ncol=1, scales="free_y")
 }
 
+unisim_plot_overlaid = function(df, id.x, cols) {
+	if (!(id.x %in% cols)) cols = c(id.x, cols)
+	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
+	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
+		geom_line(size=1.1) +
+		ylab("") 
+}
 
 
