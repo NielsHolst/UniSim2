@@ -32,14 +32,14 @@ PUBLISH(EnergyFluxCoolingDemand)
  */
 
 EnergyFluxCoolingDemand::EnergyFluxCoolingDemand(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, heatedTemperature, "../../temperature[value]");
-    InputRef(double, setpointTemperature, "setpoints/temperature/ventilation[value]");
-    InputRef(double, volume, "geometry[indoorsVolume]");
-    InputRef(double, area, "geometry[groundArea]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
-    Output(double, value);
+    Input(heatedTemperature, "../../temperature[value]");
+    Input(setpointTemperature, "setpoints/temperature/ventilation[value]");
+    Input(volume, "geometry[indoorsVolume]");
+    Input(area, "geometry[groundArea]");
+    Input(timeStep, "calendar[timeStepSecs]");
+    Output(value);
 }
 
 void EnergyFluxCoolingDemand::update() {

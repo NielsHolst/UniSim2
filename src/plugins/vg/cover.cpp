@@ -5,12 +5,12 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <QMap>
-#include <usbase/data_grid.h>
-#include <usbase/exception.h>
-#include <usbase/interpolate.h>
-#include <usengine/simulation.h>
-#include "cover.h"
+#include <base/environment.h>
+#include <base/exception.h>
 #include <base/publish.h>
+#include "interpolate.h"
+#include "cover.h"
+#include "data_grid.h"
 
 using std::min;
 using namespace base;
@@ -52,27 +52,28 @@ PUBLISH(Cover)
 Cover::Cover(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
-    InputRef(double, greenhouseShade, "geometry[shade]");
-    InputRef(double, chalk, "controllers/chalk[signal]");
-    Input(QString, directTransmissionFile, "direct_transmission_single.txt");
-    InputRef(double, latitude, "calendar[latitude]");
-    InputRef(double, azimuth, "calendar[azimuth]");
-    InputRef(double, area, "..[area]");
-    InputRef(double, windspeed, "outdoors[windspeed]");
-    Input(double, U4, 7.5);
-    Input(double, emissivity, 0.84);
-    Input(double, absorptivity, 0.04);
-    Input(double, transmissivity, 1.);
-    Input(double, haze, 0.);
-    Input(bool, antiReflection, false);
-    Input(double, specificHeatCapacity, 840.);
+    Input(greenhouseShade).imports("geometry[shade]");
+    Input(chalk).imports("controllers/chalk[signal]");
+    Input(directTransmissionFile).imports("direct_transmission_single.txt");
+    Input(latitude).imports("calendar[latitude]");
+    Input(azimuth).imports("calendar[azimuth]");
+    Input(area).imports("..[area]");
+    Input(windspeed).imports("outdoors[windspeed]");
+    Input(U4).equals(7.5);
+    Input(emissivity).equals(0.84);
+    Input(absorptivity).equals(0.04);
+    Input(transmissivity).equals(1.);
+    Input(haze).equals(0.);
+    Input(antiReflection).equals(false);
+    Input(specificHeatCapacity).equals(840.);
 
-    Output(double, U);
-    Output(double, heatCapacity);
+    Output(U);
+    Output(heatCapacity);
 }
 
 void Cover::initialize() {
-    dirTransTable = new DataGrid(simulation()->inputFilePath(directTransmissionFile), this);
+    QDir inputFolder = environment().state.dir.input;
+    dirTransTable = new DataGrid(inputFolder.absoluteFilePath(directTransmissionFile), this);
 }
 
 void Cover::reset() {

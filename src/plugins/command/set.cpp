@@ -2,7 +2,6 @@
 #include <base/dialog.h>
 #include <base/exception.h>
 #include "set.h"
-#include "set_autosave.h"
 #include "set_font.h"
 #include "set_input_folder.h"
 #include "set_output_folder.h"
@@ -33,8 +32,6 @@ void set::doExecute() {
                 a2 = (n > 2) ? _args.at(2) : "";
         if (a1 == "font")
             command = new set_font("set_font", this);
-        else if (a1 == "autosave")
-            command = new set_autosave("set_autosave", this);
         else if (a1 == "input") {
             if (a2 == "folder")
                 command = new set_input_folder("set_input_folder", this);

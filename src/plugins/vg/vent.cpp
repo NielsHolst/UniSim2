@@ -5,7 +5,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <math.h>
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <base/publish.h>
 #include "vent.h"
 
@@ -32,13 +32,13 @@ PUBLISH(Vent)
  */
 
 Vent::Vent(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, length, 3.5);
-    Input(double, height, 0.8);
-    Input(double, number, 10);
-    Input(double, porosity, 1.);
-    Output(double, effectiveArea);
+    Input(length, 3.5);
+    Input(height, 0.8);
+    Input(number, 10);
+    Input(porosity, 1.);
+    Output(effectiveArea);
 }
 
 void Vent::reset() {

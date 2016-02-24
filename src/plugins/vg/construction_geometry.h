@@ -4,11 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_CONSTRUCTION_GEOMETRY_H
-#define VG_CONSTRUCTION_GEOMETRY_H
+#ifndef CONSTRUCTION_GEOMETRY_H
+#define CONSTRUCTION_GEOMETRY_H
 
 #include <base/box.h>
-#include <usbase/string_map.h>
 
 namespace vg {
 

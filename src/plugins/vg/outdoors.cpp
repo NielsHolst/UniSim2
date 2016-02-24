@@ -39,22 +39,22 @@ PUBLISH(Outdoors)
  */
 
 Outdoors::Outdoors(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, propParRadiation, 0.47);
-    Input(double, co2, 400.);
-    Input(double, soilTemperature, 10);
-    InputRef(double, temperature, "./records[Tair]");
-    InputRef(double, rh, "./records[RHair]");
-    InputRef(double, radiation, "./records[GlobRad]");
-    InputRef(double, diffuseRadiation, "./records[DifRad]");
-    InputRef(double, windSpeed, "./records[WindSpeed]");
-    InputRef(double, skyTemperature, "./records[Tsky]");
-    Output(double, parRadiation);
-    Output(double, directRadiation);
-    Output(double, propDirectRadiation);
-    Output(double, ah);
-    Output(double, sh);
+    Input(propParRadiation, 0.47);
+    Input(co2, 400.);
+    Input(soilTemperature, 10);
+    Input(temperature, "./records[Tair]");
+    Input(rh, "./records[RHair]");
+    Input(radiation, "./records[GlobRad]");
+    Input(diffuseRadiation, "./records[DifRad]");
+    Input(windSpeed, "./records[WindSpeed]");
+    Input(skyTemperature, "./records[Tsky]");
+    Output(parRadiation);
+    Output(directRadiation);
+    Output(propDirectRadiation);
+    Output(ah);
+    Output(sh);
 }
 
 void Outdoors::reset() {

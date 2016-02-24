@@ -21,16 +21,17 @@ HEADERS +=  \
     boundary_layer_resistance_jones_b.h \
     boundary_layer_resistance_stanghellini.h \
     boundary_layer_resistance_monteith_unsworth.h \
-#    budget.h \
-#    co2_controller.h \
-#    construction_geometry.h \
-#    cover.h \
+    budget.h \
+    co2_controller.h \
+    construction_geometry.h \
+    cover.h \
 #    crop.h \
 #    crop_mass.h \
 #    crop_growth.h \
 #    crop_lai.h \
 #    crop_radiation.h \
 #    crop_yield.h \
+    data_grid.h \
 #    date_time_signal.h \
 #    energy_flux_air.h \
 #    energy_flux_base.h \
@@ -59,6 +60,7 @@ HEADERS +=  \
 #    indoors_light.h \
 #    indoors_temperature.h \
 #    indoors_wind_speed.h \
+    interpolate.h \
 #    leaf_layer.h \
 #    leaf_light_response.h \
 #    leaf_photosynthesis.h \
@@ -81,8 +83,8 @@ HEADERS +=  \
 #    stomatal_resistance_base.h \
 #    stomatal_resistance_rose.h \
 #    stomatal_resistance_tomato.h \
-#    surface_radiation.h \
-#    surface_radiation_outputs.h \
+    surface_radiation.h \
+    surface_radiation_outputs.h \
 #    threshold_signal.h \
     utilities.h \
 #    vapour_flux_air.h \
@@ -110,16 +112,17 @@ SOURCES += \
     boundary_layer_resistance_jones_b.cpp \
     boundary_layer_resistance_stanghellini.cpp \
     boundary_layer_resistance_monteith_unsworth.cpp \
-#    budget.cpp \
-#    co2_controller.cpp \
-#    construction_geometry.cpp \
-#    cover.cpp \
+    budget.cpp \
+    co2_controller.cpp \
+    construction_geometry.cpp \
+    cover.cpp \
 #    crop.cpp \
 #    crop_mass.cpp \
 #    crop_growth.cpp \
 #    crop_lai.cpp \
 #    crop_radiation.cpp \
 #    crop_yield.cpp \
+    data_grid.cpp \
 #    date_time_signal.cpp \
 #    energy_flux_air.cpp \
 #    energy_flux_base.cpp \
@@ -170,8 +173,8 @@ SOURCES += \
 #    stomatal_resistance_base.cpp \
 #    stomatal_resistance_rose.cpp \
 #    stomatal_resistance_tomato.cpp \
-#    surface_radiation.cpp \
-#    surface_radiation_outputs.cpp \
+    surface_radiation.cpp \
+    surface_radiation_outputs.cpp \
 #    threshold_signal.cpp \
     utilities.cpp \
 #    vapour_flux_air.cpp \

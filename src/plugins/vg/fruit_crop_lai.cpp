@@ -35,9 +35,9 @@ PUBLISH(FruitCropLai)
 FruitCropLai::FruitCropLai(QString name, QObject *parent)
     : CropLai(name, parent)
 {
-    Input(double, maxLai, 3.5);
-    InputRef(double, cropDensity, "..[density]");
-    InputRef(double, tempSum, "../physTime[total]");
+    Input(maxLai, 3.5);
+    Input(cropDensity, "..[density]");
+    Input(tempSum, "../physTime[total]");
     InputRef(bool, cropPresent, "../periods[flag]");
     Output(bool, maxLaiReached);
 }

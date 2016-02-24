@@ -21,7 +21,7 @@ PUBLISH(FixedSignal)
 
 FixedSignal::FixedSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input(double, input, 0.);
+    Input(input, 0.);
 }
 
 double FixedSignal::signal() {

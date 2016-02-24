@@ -26,9 +26,9 @@ PUBLISH(Crop)
  */
 
 Crop::Crop(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, density, 1.);
+    Input(density, 1.);
 }
 
 

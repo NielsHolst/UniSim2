@@ -45,33 +45,33 @@ namespace vg {
  */
 
 CropMass::CropMass(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
-    InputRef(double, grossGrowthRate, "../growth[grossGrowthRate]");
+    Input(timeStep, "calendar[timeStepSecs]");
+    Input(grossGrowthRate, "../growth[grossGrowthRate]");
     InputRef(bool, establishCrop, "../periods[flagUp]");
     InputRef(bool, removeCrop, "../periods[flagDown]");
-    Input(double, initMass, 10);
-    Input(double, propRoot, 0.);
-    Input(double, propStem, 0.5);
-    Input(double, propLeaf, 0.5);
-    Input(double, propFruit, 0.);
-    Input(double, costRoot, 0.39);
-    Input(double, costStem, 0.45);
-    Input(double, costLeaf, 0.39);
-    Input(double, costFruit, 0.35);
+    Input(initMass, 10);
+    Input(propRoot, 0.);
+    Input(propStem, 0.5);
+    Input(propLeaf, 0.5);
+    Input(propFruit, 0.);
+    Input(costRoot, 0.39);
+    Input(costStem, 0.45);
+    Input(costLeaf, 0.39);
+    Input(costFruit, 0.35);
 
-    Output(double, root);
-    Output(double, stem);
-    Output(double, leaf);
-    Output(double, fruit);
-    Output(double, total);
+    Output(root);
+    Output(stem);
+    Output(leaf);
+    Output(fruit);
+    Output(total);
 
-    Output(double, rootGrowthRate);
-    Output(double, stemGrowthRate);
-    Output(double, leafGrowthRate);
-    Output(double, fruitGrowthRate);
-    Output(double, totalGrowthRate);
+    Output(rootGrowthRate);
+    Output(stemGrowthRate);
+    Output(leafGrowthRate);
+    Output(fruitGrowthRate);
+    Output(totalGrowthRate);
 }
 
 void CropMass::reset() {

@@ -39,15 +39,15 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
     Input2(QString, lampTypeStr, type, "HPSL");
-    Input(double, intensity, 40.);
-    Input(double, ballastCorrection, 1.);
-    Input(double, age, 0.);
-    Input(double, lifeTime, 12000.);
+    Input(intensity, 40.);
+    Input(ballastCorrection, 1.);
+    Input(age, 0.);
+    Input(lifeTime, 12000.);
     InputRef(bool, on, "controllers/growthLight[signal]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
+    Input(timeStep, "calendar[timeStepSecs]");
 
-    Output(double, currentPeriod);
-    Output(double, totalPeriod);
+    Output(currentPeriod);
+    Output(totalPeriod);
 
     types["hpsl"] = Hpsl;
     types["led"] = Led;

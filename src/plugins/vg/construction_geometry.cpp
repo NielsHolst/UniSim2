@@ -4,10 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <QMap>
-#include <usbase/exception.h>
-#include "construction_geometry.h"
+#include <base/exception.h>
 #include <base/publish.h>
+#include "construction_geometry.h"
+#include "general.h"
 
 using std::tan;
 using std::hypot;
@@ -49,28 +49,29 @@ PUBLISH(ConstructionGeometry)
  */
 
 ConstructionGeometry::ConstructionGeometry(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(int, numSpans, 1);
-    Input(double, spanWidth, 20.);
-    Input(double, length, 50.);
-    Input(double, height, 4.);
-    Input(double, margin, 0.15);
-    Input(double, roofPitch, 26.);
-    Input(double, shade, 0.1);
-    InputRef(double, screensMaxState, "construction/shelters[screensMaxState]");
-    InputRef(bool, hasHorizontalScreens, "construction/shelters/roof1/screens[areHorizontal]");
+    Class(ConstructionGeometry);
+    Input(numSpans).equals(1);
+    Input(spanWidth).equals(20.);
+    Input(length).equals(50.);
+    Input(height).equals(4.);
+    Input(margin).equals(0.15);
+    Input(roofPitch).equals(26.);
+    Input(shade).equals(0.1);
+    Input(screensMaxState).imports("construction/shelters[screensMaxState]");
+    Input(hasHorizontalScreens).imports("construction/shelters/roof1/screens[areHorizontal]");
 
-    Output(double, width);
-    Output(double, groundArea);
-    Output(double, roofArea);
-    Output(double, sideWallsArea);
-    Output(double, endWallsArea);
-    Output(double, gablesArea);
-    Output(double, coverArea);
-    Output(double, coverPerGroundArea);
-    Output(double, indoorsVolume);
-    Output(double, indoorsAverageHeight);
+    Output(width);
+    Output(groundArea);
+    Output(roofArea);
+    Output(sideWallsArea);
+    Output(endWallsArea);
+    Output(gablesArea);
+    Output(coverArea);
+    Output(coverPerGroundArea);
+    Output(indoorsVolume);
+    Output(indoorsAverageHeight);
 }
 
 void ConstructionGeometry::reset() {

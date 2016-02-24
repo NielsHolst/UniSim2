@@ -25,11 +25,11 @@ namespace vg {
  */
 
 CropLai::CropLai(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, laiStartPerPlant, 0.3);
-    Input(double, fractionPlantArea, 1.);
-    Output(double, value);
+    Input(laiStartPerPlant, 0.3);
+    Input(fractionPlantArea, 1.);
+    Output(value);
 }
 
 void CropLai::reset() {

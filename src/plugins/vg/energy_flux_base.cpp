@@ -24,9 +24,9 @@ PUBLISH(EnergyFluxBase)
  */
 
 EnergyFluxBase::EnergyFluxBase(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Output(double, value);
+    Output(value);
 }
 
 void EnergyFluxBase::reset() {

@@ -32,11 +32,11 @@ PUBLISH(PidControlElement)
 PidControlElement::PidControlElement(QString name, QObject *parent)
     : BaseControlElement(name, parent)
 {
-    Input(double, Kprop, 0.5);
-    Input(double, Kint, 0.);
-    Input(double, Kderiv, 0.);
-    Output(double, errorIntegral);
-    Output(double, errorDerivative);
+    Input(Kprop, 0.5);
+    Input(Kint, 0.);
+    Input(Kderiv, 0.);
+    Output(errorIntegral);
+    Output(errorDerivative);
 }
 
 void PidControlElement::localReset() {

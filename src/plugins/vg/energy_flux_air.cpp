@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include "general.h"
 #include <base/publish.h>
 #include "energy_flux_air.h"
@@ -30,11 +30,11 @@ PUBLISH(EnergyFluxAir)
 EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(double, airFlux, 0.);
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, outdoorsTemperature, "outdoors[temperature]");
-    InputRef(double, height,"geometry[indoorsAverageHeight]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
+    Input(airFlux, 0.);
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(outdoorsTemperature, "outdoors[temperature]");
+    Input(height,"geometry[indoorsAverageHeight]");
+    Input(timeStep, "calendar[timeStepSecs]");
 }
 
 void EnergyFluxAir::update() {

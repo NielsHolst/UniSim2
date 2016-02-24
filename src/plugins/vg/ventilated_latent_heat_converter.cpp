@@ -29,9 +29,9 @@ PUBLISH(VentilatedLatentHeatConverter)
 VentilatedLatentHeatConverter::VentilatedLatentHeatConverter(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    InputRef(double, groundArea, "geometry[groundArea]");
-    InputRef(double, indoorsAh, "indoors/humidity[ah]");
-    Input(double, volumeFlowRate, 2.5);
+    Input(groundArea, "geometry[groundArea]");
+    Input(indoorsAh, "indoors/humidity[ah]");
+    Input(volumeFlowRate, 2.5);
     // Additional outputs are needed to specify the flux of latent heat gain [W/m2]
 }
 

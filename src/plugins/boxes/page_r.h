@@ -11,7 +11,7 @@ public:
 private:
     // Inputs
     QString xAxis;
-    int width, height, nrow;
+    int width, height, ncol;
 };
 
 }

@@ -6,7 +6,6 @@
 #include <base/publish.h>
 #include "load.h"
 #include "run.h"
-#include "save_output.h"
 
 using namespace base;
 
@@ -28,8 +27,6 @@ void run::doExecute() {
     doLoad();
     if (!env.state.command->hasError())
         doRun();
-    if (!env.state.command->hasError() && environment().state.autosave)
-        doSave();
 }
 
 void run::doLoad() {
@@ -52,13 +49,7 @@ void run::doRun() {
     catch (Exception &ex) {
         throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.fullText());
     }
-    dialog().information("Run: " + root->objectName() + " finished");
-}
-
-void run::doSave() {
-    Command *save = new save_output("autosave_output", this);
-    save->arguments(QStringList() << "save" << "output");
-    save->execute();
+//    dialog().information("Run: " + root->objectName() + " finished");
 }
 
 }

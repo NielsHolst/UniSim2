@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_BUDGET_H
-#define VG_BUDGET_H
+#ifndef BUDGET_H
+#define BUDGET_H
 
 #include <base/box.h>
 

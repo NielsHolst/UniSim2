@@ -35,14 +35,15 @@ PUBLISH(Co2Controller)
  */
 
 Co2Controller::Co2Controller(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, minCo2, "setpoints/co2/minimum[signal]");
-    InputRef(double, maxCo2, "setpoints/co2/maximum[signal]");
-    InputRef(double, indoorsCo2, "indoors/co2[value]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
-    Input(double, injectionRate, 4.5);
-    Output(double, signal);
+    Class(Co2Controller);
+    Input(minCo2).imports("setpoints/co2/minimum[signal]");
+    Input(maxCo2).imports("setpoints/co2/maximum[signal]");
+    Input(indoorsCo2).imports("indoors/co2[value]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(injectionRate).equals(4.5);
+    Output(signal);
 }
 
 void Co2Controller::reset() {

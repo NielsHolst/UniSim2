@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include "sliding_signal.h"
 
 using namespace base;
@@ -35,11 +35,11 @@ namespace vg {
 SlidingSignal::SlidingSignal(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
-    Input(double, input, 25.);
-    Input(double, threshold, 25.);
-    Input(double, thresholdBand, 5.);
-    Input(double, minSignal, 0.);
-    Input(double, maxSignal, 100.);
+    Input(input, 25.);
+    Input(threshold, 25.);
+    Input(thresholdBand, 5.);
+    Input(minSignal, 0.);
+    Input(maxSignal, 100.);
     Input(bool, increasingSignal, true);
 }
 

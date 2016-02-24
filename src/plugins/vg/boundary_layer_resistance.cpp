@@ -30,12 +30,12 @@ PUBLISH(BoundaryLayerResistance)
  */
 
 BoundaryLayerResistance::BoundaryLayerResistance(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, leafDimension, 25./1000.);
-    InputRef(double, indoorsWindSpeed, "indoors/windSpeed[value]");
-    Output(double, rbH2O);
-    Output(double, rbCO2);
+    Input(leafDimension, 25./1000.);
+    Input(indoorsWindSpeed, "indoors/windSpeed[value]");
+    Output(rbH2O);
+    Output(rbCO2);
 }
 
 void BoundaryLayerResistance::reset() {

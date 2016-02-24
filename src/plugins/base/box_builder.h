@@ -26,7 +26,6 @@ public:
     BoxBuilder& attribute(QString name, QString value);
     // Attributes direct
     BoxBuilder& label(QString la);
-    BoxBuilder& axis(QString ax);
     BoxBuilder& page(QString pa);
     BoxBuilder& plot(QString pl);
     BoxBuilder& track(QString tr);

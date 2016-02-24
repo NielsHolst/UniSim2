@@ -43,21 +43,21 @@ PUBLISH(LeafLightResponse)
 const double O2i = 210;     // [G94, p.80] O2 partial pressure inside stomata [ppm], [mbar], [ml/l]
 
 LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, rsCO2, "../../rs[rsCO2]");
-    InputRef(double, rbCO2, "../../rb[rbCO2]");
-    InputRef(double, Tleaf, "../../temperature[value]");
-    InputRef(double, co2Air, "indoors/co2[value]");
-    Input(double, rhoChl, 0.45);
-    Input(double, theta, 0.7);
-    Input(double, frParAbs, 0.3);
-    Input(double, concEnzyme, 87);
-    Output(double, LUE);
-    Output(double, Pnmax);
-    Output(double, Pgmax);
-    Output(double, Rd);
-    Output(double, rtCO2);
+    Input(rsCO2, "../../rs[rsCO2]");
+    Input(rbCO2, "../../rb[rbCO2]");
+    Input(Tleaf, "../../temperature[value]");
+    Input(co2Air, "indoors/co2[value]");
+    Input(rhoChl, 0.45);
+    Input(theta, 0.7);
+    Input(frParAbs, 0.3);
+    Input(concEnzyme, 87);
+    Output(LUE);
+    Output(Pnmax);
+    Output(Pgmax);
+    Output(Rd);
+    Output(rtCO2);
 }
 
 void LeafLightResponse::reset() {

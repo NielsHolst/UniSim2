@@ -31,24 +31,38 @@ void Box::addPort(Port *port) {
     _ports[name] = port;
 }
 
-Port* Box::peakPort(QString name) const {
-    Path path(".[" + name + "]", this);
-    auto ports = (path.resolve());
-    switch (ports.size()) {
-    case 0:
-        return 0;
-    case 1:
-        return dynamic_cast<Port*>(ports.at(0));
-    default:
-        throw Exception("Port name not unique within box", name, this);
+#define PEAKPORT \
+    Path path(".[" + name + "]", this); \
+    auto ports = (path.resolve()); \
+    switch (ports.size()) { \
+    case 0: \
+        return 0; \
+    case 1: \
+        return dynamic_cast<Port*>(ports.at(0)); \
+    default: \
+        throw Exception("Port name not unique within box", name, this); \
     }
+
+Port* Box::peakPort(QString name) {
+    PEAKPORT
 }
 
-Port* Box::port(QString name) const {
-    Port *port = peakPort(name);
-    if (!port)
-        throw Exception("No port of that name in this box", name, this);
-    return port;
+const Port* Box::peakPort(QString name) const {
+    PEAKPORT
+}
+
+Port* Box::port(QString name) {
+    Port *port = peakPort(name); \
+    if (!port) \
+        throw Exception("No port of that name in this box", name, this); \
+    return port; \
+}
+
+const Port* Box::port(QString name) const {
+    const Port *port = peakPort(name); \
+    if (!port) \
+        throw Exception("No port of that name in this box", name, this); \
+    return port; \
 }
 
 Box* Box::currentRoot() {

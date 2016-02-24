@@ -40,19 +40,19 @@ PUBLISH(Shelter)
 Shelter::Shelter(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
-    InputRef(double, roofArea, "geometry[roofArea]");
-    InputRef(double, sideWallsArea, "geometry[sideWallsArea]");
-    InputRef(double, endWallsArea, "geometry[endWallsArea]");
-    InputRef(double, gablesArea, "geometry[gablesArea]");
-    InputRef(double, groundArea, "geometry[groundArea]");
+    Input(roofArea, "geometry[roofArea]");
+    Input(sideWallsArea, "geometry[sideWallsArea]");
+    Input(endWallsArea, "geometry[endWallsArea]");
+    Input(gablesArea, "geometry[gablesArea]");
+    Input(groundArea, "geometry[groundArea]");
 
-    InputRef(double, outdoorsDirectRadiation, "outdoors[directRadiation]");
-    InputRef(double, outdoorsDiffuseRadiation, "outdoors[diffuseRadiation]");
-    InputRef(double, screensMaxState, "./screens[maxState]");
+    Input(outdoorsDirectRadiation, "outdoors[directRadiation]");
+    Input(outdoorsDiffuseRadiation, "outdoors[diffuseRadiation]");
+    Input(screensMaxState, "./screens[maxState]");
 
-    Output(double, area);
-    Output(double, relativeArea);
-    Output(double, areaPerGround);
+    Output(area);
+    Output(relativeArea);
+    Output(areaPerGround);
 }
 
 void Shelter::initialize() {

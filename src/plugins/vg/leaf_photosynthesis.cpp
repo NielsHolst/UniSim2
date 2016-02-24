@@ -66,29 +66,29 @@ double LeafPhotosynthesis::laic() const {
 }
 
 LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, parDiffuse, "indoors/light[parDiffuse]");
-    InputRef(double, parDirect, "indoors/light[parDirect]");
-    InputRef(double, kDiffuse, "crop/radiation[kDiffuse]");
-    InputRef(double, kDirect, "crop/radiation[kDirect]");
-    InputRef(double, kDirectDirect, "crop/radiation[kDirectDirect]");
-    InputRef(double, scattering, "crop/radiation[scattering]");
-    InputRef(double, diffuseReflectivity, "crop/radiation[diffuseReflectivity]");
-    InputRef(double, directReflectivity, "crop/radiation[directReflectivity]");
-    InputRef(double, lai, "crop/lai[value]");
-    InputRef(double, sinB, "calendar[sinB]");
+    Input(parDiffuse, "indoors/light[parDiffuse]");
+    Input(parDirect, "indoors/light[parDirect]");
+    Input(kDiffuse, "crop/radiation[kDiffuse]");
+    Input(kDirect, "crop/radiation[kDirect]");
+    Input(kDirectDirect, "crop/radiation[kDirectDirect]");
+    Input(scattering, "crop/radiation[scattering]");
+    Input(diffuseReflectivity, "crop/radiation[diffuseReflectivity]");
+    Input(directReflectivity, "crop/radiation[directReflectivity]");
+    Input(lai, "crop/lai[value]");
+    Input(sinB, "calendar[sinB]");
 
-    InputRef(double, LUE, "./lightResponse[LUE]");
-    InputRef(double, Pgmax, "./lightResponse[Pgmax]");
-    InputRef(double, Rd, "./lightResponse[Rd]");
-    InputRef(double, xGauss, "..[xGaussUpperside]");
-    InputRef(double, wGauss, "..[wGaussUpperside]");
+    Input(LUE, "./lightResponse[LUE]");
+    Input(Pgmax, "./lightResponse[Pgmax]");
+    Input(Rd, "./lightResponse[Rd]");
+    Input(xGauss, "..[xGaussUpperside]");
+    Input(wGauss, "..[wGaussUpperside]");
 
-    Output(double, absorptivity);
-    Output(double, parAbsorbed);
-    Output(double, Pn);
-    Output(double, Pg);
+    Output(absorptivity);
+    Output(parAbsorbed);
+    Output(Pn);
+    Output(Pg);
 }
 
 void LeafPhotosynthesis::reset() {

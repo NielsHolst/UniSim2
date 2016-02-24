@@ -22,10 +22,10 @@ namespace vg {
  */
 
 StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Output(double, rsH2O);
-    Output(double, rsCO2);
+    Output(rsH2O);
+    Output(rsCO2);
 }
 
 void StomatalResistanceBase::reset() {

@@ -30,14 +30,14 @@ PUBLISH(IndoorsTemperature)
  */
 
 IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, resetValue, 20.);
-    Input(double, energyFlux, 0.);
-    InputRef(double, baseTemperature,".[value]");
-    InputRef(double, height,"geometry[indoorsAverageHeight]");
-    InputRef(double, timeStep,"calendar[timeStepSecs]");
-    Output(double, value);
+    Input(resetValue, 20.);
+    Input(energyFlux, 0.);
+    Input(baseTemperature,".[value]");
+    Input(height,"geometry[indoorsAverageHeight]");
+    Input(timeStep,"calendar[timeStepSecs]");
+    Output(value);
 }
 
 

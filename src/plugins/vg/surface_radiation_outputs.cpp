@@ -34,23 +34,24 @@ namespace vg {
  */
 
 SurfaceRadiationOutputs::SurfaceRadiationOutputs(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Output(double, lightTransmissivity);
-    Output(double, directLightTransmissivity);
-    Output(double, lwTransmissivity);
-    Output(double, incomingLightAbsorptivity);
-    Output(double, incomingLightReflectivity);
-    Output(double, incomingDirectLightAbsorptivity);
-    Output(double, incomingDirectLightReflectivity);
-    Output(double, incomingLwAbsorptivity);
-    Output(double, incomingLwReflectivity);
-    Output(double, outgoingLightAbsorptivity);
-    Output(double, outgoingLightReflectivity);
-    Output(double, outgoingDirectLightAbsorptivity);
-    Output(double, outgoingDirectLightReflectivity);
-    Output(double, outgoingLwAbsorptivity);
-    Output(double, outgoingLwReflectivity);
+    Class(SurfaceRadiationOutputs);
+    Output(lightTransmissivity);
+    Output(directLightTransmissivity);
+    Output(lwTransmissivity);
+    Output(incomingLightAbsorptivity);
+    Output(incomingLightReflectivity);
+    Output(incomingDirectLightAbsorptivity);
+    Output(incomingDirectLightReflectivity);
+    Output(incomingLwAbsorptivity);
+    Output(incomingLwReflectivity);
+    Output(outgoingLightAbsorptivity);
+    Output(outgoingLightReflectivity);
+    Output(outgoingDirectLightAbsorptivity);
+    Output(outgoingDirectLightReflectivity);
+    Output(outgoingLwAbsorptivity);
+    Output(outgoingLwReflectivity);
 }
 
 void SurfaceRadiationOutputs::resetRadiationOutputs() {

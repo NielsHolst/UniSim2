@@ -5,7 +5,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <stdlib.h>
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <usbase/utilities.h>
 #include <usbase/test_num.h>
 #include "general.h"
@@ -49,24 +49,24 @@ PUBLISH(Pipe)
  */
 
 Pipe::Pipe(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, length, 1.);
-    Input(double, diameter, 51.);
-    Input(double, minTemperature, 20.);
-    Input(double, maxTemperature, 80.);
-    Input(double, maxTemperatureIncreaseRate, 2.);
-    Input(double, emissivity, 0.9);
-    InputRef(double, energyFluxTotal, "heating/supply[value]");
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
+    Input(length, 1.);
+    Input(diameter, 51.);
+    Input(minTemperature, 20.);
+    Input(maxTemperature, 80.);
+    Input(maxTemperatureIncreaseRate, 2.);
+    Input(emissivity, 0.9);
+    Input(energyFluxTotal, "heating/supply[value]");
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(timeStep, "calendar[timeStepSecs]");
 
-    Output(double, temperature);
-    Output(double, energyFlux);
-    Output(double, nextTemperatureMin);
-    Output(double, nextTemperatureMax);
-    Output(double, nextEnergyFluxMin);
-    Output(double, nextEnergyFluxMax);
+    Output(temperature);
+    Output(energyFlux);
+    Output(nextTemperatureMin);
+    Output(nextTemperatureMax);
+    Output(nextEnergyFluxMin);
+    Output(nextEnergyFluxMax);
 }
 
 void Pipe::initialize() {

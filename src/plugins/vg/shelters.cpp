@@ -35,12 +35,12 @@ PUBLISH(Shelters)
 Shelters::Shelters(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
-    InputRef(double, groundArea, "geometry[groundArea]");
-    Output(double, heatCapacityCoversPerGround);
-    Output(double, heatCapacityScreensPerGround);
-    Output(double, screensEffectiveArea);
-    Output(double, screensPerGroundArea);
-    Output(double, screensMaxState);
+    Input(groundArea, "geometry[groundArea]");
+    Output(heatCapacityCoversPerGround);
+    Output(heatCapacityScreensPerGround);
+    Output(screensEffectiveArea);
+    Output(screensPerGroundArea);
+    Output(screensMaxState);
 }
 
 #define Pull(p) si.p = shelter->pullValuePtr<double>(#p)

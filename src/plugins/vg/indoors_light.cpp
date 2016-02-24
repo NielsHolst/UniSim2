@@ -39,19 +39,19 @@ PUBLISH(IndoorsLight)
  */
 
 IndoorsLight::IndoorsLight(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, sunlightDiffuse, "construction/shelters[diffuseLightTransmitted]");
-    InputRef(double, sunlightDirect, "construction/shelters[directLightTransmitted]");
-    InputRef(double, sunlightPropPar, "outdoors[propParRadiation]");
-    InputRef(double, growthLigthtsDirect, "growthLights[shortWaveEmission]");
-    InputRef(double, growthLigthtsPar, "growthLights[parEmission]");
-    Output(double, direct);
-    Output(double, diffuse);
-    Output(double, total);
-    Output(double, parDirect);
-    Output(double, parDiffuse);
-    Output(double, parTotal);
+    Input(sunlightDiffuse, "construction/shelters[diffuseLightTransmitted]");
+    Input(sunlightDirect, "construction/shelters[directLightTransmitted]");
+    Input(sunlightPropPar, "outdoors[propParRadiation]");
+    Input(growthLigthtsDirect, "growthLights[shortWaveEmission]");
+    Input(growthLigthtsPar, "growthLights[parEmission]");
+    Output(direct);
+    Output(diffuse);
+    Output(total);
+    Output(parDirect);
+    Output(parDiffuse);
+    Output(parTotal);
 }
 
 void IndoorsLight::reset() {

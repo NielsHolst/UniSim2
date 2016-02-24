@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <usbase/test_num.h>
 #include "leaf_radiation_absorbed.h"
 #include "general.h"
@@ -56,34 +56,34 @@ PUBLISH(LeafRadiationAbsorbed)
  */
 
 LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Input(double, kLw, 0.8);
-    Input(double, emissivity, 0.8);
-    InputRef(double, xGaussLowerside, "..[xGaussLowerside]");
-    InputRef(double, wGaussLowerside, "..[wGaussLowerside]");
-    InputRef(double, xGaussUpperside, "..[xGaussUpperside]");
-    InputRef(double, wGaussUpperside, "..[wGaussUpperside]");
-    InputRef(double, lai, "crop/lai[value]");
-    InputRef(double, indoorsLight, "indoors/light[total]");
-    InputRef(double, lightAbsorptivity, "../photosynthesis[absorptivity]");
-    InputRef(double, growthLightLw, "actuators/growthlights[longWaveEmission]");
-    Input(double, growthLightViewFactor, 1.);
-    InputRef(double, floorTemperature, "energyFlux/floor[temperature]");
-    InputRef(double, floorEmissivity, "energyFlux/floor[emissivity]");
-    InputRef(double, leafTemperature, "../temperature[value]");
-    InputRef(double, coverTemperature, "given/energyFlux/shelter[coverTemperature]");
-    InputRef(double, screensTemperature, "given/energyFlux/shelter[screensTemperature]");
-    InputRef(double, screensMaxState, "construction/shelters[screensMaxState]");
-    InputRef(double, shelterOutgoingLwAbsorptivity, "construction/shelters[outgoingLwAbsorptivity]");
-    InputRef(double, coverPerGroundArea, "construction/geometry[coverPerGroundArea]");
+    Input(kLw, 0.8);
+    Input(emissivity, 0.8);
+    Input(xGaussLowerside, "..[xGaussLowerside]");
+    Input(wGaussLowerside, "..[wGaussLowerside]");
+    Input(xGaussUpperside, "..[xGaussUpperside]");
+    Input(wGaussUpperside, "..[wGaussUpperside]");
+    Input(lai, "crop/lai[value]");
+    Input(indoorsLight, "indoors/light[total]");
+    Input(lightAbsorptivity, "../photosynthesis[absorptivity]");
+    Input(growthLightLw, "actuators/growthlights[longWaveEmission]");
+    Input(growthLightViewFactor, 1.);
+    Input(floorTemperature, "energyFlux/floor[temperature]");
+    Input(floorEmissivity, "energyFlux/floor[emissivity]");
+    Input(leafTemperature, "../temperature[value]");
+    Input(coverTemperature, "given/energyFlux/shelter[coverTemperature]");
+    Input(screensTemperature, "given/energyFlux/shelter[screensTemperature]");
+    Input(screensMaxState, "construction/shelters[screensMaxState]");
+    Input(shelterOutgoingLwAbsorptivity, "construction/shelters[outgoingLwAbsorptivity]");
+    Input(coverPerGroundArea, "construction/geometry[coverPerGroundArea]");
 
-    Output(double, lightAbsorbed);
-    Output(double, heatingAbsorbed);
-    Output(double, growthLightLwAbsorbed);
-    Output(double, floorLwAbsorbed);
-    Output(double, shelterLoss);
-    Output(double, value);
+    Output(lightAbsorbed);
+    Output(heatingAbsorbed);
+    Output(growthLightLwAbsorbed);
+    Output(floorLwAbsorbed);
+    Output(shelterLoss);
+    Output(value);
 }
 
 void LeafRadiationAbsorbed::initialize() {

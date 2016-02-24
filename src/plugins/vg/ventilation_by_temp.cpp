@@ -32,15 +32,15 @@ PUBLISH(VentilationByTemp)
  */
 
 VentilationByTemp::VentilationByTemp(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, outdoorsTemperature, "outdoors[temperature]");
-    InputRef(double, windowLength, "construction/vents[totalLength]");
-    InputRef(double, windowHeight, "construction/vents[averageHeight]");
-    InputRef(double, greenhouseArea, "geometry[groundArea]");
-    Input(double, dischargeCoefficient, 0.7);
-    Output(double, value);
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(outdoorsTemperature, "outdoors[temperature]");
+    Input(windowLength, "construction/vents[totalLength]");
+    Input(windowHeight, "construction/vents[averageHeight]");
+    Input(greenhouseArea, "geometry[groundArea]");
+    Input(dischargeCoefficient, 0.7);
+    Output(value);
 }
 
 void VentilationByTemp::reset() {

@@ -27,7 +27,7 @@ PUBLISH(GrowthLightController)
  */
 
 GrowthLightController::GrowthLightController(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
     Output(bool, signal);
 }

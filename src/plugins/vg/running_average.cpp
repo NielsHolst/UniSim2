@@ -29,12 +29,12 @@ PUBLISH(RunningAverage)
  */
 
 RunningAverage::RunningAverage(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, initialValue, 0.);
-    Input(double, input, 0.);
+    Input(initialValue, 0.);
+    Input(input, 0.);
     Input(int, length, 10);
-    Output(double, value);
+    Output(value);
 }
 
 void RunningAverage::reset() {

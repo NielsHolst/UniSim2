@@ -6,7 +6,7 @@
 */
 #include <stdlib.h>
 #include <QMessageBox>
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <usbase/test_num.h>
 #include "general.h"
 #include <base/publish.h>
@@ -40,12 +40,12 @@ Screens::Screens(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
     Output(bool, areHorizontal);
-    Output(double, maxState);
-    Output(double, airTransmissivity);
-    Output(double, haze);
-    Output(double, U);
-    Output(double, heatCapacity);
-    Output(double, effectiveArea);
+    Output(maxState);
+    Output(airTransmissivity);
+    Output(haze);
+    Output(U);
+    Output(heatCapacity);
+    Output(effectiveArea);
 }
 
 void Screens::initialize() {

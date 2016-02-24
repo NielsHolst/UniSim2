@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <usbase/test_num.h>
 #include "fruit_crop_mass.h"
 #include <base/publish.h>
@@ -49,20 +49,20 @@ PUBLISH(FruitCropMass)
 FruitCropMass::FruitCropMass(QString name, QObject *parent)
     : CropMass(name, parent)
 {
-    Input(double, vegPropRoot, 0.);
-    Input(double, vegPropStem, 0.5);
-    Input(double, vegPropLeaf, 0.5);
-    Input(double, vegPropFruit, 0.);
-    Input(double, reproPropRoot, 0.);
-    Input(double, reproPropStem, 0.);
-    Input(double, reproPropLeaf, 0.);
-    Input(double, reproPropFruit, 1.);
-    Input(double, tempSumReproductive, 975.);
-    Input(double, tempMaxReproductive, 30.);
-    Input(double, fruitFactor, 1.);
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, tempSum, "../physTime[total]");
-    InputRef(double, lai, "../lai[value]");
+    Input(vegPropRoot, 0.);
+    Input(vegPropStem, 0.5);
+    Input(vegPropLeaf, 0.5);
+    Input(vegPropFruit, 0.);
+    Input(reproPropRoot, 0.);
+    Input(reproPropStem, 0.);
+    Input(reproPropLeaf, 0.);
+    Input(reproPropFruit, 1.);
+    Input(tempSumReproductive, 975.);
+    Input(tempMaxReproductive, 30.);
+    Input(fruitFactor, 1.);
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(tempSum, "../physTime[total]");
+    Input(lai, "../lai[value]");
     InputRef(bool, maxLaiReached, "../lai[maxLaiReached]");
 }
 

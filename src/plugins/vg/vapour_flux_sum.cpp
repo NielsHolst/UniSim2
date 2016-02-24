@@ -24,7 +24,7 @@ PUBLISH(VapourFluxSum)
 VapourFluxSum::VapourFluxSum(QString name, QObject *parent)
     : VapourFluxSumBase(name, parent)
 {
-    Input(QString, toAdd, "()");
+    Input(toAdd, "()");
 }
 
 QList<VapourFluxBase*> VapourFluxSum::fluxes() {

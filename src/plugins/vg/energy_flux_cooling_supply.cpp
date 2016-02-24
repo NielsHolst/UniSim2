@@ -34,15 +34,15 @@ PUBLISH(EnergyFluxCoolingSupply)
  */
 
 EnergyFluxCoolingSupply::EnergyFluxCoolingSupply(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, airSupplyMax, "cooling/airSupplyMax[value]");
-    InputRef(double, energyDemand, "cooling/demand[value]");
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, outdoorsTemperature, "outdoors[temperature]");
-    InputRef(double, height,"geometry[indoorsAverageHeight]");
-    InputRef(double, airTransmissivity, "construction/shelters[airTransmissivity]");
-    Output(double, value);
+    Input(airSupplyMax, "cooling/airSupplyMax[value]");
+    Input(energyDemand, "cooling/demand[value]");
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(outdoorsTemperature, "outdoors[temperature]");
+    Input(height,"geometry[indoorsAverageHeight]");
+    Input(airTransmissivity, "construction/shelters[airTransmissivity]");
+    Output(value);
 }
 
 void EnergyFluxCoolingSupply::reset() {

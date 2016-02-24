@@ -32,14 +32,14 @@ PUBLISH(LeafWindSpeed)
  */
 
 LeafWindSpeed::LeafWindSpeed(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Input(double, k, 0.);
-    Input(double, indoorsWindSpeedMinimum, 0.025);
-    InputRef(double, indoorsWindSpeed, "indoors/windSpeed[value]");
-    InputRef(double, xGauss, "..[xGaussUpperside]");
-    InputRef(double, lai, "crop/lai[value]");
-    Output(double, value);
+    Input(k, 0.);
+    Input(indoorsWindSpeedMinimum, 0.025);
+    Input(indoorsWindSpeed, "indoors/windSpeed[value]");
+    Input(xGauss, "..[xGaussUpperside]");
+    Input(lai, "crop/lai[value]");
+    Output(value);
 }
 
 void LeafWindSpeed::reset() {

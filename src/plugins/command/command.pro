@@ -17,10 +17,10 @@ HEADERS +=  \
     list.h \
     load.h \
     run.h \
-    save.h \
-    save_output.h \
+#    save.h \
+#    save_output.h \
     set.h \
-    set_autosave.h \
+#    set_autosave.h \
     set_font.h \
     set_input_folder.h \
     set_output_folder.h \
@@ -36,10 +36,10 @@ SOURCES +=  \
     list.cpp \
     load.cpp \
     run.cpp \
-    save.cpp \
-    save_output.cpp \
+#    save.cpp \
+#    save_output.cpp \
     set.cpp \
-    set_autosave.cpp \
+#    set_autosave.cpp \
     set_font.cpp \
     set_input_folder.cpp \
     set_output_folder.cpp \

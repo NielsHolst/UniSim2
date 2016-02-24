@@ -59,9 +59,9 @@ DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     Input(QTime, endTime, QTime(24,0));
     InputRef(int, day, "calendar[dayOfyear]");
     InputRef(QTime, time, "calendar[timeOfDay]");
-    Input(double, signalOutside, 0.);
-    Input(double, signalOutsideTimeOnly, 0.);
-    Input(double, signalInside, 1.);
+    Input(signalOutside, 0.);
+    Input(signalOutsideTimeOnly, 0.);
+    Input(signalInside, 1.);
     Input(bool, circadian, true);
 }
 

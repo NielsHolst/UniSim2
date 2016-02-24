@@ -67,8 +67,9 @@ void load::readFile(QString fileName) {
     Box *newRoot = builder.content();
     if (newRoot) {
         environment().state.root = newRoot;
-        QString info("New root: %1 %2");
-        dialog().information(info.arg(newRoot->className()).arg(newRoot->objectName()));
+//        Drop info message
+//        QString info("New root: %1 %2");
+//        dialog().information(info.arg(newRoot->className()).arg(newRoot->objectName()));
     }
     else
         dialog().error("Box is empty");

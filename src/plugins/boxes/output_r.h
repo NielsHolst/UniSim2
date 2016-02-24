@@ -25,11 +25,9 @@ private:
     // Input
     QString xAxis;
 
-    // Methods
-    void setTrackX();
-
     // Data
     QFile _file;
+    QStringList _pageFunctionNames;
 
     struct PageInfo;
     struct PlotInfo;
@@ -44,6 +42,7 @@ private:
         PageInfo(Box *page);
         QString toString();
         QString toScript();
+        QString functionName() const;
     };
 
     struct PlotInfo {
@@ -61,7 +60,7 @@ private:
     // Methods
     void collectInfo();
     QVector<const base::Port*> collectPorts(QString pageName, QString plotName);
-
+    void setTrackX();
     void writeScript();
     void openFile();
 };

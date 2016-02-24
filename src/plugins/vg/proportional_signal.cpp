@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include "general.h"
 #include "proportional_signal.h"
 #include <base/publish.h>

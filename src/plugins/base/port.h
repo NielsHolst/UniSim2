@@ -27,7 +27,7 @@ private:
     QString _importPath;
     QVector<Port *> _importPorts;
     unsigned _accessFlags;
-    QString _label, _Rformat, _axis, _page, _plot;
+    QString _label, _Rformat, _page, _plot;
     bool _reset;
     Vector _track;
     bool _trackOn;
@@ -44,7 +44,6 @@ public:
     Port& access(unsigned accessFlags);
     Port& label(QString la);
     Port& Rformat(QString format);
-    Port& axis(QString ax);
     Port& page(QString pa);
     Port& plot(QString pl);
     Port& zeroAtReset();
@@ -75,7 +74,6 @@ public:
     unsigned accessFlags() const;
     QString label() const;
     QString Rformat() const;
-    QString axis() const;
     QString page() const;
     QString plot() const;
     bool hasImport() const;

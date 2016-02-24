@@ -23,11 +23,11 @@ namespace vg {
  */
 
 VapourFluxBase::VapourFluxBase(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Output(double, conductance);
-    Output(double, gain);
-    Output(double, vapourFlux);
+    Output(conductance);
+    Output(gain);
+    Output(vapourFlux);
 }
 
 void VapourFluxBase::reset() {

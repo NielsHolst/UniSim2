@@ -10,7 +10,7 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity), _importPath(""),
-      _accessFlags(Read), _label(name), _Rformat("NA"), _axis("y"), _page("page"), _plot("plot"),
+      _accessFlags(Read), _label(name), _Rformat("NA"), _page("page"), _plot("plot"),
       _reset(false), _track(this), _trackOn(true)
 {
     Class(Port);
@@ -44,13 +44,6 @@ Port& Port::label(QString la) {
 
 Port& Port::Rformat(QString format) {
     _Rformat = format;
-    return *this;
-}
-
-Port& Port::axis(QString ax) {
-    if (ax != "x" && ax != "y" && ax != "facet")
-        throw Exception("Port axis must be one of 'x', 'y' or 'facet'", ax);
-    _axis = ax;
     return *this;
 }
 
@@ -196,10 +189,6 @@ QString Port::label() const {
 
 QString Port::Rformat() const {
     return _Rformat;
-}
-
-QString Port::axis() const {
-    return _axis;
 }
 
 QString Port::page() const {

@@ -62,20 +62,12 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
 }
 
 BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
-    if (name == "axis") return axis(value);
     if (name == "plot") return plot(value);
     if (name == "label") return label(value);
     if (name == "page") return page(value);
     if (name == "Rformat") return Rformat(value);
     if (name == "track") return track(value);
     throw Exception("Unknown port attribute", name);
-}
-
-BoxBuilder& BoxBuilder::axis(QString ax) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: axis out of context");
-    _currentPort->axis(ax);
-    return *this;
 }
 
 BoxBuilder& BoxBuilder::plot(QString pl) {

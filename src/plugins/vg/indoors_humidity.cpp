@@ -39,21 +39,21 @@ PUBLISH(IndoorsHumidity)
  */
 
 IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, conductance, "indoors/total/vapourFlux[conductance]");
-    InputRef(double, vapourFlux, "indoors/total/vapourFlux[vapourFlux]");
-    InputRef(double, gain, "indoors/total/vapourFlux[gain]");
-    InputRef(double, temperature, "indoors/temperature[value]");
-    InputRef(double, height, "geometry[indoorsAverageHeight]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
+    Input(conductance, "indoors/total/vapourFlux[conductance]");
+    Input(vapourFlux, "indoors/total/vapourFlux[vapourFlux]");
+    Input(gain, "indoors/total/vapourFlux[gain]");
+    Input(temperature, "indoors/temperature[value]");
+    Input(height, "geometry[indoorsAverageHeight]");
+    Input(timeStep, "calendar[timeStepSecs]");
 
-    Output(double, rh);
-    Output(double, ah);
-    Output(double, ahEq);
-    Output(double, timeConstant);
-    Output(double, surplusAh);
-    Output(double, netVapourFlux);
+    Output(rh);
+    Output(ah);
+    Output(ahEq);
+    Output(timeConstant);
+    Output(surplusAh);
+    Output(netVapourFlux);
 }
 
 void IndoorsHumidity::reset() {

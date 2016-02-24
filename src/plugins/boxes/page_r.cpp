@@ -14,7 +14,7 @@ PageR::PageR(QString name, QObject *parent)
     Input(xAxis).imports("/*[step]");
     Input(width).equals(14);
     Input(height).equals(10);
-    Input(nrow).equals(2);
+    Input(ncol).equals(1);
 }
 
 }

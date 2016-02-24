@@ -45,7 +45,7 @@ Environment::~Environment() {
 }
 
 QString Environment::outputFilePath(QString extension) {
-    QDir dir = makeDir(environment().state.dir.work, environment().state.dir.output);
+    QDir dir = makeDir(state.dir.work, state.dir.output);
     QString folderPath = dir.absolutePath();
     QString fileName = state.latestLoadArg;
     int n = fileName.lastIndexOf(".");
@@ -56,6 +56,12 @@ QString Environment::outputFilePath(QString extension) {
     QString ext = (extension.at(0) == '.') ? extension : ("." + extension);
     return folderPath + "/" + fileName.left(n) + "_" + numberFilled + ext;
 }
+
+QString Environment::scriptFilePath(QString fileName) {
+    QDir dir = locateDir(state.dir.work, state.dir.script);
+    return dir.absoluteFilePath(fileName);
+}
+
 QDir Environment::makeDir(QDir baseDir, QDir specificDir) {
     QDir dir = locateDir(baseDir, specificDir);
     if (!dir.mkpath("."))

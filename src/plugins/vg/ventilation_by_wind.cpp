@@ -30,12 +30,12 @@ PUBLISH(VentilationByWind)
  */
 
 VentilationByWind::VentilationByWind(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Input(double, baseRate, 30.);
-    InputRef(double, windspeed, "outdoors[windspeed]");
-    InputRef(double, ventsProportionalEffectiveArea, "construction/vents[proportionalEffectiveArea]");
-    Output(double, value);
+    Input(baseRate, 30.);
+    Input(windspeed, "outdoors[windspeed]");
+    Input(ventsProportionalEffectiveArea, "construction/vents[proportionalEffectiveArea]");
+    Output(value);
 }
 
 void VentilationByWind::reset() {

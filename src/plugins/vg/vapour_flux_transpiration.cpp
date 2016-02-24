@@ -28,9 +28,9 @@ PUBLISH(VapourFluxTranspiration)
 VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    InputRef(double, conductanceIn, "crop/conductance[value]");
-    InputRef(double, vapourFluxIn, "crop/vapourFlux[value]");
-    InputRef(double, gainIn, "crop/gain[value]");
+    Input(conductanceIn, "crop/conductance[value]");
+    Input(vapourFluxIn, "crop/vapourFlux[value]");
+    Input(gainIn, "crop/gain[value]");
 }
 
 void VapourFluxTranspiration::update() {

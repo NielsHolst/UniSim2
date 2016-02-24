@@ -29,11 +29,11 @@ PUBLISH(IndoorsWindSpeed)
  */
 
 IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, ventilation, "indoors/total/airflux[value]");
-    InputRef(double, constructionWidth, "geometry[width]");
-    Output(double, value);
+    Input(ventilation, "indoors/total/airflux[value]");
+    Input(constructionWidth, "geometry[width]");
+    Output(value);
 }
 
 void IndoorsWindSpeed::reset() {

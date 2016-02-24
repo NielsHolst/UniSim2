@@ -98,8 +98,15 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
+    s += "rm(list=ls(all=TRUE))\n";
+    s += "graphics.off()\n";
+    s += "source(\"" + environment().scriptFilePath("common.R") + "\")\n";
     for (PageInfo pageInfo : _pageInfos)
         s += pageInfo.toScript();
+    s += "unisim_plot_all <- function(df) {\n";
+    for (PageInfo pageInfo : _pageInfos)
+        s += "  " + pageInfo.functionName() + "(df)\n";
+    s += "}\n";
     return s;
 }
 
@@ -121,7 +128,7 @@ QString OutputR::PageInfo::toString() {
 QString OutputR::PageInfo::toScript() {
     QString string;
     QTextStream s(&string);
-    s << _page->objectName() << " = function(df) {\n"
+    s << functionName() << " <- function(df) {\n"
       << "  windows("
       << _page->port("width")->value<int>()
       << ", "
@@ -130,8 +137,12 @@ QString OutputR::PageInfo::toScript() {
       << "  grid.arrange(\n" ;
     for (PlotInfo plotInfo : _plotInfos)
         s << plotInfo.toScript();
-    s << "    nrow = " << _page->port("nrow")->value<int>() << "\n  )\n}\n";
+    s << "    ncol = " << _page->port("ncol")->value<int>() << "\n  )\n}\n";
     return string;
+}
+
+QString OutputR::PageInfo::functionName() const {
+    return "unisim_" + _page->objectName() + "_page";
 }
 
 OutputR::PlotInfo::PlotInfo(Box *plot)
@@ -165,9 +176,12 @@ inline QString apostrophed(QString s) {
 
 QString OutputR::PlotInfo::toScript() {
     QStringList portLabels;
-    for (const Port *port : _ports)
-        portLabels << apostrophed(port->label());
     QString xLabel = apostrophed(xPortLabel());
+    for (const Port *port : _ports) {
+        // Avoid x-axis being plotted on y-axis too
+        if (port->label() != xLabel)
+            portLabels << apostrophed(port->label());
+    }
     return "    unisim_plot(df, " + xLabel + ", c(" + portLabels.join(", ") + ")),\n";
 }
 
@@ -200,7 +214,12 @@ void OutputR::openFile() {
     _file.setFileName(filePath);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
         throw Exception("Cannot open file for output", filePath, this);
-    environment().copyToClipboard("source(\""+filePath+"\")\n");
+    environment().copyToClipboard(
+                "source(\""+filePath+"\")\n"
+                "unisim_plot_all(read_unisim_output(\"" +
+                environment().outputFilePath(".txt") +
+                + "\"))\n"
+                );
 }
 
 

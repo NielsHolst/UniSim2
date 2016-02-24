@@ -33,14 +33,14 @@ namespace vg {
 ShelterBase::ShelterBase(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
-    Output(double, diffuseLightTransmitted);
-    Output(double, directLightTransmitted);
-    Output(double, totalLightTransmitted);
-    Output(double, lightAbsorbedCover);
-    Output(double, lightAbsorbedScreens);
-    Output(double, haze);
-    Output(double, U);
-    Output(double, airTransmissivity);
+    Output(diffuseLightTransmitted);
+    Output(directLightTransmitted);
+    Output(totalLightTransmitted);
+    Output(lightAbsorbedCover);
+    Output(lightAbsorbedScreens);
+    Output(haze);
+    Output(U);
+    Output(airTransmissivity);
 }
 
 

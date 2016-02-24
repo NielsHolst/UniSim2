@@ -10,7 +10,7 @@
 #define RETURN_PLUGIN_NAME(x) #x
 
 #define Input(X) (*new Port(#X, this)).data(& X).access(Port::Read|Port::Write).trackOff()
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset()
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset().trackOn()
 
 namespace base {
 
@@ -23,8 +23,10 @@ public:
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
-    Port* peakPort(QString name) const;
-    Port* port(QString name) const;
+    Port* peakPort(QString name);
+    const Port* peakPort(QString name) const;
+    Port* port(QString name);
+    const Port* port(QString name) const;
 
     static Box* currentRoot();
     QString className() const;

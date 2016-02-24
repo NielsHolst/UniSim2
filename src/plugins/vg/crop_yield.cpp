@@ -29,13 +29,13 @@ PUBLISH(CropYield)
  */
 
 CropYield::CropYield(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, produceMass, "../mass[fruit]");
-    InputRef(double, fractionPlantArea, "crop/lai[fractionPlantArea]");
-    Input(double, fractionDryWeight, 0.03);
-    Output(double, freshWeight);
-    Output(double, dryWeight);
+    Input(produceMass, "../mass[fruit]");
+    Input(fractionPlantArea, "crop/lai[fractionPlantArea]");
+    Input(fractionDryWeight, 0.03);
+    Output(freshWeight);
+    Output(dryWeight);
 }
 
 void CropYield::reset() {

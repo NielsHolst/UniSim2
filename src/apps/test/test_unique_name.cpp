@@ -81,7 +81,7 @@ void TestUniqueName::testSandy() {
         box("Sequence").name("seq").
             port("min").equals(10).
             port("max").equals(30).
-            port("value").axis("x").label("x").
+            port("value").label("x").
         endbox().
         box("Sandy").name("A").
             port("x").imports("seq[value]").

@@ -28,14 +28,14 @@ PUBLISH(GrowthLightBase)
  */
 
 GrowthLightBase::GrowthLightBase(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Output(double, heatEmission);
-    Output(double, longWaveEmission);
-    Output(double, shortWaveEmission);
-    Output(double, totalEmission);
-    Output(double, parEmission);
-    Output(double, energyFlux);
+    Output(heatEmission);
+    Output(longWaveEmission);
+    Output(shortWaveEmission);
+    Output(totalEmission);
+    Output(parEmission);
+    Output(energyFlux);
     Output(bool, currentlyOn);
 }
 

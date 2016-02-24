@@ -40,15 +40,15 @@ PUBLISH(StomatalResistance)
  */
 
 StomatalResistance::StomatalResistance(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, co2, "indoors/co2[value]");
-    InputRef(double, rh, "indoors/humidity[rh]");
-    InputRef(double, Pn, "../photosynthesis[Pn]");
-    InputRef(double, rbCO2, "../rb[rbCO2]");
-    InputRef(double, lai, "crop/lai[value]");
-    Output(double, rsH2O);
-    Output(double, rsCO2);
+    Input(co2, "indoors/co2[value]");
+    Input(rh, "indoors/humidity[rh]");
+    Input(Pn, "../photosynthesis[Pn]");
+    Input(rbCO2, "../rb[rbCO2]");
+    Input(lai, "crop/lai[value]");
+    Output(rsH2O);
+    Output(rsCO2);
 }
 
 void StomatalResistance::reset() {

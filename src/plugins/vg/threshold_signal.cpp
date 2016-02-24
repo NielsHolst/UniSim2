@@ -27,10 +27,10 @@ PUBLISH(ThresholdSignal)
 
 ThresholdSignal::ThresholdSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input(double, threshold, 0.);
-    Input(double, input, 0.);
-    Input(double, signalBelow, 0.);
-    Input(double, signalAbove, 1.);
+    Input(threshold, 0.);
+    Input(input, 0.);
+    Input(signalBelow, 0.);
+    Input(signalAbove, 1.);
 }
 
 double ThresholdSignal::signal() {

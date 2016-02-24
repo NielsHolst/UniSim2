@@ -32,16 +32,16 @@ PUBLISH(Budget)
  */
 
 Budget::Budget(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, heatingEnergyFlux, "heating/supply[value]");
-    InputRef(double, growthLightsEnergyFlux, "actuators/growthLights[energyFlux]");
-    InputRef(double, co2Flux, "controllers/co2[signal]");
-    InputRef(double, dt, "calendar[timeStepSecs]");
-    Input(QString, energyUnit, "GJ");
-    Output(double, heatingEnergyTotal);
-    Output(double, growthLightsEnergyTotal);
-    Output(double, co2Total);
+    Input(heatingEnergyFlux).imports("heating/supply[value]");
+    Input(growthLightsEnergyFlux).imports("actuators/growthLights[energyFlux]");
+    Input(co2Flux).imports("controllers/co2[signal]");
+    Input(dt).imports("calendar[timeStepSecs]");
+    Input(energyUnit).equals("GJ");
+    Output(heatingEnergyTotal);
+    Output(growthLightsEnergyTotal);
+    Output(co2Total);
 }
 
 void Budget::reset() {
@@ -55,7 +55,7 @@ void Budget::reset() {
         eUnit = dt/3600.*1e-3;    // kh = s / (s/h) * k
     else {
         QString msg {"Unknown energy unit '%1', expected 'kWh' or 'GJ'"};
-        throw Exception(msg.arg(energyUnit), this);
+        throw Exception(msg.arg(energyUnit), energyUnit, this);
     }
 }
 

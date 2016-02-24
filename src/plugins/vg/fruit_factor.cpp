@@ -33,12 +33,12 @@ PUBLISH(FruitFactor)
  */
 
 FruitFactor::FruitFactor(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Input(double, minDensity, 1.);
-    Input(double, maxValue, 1.);
-    InputRef(double, plantDensity, "../..[density]");
-    Output(double, value);
+    Input(minDensity, 1.);
+    Input(maxValue, 1.);
+    Input(plantDensity, "../..[density]");
+    Output(value);
 }
 
 void FruitFactor::reset() {

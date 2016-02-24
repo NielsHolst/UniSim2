@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_SURFACE_RADIATION_H
-#define VG_SURFACE_RADIATION_H
+#ifndef SURFACE_RADIATION_H
+#define SURFACE_RADIATION_H
 
 namespace vg {
 

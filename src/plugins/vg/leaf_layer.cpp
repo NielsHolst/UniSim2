@@ -26,12 +26,12 @@ PUBLISH(LeafLayer)
  */
 
 LeafLayer::LeafLayer(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    Input(double, xGaussUpperside, 1);
-    Input(double, wGaussUpperside, 1);
-    Input(double, xGaussLowerside, 1);
-    Input(double, wGaussLowerside, 1);
+    Input(xGaussUpperside, 1);
+    Input(wGaussUpperside, 1);
+    Input(xGaussLowerside, 1);
+    Input(wGaussLowerside, 1);
 }
 
 

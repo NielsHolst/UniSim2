@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <usbase/test_num.h>
 #include "crop_radiation.h"
 #include "general.h"
@@ -42,22 +42,22 @@ PUBLISH(CropRadiation)
  */
 
 CropRadiation::CropRadiation(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    Input(double, kDiffuse, 0.8);
-    Input(double, scattering, 0.2);
-    InputRef(double, sinB, "calendar[sinB]");
-    InputRef(double, lightDiffuse, "indoors/light[diffuse]");
-    InputRef(double, lightDirect, "indoors/light[direct]");
-    InputRef(double, absorptivityTop, "layers/top/photosynthesis[absorptivity]");
-    InputRef(double, absorptivityMiddle, "layers/middle/photosynthesis[absorptivity]");
-    InputRef(double, absorptivityBottom, "layers/bottom/photosynthesis[absorptivity]");
+    Input(kDiffuse, 0.8);
+    Input(scattering, 0.2);
+    Input(sinB, "calendar[sinB]");
+    Input(lightDiffuse, "indoors/light[diffuse]");
+    Input(lightDirect, "indoors/light[direct]");
+    Input(absorptivityTop, "layers/top/photosynthesis[absorptivity]");
+    Input(absorptivityMiddle, "layers/middle/photosynthesis[absorptivity]");
+    Input(absorptivityBottom, "layers/bottom/photosynthesis[absorptivity]");
 
-    Output(double, kDirect);
-    Output(double, kDirectDirect);
-    Output(double, diffuseReflectivity);
-    Output(double, directReflectivity);
-    Output(double, reflectivity);
+    Output(kDirect);
+    Output(kDirectDirect);
+    Output(diffuseReflectivity);
+    Output(directReflectivity);
+    Output(reflectivity);
 }
 
 void CropRadiation::reset() {

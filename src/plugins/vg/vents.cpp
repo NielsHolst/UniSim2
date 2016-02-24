@@ -5,7 +5,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <math.h>
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include <base/publish.h>
 #include "vent.h"
 #include "vents.h"
@@ -31,12 +31,12 @@ PUBLISH(Vents)
  */
 
 Vents::Vents(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, groundArea, "geometry[groundArea]");
-    Output(double, totalLength);
-    Output(double, averageHeight);
-    Output(double, proportionalEffectiveArea);
+    Input(groundArea, "geometry[groundArea]");
+    Output(totalLength);
+    Output(averageHeight);
+    Output(proportionalEffectiveArea);
 }
 
 void Vents::reset() {

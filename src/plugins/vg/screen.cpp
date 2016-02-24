@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include "general.h"
 #include <base/publish.h>
 #include "screen.h"
@@ -47,30 +47,30 @@ PUBLISH(Screen)
  */
 
 Screen::Screen(QString name, QObject *parent)
-    : Model(name, parent)
+    : Box(name, parent)
 {
-    InputRef(double, shelterArea, "../..[area]");
-    Input(QString, position, "");
-    Input(QString, layer, "");
-    Input(double, transmissivityLight, 0.41);
-    Input(double, emissivityInner, 0.62);
-    Input(double, emissivityOuter, 0.06);
-    Input(double, U, infinity());
-    Input(double, energyLossReduction, 0.4);
-    Input(double, haze, 0.);
-    Input(double, specificHeatCapacity, 840.);
-    Input(double, transmissivityAir, 0.8);
-    Input(double, transmissivityAirExponent, 4.);
-    Input(double, state, 0.);
+    Input(shelterArea, "../..[area]");
+    Input(position, "");
+    Input(layer, "");
+    Input(transmissivityLight, 0.41);
+    Input(emissivityInner, 0.62);
+    Input(emissivityOuter, 0.06);
+    Input(U, infinity());
+    Input(energyLossReduction, 0.4);
+    Input(haze, 0.);
+    Input(specificHeatCapacity, 840.);
+    Input(transmissivityAir, 0.8);
+    Input(transmissivityAirExponent, 4.);
+    Input(state, 0.);
 
-    Output(double, transmissivityLightNet);
-    Output(double, absorptivityLwInnerNet);
-    Output(double, absorptivityLwOuterNet);
-    Output(double, unhazed);
-    Output(double, resistance);
-    Output(double, heatCapacity);
-    Output(double, transmissivityAirNet);
-    Output(double, effectiveArea);
+    Output(transmissivityLightNet);
+    Output(absorptivityLwInnerNet);
+    Output(absorptivityLwOuterNet);
+    Output(unhazed);
+    Output(resistance);
+    Output(heatCapacity);
+    Output(transmissivityAirNet);
+    Output(effectiveArea);
     Output(bool, isHorizontal);
 }
 

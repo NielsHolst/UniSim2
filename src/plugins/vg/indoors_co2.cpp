@@ -33,15 +33,15 @@ PUBLISH(IndoorsCo2)
  */
 
 IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, outdoorsCo2, "outdoors[co2]");
-    InputRef(double, airFlux, "total/airflux[value]");
-    InputRef(double, injectionRate, "controllers/co2[signal]");
-    InputRef(double, assimilation, "crop/growth/Pg[value]");
-    InputRef(double, averageHeight, "geometry[indoorsAverageHeight]");
-    InputRef(double, timeStep, "calendar[timeStepSecs]");
-    Output(double, value);
+    Input(outdoorsCo2, "outdoors[co2]");
+    Input(airFlux, "total/airflux[value]");
+    Input(injectionRate, "controllers/co2[signal]");
+    Input(assimilation, "crop/growth/Pg[value]");
+    Input(averageHeight, "geometry[indoorsAverageHeight]");
+    Input(timeStep, "calendar[timeStepSecs]");
+    Output(value);
 }
 
 void IndoorsCo2::reset() {

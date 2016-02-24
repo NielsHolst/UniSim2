@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/exception.h>
+#include <base/exception.h>
 #include "general.h"
 #include <base/publish.h>
 #include "vapour_flux_air.h"
@@ -29,10 +29,10 @@ PUBLISH(VapourFluxAir)
 VapourFluxAir::VapourFluxAir(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(double, airFlux, 0.);
-    InputRef(double, indoorsAh, "indoors/humidity[ah]");
-    InputRef(double, outdoorsAh, "outdoors[ah]");
-    InputRef(double, height, "geometry[indoorsAverageHeight]");
+    Input(airFlux, 0.);
+    Input(indoorsAh, "indoors/humidity[ah]");
+    Input(outdoorsAh, "outdoors[ah]");
+    Input(height, "geometry[indoorsAverageHeight]");
 }
 
 void VapourFluxAir::update() {

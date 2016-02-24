@@ -38,14 +38,14 @@ PUBLISH(LeafTranspiration)
 LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    InputRef(double, lai, "crop/lai[value]");
-    InputRef(double, fractionPlantArea, "crop/lai[fractionPlantArea]");
-    InputRef(double, indoorsAh, "indoors/humidity[ah]");
-    InputRef(double, radiationAbsorbed, "../radiationAbsorbed[value]");
-    InputRef(double, leafTemperature, "../Temperature[value]");
-    InputRef(double, rbH2O, "../rb[rbH2O]");
-    InputRef(double, rsH2O, "../rs[rsH2O]");
-    Output(double, leafAh);
+    Input(lai, "crop/lai[value]");
+    Input(fractionPlantArea, "crop/lai[fractionPlantArea]");
+    Input(indoorsAh, "indoors/humidity[ah]");
+    Input(radiationAbsorbed, "../radiationAbsorbed[value]");
+    Input(leafTemperature, "../Temperature[value]");
+    Input(rbH2O, "../rb[rbH2O]");
+    Input(rsH2O, "../rs[rsH2O]");
+    Output(leafAh);
 }
 
 void LeafTranspiration::reset() {

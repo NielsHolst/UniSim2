@@ -31,14 +31,14 @@ PUBLISH(LeafTemperature)
  */
 
 LeafTemperature::LeafTemperature(QString name, QObject *parent)
-	: Model(name, parent)
+	: Box(name, parent)
 {
-    InputRef(double, indoorsTemperature, "indoors/temperature[value]");
-    InputRef(double, indoorsRh, "indoors/humidity[rh]");
-    InputRef(double, rsH2O, "../rs[rsH2O]");
-    InputRef(double, rbH2O, "../rb[rbH2O]");
-    InputRef(double, radiationAbsorbed, "../radiationAbsorbed[value]");
-    Output(double, value);
+    Input(indoorsTemperature, "indoors/temperature[value]");
+    Input(indoorsRh, "indoors/humidity[rh]");
+    Input(rsH2O, "../rs[rsH2O]");
+    Input(rbH2O, "../rb[rbH2O]");
+    Input(radiationAbsorbed, "../radiationAbsorbed[value]");
+    Output(value);
 }
 
 void LeafTemperature::reset() {

@@ -30,8 +30,8 @@ PUBLISH(EnergyFluxHeatingSupply)
 EnergyFluxHeatingSupply::EnergyFluxHeatingSupply(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(double, maxHeating, 10000.);
-    InputRef(double, demand, "heating/demand[value]");
+    Input(maxHeating, 10000.);
+    Input(demand, "heating/demand[value]");
 }
 
 void EnergyFluxHeatingSupply::update() {

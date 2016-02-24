@@ -6,10 +6,9 @@
 */
 #include <math.h>
 #include <qglobal.h>
-#include <QMessageBox>
 #include <QString>
-#include <usbase/exception.h>
-#include <usbase/test_num.h>
+#include <base/exception.h>
+#include <base/test_num.h>
 #include "general.h"
 #include "surface_radiation.h"
 
@@ -82,9 +81,6 @@ void SurfaceRadiation::setToZero() {
 void SurfaceRadiation::Spectrum::Direction::setRef(double tra) {
     ref = 1. - abs - tra;
     TestNum::snapToZero(ref);
-    if (ref < 0.) {
-        QMessageBox::information(0, "Test ref<0", QString::number(ref));
-    }
     Q_ASSERT(ref>=0);
 }
 
@@ -92,9 +88,6 @@ void SurfaceRadiation::Spectrum::Direction::setRef(double tra) {
 void SurfaceRadiation::Spectrum::Direction::setAbs(double tra) {
     abs = 1. - ref - tra;
     TestNum::snapToZero(abs);
-    if (abs < 0.) {
-        QMessageBox::information(0, "Test abs<0", QString::number(abs) + " " + QString::number(ref) + " " + QString::number(tra));
-    }
     Q_ASSERT(abs>=0.);
 }
 
