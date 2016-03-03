@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <QFont>
 #include <QFontDatabase>
 #include <QKeyEvent>
@@ -9,6 +10,7 @@
 #include <QTextDocument>
 #include "command.h"
 #include "dialog.h"
+#include "environment.h"
 #include "exception.h"
 #include "general.h"
 #include "mega_factory.h"
@@ -21,9 +23,13 @@ Dialog::Dialog(QWidget *parent)
       _informationColor(QColor("blue")),
       _errorColor(QColor("red"))
 {
+    setObjectName("dialog");
     setDocument(_textDocument = new QTextDocument(this));
     restoreFont();
+    writeWelcome();
     writePrompt();
+    QObject::connect(qApp, &QApplication::focusChanged,
+                     this, &Dialog::receivedFocus);
 }
 
 
@@ -67,7 +73,7 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Escape:
         event->accept();
         cursor = textCursor();
-        cursor.movePosition(QTextCursor::EndOfLine);
+        cursor.movePosition(QTextCursor::End);
         setTextCursor(cursor);
         writePrompt();
         break;
@@ -132,6 +138,14 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
     mainWindow()->statusBar()->showMessage(QString::number(numLines()));
 }
 
+void Dialog::receivedFocus(QWidget *old, QWidget *now) {
+    if (!old && now == this) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition(QTextCursor::End);
+        setTextCursor(cursor);
+    }
+}
+
 QMainWindow* Dialog::mainWindow() {
     return dynamic_cast<QMainWindow*>(parent());
 }
@@ -149,6 +163,18 @@ QTextCursor Dialog::getCursor() {
 
 void Dialog::writePrompt() {
    insertText("\n" + _prompt);
+}
+
+void Dialog::writeWelcome() {
+    QString latestFile = environment().state.latestLoadArg,
+            inputFolder = environment().state.dir.input.path(),
+            workFolder = environment().state.dir.work.absolutePath(),
+            info = latestFile.isEmpty() ? "Welcome to Universal Simulator." : "Welcome back.";
+    info += "\nYour work folder is '" + workFolder + "'.";
+    info += "\nYour input folder is '" + inputFolder + "'.";
+    if (!latestFile.isEmpty())
+        info += "\nYour latest file was '" + latestFile + "'.";
+    dialog().information(info);
 }
 
 void Dialog::insertText(QString text, QColor color) {

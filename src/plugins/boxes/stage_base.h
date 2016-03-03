@@ -21,11 +21,11 @@ public:
 protected:
     // inputs
     int k;
-    double duration, fgr, sdRatio, instantMortality, instantLossRate;
+    double duration, growthFactor, sdRatio, instantMortality, instantLossRate;
     QVector<double> phaseInflow;
 
     // outputs
-    double sum, inflowTotal, outflowTotal, phaseInflowTotal, phaseOutflowTotal, growth;
+    double content, inflowTotal, outflowTotal, phaseInflowTotal, phaseOutflowTotal, growth;
     QVector<double> phaseOutflow;
 
     // methods

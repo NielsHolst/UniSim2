@@ -1,0 +1,28 @@
+Simulation butterfly(steps=240 step{track=off}) {
+	Calendar calendar(initialDate = weather[firstDateTime])
+	Records weather(fileName="weather/flakkebjerg 2009.txt")
+	Stage egg (initial=100 
+	           duration=140 
+			   dt=./time[step] 
+			   content{page=lifecycle}) {
+		DayDegrees time(T0=8.3 T=weather[Tavg])
+	}
+	Stage larva (inflow=../egg[outflow] 
+	             duration=315 
+			     dt=./time[step]
+				 content{page=lifecycle}) {
+		DayDegrees time(T0=8.3 T=weather[Tavg])
+	}
+	Stage pupa (inflow=../larva[outflow] 
+	            duration=110 
+			    dt=./time[step]
+			    content{page=lifecycle}) {
+		DayDegrees time(T0=10.9 T=weather[Tavg])
+	}
+	Stage adult (inflow=../pupa[outflow] 
+	            duration=18.8 
+			    dt=1	 
+				content{page=lifecycle}) {
+	}
+	OutputR (xAxis=calendar[date] overlay=TRUE) 
+}

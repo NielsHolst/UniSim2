@@ -1,0 +1,5 @@
+Simulation chicken(steps=50) {
+	Calendar calendar()
+	Stage egg(initial=100 duration=22) 
+	OutputR (xAxis=calendar[date]) 
+}

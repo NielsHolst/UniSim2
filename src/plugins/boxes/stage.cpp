@@ -23,7 +23,7 @@ PUBLISH(Stage)
 Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent), dd(0)
 {
-    Input(dt).imports(".../time[step]");
+    Input(dt).equals(1);
     Input(inflow);
     Input(initial);
     Input(phaseOutflowProportion); // Proportion that will change phase in next time step
@@ -43,6 +43,7 @@ DistributedDelayBase* Stage::createDistributedDelay() {
 void Stage::reset() {
     StageBase::reset();
     inflowPending = latestInflow = outflow = 0.;
+    content = initial;
     firstUpdate = true;
 }
 
@@ -72,18 +73,18 @@ void Stage::update() {
     }
 
     if (TestNum::eqZero(dt)) {
-        sum = dd->content() + inflowPending;
+        content = dd->content() + inflowPending;
         outflow = growth = 0.;
         return;
     }
 
-    if (fgr <= 0)
-        throw Exception(QString("Growth rate must be > 0"), QString::number(fgr), this);
+    if (growthFactor <= 0)
+        throw Exception(QString("Growth rate must be > 0"), QString::number(growthFactor), this);
     if (inflowPending < 0) {
         throw Exception(QString("Input must be >= 0"), QString::number(inflowPending), this);
     }
 
-    dd->update(inflowPending, dt, fgr);
+    dd->update(inflowPending, dt, growthFactor);
     inflowPending = 0;
 
     if (phaseOutflowProportion == 0.) {
@@ -99,7 +100,7 @@ void Stage::update() {
         phaseOutflowTotal += accum(phaseOutflow);
     }
 
-    sum = dd->content();
+    content = dd->content();
     outflowTotal += outflow = dd->state().outflowRate;
     growth = dd->state().growthRate;
 }

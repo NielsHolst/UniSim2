@@ -1,14 +1,14 @@
 #include "factory.h"
 #include <base/publish.h>
 
-#define RETURN_ID(x) #x
+//#define RETURN_ID(x) #x
 
 using namespace base;
 
 namespace BOXES_PLUGIN_NAME {
 
 QString Factory::id() const {
-    return RETURN_ID(BOXES_PLUGIN_NAME);
+    return BOXES_PLUGIN_NAME_TEXT;
 }
 
 QList<QString> Factory::inventory() {

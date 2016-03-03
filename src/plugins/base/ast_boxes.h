@@ -66,7 +66,7 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') >> char_('"')];
         // An unquoted value is for numbers, dates and times (booleans??)
-        unquoted_value %= lexeme[+(char_ - char_(" \"(){}"))];
+        unquoted_value %= lexeme[+(char_ - char_(" \t\n \"(){}"))];
         // A value may be optional
         optional_value %= value;
         // A name-value pair

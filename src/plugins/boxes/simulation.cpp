@@ -18,7 +18,7 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(iterations).equals(1);
     Input(steps).equals(1);
     Output(iteration).noReset().Rformat("factor");
-    Output(step);
+    Output(step).trackOff();
 }
 
 void Simulation::amend() {

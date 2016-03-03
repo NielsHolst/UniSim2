@@ -31,23 +31,22 @@ read_unisim_output = function(file_path) {
 			U[,ix] = parse_date_time(U[,ix], c(cl$Rformat[ix]))
 		}
 	}
-	
 	U
 }
 
 create_unisim_plots = function() {
 	L = read_unisim_output()
-	llply(L$pages, 
+	llply(L$pages,
 		function(M) {
 			ggplot(M, aes_string(x=L$x_name, y="value",colour="variable")) +
-			geom_line(size=1.1) 
+			geom_line(size=1.1)
 		}
 	)
 }
 
 print_unisim_plots = function() {
-	l_ply(create_unisim_plots(), 
-		function(p) { 
+	l_ply(create_unisim_plots(),
+		function(p) {
 			windows(14,10)
 			print(p)
 		}
@@ -71,7 +70,5 @@ unisim_plot_overlaid = function(df, id.x, cols) {
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
 		geom_line(size=1.1) +
-		ylab("") 
+		ylab("")
 }
-
-

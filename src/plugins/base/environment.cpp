@@ -45,8 +45,6 @@ Environment::~Environment() {
 }
 
 QString Environment::outputFilePath(QString extension) {
-    QDir dir = makeDir(state.dir.work, state.dir.output);
-    QString folderPath = dir.absolutePath();
     QString fileName = state.latestLoadArg;
     int n = fileName.lastIndexOf(".");
 
@@ -54,7 +52,13 @@ QString Environment::outputFilePath(QString extension) {
     sprintf(numberFilled, "%04d", fileCountervalue());
 
     QString ext = (extension.at(0) == '.') ? extension : ("." + extension);
-    return folderPath + "/" + fileName.left(n) + "_" + numberFilled + ext;
+    return outputFileNamePath(fileName.left(n) + "_" + numberFilled + ext);
+}
+
+QString Environment::outputFileNamePath(QString fileName) {
+    QDir dir = makeDir(state.dir.work, state.dir.output);
+    QString folderPath = dir.absolutePath();
+    return folderPath + "/" + fileName;
 }
 
 QString Environment::scriptFilePath(QString fileName) {

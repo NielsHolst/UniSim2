@@ -1,0 +1,4 @@
+Simulation chicken(steps=50) {
+	Stage egg(initial=100 duration=22) 
+	OutputR () 
+}

@@ -30,13 +30,7 @@ void run::doExecute() {
 }
 
 void run::doLoad() {
-    QString fileName = (_args.size() == 1) ?
-                       environment().state.latestLoadArg :
-                       _args.at(1);
-    if (fileName.isEmpty())
-        throw Exception("No box loaded");
     Command *loadCom = new load("load", this);
-    loadCom->arguments(QStringList() << "load" << fileName);
     loadCom->execute();
 }
 
@@ -49,7 +43,6 @@ void run::doRun() {
     catch (Exception &ex) {
         throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.fullText());
     }
-//    dialog().information("Run: " + root->objectName() + " finished");
 }
 
 }

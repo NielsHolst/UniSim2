@@ -10,7 +10,6 @@ PUBLISH(Fibonacci)
 Fibonacci::Fibonacci(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Fibonacci);
     Output(value);
 }
 

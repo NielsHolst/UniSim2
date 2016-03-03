@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include <QTextCursor>
+//#include <QWidget>
 #include "dialog_base.h"
 #include "history.h"
 
@@ -20,7 +21,8 @@ public:
     void error(QString s);
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-
+private slots:
+    void receivedFocus(QWidget *old, QWidget *now);
 private:
     // Data
     History _history;
@@ -33,6 +35,7 @@ private:
     void restoreFont();
     QTextCursor getCursor();
     void writePrompt();
+    void writeWelcome();
     void insertText(QString text, QColor color = QColor("black"));
     int numLines();
     int linePosition(int i);

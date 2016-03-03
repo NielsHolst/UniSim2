@@ -59,6 +59,7 @@ private:
     };
 
     // Methods
+    void trackXAxis();
     void collectInfo();
     QVector<const base::Port*> collectPorts(QString pageName, QString plotName);
     void setTrackX();

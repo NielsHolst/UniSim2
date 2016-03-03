@@ -16,8 +16,8 @@ include("$$_PRO_FILE_PWD_/../../boxes_common.pri")
 TEMPLATE = lib
 DESTDIR = "$$_PRO_FILE_PWD_/../../../bin/plugins"
 TARGET = $$BOXES_PLUGIN_NAME$${SUFFIX}
-DEFINES += "BOXES_PLUGIN_NAME=$$BOXES_PLUGIN_NAME"
-#CONFIG += dll ??
+DEFINES += BOXES_PLUGIN_NAME=$$BOXES_PLUGIN_NAME
+DEFINES += BOXES_PLUGIN_NAME_TEXT=\\\"$${BOXES_PLUGIN_NAME}\\\"
 
 # Own library source code on which we depend
 DEPENDPATH += $$_PRO_FILE_PWD_/../base

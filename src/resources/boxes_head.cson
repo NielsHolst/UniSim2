@@ -1,0 +1,64 @@
+# If this is your first time writing a language grammar, check out:
+#   - http://manual.macromates.com/en/language_grammars
+
+'scopeName': 'source.boxes'
+'name': 'boxes'
+'fileTypes': [
+  'box'
+]
+'foldingStartMarker': '\{\s*$'
+'foldingStopMarker': '^\s*\}'
+'patterns': [
+  {
+    'match': '^\\s*//.*$'
+    'name': 'comment.line.double-slash'
+  }
+  {
+    'begin': '"'
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin'
+    'end': '"'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end'
+    'name': 'string.quoted.double.r'
+    'patterns': [
+      {
+        'match': '\\\\.'
+        'name': 'constant.character.escape'
+      }
+    ]
+  }
+  {
+    'match': '\\b(plot|label|page|Rformat|track|transform)\\b'
+    'name': 'keyword.control'
+  }
+  {
+    'match': '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
+    'name': 'constant.numeric'
+  }
+  {
+    'match': '='
+    'name': 'keyword.operator.assignment'
+  }
+  {
+    'match': '\\b(Calendar|DayDegrees|OutputR|Records|Simulation|Stage)\\b'
+    'name': 'support.class'
+  }
+  {
+    'match': '\\b(boxes|popdyn)\\b'
+    'name': 'support.class'
+  }
+  {
+    'match': '\\b(steps|step|initialDate|firstDateTime|fileName|Tmin|Tmax|I|initial|duration|dt|T0|T|Tavg|inflow|outflow|xAxis|overlay|date)\\b'
+    'name': 'support.variable'
+  }
+  {
+    'match': '\\b(Identity|Sum|Average|Min|Max|Copy|Split|All|Any)\\b'
+    'name': 'support.function'
+  }
+  {
+    'match': '\\b(TRUE|FALSE)\\b'
+    'name': 'constant.language'
+  }

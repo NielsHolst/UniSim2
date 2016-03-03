@@ -76,12 +76,29 @@ void OutputR::setTrackX() {
 //
 
 void OutputR::initialize() {
+    trackXAxis();
     try {
         collectInfo();
     }
     catch (Exception &ex) {
         QString msg{"Unexpected error in OutputR::collectInfo:\n"};
         throw( Exception(msg+ex.what(), "", this) );
+    }
+}
+
+void OutputR::trackXAxis() {
+    QVector<Port*> xAxisImportPorts = port("xAxis")->importPorts();
+    switch (xAxisImportPorts.size()) {
+    case 0:
+        return;
+    case 1:
+        xAxisImportPorts.at(0)->trackOn();
+        break;
+    default:
+        QString s;
+        for (Port* port : xAxisImportPorts)
+            s += base::fullName(port) + "\n";
+        throw Exception("There can only be one x-axis", s, this);
     }
 }
 

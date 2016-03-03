@@ -21,12 +21,12 @@ StageBase::StageBase(QString name, QObject *parent)
 {
     Input(k).equals(30);
     Input(duration).equals(100);
-    Input(fgr).equals(1);
+    Input(growthFactor).equals(1);
     Input(sdRatio).equals(1);
-    Input(instantMortality).equals(0);  // Mortality [0..100] will be applied in the next time step, before @F inflow is added
-    Input(instantLossRate).equals(0);   // Works just like @F mortality except the scale is a ratio [0..1]
-    Input(phaseInflow);                 // Inflow of dimension @F {k}
-    Output(sum);
+    Input(instantMortality);  // Mortality [0..100] will be applied in the next time step, before @F inflow is added
+    Input(instantLossRate);   // Works just like @F mortality except the scale is a ratio [0..1]
+    Input(phaseInflow);       // Inflow of dimension @F {k}
+    Output(content);
     Output(inflowTotal).trackOff();
     Output(phaseInflowTotal).trackOff();
     Output(phaseOutflowTotal).trackOff();
@@ -54,7 +54,7 @@ void StageBase::reset()
 {
     Q_ASSERT(ddBase);
     ddBase->scale(0);
-    sum = inflowTotal = outflowTotal = phaseInflowTotal = phaseOutflowTotal = growth = 0.;
+    content = inflowTotal = outflowTotal = phaseInflowTotal = phaseOutflowTotal = growth = 0.;
     phaseOutflow.resize(k);
 }
 

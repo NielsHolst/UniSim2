@@ -86,7 +86,7 @@ Calendar::Calendar(QString name, QObject *parent)
     Output(date).trackOff();
     Output(timeOfDay).trackOff();
     Output(trueSolarTime).trackOff();
-    Output(dateTime);
+    Output(dateTime).trackOff();
     Output(timeStepSecs).trackOff();
     Output(totalTimeSteps).trackOff();
     Output(totalTime).trackOff();

@@ -14,6 +14,7 @@ public:
     Environment();
     ~Environment();
     QString outputFilePath(QString extension);
+    QString outputFileNamePath(QString fileName);
     QString scriptFilePath(QString fileName);
     void incrementFileCounter();
     void copyToClipboard(QString text);

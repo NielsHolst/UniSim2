@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 //    QCoreApplication::setApplicationName("Universal Simulator");
 
     QApplication app(argc, argv);
+    app.setObjectName("application");
     MainWindow window;
     window.show();
     return app.exec();

@@ -30,20 +30,25 @@ load::load(QString name, QObject *parent)
 
 void load::doExecute() {
     Environment &env(environment());
+    QString fileName;
     switch (_args.size()) {
+    case 0:
+        // Zero arguments when called from run command
     case 1:
-        throw Exception("Write 'load <file-name>'");
+        fileName = env.state.latestLoadArg;
         break;
     case 2:
-        delete env.state.root;
-        env.state.root = 0;
-        readFile(_args.at(1));
-        env.state.latestLoadArg = _args.at(1);
+        fileName = _args.at(1);
         break;
     default:
         throw Exception("Too many arguments. Write 'load <file-name>'."
-                        "\nIf the file name contains spaces then enclose it in apostrophes");
+                        "\nIf the file name contains spaces then enclose it in apostrophes",
+                        _args.join(" "));
     }
+    delete env.state.root;
+    env.state.root = 0;
+    readFile(fileName);
+    env.state.latestLoadArg = fileName;
 }
 
 void load::readFile(QString fileName) {
