@@ -57,13 +57,13 @@ void load::readFile(QString fileName) {
     try {
         switch(fileType(fileName)) {
         case Boxes:
-            reader = new BoxReaderBoxes;
+            reader = new BoxReaderBoxes(&builder);
             break;
         case Xml:
-            reader = new BoxReaderXml;
+            reader = new BoxReaderXml(&builder);
             break;
         }
-        builder = reader->parse(filePath(fileName));
+        reader->parse(filePath(fileName));
     }
     catch (Exception &ex) {
         dialog().error(QString("Load failed\n") + ex.fullText());
@@ -72,9 +72,9 @@ void load::readFile(QString fileName) {
     Box *newRoot = builder.content();
     if (newRoot) {
         environment().state.root = newRoot;
-//        Drop info message
-//        QString info("New root: %1 %2");
-//        dialog().information(info.arg(newRoot->className()).arg(newRoot->objectName()));
+        newRoot->amendFamily();
+        QString info("%1 boxes loaded");
+        dialog().information(info.arg(newRoot->count()));
     }
     else
         dialog().error("Box is empty");

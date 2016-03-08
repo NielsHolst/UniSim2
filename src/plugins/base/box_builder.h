@@ -1,5 +1,7 @@
 #ifndef BOX_BUILDER_H
 #define BOX_BUILDER_H
+#include <QList>
+#include <QObject>
 #include <QStack>
 #include <QString>
 #include "exception.h"
@@ -25,14 +27,12 @@ public:
     // Attributes by name
     BoxBuilder& attribute(QString name, QString value);
     // Attributes direct
-    BoxBuilder& label(QString la);
+    BoxBuilder& format(QString value);
     BoxBuilder& page(QString pa);
     BoxBuilder& plot(QString pl);
-    BoxBuilder& track(QString tr);
-    BoxBuilder& trackOn();
-    BoxBuilder& trackOff();
-    BoxBuilder& Rformat(QString format);
-    BoxBuilder& transform(PortTransform pt);
+    BoxBuilder& label(QString la);
+    BoxBuilder& transform(QString tr);
+    BoxBuilder& transform(PortTransform value);
     // Data templates
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
@@ -41,6 +41,7 @@ public:
     const Port* currentPort() const;
     Box* content();
 private:
+    // Data
     Box *_content, *_currentBox;
     Port *_currentPort;
     QStack<Box*> _stack;

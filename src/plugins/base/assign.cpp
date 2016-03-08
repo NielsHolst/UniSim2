@@ -79,7 +79,7 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
         break;
     case Copy:
     case Split:
-        throw Exception("Transform cannot be applied when assigning a vector to a scalar", nameOf(transform));
+        throw Exception("Transform cannot be applied when assigning a vector to a scalar", convert<QString>(transform));
     }
     DEST(destT) = convert<destT>(value);
 }
@@ -95,7 +95,7 @@ template <> void assignToScalarFromVector<destT, sourceT>(void *destPtr, const v
         DEST(destT) = convert<destT>(sourceVector->at(0)); \
         break; \
     default: \
-        throw Exception("Transform cannot be applied when assigning a vector to a scalar", nameOf(transform)); \
+        throw Exception("Transform cannot be applied when assigning a vector to a scalar", convert<QString>(transform)); \
     } \
 }
 
@@ -128,7 +128,7 @@ QDateTime operator/(QDateTime x, int) { return x; }
 template <class destT, class sourceT>
 void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransform transform) {
     if (transform != Identity)
-        throw Exception("Expected 'Identity' transform when assigning to vector", nameOf(transform));
+        throw Exception("Expected 'Identity' transform when assigning to vector", convert<QString>(transform));
     QVector<destT> *destVector = DEST_PTR(QVector<destT>);
     sourceT source = SOURCE(sourceT);
     destT destValue = convert<destT>(source);
@@ -145,13 +145,13 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
         QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
                     "\nor scalar must be transformed by Copy or Split"),
                 value("Vector size = %1, Transform = %2");
-        throw Exception(msg, value.arg(QString::number(n)).arg(nameOf(transform)));
+        throw Exception(msg, value.arg(QString::number(n)).arg(convert<QString>(transform)));
     }
 }
 
 #define ASSIGN_TO_VECTOR_FROM_VECTOR_INTRO(destT, sourceT) \
     if (transform != Identity) \
-        throw Exception("Expected 'Identity' transform when assigning Vector to Vector", nameOf(transform)); \
+        throw Exception("Expected 'Identity' transform when assigning Vector to Vector", convert<QString>(transform)); \
 \
     QVector<destT> *destVector = DEST_PTR(QVector<destT>); \
     const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>);

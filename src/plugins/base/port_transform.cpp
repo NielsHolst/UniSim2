@@ -1,43 +1,62 @@
+#include <QMap>
+#include <QStringList>
 #include "port_transform.h"
 
 namespace base {
 
-#define NAMEOF_TRANSFORM(X) \
+#define TRANSFORM_CASE(X) \
     case X: \
         s = #X; \
         break
 
-QString nameOf(PortTransform transform) {
+#define TRANSFORM_ENTRY(X) \
+    _map[#X] = X
+
+namespace {
+    const QMap<QString, PortTransform>& portTransformMap() {
+        static QMap<QString, PortTransform> _map;
+        if (_map.isEmpty()) {
+            TRANSFORM_ENTRY(Identity);
+            TRANSFORM_ENTRY(Sum);
+            TRANSFORM_ENTRY(Average);
+            TRANSFORM_ENTRY(Min);
+            TRANSFORM_ENTRY(Max);
+            TRANSFORM_ENTRY(Copy);
+            TRANSFORM_ENTRY(Split);
+            TRANSFORM_ENTRY(All);
+            TRANSFORM_ENTRY(Any);
+        }
+        return _map;
+    }
+}
+
+template<> QString convert(PortTransform transform) {
     QString s;
     switch (transform) {
-        NAMEOF_TRANSFORM(Identity);
-        NAMEOF_TRANSFORM(Sum);
-        NAMEOF_TRANSFORM(Average);
-        NAMEOF_TRANSFORM(Min);
-        NAMEOF_TRANSFORM(Max);
-        NAMEOF_TRANSFORM(Copy);
-        NAMEOF_TRANSFORM(Split);
-        NAMEOF_TRANSFORM(All);
-        NAMEOF_TRANSFORM(Any);
+        TRANSFORM_CASE(Identity);
+        TRANSFORM_CASE(Sum);
+        TRANSFORM_CASE(Average);
+        TRANSFORM_CASE(Min);
+        TRANSFORM_CASE(Max);
+        TRANSFORM_CASE(Copy);
+        TRANSFORM_CASE(Split);
+        TRANSFORM_CASE(All);
+        TRANSFORM_CASE(Any);
     }
     return s;
 }
 
-//#define LOOKUP_TRANSFORM(x) lookupTransform[#x] = x
+template<> PortTransform convert(QString s) {
+    if (s.isEmpty())
+        return Identity;
+    if (portTransformMap().contains(s))
+        return portTransformMap().value(s);
+    QString msg{"Unknown transform.Must be one of '%1'"};
+    throw Exception(msg.arg(portTransformNames().join(",")), s);
+}
 
-//namespace {
-//    QMap<QString, PortTransform> lookupTransform;
-//    void init() {
-//        LOOKUP_TRANSFORM(Identity);
-//        LOOKUP_TRANSFORM(Sum);
-//        LOOKUP_TRANSFORM(Average);
-//        LOOKUP_TRANSFORM(Min);
-//        LOOKUP_TRANSFORM(Max);
-//        LOOKUP_TRANSFORM(Copy);
-//        LOOKUP_TRANSFORM(Split);
-//        LOOKUP_TRANSFORM(All);
-//        LOOKUP_TRANSFORM(Any);
-//    }
-//}
+QStringList portTransformNames() {
+    return QStringList(portTransformMap().keys());
+}
 
 }

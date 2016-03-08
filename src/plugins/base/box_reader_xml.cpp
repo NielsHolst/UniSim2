@@ -6,12 +6,12 @@
 
 namespace base {
 
-BoxReaderXml::BoxReaderXml()
-    : BoxReaderBase()
+BoxReaderXml::BoxReaderXml(BoxBuilder *builder)
+    : BoxReaderBase(builder)
 {
 }
 
-BoxBuilder BoxReaderXml::parse(QString filePath) {
+void BoxReaderXml::parse(QString filePath) {
     openReader(filePath);
     _reader.readNext();
     if (_reader.tokenType() != QXmlStreamReader::StartDocument)
@@ -34,7 +34,7 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
                 setElementType();
                 switch (_elementType) {
                     case BoxElement:
-                        _builder.endbox();
+                        _builder->endbox();
                         break;
                     case PortElement:
                         break;
@@ -43,12 +43,8 @@ BoxBuilder BoxReaderXml::parse(QString filePath) {
             default:
                 break;
         }
-//        QString text = _reader.name().toString();
-//        text = QString::number((int)_reader.tokenType()) + " " + _reader.tokenString() + text;
-//        dialog().information(text);
         _reader.readNext();
     }
-    return _builder;
 }
 
 void BoxReaderXml::openReader(QString filePath) {
@@ -73,15 +69,15 @@ void BoxReaderXml::setElementType() {
 void BoxReaderXml::setBoxAttributes() {
     // If box has no "class" attribute the default to "box" class
     if (!_reader.attributes().hasAttribute("class"))
-        _builder.box("box");
+        _builder->box("box");
     // Otherwise the "class" attribute will be picked up in the loop
     for (QXmlStreamAttribute attribute : _reader.attributes()) {
         QString name = attribute.name().toString(),
                 value = _reader.attributes().value(name).toString();
         if (name == "class")
-            _builder.box(value);
+            _builder->box(value);
         else if (name == "name")
-            _builder.name(value);
+            _builder->name(value);
         else
             throw Exception("Unexpected class attribute" + currentInfo(), name);
     }
@@ -93,15 +89,15 @@ void BoxReaderXml::setPortAttributes() {
         QString name = attribute.name().toString(),
                 value = _reader.attributes().value(name).toString();
         if (name == "name"){
-            _builder.port(value);
+            _builder->port(value);
             nameSet = true;
         }
         else if (name == "value")
-            _builder.equals(value);
+            _builder->equals(value);
         else if (name == "ref")
-            _builder.imports(value);
+            _builder->imports(value);
         else
-            _builder.attribute(name, value);
+            _builder->attribute(name, value);
     }
     if (!nameSet)
         throw Exception("Port misses \"name\" attribute" + currentInfo());

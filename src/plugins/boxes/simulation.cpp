@@ -17,13 +17,13 @@ Simulation::Simulation(QString name, QObject *parent)
     Class(Simulation);
     Input(iterations).equals(1);
     Input(steps).equals(1);
-    Output(iteration).noReset().Rformat("factor");
-    Output(step).trackOff();
+    Output(iteration).noReset().format("factor");
+    Output(step);
 }
 
 void Simulation::amend() {
-    if (iterations == 1)
-        port("iteration")->trackOff();
+    if (iterations > 1)
+        port("iteration")->page("");
 }
 
 void Simulation::initialize() {
@@ -52,7 +52,6 @@ void Simulation::makePortLabelsUnique() {
 }
 
 void Simulation::run() {
-    amendFamily();
     initializeFamily();
     for (iteration = 0; iteration < iterations; ++iteration) {
         resetFamily();
@@ -103,7 +102,7 @@ void Simulation::writeDataFrame() {
 
     // Write column format
     for (Port *port : _trackedPorts) {
-        _stream << port->Rformat();
+        _stream << port->format();
         if (port != last)
             _stream << "\t";
     }
@@ -125,7 +124,7 @@ void Simulation::removeObsoletePorts() {
     QList<Port*>::iterator itPort = _trackedPorts.begin();
     while(itPort != _trackedPorts.end()) {
         Port *port = *itPort;
-        bool isFactor = port->Rformat() == "factor";
+        bool isFactor = port->format() == "factor";
         bool isUninformative = valuesAreEqual(port);
         if (isFactor && isUninformative)
             itPort = _trackedPorts.erase(itPort);

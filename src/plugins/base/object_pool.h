@@ -12,6 +12,7 @@ namespace base {
 class ObjectPool : public QObject
 {
 public:
+    ObjectPool(QObject *parent);
     void attach(QString id, QObject *object);
     bool contains(QString id);
     template <class T> T find(QString);
@@ -20,9 +21,7 @@ private:
     typedef QMap<QString, QObject*> ObjectMap;
     ObjectMap objects;
 
-    // Singleton
-    ObjectPool();
-    static std::unique_ptr<ObjectPool> _objectPool;
+    static ObjectPool *_objectPool;
     friend ObjectPool* objectPool();
 };
 

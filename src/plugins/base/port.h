@@ -1,6 +1,7 @@
 #ifndef PORT_H
 #define PORT_H
 #include <QObject>
+#include <QMap>
 #include <QString>
 #include <QStringList>
 #include <QVector>
@@ -23,34 +24,43 @@ public:
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
-    PortTransform _transform;
     QString _importPath;
     QVector<Port *> _importPorts;
     unsigned _accessFlags;
-    QString _label, _Rformat, _page, _plot;
     bool _reset;
     Vector _track;
-    bool _trackOn;
     static unsigned _trackFlags;
+    QMap<QString, QString> _attributes; //!todo _page and _plot should be string lists
 
 public:
     // Configure
-    Port(QString name="noname", QObject *parent=0);
+    Port(QString name="noname", QObject *parent=0, bool orphan=false);
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value) { return equals(QString(value)); }
     Port& imports(QString pathToPort);
-    Port& transform(PortTransform t);
     Port& access(unsigned accessFlags);
-    Port& label(QString la);
-    Port& Rformat(QString format);
-    Port& page(QString pa);
-    Port& plot(QString pl);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
-    Port& trackOn();
-    Port& trackOff();
+
+    // Attributes
+    QStringList attributes();
+
+    Port& attribute(QString name, QString value);
+    Port& format(QString fo);
+    Port& page(QString pa);
+    Port& plot(QString pl);
+    Port& label(QString la);
+    Port& transform(QString t);
+    Port& transform(PortTransform t);
+
+    QString attribute(QString name) const;
+    QString format() const;
+    QString label() const;
+    QString page() const;
+    QString plot() const;
+    QString transform() const;
 
     // Change
     void resolveImports();
@@ -59,7 +69,7 @@ public:
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
     void track(Step step);
-    void Rformat(PortType type);
+    void format(PortType type);
 
     // Access
     Box *boxParent();
@@ -67,15 +77,9 @@ public:
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
     const Vector* trackPtr() const;
-
-    // Attributes
     PortType type() const;
-    PortTransform transform() const;
     unsigned accessFlags() const;
-    QString label() const;
-    QString Rformat() const;
-    QString page() const;
-    QString plot() const;
+    bool doTrack() const;
     bool hasImport() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
@@ -83,11 +87,10 @@ public:
     static PortType commonType(const QVector<Port *> &ports);
 };
 
-
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
     _valueType = typeOf<T>();
-    Rformat(_valueType);
+    format(_valueType);
     base::initialize(_valueType, _valuePtr);
     return *this;
 }
@@ -99,7 +102,7 @@ template <class T> Port& Port::equals(T value)
     if (!(_accessFlags & Write))
         throw Exception("Cannot set port value by 'equals' because port is not for input", "", this);
     _importPath.clear();
-    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, _transform);
+    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, convert<PortTransform>(transform()));
     return *this;
 }
 

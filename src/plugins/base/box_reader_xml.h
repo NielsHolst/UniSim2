@@ -12,8 +12,8 @@ namespace base {
 class BoxReaderXml : public BoxReaderBase
 {
 public:
-    BoxReaderXml();
-    BoxBuilder parse(QString filePath);
+    BoxReaderXml(BoxBuilder *builder);
+    void parse(QString filePath);
 private:
     // Data
     QXmlStreamReader _reader;

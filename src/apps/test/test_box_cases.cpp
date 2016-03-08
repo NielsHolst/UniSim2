@@ -57,8 +57,8 @@ namespace TestBoxCases {
             box("Simulation").name("savanna").
                 port("steps").equals(2).
                 box().name("lion").
-                    newPort("sum").data(&sum).equals(77).
-                    newPort("sum2").data(&sum2).imports("./*{Lion}[n]").transform(Sum).
+                    newPort("sum").data(&sum).equals(77).page("").
+                    newPort("sum2").data(&sum2).imports("./*{Lion}[n]").page("").transform(Sum).
                     box("Lion").name("juvenile").
                         port("n").equals(25).
                     endbox().
@@ -69,7 +69,7 @@ namespace TestBoxCases {
                 endbox().
                 box("Grazer").name("zebra").
                     port("initialDensity").equals(100).
-                    port("killRate").imports("lion/adult[killRate]").
+                    port("killRate").imports("lion/adult[killRate]").page("").
                 endbox().
                 box("Grazer").name("gnu").
                 port("initialDensity").equals(20).
@@ -85,10 +85,13 @@ namespace TestBoxCases {
             box("Simulation").name("test_box_cases_3a").
                 port("steps").equals(2).
                 box("ModelA").name("A").
-                    port("input2").trackOn().
-                    port("input4").trackOn().
-                    port("output2").trackOff().
-                    port("output4").trackOff().
+                    port("input2").page("").
+                    port("input4").page("").
+                    port("output1").page("").
+                    port("output3").page("").
+                endbox().
+                box("OutputR").
+                    port("xAxis").imports("test_box_cases_3a[step]").
                 endbox().
             endbox();
         return builder.content();

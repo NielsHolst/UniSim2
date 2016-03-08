@@ -13,7 +13,7 @@ DayDegrees::DayDegrees(QString name, QObject *parent)
     Input(Tmax).equals(100);
     Input(T).imports("weather[Tavg]");
     Output(step);
-    Output(total).trackOff();
+    Output(total);
 }
 
 void DayDegrees::update() {

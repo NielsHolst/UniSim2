@@ -5,15 +5,17 @@
 
 namespace base {
 
+class BoxBuilder;
+
 class BoxReaderBase
 {
 public:
-    BoxReaderBase();
+    BoxReaderBase(BoxBuilder *builder);
     virtual ~BoxReaderBase(){}
-    virtual BoxBuilder parse(QString filePath) = 0;
+    virtual void parse(QString filePath) = 0;
 protected:
     // Data
-    BoxBuilder _builder;
+    BoxBuilder *_builder;
     // Methods
     QString currentInfo() const;
 };

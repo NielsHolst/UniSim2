@@ -1,16 +1,18 @@
-#include "mega_factory.h"
+#include "exception.h"
 #include "object_pool.h"
 
 namespace base {
 
-std::unique_ptr<ObjectPool> ObjectPool::_objectPool(new ObjectPool);
+ObjectPool *ObjectPool::_objectPool = 0;
 
-ObjectPool* objectPool() {
-    return ObjectPool::_objectPool.get();
-}
-
-ObjectPool::ObjectPool()
+ObjectPool::ObjectPool(QObject *parent)
+    : QObject(parent)
 {
+    // Allow only one instance of object pool
+    Q_ASSERT(!_objectPool);
+    // Must have parent (to take care of destruction)
+    Q_ASSERT(parent);
+    _objectPool = this;
 }
 
 void ObjectPool::attach(QString id, QObject *object) {
@@ -21,6 +23,11 @@ void ObjectPool::attach(QString id, QObject *object) {
 
 bool ObjectPool::contains(QString id) {
     return objects.contains(id);
+}
+
+ObjectPool* objectPool() {
+    Q_ASSERT(ObjectPool::_objectPool);
+    return ObjectPool::_objectPool;
 }
 
 

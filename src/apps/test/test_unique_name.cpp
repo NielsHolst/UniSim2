@@ -77,7 +77,7 @@ void TestUniqueName::testSandy() {
     builder.
     box("Simulation").name("sandy_test").
         port("steps").equals(100).
-        port("step").trackOff().
+        port("step").
         box("Sequence").name("seq").
             port("min").equals(10).
             port("max").equals(30).

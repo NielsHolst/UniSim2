@@ -169,11 +169,11 @@ void Dialog::writeWelcome() {
     QString latestFile = environment().state.latestLoadArg,
             inputFolder = environment().state.dir.input.path(),
             workFolder = environment().state.dir.work.absolutePath(),
-            info = latestFile.isEmpty() ? "Welcome to Universal Simulator." : "Welcome back.";
-    info += "\nYour work folder is '" + workFolder + "'.";
-    info += "\nYour input folder is '" + inputFolder + "'.";
+            info = latestFile.isEmpty() ? "Welcome to Universal Simulator." : "Welcome back";
+    info += "\nYour work folder is '" + workFolder + "'";
+    info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
-        info += "\nYour latest file was '" + latestFile + "'.";
+        info += "\nYour latest file was '" + latestFile + "'";
     dialog().information(info);
 }
 

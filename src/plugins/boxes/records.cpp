@@ -20,14 +20,14 @@ Records::Records(QString name, QObject *parent)
     Input(fileName).equals("records.txt");
     Input(calendarDateTime).imports("calendar[dateTime]");
 
-    Output(currentDateTime).trackOff();
-    Output(nextDateTime).trackOff();
-    Output(firstDateTime).trackOff();
-    Output(lastDateTime).trackOff();
-    Output(currentDate).trackOff();
-    Output(nextDate).trackOff();
-    Output(currentTime).trackOff();
-    Output(nextTime).trackOff();
+    Output(currentDateTime);
+    Output(nextDateTime);
+    Output(firstDateTime);
+    Output(lastDateTime);
+    Output(currentDate);
+    Output(nextDate);
+    Output(currentTime);
+    Output(nextTime);
 
     currentColumnValues = new QVector<double>;
     nextColumnValues = new QVector<double>;
@@ -87,7 +87,7 @@ void Records::readLineItems() {
     pastLastLine = lineItems.isEmpty();
 }
 
-#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).access(Port::Read).zeroAtReset().trackOn()
+#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).access(Port::Read).zeroAtReset()
 
 void Records::createColumnOutputs() {
     int n = columnNames.size();
@@ -98,9 +98,9 @@ void Records::createColumnOutputs() {
         QString name = columnNames[i];
         if (i != dateColumn && i != timeColumn) {
             Port &port( NamedOutput(name, values[i]) );
-            // Hack! In stead provide list(!) of column names to ignore as input
-            if (name.toLower() == "station")
-                port.trackOff();
+            // Hack! In stead provide list(!) of column names to ignore
+            if (name.toLower() != "station")
+                port.page("");
         }
     }
 }

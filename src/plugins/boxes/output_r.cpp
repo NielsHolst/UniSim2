@@ -39,9 +39,9 @@ void OutputR::amend() {
     for (Port *port : trackedPorts) {
         pagesWithPlots[port->page()] << port->plot();
     }
-    // If more than one page exists then remove default page named "page"
-    if (pagesWithPlots.size() > 1)
-        pagesWithPlots.remove("page");
+//    // If more than one page exists then remove default page named "page"
+//    if (pagesWithPlots.size() > 1)
+//        pagesWithPlots.remove("page");
     // Create pages with plots
     QMapIterator<QString, QSet<QString>> it(pagesWithPlots);
     while (it.hasNext()) {
@@ -67,9 +67,8 @@ void OutputR::setTrackX() {
         QString msg{"Expected one x-axis, got '%1'"};
         throw Exception(msg.arg(importPorts.size()), port("xAxis")->importPath(), this);
     }
-    importPorts[0]->trackOn();
+    importPorts[0]->page("");
 }
-
 
 //
 // initialize
@@ -92,7 +91,7 @@ void OutputR::trackXAxis() {
     case 0:
         return;
     case 1:
-        xAxisImportPorts.at(0)->trackOn();
+        xAxisImportPorts.at(0)->page("");
         break;
     default:
         QString s;
@@ -123,8 +122,12 @@ QString OutputR::toScript() {
     for (PageInfo pageInfo : _pageInfos)
         s += pageInfo.toScript();
     s += "unisim_plot_all <- function(df) {\n";
-    for (PageInfo pageInfo : _pageInfos)
+    bool skipDefaultPage = (_pageInfos.size() > 1);
+    for (PageInfo pageInfo : _pageInfos) {
+        if (skipDefaultPage && pageInfo._page->objectName().isEmpty())
+            continue;
         s += "  " + pageInfo.functionName() + "(df)\n";
+    }
     s += "}\n";
     return s;
 }
@@ -154,8 +157,12 @@ QString OutputR::PageInfo::toScript() {
       << _page->port("height")->value<int>()
       << ")\n"
       << "  grid.arrange(\n" ;
-    for (PlotInfo plotInfo : _plotInfos)
+    bool skipDefaultPlot = (_plotInfos.size() > 1);
+    for (PlotInfo plotInfo : _plotInfos) {
+        if (skipDefaultPlot && plotInfo._plot->objectName().isEmpty())
+            continue;
         s << plotInfo.toScript();
+    }
     s << "    ncol = " << _page->port("ncol")->value<int>() << "\n  )\n}\n";
     return string;
 }
@@ -177,13 +184,13 @@ void OutputR::PlotInfo::collectPorts() {
             plotName = _plot->objectName();
 
     for (Port *port : Port::trackedPorts()) {
-        if (port->page() == pageName && port->plot() == plotName && port->trackPtr())
+        if (port->page() == pageName && port->plot() == plotName)
             _ports << port;
     }
 }
 
 QString OutputR::PlotInfo::toString() {
-    QString s = "Plot: " + _plot->objectName() + "\n"; //" " + _parent->test +
+    QString s = "Plot: " + _plot->objectName() + "\n";
     for (const Port *port : _ports)
         s += "  Port: " + port->objectName() + "\n";
     return s;

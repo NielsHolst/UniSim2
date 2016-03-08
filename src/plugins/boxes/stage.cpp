@@ -27,7 +27,7 @@ Stage::Stage(QString name, QObject *parent)
     Input(inflow);
     Input(initial);
     Input(phaseOutflowProportion); // Proportion that will change phase in next time step
-    Output(latestInflow).trackOff();
+    Output(latestInflow);
     Output(outflow);
 }
 

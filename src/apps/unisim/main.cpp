@@ -1,5 +1,5 @@
-//#include <QApplication>
-#include <base/exception.h>
+#include <QCoreApplication>
+#include <base/object_pool.h>
 #include <base/organisation.h>
 #include "main_window.h"
 
@@ -12,13 +12,9 @@ void myMsgHandler(QtMsgType, const QMessageLogContext &, const QString &msg)
 int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMsgHandler);
-
-//    QCoreApplication::setOrganizationName("Aarhus University");
-//    QCoreApplication::setOrganizationDomain("www.ecolmod.org");
-//    QCoreApplication::setApplicationName("Universal Simulator");
-
     QApplication app(argc, argv);
     app.setObjectName("application");
+    new base::ObjectPool(&app);
     MainWindow window;
     window.show();
     return app.exec();

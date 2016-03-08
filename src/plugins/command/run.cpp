@@ -1,3 +1,4 @@
+#include <QTime>
 #include <base/box.h>
 #include <base/command_help.h>
 #include <base/dialog.h>
@@ -37,12 +38,22 @@ void run::doLoad() {
 void run::doRun() {
     Box *root = environment().state.root;
     Q_ASSERT(root);
+    QTime time;
+    time.start();
     try {
         root->run();
     }
     catch (Exception &ex) {
         throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.fullText());
     }
+    int dt = time.elapsed();
+    QString units = "msecs";
+    if (dt > 5000) {
+        dt /= 1000;
+        units = "secs";
+    }
+    QString info{"Finished after %1 %2"};
+    dialog().information(info.arg(dt).arg(units));
 }
 
 }

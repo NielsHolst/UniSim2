@@ -7,21 +7,18 @@
 
 namespace base {
 
-BoxReaderBoxes::BoxReaderBoxes()
-    : BoxReaderBase()
+BoxReaderBoxes::BoxReaderBoxes(BoxBuilder *builder)
+    : BoxReaderBase(builder)
 {
 }
 
-BoxBuilder BoxReaderBoxes::parse(QString filePath) {
+void BoxReaderBoxes::parse(QString filePath) {
     openFile(filePath);
     ast::Node astRoot;
-    if (parse(astRoot)) {
-//        dialog().information(astRoot.toString());
-        astRoot.addToBuilder(_builder);
-    }
+    if (parse(astRoot))
+        astRoot.addToBuilder(*_builder);
     else
         dialog().error("Parse failure");
-    return _builder;
 }
 
 void BoxReaderBoxes::openFile(QString filePath) {

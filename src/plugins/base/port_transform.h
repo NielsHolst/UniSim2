@@ -2,6 +2,8 @@
 #define PORT_TRANSFORM_H
 #include <QMap>
 #include <QString>
+#include "convert.h"
+#include "exception.h"
 
 namespace base {
 
@@ -17,9 +19,12 @@ enum PortTransform {
     Any
 };
 
-QString nameOf(PortTransform transform);
+template<class T> T convert(PortTransform )  { throw Exception("Cannot only convert port transform to QString"); }
 
-//PortTransform convert(QString s);
+template<> QString convert(PortTransform transform);
+template<> PortTransform convert(QString s);
+
+QStringList portTransformNames();
 
 }
 

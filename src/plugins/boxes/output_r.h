@@ -35,7 +35,7 @@ private:
 
     QVector<PageInfo> _pageInfos;
 
-    struct PageInfo {
+    struct PageInfo { //!! move to page_r
         const Box *_page;
         QVector<PlotInfo> _plotInfos;
         // Methods
@@ -46,7 +46,7 @@ private:
         QString functionName() const;
     };
 
-    struct PlotInfo {
+    struct PlotInfo {       //!! move to plot_r
         const Box *_plot;
         QVector<const base::Port*> _ports;
         // Methods

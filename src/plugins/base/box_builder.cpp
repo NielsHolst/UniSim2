@@ -3,6 +3,7 @@
 #include "box_builder.h"
 #include "box_step.h"
 #include "mega_factory.h"
+#include "path.h"
 
 namespace base {
 
@@ -37,10 +38,11 @@ BoxBuilder& BoxBuilder::endbox() {
 }
 
 BoxBuilder& BoxBuilder::port(QString name) {
-    if (!_currentBox) {
+    if (!_currentBox)
         throw Exception("BoxBuilder: port declaration outside of box context");
-    }
-    _currentPort = _currentBox->port(name);
+    _currentPort = _currentBox->peakPort(name) ?
+                   _currentBox->port(name) :
+                   new Port(name, _currentBox, true);
     return *this;
 }
 
@@ -50,7 +52,6 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
     }
     _currentPort = new Port(name, _currentBox);
     _currentPort->access(Port::Read|Port::Write);
-    _currentPort->trackOff();
     return *this;
 }
 
@@ -61,72 +62,31 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     return *this;
 }
 
+// Attributes by name
+
 BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
-    if (name == "plot") return plot(value);
-    if (name == "label") return label(value);
-    if (name == "page") return page(value);
-    if (name == "Rformat") return Rformat(value);
-    if (name == "track") return track(value);
-    throw Exception("Unknown port attribute", name);
-}
-
-BoxBuilder& BoxBuilder::plot(QString pl) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: plot out of context");
-    _currentPort->plot(pl);
+        throw Exception("BoxBuilder: attribute out of context", name + "=" + value);
+    _currentPort->attribute(name, value);
     return *this;
 }
 
-BoxBuilder& BoxBuilder::label(QString la) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: label out of context");
-    _currentPort->label(la);
-    return *this;
+// Attributes direct
+
+#define SET_ATTRIBUTE_DIRECT(X) \
+BoxBuilder& BoxBuilder::X(QString value) { return attribute(#X, value); }
+
+SET_ATTRIBUTE_DIRECT(format)
+SET_ATTRIBUTE_DIRECT(page)
+SET_ATTRIBUTE_DIRECT(plot)
+SET_ATTRIBUTE_DIRECT(label)
+SET_ATTRIBUTE_DIRECT(transform)
+
+BoxBuilder& BoxBuilder::transform(PortTransform value) {
+    return attribute("transform", convert<QString>(value));
 }
 
-BoxBuilder& BoxBuilder::page(QString pa) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: page out of context");
-    _currentPort->page(pa);
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::track(QString tr) {
-    if (tr == "on")
-        return trackOn();
-    else if (tr == "off")
-        return trackOff();
-    else
-        throw Exception("Track value must be 'on' or 'off'", tr);
-}
-
-BoxBuilder& BoxBuilder::trackOn() {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: track out of context");
-    _currentPort->trackOn();
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::trackOff() {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: track out of context");
-    _currentPort->trackOff();
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::Rformat(QString format) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: Rformat out of context");
-    _currentPort->Rformat(format);
-    return *this;
-}
-
-BoxBuilder& BoxBuilder::transform(PortTransform pt) {
-    if (!_currentPort)
-        throw Exception("BoxBuilder: transform out of context");
-    _currentPort->transform(pt);
-    return *this;
-}
+// State
 
 const Box* BoxBuilder::currentBox() const {
     return _currentBox;

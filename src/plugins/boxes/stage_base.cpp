@@ -26,12 +26,12 @@ StageBase::StageBase(QString name, QObject *parent)
     Input(instantMortality);  // Mortality [0..100] will be applied in the next time step, before @F inflow is added
     Input(instantLossRate);   // Works just like @F mortality except the scale is a ratio [0..1]
     Input(phaseInflow);       // Inflow of dimension @F {k}
-    Output(content);
-    Output(inflowTotal).trackOff();
-    Output(phaseInflowTotal).trackOff();
-    Output(phaseOutflowTotal).trackOff();
-    Output(growth).trackOff();
-    Output(phaseOutflow).trackOff();
+    Output(content).page("");
+    Output(inflowTotal);
+    Output(phaseInflowTotal);
+    Output(phaseOutflowTotal);
+    Output(growth);
+    Output(phaseOutflow);
 }
 
 StageBase::~StageBase() {

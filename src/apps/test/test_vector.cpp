@@ -67,6 +67,8 @@ void TestVector::testWithSimulationIterated() {
     builder.
         box("Simulation").
             port("iterations").equals(3).
+            port("iteration").page("").
+            port("step").page("").
             port("steps").equals(4).
             box("Fibonacci").name("fibonacci").
             endbox().

@@ -8,17 +8,27 @@ namespace base {
 
 unsigned Port::_trackFlags = Reset | Update;
 
-Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _transform(Identity), _importPath(""),
-      _accessFlags(Read), _label(name), _Rformat("NA"), _page("page"), _plot("plot"),
-      _reset(false), _track(this), _trackOn(true)
+Port::Port(QString name, QObject *parent, bool orphan)
+    : QObject(parent), _valuePtr(0), _valueType(Null), _importPath(""),
+      _accessFlags(Read), _reset(false), _track(this)
 {
     Class(Port);
     setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
-    if (boxParent)
-        boxParent->addPort(this);
+    if (boxParent) {
+        if (orphan)
+            boxParent->addOrphanPort(this);
+        else
+            boxParent->addPort(this);
+    }
+    _attributes["format"] = QString();
+    _attributes["page"] = QString();
+    _attributes["plot"] = QString();
+    _attributes["label"] = QString();
+    _attributes["transform"] = QString();
 }
+
+// Configure
 
 Port& Port::imports(QString pathToPort) {
     if (!(_accessFlags & Write))
@@ -27,33 +37,8 @@ Port& Port::imports(QString pathToPort) {
     return *this;
 }
 
-Port& Port::transform(PortTransform t) {
-    _transform = t;
-    return *this;
-}
-
 Port& Port::access(unsigned accessFlags) {
     _accessFlags = accessFlags;
-    return *this;
-}
-
-Port& Port::label(QString la) {
-    _label = la;
-    return *this;
-}
-
-Port& Port::Rformat(QString format) {
-    _Rformat = format;
-    return *this;
-}
-
-Port& Port::page(QString pa) {
-    _page = pa;
-    return *this;
-}
-
-Port& Port::plot(QString pl) {
-    _plot = pl;
     return *this;
 }
 
@@ -67,15 +52,57 @@ Port& Port::noReset() {
     return *this;
 }
 
-Port& Port::trackOn() {
-    _trackOn = true;
+
+QStringList Port::attributes() {
+    return QStringList( _attributes.keys() );
+}
+
+
+// Set attributes
+
+Port& Port::attribute(QString name, QString value) {
+    if (!_attributes.contains(name))
+        throw Exception("Unknown attribute", name, this);
+    _attributes[name] = value;
     return *this;
 }
 
-Port& Port::trackOff() {
-    _trackOn = false;
-    return *this;
+#define SET_ATTRIBUTE(X) \
+Port& Port::X(QString fo) { \
+    _attributes[#X] = fo; \
+    return *this; \
 }
+
+SET_ATTRIBUTE(format)
+SET_ATTRIBUTE(page)
+SET_ATTRIBUTE(plot)
+SET_ATTRIBUTE(label)
+SET_ATTRIBUTE(transform)
+
+Port& Port::transform(PortTransform tr) {
+    return transform(convert<QString>(tr));
+}
+
+// Get attributes
+
+QString Port::attribute(QString name) const {
+    if (!_attributes.contains(name))
+        throw Exception("Unknown attribute", name, this);
+    return _attributes.value(name);
+}
+
+#define GET_ATTRIBUTE(X) \
+QString Port::X() const { \
+    return _attributes.value(#X); \
+}
+
+GET_ATTRIBUTE(format)
+GET_ATTRIBUTE(page)
+GET_ATTRIBUTE(plot)
+GET_ATTRIBUTE(label)
+GET_ATTRIBUTE(transform)
+
+// Change
 
 void Port::resolveImports() {
     if (_importPath.isEmpty())
@@ -90,8 +117,8 @@ void Port::resolveImports() {
 }
 
 void Port::allocatePortBuffer() {
-    if (_trackOn) {
-         Box *root = boxParent()->currentRoot();
+    if (doTrack()) {
+        Box *root = boxParent()->currentRoot();
         Port *iterations = root->peakPort("iterations"),
              *steps = root->peakPort("steps");
         int ite = iterations ? iterations->value<int>() : 1,
@@ -113,14 +140,15 @@ void Port::copyFromImport() {
 
 
 void Port::assign(const QVector<Port*> &sources) {
+    PortTransform pt = convert<PortTransform>(transform());
     try {
         if (sources.size() == 1) {
             const Port *source = sources.at(0);
-            base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
+            base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, pt, this);
         }
         else {
             const void *sourceVector = vectorize(_importType, sources);
-            base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
+            base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, pt, this);
         }
     }
     catch (Exception &ex) {
@@ -129,28 +157,30 @@ void Port::assign(const QVector<Port*> &sources) {
 }
 
 void Port::track(Step step) {
-    if (_trackOn && (step & _trackFlags))
+    if (doTrack() && (step & _trackFlags))
         _track.append(_valuePtr);
 }
 
-void Port::Rformat(PortType type) {
+void Port::format(PortType type) {
     switch (type) {
         case Date:
         case DateVector:
-            Rformat("ymd");
+            format("ymd");
             break;
         case Time:
         case TimeVector:
-            Rformat("hms");
+            format("hms");
             break;
         case DateTime:
         case DateTimeVector:
-            Rformat("ymdhms");
+            format("ymdhms");
             break;
         default:
-            Rformat("NA");
+            format("NA");
     }
 }
+
+// Access
 
 Box *Port::boxParent() {
     Box *par = dynamic_cast<Box*>(parent());
@@ -168,35 +198,19 @@ template <> const void* Port::valuePtr() const {
 }
 
 const Vector* Port::trackPtr() const {
-    return _trackOn ? & _track : 0;
+    return doTrack() ? &_track : 0;
 }
 
 PortType Port::type() const {
     return _valueType;
 }
 
-PortTransform Port::transform() const {
-    return _transform;
-}
-
 unsigned Port::accessFlags() const {
     return _accessFlags;
 }
 
-QString Port::label() const {
-    return _label;
-}
-
-QString Port::Rformat() const {
-    return _Rformat;
-}
-
-QString Port::page() const {
-    return _page;
-}
-
-QString Port::plot() const {
-    return _plot;
+bool Port::doTrack() const {
+    return !(attribute("plot").isNull() && attribute("page").isNull());
 }
 
 bool Port::hasImport() const {

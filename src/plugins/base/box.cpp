@@ -9,9 +9,10 @@ namespace base {
 
 Box *Box::_currentRoot = 0;
 bool Box::_currentRootIsDirty = true;
+int Box::_count = 0;
 
 Box::Box(QString name, QObject *parent)
-    : QObject(parent), _name(name), _amended(false)
+    : QObject(parent), _name(name), _id(0), _amended(false)
 {
     Class(Box);
     setObjectName(name);
@@ -25,30 +26,41 @@ Box::~Box() {
 }
 
 void Box::addPort(Port *port) {
+    addPort(_ports, port);
+}
+
+void Box::addOrphanPort(Port *port) {
+    port->setParent(0);
+    addPort(_orphanPorts, port);
+}
+
+void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     QString name{port->objectName()};
-    if (_ports.contains(name))
+    if (ports.contains(name))
         throw Exception("Box already has a port with this name", name, this);
-    _ports[name] = port;
+    ports[name] = port;
 }
 
 #define PEAKPORT \
     Path path(".[" + name + "]", this); \
     auto ports = (path.resolve()); \
-    switch (ports.size()) { \
+    QString value{" (%1 found)"}; \
+    int n = ports.size(); \
+    switch (n) { \
     case 0: \
         return 0; \
     case 1: \
         return dynamic_cast<Port*>(ports.at(0)); \
     default: \
-        throw Exception("Port name not unique within box", name, this); \
+        throw Exception("Port name not unique within box", name+value.arg(n), this); \
     }
 
 Port* Box::peakPort(QString name) {
-    PEAKPORT
+    return _ports.contains(name) ? _ports.value(name) : 0;
 }
 
 const Port* Box::peakPort(QString name) const {
-    PEAKPORT
+    return _ports.contains(name) ? _ports.value(name) : 0;
 }
 
 Port* Box::port(QString name) {
@@ -82,8 +94,39 @@ QString Box::fullName() const {
     return base::fullName(this);
 }
 
+int Box::id() const {
+    return _id;
+}
+
+int Box::count() {
+    return _count;
+}
+
 void Box::run() {
     throw Exception("Method 'run' not defined for this class", className(), this);
+}
+
+void Box::postAmend() {
+    // Copy attributes from orphan ports to original ports
+    QMapIterator<QString, Port*> orphanIt(_orphanPorts);
+    while (orphanIt.hasNext()) {
+        orphanIt.next();
+        QString orphanName = orphanIt.key();
+        Port *orphanPort = orphanIt.value(),
+             *originalPort = peakPort(orphanName);
+        if (!originalPort)
+            throw Exception("Port not found", orphanName, this);
+        for (QString name : orphanPort->attributes()) {
+            // Only copy attribute if it has been set in the orphan port
+            bool attributeHasBeenSet = !orphanPort->attribute(name).isNull();
+            if (attributeHasBeenSet)
+                originalPort->attribute(name, orphanPort->attribute(name));
+        }
+    }
+    // Clear orphan list
+    for (Port *orphan : _orphanPorts)
+        delete orphan;
+    _orphanPorts.clear();
 }
 
 void Box::amendFamily() {
@@ -94,7 +137,19 @@ void Box::amendFamily() {
             box->amendFamily();
     }
     amend();
+    postAmend();
+    _count = 0;
+    enumerateBoxes(_count);
     _amended = true;
+}
+
+void Box::enumerateBoxes(int &i) {
+    _id = i++;
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->enumerateBoxes(i);
+    }
 }
 
 void Box::initializeFamily() {

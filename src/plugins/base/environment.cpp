@@ -58,7 +58,7 @@ QString Environment::outputFilePath(QString extension) {
 QString Environment::outputFileNamePath(QString fileName) {
     QDir dir = makeDir(state.dir.work, state.dir.output);
     QString folderPath = dir.absolutePath();
-    return folderPath + "/" + fileName;
+    return state.latestOutputFilePath = folderPath + "/" + fileName;
 }
 
 QString Environment::scriptFilePath(QString fileName) {

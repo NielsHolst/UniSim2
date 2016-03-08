@@ -4,14 +4,15 @@
 
 namespace base {
 
-BoxReaderBase::BoxReaderBase()
+BoxReaderBase::BoxReaderBase(BoxBuilder *builder)
+    : _builder(builder)
 {
 }
 
 QString BoxReaderBase::currentInfo() const {
     QString info{"\n  Last box: '%1'\n  Last port: '%2'"};
-    QString lastBox = _builder.currentBox() ? _builder.currentBox()->objectName() : QString();
-    QString lastPort = _builder.currentPort() ? _builder.currentPort()->objectName() : QString();
+    QString lastBox = _builder->currentBox() ? _builder->currentBox()->objectName() : QString();
+    QString lastPort = _builder->currentPort() ? _builder->currentPort()->objectName() : QString();
     return info.arg(lastBox).arg(lastPort);
 }
 

@@ -9,8 +9,8 @@
 
 #define RETURN_PLUGIN_NAME(x) #x
 
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Read|Port::Write).trackOff()
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset().trackOn()
+#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Read|Port::Write)
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset()
 
 namespace base {
 
@@ -23,6 +23,7 @@ public:
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
+    void addOrphanPort(Port *port);
     Port* peakPort(QString name);
     const Port* peakPort(QString name) const;
     Port* port(QString name);
@@ -31,6 +32,8 @@ public:
     static Box* currentRoot();
     QString className() const;
     QString fullName() const;
+    int id() const;
+    static int count();
 
     virtual void amend() {}
     virtual void initialize() {}
@@ -50,11 +53,16 @@ public:
 private:
     // Data
     QString _name;
-    QMap<QString,Port*> _ports;
+    QMap<QString,Port*> _ports, _orphanPorts;
+    int _id;
     bool _amended;
     static Box *_currentRoot;
     static bool _currentRootIsDirty;
+    static int _count;
     // Methods
+    void addPort(QMap<QString,Port*> &ports, Port *port);
+    void postAmend();
+    void enumerateBoxes(int &i);
     void resolvePortImports();
     void allocatePortBuffers();
     void resetPorts();

@@ -12,8 +12,8 @@ namespace base {
 class BoxReaderBoxes : public BoxReaderBase
 {
 public:
-    BoxReaderBoxes();
-    BoxBuilder parse(QString filePath);
+    BoxReaderBoxes(BoxBuilder *builder);
+    void parse(QString filePath);
 private:
     // Data
     std::ifstream _file;

@@ -20,7 +20,6 @@ void TestTrack::testDefault() {
     try {
         env.state.root = TestBoxCases::case3a();
         env.state.root->run();
-        save(&env);
         checkColumnNames();
     }
     catch (Exception &ex) {
@@ -29,12 +28,6 @@ void TestTrack::testDefault() {
     }
     delete dialog;
     QVERIFY(!excepted);
-}
-
-void TestTrack::save(QObject *parent) {
-    Command *save = MegaFactory::create<Command>("save", "save", parent);
-    save->arguments(QStringList() << "save" << "output");
-    save->execute();
 }
 
 void TestTrack::checkColumnNames() {
@@ -49,6 +42,7 @@ void TestTrack::checkColumnNames() {
     QSet<QString> result, expected;
     for (QString name : names)
         result << name;
-    expected << "iteration" << "step" << "input2" << "input3" << "input4" << "output1";
+    expected << "step" << "input2" << "input3" << "input4"
+                       << "output1" << "output2" << "output3";
     QCOMPARE(result, expected);
 }
