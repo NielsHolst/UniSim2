@@ -10,6 +10,7 @@
 #include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
+#include "layout_r.h"
 #include "output_r.h"
 #include "page_r.h"
 #include "plot_r.h"
@@ -25,12 +26,33 @@ OutputR::OutputR(QString name, QObject *parent)
 {
     Class(OutputR);
     Input(xAxis).imports("/*[step]");
-    Input(overlay).equals(true);
+    Input(layout).equals("merged");
+    Input(width).equals(14);
+    Input(height).equals(10);
+    Input(clear).equals(true);
 }
 
 //
 // amend
 //
+
+namespace {
+    void copyPortValues(Box *destination, Box *source, QStringList excluding = QStringList()) {
+        QVector<Port*> sourcePorts = Path(".[*]", source).resolve<Port>();
+        for (Port *sourcePort : sourcePorts) {
+            QString portName = sourcePort->objectName();
+            if (excluding.contains(portName))
+                continue;
+            Port *destinationPort = destination->peakPort(portName);
+            if (destinationPort) {
+                if (destinationPort->hasImport())
+                    destinationPort->imports(sourcePort->importPath());
+                else
+                    destinationPort->equals(sourcePort->value<QString>());
+            }
+        }
+    }
+}
 
 void OutputR::amend() {
     // Collect names of pages and plots attributed to tracked ports
@@ -39,10 +61,9 @@ void OutputR::amend() {
     for (Port *port : trackedPorts) {
         pagesWithPlots[port->page()] << port->plot();
     }
-//    // If more than one page exists then remove default page named "page"
-//    if (pagesWithPlots.size() > 1)
-//        pagesWithPlots.remove("page");
     // Create pages with plots
+    //!! Only create pages that do not exist
+    //!! For pages that exist only create plots that do not exist
     QMapIterator<QString, QSet<QString>> it(pagesWithPlots);
     while (it.hasNext()) {
         it.next();
@@ -50,12 +71,16 @@ void OutputR::amend() {
         QSet<QString> plotNames = it.value();
         Box *page = MegaFactory::create<PageR>("PageR", pageName, this);
         // The page imports the same axis as the general one for OutputR
-        // Generalize to copy function; also use this for 'overlay'
-        page->port("xAxis")->imports( port("xAxis")->importPath() );
-        for (QString plotName : plotNames)
-            MegaFactory::create<PlotR>("PlotR", plotName, page);
+        QStringList dontCopy;
+        dontCopy << "ncol" << "nrow";
+        copyPortValues(page, this, dontCopy);
+//        page->port("xAxis")->imports( port("xAxis")->importPath() );
+        for (QString plotName : plotNames) {
+            PlotR *plot = MegaFactory::create<PlotR>("PlotR", plotName, page);
+            copyPortValues(plot, page, dontCopy);
+        }
     }
-    // Make certain that x-axis is include in output data frame
+    // Make certain that x-axis is included in output text file
     setTrackX();
 }
 
@@ -75,151 +100,36 @@ void OutputR::setTrackX() {
 //
 
 void OutputR::initialize() {
-    trackXAxis();
-    try {
-        collectInfo();
-    }
-    catch (Exception &ex) {
-        QString msg{"Unexpected error in OutputR::collectInfo:\n"};
-        throw( Exception(msg+ex.what(), "", this) );
-    }
-}
-
-void OutputR::trackXAxis() {
-    QVector<Port*> xAxisImportPorts = port("xAxis")->importPorts();
-    switch (xAxisImportPorts.size()) {
-    case 0:
-        return;
-    case 1:
-        xAxisImportPorts.at(0)->page("");
-        break;
-    default:
-        QString s;
-        for (Port* port : xAxisImportPorts)
-            s += base::fullName(port) + "\n";
-        throw Exception("There can only be one x-axis", s, this);
-    }
-}
-
-void OutputR::collectInfo() {
-    QVector<Box*> pages = Path("children::*{PageR}", this).resolve<Box>();
-    for (Box *page : pages)
-        _pageInfos << PageInfo(page);
+    // Validate input
+    convert<LayoutR>(layout);
+    // Find pages in this output
+    _pages = Path("./*{PageR}", this).resolve<PageR>();
 }
 
 QString OutputR::toString() {
     QString s;
-    for (PageInfo pageInfo : _pageInfos)
-        s += pageInfo.toString();
+    for (PageR *page : _pages)
+        s += page->toString();
     return s;
 }
 
 QString OutputR::toScript() {
     QString s;
     s += "rm(list=ls(all=TRUE))\n";
-    s += "graphics.off()\n";
-    s += "source(\"" + environment().scriptFilePath("common.R") + "\")\n";
-    for (PageInfo pageInfo : _pageInfos)
-        s += pageInfo.toScript();
+    if (clear)
+        s += "graphics.off()\n";
+    s += "source(\"" + environment().scriptFilePath("common.R") + "\")\n\n";
+    for (PageR *page : _pages)
+        s += page->toScript();
     s += "unisim_plot_all <- function(df) {\n";
-    bool skipDefaultPage = (_pageInfos.size() > 1);
-    for (PageInfo pageInfo : _pageInfos) {
-        if (skipDefaultPage && pageInfo._page->objectName().isEmpty())
+    bool skipDefaultPage = (_pages.size() > 1);
+    for (PageR *page : _pages) {
+        if (skipDefaultPage && page->objectName().isEmpty())
             continue;
-        s += "  " + pageInfo.functionName() + "(df)\n";
+        s += "  " + page->functionName() + "(df)\n";
     }
     s += "}\n";
     return s;
-}
-
-OutputR::PageInfo::PageInfo(Box *page)
-    : _page(page)
-{
-    QVector<Box*> plots = Path("children::*{PlotR}", page).resolve<Box>();
-    for (Box *plot : plots)
-        _plotInfos << PlotInfo(plot);
-}
-
-QString OutputR::PageInfo::toString() {
-    QString s = _page->className() + " " + _page->objectName() + "\n";
-    for (PlotInfo plotInfo : _plotInfos)
-        s += plotInfo.toString();
-    return s;
-}
-
-QString OutputR::PageInfo::toScript() {
-    QString string;
-    QTextStream s(&string);
-    s << functionName() << " <- function(df) {\n"
-      << "  windows("
-      << _page->port("width")->value<int>()
-      << ", "
-      << _page->port("height")->value<int>()
-      << ")\n"
-      << "  grid.arrange(\n" ;
-    bool skipDefaultPlot = (_plotInfos.size() > 1);
-    for (PlotInfo plotInfo : _plotInfos) {
-        if (skipDefaultPlot && plotInfo._plot->objectName().isEmpty())
-            continue;
-        s << plotInfo.toScript();
-    }
-    s << "    ncol = " << _page->port("ncol")->value<int>() << "\n  )\n}\n";
-    return string;
-}
-
-QString OutputR::PageInfo::functionName() const {
-    return "unisim_" + _page->objectName() + "_page";
-}
-
-OutputR::PlotInfo::PlotInfo(Box *plot)
-    : _plot(plot)
-{
-    collectPorts();
-}
-
-void OutputR::PlotInfo::collectPorts() {
-    Box *parent = dynamic_cast<Box*>(_plot->parent());
-    Q_ASSERT(parent);
-    QString pageName = parent->objectName(),
-            plotName = _plot->objectName();
-
-    for (Port *port : Port::trackedPorts()) {
-        if (port->page() == pageName && port->plot() == plotName)
-            _ports << port;
-    }
-}
-
-QString OutputR::PlotInfo::toString() {
-    QString s = "Plot: " + _plot->objectName() + "\n";
-    for (const Port *port : _ports)
-        s += "  Port: " + port->objectName() + "\n";
-    return s;
-}
-
-inline QString apostrophed(QString s) {
-    return "\"" + s + "\"";
-}
-
-QString OutputR::PlotInfo::toScript() {
-    QStringList portLabels;
-    QString xLabel = apostrophed(xPortLabel());
-    for (const Port *port : _ports) {
-        // Avoid x-axis being plotted on y-axis too
-        if (port->label() != xLabel)
-            portLabels << apostrophed(port->label());
-    }
-    // OutputR should be PageR !!
-    Port *overlay = Path("ancestors::*{OutputR}[overlay]", _plot).resolveOne<Port>(_plot);
-    QString functionName = overlay->value<bool>() ? "unisim_plot_overlaid" : "unisim_plot";
-    return "    " + functionName + "(df, " + xLabel + ", c(" + portLabels.join(", ") + ")),\n";
-}
-
-QString OutputR::PlotInfo::xPortLabel() {
-    Box *parent = dynamic_cast<Box*>(_plot->parent());
-    Q_ASSERT(parent);
-    QString xPath = parent->port("xAxis")->importPath();
-    Port *xPort = Path(xPath).resolveOne<Port>();
-    return xPort->label();
 }
 
 //
@@ -250,6 +160,5 @@ void OutputR::openFile() {
                 + "\"))\n"
                 );
 }
-
 
 }

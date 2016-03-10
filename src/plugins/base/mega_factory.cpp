@@ -47,7 +47,7 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     QObject *creation;
     if (className == "Box") {
         creation = new Box(objectName, parent);
-        creation->setProperty("classLabel", className);
+        setClassName(creation, "Box");
         return creation;
     }
     switch (me()->productIndex.count(className)) {
@@ -56,7 +56,6 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     case 1:
         factory = me()->productIndex[className];
         creation = factory->create(removeNamespace(className), objectName, parent);
-        creation->setProperty("classLabel", className);
         break;
     default:
         QString msg = "More than one model of class '%1'. Qualify type with plug-in name";

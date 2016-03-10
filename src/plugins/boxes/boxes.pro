@@ -14,6 +14,7 @@ HEADERS +=  \
     distributed_delay_base.h \
     distributed_delay.h \
     fibonacci.h \
+    layout_r.h \
     output_r.h \
     page_r.h \
     plot_r.h \
@@ -35,6 +36,7 @@ SOURCES +=  \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
     fibonacci.cpp \
+    layout_r.cpp \
     output_r.cpp \
     page_r.cpp \
     plot_r.cpp \

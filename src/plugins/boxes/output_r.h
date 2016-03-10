@@ -3,14 +3,13 @@
 #include <QFile>
 #include <QString>
 #include <base/box.h>
+#include <base/convert.h>
 
 class QFile;
 
-namespace base {
-    class Port;
-}
-
 namespace boxes {
+
+class PageR;
 
 class OutputR : public base::Box
 {
@@ -21,52 +20,24 @@ public:
     void debrief();
     QString toString();
     QString toScript();
+
 private:
     // Input
-    QString xAxis;
-    bool overlay;
+    QString xAxis, layout;
+    int width, height;
+    bool clear;
 
     // Data
+    QVector<PageR*> _pages;
     QFile _file;
-    QStringList _pageFunctionNames;
-
-    struct PageInfo;
-    struct PlotInfo;
-
-    QVector<PageInfo> _pageInfos;
-
-    struct PageInfo { //!! move to page_r
-        const Box *_page;
-        QVector<PlotInfo> _plotInfos;
-        // Methods
-        PageInfo(){}
-        PageInfo(Box *page);
-        QString toString();
-        QString toScript();
-        QString functionName() const;
-    };
-
-    struct PlotInfo {       //!! move to plot_r
-        const Box *_plot;
-        QVector<const base::Port*> _ports;
-        // Methods
-        PlotInfo(){}
-        PlotInfo(Box *plot);
-        void collectPorts();
-        QString toString();
-        QString toScript();
-        QString xPortLabel();
-    };
 
     // Methods
-    void trackXAxis();
     void collectInfo();
-    QVector<const base::Port*> collectPorts(QString pageName, QString plotName);
     void setTrackX();
     void writeScript();
     void openFile();
 };
 
-}
+} // boxes
 
 #endif

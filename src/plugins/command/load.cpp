@@ -72,7 +72,6 @@ void load::readFile(QString fileName) {
     Box *newRoot = builder.content();
     if (newRoot) {
         environment().state.root = newRoot;
-        newRoot->amendFamily();
         QString info("%1 boxes loaded");
         dialog().information(info.arg(newRoot->count()));
     }

@@ -60,7 +60,7 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         // Classes and objects have a name
         class_name %= name;
         object_name %= name;
-        // A value may be quotes or unquoted
+        // A value may be quoted or unquoted
         value = (quoted_value | unquoted_value);
         // A quoted value is a string of any characters, except apostrophes;
         // bracing apostrophes are kept in the string

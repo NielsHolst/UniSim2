@@ -192,23 +192,28 @@ Path::QObjects Path::nearest(const QObject *p, QString tail) {
 namespace {
 
     inline bool matches(const QObject* candidate, QString box, QString type) {
+        if (!candidate)
+            return false;
         QStringList types = classInheritance(candidate).split("/");
         return (box=="*" || candidate->objectName()==box) && types.contains(type);
     }
 
     void findAncestors(const QObject *p, Path::QObjects &ancestors) {
+        Q_ASSERT(p);
         QObject *parent = p->parent();
         if (parent)
             findAncestors(parent, ancestors << parent);
     }
 
     Path::QObjects allSiblings(const QObject *p) {
+        Q_ASSERT(p);
         const QObject *parent = p->parent();
         return (parent) ? parent->findChildren<const QObject*>(QString(), Qt::FindDirectChildrenOnly)
                         : Path::QObjects();
     }
 
     Path::QObjects otherSiblings(const QObject *p) {
+        Q_ASSERT(p);
         const QObject *parent = p->parent();
         Path::QObjects sib;
         if (parent) {
@@ -220,6 +225,7 @@ namespace {
     }
 
     const QObject* preceedingSibling(const QObject *p) {
+        Q_ASSERT(p);
         const QObject *parent = p->parent();
         const QObject *sib{0};
         if (parent) {
@@ -232,6 +238,7 @@ namespace {
     }
 
     const QObject* followingSibling(const QObject *p) {
+        Q_ASSERT(p);
         const QObject *parent = p->parent();
         const QObject *sib{0};
         if (parent) {

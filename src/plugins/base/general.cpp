@@ -4,27 +4,34 @@
 #include <QVariant>
 namespace base {
 
-void setClassName(QObject *object, QString myClassName) {
+void setClassName(QObject *object, QString className_) {
     Q_ASSERT(object);
-    QString curClassName = hasClassName(object) ? className(object) : QString();
-    object->setProperty("base::Class", QVariant(myClassName));
-    object->setProperty("base::ClassInheritance", QVariant(curClassName + "/" + myClassName));
+    if (hasClassName(object)) {
+        bool alreadySet = (className(object) == className_);
+        if (!alreadySet) {
+            object->setProperty("base::Class", QVariant(className_));
+            object->setProperty("base::ClassInheritance", QVariant(classInheritance(object) + "/" + className_));
+        }
+    }
+    else {
+        object->setProperty("base::Class", QVariant(className_));
+        object->setProperty("base::ClassInheritance", QVariant(className_));
+    }
 }
 
 QString className(const QObject *object) {
-    if (!object) return "NULL";
+    Q_ASSERT(object);
     QVariant className = object->property("base::Class");
-//    if (!className.isValid())
-//        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
-    return className.isValid() ? className.toString() : QString("UnknownClass");
+    Q_ASSERT(className.isValid());
+    return className.toString();
 }
 
 QString classInheritance(const QObject *object) {
-    if (!object) return "NULL";
+    if (!object)
+        Q_ASSERT(object);
     QVariant classInheritance = object->property("base::ClassInheritance");
-//    if (!classInheritance.isValid())
-//        throw Exception("Object has no class name (did you forget 'Class' in the constructor?)", "", object);
-    return classInheritance.isValid() ? classInheritance.toString() : QString("UnknownClass");
+    Q_ASSERT(classInheritance.isValid());
+    return classInheritance.toString();
 }
 
 bool hasClassName(const QObject *object) {

@@ -13,14 +13,14 @@ PUBLISH(Sandy)
 Sandy::Sandy(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Sandy);
+//    Class(Sandy);
     Input(xMin).equals(0);
     Input(xMax).equals(1);
     Input(yMax).equals(1);
     Input(a).equals(1);
     Input(b).equals(1);
     Input(x);
-    Output(value);
+    Output(value).page("");
 }
 
 void Sandy::reset() {
@@ -29,6 +29,7 @@ void Sandy::reset() {
         throw Exception("'xMin' must be less than 'xMax'", value.arg(xMin).arg(xMax), this);
     }
     C = (a<=0. || b<=0.) ?  1. : pow(a/(a+b),-a) * pow(b/(a+b),-b);
+    update();
 }
 
 void Sandy::update() {

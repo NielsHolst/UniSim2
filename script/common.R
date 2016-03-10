@@ -34,38 +34,17 @@ read_unisim_output = function(file_path) {
 	U
 }
 
-create_unisim_plots = function() {
-	L = read_unisim_output()
-	llply(L$pages,
-		function(M) {
-			ggplot(M, aes_string(x=L$x_name, y="value",colour="variable")) +
-			geom_line(size=1.1)
-		}
-	)
-}
-
-print_unisim_plots = function() {
-	l_ply(create_unisim_plots(),
-		function(p) {
-			windows(14,10)
-			print(p)
-		}
-	)
-}
-
-# print_unisim_plots()
-
-unisim_plot = function(df, id.x, cols) {
+unisim_plot_facetted = function(df, id.x, cols, ncol, nrow) {
 	if (!(id.x %in% cols)) cols = c(id.x, cols)
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
 		geom_line(size=1.1) +
 		theme(legend.position="none") +
 		ylab("") +
-		facet_wrap(~Variable, ncol=1, scales="free_y")
+		facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
 }
 
-unisim_plot_overlaid = function(df, id.x, cols) {
+unisim_plot_merged = function(df, id.x, cols) {
 	if (!(id.x %in% cols)) cols = c(id.x, cols)
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +

@@ -4,15 +4,24 @@
 
 namespace boxes {
 
+class PlotR;
+
 class PageR : public base::Box
 {
 public:
     PageR(QString name, QObject *parent);
+    void initialize();
+    QString toString();
+    QString toScript();
+    QString functionName() const;
 private:
     // Inputs
-    QString xAxis;
-    bool overlay;
-    int width, height, ncol;
+    QString xAxis, layout;
+    int width, height, ncol, nrow;
+    // Data
+    QVector<PlotR*> _plots;
+    // Methods
+    QString dim(QString portName);
 };
 
 }

@@ -299,6 +299,8 @@ void TestPath::testPreceedingSibling() {
     compareVectors(relative, absolute, 1);
 
     setContext("/A");
+    Path path = Path("preceedingSibling:*", _context);
+    relative = path.resolve();
     QVERIFY(Path("preceedingSibling:*", _context).resolve().isEmpty());
 }
 
