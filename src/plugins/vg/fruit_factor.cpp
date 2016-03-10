@@ -35,9 +35,9 @@ PUBLISH(FruitFactor)
 FruitFactor::FruitFactor(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(minDensity, 1.);
-    Input(maxValue, 1.);
-    Input(plantDensity, "../..[density]");
+    Input(minDensity).equals(1.);
+    Input(maxValue).equals(1.);
+    Input(plantDensity).imports("../..[density]");
     Output(value);
 }
 

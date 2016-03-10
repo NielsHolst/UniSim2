@@ -5,13 +5,12 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include "growth_light.h"
+#include <base/exception.h>
 #include <base/publish.h>
 
 using namespace base;
 
 namespace vg {
-
-UniSim::StringMap<GrowthLight::Type> GrowthLight::types;
 
 PUBLISH(GrowthLight)
 
@@ -38,39 +37,37 @@ PUBLISH(GrowthLight)
 GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
-    Input2(QString, lampTypeStr, type, "HPSL");
-    Input(intensity, 40.);
-    Input(ballastCorrection, 1.);
-    Input(age, 0.);
-    Input(lifeTime, 12000.);
-    InputRef(bool, on, "controllers/growthLight[signal]");
-    Input(timeStep, "calendar[timeStepSecs]");
-
+    Input(type).equals("HPSL");
+    Input(intensity).equals(40.);
+    Input(ballastCorrection).equals(1.);
+    Input(age).equals(0);
+    Input(lifeTime).equals(12000.);
+    Input(on).imports("controllers/growthLight[signal]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
     Output(currentPeriod);
     Output(totalPeriod);
-
-    types["hpsl"] = Hpsl;
-    types["led"] = Led;
 }
 
 void GrowthLight::reset() {
-    switch (types.seek(lampTypeStr.toLower(), this)) {
-    case Hpsl:
+    // Set parameters according to type
+    QString key = type.toLower();
+    if (key == "hpsl") {
         attributes.heatCoef = 0.23;
         attributes.longWaveCoef = 0.42;
         attributes.shortWaveCoef = 0.50;
         attributes.parCoef = 0.31;
         attributes.minPeriodOn = 30.;
-        break;
-    case Led:
+    }
+    else if (key == "led") {
         attributes.heatCoef = 0.02;
         attributes.longWaveCoef = 0.05;
         attributes.shortWaveCoef = 0.82;
         attributes.parCoef = 0.82;
         attributes.minPeriodOn = 0.;
-        break;
     }
-
+    else
+        throw Exception("Unknown growth light type", type, this);
+    // Compute derived parameters
     double netCapacity = intensity/ballastCorrection;
     netAttributes.heatEmission = attributes.heatCoef*netCapacity;
     netAttributes.longWaveEmission = attributes.longWaveCoef*netCapacity;

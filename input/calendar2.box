@@ -1,0 +1,11 @@
+Simulation calendar_demo(steps=240 step{track=off}) {
+	Calendar cal(dayLength{track=on page=solar plot=day} 
+				 azimuth{track=on page=solar plot=azimuth}
+	             sunrise{track=on page=time plot=sun}
+				 sunset{track=on page=time plot=sun}
+				 trueSolarTime{track=on page=time plot=sunTime}
+				) {
+	}
+	OutputR (xAxis = cal[dateTime]) { 
+	}
+}

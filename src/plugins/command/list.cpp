@@ -16,7 +16,6 @@ HELP(list, "list", "lists box structure starting from root")
 list::list(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(list);
 }
 
 void list::doExecute() {

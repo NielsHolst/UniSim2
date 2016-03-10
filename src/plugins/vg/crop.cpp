@@ -28,7 +28,7 @@ PUBLISH(Crop)
 Crop::Crop(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(density, 1.);
+    Input(density).equals(1);
 }
 
 

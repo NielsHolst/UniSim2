@@ -5,7 +5,6 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <stdlib.h>
-#include <usbase/utilities.h>
 #include "fruit_crop_lai.h"
 #include <base/publish.h>
 
@@ -35,11 +34,11 @@ PUBLISH(FruitCropLai)
 FruitCropLai::FruitCropLai(QString name, QObject *parent)
     : CropLai(name, parent)
 {
-    Input(maxLai, 3.5);
-    Input(cropDensity, "..[density]");
-    Input(tempSum, "../physTime[total]");
-    InputRef(bool, cropPresent, "../periods[flag]");
-    Output(bool, maxLaiReached);
+    Input(maxLai).equals(3.5);
+    Input(cropDensity).imports("..[density]");
+    Input(tempSum).imports("../physTime[total]");
+    Input(cropPresent).imports("../periods[flag]");
+    Output(maxLaiReached);
 }
 
 void FruitCropLai::reset() {

@@ -68,22 +68,22 @@ double LeafPhotosynthesis::laic() const {
 LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(parDiffuse, "indoors/light[parDiffuse]");
-    Input(parDirect, "indoors/light[parDirect]");
-    Input(kDiffuse, "crop/radiation[kDiffuse]");
-    Input(kDirect, "crop/radiation[kDirect]");
-    Input(kDirectDirect, "crop/radiation[kDirectDirect]");
-    Input(scattering, "crop/radiation[scattering]");
-    Input(diffuseReflectivity, "crop/radiation[diffuseReflectivity]");
-    Input(directReflectivity, "crop/radiation[directReflectivity]");
-    Input(lai, "crop/lai[value]");
-    Input(sinB, "calendar[sinB]");
+    Input(parDiffuse).imports("indoors/light[parDiffuse]");
+    Input(parDirect).imports("indoors/light[parDirect]");
+    Input(kDiffuse).imports("crop/radiation[kDiffuse]");
+    Input(kDirect).imports("crop/radiation[kDirect]");
+    Input(kDirectDirect).imports("crop/radiation[kDirectDirect]");
+    Input(scattering).imports("crop/radiation[scattering]");
+    Input(diffuseReflectivity).imports("crop/radiation[diffuseReflectivity]");
+    Input(directReflectivity).imports("crop/radiation[directReflectivity]");
+    Input(lai).imports("crop/lai[value]");
+    Input(sinB).imports("calendar[sinB]");
 
-    Input(LUE, "./lightResponse[LUE]");
-    Input(Pgmax, "./lightResponse[Pgmax]");
-    Input(Rd, "./lightResponse[Rd]");
-    Input(xGauss, "..[xGaussUpperside]");
-    Input(wGauss, "..[wGaussUpperside]");
+    Input(LUE).imports("./lightResponse[LUE]");
+    Input(Pgmax).imports("./lightResponse[Pgmax]");
+    Input(Rd).imports("./lightResponse[Rd]");
+    Input(xGauss).imports("..[xGaussUpperside]");
+    Input(wGauss).imports("..[wGaussUpperside]");
 
     Output(absorptivity);
     Output(parAbsorbed);

@@ -31,9 +31,9 @@ PUBLISH(RunningAverage)
 RunningAverage::RunningAverage(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(initialValue, 0.);
-    Input(input, 0.);
-    Input(int, length, 10);
+    Input(initialValue).equals(0.);
+    Input(input).equals(0.);
+    Input(length).equals(10);
     Output(value);
 }
 

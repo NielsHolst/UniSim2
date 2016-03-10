@@ -23,7 +23,7 @@ PUBLISH(EnergyFluxGrowthLights)
 EnergyFluxGrowthLights::EnergyFluxGrowthLights(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(energyFlux, "actuators/growthlights[energyFlux]");
+    Input(energyFlux).imports("actuators/growthlights[energyFlux]");
 }
 
 void EnergyFluxGrowthLights::update() {

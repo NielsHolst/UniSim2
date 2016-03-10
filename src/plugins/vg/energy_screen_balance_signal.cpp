@@ -27,10 +27,10 @@ PUBLISH(EnergyScreenBalanceSignal)
 EnergyScreenBalanceSignal::EnergyScreenBalanceSignal(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
-    Input(Ucover, "construction/shelters[U]");
-    Input(indoorsLight, "indoors/light[total]");
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(outdoorsTemperature, "outdoors[temperature]");
+    Input(Ucover).imports("construction/shelters[U]");
+    Input(indoorsLight).imports("indoors/light[total]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
 }
 
 double EnergyScreenBalanceSignal::signal()  {

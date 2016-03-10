@@ -35,12 +35,13 @@ namespace vg {
 SlidingSignal::SlidingSignal(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
-    Input(input, 25.);
-    Input(threshold, 25.);
-    Input(thresholdBand, 5.);
-    Input(minSignal, 0.);
-    Input(maxSignal, 100.);
-    Input(bool, increasingSignal, true);
+    Class(SlidingSignal);
+    Input(input).equals(25.);
+    Input(threshold).equals(25.);
+    Input(thresholdBand).equals(5.);
+    Input(minSignal).equals(0.);
+    Input(maxSignal).equals(100.);
+    Input(increasingSignal).equals(true);
 }
 
 double SlidingSignal::signal() {

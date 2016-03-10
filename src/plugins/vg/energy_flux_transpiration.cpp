@@ -32,7 +32,7 @@ PUBLISH(EnergyFluxTranspiration)
 EnergyFluxTranspiration::EnergyFluxTranspiration(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(transpiration, "../../vapourFlux/transpiration[vapourFlux]");
+    Input(transpiration).imports("../../vapourFlux/transpiration[vapourFlux]");
 }
 
 void EnergyFluxTranspiration::update() {

@@ -16,7 +16,6 @@ class EnergyFluxBase : public base::Box
 {
 public:
     EnergyFluxBase(QString name, QObject *parent);
-    void reset();
 protected:
     double value;
 };

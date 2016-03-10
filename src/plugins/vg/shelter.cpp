@@ -4,10 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <QMessageBox>
+#include <base/path.h>
+#include <base/publish.h>
 #include "cover.h"
 #include "general.h"
-#include <base/publish.h>
 #include "screens.h"
 #include "shelter.h"
 
@@ -40,15 +40,15 @@ PUBLISH(Shelter)
 Shelter::Shelter(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
-    Input(roofArea, "geometry[roofArea]");
-    Input(sideWallsArea, "geometry[sideWallsArea]");
-    Input(endWallsArea, "geometry[endWallsArea]");
-    Input(gablesArea, "geometry[gablesArea]");
-    Input(groundArea, "geometry[groundArea]");
+    Input(roofArea).imports("geometry[roofArea]");
+    Input(sideWallsArea).imports("geometry[sideWallsArea]");
+    Input(endWallsArea).imports("geometry[endWallsArea]");
+    Input(gablesArea).imports("geometry[gablesArea]");
+    Input(groundArea).imports("geometry[groundArea]");
 
-    Input(outdoorsDirectRadiation, "outdoors[directRadiation]");
-    Input(outdoorsDiffuseRadiation, "outdoors[diffuseRadiation]");
-    Input(screensMaxState, "./screens[maxState]");
+    Input(outdoorsDirectRadiation).imports("outdoors[directRadiation]");
+    Input(outdoorsDiffuseRadiation).imports("outdoors[diffuseRadiation]");
+    Input(screensMaxState).imports("./screens[maxState]");
 
     Output(area);
     Output(relativeArea);
@@ -58,31 +58,31 @@ Shelter::Shelter(QString name, QObject *parent)
 void Shelter::initialize() {
     shelter.fetch(this);
 
-    Cover *coverM = seekOneChild<Cover*>("cover");
-    pCoverU = coverM->pullValuePtr<double>("U");
-    pCoverHaze = coverM->pullValuePtr<double>("haze");
+    Cover *coverM = Path("./cover", this).resolveOne<Cover>(this);
+    pCoverU = coverM->port("U")->valuePtr<double>();
+    pCoverHaze = coverM->port("haze")->valuePtr<double>();
     cover.fetch(coverM);
     pCoverSurfaceRadiation = coverM->surfaceRadiation();
 
-    Screens *screensM = seekOneChild<Screens*>("screens");
-    pScreensU = screensM->pullValuePtr<double>("U");
-    pScreensHaze = screensM->pullValuePtr<double>("haze");
+    Screens *screensM = Path("./screens", this).resolveOne<Screens>(this);
+    pScreensU = screensM->port("U")->valuePtr<double>();
+    pScreensHaze = screensM->port("haze")->valuePtr<double>();
     screens.fetch(screensM);
     pScreensSurfaceRadiation = screensM->surfaceRadiation();
-    pScreensAirTransmission = screensM->pullValuePtr<double>("airTransmissivity");
+    pScreensAirTransmission = screensM->port("airTransmissivity")->valuePtr<double>();
 }
 
 void Shelter::Light::fetch(base::Box *model) {
-    diffuse.tra = model->pullValuePtr<double>("lightTransmissivity");
-    direct.tra = model->pullValuePtr<double>("directLightTransmissivity");
-    diffuse.abs = model->pullValuePtr<double>("incomingLightAbsorptivity");
-    direct.abs = model->pullValuePtr<double>("incomingDirectLightAbsorptivity");
+    diffuse.tra = model->port("lightTransmissivity")->valuePtr<double>();
+    direct.tra =  model->port("directLightTransmissivity")->valuePtr<double>();
+    diffuse.abs = model->port("incomingLightAbsorptivity")->valuePtr<double>();
+    direct.abs =  model->port("incomingDirectLightAbsorptivity")->valuePtr<double>();
 }
 
 void Shelter::reset() {
     ShelterBase::reset();
 
-    QString name = id().label();
+    QString name = objectName();
     if (name.toLower().contains("roof"))
         area = roofArea/2;
     else if (name.toLower().contains("side"))

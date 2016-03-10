@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_CROP_H
-#define VG_CROP_H
+#ifndef CROP_H
+#define CROP_H
 
 #include <base/box.h>
 

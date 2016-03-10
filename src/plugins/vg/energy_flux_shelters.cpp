@@ -54,24 +54,24 @@ PUBLISH(EnergyFluxShelters)
 EnergyFluxShelters::EnergyFluxShelters(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(U, "construction/shelters[U]");
-    Input(incomingLwAbsorptivity, "construction/shelters[incomingLwAbsorptivity]");
-    Input(outgoingLwAbsorptivity, "construction/shelters[outgoingLwAbsorptivity]");
-    Input(lightAbsorbedCover, "construction/shelters[lightAbsorbedCover]");
-    Input(lightAbsorbedScreens, "construction/shelters[lightAbsorbedScreens]");
-    Input(heatCapacityCover, "construction/shelters[heatCapacityCoversPerGround]");
-    Input(heatCapacityScreens, "construction/shelters[heatCapacityScreensPerGround]");
+    Input(U).imports("construction/shelters[U]");
+    Input(incomingLwAbsorptivity).imports("construction/shelters[incomingLwAbsorptivity]");
+    Input(outgoingLwAbsorptivity).imports("construction/shelters[outgoingLwAbsorptivity]");
+    Input(lightAbsorbedCover).imports("construction/shelters[lightAbsorbedCover]");
+    Input(lightAbsorbedScreens).imports("construction/shelters[lightAbsorbedScreens]");
+    Input(heatCapacityCover).imports("construction/shelters[heatCapacityCoversPerGround]");
+    Input(heatCapacityScreens).imports("construction/shelters[heatCapacityScreensPerGround]");
 
-    Input(timeStep, "calendar[timeStepSecs]");
-    Input(height, "geometry[indoorsAverageHeight]");
-    Input(coverPerGroundArea,"geometry[coverPerGroundArea]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]");
 
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(outdoorsTemperature, "outdoors[temperature]");
-    Input(skyTemperature, "outdoors[skyTemperature]");
-    Input(radiationFluxCropTop, "crop/layers/top/radiationAbsorbed[shelterLoss]");
-    Input(radiationFluxCropMiddle, "crop/layers/middle/radiationAbsorbed[shelterLoss]");
-    Input(radiationFluxCropBottom, "crop/layers/bottom/radiationAbsorbed[shelterLoss]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(skyTemperature).imports("outdoors[skyTemperature]");
+    Input(radiationFluxCropTop).imports("crop/layers/top/radiationAbsorbed[shelterLoss]");
+    Input(radiationFluxCropMiddle).imports("crop/layers/middle/radiationAbsorbed[shelterLoss]");
+    Input(radiationFluxCropBottom).imports("crop/layers/bottom/radiationAbsorbed[shelterLoss]");
 
     Output(heatFluxOutsideToCover);
     Output(heatFluxInsideToCover);
@@ -83,12 +83,6 @@ EnergyFluxShelters::EnergyFluxShelters(QString name, QObject *parent)
 }
 
 void EnergyFluxShelters::reset() {
-    EnergyFluxBase::reset();
-    heatFluxOutsideToCover =
-    heatFluxInsideToCover =
-    radiationFluxSkyToCover =
-    radiationFluxSunToCover =
-    radiationFluxSunToScreens = 0.;
     coverTemperature = screensTemperature = 12.;
 }
 

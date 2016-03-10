@@ -34,11 +34,11 @@ PUBLISH(EnergyFluxCoolingDemand)
 EnergyFluxCoolingDemand::EnergyFluxCoolingDemand(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(heatedTemperature, "../../temperature[value]");
-    Input(setpointTemperature, "setpoints/temperature/ventilation[value]");
-    Input(volume, "geometry[indoorsVolume]");
-    Input(area, "geometry[groundArea]");
-    Input(timeStep, "calendar[timeStepSecs]");
+    Input(heatedTemperature).imports("../../temperature[value]");
+    Input(setpointTemperature).imports("setpoints/temperature/ventilation[value]");
+    Input(volume).imports("geometry[indoorsVolume]");
+    Input(area).imports("geometry[groundArea]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
     Output(value);
 }
 

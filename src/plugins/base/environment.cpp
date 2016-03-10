@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDir>
+#include <QFileInfo>
 #include <QSettings>
 #include "environment.h"
 #include "general.h"
@@ -87,7 +88,7 @@ int Environment::fileCountervalue() {
 }
 
 QString Environment::fileCounterKey() {
-    return "environment/file-counter/" + state.latestLoadArg;
+    return "environment/file-counter/" + QFileInfo(state.latestLoadArg).baseName();
 }
 
 void Environment::copyToClipboard(QString text) {

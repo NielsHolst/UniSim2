@@ -16,7 +16,6 @@ HELP(cd_path, "cd <path>", "change working directory")
 cd::cd(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(cd);
 }
 
 void cd::doExecute() {

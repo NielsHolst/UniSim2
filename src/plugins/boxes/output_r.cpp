@@ -24,7 +24,6 @@ PUBLISH(OutputR)
 OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(OutputR);
     Input(xAxis).imports("/*[step]");
     Input(layout).equals("merged");
     Input(width).equals(14);

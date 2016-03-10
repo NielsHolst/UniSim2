@@ -74,7 +74,6 @@ PUBLISH(Calendar)
 Calendar::Calendar(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Calendar);
     Input(latitude).equals(52);
     Input(longitude).equals(11);
     Input(timeZone).equals(1);

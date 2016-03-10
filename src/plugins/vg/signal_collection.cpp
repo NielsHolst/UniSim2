@@ -6,6 +6,7 @@
 */
 #include <cmath>
 #include <limits>
+#include <base/path.h>
 #include <base/publish.h>
 #include "signal_collection.h"
 
@@ -28,29 +29,29 @@ PUBLISH(SignalCollection)
  *
  */
 
-UniSim::StringMap<SignalCollection::Rule> SignalCollection::rules;
+StringMap<SignalCollection::Rule> SignalCollection::rules;
 
 SignalCollection::SignalCollection(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input2(QString, ruleStr, rule, "max");
+    Input(rule).equals("max");
 }
 
 void SignalCollection::initialize() {
-    auto children = seekChildren<BaseSignal*>("*");
+    QVector<BaseSignal*> children = Path("./*", this).resolveMany<BaseSignal>();
     childSignals.clear();
-    for (auto child : children) {
-        childSignals << child->pullValuePtr<double>("signal");
+    for (BaseSignal *child : children) {
+        childSignals << child->port("signal")->valuePtr<double>();
     }
     setRules();
 }
 
 void SignalCollection::localReset() {
-    rule = rules.seek(ruleStr.toLower(), this);
+    ruleDecoded = rules.seek(rule, this);
 }
 
 double SignalCollection::signal() {
     double res{0};
-    switch (rule) {
+    switch (ruleDecoded) {
     case Min:
         res = numeric_limits<double>::max();
         for (auto childSignal : childSignals)

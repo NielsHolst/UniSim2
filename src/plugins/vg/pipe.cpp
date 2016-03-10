@@ -6,14 +6,17 @@
 */
 #include <stdlib.h>
 #include <base/exception.h>
-#include <usbase/utilities.h>
-#include <usbase/test_num.h>
+#include <base/general.h>
+#include <base/path.h>
+#include <base/publish.h>
+#include <base/test_num.h>
 #include "general.h"
 #include "pipe.h"
-#include <base/publish.h>
 
 using std::min;
 using std::max;
+using base::bounded;
+
 using namespace base;
 
 namespace vg {
@@ -51,15 +54,15 @@ PUBLISH(Pipe)
 Pipe::Pipe(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(length, 1.);
-    Input(diameter, 51.);
-    Input(minTemperature, 20.);
-    Input(maxTemperature, 80.);
-    Input(maxTemperatureIncreaseRate, 2.);
-    Input(emissivity, 0.9);
-    Input(energyFluxTotal, "heating/supply[value]");
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(timeStep, "calendar[timeStepSecs]");
+    Input(length).equals(1.);
+    Input(diameter).equals(51.);
+    Input(minTemperature).equals(20.);
+    Input(maxTemperature).equals(80.);
+    Input(maxTemperatureIncreaseRate).equals(2.);
+    Input(emissivity).equals(0.9);
+    Input(energyFluxTotal).imports("heating/supply[value]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
 
     Output(temperature);
     Output(energyFlux);
@@ -70,23 +73,14 @@ Pipe::Pipe(QString name, QObject *parent)
 }
 
 void Pipe::initialize() {
-    auto preceedingPipes = seekPrecedingSiblings();
-    for (Model *pipe : preceedingPipes) {
-        energyFluxFromPreceedingPipes << pipe->pullValuePtr<double>("energyFlux");
+    QVector<Box*> preceedingPipes = Path("preceedingsibling::*").resolveMany<Box>();
+    for (Box *pipe : preceedingPipes) {
+        energyFluxFromPreceedingPipes << pipe->port("energyFlux")->valuePtr<double>();
     }
 }
 
-QList<Model *> Pipe::seekPrecedingSiblings() {
-    Model *parent = seekParent<Model*>("*");
-    auto siblings = parent->seekChildren<Model*>("*");
-    while (siblings.last() != this)
-        siblings.takeLast();
-    siblings.takeLast();
-    return siblings;
-}
-
 void Pipe::reset() {
-    double d = minMax(26., diameter, 51.);
+    double d = bounded(26., diameter, 51.);
     slope = length*(0.0131*d + 0.105);
 //    temperature = minTemperature;
     update();
@@ -94,13 +88,13 @@ void Pipe::reset() {
 
 void Pipe::update() {
     // Set temperature
-    temperature = minMax(minTemperature,
-                         indoorsTemperature +
-                         calcTemperatureDifference(energyFluxTotal - energyFluxFromPreceedingPipesSum()),
-                         maxTemperature);
-    nextTemperatureMax = minMax(minTemperature,
-                                temperature + maxTemperatureIncreaseRate*timeStep/60.,
-                                maxTemperature);
+    temperature = bounded(minTemperature,
+                          indoorsTemperature +
+                          calcTemperatureDifference(energyFluxTotal - energyFluxFromPreceedingPipesSum()),
+                          maxTemperature);
+    nextTemperatureMax = bounded(minTemperature,
+                                 temperature + maxTemperatureIncreaseRate*timeStep/60.,
+                                 maxTemperature);
     setNextTemperatureMin();
     // Set energy flux
     energyFlux = calcEnergyFlux(temperature - indoorsTemperature);
@@ -123,9 +117,9 @@ double Pipe::calcTemperatureDifference(double energyFlux) const {
 void Pipe::setNextTemperatureMin() {
     double energyFlux = calcEnergyFlux(temperature - indoorsTemperature),
            waterVolume = length*PI*sqr(diameter/1000./2.);
-    nextTemperatureMin = minMax(minTemperature,
-                                temperature - energyFlux*timeStep/CpWaterVol/waterVolume,    // K = W/m2 * s * K*m3/J * m2/m3
-                                maxTemperature);
+    nextTemperatureMin = bounded(minTemperature,
+                                 temperature - energyFlux*timeStep/CpWaterVol/waterVolume,    // K = W/m2 * s * K*m3/J * m2/m3
+                                 maxTemperature);
 }
 
 double Pipe::energyFluxFromPreceedingPipesSum() {

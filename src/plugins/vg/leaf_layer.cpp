@@ -28,10 +28,10 @@ PUBLISH(LeafLayer)
 LeafLayer::LeafLayer(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(xGaussUpperside, 1);
-    Input(wGaussUpperside, 1);
-    Input(xGaussLowerside, 1);
-    Input(wGaussLowerside, 1);
+    Input(xGaussUpperside).equals(1);
+    Input(wGaussUpperside).equals(1);
+    Input(xGaussLowerside).equals(1);
+    Input(wGaussLowerside).equals(1);
 }
 
 

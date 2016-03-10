@@ -31,11 +31,11 @@ PUBLISH(StomatalResistanceRose)
 StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     : StomatalResistanceBase(name, parent)
 {
-    Input(co2, "indoors/co2[value]");
-    Input(rh, "indoors/humidity[rh]");
-    Input(Pn, "../photosynthesis[Pn]");
-    Input(rbCO2, "../rb[rbCO2]");
-    Input(lai, "crop/lai[value]");
+    Input(co2).imports("indoors/co2[value]");
+    Input(rh).imports("indoors/humidity[rh]");
+    Input(Pn).imports("../photosynthesis[Pn]");
+    Input(rbCO2).imports("../rb[rbCO2]");
+    Input(lai).imports("crop/lai[value]");
 }
 
 double StomatalResistanceRose::resetRsH2O() {

@@ -10,7 +10,6 @@ PUBLISH(ModelA)
 ModelA::ModelA(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(ModelA);
     Input(input1);
     Input(input2);
     Input(input3).page("");

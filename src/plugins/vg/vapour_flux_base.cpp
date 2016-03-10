@@ -23,15 +23,12 @@ namespace vg {
  */
 
 VapourFluxBase::VapourFluxBase(QString name, QObject *parent)
-	: Box(name, parent)
+    : Box(name, parent)
 {
+    Class(VapourFluxBase);
     Output(conductance);
     Output(gain);
     Output(vapourFlux);
-}
-
-void VapourFluxBase::reset() {
-    conductance = vapourFlux = gain = 0.;
 }
 
 } //namespace

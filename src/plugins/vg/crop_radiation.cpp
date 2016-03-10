@@ -5,10 +5,10 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <base/exception.h>
-#include <usbase/test_num.h>
+#include <base/publish.h>
+#include <base/test_num.h>
 #include "crop_radiation.h"
 #include "general.h"
-#include <base/publish.h>
 
 using std::max;
 using namespace base;
@@ -44,14 +44,14 @@ PUBLISH(CropRadiation)
 CropRadiation::CropRadiation(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(kDiffuse, 0.8);
-    Input(scattering, 0.2);
-    Input(sinB, "calendar[sinB]");
-    Input(lightDiffuse, "indoors/light[diffuse]");
-    Input(lightDirect, "indoors/light[direct]");
-    Input(absorptivityTop, "layers/top/photosynthesis[absorptivity]");
-    Input(absorptivityMiddle, "layers/middle/photosynthesis[absorptivity]");
-    Input(absorptivityBottom, "layers/bottom/photosynthesis[absorptivity]");
+    Input(kDiffuse).equals(0.8);
+    Input(scattering).equals(0.2);
+    Input(sinB).imports("calendar[sinB]");
+    Input(lightDiffuse).imports("indoors/light[diffuse]");
+    Input(lightDirect).imports("indoors/light[direct]");
+    Input(absorptivityTop).imports("layers/top/photosynthesis[absorptivity]");
+    Input(absorptivityMiddle).imports("layers/middle/photosynthesis[absorptivity]");
+    Input(absorptivityBottom).imports("layers/bottom/photosynthesis[absorptivity]");
 
     Output(kDirect);
     Output(kDirectDirect);

@@ -30,15 +30,11 @@ PUBLISH(FloorRadiationAbsorbed)
 FloorRadiationAbsorbed::FloorRadiationAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(indoorsLight, "indoors/light[total]");
-    Input(growthLightLight, "actuators/growthlights[shortWaveEmission]");
-    Input(lightAbsorbedByCrop, "crop/lightAbsorbed[value]");
-    Input(growthLightLwAbsorbedByCrop, "crop/growthLightLwAbsorbed[value]");
+    Input(indoorsLight).imports("indoors/light[total]");
+    Input(growthLightLight).imports("actuators/growthlights[shortWaveEmission]");
+    Input(lightAbsorbedByCrop).imports("crop/lightAbsorbed[value]");
+    Input(growthLightLwAbsorbedByCrop).imports("crop/growthLightLwAbsorbed[value]");
     Output(value);
-}
-
-void FloorRadiationAbsorbed::reset() {
-    value = 0.;
 }
 
 void FloorRadiationAbsorbed::update() {

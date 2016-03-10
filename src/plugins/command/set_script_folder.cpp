@@ -17,7 +17,6 @@ HELP(set_script_folder_path, "set script folder <path>", "sets script folder")
 set_script_folder::set_script_folder(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(set_script_folder);
 }
 
 

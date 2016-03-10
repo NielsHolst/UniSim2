@@ -29,10 +29,6 @@ EnergyFluxBase::EnergyFluxBase(QString name, QObject *parent)
     Output(value);
 }
 
-void EnergyFluxBase::reset() {
-    value = 0.;
-}
-
 
 } //namespace
 

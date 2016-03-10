@@ -24,7 +24,6 @@ HELP(load, "load", "loads box script")
 load::load(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(load);
 }
 
 

@@ -15,7 +15,6 @@ class FloorRadiationAbsorbed : public base::Box
 {
 public:
     FloorRadiationAbsorbed(QString name, QObject *parent);
-    void reset();
     void update();
 private:
     // Inputs

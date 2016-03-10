@@ -17,7 +17,6 @@ HELP(set_input_folder_path, "set input folder <path>", "sets input folder")
 set_input_folder::set_input_folder(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(set_input_folder);
 }
 
 

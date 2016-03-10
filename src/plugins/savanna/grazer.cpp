@@ -10,7 +10,6 @@ PUBLISH(Grazer)
 Grazer::Grazer(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Grazer);
     Input(initialDensity).equals(0.1);
     Input(growthRate).equals(4.5);
     Input(killRate).equals(0);

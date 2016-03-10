@@ -15,7 +15,6 @@ class EnergyFluxCoolingSupply : public base::Box
 {
 public:
     EnergyFluxCoolingSupply(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:

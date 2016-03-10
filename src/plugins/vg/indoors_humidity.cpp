@@ -41,12 +41,12 @@ PUBLISH(IndoorsHumidity)
 IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(conductance, "indoors/total/vapourFlux[conductance]");
-    Input(vapourFlux, "indoors/total/vapourFlux[vapourFlux]");
-    Input(gain, "indoors/total/vapourFlux[gain]");
-    Input(temperature, "indoors/temperature[value]");
-    Input(height, "geometry[indoorsAverageHeight]");
-    Input(timeStep, "calendar[timeStepSecs]");
+    Input(conductance).imports("indoors/total/vapourFlux[conductance]");
+    Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]");
+    Input(gain).imports("indoors/total/vapourFlux[gain]");
+    Input(temperature).imports("indoors/temperature[value]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
 
     Output(rh);
     Output(ah);

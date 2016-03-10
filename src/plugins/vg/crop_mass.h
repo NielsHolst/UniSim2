@@ -19,12 +19,16 @@ public:
     void update() final;
     virtual void setProportions() = 0;
 protected:
+    // Inputs
+    bool establishCrop, removeCrop;
     double timeStep, initMass, grossGrowthRate,
         propRoot, propStem, propLeaf, propFruit,
-        costRoot, costStem, costLeaf, costFruit,
+        costRoot, costStem, costLeaf, costFruit;
+    // Outputs
+    double
         root, stem, leaf, fruit, total,
         rootGrowthRate, stemGrowthRate, leafGrowthRate, fruitGrowthRate, totalGrowthRate;
-    bool establishCrop, removeCrop;
+    // Methods
     void allocate();
 private:
     void establish();

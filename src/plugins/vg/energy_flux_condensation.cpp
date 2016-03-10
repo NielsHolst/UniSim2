@@ -25,7 +25,7 @@ PUBLISH(EnergyFluxCondensation)
 EnergyFluxCondensation::EnergyFluxCondensation(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(vapourFlux, 0);
+    Input(vapourFlux).equals(0);
 }
 
 void EnergyFluxCondensation::update() {

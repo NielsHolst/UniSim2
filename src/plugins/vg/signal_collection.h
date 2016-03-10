@@ -8,7 +8,7 @@
 #define VG_SIGNAL_COLLECTION_H
 
 #include <QList>
-#include <usbase/string_map.h>
+#include "string_map.h"
 #include "base_signal.h"
 
 namespace vg {
@@ -21,11 +21,12 @@ public:
     void localReset();
     double signal();
 private:
-    QString ruleStr;
-    QList<const double *> childSignals;
+    // Input
+    QString rule;
     enum Rule {Min, Max, Sum};
-    Rule rule;
-    static UniSim::StringMap<Rule> rules;
+    Rule ruleDecoded;
+    static StringMap<Rule> rules;
+    QList<const double *> childSignals;
     void setRules();
 };
 

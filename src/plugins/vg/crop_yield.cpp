@@ -31,9 +31,9 @@ PUBLISH(CropYield)
 CropYield::CropYield(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(produceMass, "../mass[fruit]");
-    Input(fractionPlantArea, "crop/lai[fractionPlantArea]");
-    Input(fractionDryWeight, 0.03);
+    Input(produceMass).imports("../mass[fruit]");
+    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]");
+    Input(fractionDryWeight).equals(0.03);
     Output(freshWeight);
     Output(dryWeight);
 }

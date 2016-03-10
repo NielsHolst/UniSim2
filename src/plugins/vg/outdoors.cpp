@@ -41,15 +41,15 @@ PUBLISH(Outdoors)
 Outdoors::Outdoors(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(propParRadiation, 0.47);
-    Input(co2, 400.);
-    Input(soilTemperature, 10);
-    Input(temperature, "./records[Tair]");
-    Input(rh, "./records[RHair]");
-    Input(radiation, "./records[GlobRad]");
-    Input(diffuseRadiation, "./records[DifRad]");
-    Input(windSpeed, "./records[WindSpeed]");
-    Input(skyTemperature, "./records[Tsky]");
+    Input(propParRadiation).equals(0.47);
+    Input(co2).equals(400.);
+    Input(soilTemperature).equals(10);
+    Input(temperature).imports("./records[Tair]");
+    Input(rh).imports("./records[RHair]");
+    Input(radiation).imports("./records[GlobRad]");
+    Input(diffuseRadiation).imports("./records[DifRad]");
+    Input(windSpeed).imports("./records[WindSpeed]");
+    Input(skyTemperature).imports("./records[Tsky]");
     Output(parRadiation);
     Output(directRadiation);
     Output(propDirectRadiation);

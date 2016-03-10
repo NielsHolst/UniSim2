@@ -17,7 +17,6 @@ HELP(set_output_folder_path, "set output folder <path>", "sets output folder")
 set_output_folder::set_output_folder(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(set_output_folder);
 }
 
 

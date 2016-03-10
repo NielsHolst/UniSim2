@@ -24,6 +24,7 @@ namespace vg {
 StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    Class(StomatalResistanceBase);
     Output(rsH2O);
     Output(rsCO2);
 }

@@ -72,9 +72,7 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_Escape:
         event->accept();
-        cursor = textCursor();
-        cursor.movePosition(QTextCursor::End);
-        setTextCursor(cursor);
+        moveCursor(QTextCursor::End);
         writePrompt();
         break;
     case Qt::Key_Tab:
@@ -139,11 +137,8 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
 }
 
 void Dialog::receivedFocus(QWidget *old, QWidget *now) {
-    if (!old && now == this) {
-        QTextCursor cursor = textCursor();
-        cursor.movePosition(QTextCursor::End);
-        setTextCursor(cursor);
-    }
+    if (!old && now == this)
+        moveCursor(QTextCursor::End);
 }
 
 QMainWindow* Dialog::mainWindow() {
@@ -170,7 +165,7 @@ void Dialog::writeWelcome() {
             inputFolder = environment().state.dir.input.path(),
             workFolder = environment().state.dir.work.absolutePath(),
             info = latestFile.isEmpty() ? "Welcome to Universal Simulator." : "Welcome back";
-    info += "\nYour work folder is '" + workFolder + "'";
+    info += "\nYour work  folder is '" + workFolder + "'";
     info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";

@@ -14,7 +14,6 @@ HELP(help, "help", "this help")
 help::help(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(help);
     helpText("help");
 }
 

@@ -41,24 +41,19 @@ PUBLISH(CropGrowth)
 CropGrowth::CropGrowth(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(respRoot, 0.03);
-    Input(respStem, 0.03);
-    Input(respLeaf, 0.015);
-    Input(respFruit, 0.01);
-    Input(massRoot, "../mass[root]");
-    Input(massStem, "../mass[stem]");
-    Input(massLeaf, "../mass[leaf]");
-    Input(massFruit, "../mass[fruit]");
-    Input(Tcrop, "../temperature[value]");
-    Input(Pg, "./Pg[value]");
-    Input(timeStep, "calendar[timeStepSecs]");
-
+    Input(respRoot).equals(0.03);
+    Input(respStem).equals(0.03);
+    Input(respLeaf).equals(0.015);
+    Input(respFruit).equals(0.01);
+    Input(massRoot).imports("../mass[root]");
+    Input(massStem).imports("../mass[stem]");
+    Input(massLeaf).imports("../mass[leaf]");
+    Input(massFruit).imports("../mass[fruit]");
+    Input(Tcrop).imports("../temperature[value]");
+    Input(Pg).imports("./Pg[value]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
     Output(maintenanceRespiration);
     Output(grossGrowthRate);
-}
-
-void CropGrowth::reset() {
-    maintenanceRespiration = grossGrowthRate = 0.;
 }
 
 void CropGrowth::update() {

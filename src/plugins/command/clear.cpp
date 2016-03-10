@@ -17,7 +17,6 @@ HELP(clear, "clear", "clears console window")
 clear::clear(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(clear);
 }
 
 void clear::doExecute() {

@@ -5,6 +5,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <stdlib.h>
+#include <base/path.h>
 #include <base/publish.h>
 #include "shelters.h"
 #include "surface_radiation.h"
@@ -35,7 +36,7 @@ PUBLISH(Shelters)
 Shelters::Shelters(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
-    Input(groundArea, "geometry[groundArea]");
+    Input(groundArea).imports("geometry[groundArea]");
     Output(heatCapacityCoversPerGround);
     Output(heatCapacityScreensPerGround);
     Output(screensEffectiveArea);
@@ -43,11 +44,11 @@ Shelters::Shelters(QString name, QObject *parent)
     Output(screensMaxState);
 }
 
-#define Pull(p) si.p = shelter->pullValuePtr<double>(#p)
+#define Pull(p) si.p = shelter->port(#p)->valuePtr<double>()
 
 void Shelters::initialize() {
     infos.clear();
-    auto shelters = seekChildren<ShelterBase*>("*");
+    QVector<ShelterBase*> shelters = Path("./*").resolveMany<ShelterBase>(this);
     for (ShelterBase* shelter : shelters) {
         ShelterInfo si;
         si.sr = shelter->surfaceRadiation();
@@ -62,11 +63,11 @@ void Shelters::initialize() {
         Pull(screensMaxState);
         Pull(area);
         Pull(relativeArea);
-        Model *cover = shelter->seekOneChild<Model*>("cover"),
-              *screens = shelter->seekOneChild<Model*>("screens");
-        si.heatCapacityCover = cover->pullValuePtr<double>("heatCapacity");
-        si.heatCapacityScreens = screens->pullValuePtr<double>("heatCapacity");
-        si.screensEffectiveArea = screens->pullValuePtr<double>("effectiveArea");
+        Box *cover = Path("./cover").resolveOne<Box>(this),
+            *screens = Path("./screens").resolveOne<Box>(this);
+        si.heatCapacityCover = cover->port("heatCapacity")->valuePtr<double>();
+        si.heatCapacityScreens = screens->port("heatCapacity")->valuePtr<double>();
+        si.screensEffectiveArea = screens->port("effectiveArea")->valuePtr<double>();
         infos << si;
     }
 }
@@ -74,15 +75,6 @@ void Shelters::initialize() {
 #define Accumulate(p) p += (*info.p);
 #define AccumulateWeighted(p) p += (*info.p) * (*info.relativeArea);
 #define AccumulateSr(p) sr.p += info.sr->p * (*info.relativeArea)
-
-void Shelters::reset() {
-    ShelterBase::reset();
-    heatCapacityCoversPerGround =
-    heatCapacityScreensPerGround =
-    screensEffectiveArea =
-    screensPerGroundArea =
-    screensMaxState = 0.;
-}
 
 void Shelters::update() {
     SurfaceRadiation sr;

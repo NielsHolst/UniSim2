@@ -5,9 +5,9 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <stdlib.h>
-#include <QMessageBox>
 #include <base/exception.h>
-#include <usbase/test_num.h>
+#include <base/path.h>
+#include <base/test_num.h>
 #include "general.h"
 #include <base/publish.h>
 #include "screens.h"
@@ -39,7 +39,7 @@ PUBLISH(Screens)
 Screens::Screens(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
-    Output(bool, areHorizontal);
+    Output(areHorizontal);
     Output(maxState);
     Output(airTransmissivity);
     Output(haze);
@@ -49,24 +49,24 @@ Screens::Screens(QString name, QObject *parent)
 }
 
 void Screens::initialize() {
-    auto screens = seekChildren<Model*>("*");
+    QVector<Box*> screens = Path("./*", this).resolveMany<Box>();
     screenInfos = collectScreenInfos(screens);
 }
 
-QVector<Screens::ScreenInfo> Screens::collectScreenInfos(QList<Model*> screenModels) {
+QVector<Screens::ScreenInfo> Screens::collectScreenInfos(QVector<Box*> screenModels) {
     QVector<Screens::ScreenInfo> screenInfos;
-    for (auto screen: screenModels) {
+    for (Box *screen: screenModels) {
         screenInfos << ScreenInfo {
-            screen->pullValuePtr<bool>("isHorizontal"),
-            screen->pullValuePtr<double>("transmissivityLightNet"),
-            screen->pullValuePtr<double>("absorptivityLwInnerNet"),
-            screen->pullValuePtr<double>("absorptivityLwOuterNet"),
-            screen->pullValuePtr<double>("state"),
-            screen->pullValuePtr<double>("unhazed"),
-            screen->pullValuePtr<double>("transmissivityAirNet"),
-            screen->pullValuePtr<double>("resistance"),
-            screen->pullValuePtr<double>("heatCapacity"),
-            screen->pullValuePtr<double>("effectiveArea")
+            screen->port("isHorizontal")->valuePtr<bool>(),
+            screen->port("transmissivityLightNet")->valuePtr<double>(),
+            screen->port("absorptivityLwInnerNet")->valuePtr<double>(),
+            screen->port("absorptivityLwOuterNet")->valuePtr<double>(),
+            screen->port("state")->valuePtr<double>(),
+            screen->port("unhazed")->valuePtr<double>(),
+            screen->port("transmissivityAirNet")->valuePtr<double>(),
+            screen->port("resistance")->valuePtr<double>(),
+            screen->port("heatCapacity")->valuePtr<double>(),
+            screen->port("effectiveArea")->valuePtr<double>()
         };
     }
     return screenInfos;

@@ -18,7 +18,6 @@ class Shelters : public ShelterBase
 public:
     Shelters(QString name, QObject *parent);
     void initialize();
-    void reset();
     void update();
 
 private:

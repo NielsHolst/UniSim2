@@ -5,7 +5,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <base/exception.h>
-#include <usbase/test_num.h>
+#include <base/test_num.h>
 #include "fruit_crop_mass.h"
 #include <base/publish.h>
 
@@ -49,21 +49,21 @@ PUBLISH(FruitCropMass)
 FruitCropMass::FruitCropMass(QString name, QObject *parent)
     : CropMass(name, parent)
 {
-    Input(vegPropRoot, 0.);
-    Input(vegPropStem, 0.5);
-    Input(vegPropLeaf, 0.5);
-    Input(vegPropFruit, 0.);
-    Input(reproPropRoot, 0.);
-    Input(reproPropStem, 0.);
-    Input(reproPropLeaf, 0.);
-    Input(reproPropFruit, 1.);
-    Input(tempSumReproductive, 975.);
-    Input(tempMaxReproductive, 30.);
-    Input(fruitFactor, 1.);
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(tempSum, "../physTime[total]");
-    Input(lai, "../lai[value]");
-    InputRef(bool, maxLaiReached, "../lai[maxLaiReached]");
+    Input(vegPropRoot).equals(0.);
+    Input(vegPropStem).equals(0.5);
+    Input(vegPropLeaf).equals(0.5);
+    Input(vegPropFruit).equals(0.);
+    Input(reproPropRoot).equals(0.);
+    Input(reproPropStem).equals(0.);
+    Input(reproPropLeaf).equals(0.);
+    Input(reproPropFruit).equals(1.);
+    Input(tempSumReproductive).equals(975.);
+    Input(tempMaxReproductive).equals(30.);
+    Input(fruitFactor).equals(1.);
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(tempSum).imports("../physTime[total]");
+    Input(lai).imports("../lai[value]");
+    Input(maxLaiReached).imports("../lai[maxLaiReached]");
 }
 
 void FruitCropMass::setProportions() {
@@ -95,8 +95,8 @@ void FruitCropMass::setProportions() {
     }
     double total = propRoot + propStem + propLeaf + propFruit;
     if (TestNum::ne(total, 1.)) {
-        QString msg {"Proportions do not add to 1: root(%1)+stem(%2)+leaf(%3)+fruit(%4)=%5"};
-        throw Exception(msg.arg(propRoot).arg(propStem).arg(propLeaf).arg(propFruit).arg(total), this);
+        QString msg {"Proportions do not add up to 1: root(%1)+stem(%2)+leaf(%3)+fruit(%4)=%5"};
+        throw Exception(msg.arg(propRoot).arg(propStem).arg(propLeaf).arg(propFruit).arg(total), QString::number(total), this);
     }
 }
 

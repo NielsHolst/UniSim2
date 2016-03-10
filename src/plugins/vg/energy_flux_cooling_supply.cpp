@@ -36,17 +36,13 @@ PUBLISH(EnergyFluxCoolingSupply)
 EnergyFluxCoolingSupply::EnergyFluxCoolingSupply(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(airSupplyMax, "cooling/airSupplyMax[value]");
-    Input(energyDemand, "cooling/demand[value]");
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(outdoorsTemperature, "outdoors[temperature]");
-    Input(height,"geometry[indoorsAverageHeight]");
-    Input(airTransmissivity, "construction/shelters[airTransmissivity]");
+    Input(airSupplyMax).imports("cooling/airSupplyMax[value]");
+    Input(energyDemand).imports("cooling/demand[value]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(airTransmissivity).imports("construction/shelters[airTransmissivity]");
     Output(value);
-}
-
-void EnergyFluxCoolingSupply::reset() {
-    value =  0.;
 }
 
 void EnergyFluxCoolingSupply::update() {

@@ -18,7 +18,6 @@ HELP(run, "run", "runs the root box")
 run::run(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(run);
 }
 
 void run::doExecute() {

@@ -32,9 +32,9 @@ PUBLISH(PidControlElement)
 PidControlElement::PidControlElement(QString name, QObject *parent)
     : BaseControlElement(name, parent)
 {
-    Input(Kprop, 0.5);
-    Input(Kint, 0.);
-    Input(Kderiv, 0.);
+    Input(Kprop).equals(0.5);
+    Input(Kint).equals(0.);
+    Input(Kderiv).equals(0.);
     Output(errorIntegral);
     Output(errorDerivative);
 }

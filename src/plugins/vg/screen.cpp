@@ -49,19 +49,19 @@ PUBLISH(Screen)
 Screen::Screen(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(shelterArea, "../..[area]");
-    Input(position, "");
-    Input(layer, "");
-    Input(transmissivityLight, 0.41);
-    Input(emissivityInner, 0.62);
-    Input(emissivityOuter, 0.06);
-    Input(U, infinity());
-    Input(energyLossReduction, 0.4);
-    Input(haze, 0.);
-    Input(specificHeatCapacity, 840.);
-    Input(transmissivityAir, 0.8);
-    Input(transmissivityAirExponent, 4.);
-    Input(state, 0.);
+    Input(shelterArea).imports("../..[area]");
+    Input(position);
+    Input(layer);
+    Input(transmissivityLight).equals(0.41);
+    Input(emissivityInner).equals(0.62);
+    Input(emissivityOuter).equals(0.06);
+    Input(U).equals(infinity());
+    Input(energyLossReduction).equals(0.4);
+    Input(haze).equals(0.);
+    Input(specificHeatCapacity).equals(840.);
+    Input(transmissivityAir).equals(0.8);
+    Input(transmissivityAirExponent).equals(4.);
+    Input(state).equals(0.);
 
     Output(transmissivityLightNet);
     Output(absorptivityLwInnerNet);
@@ -71,7 +71,7 @@ Screen::Screen(QString name, QObject *parent)
     Output(heatCapacity);
     Output(transmissivityAirNet);
     Output(effectiveArea);
-    Output(bool, isHorizontal);
+    Output(isHorizontal);
 }
 
 void Screen::reset() {

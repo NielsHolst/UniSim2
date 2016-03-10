@@ -5,9 +5,11 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <stdlib.h>
-#include "general.h"
 #include <base/publish.h>
+#include "general.h"
 #include "leaf_transpiration.h"
+#include "vapour_flux_base.h"
+
 using std::max;
 
 using namespace base;
@@ -38,18 +40,17 @@ PUBLISH(LeafTranspiration)
 LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(lai, "crop/lai[value]");
-    Input(fractionPlantArea, "crop/lai[fractionPlantArea]");
-    Input(indoorsAh, "indoors/humidity[ah]");
-    Input(radiationAbsorbed, "../radiationAbsorbed[value]");
-    Input(leafTemperature, "../Temperature[value]");
-    Input(rbH2O, "../rb[rbH2O]");
-    Input(rsH2O, "../rs[rsH2O]");
+    Input(lai).imports("crop/lai[value]");
+    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]");
+    Input(indoorsAh).imports("indoors/humidity[ah]");
+    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]");
+    Input(leafTemperature).imports("../Temperature[value]");
+    Input(rbH2O).imports("../rb[rbH2O]");
+    Input(rsH2O).imports("../rs[rsH2O]");
     Output(leafAh);
 }
 
 void LeafTranspiration::reset() {
-    VapourFluxBase::reset();
     leafAh = indoorsAh;
 }
 

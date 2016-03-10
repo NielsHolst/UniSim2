@@ -36,19 +36,18 @@ PUBLISH(EnergyFluxFloor)
 EnergyFluxFloor::EnergyFluxFloor(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(Uindoors, 7.5);
-    Input(Usoil, 7.5);
-    Input(heatCapacity, 42000.);
-    Input(emissivity, 0.85);    // concrete
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(soilTemperature, "outdoors[soilTemperature]");
-    Input(height,"geometry[indoorsAverageHeight]");
-    Input(timeStep, "calendar[timeStepSecs]");
+    Input(Uindoors).equals(7.5);
+    Input(Usoil).equals(7.5);
+    Input(heatCapacity).equals(42000.);
+    Input(emissivity).equals(0.85);    // concrete
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(soilTemperature).imports("outdoors[soilTemperature]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
     Output(temperature);
 }
 
 void EnergyFluxFloor::reset() {
-    EnergyFluxBase::reset();
     temperature = 18.;
 }
 

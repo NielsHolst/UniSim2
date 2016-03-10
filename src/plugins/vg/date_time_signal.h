@@ -17,6 +17,7 @@ public:
     DateTimeSignal(QString name, QObject *parent);
     double signal();
 private:
+    // Inputs
     int beginDay, endDay, day;
     QTime beginTime, endTime, time;
     double signalInside, signalOutsideTimeOnly, signalOutside;

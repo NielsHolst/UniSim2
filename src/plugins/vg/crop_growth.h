@@ -15,14 +15,15 @@ class CropGrowth : public base::Box
 {
 public:
     CropGrowth(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:
+    // Inputs
     double Tcrop, Pg, timeStep,
         massRoot, massStem, massLeaf, massFruit, massTotal,
         respRoot, respStem, respLeaf, respFruit,
         grossGrowthRate, maintenanceRespiration;
+    // Outputs
     double maintenanceRespirationRate();
 };
 } //namespace

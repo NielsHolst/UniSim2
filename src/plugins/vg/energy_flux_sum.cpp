@@ -4,9 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <qmessagebox.h>
 #include "energy_flux_sum.h"
 #include "general.h"
+#include <base/path.h>
+#include <base/port.h>
 #include <base/publish.h>
 
 using namespace base;
@@ -34,9 +35,9 @@ EnergyFluxSum::EnergyFluxSum(QString name, QObject *parent)
 
 void EnergyFluxSum::initialize() {
     fluxes.clear();
-    auto children = seekChildren<Model*>("*");
-    for (Model *model : children)
-        fluxes << model->peekValuePtr<double>("value");;
+    QVector<Port*> ports = Path("./*[value]", this).resolveMany<Port>(this);
+    for (Port *port : ports)
+        fluxes << port->valuePtr<double>();;
 }
 
 void EnergyFluxSum::update() {

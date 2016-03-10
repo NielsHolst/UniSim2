@@ -16,7 +16,6 @@ class LeafRadiationAbsorbed : public base::Box
 public:
     LeafRadiationAbsorbed(QString name, QObject *parent);
     void initialize();
-    void reset();
     void update();
 private:
     // Inputs

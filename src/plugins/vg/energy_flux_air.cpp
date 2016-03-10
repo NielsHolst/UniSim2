@@ -30,11 +30,11 @@ PUBLISH(EnergyFluxAir)
 EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(airFlux, 0.);
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(outdoorsTemperature, "outdoors[temperature]");
-    Input(height,"geometry[indoorsAverageHeight]");
-    Input(timeStep, "calendar[timeStepSecs]");
+    Input(airFlux).equals(0);
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
 }
 
 void EnergyFluxAir::update() {

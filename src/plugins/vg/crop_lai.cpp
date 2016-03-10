@@ -27,8 +27,8 @@ namespace vg {
 CropLai::CropLai(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(laiStartPerPlant, 0.3);
-    Input(fractionPlantArea, 1.);
+    Input(laiStartPerPlant).equals(0.3);
+    Input(fractionPlantArea).equals(1.);
     Output(value);
 }
 

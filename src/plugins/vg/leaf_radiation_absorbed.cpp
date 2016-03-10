@@ -5,10 +5,11 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <base/exception.h>
-#include <usbase/test_num.h>
-#include "leaf_radiation_absorbed.h"
-#include "general.h"
+#include <base/path.h>
 #include <base/publish.h>
+#include <base/test_num.h>
+#include "general.h"
+#include "leaf_radiation_absorbed.h"
 
 using std::max;
 using namespace base;
@@ -58,25 +59,25 @@ PUBLISH(LeafRadiationAbsorbed)
 LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(kLw, 0.8);
-    Input(emissivity, 0.8);
-    Input(xGaussLowerside, "..[xGaussLowerside]");
-    Input(wGaussLowerside, "..[wGaussLowerside]");
-    Input(xGaussUpperside, "..[xGaussUpperside]");
-    Input(wGaussUpperside, "..[wGaussUpperside]");
-    Input(lai, "crop/lai[value]");
-    Input(indoorsLight, "indoors/light[total]");
-    Input(lightAbsorptivity, "../photosynthesis[absorptivity]");
-    Input(growthLightLw, "actuators/growthlights[longWaveEmission]");
-    Input(growthLightViewFactor, 1.);
-    Input(floorTemperature, "energyFlux/floor[temperature]");
-    Input(floorEmissivity, "energyFlux/floor[emissivity]");
-    Input(leafTemperature, "../temperature[value]");
-    Input(coverTemperature, "given/energyFlux/shelter[coverTemperature]");
-    Input(screensTemperature, "given/energyFlux/shelter[screensTemperature]");
-    Input(screensMaxState, "construction/shelters[screensMaxState]");
-    Input(shelterOutgoingLwAbsorptivity, "construction/shelters[outgoingLwAbsorptivity]");
-    Input(coverPerGroundArea, "construction/geometry[coverPerGroundArea]");
+    Input(kLw).equals(0.8);
+    Input(emissivity).equals(0.8);
+    Input(xGaussLowerside).imports("..[xGaussLowerside]");
+    Input(wGaussLowerside).imports("..[wGaussLowerside]");
+    Input(xGaussUpperside).imports("..[xGaussUpperside]");
+    Input(wGaussUpperside).imports("..[wGaussUpperside]");
+    Input(lai).imports("crop/lai[value]");
+    Input(indoorsLight).imports("indoors/light[total]");
+    Input(lightAbsorptivity).imports("../photosynthesis[absorptivity]");
+    Input(growthLightLw).imports("actuators/growthlights[longWaveEmission]");
+    Input(growthLightViewFactor).equals(1.);
+    Input(floorTemperature).imports("energyFlux/floor[temperature]");
+    Input(floorEmissivity).imports("energyFlux/floor[emissivity]");
+    Input(leafTemperature).imports("../temperature[value]");
+    Input(coverTemperature).imports("given/energyFlux/shelter[coverTemperature]");
+    Input(screensTemperature).imports("given/energyFlux/shelter[screensTemperature]");
+    Input(screensMaxState).imports("construction/shelters[screensMaxState]");
+    Input(shelterOutgoingLwAbsorptivity).imports("construction/shelters[outgoingLwAbsorptivity]");
+    Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
 
     Output(lightAbsorbed);
     Output(heatingAbsorbed);
@@ -87,23 +88,15 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
 }
 
 void LeafRadiationAbsorbed::initialize() {
-    auto pipes = seekMany<Model*>("actuators/heating/pipes/*");
-    for (Model *pipe : pipes) {
+    QVector<Box*> pipes = Path("actuators/heating/pipes/*").resolveMany<Box>(this);
+    for (Box *pipe : pipes) {
         pipeInfos << PipeInfo {
-                        pipe->pullValuePtr<double>("length"),
-                        pipe->pullValuePtr<double>("diameter"),
-                        pipe->pullValuePtr<double>("temperature"),
-                        pipe->pullValuePtr<double>("emissivity")
+                        pipe->port("length")->valuePtr<double>(),
+                        pipe->port("diameter")->valuePtr<double>(),
+                        pipe->port("temperature")->valuePtr<double>(),
+                        pipe->port("emissivity")->valuePtr<double>()
                      };
     }
-}
-
-void LeafRadiationAbsorbed::reset() {
-    lightAbsorbed =
-    heatingAbsorbed =
-    growthLightLwAbsorbed =
-    shelterLoss =
-    value = 0.;
 }
 
 void LeafRadiationAbsorbed::update() {

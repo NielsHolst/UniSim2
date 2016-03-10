@@ -53,16 +53,16 @@ PUBLISH(DateTimeSignal)
 
 DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input(int, beginDay, 1);
-    Input(int, endDay, 365);
-    Input(QTime, beginTime, QTime(0,0));
-    Input(QTime, endTime, QTime(24,0));
-    InputRef(int, day, "calendar[dayOfyear]");
-    InputRef(QTime, time, "calendar[timeOfDay]");
-    Input(signalOutside, 0.);
-    Input(signalOutsideTimeOnly, 0.);
-    Input(signalInside, 1.);
-    Input(bool, circadian, true);
+    Input(beginDay).equals(1);
+    Input(endDay).equals(365);
+    Input(beginTime).equals(QTime(0,0));
+    Input(endTime).equals(QTime(24,0));
+    Input(day).imports("calendar[dayOfyear]");
+    Input(time).imports("calendar[timeOfDay]");
+    Input(signalOutside).equals(0.);
+    Input(signalOutsideTimeOnly).equals(0.);
+    Input(signalInside).equals(1.);
+    Input(circadian).equals(true);
 }
 
 inline QDate date(int day) {

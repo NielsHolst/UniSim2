@@ -35,7 +35,7 @@ private:
     QVector<ScreenInfo> screenInfos;
 
     // Methods
-    QVector<ScreenInfo> collectScreenInfos(QList<Model*> screenModels);
+    QVector<ScreenInfo> collectScreenInfos(QVector<Box *> screenModels);
     void updateRadiation();
 };
 

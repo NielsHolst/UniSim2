@@ -8,7 +8,6 @@
 #define VG_SCREEN_H
 
 #include <base/box.h>
-#include <usbase/string_map.h>
 
 namespace vg {
 

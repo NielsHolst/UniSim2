@@ -11,7 +11,6 @@ PUBLISH(Sequence)
 Sequence::Sequence(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Sequence);
     Input(counter).imports("/*[step]");
     Input(counterMax).imports("/*[steps]");
     Input(min).equals(0);

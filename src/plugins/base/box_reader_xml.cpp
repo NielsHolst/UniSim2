@@ -67,7 +67,7 @@ void BoxReaderXml::setElementType() {
 }
 
 void BoxReaderXml::setBoxAttributes() {
-    // If box has no "class" attribute the default to "box" class
+    // If box has no "class" attribute then default to "box" class
     if (!_reader.attributes().hasAttribute("class"))
         _builder->box("box");
     // Otherwise the "class" attribute will be picked up in the loop

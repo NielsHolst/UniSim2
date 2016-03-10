@@ -33,11 +33,11 @@ PUBLISH(EnergyFluxHeatingDemand)
 EnergyFluxHeatingDemand::EnergyFluxHeatingDemand(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(givenEnergyFlux, "given/energyFlux[value]");
-    Input(heatingSetpoint, "setpoints/temperature/heating[value]");
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(height, "geometry[indoorsAverageHeight]");
-    Input(timeStep,"calendar[timeStepSecs]");
+    Input(givenEnergyFlux).imports("given/energyFlux[value]");
+    Input(heatingSetpoint).imports("setpoints/temperature/heating[value]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
 }
 
 void EnergyFluxHeatingDemand::update() {

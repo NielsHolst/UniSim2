@@ -13,7 +13,6 @@ PUBLISH(Sandy)
 Sandy::Sandy(QString name, QObject *parent)
     : Box(name, parent)
 {
-//    Class(Sandy);
     Input(xMin).equals(0);
     Input(xMax).equals(1);
     Input(yMax).equals(1);

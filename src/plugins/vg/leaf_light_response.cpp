@@ -45,14 +45,14 @@ const double O2i = 210;     // [G94, p.80] O2 partial pressure inside stomata [p
 LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(rsCO2, "../../rs[rsCO2]");
-    Input(rbCO2, "../../rb[rbCO2]");
-    Input(Tleaf, "../../temperature[value]");
-    Input(co2Air, "indoors/co2[value]");
-    Input(rhoChl, 0.45);
-    Input(theta, 0.7);
-    Input(frParAbs, 0.3);
-    Input(concEnzyme, 87);
+    Input(rsCO2).imports("../../rs[rsCO2]");
+    Input(rbCO2).imports("../../rb[rbCO2]");
+    Input(Tleaf).imports("../../temperature[value]");
+    Input(co2Air).imports("indoors/co2[value]");
+    Input(rhoChl).equals(0.45);
+    Input(theta).equals(0.7);
+    Input(frParAbs).equals(0.3);
+    Input(concEnzyme).equals(87);
     Output(LUE);
     Output(Pnmax);
     Output(Pgmax);

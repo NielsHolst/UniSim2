@@ -16,7 +16,6 @@ HELP(update, "update", "updates the root box")
 update::update(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(update);
 }
 
 void update::doExecute() {

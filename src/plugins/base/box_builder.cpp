@@ -97,7 +97,8 @@ const Port* BoxBuilder::currentPort() const {
 }
 
 Box* BoxBuilder::content() {
-    _content->amendFamily();
+    if (_content)
+        _content->amendFamily();
     return _content;
 }
 

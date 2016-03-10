@@ -16,7 +16,6 @@ HELP(test, "test", "loads test box")
 test::test(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(test);
 }
 
 void test::doExecute() {

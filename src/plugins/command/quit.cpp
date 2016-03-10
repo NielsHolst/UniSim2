@@ -14,7 +14,6 @@ HELP(quit, "quit", "close console")
 quit::quit(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(quit);
     helpText("quit");
 }
 

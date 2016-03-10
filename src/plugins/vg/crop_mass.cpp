@@ -47,19 +47,19 @@ namespace vg {
 CropMass::CropMass(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(timeStep, "calendar[timeStepSecs]");
-    Input(grossGrowthRate, "../growth[grossGrowthRate]");
-    InputRef(bool, establishCrop, "../periods[flagUp]");
-    InputRef(bool, removeCrop, "../periods[flagDown]");
-    Input(initMass, 10);
-    Input(propRoot, 0.);
-    Input(propStem, 0.5);
-    Input(propLeaf, 0.5);
-    Input(propFruit, 0.);
-    Input(costRoot, 0.39);
-    Input(costStem, 0.45);
-    Input(costLeaf, 0.39);
-    Input(costFruit, 0.35);
+    Input(establishCrop).imports("../periods[flagUp]");
+    Input(removeCrop).imports("../periods[flagDown]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(grossGrowthRate).imports("../growth[grossGrowthRate]");
+    Input(initMass).equals(10);
+    Input(propRoot).equals(0.);
+    Input(propStem).equals(0.5);
+    Input(propLeaf).equals(0.5);
+    Input(propFruit).equals(0.);
+    Input(costRoot).equals(0.39);
+    Input(costStem).equals(0.45);
+    Input(costLeaf).equals(0.39);
+    Input(costFruit).equals(0.35);
 
     Output(root);
     Output(stem);

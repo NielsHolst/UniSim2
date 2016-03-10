@@ -1,6 +1,6 @@
 Simulation t_urticae( steps = 1000 )
 {
-	Sequence temp ( min = 10
+	Sequence temp ( min = 15
 		              max = 40 )
 	Sandy sexRatio ( x = temp[value]
 	                 yMax = 0.7432
@@ -51,6 +51,6 @@ Simulation t_urticae( steps = 1000 )
 				 	   a = 0.5189
 					   b = 0.0678 )
 OutputR ( xAxis = temp[value]
-		      layout = "facetted"
-					width = 8 )
+		      clear = TRUE
+		      layout = "facetted" )
 }

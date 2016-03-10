@@ -15,7 +15,6 @@ class VapourFluxBase : public base::Box
 {
 public:
     VapourFluxBase(QString name, QObject *parent);
-    void reset();
 protected:
     // Outputs
     double conductance, gain, vapourFlux;

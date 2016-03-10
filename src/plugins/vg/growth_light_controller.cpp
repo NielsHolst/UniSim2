@@ -4,11 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/test_num.h>
-#include <QList>
-#include <QMessageBox>
-#include "growth_light_controller.h"
+#include <base/path.h>
 #include <base/publish.h>
+#include <base/test_num.h>
+#include "growth_light_controller.h"
 
 using namespace base;
 
@@ -29,7 +28,7 @@ PUBLISH(GrowthLightController)
 GrowthLightController::GrowthLightController(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Output(bool, signal);
+    Output(signal);
 }
 
 void GrowthLightController::amend() {
@@ -39,8 +38,9 @@ void GrowthLightController::amend() {
 }
 
 const bool * GrowthLightController::getFlag(QString name) {
-    auto model = seekOneChild<Model*>(name);
-    return model->pullValuePtr<bool>("flag");
+    QString path{"./%1[flag]"};
+    Port *port = Path(path.arg(name), this).resolveOne<Port>(this);
+    return port->valuePtr<bool>();
 }
 
 void GrowthLightController::reset() {

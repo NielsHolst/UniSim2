@@ -14,7 +14,6 @@ PUBLISH(Simulation)
 Simulation::Simulation(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(Simulation);
     Input(iterations).equals(1);
     Input(steps).equals(1);
     Output(iteration).noReset().format("factor");

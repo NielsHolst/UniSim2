@@ -22,7 +22,6 @@ HELP(save_grammar, "save grammar", "save grammar for Atom editor")
 save::save(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(save);
 }
 
 void save::doExecute() {

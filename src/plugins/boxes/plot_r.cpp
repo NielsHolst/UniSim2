@@ -62,10 +62,11 @@ QString PlotR::toScript() {
     s << "    "
       << "unisim_plot_" << layout << "(df, "
       << xLabel << ", "
-      << "c(" << portLabels.join(", ") << "), ";
+      << "c(" << portLabels.join(", ") << ")";
 
     if (convert<LayoutR>(layout) == Facetted) {
-        s << "ncol=" << dim("ncol") << ", "
+        s << ", "
+          << "ncol=" << dim("ncol") << ", "
           << "nrow=" << dim("nrow");
     }
     s << "),\n";

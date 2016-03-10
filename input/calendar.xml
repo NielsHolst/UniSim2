@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box class="Simulation" name ="calendar_demo">
 	<port name="steps" value="240"/>
-	<port name="step" track="off"/>
 	<box class="Calendar" name ="cal">
-		<port name="dayLength" track="on" page="Day"/>
-		<port name="sunrise" track="on" page="Sun"/>
-		<port name="sunset" track="on" page="Sun"/>
+		<port name="dayLength" plot="Day"/>
+		<port name="sunrise" plot="Sun"/>
+		<port name="sunset" plot="Sun"/>
 	</box>
+	<!--
+	<box class="OutputR">
+		<port name="width" value="6"/>
+		<port name="height" value="4"/>
+	</box>
+	-->
 </box>
