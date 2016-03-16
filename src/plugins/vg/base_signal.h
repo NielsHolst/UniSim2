@@ -18,9 +18,12 @@ public:
     void reset() final;
     void update() final;
     virtual void localReset() {}
-    virtual double signal() = 0;
+    virtual double computeSignal() = 0;
 private:
-    double signalReset, _signal;
+    // Input
+    double signalReset;
+    // Output
+    double signal;
     bool flag, flagUp, flagDown;
 };
 } //namespace

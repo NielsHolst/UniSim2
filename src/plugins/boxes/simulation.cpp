@@ -1,3 +1,4 @@
+#include <base/dialog.h>
 #include <base/environment.h>
 #include <base/path.h>
 #include <base/port.h>
@@ -32,7 +33,7 @@ void Simulation::initialize() {
 
 void Simulation::collectTrackedPorts() {
     _trackedPorts.clear();
-    QVector<Port*> all = Path("*{Port}").resolve<Port>();
+    QVector<Port*> all = Path("*{Port}").resolveMany<Port>();
     for (Port *port : all) {
         if (port->trackPtr())
             _trackedPorts << port;
@@ -51,13 +52,18 @@ void Simulation::makePortLabelsUnique() {
 }
 
 void Simulation::run() {
+    dialog().information("initialize...");
     initializeFamily();
     for (iteration = 0; iteration < iterations; ++iteration) {
+        dialog().information("reset...");
         resetFamily();
+        dialog().information("update...");
         for (step = 1; step <= steps; ++step)
             updateFamily();
+        dialog().information("cleanup...");
         cleanupFamily();
     }
+    dialog().information("debrief...");
     debriefFamily();
 }
 
@@ -73,14 +79,14 @@ void Simulation::openFileStream() {
     filePath.replace("\\", "/");
     _file.setFileName(filePath);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        throw Exception("Cannot open file for output", filePath, this);
+        ThrowException("Cannot open file for output").value(filePath).context(this);
     _stream.setDevice(&_file);
 }
 
 void Simulation::writeDataFrame() {
     // Check ports
     if (_trackedPorts.isEmpty())
-        throw Exception("No ports are being tracked");
+        ThrowException("No ports are being tracked");
 
     removeObsoletePorts();
 

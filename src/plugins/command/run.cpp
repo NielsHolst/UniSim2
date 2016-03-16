@@ -23,7 +23,7 @@ run::run(QString name, QObject *parent)
 void run::doExecute() {
     Environment &env(environment());
     if (_args.size() > 2)
-        throw Exception("Command 'run' takes at most one argument");
+        ThrowException("Command 'run' takes at most one argument");
     doLoad();
     if (!env.state.command->hasError())
         doRun();
@@ -39,11 +39,12 @@ void run::doRun() {
     Q_ASSERT(root);
     QTime time;
     time.start();
+    QString errorMsg;
     try {
         root->run();
     }
     catch (Exception &ex) {
-        throw Exception("Run: " + root->objectName() + " interrupted\n" + ex.fullText());
+        errorMsg = QString("\n") + ex.what();
     }
     int dt = time.elapsed();
     QString units = "msecs";
@@ -51,8 +52,14 @@ void run::doRun() {
         dt /= 1000;
         units = "secs";
     }
-    QString info{"Finished after %1 %2"};
-    dialog().information(info.arg(dt).arg(units));
+    if (errorMsg.isEmpty()) {
+        QString info{"Finished after %1 %2"};
+        dialog().information(info.arg(dt).arg(units));
+    }
+    else {
+        QString info{"Interrupted after %1 %2"};
+        dialog().error(info.arg(dt).arg(units) + errorMsg);
+    }
 }
 
 }

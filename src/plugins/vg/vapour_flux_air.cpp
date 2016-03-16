@@ -29,10 +29,10 @@ PUBLISH(VapourFluxAir)
 VapourFluxAir::VapourFluxAir(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(airFlux, 0.);
-    Input(indoorsAh, "indoors/humidity[ah]");
-    Input(outdoorsAh, "outdoors[ah]");
-    Input(height, "geometry[indoorsAverageHeight]");
+    Input(airFlux).equals(0.);
+    Input(indoorsAh).imports("indoors/humidity[ah]");
+    Input(outdoorsAh).imports("outdoors[ah]");
+    Input(height).imports("geometry[indoorsAverageHeight]");
 }
 
 void VapourFluxAir::update() {

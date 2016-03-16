@@ -26,7 +26,7 @@ void PageR::initialize() {
     // Validate input
     convert<LayoutR>(layout);
     // Find plots on this page
-    _plots = Path("./*{PlotR}", this).resolve<PlotR>();
+    _plots = Path("./*{PlotR}", this).resolveMany<PlotR>();
 }
 
 QString PageR::toString() {

@@ -24,7 +24,7 @@ FixedSignal::FixedSignal(QString name, QObject *parent)
     Input(input).equals(0);
 }
 
-double FixedSignal::signal() {
+double FixedSignal::computeSignal() {
     return input;
 }
 

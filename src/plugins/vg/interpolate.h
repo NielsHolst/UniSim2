@@ -21,7 +21,7 @@ template<class X> double interpolate(const DataGrid &matrix, X rowValue, X colVa
 template<class X, class Y> QPair<int,int> bracket(const QVector<X> increasing, Y x) {
     if (increasing.isEmpty()) {
         QString msg{"Cannot bracket value '%1' in empty vector"};
-        throw base::Exception(msg.arg(x));
+        ThrowException(msg.arg(x));
     }
 
     auto p1 = increasing.constBegin();
@@ -46,7 +46,7 @@ double interpolate(QPair<X,Y> p1, QPair<X,Y> p2, Z x) {
         if (x == p1.first)
             return p1.second;
         QString msg{"Cannot interpolate x (%5) between two points with same x: (%1,%2) and (%3,%4)"};
-        throw base::Exception(msg.arg(p1.first).arg(p1.second).arg(p2.first).arg(p2.second).arg(x));
+        ThrowException(msg.arg(p1.first).arg(p1.second).arg(p2.first).arg(p2.second).arg(x));
     }
     return double(x - p1.first)/(p2.first - p1.first)*(p2.second - p1.second) + p1.second;
 
@@ -61,7 +61,7 @@ template<class X, class Y>
 double interpolate(const QMap<X,Y> &xy, X x) {
     if (xy.isEmpty()) {
         QString msg{"Cannot interpolate value '%1' from empty (x,y)-table"};
-        throw base::Exception(msg.arg(x));
+        ThrowException(msg.arg(x));
     }
     Y lastY = xy[0];
     auto low = xy.begin();
@@ -80,7 +80,7 @@ double interpolate(const QMap<X,Y> &xy, X x) {
 template<class X> double interpolate(const DataGrid &matrix, X rowValue, X colValue) {
     if (matrix.rowNumber() < 2 || matrix.columnNumber() < 3) {
         QString msg{"Matrix (%1x%2) must at least be 2x2 to perform interpolation"};
-        throw base::Exception(msg.arg(matrix.rowNumber()).arg(matrix.columnNumber()-1));
+        ThrowException(msg.arg(matrix.rowNumber()).arg(matrix.columnNumber()-1));
     }
     X x{rowValue}, y{colValue};
     QStringList xs = matrix.rowNames(), ys = matrix.columnNames();
@@ -91,7 +91,7 @@ template<class X> double interpolate(const DataGrid &matrix, X rowValue, X colVa
         xIncreasing << s.toDouble(&ok);
         if (!ok) {
             QString msg{"Cannot interpolate. This is not a number: '%1'"};
-            throw base::Exception(msg.arg(s));
+            ThrowException(msg.arg(s));
         }
     }
     for (QString s : ys) {
@@ -99,7 +99,7 @@ template<class X> double interpolate(const DataGrid &matrix, X rowValue, X colVa
         yIncreasing << s.toDouble(&ok);
         if (!ok) {
             QString msg{"Cannot interpolate. This is not a number: '%1'"};
-            throw base::Exception(msg.arg(s));
+            ThrowException(msg.arg(s));
         }
     }
 

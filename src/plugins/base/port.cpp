@@ -10,7 +10,7 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
     : QObject(parent), _valuePtr(0), _valueType(Null), _importPath(""),
-      _accessFlags(Read), _reset(false), _track(this)
+      _access(Input), _reset(false), _track(this)
 {
     Class(Port);
     setObjectName(name);
@@ -31,14 +31,12 @@ Port::Port(QString name, QObject *parent, bool orphan)
 // Configure
 
 Port& Port::imports(QString pathToPort) {
-    if (!(_accessFlags & Write))
-        throw Exception("Cannot import port value because port is not for input", "", this);
     _importPath = pathToPort;
     return *this;
 }
 
-Port& Port::access(unsigned accessFlags) {
-    _accessFlags = accessFlags;
+Port& Port::access(Access acc) {
+    _access = acc;
     return *this;
 }
 
@@ -62,7 +60,7 @@ QStringList Port::attributes() {
 
 Port& Port::attribute(QString name, QString value) {
     if (!_attributes.contains(name))
-        throw Exception("Unknown attribute", name, this);
+        ThrowException("Unknown attribute").value(name).context(this);
     _attributes[name] = value;
     return *this;
 }
@@ -87,7 +85,7 @@ Port& Port::transform(PortTransform tr) {
 
 QString Port::attribute(QString name) const {
     if (!_attributes.contains(name))
-        throw Exception("Unknown attribute", name, this);
+        ThrowException("Unknown attribute").value(name).context(this);
     return _attributes.value(name);
 }
 
@@ -108,9 +106,9 @@ void Port::resolveImports() {
     if (_importPath.isEmpty())
         return;
     Box *context = boxParent();
-    _importPorts = Path(_importPath, context).resolve<Port>(-1,this);
+    _importPorts = Path(_importPath, context).resolveMany<Port>();
     if (_importPorts.isEmpty())
-        throw Exception("No matching import ports found", _importPath, this);
+        ThrowException("No matching import ports found").value(_importPath).context(this);
     _importType = commonType(_importPorts);
     if (_importType == Null)
         _importType = _valueType;
@@ -141,18 +139,13 @@ void Port::copyFromImport() {
 
 void Port::assign(const QVector<Port*> &sources) {
     PortTransform pt = convert<PortTransform>(transform());
-    try {
-        if (sources.size() == 1) {
-            const Port *source = sources.at(0);
-            base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, pt, this);
-        }
-        else {
-            const void *sourceVector = vectorize(_importType, sources);
-            base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, pt, this);
-        }
+    if (sources.size() == 1) {
+        const Port *source = sources.at(0);
+        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, pt, this);
     }
-    catch (Exception &ex) {
-        throw Exception(ex.message(), ex.value(), this);
+    else {
+        const void *sourceVector = vectorize(_importType, sources);
+        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, pt, this);
     }
 }
 
@@ -185,7 +178,7 @@ void Port::format(PortType type) {
 Box *Port::boxParent() {
     Box *par = dynamic_cast<Box*>(parent());
     if (!par)
-        throw Exception("Application error: Port has no Box parent", "", this);
+        ThrowException("Application error: Port has no Box parent").context(this);
     return par;
 }
 
@@ -205,8 +198,8 @@ PortType Port::type() const {
     return _valueType;
 }
 
-unsigned Port::accessFlags() const {
-    return _accessFlags;
+Port::Access Port::access() const {
+    return _access;
 }
 
 bool Port::doTrack() const {
@@ -226,7 +219,7 @@ QVector<Port*> Port::importPorts() const {
 }
 
 QVector<Port*> Port::trackedPorts() {
-    QVector<base::Port*> result, all = Path("*{Port}").resolve<Port>();
+    QVector<base::Port*> result, all = Path("*{Port}").resolveMany<Port>();
     for (Port *port : all) {
         if (port->trackPtr())
             result << port;

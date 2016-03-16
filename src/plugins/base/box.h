@@ -9,8 +9,8 @@
 
 #define RETURN_PLUGIN_NAME(x) #x
 
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Read|Port::Write)
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Read).zeroAtReset()
+#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Input)
+#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Output).zeroAtReset()
 
 namespace base {
 

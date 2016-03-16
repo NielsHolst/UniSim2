@@ -5,7 +5,7 @@
 
 void myMsgHandler(QtMsgType, const QMessageLogContext &, const QString &msg)
 {
-    throw base::Exception(QString(msg));
+    ThrowException(msg);
 }
 
 

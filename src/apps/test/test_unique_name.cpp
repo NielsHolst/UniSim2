@@ -46,7 +46,7 @@ void TestUniqueName::testMany() {
     endbox();
 
     Path path("*{Port}");
-    QVector<Port*> ports = path.resolve<Port>();
+    QVector<Port*> ports = path.resolveMany<Port>();
     UniqueName unique(ports);
     QStringList names = unique.resolve(), expected;
 //    std::cout << qPrintable(names.join("\n"));
@@ -118,7 +118,7 @@ void TestUniqueName::testSandy() {
     endbox();
 
     Path path("*{Port}");
-    QVector<Port*> ports = path.resolve<Port>();
+    QVector<Port*> ports = path.resolveMany<Port>();
     UniqueName unique(ports);
     QStringList names = unique.resolve(), expected;
     std::cout << qPrintable(names.join("\n"));

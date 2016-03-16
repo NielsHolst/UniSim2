@@ -47,7 +47,7 @@ void initialize(PortType destT, void *destPtr) {
     CASE_INIT(Time, QTime);
     CASE_INIT(DateTime, QDateTime);
     case Null:
-        throw Exception("Cannot initialize Null");
+        ThrowException("Cannot initialize Null");
         break;
     }
 }

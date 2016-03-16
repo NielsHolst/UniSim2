@@ -32,9 +32,9 @@ PUBLISH(VentilationByWind)
 VentilationByWind::VentilationByWind(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(baseRate, 30.);
-    Input(windspeed, "outdoors[windspeed]");
-    Input(ventsProportionalEffectiveArea, "construction/vents[proportionalEffectiveArea]");
+    Input(baseRate).equals(30.);
+    Input(windSpeed).imports("outdoors[windSpeed]");
+    Input(ventsProportionalEffectiveArea).imports("construction/vents[proportionalEffectiveArea]");
     Output(value);
 }
 
@@ -43,7 +43,7 @@ void VentilationByWind::reset() {
 }
 
 void VentilationByWind::update() {
-    value = baseRate*windspeed*ventsProportionalEffectiveArea;
+    value = baseRate*windSpeed*ventsProportionalEffectiveArea;
 }
 
 } //namespace

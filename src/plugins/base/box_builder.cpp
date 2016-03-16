@@ -2,6 +2,7 @@
 #include "box.h"
 #include "box_builder.h"
 #include "box_step.h"
+#include "dialog.h"
 #include "mega_factory.h"
 #include "path.h"
 
@@ -10,11 +11,12 @@ namespace base {
 BoxBuilder::BoxBuilder()
     : _content(0), _currentBox(0), _currentPort(0)
 {
+    dialog().information("construct...");
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
     if (_content && _stack.isEmpty()) {
-        throw Exception("BoxBuilder: Boxes miss a common root");
+        ThrowException("BoxBuilder: Boxes miss a common root");
     }
     _stack.push(_currentBox);
     _currentBox =  MegaFactory::create<Box>(className, "", _currentBox);
@@ -31,7 +33,7 @@ BoxBuilder& BoxBuilder::name(QString boxName) {
 
 BoxBuilder& BoxBuilder::endbox() {
     if (_stack.isEmpty())
-        throw Exception("BoxBuilder: box body ended twice");
+        ThrowException("BoxBuilder: box body ended twice");
     _currentBox = _stack.pop();
     _currentPort = 0;
     return *this;
@@ -39,7 +41,7 @@ BoxBuilder& BoxBuilder::endbox() {
 
 BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
-        throw Exception("BoxBuilder: port declaration outside of box context");
+        ThrowException("BoxBuilder: port declaration outside of box context");
     _currentPort = _currentBox->peakPort(name) ?
                    _currentBox->port(name) :
                    new Port(name, _currentBox, true);
@@ -48,16 +50,15 @@ BoxBuilder& BoxBuilder::port(QString name) {
 
 BoxBuilder& BoxBuilder::newPort(QString name) {
     if (!_currentBox) {
-        throw Exception("BoxBuilder: new port declaration out of context");
+        ThrowException("BoxBuilder: new port declaration out of context");
     }
     _currentPort = new Port(name, _currentBox);
-    _currentPort->access(Port::Read|Port::Write);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
-        throw Exception("BoxBuilder: import out of context");
+        ThrowException("BoxBuilder: import out of context");
     _currentPort->imports(pathToPort);
     return *this;
 }
@@ -66,7 +67,7 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
 
 BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
     if (!_currentPort)
-        throw Exception("BoxBuilder: attribute out of context", name + "=" + value);
+        ThrowException("BoxBuilder: attribute out of context").value(name + "=" + value);
     _currentPort->attribute(name, value);
     return *this;
 }
@@ -97,8 +98,14 @@ const Port* BoxBuilder::currentPort() const {
 }
 
 Box* BoxBuilder::content() {
+
+    dialog().information("amend...");
     if (_content)
         _content->amendFamily();
+    else
+        ThrowException("Construction failed");
+    QString info("%1 boxes created");
+    dialog().information(info.arg(_content->count()));
     return _content;
 }
 

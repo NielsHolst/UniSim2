@@ -20,7 +20,7 @@ public:
 
 private:
     // Inputs
-    double baseRate, windspeed, ventsProportionalEffectiveArea;
+    double baseRate, windSpeed, ventsProportionalEffectiveArea;
     // Output
     double value;
 };

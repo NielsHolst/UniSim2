@@ -17,6 +17,7 @@ HEADERS +=  \
     test_box.h \
     test_box_builder.h \
     test_box_cases.h \
+    test_circle_buffer.h \
     test_command.h \
     test_general.h \
     test_history.h \
@@ -35,6 +36,7 @@ SOURCES +=  \
     test_box.cpp \
     test_box_builder.cpp \
     test_box_cases.cpp \
+    test_circle_buffer.cpp \
     test_command.cpp \
     test_general.cpp \
     test_history.cpp \

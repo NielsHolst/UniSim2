@@ -38,7 +38,7 @@ bool isVector(PortType type) {
 
 PortType asVector(PortType type) {
     if (type==Null)
-        throw Exception("Cannot convert 'Null' to vector type");
+        ThrowException("Cannot convert 'Null' to vector type");
     int i(type);
     return (i%2 == 0) ? PortType(i+1) : type;
 }

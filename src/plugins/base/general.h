@@ -19,12 +19,25 @@ QString fullName(const QObject *object);
 QStringList split(QString s, QObject *context = 0);
 QStringList split(const char *s, QObject *context = 0);
 
+QStringList decodeSimpleList(QString parenthesizedList, QObject *context);
+
+QString locateFile(QDir baseDir, QDir specificDir, QString filePath);
 QDir locateDir(QDir baseDir, QDir specificDir);
 QDir makeDir(QDir baseDir, QDir specificDir);
 
 double accum(const QVector<double> &x);
 void increment(QVector<double> &x, const QVector<double> &toAdd);
 void increment(double *x, const double *toAdd, int n);
+
+template<class T> T bounded(T low, T x, T high);
+
+template<class T> T bounded(T low, T x, T high) {
+    if (x < low)
+        return low;
+    else if (x > high)
+        return high;
+    return x;
+}
 
 } //namespace
 

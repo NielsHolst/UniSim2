@@ -164,7 +164,7 @@ void Dialog::writeWelcome() {
     QString latestFile = environment().state.latestLoadArg,
             inputFolder = environment().state.dir.input.path(),
             workFolder = environment().state.dir.work.absolutePath(),
-            info = latestFile.isEmpty() ? "Welcome to Universal Simulator." : "Welcome back";
+            info = latestFile.isEmpty() ? "Welcome to Universal Simulator!" : "Welcome back!";
     info += "\nYour work  folder is '" + workFolder + "'";
     info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
@@ -233,7 +233,7 @@ void Dialog::submitCommand() {
         if (!items.isEmpty()) {
             try {
                 if (items.first().contains("_"))
-                    throw Exception("Illegal characted in command");
+                    ThrowException("Illegal characted in command");
                 command = MegaFactory::create<Command>(items.first(), items.first(), this);
             }
             catch (Exception &ex) {

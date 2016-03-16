@@ -65,7 +65,7 @@ void Stage::update() {
     if (!phaseInflow.isEmpty()) {
         if (phaseInflow.size() != k) {
             QString msg("phaseInflow's size (k=%1) does not match the size of the recipient (k=%2)");
-            throw Exception(msg.arg(phaseInflow.size()).arg(k), "", this);
+            ThrowException(msg.arg(phaseInflow.size()).arg(k)).context(this);
         }
         double *contents = const_cast<double*>(data());
         increment(contents, phaseInflow.data(), k);
@@ -79,9 +79,9 @@ void Stage::update() {
     }
 
     if (growthFactor <= 0)
-        throw Exception(QString("Growth rate must be > 0"), QString::number(growthFactor), this);
+        ThrowException("Growth rate must be > 0").value(growthFactor).context(this);
     if (inflowPending < 0) {
-        throw Exception(QString("Input must be >= 0"), QString::number(inflowPending), this);
+        ThrowException("Input must be >= 0").value(inflowPending).context(this);
     }
 
     dd->update(inflowPending, dt, growthFactor);
@@ -94,7 +94,7 @@ void Stage::update() {
         TestNum::snapTo(phaseOutflowProportion, 1.);
         if (phaseOutflowProportion > 1.) {
             QString msg = "phaseOutflowProportion must not be > 1";
-            throw Exception(msg, QString::number(phaseOutflowProportion), this);
+            ThrowException(msg).value(phaseOutflowProportion).context(this);
         }
         phaseOutflow = dd->take(phaseOutflowProportion);
         phaseOutflowTotal += accum(phaseOutflow);

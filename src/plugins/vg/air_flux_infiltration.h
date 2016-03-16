@@ -20,7 +20,7 @@ public:
 
 private:
     // Parameters
-    double leakage, windspeed, airTransmissivity;
+    double leakage, windSpeed, airTransmissivity;
 
     // Variables
     double value;

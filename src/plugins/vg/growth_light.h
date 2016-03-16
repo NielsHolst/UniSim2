@@ -21,13 +21,14 @@ private:
     QString type;
     double timeStep, intensity, ballastCorrection, age, lifeTime;
     bool on;
-
     // Outputs
     double currentPeriod, totalPeriod;
-
+    // Data
     struct { double heatCoef, longWaveCoef, shortWaveCoef, parCoef, minPeriodOn; } attributes;
     struct { double heatEmission, longWaveEmission, shortWaveEmission, parEmission, energyFlux; } netAttributes;
     double degradationRate;
+    // Methods
+    void noLight();
 };
 } //namespace
 

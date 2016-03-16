@@ -16,10 +16,9 @@ class GrowthLightBase : public base::Box
 public:
     GrowthLightBase(QString name, QObject *parent);
 protected:
-    double heatEmission, longWaveEmission, shortWaveEmission, totalEmission, parEmission,
-        energyFlux;
+    // Outputs
+    double heatEmission, longWaveEmission, shortWaveEmission, totalEmission, parEmission, energyFlux;
     bool currentlyOn;
-    void noLight();
 };
 } //namespace
 

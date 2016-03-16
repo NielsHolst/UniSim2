@@ -56,7 +56,7 @@ void LeafTemperature::update() {
             (1+(s/Psychr+ rsH2O/rbH2O+ 1/(RhoAir*CpAir/4/Sigma*Tgh3)*(rsH2O+rbH2O)))
             + indoorsTemperature;
     if (std::isnan(value)) {
-        throw Exception("LeafTemperature is not a number");
+        ThrowException("LeafTemperature is not a number").context(this);
     }
 
     /* Thermal storage was neglible, max 1-2 W/m2

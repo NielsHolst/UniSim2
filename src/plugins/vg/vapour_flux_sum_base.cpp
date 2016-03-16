@@ -31,9 +31,9 @@ VapourFluxSumBase::VapourFluxSumBase(QString name, QObject *parent)
 void VapourFluxSumBase::initialize() {
     ptrs.clear();
     for (auto flux : fluxes()) {
-      const double *co = flux->pullValuePtr<double>("conductance"),
-                   *va = flux->pullValuePtr<double>("vapourFlux"),
-                   *ga = flux->pullValuePtr<double>("gain");
+      const double *co = flux->port("conductance")->valuePtr<double>(),
+                   *va = flux->port("vapourFlux")->valuePtr<double>(),
+                   *ga = flux->port("gain")->valuePtr<double>();
       ptrs << Ptr{co, va, ga};
     }
 }

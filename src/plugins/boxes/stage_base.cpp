@@ -41,10 +41,10 @@ StageBase::~StageBase() {
 void StageBase::initialize()
 {
     if (k <= 0)
-        throw Exception(QString("k must be > 0"), QString::number(k), this);
+        ThrowException("k must be > 0").value(k).context(this);
 
     if (duration <= 0)
-        throw Exception(QString("Duration must be > 0"), QString::number(duration), this);
+        ThrowException("Duration must be > 0").value(duration).context(this);
 
     ddBase = createDistributedDelay();
 }
@@ -61,13 +61,13 @@ void StageBase::reset()
 void StageBase::applyInstantMortality() {
     if (instantMortality > 0. && instantLossRate > 0.) {
         QString msg = "Parameters instantMortality and instantLossRate cannot both be > 0 (they are '%1' and '%2')";
-        throw Exception(msg.arg(instantMortality).arg(instantLossRate));
+        ThrowException(msg.arg(instantMortality).arg(instantLossRate)).context(this);
     }
     double survival = 1. - instantMortality/100. - instantLossRate;
     TestNum::snapToZero(survival);
     TestNum::snapTo(survival, 1.);
     if (survival < 0 || survival > 1.)
-       throw Exception(QString("Survival must be in the range [0;1]"), QString::number(survival), this);
+       ThrowException("Survival must be in the range [0;1]").value(survival).context(this);
     ddBase->scale(survival);
     instantMortality = instantLossRate = 0;
 }

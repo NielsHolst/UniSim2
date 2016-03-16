@@ -37,7 +37,7 @@ void TestPort::initTestCase() {
 void TestPort::testFixedInt() {
     Port j;
     int i;
-    j.data(&i).access(Port::Read|Port::Write);
+    j.data(&i);
     j.equals(5);
     QCOMPARE(i, 5);
     QCOMPARE(j.value<int>(), 5);
@@ -46,7 +46,7 @@ void TestPort::testFixedInt() {
 void TestPort::testPtrInt() {
     int i{5};
     Port j;
-    j.data(&i).access(Port::Read|Port::Write);
+    j.data(&i);
     i = 6;
     QCOMPARE(j.value<int>(), 6);
 }
@@ -54,7 +54,7 @@ void TestPort::testPtrInt() {
 void TestPort::testFixedString() {
     QString s;
     Port j;
-    j.data(&s).access(Port::Read|Port::Write);
+    j.data(&s);
     j.equals(QString("aBc"));
     QCOMPARE(s, QString("aBc"));
     QCOMPARE(j.value<QString>(), QString("aBc"));
@@ -63,7 +63,7 @@ void TestPort::testFixedString() {
 void TestPort::testPtrString() {
     QString s{};
     Port j;
-    j.data(&s).access(Port::Read|Port::Write);
+    j.data(&s);
     s = "aBc6";
     QCOMPARE(j.value<QString>(), QString("aBc6"));
 }
@@ -76,7 +76,7 @@ void TestPort::testIntVector() {
     Port j;
     QVector<int> data, val;
     data.fill(0,3);
-    j.data(&data).access(Port::Read|Port::Write);
+    j.data(&data);
     val << 7 << 9 << 13;
     j.equals(val);
     QCOMPARE(j.value<QVector<int>>(), val);
@@ -85,7 +85,7 @@ void TestPort::testIntVector() {
 void TestPort::testStringVector() {
     Port j;
     QVector<QString> data, val;
-    j.data(&data).access(Port::Read|Port::Write);
+    j.data(&data);
     val << "7" << "9" << "13";
     j.equals(val);
     QCOMPARE(j.value<QVector<QString>>(), val);
@@ -98,7 +98,7 @@ void TestPort::testStringVector() {
 void TestPort::testFixedCString() {
     Port j;
     QString data;
-    j.data(&data).access(Port::Read|Port::Write);
+    j.data(&data);
     j.equals("aBc");
     QCOMPARE(j.value<QString>(), QString("aBc"));
 }
@@ -109,7 +109,7 @@ void TestPort::testFixedCString() {
 void TestPort::testUSDate() {
     Port j;
     QDate data;
-    j.data(&data).access(Port::Read|Port::Write);
+    j.data(&data);
     j.equals("/12/24/2015");
     QCOMPARE(j.value<QDate>(), QDate(2015,12,24));
     j.equals("/12/24/15");
@@ -124,7 +124,7 @@ void TestPort::testUSDate() {
 void TestPort::testResetBool() {
     Port j;
     bool data(true);
-    j.data(&data).access(Port::Read|Port::Write).zeroAtReset();
+    j.data(&data).zeroAtReset();
     QCOMPARE(j.value<bool>(), false);
     data = true;
     j.reset();
@@ -136,7 +136,7 @@ void TestPort::testResetBoolVector() {
     Port j;
     BoolVector data{true, false, true},
                value{false, false, false};
-    j.data(&data).access(Port::Read|Port::Write).zeroAtReset();
+    j.data(&data).zeroAtReset();
     QCOMPARE(j.value<BoolVector>(), data);
     j.reset();
     QCOMPARE(j.value<BoolVector>(), value);
@@ -145,7 +145,7 @@ void TestPort::testResetBoolVector() {
 void TestPort::testResetLongInt() {
     Port j;
     long int data;
-    j.data(&data).access(Port::Read|Port::Write).zeroAtReset();
+    j.data(&data).zeroAtReset();
     QCOMPARE(j.value<long int>(), 0L);
     data = 7L;
     j.reset();
@@ -155,7 +155,7 @@ void TestPort::testResetLongInt() {
 void TestPort::testResetString() {
     Port j;
     QString data, empty;
-    j.data(&data).access(Port::Read|Port::Write).zeroAtReset();
+    j.data(&data).zeroAtReset();
     QCOMPARE(j.value<QString>(), empty);
     data = "abc";
     j.reset();
@@ -172,7 +172,7 @@ void TestPort::testResetString() {
         Y2 y2; \
         bool escaped{false}; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x = X3; \
         try { \
             y2 = y.value<Y2>(); \
@@ -186,21 +186,21 @@ void TestPort::testResetString() {
     void TestPort::test##X##To##Y##VectorToScalar() { \
         QVector<X2> x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x << X3; \
         QCOMPARE(y.value<Y2>(), Y3); \
     } \
     void TestPort::test##X##To##Y##ScalarToVector() { \
         X2 x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x = X3; \
         QCOMPARE(y.value<QVector<Y2>>(), QVector<Y2>() << Y3); \
     } \
     void TestPort::test##X##To##Y##VectorToVector() { \
         QVector<X2> x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x << X3 << X3; \
         QCOMPARE(y.value<QVector<Y2>>(), QVector<Y2>() << Y3 << Y3); \
     }
@@ -210,7 +210,7 @@ void TestPort::testResetString() {
         bool escaped{false}; \
         X2 x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x = X3; \
         try { \
             y.value<Y2>(); \
@@ -224,7 +224,7 @@ void TestPort::testResetString() {
         bool escaped{false}; \
         QVector<X2> x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x << X3; \
         try { \
             y.value<Y2>(); \
@@ -238,7 +238,7 @@ void TestPort::testResetString() {
         bool escaped{false}; \
         X2 x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x = X3; \
         try { \
             y.value<QVector<Y2>>(); \
@@ -252,7 +252,7 @@ void TestPort::testResetString() {
         bool escaped{false}; \
         QVector<X2> x; \
         Port y; \
-        y.data(&x).access(Port::Read|Port::Write); \
+        y.data(&x); \
         x << X3 << X3; \
         try { \
             y.value<QVector<Y2>>(); \

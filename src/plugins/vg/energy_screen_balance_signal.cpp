@@ -33,7 +33,7 @@ EnergyScreenBalanceSignal::EnergyScreenBalanceSignal(QString name, QObject *pare
     Input(outdoorsTemperature).imports("outdoors[temperature]");
 }
 
-double EnergyScreenBalanceSignal::signal()  {
+double EnergyScreenBalanceSignal::computeSignal()  {
     return (indoorsLight > Ucover*(indoorsTemperature - outdoorsTemperature)) ? 0 : 1;
 }
 

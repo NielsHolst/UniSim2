@@ -102,7 +102,7 @@ double pow0(double x, double c, QObject *context) {
     if (x == 0) {
         if (c >= 0) return 0.;
         QString msg = "Cannot raise zero to power of '%1'";
-        throw Exception(msg.arg(c), "", context);
+        ThrowException(msg.arg(c)).context(context);
     }
     else
         return std::pow(x, c);
@@ -138,9 +138,9 @@ double divBounded(double x, double y, double bound) {
 //! Gutierrez-Baumgaertner functional response
 double GBFuncResp(double demand, double resource) {
     if (demand < 0 ||  resource < 0)
-        throw Exception("Illegal arguments to GBFuncResp(d,s), "
-                        "d = " + QString::number(demand) +
-                        "s = " + QString::number(resource));
+        ThrowException("Illegal arguments to GBFuncResp(d,s), "
+                       "d = " + QString::number(demand) +
+                       "s = " + QString::number(resource));
 
     if (demand <= numeric_limits<double>::epsilon())
         return 0.;
@@ -165,11 +165,11 @@ double convertTime(double time, char fromUnit, char toUnit, QObject *context) {
         u['d'] = 60*60*24;
         u['y'] = 60*60*24*365;
     }
-    QString msg = "Time units must be 's', 'm', 'h', 'd' or 'y', not '%1'";
+    QString msg = "Time units must be one of 's', 'm', 'h', 'd' or 'y'";
     if (!u.contains(fromUnit))
-        throw Exception(msg.arg(fromUnit), QString(fromUnit), context);
+        ThrowException(msg).value(fromUnit).context(context);
     if (!u.contains(toUnit))
-        throw Exception(msg.arg(toUnit), QString(fromUnit), context);
+        ThrowException(msg).value(toUnit).context(context);
     return time*u.value(fromUnit)/u.value(toUnit);
 }
 

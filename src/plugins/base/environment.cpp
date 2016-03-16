@@ -58,8 +58,11 @@ QString Environment::outputFilePath(QString extension) {
 
 QString Environment::outputFileNamePath(QString fileName) {
     QDir dir = makeDir(state.dir.work, state.dir.output);
+    QString dirInFileName = QFileInfo(fileName).path();
+    if (!dirInFileName.isEmpty())
+        dir = makeDir(dir, dirInFileName);
     QString folderPath = dir.absolutePath();
-    return state.latestOutputFilePath = folderPath + "/" + fileName;
+    return state.latestOutputFilePath = folderPath + "/" + QFileInfo(fileName).fileName();
 }
 
 QString Environment::scriptFilePath(QString fileName) {
@@ -70,7 +73,7 @@ QString Environment::scriptFilePath(QString fileName) {
 QDir Environment::makeDir(QDir baseDir, QDir specificDir) {
     QDir dir = locateDir(baseDir, specificDir);
     if (!dir.mkpath("."))
-        throw Exception("Could not create folder", dir.path());
+        ThrowException("Could not create folder").value(dir.path());
     return dir;
 }
 

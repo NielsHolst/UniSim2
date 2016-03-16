@@ -15,7 +15,7 @@ class FixedSignal : public BaseSignal
 {
 public:
     FixedSignal(QString name, QObject *parent);
-    double signal();
+    double computeSignal();
 private:
     double input;
 };

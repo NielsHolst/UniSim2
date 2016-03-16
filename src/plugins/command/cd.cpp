@@ -40,11 +40,11 @@ void cd::doExecute() {
         }
         else {
             QString msg("Unknown directory: '%1'\nPath unchanged: %2");
-            throw Exception(msg.arg(dirName).arg(env.state.dir.work.absolutePath()));
+            ThrowException(msg.arg(dirName).arg(env.state.dir.work.absolutePath()));
         }
         break;
     default:
-        throw Exception("Command 'cd' takes at most 1 argument");
+        ThrowException("Command 'cd' takes at most 1 argument");
     }
 }
 

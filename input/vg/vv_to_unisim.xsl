@@ -92,31 +92,31 @@
 
 <xsl:template name="extract-period">
 	<xsl:param name="circadian"/>
-	<parameter name="beginDay">
+	<port name="beginDay">
 		<xsl:attribute name="value">
 			<xsl:value-of select="FromDay"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="endDay">
+	</port>
+	<port name="endDay">
 		<xsl:attribute name="value">
 			<xsl:value-of select="ToDay"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="beginTime">
+	</port>
+	<port name="beginTime">
 		<xsl:attribute name="value">
 			<xsl:value-of select="concat(floor(FromTime div 60), ':', FromTime mod 60)"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="endTime">
+	</port>
+	<port name="endTime">
 		<xsl:attribute name="value">
 			<xsl:value-of select="concat(floor(ToTime div 60), ':', ToTime mod 60)"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="circadian">
+	</port>
+	<port name="circadian">
 		<xsl:attribute name="value">
 			<xsl:value-of select="$circadian"/>
 		</xsl:attribute>
-	</parameter>
+	</port>
 </xsl:template>
 
 <xsl:template name="cover-position-name">
@@ -209,67 +209,67 @@
 
 <xsl:template name="extract-screen-parameters">
 	<xsl:param name="screen-type"/>
-	<parameter name="position">
+	<port name="position">
 		<xsl:attribute name="value">
 			<xsl:call-template name="screen-position-name">
 				<xsl:with-param name="number" select="Position"/>
 			</xsl:call-template>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="layer">
+	</port>
+	<port name="layer">
 		<xsl:attribute name="value">
 			<xsl:call-template name="screen-layer-name">
 				<xsl:with-param name="number" select="Layer"/>
 			</xsl:call-template>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="emissivityInner">
+	</port>
+	<port name="emissivityInner">
 		<xsl:attribute name="value">
 			<xsl:value-of select="$ScreenEmissivityInner"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="emissivityOuter">
+	</port>
+	<port name="emissivityOuter">
 		<xsl:attribute name="value">
 			<xsl:value-of select="$ScreenEmissivityOuter"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="transmissivityLight">
+	</port>
+	<port name="transmissivityLight">
 		<xsl:attribute name="value">
 			<xsl:value-of select="Constants/Parameters[ParameterID='30']/Value div 100"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="transmissivityAir">
+	</port>
+	<port name="transmissivityAir">
 		<xsl:attribute name="value">
 			<xsl:value-of select="Constants/Parameters[ParameterID='32']/Value div 100"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="energyLossReduction">
+	</port>
+	<port name="energyLossReduction">
 		<xsl:attribute name="value">
 			<xsl:value-of select="Constants/Parameters[ParameterID='33']/Value div 100"/>
 		</xsl:attribute>
-	</parameter>
+	</port>
 	
-	<parameter name="U">
+	<port name="U">
 		<xsl:attribute name="value">
 			<xsl:value-of select="$ScreenU"/>
 		</xsl:attribute>
-	</parameter>
+	</port>
 	
-	<parameter name="haze">
+	<port name="haze">
 		<xsl:attribute name="value">
 			<xsl:value-of select="$ScreenHaze"/>
 		</xsl:attribute>
-	</parameter>
-	<parameter name="state">
+	</port>
+	<port name="state">
 		<xsl:attribute name="ref">
 			<xsl:value-of select="concat('actuators/screens/', $screen-type, '/control[state]')"/>
 		</xsl:attribute>
-	</parameter>
+	</port>
 </xsl:template>
 
 <xsl:template name="extract-screens">
 	<xsl:param name="shelter-position"/>
-	<model name="screens" type="vg::Screens">
+	<box name="screens" class="vg::Screens">
 		<xsl:for-each select="/JobDataSet/Greenhouse/zone/Screens//Screen">
 			<xsl:variable name="screen-type">
 				<xsl:call-template name="screen-type-name">
@@ -282,24 +282,24 @@
 				</xsl:call-template>
 			</xsl:variable>
 			<xsl:if test="contains($screen-position, $shelter-position)">
-				<model>
+				<box>
 					<xsl:attribute name="name">
 						<xsl:value-of select="$screen-type"/>
 					</xsl:attribute>
-					<xsl:attribute name="type">
+					<xsl:attribute name="class">
 						<xsl:value-of select="'vg::Screen'"/>
 					</xsl:attribute>
 					<xsl:call-template name="extract-screen-parameters">
 						<xsl:with-param name="screen-type" select="$screen-type"/>
 					</xsl:call-template>
-				</model>
+				</box>
 			</xsl:if>
 		</xsl:for-each>					
-	</model>
+	</box>
 </xsl:template>
 
 <xsl:template name="extract-shelter">
-	<model>
+	<box>
 		<xsl:variable name="shelter-position">
 			<xsl:call-template name="cover-position-name">
 				<xsl:with-param name="number" select="Position"/>
@@ -308,90 +308,90 @@
 		<xsl:attribute name="name">
 			<xsl:value-of select="$shelter-position"/>
 		</xsl:attribute>
-		<xsl:attribute name="type">
+		<xsl:attribute name="class">
 			<xsl:value-of select="'vg::Shelter'"/>
 		</xsl:attribute>
 
-		<model name="cover" type="vg::Cover">
-			<parameter name="U4">
+		<box name="cover" class="vg::Cover">
+			<port name="U4">
 				<xsl:attribute name="value">
 					<xsl:value-of select="Constants/Parameters[ParameterID='310']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="transmissivity">
+			</port>
+			<port name="transmissivity">
 				<xsl:attribute name="value">
 					<xsl:value-of select="Constants/Parameters[ParameterID='308']/Value div 100"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="emissivity">
+			</port>
+			<port name="emissivity">
 				<xsl:attribute name="value">
 					<xsl:value-of select="$CoverEmissitivity"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="absorptivity">
+			</port>
+			<port name="absorptivity">
 				<xsl:attribute name="value">
 					<xsl:value-of select="$CoverAbsorptivity"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="specificHeatCapacity">
+			</port>
+			<port name="specificHeatCapacity">
 				<xsl:attribute name="value">
 					<xsl:value-of select="$CoverHeatCapacity"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="haze">
+			</port>
+			<port name="haze">
 				<xsl:attribute name="value">
 					<xsl:value-of select="$CoverHaze"/>
 				</xsl:attribute>
-			</parameter>
-		</model> <!-- cover -->
+			</port>
+		</box> <!-- cover -->
 
 		<xsl:call-template name="extract-screens">
 			<xsl:with-param name="shelter-position" select="$shelter-position"/>
 		</xsl:call-template>
-	</model>
+	</box>
 </xsl:template>
 
 <xsl:template name="crop-layer">
-	<model name="windSpeed" type="vg::LeafWindSpeed">
-		<parameter name="k" value="0.6"/>
-	</model>
+	<box name="windSpeed" class="vg::LeafWindSpeed">
+		<port name="k" value="0.6"/>
+	</box>
 	<xsl:call-template name="extract-crop-model">
 		<xsl:with-param name="modelName">rs</xsl:with-param>
 	</xsl:call-template>
-	<model name="rb" type="vg::BoundaryLayerResistanceStanghellini"/>
-	<model name="radiationAbsorbed" type="vg::LeafRadiationAbsorbed"/>
-	<model name="transpiration" type="vg::LeafTranspiration"/>
+	<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
+	<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed"/>
+	<box name="transpiration" class="vg::LeafTranspiration"/>
 	<!--
-	<model name="condensation">
-		<model name="vapourFlux" type="vg::VapourFluxCondensation">
-			<parameter name="surfaceAreaPerGroundArea" ref="./lai[value]"/>
-			<parameter name="surfaceTemperature" ref="../../temperature[value]"/>
-			<model name="lai" type="vg::LeafLai"/>
-		</model>
-		<model name="energyFlux" type="vg::EnergyFluxCondensation">
-			<parameter name="vapourFlux" ref="../vapourflux[vapourFlux]"/>
-		</model>
-	</model>
+	<box name="condensation">
+		<box name="vapourFlux" class="vg::VapourFluxCondensation">
+			<port name="surfaceAreaPerGroundArea" ref="./lai[value]"/>
+			<port name="surfaceTemperature" ref="../../temperature[value]"/>
+			<box name="lai" class="vg::LeafLai"/>
+		</box>
+		<box name="energyFlux" class="vg::EnergyFluxCondensation">
+			<port name="vapourFlux" ref="../vapourflux[vapourFlux]"/>
+		</box>
+	</box>
 	-->
-	<model name="temperature" type="vg::LeafTemperature"/>
-	<model name="photosynthesis" type="vg::LeafPhotosynthesis">
-		<model name="lightResponse" type="vg::LeafLightResponse"/>	
-	</model>
+	<box name="temperature" class="vg::LeafTemperature"/>
+	<box name="photosynthesis" class="vg::LeafPhotosynthesis">
+		<box name="lightResponse" class="vg::LeafLightResponse"/>	
+	</box>
 </xsl:template>
 	
 	
 <!-- MAIN -->
 		
-<xsl:template match="/"> <simulation name="Virtual Greenhouse">
+<xsl:template match="/"> <box class="Simulation" name="VirtualGreenhouse">
 	<xsl:variable name="startTime" select="JobDataSet/StartTime"/>
 	<xsl:variable name="stopTime" select="JobDataSet/StopTime"/>
 	<xsl:variable name="startYear" select="number( substring($startTime, 1, 4) )"/>
 	<xsl:variable name="stopYear" select="number( substring($stopTime, 1, 4) )"/>
 	<xsl:variable name="incYear" select="$stopYear - $startYear"/>
 
-	<integrator name="steps" type="UniSim::StepsTimeInterval">
+	<box name="simulationTimeInterval" class="vg::SimulationTimeInterval">
 		
-		<parameter name="beginDate">
+		<port name="beginDate">
 			<xsl:attribute name="value">
 				<xsl:choose>
 					<xsl:when test="$test-mode=0">
@@ -402,9 +402,9 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-		</parameter>
+		</port>
 
-		<parameter name="endDate">
+		<port name="endDate">
 			<xsl:attribute name="value">
 				<xsl:choose>
 					<xsl:when test="$test-mode=0">
@@ -415,47 +415,40 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-		</parameter>
+		</port>
 
-		<parameter name="beginTime">
+		<port name="beginTime">
 			<xsl:attribute name="value">
 				<xsl:value-of select="substring($startTime, 12, 5)"/>
 			</xsl:attribute>
-		</parameter>
-		<parameter name="endTime">
+		</port>
+		<port name="endTime">
 			<xsl:attribute name="value">
 				<xsl:value-of select="substring($stopTime, 12, 5)"/>
 			</xsl:attribute>
-		</parameter>
+		</port>
 
-		<parameter name="timeStep" value="5"/>
+		<port name="timeStep" value="5"/>
 		<!--
-		<parameter name="timeStep">
+		<port name="timeStep">
 			<xsl:attribute name="value">
 				<xsl:value-of select="JobDataSet/SimulationTimeStep"/>
 			</xsl:attribute>
-		</parameter>
+		</port>
 		-->
-		<parameter name="timeUnit" value="m"/>
-		<xsl:choose>
-			<xsl:when test="$test-mode=0">
-				<parameter name="indicator" value="1"/>
-			</xsl:when>
-			<xsl:when test="$test-mode>0">
-				<parameter name="indicator" value="2"/>
-			</xsl:when>
-		</xsl:choose>
-	</integrator>
+		<port name="timeUnit" value="m"/>
+	</box>
 
-	<model name="calendar" type="UniSim::Calendar">
+	<port name="steps" ref="simulationTimeInterval[steps]"/>
+
+	<box name="calendar" class="boxes::Calendar">
 		<xsl:variable name="simTimeStep" select="JobDataSet/SimulationTimeStep"/>
 		<xsl:variable name="outTimeStep" select="JobDataSet/OutputTimeStep"/>
-		<parameter name="initialDate" ref="steps[beginDate]"/>
-		<parameter name="initialTimeOfDay" ref="steps[beginTime]"/>
-		<parameter name="timeStep" ref="steps[timeStep]"/>
-		<parameter name="timeUnit" ref="steps[timeUnit]"/>
-		<parameter name="sample" value="12"/>
-<!--	<parameter name="sample">
+		<port name="initialDateTime" ref="simulationTimeInterval[beginDateTime]"/>
+		<port name="timeStep" ref="simulationTimeInterval[timeStep]"/>
+		<port name="timeUnit" ref="simulationTimeInterval[timeUnit]"/>
+		<port name="sample" value="12"/>
+<!--	<port name="sample">
 			<xsl:choose>
 				<xsl:when test="string-length($simTimeStep)=0 or string-length($simTimeStep)=0">
 					<xsl:attribute name="value" select="12"/>
@@ -464,88 +457,87 @@
 					<xsl:attribute name="value" select="$outTimeStep div $simTimeStep"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</parameter> -->
-		<parameter name="latitude">
+		</port> -->
+		<port name="latitude">
 			<xsl:attribute name="value" select="JobDataSet/Latitude"/>
-		</parameter>
-		<parameter name="longitude">
+		</port>
+		<port name="longitude">
 			<xsl:attribute name="value" select="JobDataSet/Longitude"/>
-		</parameter>
-		<parameter name="timeZone">
+		</port>
+		<port name="timeZone">
 			<xsl:attribute name="value">
 				<xsl:value-of select="substring($startTime, 21, 2)"/>
 			</xsl:attribute>
-		</parameter>
-	</model>
+		</port>
+	</box>
 
-	<model name="outdoors" type="vg::Outdoors">
-		<parameter name="co2">
+	<box name="outdoors" class="vg::Outdoors">
+		<port name="co2">
 			<xsl:attribute name="value">
 				<xsl:value-of select="$OutdoorsCo2"/>
 			</xsl:attribute>
-		</parameter>
-		<model name="records" type="UniSim::Records">
-			<parameter name="fileName" value="sel_dk.txt"/>
-			<parameter name="imposeInitialDateTime" value="false"/>
-		</model>
-	</model>
+		</port>
+		<box name="records" class="boxes::Records">
+			<port name="fileName" value=".../weather/sel_dk.txt"/>
+		</box>
+	</box>
 
-	<model name="construction">
-		<model name="geometry" type="vg::ConstructionGeometry">
-			<parameter name="spanWidth">
+	<box name="construction">
+		<box name="geometry" class="vg::ConstructionGeometry">
+			<port name="spanWidth">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='11']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="numSpans">
+			</port>
+			<port name="numSpans">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='9']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="height">
+			</port>
+			<port name="height">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='13']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="length">
+			</port>
+			<port name="length">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='223']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="roofPitch">
+			</port>
+			<port name="roofPitch">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='14']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="shade">
+			</port>
+			<port name="shade">
 				<xsl:attribute name="value">
 					<xsl:value-of select="JobDataSet/Greenhouse/constants/Parameters/Parameters[ParameterID='445']/Value div 100"/>
 				</xsl:attribute>
-			</parameter>
-		</model>
+			</port>
+		</box>
 
-		<model name="shelters" type="vg::Shelters">
+		<box name="shelters" class="vg::Shelters">
 			<xsl:for-each select="JobDataSet/Greenhouse/zone/Panes//Pane[Position &lt; 7]">
 				<xsl:call-template name="extract-shelter"/>
 			</xsl:for-each>		
 			<!--
-			<model name="roof" type="vg::Shelters">
+			<box name="roof" class="vg::Shelters">
 				<xsl:for-each select="JobDataSet/Greenhouse/zone/Panes//Pane[Position &lt; 3]">
 					<xsl:call-template name="extract-shelter"/>
 				</xsl:for-each>		
-			</model>
-			<model name="walls" type="vg::Shelters">
+			</box>
+			<box name="walls" class="vg::Shelters">
 				<xsl:for-each select="JobDataSet/Greenhouse/zone/Panes//Pane[Position > 2 and Position &lt; 7]">
 					<xsl:call-template name="extract-shelter"/>
 				</xsl:for-each>		
-			</model>
+			</box>
 			-->
-		</model>
+		</box>
 
 
-		<model name="vents" type="vg::Vents">
+		<box name="vents" class="vg::Vents">
 			<xsl:for-each select="//JobDataSet/Greenhouse/zone/Vents/Vent">
-				<model type="vg::Vent">
+				<box class="vg::Vent">
 					<xsl:attribute name="name">
 						<xsl:value-of select="concat('vent', position())"/>
 					</xsl:attribute>
@@ -554,305 +546,305 @@
 							<xsl:value-of select="Constants/Parameters[ParameterID='52']/Value"/>
 						</xsl:attribute>
 					</parameter>-->
-					<parameter name="length">
+					<port name="length">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='456']/Value"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="height">
+					</port>
+					<port name="height">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='457']/Value"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="number">
+					</port>
+					<port name="number">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='49']/Value"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="porosity">
+					</port>
+					<port name="porosity">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='51']/Value div 100"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
+					</port>
+				</box>
 			</xsl:for-each>
-		</model>
-	</model>
+		</box>
+	</box>
 	
-	<model name="indoors">
-		<model name="given">
-			<model name="airflux" type="AirFluxGiven">
-				<model name="infiltration" type="vg::AirFluxInfiltration">
-					<parameter name="leakage">
+	<box name="indoors">
+		<box name="given">
+			<box name="airflux" class="AirFluxGiven">
+				<box name="infiltration" class="vg::AirFluxInfiltration">
+					<port name="leakage">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$Leakage"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
+					</port>
+				</box>
 				
-				<model name="crackVentilation" type="vg::PidControlElement">
-					<parameter name="signal" ref="./target[signal]"/>
-					<parameter name="Kprop" value="0.1"/>
-					<model name="target" type="vg::ProportionalSignal">
-						<model name="coldFactor" type="vg::ProportionalSignal"> 
-							<parameter name="input" ref ="outdoors[temperature]"/>
-							<parameter name="threshold" value ="-5"/>    	<!-- sp.VentsspFrostProtection_alpha=-5  -->
-							<parameter name="thresholdBand" value="1"/>
-							<parameter name="increasingSignal" value="true"/>
-							<parameter name="maxSignal">
+				<box name="crackVentilation" class="vg::PidControlElement">
+					<port name="signal" ref="./target[signal]"/>
+					<port name="Kprop" value="0.1"/>
+					<box name="target" class="vg::ProportionalSignal">
+						<box name="coldFactor" class="vg::ProportionalSignal"> 
+							<port name="input" ref ="outdoors[temperature]"/>
+							<port name="threshold" value ="-5"/>    	<!-- sp.VentsspFrostProtection_alpha=-5  -->
+							<port name="thresholdBand" value="1"/>
+							<port name="increasingSignal" value="TRUE"/>
+							<port name="maxSignal">
 								<xsl:attribute name="value">
 									<xsl:value-of select="$MaxCrackVentilation"/>
 								</xsl:attribute>
-							</parameter>
-							<parameter name="minSignal" value="0"/>
-						</model>
+							</port>
+							<port name="minSignal" value="0"/>
+						</box>
 						
-						<parameter name="input" ref="indoors/humidity[rh]"/>
-						<parameter name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
-						<parameter name="thresholdBand">
+						<port name="input" ref="indoors/humidity[rh]"/>
+						<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+						<port name="thresholdBand">
 							<xsl:attribute name="value">
 								<xsl:value-of select="max(JobDataSet/Greenhouse/zone/Vents/Vent/Constants/Parameters[ParameterID='492']/Value)"/> <!--Hack-->
 							</xsl:attribute>
-						</parameter>
-						<parameter name="increasingSignal" value="true"/>
-						<parameter name="maxSignal" ref="./coldFactor[signal]"/>  
-						<parameter name="minSignal" value="0"/>
-					</model>
-				</model>
+						</port>
+						<port name="increasingSignal" value="TRUE"/>
+						<port name="maxSignal" ref="./coldFactor[signal]"/>  
+						<port name="minSignal" value="0"/>
+					</box>
+				</box>
 				
-				<model name="gravitation" type="AirFluxGravitation"/>
-			</model> <!-- airflux -->
+				<box name="gravitation" class="AirFluxGravitation"/>
+			</box> <!-- airflux -->
 
-			<model name="vapourFlux" type="vg::VapourFluxSum"> 
-				<model name="transpiration" type="vg::VapourFluxTranspiration"/>
-				<model name="condensationCover" type="vg::VapourFluxCondensation">
-					<parameter name="surfaceAreaPerGroundArea" ref="geometry[coverPerGroundArea]"/>
-					<parameter name="surfaceTemperature" ref="energyFlux/shelter[coverTemperature]"/>
-				</model>
-				<model name="condensationScreens" type="vg::VapourFluxCondensation">
-					<parameter name="surfaceAreaPerGroundArea" ref="construction/shelters[screensPerGroundArea]"/>
-					<parameter name="surfaceTemperature" ref="energyFlux/shelter[screensTemperature]"/>
-				</model>
-				<model name="airFluxOutdoors"  type="vg::VapourFluxAir">
-					<parameter name="airFlux" ref="given/airflux[value]"/>
-				</model>
-			</model>
+			<box name="vapourFlux" class="vg::VapourFluxSum"> 
+				<box name="transpiration" class="vg::VapourFluxTranspiration"/>
+				<box name="condensationCover" class="vg::VapourFluxCondensation">
+					<port name="surfaceAreaPerGroundArea" ref="geometry[coverPerGroundArea]"/>
+					<port name="surfaceTemperature" ref="energyFlux/shelter[coverTemperature]"/>
+				</box>
+				<box name="condensationScreens" class="vg::VapourFluxCondensation">
+					<port name="surfaceAreaPerGroundArea" ref="construction/shelters[screensPerGroundArea]"/>
+					<port name="surfaceTemperature" ref="energyFlux/shelter[screensTemperature]"/>
+				</box>
+				<box name="airFluxOutdoors"  class="vg::VapourFluxAir">
+					<port name="airFlux" ref="given/airflux[value]"/>
+				</box>
+			</box>
 			
-			<model name="energyFlux" type="vg::EnergyFluxSum"> 
-				<model name="light" type="UniSim::Sum">
-					<parameter name="toAdd" value="(indoors/light[total])"/>
-				</model>
-				<model name="condensationCover" type="vg::EnergyFluxCondensation">
-					<parameter name="vapourFlux" ref="../../vapourflux/condensationCover[vapourFlux]"/>
-				</model>
-				<model name="condensationScreens" type="vg::EnergyFluxCondensation">
-					<parameter name="vapourFlux" ref="../../vapourflux/condensationScreens[vapourFlux]"/>
-				</model>
-				<model name="airFlux" type="vg::EnergyFluxAir">
-					<parameter name="airFlux" ref="given/airflux[value]"/>
-				</model>
-				<model name="growthLights" type="vg::PidControlElement">
-					<parameter name="Kprop" value="0.5"/>
-					<parameter name="signal" ref="./growthLights[value]"/>
-					<model name="growthLights" type="vg::EnergyFluxGrowthLights"/>
-				</model>
-				<model name="shelter" type="vg::EnergyFluxShelters"/>
-				<model name="floor" type="vg::EnergyFluxFloor"> 
-					<model name="radiationAbsorbed" type="vg::FloorRadiationAbsorbed"/>
-					<parameter name="Uindoors">
+			<box name="energyFlux" class="vg::EnergyFluxSum"> 
+				<box name="light" class="vg::Sum">
+					<port name="inputs" value="(indoors/light[total])"/>
+				</box>
+				<box name="condensationCover" class="vg::EnergyFluxCondensation">
+					<port name="vapourFlux" ref="../../vapourflux/condensationCover[vapourFlux]"/>
+				</box>
+				<box name="condensationScreens" class="vg::EnergyFluxCondensation">
+					<port name="vapourFlux" ref="../../vapourflux/condensationScreens[vapourFlux]"/>
+				</box>
+				<box name="airFlux" class="vg::EnergyFluxAir">
+					<port name="airFlux" ref="given/airflux[value]"/>
+				</box>
+				<box name="growthLights" class="vg::PidControlElement">
+					<port name="Kprop" value="0.5"/>
+					<port name="signal" ref="./growthLights[value]"/>
+					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
+				</box>
+				<box name="shelter" class="vg::EnergyFluxShelters"/>
+				<box name="floor" class="vg::EnergyFluxFloor"> 
+					<box name="radiationAbsorbed" class="vg::FloorRadiationAbsorbed"/>
+					<port name="Uindoors">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$FloorUindoors"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="Usoil">
+					</port>
+					<port name="Usoil">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$FloorUsoil"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="heatCapacity">
+					</port>
+					<port name="heatCapacity">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$FloorHeatCapacity"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
+					</port>
+				</box>
 				
-				<model name="transpiration" type="vg::EnergyFluxTranspiration"/> 
-			</model>		
-		</model> <!-- given -->		
+				<box name="transpiration" class="vg::EnergyFluxTranspiration"/> 
+			</box>		
+		</box> <!-- given -->		
 
-		<model name="controlled">
-			<model name="energyFlux"> 
-				<model name="heating">
-					<model name="minSupply" type="Unisim::Sum">
-						<parameter name="toAdd" value="(actuators/heating/pipes/*[nextEnergyFluxMin])"/>
-					</model>
-					<model name="maxSupply" type="Unisim::Sum">
-						<parameter name="toAdd" value="(actuators/heating/pipes/*[nextEnergyFluxMax])"/>
-					</model>
-					<model name="demand" type="vg::EnergyFluxHeatingDemand"/>
-					<model name="supply" type="vg::PidControlElement">
-						<parameter name="Kprop" value="0.6"/>
-						<parameter name="Kint" value="0.01"/>
-						<parameter name="minimum" ref="../minSupply[value]"/>
-						<parameter name="maximum" ref="../maxSupply[value]"/>
-						<parameter name="signal" ref="../demand[value]"/>
-					</model>				
-				</model>		
+		<box name="controlled">
+			<box name="energyFlux"> 
+				<box name="heating">
+					<box name="minSupply" class="vg::Sum">
+						<port name="inputs" value="(actuators/heating/pipes/*[nextEnergyFluxMin])"/>
+					</box>
+					<box name="maxSupply" class="vg::Sum">
+						<port name="inputs" value="(actuators/heating/pipes/*[nextEnergyFluxMax])"/>
+					</box>
+					<box name="demand" class="vg::EnergyFluxHeatingDemand"/>
+					<box name="supply" class="vg::PidControlElement">
+						<port name="Kprop" value="0.6"/>
+						<port name="Kint" value="0.01"/>
+						<port name="minimum" ref="../minSupply[value]"/>
+						<port name="maximum" ref="../maxSupply[value]"/>
+						<port name="signal" ref="../demand[value]"/>
+					</box>				
+				</box>		
 				
-				<model name="temperature" type="vg::IndoorsTemperature">
-					<model name="energyFlux" type="Unisim::Sum">
-						<parameter name="toAdd" value="(given/energyFlux[value] energyFlux/heating/supply[value])"/>
-					</model>
-					<parameter name="energyFlux" ref="./energyFlux[value]"/>
-					<parameter name="baseTemperature" ref="indoors/temperature[value]"/>
-				</model>
+				<box name="temperature" class="vg::IndoorsTemperature">
+					<box name="energyFlux" class="vg::Sum">
+						<port name="inputs" value="(given/energyFlux[value] energyFlux/heating/supply[value])"/>
+					</box>
+					<port name="energyFlux" ref="./energyFlux[value]"/>
+					<port name="baseTemperature" ref="indoors/temperature[value]"/>
+				</box>
 
-				<model name="cooling"> 
-					<model name="demand" type="vg::EnergyFluxCoolingDemand"/>
-					<model name="airSupplyMax" type="vg::AirFluxCoolingSupplyMax">
-						<model name="byWind" type="vg::VentilationByWind">
-							<parameter name="baseRate" value="10"/>
-						</model>
-						<model name="byTemp" type="vg::VentilationByTemp">
-							<parameter name="dischargeCoefficient" value="0.3"/>
-						</model>
-					</model>
-					<model name="supply" type="vg::PidControlElement">
-						<parameter name="Kprop" value="0.5"/>
-						<parameter name="maximum" value="0"/>
-						<parameter name="maxSlope" value="1"/>
-						<parameter name="minSlope" value="-1"/>
-						<parameter name="signal" ref="./target[value]"/>
-						<model name="target" type="vg::EnergyFluxCoolingSupply">
-							<parameter name="airSupplyMax" ref="cooling/airSupplyMax[value]"/>
-						</model>
-					</model>
-				</model>
-			</model> <!-- energyFlux -->
+				<box name="cooling"> 
+					<box name="demand" class="vg::EnergyFluxCoolingDemand"/>
+					<box name="airSupplyMax" class="vg::AirFluxCoolingSupplyMax">
+						<box name="byWind" class="vg::VentilationByWind">
+							<port name="baseRate" value="10"/>
+						</box>
+						<box name="byTemp" class="vg::VentilationByTemp">
+							<port name="dischargeCoefficient" value="0.3"/>
+						</box>
+					</box>
+					<box name="supply" class="vg::PidControlElement">
+						<port name="Kprop" value="0.5"/>
+						<port name="maximum" value="0"/>
+						<port name="maxSlope" value="1"/>
+						<port name="minSlope" value="-1"/>
+						<port name="signal" ref="./target[value]"/>
+						<box name="target" class="vg::EnergyFluxCoolingSupply">
+							<port name="airSupplyMax" ref="cooling/airSupplyMax[value]"/>
+						</box>
+					</box>
+				</box>
+			</box> <!-- energyFlux -->
 
-			<model name="cooling">
-				<model name="airFlux" type="vg::AirFluxCoolingSupply"/>
-				<model name="vapourFlux" type="vg::VapourFluxAir">
-					<parameter name="airFlux" ref="cooling/airFlux[value]"/>
-				</model>
-				<model name="energyFlux" type="vg::EnergyFluxAir">
-					<parameter name="airFlux" ref="cooling/airFlux[value]"/>
-				</model>
-			</model>
-		</model> <!-- controlled -->
+			<box name="cooling">
+				<box name="airFlux" class="vg::AirFluxCoolingSupply"/>
+				<box name="vapourFlux" class="vg::VapourFluxAir">
+					<port name="airFlux" ref="cooling/airFlux[value]"/>
+				</box>
+				<box name="energyFlux" class="vg::EnergyFluxAir">
+					<port name="airFlux" ref="cooling/airFlux[value]"/>
+				</box>
+			</box>
+		</box> <!-- controlled -->
 		
-		<model name="total">
-			<model name="airFlux" type="Unisim::Sum">
-				<parameter name="toAdd" value="(given/airFlux[value] cooling/airFlux[value])"/>
-			</model>
-			<model name="vapourFlux" type="vg::VapourFluxSum">
-				<parameter name="toAdd" value="(given/vapourFlux cooling/vapourFlux)"/>
-			</model>
-			<model name="energyFlux" type="Unisim::Sum">
-				<parameter name="toAdd" value="(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])"/>
-			</model>
-		</model> <!-- total -->
+		<box name="total">
+			<box name="airFlux" class="vg::Sum">
+				<port name="inputs" value="(given/airFlux[value] cooling/airFlux[value])"/>
+			</box>
+			<box name="vapourFlux" class="vg::VapourFluxSum">
+				<port name="toAdd" value="(given/vapourFlux cooling/vapourFlux)"/>
+			</box>
+			<box name="energyFlux" class="vg::Sum">
+				<port name="inputs" value="(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])"/>
+			</box>
+		</box> <!-- total -->
 
-		<model name="light" type="vg::IndoorsLight"/> 
-		<model name="temperature" type="vg::IndoorsTemperature">
-			<parameter name="resetValue">
+		<box name="light" class="vg::IndoorsLight"/> 
+		<box name="temperature" class="vg::IndoorsTemperature">
+			<port name="resetValue">
 				<xsl:attribute name="value">
 					<xsl:value-of select="//Setpoint[ParameterId='2']//SetpointValue"/>
 				</xsl:attribute>
-			</parameter> 
-			<parameter name="energyFlux" ref="total/energyFlux[value]"/>
-		</model>
-		<model name="humidity" type="vg::IndoorsHumidity"/>
-		<model name="co2" type="vg::IndoorsCo2"/>
-		<model name="windSpeed" type="vg::IndoorsWindSpeed"/>
-	</model> <!-- indoors -->
+			</port> 
+			<port name="energyFlux" ref="total/energyFlux[value]"/>
+		</box>
+		<box name="humidity" class="vg::IndoorsHumidity"/>
+		<box name="co2" class="vg::IndoorsCo2"/>
+		<box name="windSpeed" class="vg::IndoorsWindSpeed"/>
+	</box> <!-- indoors -->
 
-	<model name="setpoints">
-		<model name="isDay" type="vg::ProportionalSignal">
-			<parameter name="threshold" >
+	<box name="setpoints">
+		<box name="isDay" class="vg::ProportionalSignal">
+			<port name="threshold" >
 				<xsl:attribute name="value">
 					<xsl:value-of select="//Greenhouse/zone/Constants/Parameters[ParameterID='436']/Value"/>
 				</xsl:attribute>
-			</parameter>
-			<parameter name="input" ref="outdoors/records[GlobRad]"/>
-			<parameter name="thresholdBand" value="0"/>
-			<parameter name="increasingSignal" value="true"/>
-			<parameter name="minSignal" value="0"/>
-			<parameter name="maxSignal" value="1"/>
-		</model>
-		<model name="humidity">
+			</port>
+			<port name="input" ref="outdoors/records[GlobRad]"/>
+			<port name="thresholdBand" value="0"/>
+			<port name="increasingSignal" value="TRUE"/>
+			<port name="minSignal" value="0"/>
+			<port name="maxSignal" value="1"/>
+		</box>
+		<box name="humidity">
 			<!-- Day/Night setpoints not implemented in MatLab nor UniSim model -->
 			<!-- DeltaX setpoint not implemented in UniSim model -->
-			<model name="maximumRh" type="vg::SignalCollection">
-				<parameter name="rule" value="min"/>
-				<parameter name="signalReset" value="100"/>
+			<box name="maximumRh" class="vg::SignalCollection">
+				<port name="rule" value="min"/>
+				<port name="signalReset" value="100"/>
 				<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='16']/SetpointTimes//SetpointTime">
-					<model type="vg::DateTimeSignal">
-						<parameter name="signalOutside" value="100"/>
-						<parameter name="signalOutsideTimeOnly" value="100"/>
-						<parameter name="signalInside">
+					<box class="vg::DateTimeSignal">
+						<port name="signalOutside" value="100"/>
+						<port name="signalOutsideTimeOnly" value="100"/>
+						<port name="signalInside">
 							<xsl:attribute name="value">
 								<xsl:value-of select="SetpointValue"/>
 							</xsl:attribute>
-						</parameter>
+						</port>
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-					</model>
+					</box>
 				</xsl:for-each>
-			</model>
-		</model>
+			</box>
+		</box>
 		
-		<model name="temperature">
-			<model name="ventilation" type="vg::PidControlElement">
-				<parameter name="initState" ref="./target[signalReset]"/>
-				<parameter name="signal" ref="./target[signal]"/>
-				<parameter name="Kprop" value="0.1"/>
-				<model name="target" type="vg::SignalCollection">
-					<parameter name="rule" value="sum"/>
-					<parameter name="signalReset">
+		<box name="temperature">
+			<box name="ventilation" class="vg::PidControlElement">
+				<port name="initState" ref="./target[signalReset]"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::SignalCollection">
+					<port name="rule" value="sum"/>
+					<port name="signalReset">
 						<xsl:attribute name="value">
 							<xsl:value-of select="//Setpoint[ParameterId='3']//SetpointValue"/>
 						</xsl:attribute>
-					</parameter> 
+					</port> 
 
-					<model name="setpoints" type="vg::SignalCollection">
-						<parameter name="rule" value="min"/>
-						<parameter name="signalReset" ref="..[signalReset]"/>
+					<box name="setpoints" class="vg::SignalCollection">
+						<port name="rule" value="min"/>
+						<port name="signalReset" ref="..[signalReset]"/>
 						<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='3']/SetpointTimes//SetpointTime">
-							<model name="setpoint" type="vg::DateTimeSignal">
+							<box name="setpoint" class="vg::DateTimeSignal">
 								<xsl:call-template name="extract-period">
-									<xsl:with-param name="circadian" select="'true'"/>
+									<xsl:with-param name="circadian" select="'TRUE'"/>
 								</xsl:call-template>
-								<parameter name="signalOutside" value="100"/>
-								<parameter name="signalOutsideTimeOnly" value="100"/>
-								<parameter name="signalInside">
+								<port name="signalOutside" value="100"/>
+								<port name="signalOutsideTimeOnly" value="100"/>
+								<port name="signalInside">
 									<xsl:attribute name="value">
 										<xsl:value-of select="SetpointValue"/>
 									</xsl:attribute>
-								</parameter>
-							</model>
+								</port>
+							</box>
 						</xsl:for-each>
-					</model>
+					</box>
 					
 					<!-- Decrease ventilation set point temperature at high humidity -->
-					<model name="adjustments" type="vg::SignalCollection">
-						<parameter name="rule" value="min"/>
-						<parameter name="signalReset" value="0"/>
+					<box name="adjustments" class="vg::SignalCollection">
+						<port name="rule" value="min"/>
+						<port name="signalReset" value="0"/>
 						<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='40']/SetpointTimes//SetpointTime">
 
-							<model type="vg::DateTimeSignal">
+							<box class="vg::DateTimeSignal">
 								<xsl:call-template name="extract-period">
-									<xsl:with-param name="circadian" select="'true'"/>
+									<xsl:with-param name="circadian" select="'TRUE'"/>
 								</xsl:call-template>
-								<parameter name="signalOutside" value="0"/>
-								<parameter name="signalOutsideTimeOnly" value="0"/>
-								<parameter name="signalInside" ref="./adjustment[signal]"/>
+								<port name="signalOutside" value="0"/>
+								<port name="signalOutsideTimeOnly" value="0"/>
+								<port name="signalInside" ref="./adjustment[signal]"/>
 					
-								<model name="adjustment" type="vg::ProportionalSignal">
-									<parameter name="input" ref="indoors/humidity[rh]"/>
-									<parameter name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
-									<parameter name="thresholdBand">
+								<box name="adjustment" class="vg::ProportionalSignal">
+									<port name="input" ref="indoors/humidity[rh]"/>
+									<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+									<port name="thresholdBand">
 										<xsl:variable name="user-sp" select="max(//Vents/Vent/Constants/Parameters[ParameterID='489']/Value)"/>
 										<xsl:attribute name="value">
 											<xsl:if test="$user-sp &lt; $MinVentilationPbandRH">
@@ -862,73 +854,73 @@
 												<xsl:value-of select="$user-sp"/>
 											</xsl:if>
 										</xsl:attribute>
-									</parameter>
-									<parameter name="increasingSignal" value="false"/>
-									<parameter name="minSignal">
+									</port>
+									<port name="increasingSignal" value="FALSE"/>
+									<port name="minSignal">
 										<xsl:attribute name="value">
 											<xsl:value-of select="-SetpointValue"/>
 										</xsl:attribute>
-									</parameter>
-									<parameter name="maxSignal" value="0"/>
-								</model>
-							</model>
+									</port>
+									<port name="maxSignal" value="0"/>
+								</box>
+							</box>
 						</xsl:for-each>
-					</model>
-				</model>
-			</model>
+					</box>
+				</box>
+			</box>
 		
 			<!-- Day/Night setpoints not implemented in MatLab nor UniSim model -->
 			<!-- spTheatmax to avoid cold-fall from screens not implemented in MatLab nor UniSim model-->
-			<model name="heating" type="vg::PidControlElement">
-				<parameter name="initState" ref="./target[signalReset]"/>
-				<parameter name="signal" ref="./target[signal]"/>
-				<parameter name="Kprop" value="0.1"/>
-				<model name="target" type="vg::SignalCollection">
-					<parameter name="rule" value="sum"/>
-					<parameter name="signalReset">
+			<box name="heating" class="vg::PidControlElement">
+				<port name="initState" ref="./target[signalReset]"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::SignalCollection">
+					<port name="rule" value="sum"/>
+					<port name="signalReset">
 						<xsl:attribute name="value">
 							<xsl:value-of select="//Setpoint[ParameterId='2']//SetpointValue"/>
 						</xsl:attribute>
-					</parameter> 
-					<model name="setpoints" type="vg::SignalCollection">
-						<parameter name="rule" value="max"/>
-						<parameter name="signalReset" ref="..[signalReset]"/>
+					</port> 
+					<box name="setpoints" class="vg::SignalCollection">
+						<port name="rule" value="max"/>
+						<port name="signalReset" ref="..[signalReset]"/>
 						<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='2']/SetpointTimes//SetpointTime">
 						
-							<model name="setpoint" type="vg::DateTimeSignal">
+							<box name="setpoint" class="vg::DateTimeSignal">
 								<xsl:call-template name="extract-period">
-									<xsl:with-param name="circadian" select="'true'"/>
+									<xsl:with-param name="circadian" select="'TRUE'"/>
 								</xsl:call-template>
-								<parameter name="signalOutside" value="0"/>
-								<parameter name="signalOutsideTimeOnly" value="0"/>
-								<parameter name="signalInside">
+								<port name="signalOutside" value="0"/>
+								<port name="signalOutsideTimeOnly" value="0"/>
+								<port name="signalInside">
 									<xsl:attribute name="value">
 										<xsl:value-of select="SetpointValue"/>
 									</xsl:attribute>
-								</parameter>
-							</model>
+								</port>
+							</box>
 						</xsl:for-each>
-					</model>
+					</box>
 					
 					<!-- Increase heating set point at high humidity -->
-					<model name="adjustmentsRh" type="vg::SignalCollection">
-						<parameter name="signalReset" value="0"/>
-						<parameter name="rule" value="max"/>
+					<box name="adjustmentsRh" class="vg::SignalCollection">
+						<port name="signalReset" value="0"/>
+						<port name="rule" value="max"/>
 						<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='22']/SetpointTimes//SetpointTime">
 						
-							<model type="vg::DateTimeSignal">
+							<box class="vg::DateTimeSignal">
 								<xsl:call-template name="extract-period">
-									<xsl:with-param name="circadian" select="'true'"/>
+									<xsl:with-param name="circadian" select="'TRUE'"/>
 								</xsl:call-template>
-								<parameter name="signalReset" value="0"/>
-								<parameter name="signalOutside" value="0"/>
-								<parameter name="signalOutsideTimeOnly" value="0"/>
-								<parameter name="signalInside" ref="./adjustment[signal]"/>
+								<port name="signalReset" value="0"/>
+								<port name="signalOutside" value="0"/>
+								<port name="signalOutsideTimeOnly" value="0"/>
+								<port name="signalInside" ref="./adjustment[signal]"/>
 					
-								<model name="adjustment" type="vg::ProportionalSignal">
-									<parameter name="input" ref="indoors/humidity[rh]"/>
-									<parameter name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
-									<parameter name="thresholdBand">
+								<box name="adjustment" class="vg::ProportionalSignal">
+									<port name="input" ref="indoors/humidity[rh]"/>
+									<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+									<port name="thresholdBand">
 										<xsl:variable name="user-sp" select="max(//Heatpipes/Heatpipe/Constants/Parameters[ParameterID='540']/Value)"/>
 										<xsl:attribute name="value">
 											<xsl:if test="$user-sp &lt; $MinHeatingPbandRH">
@@ -938,579 +930,579 @@
 												<xsl:value-of select="$user-sp"/>
 											</xsl:if>
 										</xsl:attribute>
-									</parameter>
-									<parameter name="increasingSignal" value="true"/>
-									<parameter name="minSignal" value="0"/>
-									<parameter name="maxSignal">
+									</port>
+									<port name="increasingSignal" value="TRUE"/>
+									<port name="minSignal" value="0"/>
+									<port name="maxSignal">
 										<xsl:attribute name="value">
 											<xsl:value-of select="SetpointValue"/>
 										</xsl:attribute>
-									</parameter>
-								</model>
-							</model>
+									</port>
+								</box>
+							</box>
 						</xsl:for-each>
-					</model>
+					</box>
 
 					<!-- Increase heating set point at high light -->
-					<model name="adjustmentLight" type="vg::ProportionalSignal">
-						<parameter name="input" ref="outdoors[radiation]"/>
-						<parameter name="threshold">
+					<box name="adjustmentLight" class="vg::ProportionalSignal">
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="threshold">
 							<xsl:attribute name="value">
 								<xsl:value-of select="$HeatingLightAdjustmentThreshold"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="thresholdBand">
+						</port>
+						<port name="thresholdBand">
 							<xsl:attribute name="value">
 								<xsl:value-of select="$HeatingLightAdjustmentThresholdBand"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="increasingSignal" value="true"/>
-						<parameter name="minSignal" value="0"/>
-						<parameter name="maxSignal">
+						</port>
+						<port name="increasingSignal" value="TRUE"/>
+						<port name="minSignal" value="0"/>
+						<port name="maxSignal">
 							<xsl:attribute name="value">
 								<xsl:value-of select="$HeatingLightAdjustment"/>
 							</xsl:attribute>
-						</parameter>
-					</model>
-				</model>
-			</model>
-		</model>
+						</port>
+					</box>
+				</box>
+			</box>
+		</box>
 
-		<model name="CO2">
-			<model name="minimum" type="vg::SignalCollection">
-				<parameter name="rule" value="max"/>
-				<parameter name="signalReset" value="0"/>
-				<parameter name="rule" value="max"/>
+		<box name="CO2">
+			<box name="minimum" class="vg::SignalCollection">
+				<port name="rule" value="max"/>
+				<port name="signalReset" value="0"/>
+				<port name="rule" value="max"/>
 				<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='28']/SetpointTimes//SetpointTime">
-					<model type="vg::DateTimeSignal">
+					<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-						<parameter name="signalOutside" value="0"/>
-						<parameter name="signalOutsideTimeOnly" value="0"/>
-						<parameter name="signalInside">
+						<port name="signalOutside" value="0"/>
+						<port name="signalOutsideTimeOnly" value="0"/>
+						<port name="signalInside">
 							<xsl:attribute name="value">
 								<xsl:value-of select="SetpointValue"/>
 							</xsl:attribute>
-						</parameter>
-					</model>
+						</port>
+					</box>
 				</xsl:for-each>
-			</model>
+			</box>
 
-			<model name="maximum" type="vg::SignalCollection">
-				<parameter name="rule" value="min"/>
-				<parameter name="signalReset" value="1500"/>
+			<box name="maximum" class="vg::SignalCollection">
+				<port name="rule" value="min"/>
+				<port name="signalReset" value="1500"/>
 				<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='27']/SetpointTimes//SetpointTime">
-					<model type="vg::DateTimeSignal">
+					<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-						<parameter name="signalOutside" value="0"/>
-						<parameter name="signalOutsideTimeOnly" value="0"/>
-						<parameter name="signalInside">
+						<port name="signalOutside" value="0"/>
+						<port name="signalOutsideTimeOnly" value="0"/>
+						<port name="signalInside">
 							<xsl:attribute name="value">
 								<xsl:value-of select="SetpointValue"/>
 							</xsl:attribute>
-						</parameter>
-					</model>
+						</port>
+					</box>
 				</xsl:for-each>
-			</model>
-		</model>
-	</model>
+			</box>
+		</box>
+	</box>
 
-	<model name="controllers">
-		<model name="screens">
+	<box name="controllers">
+		<box name="screens">
 			<!-- When too humid, do not draw screens completely -->
-			<model name="maxDrawn" type="vg::PidControlElement"> 
-				<parameter name="initState" value="1"/>
-				<parameter name="signal" ref="./target[signal]"/>
-				<parameter name="Kprop" value="0.1"/>
-				<model name="target" type="vg::ThresholdSignal"> 
-					<parameter name="input" ref ="indoors/humidity[rh]"/>
-					<parameter name="threshold" ref ="setpoints/humidity/maximumRh[signal]"/>
-					<parameter name="signalBelow" value ="1"/>
-					<parameter name="signalAbove">
+			<box name="maxDrawn" class="vg::PidControlElement"> 
+				<port name="initState" value="1"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::ThresholdSignal"> 
+					<port name="input" ref ="indoors/humidity[rh]"/>
+					<port name="threshold" ref ="setpoints/humidity/maximumRh[signal]"/>
+					<port name="signalBelow" value ="1"/>
+					<port name="signalAbove">
 						<xsl:attribute name="value">
 							<xsl:value-of select="1 - max(//Screens/Screen/Constants/Parameters[ParameterID='522']/Value) div 100"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
-			</model>
+					</port>
+				</box>
+			</box>
 
-			<model name="energy">
+			<box name="energy">
 				<xsl:choose>
 					<xsl:when test="$EnergyScreenOption=1">
-						<model name="control" type="vg::SignalCollection">
-							<parameter name="rule" value="min"/>
-							<parameter name="signalReset" value ="0"/>
+						<box name="control" class="vg::SignalCollection">
+							<port name="rule" value="min"/>
+							<port name="signalReset" value ="0"/>
 							<!-- Draw when it is dark -->
-							<model type="vg::ThresholdSignal">
-								<parameter name="input" ref ="outdoors[radiation]"/>
-								<parameter name="threshold">
+							<box class="vg::ThresholdSignal">
+								<port name="input" ref ="outdoors[radiation]"/>
+								<port name="threshold">
 									<xsl:attribute name="value">
 										<xsl:value-of select="$spLightEnergyScreen"/>
 									</xsl:attribute>
-								</parameter>
-								<parameter name="signalBelow" ref ="controllers/screens/maxDrawn[value]"/>
-								<parameter name="signalAbove" value ="0"/>
-							</model>
+								</port>
+								<port name="signalBelow" ref ="controllers/screens/maxDrawn[value]"/>
+								<port name="signalAbove" value ="0"/>
+							</box>
 							<!-- And it is cool inside -->
-							<model type="vg::ThresholdSignal">
-								<parameter name="input" ref ="indoors/temperature[value]"/>
-								<parameter name="threshold" ref ="setpoints/temperature/ventilation[value]"/>
-								<parameter name="signalBelow" value ="1"/>
-								<parameter name="signalAbove" value ="0"/>
-							</model>
+							<box class="vg::ThresholdSignal">
+								<port name="input" ref ="indoors/temperature[value]"/>
+								<port name="threshold" ref ="setpoints/temperature/ventilation[value]"/>
+								<port name="signalBelow" value ="1"/>
+								<port name="signalAbove" value ="0"/>
+							</box>
 							<!-- And the energy balance without screens is negative -->
-							<model type="vg::EnergyScreenBalanceSignal"/>
-						</model>
+							<box class="vg::EnergyScreenBalanceSignal"/>
+						</box>
 					</xsl:when>
 					<xsl:when test="$EnergyScreenOption=2">
-						<model name="control" type="vg::SignalCollection">
-							<parameter name="rule" value="min"/>
-							<parameter name="signalReset" value ="0"/>
+						<box name="control" class="vg::SignalCollection">
+							<port name="rule" value="min"/>
+							<port name="signalReset" value ="0"/>
 							<!-- Draw when it is dark -->
-							<model type="vg::ThresholdSignal">
-								<parameter name="input" ref ="outdoors[radiation]"/>
-								<parameter name="threshold">
+							<box class="vg::ThresholdSignal">
+								<port name="input" ref ="outdoors[radiation]"/>
+								<port name="threshold">
 									<xsl:attribute name="value">
 										<xsl:value-of select="$spLightEnergyScreen"/>
 									</xsl:attribute>
-								</parameter>
-								<parameter name="signalBelow" ref ="controllers/screens/maxDrawn[value]"/>
-								<parameter name="signalAbove" value ="0"/>
-							</model>
+								</port>
+								<port name="signalBelow" ref ="controllers/screens/maxDrawn[value]"/>
+								<port name="signalAbove" value ="0"/>
+							</box>
 							<!-- And it is cool inside -->
-							<model type="vg::ThresholdSignal">
-								<parameter name="input" ref ="indoors/temperature[value]"/>
-								<parameter name="threshold" ref ="setpoints/temperature/ventilation[signal]"/>
-								<parameter name="signalBelow" value ="1"/>
-								<parameter name="signalAbove" value ="0"/>
-							</model>
-						</model>
+							<box class="vg::ThresholdSignal">
+								<port name="input" ref ="indoors/temperature[value]"/>
+								<port name="threshold" ref ="setpoints/temperature/ventilation[signal]"/>
+								<port name="signalBelow" value ="1"/>
+								<port name="signalAbove" value ="0"/>
+							</box>
+						</box>
 					</xsl:when>
 				</xsl:choose>
-			</model>
+			</box>
 			
-			<model name="shade">
-				<model name="control" type="vg::SignalCollection">
-					<parameter name="rule" value="max"/>
-					<parameter name="signalReset" value ="0"/>
+			<box name="shade">
+				<box name="control" class="vg::SignalCollection">
+					<port name="rule" value="max"/>
+					<port name="signalReset" value ="0"/>
 					<!-- Draw when it is too light  -->
-					<model type="vg::ThresholdSignal">
-						<parameter name="input" ref ="outdoors[radiation]"/>
-						<parameter name="threshold">
+					<box class="vg::ThresholdSignal">
+						<port name="input" ref ="outdoors[radiation]"/>
+						<port name="threshold">
 							<xsl:attribute name="value">
 								<xsl:value-of select="$spShadowThresholdScreen"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="signalBelow" value ="0"/>
-						<parameter name="signalAbove" ref ="controllers/screens/maxDrawn[value]"/>
-					</model>
+						</port>
+						<port name="signalBelow" value ="0"/>
+						<port name="signalAbove" ref ="controllers/screens/maxDrawn[value]"/>
+					</box>
 					<!-- Or when energy screen is drawn -->
 					<xsl:if test="$Use2ndScreenWithEnergy=1">
-						<model type="vg::FixedSignal">
-							<parameter name="input" ref="controllers/screens/energy/control[signal]"/>
-						</model>
+						<box class="vg::FixedSignal">
+							<port name="input" ref="controllers/screens/energy/control[signal]"/>
+						</box>
 					</xsl:if>
-				</model>
-			</model>
+				</box>
+			</box>
 
-			<model name="blackout">
+			<box name="blackout">
 				<!-- Draw if there is any light  -->
-				<model name="light" type="vg::ThresholdSignal">
-					<parameter name="input" ref="outdoors[radiation]"/>
-					<parameter name="threshold" value="0"/>
-					<parameter name="signalBelow" value="0"/>
-					<parameter name="signalAbove" ref ="controllers/screens/maxDrawn[value]"/>
-				</model>
-				<model name="control" type="vg::SignalCollection">
-					<parameter name="rule" value="max"/>
-					<parameter name="signalReset" value="0"/>
-					<model type="vg::SignalCollection">
-						<parameter name="rule" value="max"/>
-						<parameter name="signalReset" value="0"/>
+				<box name="light" class="vg::ThresholdSignal">
+					<port name="input" ref="outdoors[radiation]"/>
+					<port name="threshold" value="0"/>
+					<port name="signalBelow" value="0"/>
+					<port name="signalAbove" ref ="controllers/screens/maxDrawn[value]"/>
+				</box>
+				<box name="control" class="vg::SignalCollection">
+					<port name="rule" value="max"/>
+					<port name="signalReset" value="0"/>
+					<box class="vg::SignalCollection">
+						<port name="rule" value="max"/>
+						<port name="signalReset" value="0"/>
 						<!-- Draw at night time  -->
-						<model type="vg::DateTimeSignal">
-							<parameter name="beginDay" value="1"/>
-							<parameter name="endDay" value="365"/>
-							<parameter name="beginTime" value="18:00"/>
-							<parameter name="endTime" value="6:00"/>
-							<parameter name="signalInside" value="1"/>
-							<parameter name="signalOutside" value="0"/>
-							<parameter name="signalOutsideTimeOnly" value="0"/>
-						</model>
-					</model>
+						<box class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="18:00"/>
+							<port name="endTime" value="6:00"/>
+							<port name="signalInside" value="1"/>
+							<port name="signalOutside" value="0"/>
+							<port name="signalOutsideTimeOnly" value="0"/>
+						</box>
+					</box>
 					<!-- Or when energy screen is drawn -->
 					<xsl:if test="$Use2ndScreenWithEnergy=1">
-						<model type="vg::FixedSignal">
-							<parameter name="input" ref="controllers/screens/energy/control[signal]"/>
-						</model>
+						<box class="vg::FixedSignal">
+							<port name="input" ref="controllers/screens/energy/control[signal]"/>
+						</box>
 					</xsl:if>
-				</model>
-			</model>
-		</model>
+				</box>
+			</box>
+		</box>
 <!--
-		<model name="ventilation" type="vg::VentilationController">
-			<model name="byTemperature" type="vg::ProportionalSignal">
-				<parameter name="input" ref="indoors/temperature[value]"/>
-				<parameter name="threshold" ref="setpoints/temperature/ventilation[value]"/>
-				<parameter name="thresholdBand">
+		<box name="ventilation" class="vg::VentilationController">
+			<box name="byTemperature" class="vg::ProportionalSignal">
+				<port name="input" ref="indoors/temperature[value]"/>
+				<port name="threshold" ref="setpoints/temperature/ventilation[value]"/>
+				<port name="thresholdBand">
 					<xsl:attribute name="value">
 						<xsl:value-of select="max(JobDataSet/Greenhouse/zone/Vents/Vent/Constants/Parameters[ParameterID='489']/Value)"/>  <-Hack
 					</xsl:attribute>
-				</parameter>
-				<parameter name="increasingSignal" value="true"/>
-				<parameter name="maxSignal" value="100"/>
-				<parameter name="minSignal" value="0"/>
-			</model>
-			<model name="byHumidity" type="vg::ProportionalSignal">
-				<parameter name="input" ref="indoors/humidity[rh]"/>
-				<parameter name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
-				<parameter name="thresholdBand">
+				</port>
+				<port name="increasingSignal" value="TRUE"/>
+				<port name="maxSignal" value="100"/>
+				<port name="minSignal" value="0"/>
+			</box>
+			<box name="byHumidity" class="vg::ProportionalSignal">
+				<port name="input" ref="indoors/humidity[rh]"/>
+				<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+				<port name="thresholdBand">
 					<xsl:attribute name="value">
 						<xsl:value-of select="max(JobDataSet/Greenhouse/zone/Vents/Vent/Constants/Parameters[ParameterID='492']/Value)"/> <-Hack
 					</xsl:attribute>
-				</parameter>
-				<parameter name="increasingSignal" value="true"/>
-				<parameter name="maxSignal" value="5"/>  <- sp.spRH.maxVentopeningRH_day=5;  sp.spRH.maxVentopeningRH_night=5; 
-				<parameter name="minSignal" value="0"/>
-			</model>
-			<model name="leeFactor" type="vg::ProportionalSignal">
-				<parameter name="input" ref="outdoors[windspeed]"/>
-				<parameter name="threshold" value="15"/>
-				<parameter name="thresholdBand" value="5"/>
-				<parameter name="increasingSignal" value="false"/>
-				<parameter name="maxSignal" value="1"/>
-				<parameter name="minSignal" value="0"/>
-			</model>
-			<model name="windFactor" type="vg::ProportionalSignal">
-				<parameter name="input" ref="outdoors[windspeed]"/>
-				<parameter name="threshold" value="10"/>
-				<parameter name="thresholdBand" value="5"/>
-				<parameter name="increasingSignal" value="false"/>
-				<parameter name="maxSignal" value="1"/>
-				<parameter name="minSignal" value="0"/>
-			</model>
-			<model name="coldFactor" type="vg::ProportionalSignal"> 
-				<parameter name="input" ref ="outdoors[temperature]"/>
-				<parameter name="threshold" value ="-5"/>    <- sp.VentsspFrostProtection_alpha=-5 
-				<parameter name="thresholdBand" value="1"/>
-				<parameter name="increasingSignal" value="true"/>
-				<parameter name="maxSignal" value="1"/>
-				<parameter name="minSignal" value="0"/>
-			</model>
-		</model>
+				</port>
+				<port name="increasingSignal" value="TRUE"/>
+				<port name="maxSignal" value="5"/>  <- sp.spRH.maxVentopeningRH_day=5;  sp.spRH.maxVentopeningRH_night=5; 
+				<port name="minSignal" value="0"/>
+			</box>
+			<box name="leeFactor" class="vg::ProportionalSignal">
+				<port name="input" ref="outdoors[windspeed]"/>
+				<port name="threshold" value="15"/>
+				<port name="thresholdBand" value="5"/>
+				<port name="increasingSignal" value="FALSE"/>
+				<port name="maxSignal" value="1"/>
+				<port name="minSignal" value="0"/>
+			</box>
+			<box name="windFactor" class="vg::ProportionalSignal">
+				<port name="input" ref="outdoors[windspeed]"/>
+				<port name="threshold" value="10"/>
+				<port name="thresholdBand" value="5"/>
+				<port name="increasingSignal" value="FALSE"/>
+				<port name="maxSignal" value="1"/>
+				<port name="minSignal" value="0"/>
+			</box>
+			<box name="coldFactor" class="vg::ProportionalSignal"> 
+				<port name="input" ref ="outdoors[temperature]"/>
+				<port name="threshold" value ="-5"/>    <- sp.VentsspFrostProtection_alpha=-5 
+				<port name="thresholdBand" value="1"/>
+				<port name="increasingSignal" value="TRUE"/>
+				<port name="maxSignal" value="1"/>
+				<port name="minSignal" value="0"/>
+			</box>
+		</box>
 
-		<model name="heating">
-			<model name="temperature" type="vg::HeatingTemperatureController">
-				<model name="Tdiff" type="vg::RunningAverage">
-					<parameter name="input" ref ="..[Tdiff]"/>
-					<parameter name="length" value ="30"/>
-				</model>
+		<box name="heating">
+			<box name="temperature" class="vg::HeatingTemperatureController">
+				<box name="Tdiff" class="vg::RunningAverage">
+					<port name="input" ref ="..[Tdiff]"/>
+					<port name="length" value ="30"/>
+				</box>
 				<- For hvert rør:
 				Se CommonFlowTemperature og CommonReturnTemperature
 				
-				<parameter name="minimumSignal" value ="20"/>
-				<parameter name="maximumSignal" value ="90"/>
-			</model>
-		</model>
+				<port name="minimumSignal" value ="20"/>
+				<port name="maximumSignal" value ="90"/>
+			</box>
+		</box>
 -->
-		<model name="growthLight" type="vg::GrowthLightController">
-			<model name="on" type="vg::SignalCollection">
-				<parameter name="rule" value ="max"/>
-				<parameter name="signalReset" value ="0"/>
+		<box name="growthLight" class="vg::GrowthLightController">
+			<box name="on" class="vg::SignalCollection">
+				<port name="rule" value ="max"/>
+				<port name="signalReset" value ="0"/>
 				<xsl:for-each select="//Setpoint[ParameterId='33']//SetpointTime">
-					<model type="vg::DateTimeSignal">
+					<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-						<parameter name="signalInside" ref ="./on[signal]"/>
-						<parameter name="signalOutside" value="0"/>
-						<parameter name="signalOutsideTimeOnly" value="0"/>
+						<port name="signalInside" ref ="./on[signal]"/>
+						<port name="signalOutside" value="0"/>
+						<port name="signalOutsideTimeOnly" value="0"/>
 
-						<model name="on" type="vg::ThresholdSignal">
-							<parameter name="threshold">
+						<box name="on" class="vg::ThresholdSignal">
+							<port name="threshold">
 								<xsl:attribute name="value">
 									<xsl:value-of select="SetpointValue"/>
 								</xsl:attribute>
-							</parameter>
-							<parameter name="input" ref ="outdoors[radiation]"/>
-							<parameter name="signalBelow" value ="1"/>
-							<parameter name="signalAbove" value="0"/>
-						</model>
-					</model>
+							</port>
+							<port name="input" ref ="outdoors[radiation]"/>
+							<port name="signalBelow" value ="1"/>
+							<port name="signalAbove" value="0"/>
+						</box>
+					</box>
 				</xsl:for-each>
-			</model>
+			</box>
 			
-			<model name="off" type="vg::SignalCollection">
-				<parameter name="rule" value ="max"/>
-				<parameter name="signalReset" value ="0"/>
+			<box name="off" class="vg::SignalCollection">
+				<port name="rule" value ="max"/>
+				<port name="signalReset" value ="0"/>
 				<xsl:for-each select="//Setpoint[ParameterId='34']//SetpointTime">
-					<model type="vg::DateTimeSignal">
+					<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-						<parameter name="signalInside" ref ="./off[signal]"/>
-						<parameter name="signalOutside" value="0"/>
-						<parameter name="signalOutsideTimeOnly" value="0"/>
+						<port name="signalInside" ref ="./off[signal]"/>
+						<port name="signalOutside" value="0"/>
+						<port name="signalOutsideTimeOnly" value="0"/>
 
-						<model name="off" type="vg::ThresholdSignal">
-							<parameter name="threshold">
+						<box name="off" class="vg::ThresholdSignal">
+							<port name="threshold">
 								<xsl:attribute name="value">
 									<xsl:value-of select="SetpointValue"/>
 								</xsl:attribute>
-							</parameter>
-							<parameter name="input" ref ="outdoors[radiation]"/>
-							<parameter name="signalBelow" value ="0"/>
-							<parameter name="signalAbove" value="1"/>
-						</model>
-					</model>
+							</port>
+							<port name="input" ref ="outdoors[radiation]"/>
+							<port name="signalBelow" value ="0"/>
+							<port name="signalAbove" value="1"/>
+						</box>
+					</box>
 				</xsl:for-each>
-			</model>
+			</box>
 			
-			<model name="periods" type="vg::SignalCollection">
-				<parameter name="rule" value ="max"/>
-				<parameter name="signalReset" value ="0"/>
+			<box name="periods" class="vg::SignalCollection">
+				<port name="rule" value ="max"/>
+				<port name="signalReset" value ="0"/>
 				<xsl:for-each select="//Setpoint[ParameterId='35']//SetpointTime[SetpointValue='1']">
-					<model type="vg::DateTimeSignal">
+					<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'true'"/>
+							<xsl:with-param name="circadian" select="'TRUE'"/>
 						</xsl:call-template>
-						<parameter name="signalInside" value ="1"/>
-						<parameter name="signalOutside" value="0"/>
-						<parameter name="signalOutsideTimeOnly" value="0"/>
-					</model>
+						<port name="signalInside" value ="1"/>
+						<port name="signalOutside" value="0"/>
+						<port name="signalOutsideTimeOnly" value="0"/>
+					</box>
 				</xsl:for-each>
-			</model>
-		</model>
+			</box>
+		</box>
 
-		<model name="chalk" type="vg::SignalCollection">
-			<parameter name="rule" value ="max"/>
-			<parameter name="signalReset" value ="0"/>
+		<box name="chalk" class="vg::SignalCollection">
+			<port name="rule" value ="max"/>
+			<port name="signalReset" value ="0"/>
 			<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='39']/SetpointTimes//SetpointTime">
-				<model type="vg::DateTimeSignal">
+				<box class="vg::DateTimeSignal">
 						<xsl:call-template name="extract-period">
-							<xsl:with-param name="circadian" select="'false'"/>
+							<xsl:with-param name="circadian" select="'FALSE'"/>
 						</xsl:call-template>
-					<parameter name="signalOutside" value="0"/>
-					<parameter name="signalInside">
+					<port name="signalOutside" value="0"/>
+					<port name="signalInside">
 						<xsl:attribute name="value">
 							<xsl:value-of select="SetpointValue"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
+					</port>
+				</box>
 			</xsl:for-each>
-		</model>
+		</box>
 		
-		<model name="CO2" type="vg::CO2Controller">
-			<parameter name="injectionRate" ref="./injectionRate[signal]"/>
-			<model name="injectionRate" type="vg::ProportionalSignal">
-				<parameter name="input" ref="indoors/total/airFlux[value]"/>
-				<parameter name="threshold">
+		<box name="CO2" class="vg::CO2Controller">
+			<port name="injectionRate" ref="./injectionRate[signal]"/>
+			<box name="injectionRate" class="vg::ProportionalSignal">
+				<port name="input" ref="indoors/total/airFlux[value]"/>
+				<port name="threshold">
 					<xsl:attribute name="value">
 						<xsl:value-of select="$Co2VentilationThreshold"/>
 					</xsl:attribute>
-				</parameter>
-				<parameter name="thresholdBand">
+				</port>
+				<port name="thresholdBand">
 					<xsl:attribute name="value">
 						<xsl:value-of select="$Co2VentilationThresholdBand"/>
 					</xsl:attribute>
-				</parameter>
-				<parameter name="increasingSignal" value="false"/>
-				<parameter name="minSignal" value="0"/>
-				<parameter name="maxSignal">
+				</port>
+				<port name="increasingSignal" value="FALSE"/>
+				<port name="minSignal" value="0"/>
+				<port name="maxSignal">
 					<xsl:attribute name="value">
 						<xsl:value-of select="$Co2MaxSupply"/>
 					</xsl:attribute>
-				</parameter>
-			</model>
-	</model>
-	</model>
+				</port>
+			</box>
+	</box>
+	</box>
 
-	<model name="actuators">
-		<model name="screens">
-			<model name="energy">
-				<model name="control" type="vg::PidControlElement">
-					<parameter name="signal" ref="controllers/screens/energy/control[signal]"/>
-					<parameter name="Kprop" value="0.3"/>
-				</model>
-			</model>
-			<model name="shade">
-				<model name="control" type="vg::PidControlElement">
-					<parameter name="signal" ref="controllers/screens/shade/control[signal]"/>
-					<parameter name="Kprop" value="0.3"/>
-				</model>
-			</model>
-			<model name="blackout">
-				<model name="control" type="vg::PidControlElement">
-					<parameter name="signal" ref="controllers/screens/blackout/control[signal]"/>
-					<parameter name="Kprop" value="0.3"/>
-				</model>
-			</model>
-		</model>
+	<box name="actuators">
+		<box name="screens">
+			<box name="energy">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/energy/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+			<box name="shade">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/shade/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+			<box name="blackout">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/blackout/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+		</box>
 		<!--
-		<model name="vents"> 
-			<model name="leeside" type="vg::LinearControlElement">
-				<parameter name="signal" ref="controllers/ventilation[leewardSignal]"/>
-				<parameter name="rate" value="10"/>
-			</model>
-			<model name="windside" type="vg::LinearControlElement">
-				<parameter name="signal" ref="controllers/ventilation[windwardSignal]"/>
-				<parameter name="rate" value="10"/>
-			</model>
-		</model>
+		<box name="vents"> 
+			<box name="leeside" class="vg::LinearControlElement">
+				<port name="signal" ref="controllers/ventilation[leewardSignal]"/>
+				<port name="rate" value="10"/>
+			</box>
+			<box name="windside" class="vg::LinearControlElement">
+				<port name="signal" ref="controllers/ventilation[windwardSignal]"/>
+				<port name="rate" value="10"/>
+			</box>
+		</box>
 		-->
-		<model name="heating">
-			<model name="pipes"> 
+		<box name="heating">
+			<box name="pipes"> 
 				<xsl:for-each select="JobDataSet/Greenhouse/zone/Heatpipes/Heatpipe">
-					<model>
+					<box>
 						<xsl:attribute name="name">
 							<xsl:value-of select="concat('pipe', position())"/>
 						</xsl:attribute>
-						<xsl:attribute name="type">
+						<xsl:attribute name="class">
 							<xsl:value-of select="'vg::Pipe'"/>
 						</xsl:attribute>
-						<parameter name="length">
+						<port name="length">
 							<xsl:attribute name="value">
 								<xsl:value-of select="Constants/Parameters[ParameterID='535']/Value"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="diameter">
+						</port>
+						<port name="diameter">
 							<xsl:attribute name="value">
 								<xsl:value-of select="Constants/Parameters[ParameterID='62']/Value*1000"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="minTemperature">
+						</port>
+						<port name="minTemperature">
 							<xsl:attribute name="value">
 								<xsl:value-of select="Constants/Parameters[ParameterID='359']/Value"/>
 							</xsl:attribute>
-						</parameter>
-						<parameter name="maxTemperature">
+						</port>
+						<port name="maxTemperature">
 							<xsl:attribute name="value">
 								<xsl:value-of select="Constants/Parameters[ParameterID='358']/Value"/>
 							</xsl:attribute>
-						</parameter>
-					</model>
+						</port>
+					</box>
 				</xsl:for-each>
-			</model>
-		</model>
-		<model name="growthLights" type="vg::GrowthLights">
+			</box>
+		</box>
+		<box name="growthLights" class="vg::GrowthLights">
 			<xsl:for-each select="JobDataSet/Greenhouse/zone/Lamps/Lamp">
-				<model type="vg::GrowthLight">
+				<box class="vg::GrowthLight">
 					<xsl:attribute name="name">
 						<xsl:value-of select="concat('growthLight', position())"/>
 					</xsl:attribute>
-					<parameter name="type">
+					<port name="type">
 						<xsl:attribute name="value">
 							<xsl:call-template name="lamp-type">
 								<xsl:with-param name="number" select="Constants/Parameters[ParameterID='575']/Value"/>
 							</xsl:call-template>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="intensity">
+					</port>
+					<port name="intensity">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='533']/Value"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="lifeTime">
+					</port>
+					<port name="lifeTime">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='397']/Value"/>
 						</xsl:attribute>
-					</parameter>
-					<parameter name="age">
+					</port>
+					<port name="age">
 						<xsl:attribute name="value">
 							<xsl:value-of select="Constants/Parameters[ParameterID='398']/Value"/>
 						</xsl:attribute>
-					</parameter>
-				</model>
+					</port>
+				</box>
 			</xsl:for-each>
-		</model>
-	</model>
+		</box>
+	</box>
 
 	<xsl:comment>
 		<xsl:value-of select="concat($crop-name, ' model')"/>
 	</xsl:comment>
 
-	<model name="crop" type="vg::Crop">
+	<box name="crop" class="vg::Crop">
 		<xsl:call-template name="extract-crop-parameters"/>
 
 		<xsl:call-template name="extract-crop-model">
 			<xsl:with-param name="modelName">periods</xsl:with-param>
 		</xsl:call-template>
 
-		<model name="physTime" type="UniSim::DayDegrees">
-			<parameter name="T" ref="indoors/temperature[value]"/>
-			<parameter name="isTicking" ref="../periods[flag]"/>
-			<parameter name="doReset" ref="../periods[flagDown]"/>
-		</model>
+		<box name="physTime" class="vg::DayDegrees">
+			<port name="T" ref="indoors/temperature[value]"/>
+			<port name="isTicking" ref="../periods[flag]"/>
+			<port name="doReset" ref="../periods[flagDown]"/>
+		</box>
 
 		<xsl:call-template name="extract-crop-model">
 			<xsl:with-param name="modelName">lai</xsl:with-param>
 		</xsl:call-template>
 
-		<model name="layers">
-			<model name="top" type="vg::LeafLayer">
-				<parameter name="xGaussUpperside"  value="0.1127"/>
-				<parameter name="wGaussUpperside"  value="0.2778"/>
-				<parameter name="xGaussLowerside"  value="0.8873"/>
-				<parameter name="wGaussLowerside"  value="0.2778"/>
+		<box name="layers">
+			<box name="top" class="vg::LeafLayer">
+				<port name="xGaussUpperside"  value="0.1127"/>
+				<port name="wGaussUpperside"  value="0.2778"/>
+				<port name="xGaussLowerside"  value="0.8873"/>
+				<port name="wGaussLowerside"  value="0.2778"/>
 				<xsl:call-template name="crop-layer"/>
-			</model>
-			<model name="middle" type="vg::LeafLayer">
-				<parameter name="xGaussUpperside"  value="0.5"/>
-				<parameter name="wGaussUpperside"  value="0.4444"/>
-				<parameter name="xGaussLowerside"  value="0.5"/>
-				<parameter name="wGaussLowerside"  value="0.4444"/>
+			</box>
+			<box name="middle" class="vg::LeafLayer">
+				<port name="xGaussUpperside"  value="0.5"/>
+				<port name="wGaussUpperside"  value="0.4444"/>
+				<port name="xGaussLowerside"  value="0.5"/>
+				<port name="wGaussLowerside"  value="0.4444"/>
 				<xsl:call-template name="crop-layer"/>
-			</model>
-			<model name="bottom" type="vg::LeafLayer">
-				<parameter name="xGaussUpperside"  value="0.8873"/>
-				<parameter name="wGaussUpperside"  value="0.2778"/>
-				<parameter name="xGaussLowerside"  value="0.1127"/>
-				<parameter name="wGaussLowerside"  value="0.2778"/>
+			</box>
+			<box name="bottom" class="vg::LeafLayer">
+				<port name="xGaussUpperside"  value="0.8873"/>
+				<port name="wGaussUpperside"  value="0.2778"/>
+				<port name="xGaussLowerside"  value="0.1127"/>
+				<port name="wGaussLowerside"  value="0.2778"/>
 				<xsl:call-template name="crop-layer"/>
-			</model>
-		</model>
+			</box>
+		</box>
 		
-		<model name="radiation" type="vg::CropRadiation"/>
+		<box name="radiation" class="vg::CropRadiation"/>
 
-		<model name="temperature" type="Unisim::Average">
-			<parameter name="inputs"  value="(layers/top/temperature[value] layers/middle/temperature[value] layers/bottom/temperature[value])"/> 
-		</model>	
+		<box name="temperature" class="vg::Average">
+			<port name="inputs"  value="(layers/top/temperature[value] layers/middle/temperature[value] layers/bottom/temperature[value])"/> 
+		</box>	
 
-		<model name="lightAbsorbed" type="Unisim::Sum">
-			<parameter name="toAdd" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
-		</model>
+		<box name="lightAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
+		</box>
 
-		<model name="heatingAbsorbed" type="Unisim::Sum">
-			<parameter name="toAdd" value="(layers/top/radiationAbsorbed[heatingAbsorbed] layers/middle/radiationAbsorbed[heatingAbsorbed] layers/bottom/radiationAbsorbed[heatingAbsorbed])"/>
-		</model>
+		<box name="heatingAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[heatingAbsorbed] layers/middle/radiationAbsorbed[heatingAbsorbed] layers/bottom/radiationAbsorbed[heatingAbsorbed])"/>
+		</box>
 
-		<model name="growthLightLwAbsorbed" type="Unisim::Sum">
-			<parameter name="toAdd" value="(layers/top/radiationAbsorbed[growthLightLwAbsorbed] layers/middle/radiationAbsorbed[growthLightLwAbsorbed] layers/bottom/radiationAbsorbed[growthLightLwAbsorbed])"/>
-		</model>
+		<box name="growthLightLwAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[growthLightLwAbsorbed] layers/middle/radiationAbsorbed[growthLightLwAbsorbed] layers/bottom/radiationAbsorbed[growthLightLwAbsorbed])"/>
+		</box>
 
-		<model name="radiationAbsorbed" type="Unisim::Sum">
-			<parameter name="toAdd" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
-		</model>
+		<box name="radiationAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
+		</box>
 
-		<model name="conductance" type="Unisim::Average">
-			<parameter name="inputs"  value="(layers/top/transpiration[conductance] layers/middle/transpiration[conductance] layers/bottom/transpiration[conductance])"/> 
-		</model>	
+		<box name="conductance" class="vg::Average">
+			<port name="inputs"  value="(layers/top/transpiration[conductance] layers/middle/transpiration[conductance] layers/bottom/transpiration[conductance])"/> 
+		</box>	
 
-		<model name="vapourFlux" type="Unisim::Average">
-			<parameter name="inputs"  value="(layers/top/transpiration[vapourFlux] layers/middle/transpiration[vapourFlux] layers/bottom/transpiration[vapourFlux])"/>
-		</model>
-		<model name="gain" type="Unisim::Average">
-			<parameter name="inputs"  value="(layers/top/transpiration[gain] layers/middle/transpiration[gain] layers/bottom/transpiration[gain])"/>
-		</model>
+		<box name="vapourFlux" class="vg::Average">
+			<port name="inputs"  value="(layers/top/transpiration[vapourFlux] layers/middle/transpiration[vapourFlux] layers/bottom/transpiration[vapourFlux])"/>
+		</box>
+		<box name="gain" class="vg::Average">
+			<port name="inputs"  value="(layers/top/transpiration[gain] layers/middle/transpiration[gain] layers/bottom/transpiration[gain])"/>
+		</box>
 
-		<model name="growth" type="vg::CropGrowth">
-			<model name="Pg" type="Unisim::Sum">
-				<parameter name="toAdd"  value="(layers/top/photosynthesis[Pg] layers/middle/photosynthesis[Pg] layers/bottom/photosynthesis[Pg])"/>
-			</model>
-		</model>
+		<box name="growth" class="vg::CropGrowth">
+			<box name="Pg" class="vg::Sum">
+				<port name="inputs"  value="(layers/top/photosynthesis[Pg] layers/middle/photosynthesis[Pg] layers/bottom/photosynthesis[Pg])"/>
+			</box>
+		</box>
 		<xsl:call-template name="extract-crop-model">
 			<xsl:with-param name="modelName">mass</xsl:with-param>
 		</xsl:call-template>
@@ -1518,150 +1510,10 @@
 			<xsl:with-param name="modelName">yield</xsl:with-param>
 		</xsl:call-template>
 
-	</model> <!-- crop -->
+	</box> <!-- crop -->
 
-	<model name="budget" type="vg::Budget"/>
-	
-	<output name="output" type="table">
-		<parameter name="fileName" value="dvv_unisim_0001.txt"/>
-		<!-- Time axis -->
-		<trace label="date" value="calendar[dateAsReal]"/>
+	<box name="budget" class="vg::Budget"/>
 		
-		<!-- Climate -->
-		<trace label="outdoorsWindspeed" value="outdoors[windspeed]"/>
-		<trace label="indoorsWindspeed" value="indoors/windspeed[value]"/>
-		<trace label="indoorsCo2" ref="indoors/co2[value]"/>
-		
-		<trace label="outdoorsRh" value="outdoors[rh]"/>
-		<trace label="indoorsRh" value="indoors/humidity[rh]"/>
-		<trace label="outdoorsAh" value="outdoors[ah]"/>
-		<trace label="indoorsAh" value="indoors/humidity[ah]"/>
-
-		<trace label="indoorsTemperature" value="indoors/temperature[value]"/>
-		<trace label="coverTemperature" value="given/energyFlux/shelter[coverTemperature]"/>
-		<trace label="screenTemperature" value="given/energyFlux/shelter[screensTemperature]"/>
-		<trace label="floorTemperature" value="energyFlux/floor[temperature]"/>
-
-		<trace label="topTemperature" ref="layers/top/temperature[value]"/>
-		<trace label="midTemperature" ref="layers/middle/temperature[value]"/>
-		<trace label="botTemperature" ref="layers/bottom/temperature[value]"/>
-
-		<trace label="topLightAbsorbed" ref="layers/top/radiationAbsorbed[lightAbsorbed]"/>
-		<trace label="midLightAbsorbed" ref="layers/middle/radiationAbsorbed[lightAbsorbed]"/>
-		<trace label="botLightAbsorbed" ref="layers/bottom/radiationAbsorbed[lightAbsorbed]"/>
-
-		<trace label="topGrowthLightLwAbsorbed" ref="layers/top/radiationAbsorbed[growthLightLwAbsorbed]"/>
-		<trace label="midGrowthLightLwAbsorbed" ref="layers/middle/radiationAbsorbed[growthLightLwAbsorbed]"/>
-		<trace label="botGrowthLightLwAbsorbed" ref="layers/bottom/radiationAbsorbed[growthLightLwAbsorbed]"/>
-
-		<trace label="topFloorLwAbsorbed" ref="layers/top/radiationAbsorbed[floorLwAbsorbed]"/>
-		<trace label="midFloorLwAbsorbed" ref="layers/middle/radiationAbsorbed[floorLwAbsorbed]"/>
-		<trace label="botFloorLwAbsorbed" ref="layers/bottom/radiationAbsorbed[floorLwAbsorbed]"/>
-
-		<trace label="topShelterLoss" ref="layers/top/radiationAbsorbed[shelterLoss]"/>
-		<trace label="midShelterLoss" ref="layers/middle/radiationAbsorbed[shelterLoss]"/>
-		<trace label="botShelterLoss" ref="layers/bottom/radiationAbsorbed[shelterLoss]"/>
-
-		<trace label="topHeatingAbsorbed" ref="layers/top/radiationAbsorbed[heatingAbsorbed]"/>
-		<trace label="midHeatingAbsorbed" ref="layers/middle/radiationAbsorbed[heatingAbsorbed]"/>
-		<trace label="botHeatingAbsorbed" ref="layers/bottom/radiationAbsorbed[heatingAbsorbed]"/>
-
-		<!-- Controlled -->
-		<trace label="airInfiltration" value="given/airFlux/infiltration[value]"/>
-		<trace label="airHumCrack" value="given/airFlux/crackVentilation[value]"/>
-		<trace label="airGravity" value="given/airFlux/gravitation[value]"/>
-		<trace label="airGiven" value="given/airFlux[value]"/>
-
-		<trace label="airCoolingMax" ref="cooling/airSupplyMax[value]"/>
-		<trace label="airCoolingMaxByWind" ref="cooling/airSupplyMax/byWind[value]"/>
-		<trace label="airCoolingMaxByTemp" ref="cooling/airSupplyMax/byTemp[value]"/>
-
-		<trace label="energyCoolingDemand" value="energyflux/cooling/demand[value]"/>
-		<trace label="energyCoolingSupply" value="energyflux/cooling/supply[value]"/>
-		<trace label="airCoolingSupply" ref="cooling/airFlux[value]"/>
-		<trace label="airCoolingSupplySlope" ref="cooling/supply[slope]"/>
-
-		<trace label="spHeating" value="setpoints/temperature/heating[value]"/>
-		<trace label="spVentilation" value="setpoints/temperature/ventilation[value]"/>
-		<trace label="spRh" value="setpoints/humidity/maximumRh[signal]"/>
-		<trace label="heatingSupply" ref="heating/supply[value]"/>
-
-		<!-- Production -->
-		<trace label="heatingEnergyFlux" value="budget[heatingEnergyFlux]"/>
-		<trace label="heatingEnergyTotal" value="budget[heatingEnergyTotal]"/>
-	
-		<trace label="growthLightsEnergyFlux" value="budget[growthLightsEnergyFlux]"/>
-		<trace label="growthLightsEnergyTotal" value="budget[growthLightsEnergyTotal]"/>
-		<trace label="growthLightsPar" value="growthLights[parEmission]"/>
-
-		<trace label="co2Flux" ref="budget[co2Flux]"/>
-		<trace label="co2Total" ref="budget[co2Total]"/>
-
-		<trace label="assimilation" ref="crop/growth/Pg[value]"/>
-		<trace label="fruitGrowthRate" value="crop/mass[fruitGrowthRate]"/>
-		<trace label="yieldFreshWeight" value="crop/yield[freshWeight]"/>
-
-		<trace label="pipe1Temperature" value="pipes/pipe1[temperature]"/>
-		<trace label="pipe2Temperature" value="pipes/pipe2[temperature]"/>
-		<trace label="pipe1NextTempMin" value="pipes/pipe1[nextTemperatureMin]"/>
-		<trace label="pipe2NextTempMin" value="pipes/pipe2[nextTemperatureMin]"/>
-		<trace label="pipe1NextTempMax" value="pipes/pipe1[nextTemperatureMax]"/>
-		<trace label="pipe2NextTempMax" value="pipes/pipe2[nextTemperatureMax]"/>
-		<trace label="pipe1NextEnergyMin" value="pipes/pipe1[nextEnergyFluxMin]"/>
-		<trace label="pipe2NextEnergyMin" value="pipes/pipe2[nextEnergyFluxMin]"/>
-		<trace label="pipe1NextEnergyMax" value="pipes/pipe1[nextEnergyFluxMax]"/>
-		<trace label="pipe2NextEnergyMax" value="pipes/pipe2[nextEnergyFluxMax]"/>
-
-		<!-- Photosynthesis -->
-		<trace label="top_Pn" ref="top/photosynthesis[Pn]"/>
-		<trace label="mid_Pn" ref="middle/photosynthesis[Pn]"/>
-		<trace label="bot_Pn" ref="bottom/photosynthesis[Pn]"/>
-
-		<trace label="top_Pg" ref="top/photosynthesis[Pg]"/>
-		<trace label="mid_Pg" ref="middle/photosynthesis[Pg]"/>
-		<trace label="bot_Pg" ref="bottom/photosynthesis[Pg]"/>
-
-		<trace label="top_rb_H2o" ref="top/rb[rbH2o]"/>
-		<trace label="mid_rb_H2o" ref="middle/rb[rbH2o]"/>
-		<trace label="bot_rb_H2o" ref="bottom/rb[rbH2o]"/>
-
-		<trace label="top_rb_Co2" ref="top/rb[rbCo2]"/>
-		<trace label="mid_rb_Co2" ref="middle/rb[rbCo2]"/>
-		<trace label="bot_rb_Co2" ref="bottom/rb[rbCo2]"/>
-
-		<trace label="top_rs_H2o" ref="top/rs[rsH2o]"/>
-		<trace label="mid_rs_H2o" ref="middle/rs[rsH2o]"/>
-		<trace label="bot_rs_H2o" ref="bottom/rs[rsH2o]"/>
-
-		<trace label="top_rs_Co2" ref="top/rs[rsCo2]"/>
-		<trace label="mid_rs_Co2" ref="middle/rs[rsCo2]"/>
-		<trace label="bot_rs_Co2" ref="bottom/rs[rsCo2]"/>
-		
-		<trace label="top_LUE" ref="top/photosynthesis/lightResponse[LUE]"/>
-		<trace label="mid_LUE" ref="middle/photosynthesis/lightResponse[LUE]"/>
-		<trace label="bot_LUE" ref="bottom/photosynthesis/lightResponse[LUE]"/>
-
-		<trace label="top_Pnmax" ref="top/photosynthesis/lightResponse[Pnmax]"/>
-		<trace label="mid_Pnmax" ref="middle/photosynthesis/lightResponse[Pnmax]"/>
-		<trace label="bot_Pnmax" ref="bottom/photosynthesis/lightResponse[Pnmax]"/>
-
-		<trace label="top_Pgmax" ref="top/photosynthesis/lightResponse[Pgmax]"/>
-		<trace label="mid_Pgmax" ref="middle/photosynthesis/lightResponse[Pgmax]"/>
-		<trace label="bot_Pgmax" ref="bottom/photosynthesis/lightResponse[Pgmax]"/>
-
-		<trace label="top_Rd" ref="top/photosynthesis/lightResponse[Rd]"/>
-		<trace label="mid_Rd" ref="middle/photosynthesis/lightResponse[Rd]"/>
-		<trace label="bot_Rd" ref="bottom/photosynthesis/lightResponse[Rd]"/>
-
-		<trace label="airFluxTotal" ref="indoors/total/airflux[value]"/>
-		
-		<!-- Wageningen (2015) poster -->
-		<trace label="topRtCO2" ref="top/photosynthesis/lightResponse[rtCO2]"/>
-		<trace label="midRtCO2" ref="middle/photosynthesis/lightResponse[rtCO2]"/>
-		<trace label="botRtCO2" ref="bottom/photosynthesis/lightResponse[rtCO2]"/>
-	</output>
-	
-		
-</simulation> </xsl:template>
+</box> </xsl:template>
 
 </xsl:stylesheet>

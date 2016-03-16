@@ -91,7 +91,7 @@ void Shelter::reset() {
         area = endWallsArea/2;
     else {
         QString msg{"Cover name is '%1' but it must contain 'roof', 'side' or 'end'"};
-        throw Exception(msg.arg(name));
+        ThrowException(msg.arg(name));
     }
     relativeArea = area/(roofArea + sideWallsArea + endWallsArea);
     areaPerGround = area/groundArea;

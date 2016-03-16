@@ -35,7 +35,7 @@ TimeUnit TimeWithUnits::charToUnit(char ch, QObject *concerning) {
         _charToUnit['y'] = Years;
     }
     if (!_charToUnit.contains(ch))
-        throw Exception("Unknown time unit", QString(ch), concerning);
+        ThrowException("Unknown time unit").value(ch).context(concerning);
     return _charToUnit.value(ch);
 }
 

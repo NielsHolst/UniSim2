@@ -55,7 +55,7 @@ void Budget::reset() {
         eUnit = dt/3600.*1e-3;    // kh = s / (s/h) * k
     else {
         QString msg {"Unknown energy unit '%1', expected 'kWh' or 'GJ'"};
-        throw Exception(msg.arg(energyUnit), energyUnit, this);
+        ThrowException(msg.arg(energyUnit)).value(energyUnit).context(this);
     }
 }
 

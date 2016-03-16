@@ -48,7 +48,7 @@ void Records::readColumnNames() {
     openFile();
     readLineItems();
     if (pastLastLine)
-        throw Exception("Records file is empty", filePath(), this);
+        ThrowException("Records file is empty").value(filePath()).context(this);
 
     dateColumn = -1;
     timeColumn = -1;
@@ -67,15 +67,12 @@ void Records::openFile() {
     file.setFileName(filePath());
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!fileOk)
-        throw Exception("Cannot open records file", filePath(), this);
+        ThrowException("Cannot open records file").value(filePath()).context(this);
     pastLastLine = false;
 }
 
 QString Records::filePath() {
-    QDir dir = locateDir(environment().state.dir.work, environment().state.dir.input);
-    if (!dir.exists())
-        throw Exception("Input folder not found", dir.absolutePath());
-    return dir.absoluteFilePath(fileName);
+    return locateFile(environment().state.dir.work, environment().state.dir.input, fileName);
 }
 
 void Records::readLineItems() {
@@ -87,7 +84,7 @@ void Records::readLineItems() {
     pastLastLine = lineItems.isEmpty();
 }
 
-#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).access(Port::Read).zeroAtReset()
+#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).zeroAtReset()
 
 void Records::createColumnOutputs() {
     int n = columnNames.size();
@@ -134,7 +131,7 @@ void Records::readToFirstLine() {
 void Records::advanceFirstLine() {
     readLineItems();
     if (pastLastLine)
-        throw Exception("Records file is empty", filePath(), this);
+        ThrowException("Records file is empty").value(filePath()).context(this);
     extractValues();
     advanceTime();
     for (int i = 0; i < nextColumnValues->size(); ++i)
@@ -151,8 +148,8 @@ void Records::advanceTime() {
 
 void Records::extractValues() {
     if (!pastLastLine && lineItems.size() != columnNames.size())
-        throw Exception("Number of items in records file does not match number of column names",
-                        lineItems.join(" "), this);
+        ThrowException("Number of items in records file does not match number of column names").
+                        value(lineItems.join(" ")).context(this);
 
     for (int i = 0; i < lineItems.size(); ++i) {
         if (i == dateColumn)

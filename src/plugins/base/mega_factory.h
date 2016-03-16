@@ -35,16 +35,13 @@ template <class T>
 T* MegaFactory::create(QString className, QString objectName, QObject *parent)
 {
     QObject *object = MegaFactory::createObject(className, objectName, parent);
-    QString msg = "MegaFactory cannot create object '%1' of class '%2'";
-    if (!object) {
-        throw Exception(msg.arg(objectName).arg(className));
-    }
+    QString msg = QString("MegaFactory cannot create object '%1' of class '%2'").arg(objectName).arg(className);
+    if (!object)
+        ThrowException(msg);
     setClassName(object, className);
     T *specificObject = dynamic_cast<T*>(object);
-    if (!specificObject) {
-        QString msg2 = msg + ", because '%1' was not derived from class '%2'";
-        throw Exception(msg2.arg(className).arg(object->metaObject()->className()));
-    }
+    if (!object)
+        ThrowException(msg);
     return specificObject;
 }
 

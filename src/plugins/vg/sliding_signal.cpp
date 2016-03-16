@@ -44,7 +44,7 @@ SlidingSignal::SlidingSignal(QString name, QObject *parent)
     Input(increasingSignal).equals(true);
 }
 
-double SlidingSignal::signal() {
+double SlidingSignal::computeSignal() {
     double res;
     double x0{threshold},
            x1{threshold + thresholdBand},

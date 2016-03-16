@@ -19,7 +19,7 @@ enum PortTransform {
     Any
 };
 
-template<class T> T convert(PortTransform )  { throw Exception("Cannot only convert port transform to QString"); }
+template<class T> T convert(PortTransform )  { ThrowException("Cannot only convert port transform to QString"); }
 
 template<> QString convert(PortTransform transform);
 template<> PortTransform convert(QString s);

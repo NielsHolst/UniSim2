@@ -9,7 +9,7 @@ template<> LayoutR convert(QString source) {
         return Facetted;
     if (source == "merged")
         return Merged;
-    throw Exception("Unknown layout. One of these expected (facetted, merged)", source);
+    ThrowException("Unknown layout. One of these expected (facetted, merged)").value(source);
 }
 
 template<> QString convert(LayoutR source) {

@@ -25,8 +25,7 @@ public:
 private:
     // inputs
     double latitude, longitude;
-    QDate initialDate;
-    QTime initialTimeOfDay;
+    QDateTime initialDateTime;
     int timeStep, timeZone, sample;
     char timeUnit;
     base::TimeUnit _timeUnit;
@@ -36,7 +35,7 @@ private:
     QTime timeOfDay, trueSolarTime, sunrise, sunset;
     QDateTime dateTime;
     int day, month, year, hour, minute, second, dayOfYear, totalTime, totalTimeSteps;
-    double timeStepSecs, totalDays, dateAsReal, dayLength,
+    double timeStepSecs, timeStepDays, totalDays, dateAsReal, dayLength,
         sinb, azimuth, solarConstant, angot, irradiationCorrection;
 
     // methods

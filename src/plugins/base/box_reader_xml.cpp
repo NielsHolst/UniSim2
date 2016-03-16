@@ -15,7 +15,7 @@ void BoxReaderXml::parse(QString filePath) {
     openReader(filePath);
     _reader.readNext();
     if (_reader.tokenType() != QXmlStreamReader::StartDocument)
-        throw Exception("XML syntax error at start of document");
+        ThrowException("XML syntax error at start of document");
     _reader.readNext();
     while (!_reader.atEnd()) {
         switch (_reader.tokenType()) {
@@ -50,8 +50,8 @@ void BoxReaderXml::parse(QString filePath) {
 void BoxReaderXml::openReader(QString filePath) {
     _file.setFileName(filePath);
     if (!_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString msg("Could not open file '%1' for reading");
-        throw Exception(msg.arg(filePath));
+        QString msg("Could not open file for reading");
+        ThrowException(msg).value(filePath);
     }
     _reader.setDevice(&_file);
 }
@@ -63,23 +63,23 @@ void BoxReaderXml::setElementType() {
     else if (name == "port")
         _elementType = PortElement;
     else
-        throw Exception("Unknown XML element. " + currentInfo(), name);
+        ThrowException("Unknown XML element. " + currentInfo()).value(name);
 }
 
 void BoxReaderXml::setBoxAttributes() {
     // If box has no "class" attribute then default to "box" class
-    if (!_reader.attributes().hasAttribute("class"))
-        _builder->box("box");
-    // Otherwise the "class" attribute will be picked up in the loop
+    QString className = _reader.attributes().hasAttribute("class") ?
+                        _reader.attributes().value("class").toString() :
+                        QString("Box");
+    _builder->box(className);
+    // Box name is optional
+    if (_reader.attributes().hasAttribute("name"))
+        _builder->name( _reader.attributes().value("name").toString() );
+    // Check for unknown attributes
     for (QXmlStreamAttribute attribute : _reader.attributes()) {
-        QString name = attribute.name().toString(),
-                value = _reader.attributes().value(name).toString();
-        if (name == "class")
-            _builder->box(value);
-        else if (name == "name")
-            _builder->name(value);
-        else
-            throw Exception("Unexpected class attribute" + currentInfo(), name);
+        QString name = attribute.name().toString();
+        if (name != "class" && name != "name")
+            ThrowException("Unexpected class attribute" + currentInfo()).value(name);
     }
 }
 
@@ -100,7 +100,7 @@ void BoxReaderXml::setPortAttributes() {
             _builder->attribute(name, value);
     }
     if (!nameSet)
-        throw Exception("Port misses \"name\" attribute" + currentInfo());
+        ThrowException("Port misses \"name\" attribute" + currentInfo());
 }
 
 } // namespace

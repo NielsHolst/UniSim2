@@ -52,7 +52,7 @@ template<> PortTransform convert(QString s) {
     if (portTransformMap().contains(s))
         return portTransformMap().value(s);
     QString msg{"Unknown transform.Must be one of '%1'"};
-    throw Exception(msg.arg(portTransformNames().join(",")), s);
+    ThrowException(msg.arg(portTransformNames().join(","))).value(s);
 }
 
 QStringList portTransformNames() {

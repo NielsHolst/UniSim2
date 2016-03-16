@@ -69,7 +69,7 @@ inline QDate date(int day) {
     return QDate(2000,12,31).addDays(day);
 }
 
-double DateTimeSignal::signal() {
+double DateTimeSignal::computeSignal() {
     bool nowOnDay = (beginDay < endDay) ?
                 (day >= beginDay) && (day <= endDay) :
                 (day >= beginDay) || (day <= endDay);

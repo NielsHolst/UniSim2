@@ -26,7 +26,7 @@ try { \
     return numeric_cast<T>(source); \
 } \
 catch (bad_numeric_cast &ex) { \
-    throw Exception("Could not convert " #sourceT " to " + nameOf(typeOf<T>()), ex.what()); \
+    ThrowException("Could not convert " #sourceT " to " + nameOf(typeOf<T>()) + "\n" + ex.what()); \
 } \
 return T()
 
@@ -112,7 +112,7 @@ template<class T> T convert(QString source) {
     }
     catch(const bad_lexical_cast &)
     {
-        throw Exception ("Cannot convert String to " + nameOf(typeOf<T>()), source);
+        ThrowException ("Cannot convert String to " + nameOf(typeOf<T>())).value(source);
     }
     return T();
 }
@@ -177,7 +177,7 @@ template<> QTime convert(QDateTime);
 // Vector conversions
 //
 #define CANNOT_CONVERT_VECTOR(sourceT) \
-throw Exception("Could not convert " #sourceT "Vector to " + nameOf(typeOf<T>()))
+ThrowException("Could not convert " #sourceT "Vector to " + nameOf(typeOf<T>()))
 
 template<class T> T convert(QVector<bool>)          { CANNOT_CONVERT_VECTOR(Bool); }
 template<class T> T convert(QVector<char>)          { CANNOT_CONVERT_VECTOR(Char); }

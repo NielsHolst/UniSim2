@@ -22,7 +22,7 @@ namespace {
             if (s.endsWith("\""))
                 return true;
             else
-                throw Exception("Unmatched apostrophe in string", s);
+                ThrowException("Unmatched apostrophe in string").value(s);
         }
         return false;
     }

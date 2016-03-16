@@ -14,6 +14,7 @@ HEADERS +=  \
     air_flux_given.h \
     air_flux_gravitation.h \
     air_flux_infiltration.h \
+    average.h \
     base_control_element.h \
     base_signal.h \
     boundary_layer_resistance_base.h \
@@ -33,6 +34,7 @@ HEADERS +=  \
     crop_yield.h \
     data_grid.h \
     date_time_signal.h \
+    day_degrees.h \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_condensation.h \
@@ -69,6 +71,7 @@ HEADERS +=  \
     leaf_transpiration.h \
     leaf_wind_speed.h \
     outdoors.h \
+    physiological_time.h \
     pid_control_element.h \
     pipe.h \
     proportional_signal.h \
@@ -79,26 +82,27 @@ HEADERS +=  \
     shelter_base.h \
     shelters.h \
     signal_collection.h \
+    simulation_time_interval.h \
     sliding_signal.h \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
     stomatal_resistance_tomato.h \
-    string_map.h \
+    sum.h \
     surface_radiation.h \
     surface_radiation_outputs.h \
-#    threshold_signal.h \
+    threshold_signal.h \
     utilities.h \
-#    vapour_flux_air.h \
+    vapour_flux_air.h \
     vapour_flux_base.h \
-#    vapour_flux_condensation.h \
-#    vapour_flux_sum.h \
-#    vapour_flux_sum_base.h \
-#    vapour_flux_transpiration.h \
-#    ventilated_latent_heat_converter.h \
-#    ventilation_by_temp.h \
-#    ventilation_by_wind.h \
-#    vent.h \
-#    vents.h
+    vapour_flux_condensation.h \
+    vapour_flux_sum.h \
+    vapour_flux_sum_base.h \
+    vapour_flux_transpiration.h \
+    ventilated_latent_heat_converter.h \
+    ventilation_by_temp.h \
+    ventilation_by_wind.h \
+    vent.h \
+    vents.h
 
 SOURCES += \
     air_flux_cooling_supply.cpp \
@@ -106,6 +110,7 @@ SOURCES += \
     air_flux_given.cpp \
     air_flux_gravitation.cpp \
     air_flux_infiltration.cpp \
+    average.cpp \
     base_control_element.cpp \
     base_signal.cpp \
     boundary_layer_resistance_base.cpp \
@@ -125,6 +130,7 @@ SOURCES += \
     crop_yield.cpp \
     data_grid.cpp \
     date_time_signal.cpp \
+    day_degrees.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_condensation.cpp \
@@ -160,6 +166,7 @@ SOURCES += \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
     outdoors.cpp \
+    physiological_time.cpp \
     pid_control_element.cpp \
     pipe.cpp \
     proportional_signal.cpp \
@@ -169,25 +176,26 @@ SOURCES += \
     shelter.cpp \
     shelter_base.cpp \
     shelters.cpp \
+    simulation_time_interval.cpp \
     signal_collection.cpp \
     sliding_signal.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
     stomatal_resistance_tomato.cpp \
-    string_map.cpp \
+    sum.cpp \
     surface_radiation.cpp \
     surface_radiation_outputs.cpp \
-#    threshold_signal.cpp \
+    threshold_signal.cpp \
     utilities.cpp \
-#    vapour_flux_air.cpp \
+    vapour_flux_air.cpp \
     vapour_flux_base.cpp \
-#    vapour_flux_condensation.cpp \
-#    vapour_flux_sum.cpp \
-#    vapour_flux_sum_base.cpp \
-#    vapour_flux_transpiration.cpp \
-#    ventilated_latent_heat_converter.cpp \
-#    ventilation_by_temp.cpp \
-#    ventilation_by_wind.cpp \
-#    vent.cpp \
-#    vents.cpp
+    vapour_flux_condensation.cpp \
+    vapour_flux_sum.cpp \
+    vapour_flux_sum_base.cpp \
+    vapour_flux_transpiration.cpp \
+    ventilated_latent_heat_converter.cpp \
+    ventilation_by_temp.cpp \
+    ventilation_by_wind.cpp \
+    vent.cpp \
+    vents.cpp
 

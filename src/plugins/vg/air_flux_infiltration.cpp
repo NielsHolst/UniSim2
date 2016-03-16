@@ -32,7 +32,7 @@ AirFluxInfiltration::AirFluxInfiltration(QString name, QObject *parent)
 {
     Class(AirFluxInfiltration);
     Input(leakage).equals(0.5);
-    Input(windspeed).imports("outdoors[windspeed]");
+    Input(windSpeed).imports("outdoors[windSpeed]");
     Input(airTransmissivity).imports("construction/shelters[airTransmissivity]");
     Output(value);
 }
@@ -42,7 +42,7 @@ void AirFluxInfiltration::reset() {
 }
 
 void AirFluxInfiltration::update() {
-    value = leakage*airTransmissivity*windspeed/4;
+    value = leakage*airTransmissivity*windSpeed/4;
 }
 
 

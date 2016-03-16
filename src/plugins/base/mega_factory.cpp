@@ -8,7 +8,7 @@
 #include "mega_factory.h"
 #include "object_pool.h"
 
-#include "dialog.h"
+//#include "dialog.h"
 
 namespace base {
 
@@ -24,13 +24,13 @@ MegaFactory::MegaFactory() {
         QPluginLoader loader(filePath);
         FactoryPlugIn *factory = qobject_cast<FactoryPlugIn*>(loader.instance());
         if (factory) {
-            dialog().information(filePath);
+//            dialog().information(filePath);
             _factories << factory;
             for (QString id : factory->inventory()) {
                 productIndex[id] = factory;
                 QString idWithNamespace = factory->id() + "::" + id;
                 productIndex[idWithNamespace] = factory;
-                dialog().information(id + " " + idWithNamespace);
+//                dialog().information(id + " " + idWithNamespace);
 
             }
         }
@@ -56,14 +56,14 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     }
     switch (me()->productIndex.count(className)) {
     case 0:
-        throw Exception("No model of class: " + className);
+        ThrowException("Unknown class").value(className);
     case 1:
         factory = me()->productIndex[className];
         creation = factory->create(removeNamespace(className), objectName, parent);
         break;
     default:
-        QString msg = "More than one model of class '%1'. Qualify class with plug-in name";
-        throw Exception(msg.arg(className));
+        QString msg = "More than one class is named '%1'. Qualify class name with plug-in name";
+        ThrowException(msg.arg(className));
     }
     return creation;
 }

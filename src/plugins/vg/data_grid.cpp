@@ -39,7 +39,7 @@ int DataGrid::findColumn(QString colName, Qt::CaseSensitivity cs) const {
     int colIndex = colNames.indexOf( QRegExp(colName, cs) );
     if (colIndex == -1) {
         QString msg = "Could not find column named '%1' among columns: '%2'";
-        throw Exception(msg.arg(colName).arg(colNames.join(',')), colName, this);
+        ThrowException(msg.arg(colName).arg(colNames.join(','))).value(colName).context(this);
     }
     return colIndex;
 }
@@ -58,7 +58,7 @@ QStringList DataGrid::row(const QStringList &rowKeys) const {
     QString rowKey = joinKeys(rowKeys);
     if (!data.rowIndex.contains(rowKey)) {
         QString msg = "No row with key value '%1' exists in file '%2'";
-        throw Exception(msg.arg(rowKey).arg(filePath));
+        ThrowException(msg.arg(rowKey).arg(filePath)).context(this);;
     }
     int row = data.rowIndex.value(rowKey);
     return data.rows.value(row);
@@ -118,7 +118,7 @@ void DataGrid::createSubIndex(const QList<int> &keyColumns) {
 QString DataGrid::cell(const QStringList &rowKeys, QString colKey) const {
     if (!data.columnIndex.contains(colKey)) {
         QString msg("No column with key value '%1' exists in file '%2'");
-        throw Exception(msg.arg(colKey).arg(filePath));
+        ThrowException(msg.arg(colKey).arg(filePath)).context(this);;
     }
     int col = data.columnIndex.value(colKey);
     return row(rowKeys).value(col);
@@ -144,12 +144,12 @@ void DataGrid::readData() {
     file.close();
 }
 
+
 void DataGrid::openFile() {
     file.setFileName(filePath);
-    bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if (!fileOk) {
-        QString msg("Cannot open DataGrid file '%1'");
-        throw Exception(msg.arg(filePath));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString s = "\n[" + QString(__FILE__) + ": " + QString::number(__LINE__) + "]";
+        ThrowException("Cannot open DataGrid file").value(filePath).context(this);
     }
 }
 
@@ -175,14 +175,14 @@ void DataGrid::setColumnIndex() {
             if (i != data.numKeys) {
                 QString msg("Key columns (marked with '*') must be the leftmost columns in the file. "
                             "Fix column '%1' in file '%2'");
-                throw Exception(msg.arg(name).arg(filePath));
+                ThrowException(msg.arg(name).arg(filePath)).context(this);
             }
             ++data.numKeys;
             name.remove(0,1);
         }
         if (data.columnIndex.contains(name)) {
             QString msg("Column names must be unique: '%1' occurs twice in file '%2'.\nLine: '%3'");
-            throw Exception(msg.arg(name).arg(filePath).arg(lineItems.join(" ")));
+            ThrowException(msg.arg(name).arg(filePath).arg(lineItems.join(" "))).context(this);;
         }
         data.columnIndex[name] = i;
         data.columnNamesInOrder << name;
@@ -202,7 +202,7 @@ DataGrid::ColumnAction DataGrid::columnAction() {
         action = AddFirstColumnName;
     else if (numItems2 != 0) {
         QString msg = "Number of items in line 1 (%1 items) and line 2 (%2 items) in file '%3' does not match.";
-        throw Exception(msg.arg(numItems1).arg(numItems2).arg(filePath));
+        ThrowException(msg.arg(numItems1).arg(numItems2).arg(filePath)).context(this);;
     }
     return action;
 }
@@ -211,8 +211,8 @@ void DataGrid::readFirstTwoLines() {
     firstTwoLines.clear();
     readLineItems();
     if (pastLastLine) {
-        QString msg("DataGrid file is empty: '%1'");
-        throw Exception(msg.arg(filePath));
+        QString msg("DataGrid file is empty");
+        ThrowException(msg).value(filePath).context(this);;
     }
     firstTwoLines << lineItems;
     readLineItems();
@@ -234,7 +234,7 @@ void DataGrid::checkLine() {
         int rowNumber = data.rowIndex.size() + 2;
         QString msg("Error in DataGrid file '%1', row number %2; "
                     "The number of columns labels does not match the number of values in row (%3 vs. %4)");
-        throw Exception(msg.arg(filePath).arg(rowNumber).arg(n1).arg(n2));
+        ThrowException(msg.arg(filePath).arg(rowNumber).arg(n1).arg(n2)).context(this);;
     }
 }
 
@@ -249,7 +249,7 @@ void DataGrid::appendLine() {
         int rowNumber = data.rowIndex.size() + 2;
         QString msg("Error in DataGrid file '%1', row number %2; "
                     "Row keys must be unique: '%3' occurs twice");
-        throw Exception(msg.arg(filePath).arg(rowNumber).arg(rowKey));
+        ThrowException(msg.arg(filePath).arg(rowNumber).arg(rowKey)).context(this);;
     }
     data.rowIndex[rowKey] = data.rows.size() - 1;
     data.rowKeysInOrder << rowKey;

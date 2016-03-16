@@ -13,9 +13,9 @@ using namespace base;
 
 namespace vg {
 
-PUBLISH(Co2Controller)
+PUBLISH(CO2Controller)
 
-/*! \class Co2Controller
+/*! \class CO2Controller
  * \brief Sets the rate of CO<SUB>2</SUB> enrichment
  * CO<SUB>2</SUB> injection begins, when the level falls below the minimum setpoint,
  * and lasts until the level reaches the maximum setpoint.
@@ -34,7 +34,7 @@ PUBLISH(Co2Controller)
  *
  */
 
-Co2Controller::Co2Controller(QString name, QObject *parent)
+CO2Controller::CO2Controller(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Class(Co2Controller);
@@ -46,12 +46,12 @@ Co2Controller::Co2Controller(QString name, QObject *parent)
     Output(signal);
 }
 
-void Co2Controller::reset() {
+void CO2Controller::reset() {
     signal = 0.;
     on = false;
 }
 
-void Co2Controller::update() {
+void CO2Controller::update() {
     if (indoorsCo2 > maxCo2)
         on = false;
     else if (indoorsCo2 < minCo2)

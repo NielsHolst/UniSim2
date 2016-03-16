@@ -24,8 +24,8 @@ void BoxReaderBoxes::parse(QString filePath) {
 void BoxReaderBoxes::openFile(QString filePath) {
     _file.open(filePath.toStdString(), std::ios_base::in);
     if (!_file) {
-        QString msg("Could not open file '%1' for reading");
-        throw Exception(msg.arg(filePath));
+        QString msg("Could not open file for reading");
+        ThrowException(msg).value(filePath);
     }
     // No white space skipping
     _file.unsetf(std::ios::skipws);

@@ -36,22 +36,22 @@ void set::doExecute() {
             if (a2 == "folder")
                 command = new set_input_folder("set_input_folder", this);
             else
-                throw Exception("Write: 'set input folder'");
+                ThrowException("Write: 'set input folder'");
         }
         else if (a1 == "output") {
             if (a2 == "folder")
                 command = new set_output_folder("set_output_folder", this);
             else
-                throw Exception("Write: 'set output folder'");
+                ThrowException("Write: 'set output folder'");
         }
         else if (a1 == "script") {
             if (a2 == "folder")
                 command = new set_script_folder("set_script_folder", this);
             else
-                throw Exception("Write: 'set script folder'");
+                ThrowException("Write: 'set script folder'");
         }
         else
-            throw Exception("Unknown command: set " + a1);
+            ThrowException("Unknown command: set " + a1);
     }
     if (command) {
         command->arguments(_args);

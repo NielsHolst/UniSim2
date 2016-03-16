@@ -37,7 +37,7 @@ OutputR::OutputR(QString name, QObject *parent)
 
 namespace {
     void copyPortValues(Box *destination, Box *source, QStringList excluding = QStringList()) {
-        QVector<Port*> sourcePorts = Path(".[*]", source).resolve<Port>();
+        QVector<Port*> sourcePorts = Path(".[*]", source).resolveMany<Port>();
         for (Port *sourcePort : sourcePorts) {
             QString portName = sourcePort->objectName();
             if (excluding.contains(portName))
@@ -89,7 +89,7 @@ void OutputR::setTrackX() {
     QVector<Port*> importPorts = xPort->importPorts();
     if (importPorts.size() != 1) {
         QString msg{"Expected one x-axis, got '%1'"};
-        throw Exception(msg.arg(importPorts.size()), port("xAxis")->importPath(), this);
+        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
     }
     importPorts[0]->page("");
 }
@@ -102,7 +102,7 @@ void OutputR::initialize() {
     // Validate input
     convert<LayoutR>(layout);
     // Find pages in this output
-    _pages = Path("./*{PageR}", this).resolve<PageR>();
+    _pages = Path("./*{PageR}", this).resolveMany<PageR>();
 }
 
 QString OutputR::toString() {
@@ -151,7 +151,7 @@ void OutputR::openFile() {
     filePath.replace("\\", "/");
     _file.setFileName(filePath);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        throw Exception("Cannot open file for output", filePath, this);
+        ThrowException("Cannot open file for output").value(filePath).context(this);
     environment().copyToClipboard(
                 "source(\""+filePath+"\")\n"
                 "unisim_plot_all(read_unisim_output(\"" +

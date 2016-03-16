@@ -20,7 +20,7 @@ Sequence::Sequence(QString name, QObject *parent)
 
 void Sequence::reset() {
     if (counterMax < 1)
-        throw Exception("'counterMax' must be > 0", QString::number(counterMax), this);
+        ThrowException("'counterMax' must be > 0").value(counterMax).context(this);
     update();
 }
 

@@ -8,7 +8,10 @@ BOXES_PLUGIN_NAME = boxes
 
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
+QT += widgets
+
 HEADERS +=  \
+    buffer.h \
     calendar.h \
     day_degrees.h \
     distributed_delay_base.h \
@@ -31,6 +34,7 @@ HEADERS +=  \
     stage.h
 	
 SOURCES +=  \
+    buffer.cpp \
     calendar.cpp \
     day_degrees.cpp \
     distributed_delay_base.cpp \

@@ -15,7 +15,7 @@ class EnergyScreenBalanceSignal : public BaseSignal
 {
 public:
     EnergyScreenBalanceSignal(QString name, QObject *parent);
-    double signal();
+    double computeSignal();
 private:
     // Inputs
     double indoorsLight, indoorsTemperature, outdoorsTemperature, Ucover;

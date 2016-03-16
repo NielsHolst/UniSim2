@@ -81,21 +81,21 @@ inline void assureEqZero(double &n, const char *varName, QObject *context, doubl
     if (eqZero(n, feps))
         n = 0.;
     if (n != 0)
-        throw base::Exception("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n), "", context);
+        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
 }
 
 inline void assureGeZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
     if (geZero(n, feps) && n < 0.)
         n = 0.;
     if (n < 0)
-        throw base::Exception("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n), "", context);
+        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
 }
 
 inline void assureLeZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
     if (leZero(n, feps) && n > 0.)
         n = 0.;
     if (n > 0)
-        throw base::Exception("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n), "", context);
+        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
 }
 
 // Fuzzy rounding in neighbourhood of constant
@@ -109,27 +109,27 @@ inline void assureEq(double &n, double d, const char *varName, QObject *context,
     if (eq(n, d, feps))
         n = d;
     if (n != d)
-        throw base::Exception("Cannot round number to constant: " + QString(varName) +
+        ThrowException("Cannot round number to constant: " + QString(varName) +
                                 " = " + QString::number(n) +
-                                " != " + QString::number(d), "", context);
+                                " != " + QString::number(d)).context(context);
 }
 
 inline void assureGe(double &n, double d, const char *varName, QObject *context, double feps = 1e-6) {
     if (ge(n, d, feps) && n < d)
         n = d;
     if (n < d)
-        throw base::Exception("Cannot round number to constant: " + QString(varName) +
+        ThrowException("Cannot round number to constant: " + QString(varName) +
                                 " = " + QString::number(n) +
-                                " != " + QString::number(d), "", context);
+                                " != " + QString::number(d)).context(context);
 }
 
 inline void assureLe(double &n, double d, const char *varName, QObject *context, double feps = 1e-6) {
     if (le(n, d, feps) && n > d)
         n = d;
     if (n > d)
-        throw base::Exception("Cannot round number to constant: " + QString(varName) +
+        ThrowException("Cannot round number to constant: " + QString(varName) +
                                 " = " + QString::number(n) +
-                                " != " + QString::number(d), "", context);
+                                " != " + QString::number(d)).context(context);
 }
 
 } // namespace

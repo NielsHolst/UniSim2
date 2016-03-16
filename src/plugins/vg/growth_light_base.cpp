@@ -31,23 +31,13 @@ GrowthLightBase::GrowthLightBase(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(GrowthLightBase);
-    Output(heatEmission).imports("./*{GrowthLightBase}[heatEmission]").transform(Sum);
-    Output(longWaveEmission).imports("./*{GrowthLightBase}[longWaveEmission]").transform(Sum);
-    Output(shortWaveEmission).imports("./*{GrowthLightBase}[shortWaveEmission]").transform(Sum);
-    Output(totalEmission).imports("./*{GrowthLightBase}[totalEmission]").transform(Sum);
-    Output(parEmission).imports("./*{GrowthLightBase}[parEmission]").transform(Sum);
-    Output(energyFlux).imports("./*{GrowthLightBase}[energyFlux]").transform(Sum);
-    Output(currentlyOn).imports("./*{GrowthLightBase}[currentlyOn]").transform(Any);
-}
-
-void GrowthLightBase::noLight() {
-    heatEmission =
-    longWaveEmission =
-    shortWaveEmission =
-    totalEmission =
-    parEmission =
-    energyFlux = 0.;
-    currentlyOn = false;
+    Output(heatEmission);
+    Output(longWaveEmission);
+    Output(shortWaveEmission);
+    Output(totalEmission);
+    Output(parEmission);
+    Output(energyFlux);
+    Output(currentlyOn);
 }
 
 } //namespace

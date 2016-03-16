@@ -31,7 +31,7 @@ void set_input_folder::doExecute() {
         env.state.dir.input = QDir(_args.at(3));
         break;
     default:
-        throw Exception("Command 'set input folder' takes at most 1 argument");
+        ThrowException("Command 'set input folder' takes at most 1 argument");
         return;
     }
 

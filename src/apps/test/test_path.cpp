@@ -25,7 +25,7 @@ void TestPath::setContext(QString path) {
     Path p{path};
     QVector<QObject*> objects;
     try {
-        objects = p.resolve();
+        objects = p.resolveMany();
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
@@ -154,77 +154,77 @@ void TestPath::testSelf() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("self:*", _context).resolve(),
-    absolute = Path("/A/A2").resolve();
+    relative = Path("self:*", _context).resolveMany(),
+    absolute = Path("/A/A2").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("self:*{Box}", _context).resolve(),
-    absolute = Path("/A/A2").resolve();
+    relative = Path("self:*{Box}", _context).resolveMany(),
+    absolute = Path("/A/A2").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path(".[v2]", _context).resolve(),
-    absolute = Path("/A/A2[v2]").resolve();
+    relative = Path(".[v2]", _context).resolveMany(),
+    absolute = Path("/A/A2[v2]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("./b[v1]", _context).resolve(),
-    absolute = Path("/A/A2/b[v1]").resolve();
+    relative = Path("./b[v1]", _context).resolveMany(),
+    absolute = Path("/A/A2/b[v1]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("./*[*]", _context).resolve(),
-    absolute = Path("/A/A2/*[*]").resolve();
+    relative = Path("./*[*]", _context).resolveMany(),
+    absolute = Path("/A/A2/*[*]").resolveMany();
     compareVectors(relative, absolute, 2);
 
-    QCOMPARE(Path("self:X", _context).resolve().size(), 0);
+    QCOMPARE(Path("self:X", _context).resolveMany().size(), 0);
 }
 
 void TestPath::testChildren() {
     setContext("A1");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("children:a[v1]", _context).resolve(),
-    absolute = Path("/A/A1/a[v1]").resolve();
+    relative = Path("children:a[v1]", _context).resolveMany(),
+    absolute = Path("/A/A1/a[v1]").resolveMany();
     compareVectors(relative, absolute, 2);
 
-    QVERIFY(Path("children:x[v1]", _context).resolve().isEmpty());
+    QVERIFY(Path("children:x[v1]", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testParent() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("../*", _context).resolve(),
-    absolute = Path("/A/*").resolve();
+    relative = Path("../*", _context).resolveMany(),
+    absolute = Path("/A/*").resolveMany();
     compareVectors(relative, absolute, 3);
 
-    relative = Path("..[v3]", _context).resolve(),
-    absolute = Path("/A[v3]").resolve();
+    relative = Path("..[v3]", _context).resolveMany(),
+    absolute = Path("/A[v3]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    QVERIFY(Path("parent:X", _context).resolve().isEmpty());
+    QVERIFY(Path("parent:X", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testNearest() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path(".../c[v2]", _context).resolve(),
-    absolute = Path("/A/A2/c[v2]").resolve();
+    relative = Path(".../c[v2]", _context).resolveMany(),
+    absolute = Path("/A/A2/c[v2]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("...[v2]", _context).resolve(),
-    absolute = Path("/A/A2[v2]").resolve();
+    relative = Path("...[v2]", _context).resolveMany(),
+    absolute = Path("/A/A2[v2]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("...[v3]", _context).resolve(),
-    absolute = Path("/A[v3]").resolve();
+    relative = Path("...[v3]", _context).resolveMany(),
+    absolute = Path("/A[v3]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path(".../*{Port}", _context).resolve(),
-    absolute = Path("/A/A2[v2]").resolve();
+    relative = Path(".../*{Port}", _context).resolveMany(),
+    absolute = Path("/A/A2[v2]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path(".../*{Box}", _context).resolve(),
-    absolute = Path("/A/A2/a").resolve();
+    relative = Path(".../*{Box}", _context).resolveMany(),
+    absolute = Path("/A/A2/a").resolveMany();
     compareVectors(relative, absolute, 1);
 }
 
@@ -232,88 +232,88 @@ void TestPath::testDescendants() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("descendants:c[v2]", _context).resolve(),
-    absolute = Path("/A/A2/c[v2]").resolve();
+    relative = Path("descendants:c[v2]", _context).resolveMany(),
+    absolute = Path("/A/A2/c[v2]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("descendants:*[*]", _context).resolve(),
-    absolute = Path("/A/A2/*[*]").resolve();
+    relative = Path("descendants:*[*]", _context).resolveMany(),
+    absolute = Path("/A/A2/*[*]").resolveMany();
     compareVectors(relative, absolute, 2);
 
-    QVERIFY(Path("descendants:x[*]", _context).resolve().isEmpty());
+    QVERIFY(Path("descendants:x[*]", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testAncestors() {
     setContext("A2/c");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("ancestors:A", _context).resolve(),
-    absolute = Path("/A").resolve();
+    relative = Path("ancestors:A", _context).resolveMany(),
+    absolute = Path("/A").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("ancestors:A2", _context).resolve(),
-    absolute = Path("/A/A2").resolve();
+    relative = Path("ancestors:A2", _context).resolveMany(),
+    absolute = Path("/A/A2").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("ancestors:*", _context).resolve(),
-    absolute = Path("/A/A2").resolve() << Path("/A").resolve();
+    relative = Path("ancestors:*", _context).resolveMany(),
+    absolute = Path("/A/A2").resolveMany() << Path("/A").resolveMany();
     compareVectors(relative, absolute, 2);
 
-    relative = Path("ancestors:A[v1]", _context).resolve(),
-    absolute = Path("/A[v1]").resolve();
+    relative = Path("ancestors:A[v1]", _context).resolveMany(),
+    absolute = Path("/A[v1]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    QVERIFY(Path("ancestors:A3", _context).resolve().isEmpty());
+    QVERIFY(Path("ancestors:A3", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testAllSiblings() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("allSiblings:*", _context).resolve(),
-    absolute = Path("/A/*").resolve();
+    relative = Path("allSiblings:*", _context).resolveMany(),
+    absolute = Path("/A/*").resolveMany();
     compareVectors(relative, absolute, 3);
 
     setContext("/A");
-    QVERIFY(Path("allSiblings:*", _context).resolve().isEmpty());
+    QVERIFY(Path("allSiblings:*", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testOtherSiblings() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("otherSiblings:*", _context).resolve(),
-    absolute = Path("/A/A1").resolve() << Path("/A/A3").resolve();
+    relative = Path("otherSiblings:*", _context).resolveMany(),
+    absolute = Path("/A/A1").resolveMany() << Path("/A/A3").resolveMany();
     compareVectors(relative, absolute, 2);
 
     setContext("/A");
-    QVERIFY(Path("otherSiblings:*", _context).resolve().isEmpty());
+    QVERIFY(Path("otherSiblings:*", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testPreceedingSibling() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("preceedingSibling:*", _context).resolve(),
-    absolute = Path("/A/A1").resolve();
+    relative = Path("preceedingSibling:*", _context).resolveMany(),
+    absolute = Path("/A/A1").resolveMany();
     compareVectors(relative, absolute, 1);
 
     setContext("/A");
     Path path = Path("preceedingSibling:*", _context);
-    relative = path.resolve();
-    QVERIFY(Path("preceedingSibling:*", _context).resolve().isEmpty());
+    relative = path.resolveMany();
+    QVERIFY(Path("preceedingSibling:*", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testFollowingSibling() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("followingSibling:*", _context).resolve(),
-    absolute = Path("/A/A3").resolve();
+    relative = Path("followingSibling:*", _context).resolveMany(),
+    absolute = Path("/A/A3").resolveMany();
     compareVectors(relative, absolute, 1);
 
     setContext("/A");
-    QVERIFY(Path("followingSibling:*", _context).resolve().isEmpty());
+    QVERIFY(Path("followingSibling:*", _context).resolveMany().isEmpty());
 }
 
 void TestPath::testPathList() {
@@ -323,8 +323,8 @@ void TestPath::testPathList() {
     absPaths << "/A/A3[v3]" << "/A[*]";
 
     QVector<QObject*> relative, absolute;
-    relative = Path(relPaths, _context).resolve(),
-    absolute = Path(absPaths).resolve();
+    relative = Path(relPaths, _context).resolveMany(),
+    absolute = Path(absPaths).resolveMany();
     compareVectors(relative, absolute, 3);
 }
 
@@ -332,8 +332,8 @@ void TestPath::testGlobal() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("A3[v3]", _context).resolve(),
-    absolute = Path("/A/A3[v3]").resolve();
+    relative = Path("A3[v3]", _context).resolveMany(),
+    absolute = Path("/A/A3[v3]").resolveMany();
     compareVectors(relative, absolute, 1);
 }
 
@@ -341,20 +341,20 @@ void TestPath::testRoot() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("A", _context).resolve(),
-    absolute = Path("/").resolve();
+    relative = Path("A", _context).resolveMany(),
+    absolute = Path("/").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("A", _context).resolve(),
-    absolute = Path("/A").resolve();
+    relative = Path("A", _context).resolveMany(),
+    absolute = Path("/A").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("A[v1]", _context).resolve(),
-    absolute = Path("/A[v1]").resolve();
+    relative = Path("A[v1]", _context).resolveMany(),
+    absolute = Path("/A[v1]").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("A[*]", _context).resolve(),
-    absolute = Path("/A[*]").resolve();
+    relative = Path("A[*]", _context).resolveMany(),
+    absolute = Path("/A[*]").resolveMany();
     compareVectors(relative, absolute, 2);
 }
 
@@ -362,7 +362,7 @@ void TestPath::testBarePort() {
     setContext("A2");
     QVector<QObject*> relative;
 
-    relative = Path("*{Port}", _context).resolve();
+    relative = Path("*{Port}", _context).resolveMany();
     QCOMPARE(relative.size(), 12);
 }
 
@@ -371,7 +371,7 @@ void TestPath::testNumberOfMatches() {
 
     bool excepted{false};
     try {
-        Path(path).resolve(1);
+        Path(path).resolveOne();
     }
     catch (Exception &) {
         excepted = true;
@@ -380,7 +380,7 @@ void TestPath::testNumberOfMatches() {
 
     excepted = false;
     try {
-        Path(path).resolve(2);
+        Path(path).resolveMany();
     }
     catch (Exception &) {
         excepted = true;
@@ -391,8 +391,8 @@ void TestPath::testNumberOfMatches() {
 void TestPath::testEmpty() {
     QVector<QObject*> none;
     try {
-        Path("").resolve(0);
-        none = Path("").resolve();
+        none = Path("").resolveMany();
+        QCOMPARE(none.size(), 0);
     }
     catch (Exception &ex) {
         QFAIL(ex.what());
@@ -403,7 +403,7 @@ void TestPath::testEmpty() {
 void TestPath::testResolveInvalid() {
     bool excepted{false};
     try {
-        Path(".[v2]").resolve();
+        Path(".[v2]").resolveMany();
     }
     catch (Exception &) {
         excepted = true;

@@ -69,8 +69,8 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     std::stringstream _error;
 
     node_parser() : node_parser::base_type(node) {
-        // A name has C++ identifier style
-        name %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
+        // A name has C++ identifier style; a leading ampersand is allowed
+        name %= lexeme[char_("&a-zA-Z_") >> *char_("a-zA-Z0-9_")];
         // classes and objects have a name;
         // a class name may be qualified by a namespace name
         class_name %= name >> -(char_(':') > char_(':') > name);

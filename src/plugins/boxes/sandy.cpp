@@ -25,7 +25,7 @@ Sandy::Sandy(QString name, QObject *parent)
 void Sandy::reset() {
     if (xMin >= xMax) {
         QString value{"%1 >= %2"};
-        throw Exception("'xMin' must be less than 'xMax'", value.arg(xMin).arg(xMax), this);
+        ThrowException("'xMin' must be less than 'xMax'").value(value.arg(xMin).arg(xMax)).context(this);;
     }
     C = (a<=0. || b<=0.) ?  1. : pow(a/(a+b),-a) * pow(b/(a+b),-b);
     update();

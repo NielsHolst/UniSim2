@@ -56,7 +56,7 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
     for (int i = 0; i <_originalPaths.size(); ++i) {
         normalise(i);
         if (_current.normalisedContext == 0)
-            throw Exception("Path misses a context object", _current.originalPath, _caller);
+            ThrowException("Path misses a context object").value(_current.originalPath).context(_caller);
         QObjects nextCandidates = (QObjects() << _current.normalisedContext);
         addCandidates(_current.normalisedPath, nextCandidates);
         _candidates << nextCandidates;
@@ -64,7 +64,7 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
     removeEmptyCandidates();
     if (number > -1 && _candidates.size() != number) {
         QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
-        throw Exception(msg.arg(_candidates.size()).arg(number), _current.originalPath, _caller);
+        ThrowException(msg.arg(_candidates.size()).arg(number)).value(_current.originalPath).context(_caller);
     }
     return _candidates;
 }
@@ -102,7 +102,7 @@ void Path::validateStep(QString step) {
 void Path::validate(QRegExp rx, QString s) {
     QString value = "'%1'' in '%2'";
     if (!rx.exactMatch(s))
-        throw Exception("Bad path format", value.arg(s).arg(_current.originalPath), _originalContext);
+        ThrowException("Bad path format").value(value.arg(s).arg(_current.originalPath)).context(_originalContext);
 }
 
 QString Path::normaliseFirstBox(QString s) {
@@ -159,7 +159,7 @@ QStringList Path::splitBox(QString s) {
         directive = "nearest";
     if (isSelf || isParent || isNearest) {
         if (hasDirective)
-            throw Exception("Dot notation cannot follow directive", _current.originalPath, _caller);
+            ThrowException("Dot notation cannot follow directive").value(_current.originalPath).context(_caller);
         box = "*";
     }
 
@@ -171,7 +171,7 @@ QString Path::normalisePort() {
     int leftBracket = _current.originalPath.indexOf('['),
         rightBracket = _current.originalPath.indexOf(']');
     if (leftBracket*rightBracket < 0)
-        throw Exception("Missing matching bracket", _current.originalPath, _originalContext);
+        ThrowException("Missing matching bracket").value(_current.originalPath).context(_originalContext);
     if (leftBracket == -1) return "";
     return "children:" +
             _current.originalPath.mid(leftBracket+1, rightBracket-leftBracket-1) +
@@ -349,7 +349,7 @@ void Path::removeEmptyCandidates() {
 Path::Directive Path::parseDirective(QString s) {
     QString dir = s.toLower();
     if (!_directives.contains(dir))
-        throw Exception("Unknown directive: '" + s + "'", _current.originalPath, _caller);
+        ThrowException("Unknown directive: '" + s + "'").value(_current.originalPath).context(_caller);
     return _directives.value(dir);
 }
 

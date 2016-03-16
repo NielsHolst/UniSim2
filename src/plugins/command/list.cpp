@@ -25,7 +25,7 @@ void list::doExecute() {
         dialog().information(output.asText());
     }
     else
-        throw Exception("No box loaded");
+        ThrowException("No box loaded");
 }
 
 }

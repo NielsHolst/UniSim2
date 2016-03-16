@@ -77,8 +77,7 @@ Calendar::Calendar(QString name, QObject *parent)
     Input(latitude).equals(52);
     Input(longitude).equals(11);
     Input(timeZone).equals(1);
-    Input(initialDate).equals(QDate(2000,1,1));
-    Input(initialTimeOfDay).equals(QTime(0,0,0));
+    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC));
     Input(timeStep).equals(1);
     Input(timeUnit).equals('d');
     Input(sample).equals(1);
@@ -87,6 +86,7 @@ Calendar::Calendar(QString name, QObject *parent)
     Output(trueSolarTime);
     Output(dateTime);
     Output(timeStepSecs);
+    Output(timeStepDays);
     Output(totalTimeSteps);
     Output(totalTime);
     Output(totalDays);
@@ -115,7 +115,8 @@ void Calendar::initialize() {
 void Calendar::reset() {
     _timeUnit = TimeWithUnits::charToUnit(timeUnit, this);
     timeStepSecs = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Seconds);
-    dateTime = QDateTime(initialDate, initialTimeOfDay, Qt::UTC);
+    timeStepDays = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Days);
+    dateTime = initialDateTime;
     totalTimeSteps = 0;
     updateDerived();
 }

@@ -101,7 +101,7 @@ SurfaceRadiation::Spectrum& SurfaceRadiation::Spectrum::operator*=(const Surface
            r12_inner = s2.inner.ref + sqr(s2.tra)*inner.ref,
            a12_inner = 1. - r12_inner - t12;
     if (k==0) {
-        throw Exception("Two facing surfaces cannot both have 100% reflection");
+        ThrowException("Two facing surfaces cannot both have 100% reflection");
     }
     tra = t12;
     inner.abs = a12_inner;

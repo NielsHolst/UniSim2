@@ -1,5 +1,6 @@
 #include <iostream>
 #include "box.h"
+#include "dialog.h"
 #include "exception.h"
 #include "general.h"
 #include "path.h"
@@ -37,7 +38,7 @@ void Box::addOrphanPort(Port *port) {
 void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     QString name{port->objectName()};
     if (ports.contains(name))
-        throw Exception("Box already has a port with this name", name, this);
+        ThrowException("Box already has a port with this name").value(name).context(this);
     ports[name] = port;
 }
 
@@ -52,7 +53,7 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     case 1: \
         return dynamic_cast<Port*>(ports.at(0)); \
     default: \
-        throw Exception("Port name not unique within box", name+value.arg(n), this); \
+        ThrowException("Port name not unique within box").value(name+value.arg(n)).context(this);; \
     }
 
 Port* Box::peakPort(QString name) {
@@ -66,14 +67,14 @@ const Port* Box::peakPort(QString name) const {
 Port* Box::port(QString name) {
     Port *port = peakPort(name); \
     if (!port) \
-        throw Exception("No port of that name in this box", name, this); \
+        ThrowException("No port of that name in this box").value(name).context(this); \
     return port; \
 }
 
 const Port* Box::port(QString name) const {
     const Port *port = peakPort(name); \
     if (!port) \
-        throw Exception("No port of that name in this box", name, this); \
+        ThrowException("No port of that name in this box").value(name).context(this); \
     return port; \
 }
 
@@ -103,7 +104,7 @@ int Box::count() {
 }
 
 void Box::run() {
-    throw Exception("Method 'run' not defined for this class", className(), this);
+    ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
 void Box::postAmend() {
@@ -115,7 +116,7 @@ void Box::postAmend() {
         Port *orphanPort = orphanIt.value(),
              *originalPort = peakPort(orphanName);
         if (!originalPort)
-            throw Exception("Port not found", orphanName, this);
+            ThrowException("Port not found").value(orphanName).context(this);
         for (QString name : orphanPort->attributes()) {
             // Only copy attribute if it has been set in the orphan port
             bool attributeHasBeenSet = !orphanPort->attribute(name).isNull();
@@ -130,17 +131,22 @@ void Box::postAmend() {
 }
 
 void Box::amendFamily() {
-    if (_amended) return;
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->amendFamily();
+    try {
+        if (_amended) return;
+        for (auto child : children()) {
+            Box *box = dynamic_cast<Box*>(child);
+            if (box)
+                box->amendFamily();
+        }
+        amend();
+        postAmend();
+        _count = 0;
+        enumerateBoxes(_count);
+        _amended = true;
     }
-    amend();
-    postAmend();
-    _count = 0;
-    enumerateBoxes(_count);
-    _amended = true;
+    catch (Exception &ex) {
+        dialog().error(ex.what());
+    }
 }
 
 void Box::enumerateBoxes(int &i) {

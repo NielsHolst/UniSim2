@@ -34,12 +34,12 @@ PUBLISH(VentilationByTemp)
 VentilationByTemp::VentilationByTemp(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(outdoorsTemperature, "outdoors[temperature]");
-    Input(windowLength, "construction/vents[totalLength]");
-    Input(windowHeight, "construction/vents[averageHeight]");
-    Input(greenhouseArea, "geometry[groundArea]");
-    Input(dischargeCoefficient, 0.7);
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(windowLength).imports("construction/vents[totalLength]");
+    Input(windowHeight).imports("construction/vents[averageHeight]");
+    Input(greenhouseArea).imports("geometry[groundArea]");
+    Input(dischargeCoefficient).equals(0.7);
     Output(value);
 }
 

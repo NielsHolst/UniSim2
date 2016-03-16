@@ -47,7 +47,7 @@ void BoundaryLayerResistanceJonesB::setRbH2O() {
 
     rbH2O = 1./gbH2O;
     if (std::isnan(rbH2O)) {
-        throw Exception("BoundaryLayerResistanceJonesB is not a number");
+        ThrowException("BoundaryLayerResistanceJonesB is not a number").context(this);;
     }
 }
 

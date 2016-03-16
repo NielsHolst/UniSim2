@@ -24,9 +24,9 @@ public:
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
-    template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = 0);
     template<class T=QObject> T* resolveOne(const QObject* caller = 0);
     template<class T=QObject> T* resolveMaybeOne(const QObject* caller = 0);
+    template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = 0);
 
     typedef QList<const QObject*> QObjects;
 private:
@@ -47,6 +47,7 @@ private:
 
     // Methods
     void initDirectives();
+    template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = 0);
     QObjects _resolve(int number = -1, const QObject* caller = 0);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
@@ -83,7 +84,11 @@ template<class T> T* Path::resolveMaybeOne(const QObject* caller) {
     case 1: return objsT.at(0);
     }
     QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(0 or 1)"};
-    throw Exception(msg.arg(objsT.size()), _current.originalPath, _caller);
+    ThrowException(msg.arg(objsT.size())).value(_current.originalPath).context(_caller);
+}
+
+template<class T> QVector<T*> Path::resolveMany(const QObject *caller) {
+    return resolve<T>(-1, caller);
 }
 
 }

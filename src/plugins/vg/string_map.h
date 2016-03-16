@@ -41,7 +41,7 @@ template <class T>
 T StringMap<T>::seek(QString key, const QObject *context) {
     if (!QMap<QString, T>::contains(key)) {
         QString msg = "Unknown key in list. Only these keys are valid: '%1'";
-        throw base::Exception(msg.arg(validKeys().join(",")), key, context);
+        ThrowException(msg.arg(validKeys().join(","))).value(key).context(context);
     }
     return QMap<QString, T>::value(key);
 }

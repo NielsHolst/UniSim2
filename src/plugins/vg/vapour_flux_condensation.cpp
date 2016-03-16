@@ -30,10 +30,10 @@ PUBLISH(VapourFluxCondensation)
 VapourFluxCondensation::VapourFluxCondensation(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(surfaceAreaPerGroundArea, 0);
-    Input(surfaceTemperature, "indoors/temperature[value]");
-    Input(indoorsTemperature, "indoors/temperature[value]");
-    Input(indoorsAh, "indoors/humidity[ah]");
+    Input(surfaceAreaPerGroundArea).equals(0);
+    Input(surfaceTemperature).imports("indoors/temperature[value]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(indoorsAh).imports("indoors/humidity[ah]");
 }
 
 void VapourFluxCondensation::update() {

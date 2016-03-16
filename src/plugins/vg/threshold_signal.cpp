@@ -27,13 +27,13 @@ PUBLISH(ThresholdSignal)
 
 ThresholdSignal::ThresholdSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input(threshold, 0.);
-    Input(input, 0.);
-    Input(signalBelow, 0.);
-    Input(signalAbove, 1.);
+    Input(threshold).equals(0.);
+    Input(input).equals(0.);
+    Input(signalBelow).equals(0.);
+    Input(signalAbove).equals(1.);
 }
 
-double ThresholdSignal::signal() {
+double ThresholdSignal::computeSignal() {
     return (input < threshold) ? signalBelow : signalAbove;
 }
 

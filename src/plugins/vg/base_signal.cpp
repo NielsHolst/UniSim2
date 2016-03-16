@@ -33,23 +33,23 @@ BaseSignal::BaseSignal(QString name, QObject *parent)
 {
     Class(BaseSignal);
     Input(signalReset);
-    Output(_signal);
+    Output(signal);
     Output(flag);
     Output(flagUp);
     Output(flagDown);
 }
 
 void BaseSignal::reset() {
-    _signal = signalReset;
-    flag = (_signal!=0.);
+    signal = signalReset;
+    flag = (signal!=0.);
     flagUp = flagDown = false;
     localReset();
 }
 
 void BaseSignal::update() {
-    _signal = signal();
+    signal = computeSignal();
     bool oldFlag = flag;
-    flag = TestNum::neZero(_signal);
+    flag = TestNum::neZero(signal);
     flagUp = !oldFlag && flag;
     flagDown = oldFlag && !flag;
 }

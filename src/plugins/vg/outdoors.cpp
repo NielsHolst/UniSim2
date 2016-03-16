@@ -45,10 +45,10 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Input(co2).equals(400.);
     Input(soilTemperature).equals(10);
     Input(temperature).imports("./records[Tair]");
-    Input(rh).imports("./records[RHair]");
+    Input(rh).imports("./records[Rhair]");
     Input(radiation).imports("./records[GlobRad]");
     Input(diffuseRadiation).imports("./records[DifRad]");
-    Input(windSpeed).imports("./records[WindSpeed]");
+    Input(windSpeed).imports("./records[Windspeed]");
     Input(skyTemperature).imports("./records[Tsky]");
     Output(parRadiation);
     Output(directRadiation);

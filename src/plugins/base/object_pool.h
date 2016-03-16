@@ -27,11 +27,11 @@ private:
 
 template <class T> T ObjectPool::find(QString id) {
     if (!objects.contains(id))
-        throw Exception("Cannot find object in object pool", id);
+        ThrowException("Cannot find object in object pool").value(id);
     else {
         T object = dynamic_cast<T>(objects.value(id));
         if (!object)
-            throw Exception("Object found in object pool is not of expected type", id);
+            ThrowException("Object found in object pool is not of expected type").value(id);
         return object;
     }
 }

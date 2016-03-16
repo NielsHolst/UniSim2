@@ -13,7 +13,7 @@ namespace base {
         IF_STEP(Update)
         IF_STEP(Cleanup)
         IF_STEP(Debrief)
-        throw Exception("Cannot convert string to step", source);
+        ThrowException("Cannot convert string to step").value(source);
     }
 
     QString convert(Step source) {

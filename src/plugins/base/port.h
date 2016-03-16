@@ -20,13 +20,13 @@ class Box;
 
 class Port : public QObject {
 public:
-    enum Access{Read=1, Write=2};
+    enum Access{Input, Output};
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
     QString _importPath;
     QVector<Port *> _importPorts;
-    unsigned _accessFlags;
+    Access _access;
     bool _reset;
     Vector _track;
     static unsigned _trackFlags;
@@ -39,7 +39,7 @@ public:
     template <class T> Port& equals(T value);
     Port& equals(const char *value) { return equals(QString(value)); }
     Port& imports(QString pathToPort);
-    Port& access(unsigned accessFlags);
+    Port& access(Access acc);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
@@ -78,7 +78,7 @@ public:
     template <class T> const T* valuePtr() const;
     const Vector* trackPtr() const;
     PortType type() const;
-    unsigned accessFlags() const;
+    Access access() const;
     bool doTrack() const;
     bool hasImport() const;
     QString importPath() const;
@@ -98,9 +98,7 @@ template <class T> Port& Port::data(T *valuePtr) {
 template <class T> Port& Port::equals(T value)
 {
     if (_valuePtr == 0)
-        throw Exception("Cannot set port value by 'equals' because port 'data' has not been set", "", this);
-    if (!(_accessFlags & Write))
-        throw Exception("Cannot set port value by 'equals' because port is not for input", "", this);
+        ThrowException("Cannot set port value by 'equals' because port 'data' has not been set").context(this);
     _importPath.clear();
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, convert<PortTransform>(transform()));
     return *this;
@@ -117,7 +115,7 @@ template <class T> const T* Port::valuePtr() const
 {
     if (_valueType != typeOf<T>()) {
         QString msg("Port of type %1 cannot be converted to type %2");
-        throw Exception(msg.arg(nameOf(_valueType)).arg(nameOf(typeOf<T>())), "", this);
+        ThrowException(msg.arg(nameOf(_valueType)).arg(nameOf(typeOf<T>()))).context(this);
     }
     return reinterpret_cast<const T*>(_valuePtr);
 }

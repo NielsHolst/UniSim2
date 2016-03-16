@@ -32,7 +32,7 @@ const void* vectorize(PortType destType, const QVector<Port*> &ports) {
     CASE_VECTOR(DateTime):
         return vectorize<QDateTime>(ports);
     case Null:
-        throw Exception("Cannot convert to 'Null' type");
+        ThrowException("Cannot convert to 'Null' type");
     }
     return 0;
 }

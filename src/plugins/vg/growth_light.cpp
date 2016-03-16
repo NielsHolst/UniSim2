@@ -66,7 +66,7 @@ void GrowthLight::reset() {
         attributes.minPeriodOn = 0.;
     }
     else
-        throw Exception("Unknown growth light type", type, this);
+        ThrowException("Unknown growth light type").value(type).context(this);
     // Compute derived parameters
     double netCapacity = intensity/ballastCorrection;
     netAttributes.heatEmission = attributes.heatCoef*netCapacity;
@@ -96,6 +96,16 @@ void GrowthLight::update() {
     }
     else
         noLight();
+}
+
+void GrowthLight::noLight() {
+    heatEmission =
+    longWaveEmission =
+    shortWaveEmission =
+    totalEmission =
+    parEmission =
+    energyFlux = 0.;
+    currentlyOn = false;
 }
 
 } //namespace

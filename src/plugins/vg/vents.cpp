@@ -6,6 +6,7 @@
 */
 #include <math.h>
 #include <base/exception.h>
+#include <base/path.h>
 #include <base/publish.h>
 #include "vent.h"
 #include "vents.h"
@@ -33,7 +34,7 @@ PUBLISH(Vents)
 Vents::Vents(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(groundArea, "geometry[groundArea]");
+    Input(groundArea).imports("geometry[groundArea]");
     Output(totalLength);
     Output(averageHeight);
     Output(proportionalEffectiveArea);
@@ -43,13 +44,13 @@ void Vents::reset() {
     totalLength =
     averageHeight =
     proportionalEffectiveArea = 0;
-    auto vents = seekChildren<Vent*>("*");
+    auto vents = Path("./*").resolveMany<Vent>();
     for (auto vent : vents) {
-        double length = vent->pullValue<double>("length"),
-               height = vent->pullValue<double>("height") ;
+        double length = vent->port("length")->value<double>(),
+               height = vent->port("height")->value<double>();
         totalLength += length;
         averageHeight += height*length;
-        proportionalEffectiveArea += vent->pullValue<double>("effectiveArea");
+        proportionalEffectiveArea += port("effectiveArea")->value<double>();
     }
     if (totalLength>0.) averageHeight /= totalLength;
     proportionalEffectiveArea /= groundArea;

@@ -4,9 +4,10 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <usbase/decode_list.h>
-#include "vapour_flux_sum.h"
+#include <base/general.h>
+#include <base/path.h>
 #include <base/publish.h>
+#include "vapour_flux_sum.h"
 
 using namespace base;
 
@@ -24,7 +25,7 @@ PUBLISH(VapourFluxSum)
 VapourFluxSum::VapourFluxSum(QString name, QObject *parent)
     : VapourFluxSumBase(name, parent)
 {
-    Input(toAdd, "()");
+    Input(toAdd).equals("()");
 }
 
 QList<VapourFluxBase*> VapourFluxSum::fluxes() {
@@ -32,14 +33,14 @@ QList<VapourFluxBase*> VapourFluxSum::fluxes() {
 }
 
 QList<VapourFluxBase*> VapourFluxSum::childFluxes() {
-    return seekChildren<VapourFluxBase*>("*");
+    return Path("./*").resolveMany<VapourFluxBase>().toList();
 }
 
 QList<VapourFluxBase*> VapourFluxSum::referredFluxes() {
-    QStringList modelNames = decodeList(toAdd, this);
+    QStringList modelNames = decodeSimpleList(toAdd, this);
     QList<VapourFluxBase*> models;
     for (auto modelName : modelNames) {
-        auto flux = seekOne<VapourFluxBase*>(modelName);
+        auto flux = Path(modelName).resolveOne<VapourFluxBase>();
         models << flux;
     }
     return models;

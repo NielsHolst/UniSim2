@@ -40,7 +40,7 @@ void RandomBase::nextValue() {
         value = drawValue();
         if (++i == maxTries) {
             QString msg = "Max number of tries exceeded to find random value inside interval: %1 to %2";
-            throw Exception(msg.arg(minValue).arg(maxValue), QString::number(maxTries), this);
+            ThrowException(msg.arg(minValue).arg(maxValue)).value(maxTries).context(this);
         }
     } while (value < minValue || value > maxValue);
 }

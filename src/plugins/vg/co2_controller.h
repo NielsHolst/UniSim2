@@ -10,10 +10,10 @@
 
 namespace vg {
 
-class Co2Controller : public base::Box
+class CO2Controller : public base::Box
 {
 public:
-    Co2Controller(QString name, QObject *parent);
+    CO2Controller(QString name, QObject *parent);
     void reset();
     void update();
 private:

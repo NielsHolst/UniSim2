@@ -40,9 +40,8 @@ void load::doExecute() {
         fileName = _args.at(1);
         break;
     default:
-        throw Exception("Too many arguments. Write 'load <file-name>'."
-                        "\nIf the file name contains spaces then enclose it in apostrophes",
-                        _args.join(" "));
+        ThrowException("Too many arguments. Write 'load <file-name>'."
+                        "\nIf the file name contains spaces then enclose it in apostrophes").value(_args.join(" "));
     }
     delete env.state.root;
     env.state.root = 0;
@@ -63,19 +62,12 @@ void load::readFile(QString fileName) {
             break;
         }
         reader->parse(filePath(fileName));
+        environment().state.root = builder.content();
+        Q_ASSERT(environment().state.root);
     }
     catch (Exception &ex) {
-        dialog().error(QString("Load failed\n") + ex.fullText());
+        dialog().error(QString("Load failed\n") + ex.what());
     }
-
-    Box *newRoot = builder.content();
-    if (newRoot) {
-        environment().state.root = newRoot;
-        QString info("%1 boxes loaded");
-        dialog().information(info.arg(newRoot->count()));
-    }
-    else
-        dialog().error("Box is empty");
     delete reader;
 }
 
@@ -86,13 +78,13 @@ load::FileType load::fileType(QString fileName) {
     else if (suffix == "xml")
         return Xml;
     QString s = suffix.isEmpty() ? "Missing" : "Wrong";
-    throw Exception(s + " file type. Must be '.box' or '.xml'", fileName);
+    ThrowException(s + " file type. Must be '.box' or '.xml'").value(fileName);
 }
 
 QString load::filePath(QString fileName) {
     QDir dir = locateDir(environment().state.dir.work, environment().state.dir.input);
     if (!dir.exists())
-        throw Exception("Input folder not found", dir.absolutePath());
+        ThrowException("Input folder not found").value(dir.absolutePath());
     return dir.absolutePath() + "/" + fileName;
 }
 

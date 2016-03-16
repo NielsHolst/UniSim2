@@ -3,10 +3,16 @@
 
 #include "autotest.h"
 
+namespace base {
+    class DialogStub;
+}
+
 class TestSavanna : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
+    void cleanupTestCase();
     void testDirectCreate();
     void testPort();
     void testPortDefaultValue();
@@ -14,6 +20,8 @@ private slots:
     void testNewPort();
     void testNewPortSum();
     void testImport();
+private:
+    base::DialogStub *dialogStub;
 };
 
 DECLARE_TEST(TestSavanna)

@@ -36,7 +36,7 @@ PUBLISH(Cover)
  * - _azimuth_ is the azimuth of the sun relative to north [-180;180]
  * - _area_ is the area of the cover [m<SUP>2</SUP>]
  * - _windSpeed_ is the outdoors wind speed [m/s]
- * - _U4_ is the heat transfer coefficient of the material at a windspeed of 4 m/s [W/m<SUP>2</SUP>/K]
+ * - _U4_ is the heat transfer coefficient of the material at a wind speed of 4 m/s [W/m<SUP>2</SUP>/K]
  * - _emissivity_ is the effectiveness in emitting energy as thermal radiation [0;1].
  * - _absorptivity_ is the proportion of light absorbed [0;1]
  * - _transmissivity_ is the proportion of diffuse light transmitted through the material [0;1]
@@ -54,11 +54,11 @@ Cover::Cover(QString name, QObject *parent)
 {
     Input(greenhouseShade).imports("geometry[shade]");
     Input(chalk).imports("controllers/chalk[signal]");
-    Input(directTransmissionFile).imports("direct_transmission_single.txt");
+    Input(directTransmissionFile).equals(".../input/direct_transmission_single.txt");
     Input(latitude).imports("calendar[latitude]");
     Input(azimuth).imports("calendar[azimuth]");
     Input(area).imports("..[area]");
-    Input(windspeed).imports("outdoors[windspeed]");
+    Input(windSpeed).imports("outdoors[windSpeed]");
     Input(U4).equals(7.5);
     Input(emissivity).equals(0.84);
     Input(absorptivity).equals(0.04);
@@ -86,7 +86,7 @@ void Cover::update() {
            tr = (1-greenhouseShade)*(1-chalk);
     set( SurfaceRadiation().asCover(tr*transmissivity, tr*transmissivity*directLightfactor,
                                     absorptivity, emissivity) );
-    double k = (windspeed <= 4) ? (2.8 + 1.2*windspeed)/7.6 : pow(windspeed,0.8)/pow(4.,0.8);
+    double k = (windSpeed <= 4) ? (2.8 + 1.2*windSpeed)/7.6 : pow(windSpeed,0.8)/pow(4.,0.8);
     U = k*U4;
     heatCapacity = specificHeatCapacity*area;
 }

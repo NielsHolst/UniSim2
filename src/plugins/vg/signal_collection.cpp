@@ -49,7 +49,7 @@ void SignalCollection::localReset() {
     ruleDecoded = rules.seek(rule, this);
 }
 
-double SignalCollection::signal() {
+double SignalCollection::computeSignal() {
     double res{0};
     switch (ruleDecoded) {
     case Min:

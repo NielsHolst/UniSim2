@@ -19,14 +19,16 @@ public:
     SignalCollection(QString name, QObject *parent);
     void initialize();
     void localReset();
-    double signal();
+    double computeSignal();
 private:
     // Input
     QString rule;
+    // Data
     enum Rule {Min, Max, Sum};
     Rule ruleDecoded;
     static StringMap<Rule> rules;
     QList<const double *> childSignals;
+    // Methods
     void setRules();
 };
 

@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_THRESHOLD_SIGNAL_H
-#define VG_THRESHOLD_SIGNAL_H
+#ifndef THRESHOLD_SIGNAL_H
+#define THRESHOLD_SIGNAL_H
 
 #include "base_signal.h"
 
@@ -15,7 +15,7 @@ class ThresholdSignal : public BaseSignal
 {
 public:
     ThresholdSignal(QString name, QObject *parent);
-    double signal();
+    double computeSignal();
 private:
     double threshold, input, signalBelow, signalAbove;
 };

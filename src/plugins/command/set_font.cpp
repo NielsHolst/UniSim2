@@ -47,11 +47,11 @@ void set_font::doExecute() {
         if (ok)
             setFont(a[2], pt);
         else
-            throw Exception("Last argument must be a number", _args.join(" "), 0,  hint);
+            ThrowException("Last argument must be a number").value(_args.join(" ")).hint(hint);
         break;
     default:
         QString s{"Too many arguments (%1): %2"};
-        throw Exception(s.arg(a.size()).arg(a.join(" ")), "", 0, hint);
+        ThrowException(s.arg(a.size()).arg(a.join(" "))).hint(hint);
     }
 }
 

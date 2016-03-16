@@ -96,7 +96,8 @@ void FruitCropMass::setProportions() {
     double total = propRoot + propStem + propLeaf + propFruit;
     if (TestNum::ne(total, 1.)) {
         QString msg {"Proportions do not add up to 1: root(%1)+stem(%2)+leaf(%3)+fruit(%4)=%5"};
-        throw Exception(msg.arg(propRoot).arg(propStem).arg(propLeaf).arg(propFruit).arg(total), QString::number(total), this);
+        ThrowException(msg.arg(propRoot).arg(propStem).arg(propLeaf).arg(propFruit).arg(total)).
+                       value(total).context(this);
     }
 }
 

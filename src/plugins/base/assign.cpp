@@ -43,7 +43,7 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
     switch (transform) {
     case Identity:
         if (n != 1)
-            throw Exception("Cannot assign to scalar from vector. Expected vector size = 1", QString::number(n) + " =! 1");
+            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(QString::number(n) + " =! 1");
         value = *sourceData;
         break;
     case Sum:
@@ -79,7 +79,7 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
         break;
     case Copy:
     case Split:
-        throw Exception("Transform cannot be applied when assigning a vector to a scalar", convert<QString>(transform));
+        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(transform);
     }
     DEST(destT) = convert<destT>(value);
 }
@@ -91,11 +91,11 @@ template <> void assignToScalarFromVector<destT, sourceT>(void *destPtr, const v
     switch (transform) { \
     case Identity: \
         if (n != 1) \
-            throw Exception("Cannot assign to scalar from vector. Expected vector size = 1", QString::number(n) + " =! 1"); \
+            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(QString::number(n) + " =! 1"); \
         DEST(destT) = convert<destT>(sourceVector->at(0)); \
         break; \
     default: \
-        throw Exception("Transform cannot be applied when assigning a vector to a scalar", convert<QString>(transform)); \
+        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(transform); \
     } \
 }
 
@@ -128,7 +128,7 @@ QDateTime operator/(QDateTime x, int) { return x; }
 template <class destT, class sourceT>
 void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransform transform) {
     if (transform != Identity)
-        throw Exception("Expected 'Identity' transform when assigning to vector", convert<QString>(transform));
+        ThrowException("Expected 'Identity' transform when assigning to vector").value(transform);
     QVector<destT> *destVector = DEST_PTR(QVector<destT>);
     sourceT source = SOURCE(sourceT);
     destT destValue = convert<destT>(source);
@@ -145,13 +145,13 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
         QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
                     "\nor scalar must be transformed by Copy or Split"),
                 value("Vector size = %1, Transform = %2");
-        throw Exception(msg, value.arg(QString::number(n)).arg(convert<QString>(transform)));
+        ThrowException(msg).value(value.arg(QString::number(n)).arg(convert<QString>(transform)));
     }
 }
 
 #define ASSIGN_TO_VECTOR_FROM_VECTOR_INTRO(destT, sourceT) \
     if (transform != Identity) \
-        throw Exception("Expected 'Identity' transform when assigning Vector to Vector", convert<QString>(transform)); \
+        ThrowException("Expected 'Identity' transform when assigning Vector to Vector").value(transform); \
 \
     QVector<destT> *destVector = DEST_PTR(QVector<destT>); \
     const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>);
@@ -206,7 +206,7 @@ case sourcePortT##Vector: \
 
 #define CANNOT_ASSIGN_FROM_NULL \
 case Null: \
-    throw Exception("Cannot assign from Null"); \
+    ThrowException("Cannot assign from Null"); \
     break;
 
 #define CASE_ASSIGN_TO_SCALAR(destT) \
@@ -253,9 +253,9 @@ case destPortType##Vector: \
 
 void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, QObject *context) {
     if (destPtr==0)
-        throw Exception("Port data has not been set", "", context);
+        ThrowException("Port data has not been set").context(context);
     if (sourcePtr==0)
-        throw Exception("Port source of import has not been set", "", context);
+        ThrowException("Port source of import has not been set").context(context);
     switch (destT) {
         CASE_ASSIGN(Bool, bool);
         CASE_ASSIGN(Char, char);
@@ -270,7 +270,7 @@ void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourceP
         CASE_ASSIGN(Time, QTime);
         CASE_ASSIGN(DateTime, QDateTime);
     case Null:
-        throw Exception("Cannot assign to Null");
+        ThrowException("Cannot assign to Null");
         break;
     }
 }

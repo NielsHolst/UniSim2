@@ -31,7 +31,7 @@ void set_script_folder::doExecute() {
         env.state.dir.script = QDir(_args.at(3));
         break;
     default:
-        throw Exception("Command 'set script folder' takes at most 1 argument");
+        ThrowException("Command 'set script folder' takes at most 1 argument");
     }
 
     QDir dir = locateDir(env.state.dir.work, env.state.dir.script);

@@ -2,7 +2,7 @@
 #include "convert.h"
 
 #define CANNOT_CONVERT(destT, sourceT) \
-throw Exception("Cannot convert " #sourceT " to " #destT)
+ThrowException("Cannot convert " #sourceT " to " #destT)
 
 namespace base {
 
@@ -86,7 +86,7 @@ template<> bool convert(QString source) {
     else if (source == "F" || source == "FALSE")
         return false;
     else
-        throw Exception("Cannot convert String to Bool. Must be T, F, TRUE or FALSE", source);
+        ThrowException("Cannot convert String to Bool. Must be T, F, TRUE or FALSE").value(source);
     return false;
 }
 
@@ -94,7 +94,7 @@ template<> char convert(QString source) {
     if (source.size() == 1)
         return source.at(0).toLatin1();
     else
-        throw Exception("Cannot convert String to Char. String must contain exactly one character", source);
+        ThrowException("Cannot convert String to Char. String must contain exactly one character").value(source);
     return 0;
 }
 
@@ -121,7 +121,7 @@ template<> QDate convert(QString source) {
     if (!date.isValid())
         date = QDate::fromString(s, "yyyy-M-d");
     if (!date.isValid())
-        throw Exception("Cannot convert String to Date", source);
+        ThrowException("Cannot convert String to Date").value(source);
     return date;
 }
 
@@ -138,7 +138,7 @@ template<> QDateTime convert(QString source) {
     catch (Exception &) {
     }
     if (!date.isValid() || parts.isEmpty() || parts.size() > 2)
-        throw Exception("Cannot convert String to DateTime", source);
+        ThrowException("Cannot convert String to DateTime").value(source);
     return QDateTime(date, time);
 }
 
@@ -148,7 +148,7 @@ template<> QTime convert(QString source) {
     if (!time.isValid())
         time = QTime::fromString(s, "h:m");
     if (!time.isValid())
-        throw Exception("Cannot convert String to Time", source);
+        ThrowException("Cannot convert String to Time").value(source);
     return time;
 }
 
@@ -156,19 +156,19 @@ template<> QTime convert(QString source) {
 // Conversions from QDate
 //
 
-template<> bool convert(QDate)              { throw Exception("Cannot convert Date to Bool"); }
-template<> char convert(QDate)              { throw Exception("Cannot convert Date to Char"); }
+template<> bool convert(QDate)              { ThrowException("Cannot convert Date to Bool"); }
+template<> char convert(QDate)              { ThrowException("Cannot convert Date to Char"); }
 template<> QString convert(QDate source)    { return source.toString("yyyy/M/d"); }
 template<> QDate convert(QDate source)      { return source; }
 template<> QDateTime convert(QDate source)  { return QDateTime(source); }
-template<> QTime convert(QDate)             { throw Exception("Cannot convert Date to Time"); }
+template<> QTime convert(QDate)             { ThrowException("Cannot convert Date to Time"); }
 
 //
 // Conversions from QDateTime
 //
 
-template<> bool convert(QDateTime)              { throw Exception("Cannot convert DateTime to Bool"); }
-template<> char convert(QDateTime)              { throw Exception("Cannot convert DateTime to Char"); }
+template<> bool convert(QDateTime)              { ThrowException("Cannot convert DateTime to Bool"); }
+template<> char convert(QDateTime)              { ThrowException("Cannot convert DateTime to Char"); }
 template<> QString convert(QDateTime source)    { return source.toString("yyyy/M/d hh:mm:ss"); }
 template<> QDate convert(QDateTime source)      { return source.date(); }
 template<> QDateTime convert(QDateTime source)  { return source; }
@@ -178,11 +178,11 @@ template<> QTime convert(QDateTime source)      { return source.time(); }
 // Conversions from QTime
 //
 
-template<> bool convert(QTime)              { throw Exception("Cannot convert Time to Bool"); }
-template<> char convert(QTime)              { throw Exception("Cannot convert Time to Char"); }
+template<> bool convert(QTime)              { ThrowException("Cannot convert Time to Bool"); }
+template<> char convert(QTime)              { ThrowException("Cannot convert Time to Char"); }
 template<> QString convert(QTime source)    { return source.toString("hh:mm:ss"); }
-template<> QDate convert(QTime)             { throw Exception("Cannot convert Time to Date"); }
-template<> QDateTime convert(QTime)         { throw Exception("Cannot convert Time to DateTime"); }
+template<> QDate convert(QTime)             { ThrowException("Cannot convert Time to Date"); }
+template<> QDateTime convert(QTime)         { ThrowException("Cannot convert Time to DateTime"); }
 template<> QTime convert(QTime source)      { return source; }
 
 //

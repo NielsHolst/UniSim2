@@ -15,7 +15,7 @@ class SlidingSignal : public BaseSignal
 {
 public:
     SlidingSignal(QString name, QObject *parent);
-    double signal() final;
+    double computeSignal() final;
     virtual double slide(double proportion) = 0;
 protected:
     double input, threshold, thresholdBand, minSignal, maxSignal;

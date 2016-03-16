@@ -83,7 +83,7 @@ void Vector::reserve(int size) {
     CASE_RESERVE(QDate, Date, size)
     CASE_RESERVE(QTime, Time, size)
     CASE_RESERVE(QDateTime, DateTime, size)
-    case Null: throw Exception("Error: Vector::reserve found 'Null' type");
+    case Null: ThrowException("Error: Vector::reserve found 'Null' type");
     }
 }
 
@@ -101,7 +101,7 @@ void Vector::erase() {
     CASE_ERASE(QDate, Date)
     CASE_ERASE(QTime, Time)
     CASE_ERASE(QDateTime, DateTime)
-    case Null: if (_vectorPtr != 0) throw Exception("Error: Vector::erase found 'Null' type with _valuePtr!=0");
+    case Null: if (_vectorPtr != 0) ThrowException("Error: Vector::erase found 'Null' type with _valuePtr!=0");
     }
     _vectorPtr = 0;
 }
@@ -121,7 +121,7 @@ void Vector::append(const void *valuePtr) {
     CASE_APPEND(QDate, Date)
     CASE_APPEND(QTime, Time)
     CASE_APPEND(QDateTime, DateTime)
-    case Null: throw Exception("Error: Vector::append found 'Null' type");
+    case Null: ThrowException("Error: Vector::append found 'Null' type");
     }
 }
 
@@ -160,7 +160,7 @@ QString Vector::toString(int row, QString separator) const {
     CASE_TO_STRING(QDate, Date, row, separator)
     CASE_TO_STRING(QTime, Time, row, separator)
     CASE_TO_STRING(QDateTime, DateTime, row, separator)
-    case Null: throw Exception("Error: Vector::toString found 'Null' type");
+    case Null: ThrowException("Error: Vector::toString found 'Null' type");
     }
     return QString();
 }

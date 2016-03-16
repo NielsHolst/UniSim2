@@ -23,6 +23,13 @@ PUBLISH(GrowthLights)
 GrowthLights::GrowthLights(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
+    port("heatEmission")->imports("./*{GrowthLight}[heatEmission]").transform(Sum);
+    port("longWaveEmission")->imports("./*{GrowthLight}[longWaveEmission]").transform(Sum);
+    port("shortWaveEmission")->imports("./*{GrowthLight}[shortWaveEmission]").transform(Sum);
+    port("totalEmission")->imports("./*{GrowthLight}[totalEmission]").transform(Sum);
+    port("parEmission")->imports("./*{GrowthLight}[parEmission]").transform(Sum);
+    port("energyFlux")->imports("./*{GrowthLight}[energyFlux]").transform(Sum);
+    port("currentlyOn")->imports("./*{GrowthLight}[currentlyOn]").transform(Any);
 }
 
 } //namespace

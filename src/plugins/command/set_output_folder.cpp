@@ -31,7 +31,7 @@ void set_output_folder::doExecute() {
         env.state.dir.output = QDir(_args.at(3));
         break;
     default:
-        throw Exception("Command 'set output folder' takes at most 1 argument");
+        ThrowException("Command 'set output folder' takes at most 1 argument");
     }
 
     QDir dir = locateDir(env.state.dir.work, env.state.dir.output);

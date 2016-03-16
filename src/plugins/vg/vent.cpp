@@ -34,10 +34,10 @@ PUBLISH(Vent)
 Vent::Vent(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(length, 3.5);
-    Input(height, 0.8);
-    Input(number, 10);
-    Input(porosity, 1.);
+    Input(length).equals(3.5);
+    Input(height).equals(0.8);
+    Input(number).equals(10);
+    Input(porosity).equals(1.);
     Output(effectiveArea);
 }
 

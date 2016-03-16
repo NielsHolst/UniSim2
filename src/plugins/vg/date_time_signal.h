@@ -15,7 +15,7 @@ class DateTimeSignal : public BaseSignal
 {
 public:
     DateTimeSignal(QString name, QObject *parent);
-    double signal();
+    double computeSignal();
 private:
     // Inputs
     int beginDay, endDay, day;

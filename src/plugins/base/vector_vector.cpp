@@ -44,7 +44,7 @@ void VectorVector::checkSizes() const {
         for (int i = 0; i < N; ++i)
             s << QString::number(sizes.at(i));
         QString msg{"Vectors are not of equal size: (%1)"};
-        throw Exception(msg.arg(s.join(" ")));
+        ThrowException(msg.arg(s.join(" ")));
     }
 }
 
