@@ -60,7 +60,7 @@ void TestVector::testWithSimulation() {
         endbox();
     Box *sim = builder.content();
 
-    Box *fibonacci = Path("fibonacci").resolveOne<Box>();
+    Box *fibonacci = Path("fibonacci").resolveOne<Box>(0);
     const Port *port = fibonacci->port("value");
     const Vector *track = port->trackPtr();
     QCOMPARE(track->size(), 0);
@@ -84,7 +84,7 @@ void TestVector::testWithSimulationIterated() {
         endbox();
     Box *sim = builder.content();
 
-    Box *fibonacci = Path("fibonacci").resolveOne<Box>();
+    Box *fibonacci = Path("fibonacci").resolveOne<Box>(0);
     const Port
         *portIteration = sim->port("iteration"),
         *portStep = sim->port("step"),

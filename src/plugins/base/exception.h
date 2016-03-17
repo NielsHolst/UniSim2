@@ -7,7 +7,6 @@
 #define EXCEPTION_H
 
 #include <boost/lexical_cast.hpp>
-#include <exception>
 #include <QDate>
 #include <QDateTime>
 #include <QString>
@@ -20,17 +19,20 @@ class QObject;
 
 namespace base {
 	
-class Exception : public std::exception {
+class Exception {
 public:
     Exception(QString message);
     Exception& file(const char *s);
     Exception& line(int i);
     Exception& context(const QObject *object);
     Exception& hint(QString s);
-    const char* what() const _GLIBCXX_USE_NOEXCEPT;
+    Exception& id(QString s);
     template <class T> Exception& value(T v);
+
+    QString id() const;
+    QString what() const;
 private:
-    QString _message, _value, _hint, _fullName, _file;
+    QString _message, _value, _hint, _fullName, _file, _id;
     int _line;
 };
 

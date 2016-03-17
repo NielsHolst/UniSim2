@@ -31,7 +31,7 @@ PUBLISH(IndoorsWindSpeed)
 IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(ventilation).imports("indoors/total/airflux[value]");
+    Input(ventilation).imports("indoors/total/airFlux[value]");
     Input(constructionWidth).imports("geometry[width]");
     Output(value);
 }

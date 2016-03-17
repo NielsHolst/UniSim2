@@ -24,7 +24,7 @@ public:
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
-    template<class T=QObject> T* resolveOne(const QObject* caller = 0);
+    template<class T=QObject> T* resolveOne(const QObject* caller);
     template<class T=QObject> T* resolveMaybeOne(const QObject* caller = 0);
     template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = 0);
 

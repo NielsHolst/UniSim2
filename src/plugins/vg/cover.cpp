@@ -7,6 +7,7 @@
 #include <QMap>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/general.h>
 #include <base/publish.h>
 #include "interpolate.h"
 #include "cover.h"
@@ -72,8 +73,8 @@ Cover::Cover(QString name, QObject *parent)
 }
 
 void Cover::initialize() {
-    QDir inputFolder = environment().state.dir.input;
-    dirTransTable = new DataGrid(inputFolder.absoluteFilePath(directTransmissionFile), this);
+    QString filePath = locateFile(environment().state.dir.work, environment().state.dir.input, directTransmissionFile);
+    dirTransTable = new DataGrid(filePath, this);
 }
 
 void Cover::reset() {

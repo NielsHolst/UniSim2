@@ -73,7 +73,7 @@ namespace TestBoxCases {
                 endbox().
                 box("Grazer").name("gnu").
                 port("initialDensity").equals(20).
-                    port("killRate").imports("lion/adult[killRate]").
+                    port("killRate").imports("../lion/adult[killRate]").
                 endbox().
             endbox();
         return builder.content();

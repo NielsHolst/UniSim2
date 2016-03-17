@@ -28,7 +28,7 @@ void Average::initialize() {
     int n = items.size();
     ports.clear();
     for (int i = 0; i < n; ++i) {
-        ports << Path(items[i]).resolveOne<Port>();
+        ports << Path(items[i]).resolveMany<Port>();
     }
 }
 

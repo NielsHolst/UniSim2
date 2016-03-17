@@ -2,7 +2,7 @@
 <box class="Simulation" name="VirtualGreenhouse">
 	<box name="simulationTimeInterval" class="vg::SimulationTimeInterval">
 		<port name="beginDate" value="2001-01-01"/>
-		<port name="endDate" value="2001-01-31"/>
+		<port name="endDate" value="2001-12-31"/>
 		<port name="beginTime" value="00:00"/>
 		<port name="endTime" value="00:00"/>
 		<port name="timeStep" value="5"/>
@@ -21,7 +21,7 @@
 	<box name="outdoors" class="vg::Outdoors">
 		<port name="co2" value="400"/>
 		<box name="records" class="boxes::Records">
-			<port name="fileName" value=".../weather/sel_dk.txt"/>
+			<port name="fileName" value=".../input/sel_dk.txt"/>
 		</box>
 	</box>
 	<box name="construction">
@@ -241,10 +241,10 @@
 					<port name="inputs" value="(indoors/light[total])"/>
 				</box>
 				<box name="condensationCover" class="vg::EnergyFluxCondensation">
-					<port name="vapourFlux" ref="../../vapourflux/condensationCover[vapourFlux]"/>
+					<port name="vapourFlux" ref="../../vapourFlux/condensationCover[vapourFlux]"/>
 				</box>
 				<box name="condensationScreens" class="vg::EnergyFluxCondensation">
-					<port name="vapourFlux" ref="../../vapourflux/condensationScreens[vapourFlux]"/>
+					<port name="vapourFlux" ref="../../vapourFlux/condensationScreens[vapourFlux]"/>
 				</box>
 				<box name="airFlux" class="vg::EnergyFluxAir">
 					<port name="airFlux" ref="given/airflux[value]"/>
@@ -467,7 +467,7 @@
 				</box>
 			</box>
 		</box>
-		<box name="CO2">
+		<box name="co2">
 			<box name="minimum" class="vg::SignalCollection">
 				<port name="rule" value="max"/>
 				<port name="signalReset" value="0"/>
@@ -654,7 +654,7 @@
 				<port name="signalInside" value="0"/>
 			</box>
 		</box>
-		<box name="CO2" class="vg::CO2Controller">
+		<box name="co2" class="vg::Co2Controller">
 			<port name="injectionRate" ref="./injectionRate[signal]"/>
 			<box name="injectionRate" class="vg::ProportionalSignal">
 				<port name="input" ref="indoors/total/airFlux[value]"/>
@@ -714,13 +714,26 @@
 	</box>
 	<!--Tomato model-->
 	<box name="crop" class="vg::Crop">
+		<port name="density" value="3.9"/>
 		<!--Tomato periods-->
+		<box name="periods" class="vg::SignalCollection">
+			<box class="vg::DateTimeSignal">
+				<port name="beginDay" value="1"/>
+				<port name="endDay" value="365"/>
+				<port name="circadian" value="FALSE"/>
+			</box>
+		</box>
 		<box name="physTime" class="vg::DayDegrees">
 			<port name="T" ref="indoors/temperature[value]"/>
 			<port name="isTicking" ref="../periods[flag]"/>
 			<port name="doReset" ref="../periods[flagDown]"/>
 		</box>
 		<!--Tomato lai-->
+		<box name="lai" class="vg::FruitCropLai">
+			<port name="laiStartPerPlant" value="0.385"/>
+			<port name="maxLai" value="3.5"/>
+			<port name="fractionPlantArea" value="0.9"/>
+		</box>
 		<box name="layers">
 			<box name="top" class="vg::LeafLayer">
 				<port name="xGaussUpperside" value="0.1127"/>
@@ -731,6 +744,7 @@
 					<port name="k" value="0.6"/>
 				</box>
 				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
 				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
 				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed"/>
 				<box name="transpiration" class="vg::LeafTranspiration"/>
@@ -748,6 +762,7 @@
 					<port name="k" value="0.6"/>
 				</box>
 				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
 				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
 				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed"/>
 				<box name="transpiration" class="vg::LeafTranspiration"/>
@@ -765,6 +780,7 @@
 					<port name="k" value="0.6"/>
 				</box>
 				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
 				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
 				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed"/>
 				<box name="transpiration" class="vg::LeafTranspiration"/>
@@ -805,7 +821,28 @@
 			</box>
 		</box>
 		<!--Tomato mass-->
+		<box name="mass" class="vg::FruitCropMass">
+			<port name="tempSumReproductive" value="900"/>
+			<port name="tempMaxReproductive" value="45"/>
+			<port name="vegPropRoot" value="0"/>
+			<port name="vegPropStem" value="0.4"/>
+			<port name="vegPropLeaf" value="0.6"/>
+			<port name="vegPropFruit" value="0"/>
+			<port name="reproPropRoot" value="0"/>
+			<port name="reproPropStem" value="0.05"/>
+			<port name="reproPropLeaf" value="0.1"/>
+			<port name="reproPropFruit" value="0.85"/>
+			<port name="fruitFactor" ref="./fruitFactor[value]"/>
+			<box name="fruitFactor" class="vg::FruitFactor">
+				<port name="minDensity" value="3.9"/>
+				<port name="maxValue" value="1.044"/>
+			</box>
+		</box>
 		<!--Tomato yield-->
+		<box name="yield" class="vg::CropYield">
+			<port name="fractionDryWeight" value="0.045"/>
+			<port name="produceMass" ref="../mass[fruit]"/>
+		</box>
 	</box>
 	<box name="budget" class="vg::Budget"/>
 </box>

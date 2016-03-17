@@ -34,7 +34,7 @@ StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     Input(co2).imports("indoors/co2[value]");
     Input(rh).imports("indoors/humidity[rh]");
     Input(Pn).imports("../photosynthesis[Pn]");
-    Input(rbCO2).imports("../rb[rbCO2]");
+    Input(rbCO2).imports("../rb[rbCo2]");
     Input(lai).imports("crop/lai[value]");
 }
 

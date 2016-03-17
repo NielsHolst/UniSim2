@@ -24,7 +24,7 @@ void TestCommand::testSetwdExecute() {
         cd->execute();
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 //    QCOMPARE(dialog->getInformation(), QDir::rootPath());
     delete cd;

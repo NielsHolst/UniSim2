@@ -33,7 +33,7 @@ BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, QObject *
     Input(leafDimension).equals(25./1000.);
     Input(leafWindSpeed).imports("../windSpeed[value]");
     Output(rbH2O);
-    Output(rbCO2);
+    Output(rbCo2);
 }
 
 void BoundaryLayerResistanceBase::reset() {
@@ -42,7 +42,7 @@ void BoundaryLayerResistanceBase::reset() {
 
 void BoundaryLayerResistanceBase::update() {
     setRbH2O();
-    rbCO2 = rbH2O*1.37;
+    rbCo2 = rbH2O*1.37;
 }
 
 

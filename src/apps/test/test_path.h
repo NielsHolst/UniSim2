@@ -46,6 +46,7 @@ private slots:
 
     void testEmpty();
     void testResolveInvalid();
+    void testIndirections();
 };
 
 DECLARE_TEST(TestPath)

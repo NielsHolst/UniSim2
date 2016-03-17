@@ -33,7 +33,7 @@ void TestSavanna::testPort() {
         port = lion->port("initialDensity");
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
     QVERIFY(port);
     QCOMPARE(port->value<double>(), 0.01);
@@ -47,7 +47,7 @@ void TestSavanna::testPortDefaultValue() {
         port = lion->port("n");
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
     QVERIFY(port);
     QCOMPARE(port->value<int>(), 0);
@@ -81,7 +81,7 @@ void TestSavanna::testNewPort() {
         delete savanna;
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 }
 
@@ -97,7 +97,7 @@ void TestSavanna::testNewPortSum() {
         delete savanna;
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 }
 
@@ -114,7 +114,7 @@ void TestSavanna::testImport() {
         delete savanna;
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
     QCOMPARE(killRateLion, killRateZebra);
 }

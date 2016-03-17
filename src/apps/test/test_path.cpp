@@ -28,7 +28,7 @@ void TestPath::setContext(QString path) {
         objects = p.resolveMany();
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
     int n = objects.length();
     QString msg{"Wrong number of box matches in '%1'. Expected 1 but found %2"};
@@ -67,7 +67,7 @@ void TestPath::testValidateName() {
         path.validateName("*");
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 
     bool excepted = false;
@@ -92,7 +92,7 @@ void TestPath::testValidateStep() {
         path.validateStep("...");
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 
     bool excepted = false;
@@ -138,11 +138,28 @@ void TestPath::testNormalise() {
     QCOMPARE(Path("../plant[v]").normalise(),
         QString("parent:*{Box}/children:plant{Box}/children:v{Port}"));
 
+    QCOMPARE(Path("../../plant[v]").normalise(),
+        QString("parent:*{Box}/parent:*{Box}/children:plant{Box}/children:v{Port}"));
+
     QCOMPARE(Path(".../plant[v]").normalise(),
         QString("nearest:*{Box}/children:plant{Box}/children:v{Port}"));
 }
 
 void TestPath::testNormaliseInvalid() {
+    Path("plant/./fruit/area[v]").normalise();
+    Path("plant/../fruit/area[v]").normalise();
+    Path("plant/.../fruit/area[v]").normalise();
+    Path("plant/fruit/area/.").normalise();
+    Path("plant/fruit/area/..").normalise();
+    Path("plant/fruit/area/...").normalise();
+    Path("././plant/fruit/area").normalise();
+    Path("./../plant/fruit/area").normalise();
+    Path("./.../plant/fruit/area").normalise();
+    Path(".././plant/fruit/area").normalise();
+    Path("../.../plant/fruit/area").normalise();
+    Path("..././plant/fruit/area").normalise();
+    Path(".../../plant/fruit/area").normalise();
+    Path(".../.../plant/fruit/area").normalise();
 }
 
 void TestPath::testSetContext() {
@@ -371,7 +388,7 @@ void TestPath::testNumberOfMatches() {
 
     bool excepted{false};
     try {
-        Path(path).resolveOne();
+        Path(path).resolveOne(0);
     }
     catch (Exception &) {
         excepted = true;
@@ -395,7 +412,7 @@ void TestPath::testEmpty() {
         QCOMPARE(none.size(), 0);
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
     QCOMPARE(none.size(), 0);
 }
@@ -409,4 +426,21 @@ void TestPath::testResolveInvalid() {
         excepted = true;
     }
     QVERIFY(excepted);
+}
+
+void TestPath::testIndirections() {
+    setContext("A2/b");
+    QObject *relative, *absolute;
+
+    try {
+        relative = Path("../../A1/c[v2]", _context).resolveOne(0);
+        absolute = Path("/A/A1/c[v2]").resolveOne(0);
+    }
+    catch (Exception &ex) {
+        std::cout << qPrintable(ex.what()) << "\n";
+        QFAIL("Unexpected exception");
+    }
+
+    QCOMPARE(relative, absolute);
+
 }

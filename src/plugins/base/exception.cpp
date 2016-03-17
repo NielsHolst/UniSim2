@@ -5,6 +5,7 @@
 */
 #include <iostream>
 #include <QObject>
+#include "box.h"
 #include "convert.h"
 #include "exception.h"
 #include "general.h"
@@ -12,7 +13,7 @@
 namespace base {
 
 Exception::Exception(QString message)
-    : std::exception(), _message(message)
+    : _message(message)
 {
 }
 
@@ -27,7 +28,14 @@ Exception& Exception::line(int i) {
 }
 
 Exception& Exception::context(const QObject *object) {
-    _fullName = object ? fullName(object) : "";
+    if (object) {
+        _fullName = fullName(object);
+        const Box *box = dynamic_cast<const Box *>(object);
+        if (!box)
+            box = dynamic_cast<const Box *>(object->parent());
+        if (box)
+            _fullName += QString(" (#%1)").arg(box->id());
+    }
     return *this;
 }
 
@@ -36,7 +44,16 @@ Exception& Exception::hint(QString s) {
     return *this;
 }
 
-const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
+Exception& Exception::id(QString s) {
+    _id = s;
+    return *this;
+}
+
+QString Exception::id() const {
+    return _id;
+}
+
+QString Exception::what() const {
     QString text = QString{"Error: %1"}.arg(_message);
     if (!_value.isEmpty())
         text += QString("\nValue: '%1'").arg(_value);
@@ -46,7 +63,7 @@ const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT {
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
-    return text.toLocal8Bit();
+    return text;
 }
 
 template <> Exception& Exception::value(bool v) {

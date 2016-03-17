@@ -4,7 +4,7 @@
 <!-- RESOURCES -->
 
 <xsl:variable name="crops" select="document('crops.xml')/Crops"/>
-	
+
 <!-- CONFIGURATION -->
 
 <!-- 0: File output for DVV; no progress bar
@@ -83,11 +83,11 @@
 	<xsl:comment>
 		<xsl:value-of select="concat($crop-name, ' ', $modelName)"/>
 	</xsl:comment>
-	<xsl:copy-of select="$crops/*[name()=$crop-name]/model[@name=$modelName]"/>
+	<xsl:copy-of select="$crops/*[name()=$crop-name]/box[@name=$modelName]"/>
 </xsl:template>
 
 <xsl:template name="extract-crop-parameters">
-	<xsl:copy-of select="$crops/*[name()=$crop-name]/model[@name='crop']//parameter"/>
+	<xsl:copy-of select="$crops/*[name()=$crop-name]/box[@name='crop']//port"/>
 </xsl:template>
 
 <xsl:template name="extract-period">
@@ -478,7 +478,7 @@
 			</xsl:attribute>
 		</port>
 		<box name="records" class="boxes::Records">
-			<port name="fileName" value=".../weather/sel_dk.txt"/>
+			<port name="fileName" value=".../input/sel_dk.txt"/>
 		</box>
 	</box>
 
@@ -635,10 +635,10 @@
 					<port name="inputs" value="(indoors/light[total])"/>
 				</box>
 				<box name="condensationCover" class="vg::EnergyFluxCondensation">
-					<port name="vapourFlux" ref="../../vapourflux/condensationCover[vapourFlux]"/>
+					<port name="vapourFlux" ref="../../vapourFlux/condensationCover[vapourFlux]"/>
 				</box>
 				<box name="condensationScreens" class="vg::EnergyFluxCondensation">
-					<port name="vapourFlux" ref="../../vapourflux/condensationScreens[vapourFlux]"/>
+					<port name="vapourFlux" ref="../../vapourFlux/condensationScreens[vapourFlux]"/>
 				</box>
 				<box name="airFlux" class="vg::EnergyFluxAir">
 					<port name="airFlux" ref="given/airflux[value]"/>
@@ -968,7 +968,7 @@
 			</box>
 		</box>
 
-		<box name="CO2">
+		<box name="co2">
 			<box name="minimum" class="vg::SignalCollection">
 				<port name="rule" value="max"/>
 				<port name="signalReset" value="0"/>
@@ -1295,7 +1295,7 @@
 			</xsl:for-each>
 		</box>
 		
-		<box name="CO2" class="vg::CO2Controller">
+		<box name="co2" class="vg::Co2Controller">
 			<port name="injectionRate" ref="./injectionRate[signal]"/>
 			<box name="injectionRate" class="vg::ProportionalSignal">
 				<port name="input" ref="indoors/total/airFlux[value]"/>

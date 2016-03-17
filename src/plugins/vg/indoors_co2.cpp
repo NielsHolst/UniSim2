@@ -36,7 +36,7 @@ IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Input(outdoorsCo2).imports("outdoors[co2]");
-    Input(airFlux).imports("total/airflux[value]");
+    Input(airFlux).imports("total/airFlux[value]");
     Input(injectionRate).imports("controllers/co2[signal]");
     Input(assimilation).imports("crop/growth/Pg[value]");
     Input(averageHeight).imports("geometry[indoorsAverageHeight]");

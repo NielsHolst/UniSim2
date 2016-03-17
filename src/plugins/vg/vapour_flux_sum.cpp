@@ -33,14 +33,14 @@ QList<VapourFluxBase*> VapourFluxSum::fluxes() {
 }
 
 QList<VapourFluxBase*> VapourFluxSum::childFluxes() {
-    return Path("./*").resolveMany<VapourFluxBase>().toList();
+    return Path("./*", this).resolveMany<VapourFluxBase>().toList();
 }
 
 QList<VapourFluxBase*> VapourFluxSum::referredFluxes() {
     QStringList modelNames = decodeSimpleList(toAdd, this);
     QList<VapourFluxBase*> models;
     for (auto modelName : modelNames) {
-        auto flux = Path(modelName).resolveOne<VapourFluxBase>();
+        auto flux = Path(modelName).resolveOne<VapourFluxBase>(this);
         models << flux;
     }
     return models;

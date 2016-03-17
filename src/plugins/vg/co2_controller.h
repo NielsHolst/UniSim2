@@ -4,16 +4,16 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_CO2_CONTROLLER_H
-#define VG_CO2_CONTROLLER_H
+#ifndef CO2_CONTROLLER_H
+#define CO2_CONTROLLER_H
 #include <base/box.h>
 
 namespace vg {
 
-class CO2Controller : public base::Box
+class Co2Controller : public base::Box
 {
 public:
-    CO2Controller(QString name, QObject *parent);
+    Co2Controller(QString name, QObject *parent);
     void reset();
     void update();
 private:

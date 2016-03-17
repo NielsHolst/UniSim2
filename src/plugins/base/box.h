@@ -3,8 +3,10 @@
 #include <QMap>
 #include <QObject>
 #include <QVariant>
+#include <QVector>
 #include "box_step.h"
 #include "general.h"
+#include "path.h"
 #include "port.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
@@ -34,6 +36,10 @@ public:
     QString fullName() const;
     int id() const;
     static int count();
+
+    template<class T=QObject> T* resolveOne(QString path);
+    template<class T=QObject> T* resolveMaybeOne(QString path);
+    template<class T=QObject> QVector<T*> resolveMany(QString path);
 
     virtual void amend() {}
     virtual void initialize() {}
@@ -69,6 +75,18 @@ private:
     void trackPorts(Step step);
     void updateImports();
 };
+
+template<class T> T* Box::resolveOne(QString path) {
+    return Path(path, this).resolveOne<T>(this);
+}
+
+template<class T> T* Box::resolveMaybeOne(QString path) {
+    return Path(path, this).resolveMaybeOne<T>(this);
+}
+
+template<class T> QVector<T*> Box::resolveMany(QString path) {
+    return Path(path, this).resolveMany<T>(this);
+}
 
 }
 #endif

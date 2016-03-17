@@ -57,7 +57,7 @@ DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     Input(endDay).equals(365);
     Input(beginTime).equals(QTime(0,0));
     Input(endTime).equals(QTime(24,0));
-    Input(day).imports("calendar[dayOfyear]");
+    Input(day).imports("calendar[dayOfYear]");
     Input(time).imports("calendar[timeOfDay]");
     Input(signalOutside).equals(0.);
     Input(signalOutsideTimeOnly).equals(0.);

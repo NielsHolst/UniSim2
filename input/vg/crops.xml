@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Crops>
 	<Cucumber>
-		<box name="crop" type="vg::Crop">
+		<box name="crop" class="vg::Crop">
 			<port name="density" value="1.5"/>
 		</box>
-		<box name="periods" type="vg::SignalCollection">
-			<box type="vg::DateTimeSignal">
+		<box name="periods" class="vg::SignalCollection">
+			<box class="vg::DateTimeSignal">
 				<port name="beginDay" value="32"/>
 				<port name="endDay" value="176"/>
 				<port name="beginTime" value="16:00"/>
 				<port name="endTime" value="8:00"/>
-				<port name="circadian" value="false"/>
+				<port name="circadian" value="FALSE"/>
 			</box>
-			<box type="vg::DateTimeSignal">
+			<box class="vg::DateTimeSignal">
 				<port name="beginDay" value="176"/>
 				<port name="endDay" value="280"/>
 				<port name="beginTime" value="16:00"/>
 				<port name="endTime" value="8:00"/>
-				<port name="circadian" value="false"/>
+				<port name="circadian" value="FALSE"/>
 			</box>
 		</box>
-		<box name="lai" type="vg::FruitCropLai">
+		<box name="lai" class="vg::FruitCropLai">
 			<port name="laiStartPerPlant" value="0.343"/>
 			<port name="maxLai" value="3.5"/>
 			<port name="fractionPlantArea" value="0.9"/>
 		</box>
-		<box name="mass" type="vg::FruitCropMass">
+		<box name="mass" class="vg::FruitCropMass">
 			<port name="tempSumReproductive" value="975"/>
 			<port name="tempMaxReproductive" value="30"/>
 			<port name="vegPropRoot" value="0"/>
@@ -37,34 +37,34 @@
 			<port name="reproPropLeaf" value="0.1"/>
 			<port name="reproPropFruit" value="0.8"/>
 			<port name="fruitFactor" ref="./fruitFactor[value]"/>
-			<box name="fruitFactor" type="vg::FruitFactor">
+			<box name="fruitFactor" class="vg::FruitFactor">
 				<port name="minDensity" value="1.5"/>
 				<port name="maxValue" value="1.044"/>
 			</box>
 		</box>
-		<box name="yield" type="vg::CropYield">
+		<box name="yield" class="vg::CropYield">
 			<port name="fractionDryWeight" value="0.025"/>
 			<port name="produceMass" ref="../mass[fruit]"/>
 		</box>
-		<box name="rs" type="vg::StomatalResistanceRose"/>
+		<box name="rs" class="vg::StomatalResistanceRose"/>
 	</Cucumber>
 	<Tomato>
-		<box name="crop" type="vg::Crop">
+		<box name="crop" class="vg::Crop">
 			<port name="density" value="3.9"/>
 		</box>
-		<box name="periods" type="vg::SignalCollection">
-			<box type="vg::DateTimeSignal">
+		<box name="periods" class="vg::SignalCollection">
+			<box class="vg::DateTimeSignal">
 				<port name="beginDay" value="1"/>
 				<port name="endDay" value="365"/>
-				<port name="circadian" value="false"/>
+				<port name="circadian" value="FALSE"/>
 			</box>
 		</box>
-		<box name="lai" type="vg::FruitCropLai">
+		<box name="lai" class="vg::FruitCropLai">
 			<port name="laiStartPerPlant" value="0.385"/>
 			<port name="maxLai" value="3.5"/>
 			<port name="fractionPlantArea" value="0.9"/>
 		</box>
-		<box name="mass" type="vg::FruitCropMass">
+		<box name="mass" class="vg::FruitCropMass">
 			<port name="tempSumReproductive" value="900"/>
 			<port name="tempMaxReproductive" value="45"/>
 			<port name="vegPropRoot" value="0"/>
@@ -76,43 +76,43 @@
 			<port name="reproPropLeaf" value="0.1"/>
 			<port name="reproPropFruit" value="0.85"/>
 			<port name="fruitFactor" ref="./fruitFactor[value]"/>
-			<box name="fruitFactor" type="vg::FruitFactor">
+			<box name="fruitFactor" class="vg::FruitFactor">
 				<port name="minDensity" value="3.9"/>
 				<port name="maxValue" value="1.044"/>
 			</box>
 		</box>
-		<box name="yield" type="vg::CropYield">
+		<box name="yield" class="vg::CropYield">
 			<port name="fractionDryWeight" value="0.045"/>
 			<port name="produceMass" ref="../mass[fruit]"/>
 		</box>
-		<box name="rs" type="vg::StomatalResistanceRose"/>
+		<box name="rs" class="vg::StomatalResistanceRose"/>
 	</Tomato>
 	<SweetPepper>
-		<box name="crop" type="vg::Crop">
+		<box name="crop" class="vg::Crop">
 			<port name="density" value="1.9"/>
 		</box>
-		<box name="periods" type="vg::SignalCollection">
-			<box type="vg::DateTimeSignal">
+		<box name="periods" class="vg::SignalCollection">
+			<box class="vg::DateTimeSignal">
 				<port name="beginDay" value="1"/>
 				<port name="endDay" value="184"/>
 				<port name="beginTime" value="16:00"/>
 				<port name="endTime" value="8:00"/>
-				<port name="circadian" value="false"/>
+				<port name="circadian" value="FALSE"/>
 			</box>
-			<box type="vg::DateTimeSignal">
+			<box class="vg::DateTimeSignal">
 				<port name="beginDay" value="184"/>
 				<port name="endDay" value="340"/>
 				<port name="beginTime" value="16:00"/>
 				<port name="endTime" value="8:00"/>
-				<port name="circadian" value="false"/>
+				<port name="circadian" value="FALSE"/>
 			</box>
 		</box>
-		<box name="lai" type="vg::FruitCropLai">
+		<box name="lai" class="vg::FruitCropLai">
 			<port name="laiStartPerPlant" value="0.385"/>
 			<port name="maxLai" value="4"/>
 			<port name="fractionPlantArea" value="0.9"/>
 		</box>
-		<box name="mass" type="vg::FruitCropMass">
+		<box name="mass" class="vg::FruitCropMass">
 			<port name="tempSumReproductive" value="1200"/>
 			<port name="tempMaxReproductive" value="30"/>
 			<port name="vegPropRoot" value="0"/>
@@ -125,15 +125,15 @@
 			<port name="reproPropFruit" value="0.8"/>
 			<port name="fruitFactor" value="1"/>
 		</box>
-		<box name="yield" type="vg::CropYield">
+		<box name="yield" class="vg::CropYield">
 			<port name="fractionDryWeight" value="0.045"/>
 			<port name="produceMass" ref="../mass[fruit]"/>
 		</box>
-		<box name="rs" type="vg::StomatalResistanceRose"/>
+		<box name="rs" class="vg::StomatalResistanceRose"/>
 	</SweetPepper>
 	<CutChrysanthemum/>
 	<PotRose>
-		<box name="rs" type="vg::StomatalResistanceRose"/>
+		<box name="rs" class="vg::StomatalResistanceRose"/>
 	</PotRose>
 	<Lettuce/>
 	<PotPlant/>

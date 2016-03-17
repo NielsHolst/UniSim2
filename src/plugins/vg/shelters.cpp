@@ -48,7 +48,7 @@ Shelters::Shelters(QString name, QObject *parent)
 
 void Shelters::initialize() {
     infos.clear();
-    QVector<ShelterBase*> shelters = Path("./*").resolveMany<ShelterBase>(this);
+    QVector<ShelterBase*> shelters = Path("./*", this).resolveMany<ShelterBase>();
     for (ShelterBase* shelter : shelters) {
         ShelterInfo si;
         si.sr = shelter->surfaceRadiation();
@@ -63,8 +63,8 @@ void Shelters::initialize() {
         Pull(screensMaxState);
         Pull(area);
         Pull(relativeArea);
-        Box *cover = Path("./cover").resolveOne<Box>(this),
-            *screens = Path("./screens").resolveOne<Box>(this);
+        Box *cover = Path("./cover", shelter).resolveOne<Box>(this),
+            *screens = Path("./screens", shelter).resolveOne<Box>(this);
         si.heatCapacityCover = cover->port("heatCapacity")->valuePtr<double>();
         si.heatCapacityScreens = screens->port("heatCapacity")->valuePtr<double>();
         si.screensEffectiveArea = screens->port("effectiveArea")->valuePtr<double>();

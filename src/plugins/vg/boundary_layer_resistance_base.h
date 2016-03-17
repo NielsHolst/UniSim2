@@ -21,7 +21,7 @@ protected:
     // Inputs
     double leafDimension, leafWindSpeed;
     // Outputs
-    double rbH2O, rbCO2;
+    double rbH2O, rbCo2;
 private:
     // Methods
     virtual void setRbH2O() = 0;

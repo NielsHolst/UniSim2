@@ -13,7 +13,7 @@ void TestBoxBuilder::initTestCase() {
         tree = TestBoxCases::case1();
     }
     catch (Exception &ex) {
-        QFAIL(ex.what());
+        QFAIL(qPrintable(ex.what()));
     }
 }
 

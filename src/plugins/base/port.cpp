@@ -106,7 +106,8 @@ void Port::resolveImports() {
     if (_importPath.isEmpty())
         return;
     Box *context = boxParent();
-    _importPorts = Path(_importPath, context).resolveMany<Port>();
+    Path path = Path(_importPath, context);
+    _importPorts = path.resolveMany<Port>();
     if (_importPorts.isEmpty())
         ThrowException("No matching import ports found").value(_importPath).context(this);
     _importType = commonType(_importPorts);

@@ -29,7 +29,7 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
     port("totalEmission")->imports("./*{GrowthLight}[totalEmission]").transform(Sum);
     port("parEmission")->imports("./*{GrowthLight}[parEmission]").transform(Sum);
     port("energyFlux")->imports("./*{GrowthLight}[energyFlux]").transform(Sum);
-    port("currentlyOn")->imports("./*{GrowthLight}[currentlyOn]").transform(Any);
+//    port("currentlyOn")->imports("./*{GrowthLight}[on]").transform(Any);
 }
 
 } //namespace

@@ -98,7 +98,7 @@ template <class T> Port& Port::data(T *valuePtr) {
 template <class T> Port& Port::equals(T value)
 {
     if (_valuePtr == 0)
-        ThrowException("Cannot set port value by 'equals' because port 'data' has not been set").context(this);
+        ThrowException("Cannot set value of non-existing port").context(this);
     _importPath.clear();
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, convert<PortTransform>(transform()));
     return *this;

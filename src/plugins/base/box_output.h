@@ -22,7 +22,7 @@ private:
     QString _output;
 
     void addOutput(const QObject *box);
-    QString entry(const QObject *box);
+    QString entry(const QObject *object);
     QString beforeEntry();
     QString afterEntry();
     QString indent();

@@ -191,10 +191,27 @@ Path::QObjects Path::nearest(const QObject *p, QString tail) {
 
 namespace {
 
-    inline bool matches(const QObject* candidate, QString box, QString type) {
+    bool hasNamespace(QString s) {
+        return s.contains("::");
+    }
+
+    void removeNamespace(QString &s) {
+        int ix = s.indexOf("::");
+        if (ix > -1)
+            s = s.mid(ix+2);
+    }
+
+    void removeNamespace(QStringList &sl) {
+        for (int i = 0; i < sl.size(); ++i)
+            removeNamespace(sl[i]);
+    }
+
+    bool matches(const QObject* candidate, QString box, QString type) {
         if (!candidate)
             return false;
         QStringList types = classInheritance(candidate).split("/");
+        if (!hasNamespace(box))
+            removeNamespace(types);
         return (box=="*" || candidate->objectName()==box) && types.contains(type);
     }
 

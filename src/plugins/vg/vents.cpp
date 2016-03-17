@@ -44,7 +44,7 @@ void Vents::reset() {
     totalLength =
     averageHeight =
     proportionalEffectiveArea = 0;
-    auto vents = Path("./*").resolveMany<Vent>();
+    auto vents = Path("./*", this).resolveMany<Vent>();
     for (auto vent : vents) {
         double length = vent->port("length")->value<double>(),
                height = vent->port("height")->value<double>();

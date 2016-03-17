@@ -31,7 +31,7 @@ FloorRadiationAbsorbed::FloorRadiationAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(indoorsLight).imports("indoors/light[total]");
-    Input(growthLightLight).imports("actuators/growthlights[shortWaveEmission]");
+    Input(growthLightLight).imports("actuators/growthLights[shortWaveEmission]");
     Input(lightAbsorbedByCrop).imports("crop/lightAbsorbed[value]");
     Input(growthLightLwAbsorbedByCrop).imports("crop/growthLightLwAbsorbed[value]");
     Output(value);

@@ -74,9 +74,9 @@ QString PlotR::toScript() {
 }
 
 QString PlotR::xPortLabel() {
-    Box *output = Path("ancestors::*{OutputR}", this).resolveOne<Box>();
+    Box *output = Path("ancestors::*{OutputR}", this).resolveOne<Box>(this);
     QString xPath = output->port("xAxis")->importPath();
-    Port *xPort = Path(xPath).resolveOne<Port>();
+    Port *xPort = Path(xPath).resolveOne<Port>(this);
     return xPort->label();
 }
 

@@ -36,7 +36,10 @@ void run::doLoad() {
 
 void run::doRun() {
     Box *root = environment().state.root;
-    Q_ASSERT(root);
+    if (!root) {
+        dialog().error("Nothing to run");
+        return;
+    }
     QTime time;
     time.start();
     QString errorMsg;
@@ -57,8 +60,8 @@ void run::doRun() {
         dialog().information(info.arg(dt).arg(units));
     }
     else {
-        QString info{"Interrupted after %1 %2"};
-        dialog().error(info.arg(dt).arg(units) + errorMsg);
+        QString err{"Interrupted after %1 %2"};
+        dialog().error(err.arg(dt).arg(units) + errorMsg);
     }
 }
 

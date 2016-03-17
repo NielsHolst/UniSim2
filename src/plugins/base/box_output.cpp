@@ -33,9 +33,12 @@ void BoxOutput::addOutput(const QObject *box) {
     }
 }
 
-QString BoxOutput::entry(const QObject *box) {
-    const Port *port = dynamic_cast<const Port*>(box);
-    QString text = beforeEntry() + className(box) + " " + box->objectName();
+QString BoxOutput::entry(const QObject *object) {
+    const Port *port = dynamic_cast<const Port*>(object);
+    const Box *box = dynamic_cast<const Box*>(object);
+    QString text = beforeEntry() + className(object) + " " + box->objectName();
+    if (box)
+        text += QString(" (#%1)").arg(box->id());
     if (port && port->hasValue())
         text += ": " + port->value<QString>();
     return text + afterEntry();
