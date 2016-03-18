@@ -19,6 +19,9 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(steps).equals(1);
     Output(iteration).noReset().format("factor");
     Output(step);
+    Output(executionTime);
+    Output(hasError);
+    Output(errorMsg);
 }
 
 void Simulation::amend() {
@@ -52,19 +55,50 @@ void Simulation::makePortLabelsUnique() {
 }
 
 void Simulation::run() {
-    dialog().information("initialize...");
-    initializeFamily();
-    for (iteration = 0; iteration < iterations; ++iteration) {
-        dialog().information("reset...");
-        resetFamily();
-        dialog().information("update...");
-        for (step = 1; step <= steps; ++step)
-            updateFamily();
-        dialog().information("cleanup...");
-        cleanupFamily();
+    dialog().message("Running...");
+    nextShowProgress = 1;
+    hasError = false;
+    QTime time;
+    try {
+        time.start();
+        dialog().information("initialize...");
+        initializeFamily();
+        for (iteration = 0; iteration < iterations; ++iteration) {
+            dialog().information("reset...");
+            resetFamily();
+            dialog().information("update...");
+            for (step = 0; step < steps; ++step) {
+                show(time);
+                updateFamily();
+            }
+            dialog().information("cleanup...");
+            cleanupFamily();
+        }
+        dialog().information("debrief...");
+        debriefFamily();
     }
-    dialog().information("debrief...");
-    debriefFamily();
+    catch (Exception &ex) {
+        hasError = true;
+        errorMsg = ex.what();
+    }
+    dialog().message("Ready");
+    executionTime = time.elapsed();
+}
+
+void Simulation::show(QTime time) {
+    double dt = double(time.elapsed())/1000;
+    if (dt > 10) {
+        int progress = 100*step/steps/iterations;
+        if (progress > nextShowProgress) {
+            QString info{"Running %1%  %2 / %3 secs"};
+            double timeTotal = 100/progress*dt,
+                   timeLeft = timeTotal*progress/100.;
+            dialog().message(info.arg(progress)
+                                 .arg(timeLeft, 0, 'f', 0)
+                                 .arg(timeTotal, 0, 'f', 0));
+            ++nextShowProgress;
+        }
+    }
 }
 
 void Simulation::debrief() {

@@ -26,17 +26,17 @@ StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
 {
     Class(StomatalResistanceBase);
     Output(rsH2O);
-    Output(rsCO2);
+    Output(rsCo2);
 }
 
 void StomatalResistanceBase::reset() {
     rsH2O = resetRsH2O();
-    rsCO2 = rsH2O*1.6;
+    rsCo2 = rsH2O*1.6;
 }
 
 void StomatalResistanceBase::update() {
     rsH2O = updateRsH2O();
-    rsCO2 = rsH2O*1.6;
+    rsCo2 = rsH2O*1.6;
 }
 
 } //namespace

@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QList>
+#include <QTime>
 #include <base/box.h>
 
 namespace base {
@@ -23,8 +24,11 @@ private:
     // Inputs
     int iterations, steps;
     // Outputs
-    int iteration, step;
+    int iteration, step, executionTime;
+    bool hasError;
+    QString errorMsg;
     // Data
+    int nextShowProgress;
     QList<base::Port*> _trackedPorts;
     QFile _file;
     QTextStream _stream;
@@ -32,6 +36,7 @@ private:
     void collectTrackedPorts();
     void removeObsoletePorts();
     void makePortLabelsUnique();
+    void show(QTime time);
     void writeDataFrame();
     void openFileStream();
     static bool valuesAreEqual(const base::Port *port);

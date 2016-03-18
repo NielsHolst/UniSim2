@@ -77,7 +77,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     Input(diffuseReflectivity).imports("crop/radiation[diffuseReflectivity]");
     Input(directReflectivity).imports("crop/radiation[directReflectivity]");
     Input(lai).imports("crop/lai[value]");
-    Input(sinB).imports("calendar[sinB]");
+    Input(sinb).imports("calendar[sinb]");
 
     Input(LUE).imports("./lightResponse[LUE]");
     Input(Pgmax).imports("./lightResponse[Pgmax]");
@@ -133,11 +133,11 @@ double LeafPhotosynthesis::absorbedByShadedLeaves() const {
 }
 
 QPair<double, double> LeafPhotosynthesis::absorbedBySunlitLeaves(double absorbedShaded) const {
-    if (Pgmax==0 || sinB==0) return qMakePair(0.,0.);
+    if (Pgmax==0 || sinb==0) return qMakePair(0.,0.);
 
     // Direct flux absorbed by leaves perpendicular on direct beam (VISpp)[J*m-2 leaf s-1]
     // Original eq. changed to guard against sinB->0 yielding absorptivity>1
-    double absorptivity = min((1-scattering)/sinB, 1.);
+    double absorptivity = min((1-scattering)/sinb, 1.);
     double absorbedPerpendicular = absorptivity*parDirect;
     // Integration over all leaf angles
     double assimilationSum{0}, absorbedSum{0};

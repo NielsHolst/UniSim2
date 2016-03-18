@@ -9,12 +9,13 @@ class DialogStub : public DialogBase
 {
 public:
     DialogStub(QWidget *parent);
+    void message(QString s);
     void information(QString s);
     void error(QString s);
     QString getInformation() const;
     QString getError() const;
 private:
-    QString _information, _error;
+    QString _message, _information, _error;
 };
 
 }

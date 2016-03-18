@@ -44,7 +44,7 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]");
     Input(indoorsAh).imports("indoors/humidity[ah]");
     Input(radiationAbsorbed).imports("../radiationAbsorbed[value]");
-    Input(leafTemperature).imports("../Temperature[value]");
+    Input(leafTemperature).imports("../temperature[value]");
     Input(rbH2O).imports("../rb[rbH2O]");
     Input(rsH2O).imports("../rs[rsH2O]");
     Output(leafAh);

@@ -59,12 +59,20 @@ void Dialog::restoreFont() {
     setTextCursor(cursor);
 }
 
+void Dialog::message(QString s) {
+    mainWindow()->statusBar()->showMessage(s);
+    mainWindow()->repaint();
+    repaint();
+}
+
 void Dialog::information(QString s) {
     insertText("\n" + s, _informationColor);
+    repaint();
 }
 
 void Dialog::error(QString s) {
     insertText("\n" + s, _errorColor);
+    repaint();
 }
 
 void Dialog::keyPressEvent(QKeyEvent *event) {
@@ -133,7 +141,6 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
         QTextEdit::keyPressEvent(event);
         break;
     }
-    mainWindow()->statusBar()->showMessage(QString::number(numLines()));
 }
 
 void Dialog::receivedFocus(QWidget *old, QWidget *now) {
@@ -169,7 +176,8 @@ void Dialog::writeWelcome() {
     info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
-    dialog().information(info);
+    information(info);
+    message("Ready");
 }
 
 void Dialog::insertText(QString text, QColor color) {

@@ -50,7 +50,7 @@ void Vents::reset() {
                height = vent->port("height")->value<double>();
         totalLength += length;
         averageHeight += height*length;
-        proportionalEffectiveArea += port("effectiveArea")->value<double>();
+        proportionalEffectiveArea += vent->port("effectiveArea")->value<double>();
     }
     if (totalLength>0.) averageHeight /= totalLength;
     proportionalEffectiveArea /= groundArea;

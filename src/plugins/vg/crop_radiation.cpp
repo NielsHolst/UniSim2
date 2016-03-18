@@ -46,7 +46,7 @@ CropRadiation::CropRadiation(QString name, QObject *parent)
 {
     Input(kDiffuse).equals(0.8);
     Input(scattering).equals(0.2);
-    Input(sinB).imports("calendar[sinB]");
+    Input(sinb).imports("calendar[sinb]");
     Input(lightDiffuse).imports("indoors/light[diffuse]");
     Input(lightDirect).imports("indoors/light[direct]");
     Input(absorptivityTop).imports("layers/top/photosynthesis[absorptivity]");
@@ -72,10 +72,10 @@ void CropRadiation::update() {
     diffuseReflectivity = (1-sqv)/(1+sqv);
 
     // Reflectivity of spherical leaf angle distribution
-    directReflectivity = 2*diffuseReflectivity/(1+1.6*sinB);
+    directReflectivity = 2*diffuseReflectivity/(1+1.6*sinb);
 
     // Extinction coefficient for direct component of direct light (KdirBL)
-    kDirectDirect = (sinB==0.) ? 0. : 0.5/sinB*kDiffuse/(0.8*sqv);
+    kDirectDirect = (sinb==0.) ? 0. : 0.5/sinb*kDiffuse/(0.8*sqv);
 
     // Extinction coefficient for total direct light
     kDirect = kDirectDirect*sqv;

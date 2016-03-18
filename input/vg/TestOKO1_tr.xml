@@ -2,7 +2,7 @@
 <box class="Simulation" name="VirtualGreenhouse">
 	<box name="simulationTimeInterval" class="vg::SimulationTimeInterval">
 		<port name="beginDate" value="2001-01-01"/>
-		<port name="endDate" value="2001-12-31"/>
+		<port name="endDate" value="2001-01-31"/>
 		<port name="beginTime" value="00:00"/>
 		<port name="endTime" value="00:00"/>
 		<port name="timeStep" value="5"/>

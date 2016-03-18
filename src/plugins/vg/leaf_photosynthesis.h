@@ -26,7 +26,7 @@ private:
         diffuseReflectivity, directReflectivity,
         parDiffuse, parDirect,
         Pgmax, LUE,
-        xGauss, wGauss, lai, Rd, sinB;
+        xGauss, wGauss, lai, Rd, sinb;
 
     // Outputs
     double absorptivity, parAbsorbed, Pg, Pn;

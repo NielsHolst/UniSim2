@@ -17,6 +17,7 @@ class Dialog : public DialogBase
 public:
     Dialog(QWidget *parent);
     ~Dialog();
+    void message(QString s);
     void information(QString s);
     void error(QString s);
 protected:

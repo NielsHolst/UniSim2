@@ -4,6 +4,8 @@
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/path.h>
+#include <base/port.h>
 #include <base/publish.h>
 #include "load.h"
 #include "run.h"
@@ -35,34 +37,56 @@ void run::doLoad() {
 }
 
 void run::doRun() {
-    Box *root = environment().state.root;
-    if (!root) {
+    _root = environment().state.root;
+    if (!_root) {
         dialog().error("Nothing to run");
         return;
     }
-    QTime time;
-    time.start();
+    _root->run();
+
+    const Port *hasErrorPort = _root->peakPort("hasError");
+    bool noError = !(hasErrorPort && hasErrorPort->value<bool>());
+
+    QString msg = noError ? "Finished" : "Interrupted";
+    msg += messageTime();
+    msg += message("iteration");
+    msg += message("step");
+
     QString errorMsg;
-    try {
-        root->run();
-    }
-    catch (Exception &ex) {
-        errorMsg = QString("\n") + ex.what();
-    }
-    int dt = time.elapsed();
+
+    if (noError)
+        dialog().information(msg);
+    else
+        dialog().error(msg + errorMessage());
+}
+
+QString run::messageTime() const {
+    const Port *port = _root->peakPort("executionTime");
+    if (!port)
+        return "";
+    int dt = port->value<int>();
     QString units = "msecs";
     if (dt > 5000) {
         dt /= 1000;
         units = "secs";
     }
-    if (errorMsg.isEmpty()) {
-        QString info{"Finished after %1 %2"};
-        dialog().information(info.arg(dt).arg(units));
-    }
-    else {
-        QString err{"Interrupted after %1 %2"};
-        dialog().error(err.arg(dt).arg(units) + errorMsg);
-    }
+    QString s{" after %1 %2"};
+    return s.arg(dt).arg(units);
+}
+
+QString run::message(QString name) const {
+    Port *i = _root->peakPort(name),
+         *n = _root->peakPort(name+"s");
+    if (!i || !n || n->value<int>() == 1)
+        return "";
+
+    QString s = " in " + name + " %1/%2";
+    return s. arg(i->value<int>()). arg(n->value<int>());
+}
+
+QString run::errorMessage() const {
+    const Port *port = _root->peakPort("errorMsg");
+    return port ? ("\n" + port->value<QString>()) : QString();
 }
 
 }

@@ -8,6 +8,11 @@ DialogStub::DialogStub(QWidget *parent)
 {
 }
 
+void DialogStub::message(QString s) {
+    std::cout << "DIALOG MESSAGE: " << qPrintable(s) << "\n";
+    _message = s;
+}
+
 void DialogStub::information(QString s) {
     std::cout << "DIALOG INFORMATION: " << qPrintable(s) << "\n";
     _information = s;

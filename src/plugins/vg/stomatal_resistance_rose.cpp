@@ -56,7 +56,10 @@ double StomatalResistanceRose::calcRsH2O(double A) {
     // Internal resistance acc. Kim Lieth is in mol m-2 s-1 and recalc. with 0.025 (Jones, p. 56)
     double cs = max(co2 - Am*(rbCO2*0.025)*Pa, 0.);
     double giH2O = b + m*Am*rh/100/(cs/Pa);
-    return 1./giH2O/0.025;
+    double rs = 1./giH2O/0.025;
+    if (std::isnan(rs))
+        ThrowException("Stomatal resistance is not a number").context(this);
+    return rs;
 }
 
 

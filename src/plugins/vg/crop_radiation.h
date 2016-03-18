@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Inputs
-    double kDiffuse, scattering, sinB,
+    double kDiffuse, scattering, sinb,
         lightDiffuse, lightDirect,
         absorptivityTop, absorptivityMiddle, absorptivityBottom,
         lai;

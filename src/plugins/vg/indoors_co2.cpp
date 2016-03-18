@@ -56,7 +56,7 @@ namespace {
                      double dt) // time step
     {
         if (b==0)
-            return a*dt;
+            return y0 + a*dt;
         else
             return exp(-b*dt)*( (exp(b*dt)-1)*(a/b+c)+y0 );
     }
