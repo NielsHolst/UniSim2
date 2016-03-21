@@ -8,6 +8,12 @@ DialogStub::DialogStub(QWidget *parent)
 {
 }
 
+void DialogStub::progress(int, int) {
+}
+
+void DialogStub::finished() {
+}
+
 void DialogStub::message(QString s) {
     std::cout << "DIALOG MESSAGE: " << qPrintable(s) << "\n";
     _message = s;

@@ -14,7 +14,7 @@
 
 <!-- Simulation period used when test-mode > 0 -->
 <xsl:variable name="BeginDate" select="'2001-01-01'"/>
-<xsl:variable name="EndDate" select="'2001-12-31'"/>
+<xsl:variable name="EndDate" select="'2001-01-10'"/>
 
 <!-- Parameters missing in DVV Online must be set here -->
 <xsl:variable name="EnergyScreenOption" select="1"/>  		<!-- 1: EnergyBalanc or 2: OutsideLight --> 
@@ -132,36 +132,6 @@
 		<xsl:otherwise>unknown</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-
-<!--
-<xsl:template name="cover-compartment-name">
-	<xsl:param name="number"/>
-	<xsl:choose>
-		<xsl:when test="$number=1">indoors/top</xsl:when>
-		<xsl:when test="$number=2">indoors/top</xsl:when>
-		<xsl:when test="$number=3">indoors</xsl:when>
-		<xsl:when test="$number=4">indoors</xsl:when>
-		<xsl:when test="$number=5">indoors</xsl:when>
-		<xsl:when test="$number=6">indoors</xsl:when>
-		<xsl:when test="$number=7">indoors</xsl:when>
-		<xsl:otherwise>unknown</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
-<xsl:template name="cover-average-height">
-	<xsl:param name="number"/>
-	<xsl:choose>
-		<xsl:when test="$number=1">roofAverageHeight</xsl:when>
-		<xsl:when test="$number=2">roofAverageHeight</xsl:when>
-		<xsl:when test="$number=3">averageHeight</xsl:when>
-		<xsl:when test="$number=4">averageHeight</xsl:when>
-		<xsl:when test="$number=5">averageHeight</xsl:when>
-		<xsl:when test="$number=6">averageHeight</xsl:when>
-		<xsl:when test="$number=7">averageHeight</xsl:when>
-		<xsl:otherwise>unknown</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
--->
 
 <xsl:template name="screen-position-name">
 	<xsl:param name="number"/>
@@ -477,6 +447,9 @@
 				<xsl:value-of select="$OutdoorsCo2"/>
 			</xsl:attribute>
 		</port>
+		<port name="windSpeed"  page="climate" plot="co2"/>
+		<port name="rh"  page="climate" plot="humidity"/>
+		<port name="ah"  page="climate" plot="humidity"/>
 		<box name="records" class="boxes::Records">
 			<port name="fileName" value=".../input/sel_dk.txt"/>
 		</box>
@@ -648,7 +621,10 @@
 					<port name="signal" ref="./growthLights[value]"/>
 					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
 				</box>
-				<box name="shelter" class="vg::EnergyFluxShelters"/>
+				<box name="shelter" class="vg::EnergyFluxShelters">
+					<port name="coverTemperature" page="climate" plot="temperature"/>
+					<port name="screensTemperature" page="climate" plot="temperature"/>
+				</box>
 				<box name="floor" class="vg::EnergyFluxFloor"> 
 					<box name="radiationAbsorbed" class="vg::FloorRadiationAbsorbed"/>
 					<port name="Uindoors">
@@ -666,6 +642,7 @@
 							<xsl:value-of select="$FloorHeatCapacity"/>
 						</xsl:attribute>
 					</port>
+					<port name="temperature" page="climate" plot="temperature"/>
 				</box>
 				
 				<box name="transpiration" class="vg::EnergyFluxTranspiration"/> 
@@ -753,10 +730,18 @@
 				</xsl:attribute>
 			</port> 
 			<port name="energyFlux" ref="total/energyFlux[value]"/>
+			<port name="value" page="climate" plot="temperature"/>
 		</box>
-		<box name="humidity" class="vg::IndoorsHumidity"/>
-		<box name="co2" class="vg::IndoorsCo2"/>
-		<box name="windSpeed" class="vg::IndoorsWindSpeed"/>
+		<box name="humidity" class="vg::IndoorsHumidity">
+			<port name="rh" page="climate" plot="humidity"/>
+			<port name="ah" page="climate" plot="humidity"/>
+		</box>
+		<box name="co2" class="vg::IndoorsCo2">
+			<port name="value"  page="climate" plot="co2"/>
+		</box>
+		<box name="windSpeed" class="vg::IndoorsWindSpeed">
+			<port name="value"  page="climate" plot="co2"/>
+		</box>
 	</box> <!-- indoors -->
 
 	<box name="setpoints">
@@ -1513,7 +1498,18 @@
 	</box> <!-- crop -->
 
 	<box name="budget" class="vg::Budget"/>
-		
+
+	<box class="OutputR">
+		<port name="xAxis" ref="calendar[date]"/>
+		<port name="layout" value="facetted"/>
+		<box name="climate" class="PageR">
+			<port name="ncol" value="5"/>
+			<box name="co2" class="PlotR"/>
+			<box name="humidity" class="PlotR"/>
+			<box name="temperature" class="PlotR"/>
+		</box>
+	</box>
+	
 </box> </xsl:template>
 
 </xsl:stylesheet>

@@ -9,6 +9,8 @@ class DialogStub : public DialogBase
 {
 public:
     DialogStub(QWidget *parent);
+    void progress(int current, int total);
+    void finished();
     void message(QString s);
     void information(QString s);
     void error(QString s);

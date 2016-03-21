@@ -28,7 +28,7 @@ private:
     bool hasError;
     QString errorMsg;
     // Data
-    int nextShowProgress;
+    double nextShowProgress;
     QList<base::Port*> _trackedPorts;
     QFile _file;
     QTextStream _stream;

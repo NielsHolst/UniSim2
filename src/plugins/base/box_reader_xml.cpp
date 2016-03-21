@@ -1,7 +1,7 @@
 #include <QXmlStreamAttributes>
 #include "box.h"
 #include "box_reader_xml.h"
-//#include "dialog.h"
+#include "dialog.h"
 #include "exception.h"
 
 namespace base {

@@ -14,8 +14,11 @@ PlotR::PlotR(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(layout).equals("merged");
-    Input(ncol).equals(-1);
+    Input(ncol).equals(1);
     Input(nrow).equals(-1);
+}
+
+void PlotR::amend() {
     collectPorts();
 }
 

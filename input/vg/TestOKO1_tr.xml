@@ -2,7 +2,7 @@
 <box class="Simulation" name="VirtualGreenhouse">
 	<box name="simulationTimeInterval" class="vg::SimulationTimeInterval">
 		<port name="beginDate" value="2001-01-01"/>
-		<port name="endDate" value="2001-01-31"/>
+		<port name="endDate" value="2001-01-10"/>
 		<port name="beginTime" value="00:00"/>
 		<port name="endTime" value="00:00"/>
 		<port name="timeStep" value="5"/>
@@ -20,6 +20,9 @@
 	</box>
 	<box name="outdoors" class="vg::Outdoors">
 		<port name="co2" value="400"/>
+		<port name="windSpeed" page="climate" plot="co2"/>
+		<port name="rh" page="climate" plot="humidity"/>
+		<port name="ah" page="climate" plot="humidity"/>
 		<box name="records" class="boxes::Records">
 			<port name="fileName" value=".../input/sel_dk.txt"/>
 		</box>
@@ -254,12 +257,16 @@
 					<port name="signal" ref="./growthLights[value]"/>
 					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
 				</box>
-				<box name="shelter" class="vg::EnergyFluxShelters"/>
+				<box name="shelter" class="vg::EnergyFluxShelters">
+					<port name="coverTemperature" page="climate" plot="temperature"/>
+					<port name="screensTemperature" page="climate" plot="temperature"/>
+				</box>
 				<box name="floor" class="vg::EnergyFluxFloor">
 					<box name="radiationAbsorbed" class="vg::FloorRadiationAbsorbed"/>
 					<port name="Uindoors" value="7.5"/>
 					<port name="Usoil" value="4"/>
 					<port name="heatCapacity" value="42000"/>
+					<port name="temperature" page="climate" plot="temperature"/>
 				</box>
 				<box name="transpiration" class="vg::EnergyFluxTranspiration"/>
 			</box>
@@ -336,10 +343,18 @@
 		<box name="temperature" class="vg::IndoorsTemperature">
 			<port name="resetValue" value="18"/>
 			<port name="energyFlux" ref="total/energyFlux[value]"/>
+			<port name="value" page="climate" plot="temperature"/>
 		</box>
-		<box name="humidity" class="vg::IndoorsHumidity"/>
-		<box name="co2" class="vg::IndoorsCo2"/>
-		<box name="windSpeed" class="vg::IndoorsWindSpeed"/>
+		<box name="humidity" class="vg::IndoorsHumidity">
+			<port name="rh" page="climate" plot="humidity"/>
+			<port name="ah" page="climate" plot="humidity"/>
+		</box>
+		<box name="co2" class="vg::IndoorsCo2">
+			<port name="value" page="climate" plot="co2"/>
+		</box>
+		<box name="windSpeed" class="vg::IndoorsWindSpeed">
+			<port name="value" page="climate" plot="co2"/>
+		</box>
 	</box>
 	<box name="setpoints">
 		<box name="isDay" class="vg::ProportionalSignal">
@@ -845,4 +860,14 @@
 		</box>
 	</box>
 	<box name="budget" class="vg::Budget"/>
+	<box class="OutputR">
+		<port name="xAxis" ref="calendar[date]"/>
+		<port name="layout" value="facetted"/>
+		<box name="climate" class="PageR">
+			<port name="ncol" value="5"/>
+			<box name="co2" class="PlotR"/>
+			<box name="humidity" class="PlotR"/>
+			<box name="temperature" class="PlotR"/>
+		</box>
+	</box>
 </box>

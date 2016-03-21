@@ -3,6 +3,7 @@
 #include <QFontDatabase>
 #include <QKeyEvent>
 #include <QMainWindow>
+#include <QProgressBar>
 #include <QSettings>
 #include <QStatusBar>
 #include <QTextBlock>
@@ -28,6 +29,10 @@ Dialog::Dialog(QWidget *parent)
     restoreFont();
     writeWelcome();
     writePrompt();
+    _progressBar = new QProgressBar(this);
+    _progressBar->setFormat("%p% of %ms");
+    _progressBar->hide();
+    mainWindow()->statusBar()->addPermanentWidget(_progressBar);
     QObject::connect(qApp, &QApplication::focusChanged,
                      this, &Dialog::receivedFocus);
 }
@@ -57,6 +62,18 @@ void Dialog::restoreFont() {
     format.setFont(QFontDatabase().font(family, QString(), pt));
     cursor.setCharFormat(format);
     setTextCursor(cursor);
+}
+
+void Dialog::progress(int current, int total) {
+    _progressBar->setMaximum(total);
+    _progressBar->setValue(current);
+    _progressBar->show();
+     qApp->processEvents();
+}
+
+void Dialog::finished() {
+    _progressBar->hide();
+    qApp->processEvents();
 }
 
 void Dialog::message(QString s) {
@@ -176,9 +193,11 @@ void Dialog::writeWelcome() {
     info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
+    _history.add("load " + latestFile);
     information(info);
     message("Ready");
 }
+
 
 void Dialog::insertText(QString text, QColor color) {
     setTextColor(color);

@@ -1,3 +1,4 @@
+#include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/path.h>
@@ -56,7 +57,7 @@ void Simulation::makePortLabelsUnique() {
 
 void Simulation::run() {
     dialog().message("Running...");
-    nextShowProgress = 1;
+    nextShowProgress = 0.01;
     hasError = false;
     QTime time;
     try {
@@ -81,23 +82,17 @@ void Simulation::run() {
         hasError = true;
         errorMsg = ex.what();
     }
+    dialog().finished();
     dialog().message("Ready");
     executionTime = time.elapsed();
 }
 
 void Simulation::show(QTime time) {
-    double dt = double(time.elapsed())/1000;
-    if (dt > 10) {
-        int progress = 100*step/steps/iterations;
-        if (progress > nextShowProgress) {
-            QString info{"Running %1%  %2 / %3 secs"};
-            double timeTotal = 100/progress*dt,
-                   timeLeft = timeTotal*progress/100.;
-            dialog().message(info.arg(progress)
-                                 .arg(timeLeft, 0, 'f', 0)
-                                 .arg(timeTotal, 0, 'f', 0));
-            ++nextShowProgress;
-        }
+    double progress = double(step)/steps/iterations;
+    if (progress > nextShowProgress) {
+        double total = time.elapsed()/progress;
+        dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
+        nextShowProgress += 0.01;
     }
 }
 

@@ -40,7 +40,7 @@ unisim_plot_facetted = function(df, id.x, cols, ncol, nrow) {
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
 		geom_line(size=1.1) +
 		theme(legend.position="none") +
-		ylab("") +
+		xlab("") + ylab("") +
 		facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
 }
 
@@ -49,5 +49,5 @@ unisim_plot_merged = function(df, id.x, cols) {
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
 		geom_line(size=1.1) +
-		ylab("")
+		xlab("") + ylab("")
 }

@@ -7,6 +7,7 @@
 #include "history.h"
 
 class QMainWindow;
+class QProgressBar;
 class QTextDocument;
 
 namespace base {
@@ -17,6 +18,8 @@ class Dialog : public DialogBase
 public:
     Dialog(QWidget *parent);
     ~Dialog();
+    void progress(int current, int total);
+    void finished();
     void message(QString s);
     void information(QString s);
     void error(QString s);
@@ -28,6 +31,7 @@ private:
     // Data
     History _history;
     QTextDocument *_textDocument;
+    QProgressBar *_progressBar;
     QString _prompt;
     QColor _informationColor, _errorColor;
     // Methods

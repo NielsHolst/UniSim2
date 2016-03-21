@@ -13,6 +13,7 @@ class PlotR : public base::Box
 {
 public:
     PlotR(QString name, QObject *parent);
+    void amend();
     void initialize();
     QString toString();
     QString toScript();

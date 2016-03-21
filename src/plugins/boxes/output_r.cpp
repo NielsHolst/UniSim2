@@ -60,24 +60,34 @@ void OutputR::amend() {
     for (Port *port : trackedPorts) {
         pagesWithPlots[port->page()] << port->plot();
     }
-    // Create pages with plots
-    //!! Only create pages that do not exist
-    //!! For pages that exist only create plots that do not exist
+    // Loop through pages
     QMapIterator<QString, QSet<QString>> it(pagesWithPlots);
     while (it.hasNext()) {
         it.next();
+        // Find existing page by name, or else construct one
         QString pageName = it.key();
-        QSet<QString> plotNames = it.value();
-        Box *page = MegaFactory::create<PageR>("PageR", pageName, this);
-        // The page imports the same axis as the general one for OutputR
+        Box *page = resolveMaybeOne<PageR>("./" + pageName);
+        bool amendPage = (!page);
+        if (!page)
+            page = MegaFactory::create<PageR>("PageR", pageName, this);
+        // Copy general output settings (i.e. port values) to the page
         QStringList dontCopy;
         dontCopy << "ncol" << "nrow";
         copyPortValues(page, this, dontCopy);
-//        page->port("xAxis")->imports( port("xAxis")->importPath() );
+        // Loop through plots on page
+        QSet<QString> plotNames = it.value();
         for (QString plotName : plotNames) {
-            PlotR *plot = MegaFactory::create<PlotR>("PlotR", plotName, page);
+            // Find existing plot by name, or else construct one
+            Box *plot = page->resolveMaybeOne<PlotR>("./" + plotName);
+            if (!plot) {
+                plot = MegaFactory::create<PlotR>("PlotR", plotName, page);
+                plot->amend();
+            }
+            // Copy general page settings (i.e. port values) to the page
             copyPortValues(plot, page, dontCopy);
         }
+        if (amendPage)
+            page->amend();
     }
     // Make certain that x-axis is included in output text file
     setTrackX();
@@ -157,6 +167,7 @@ void OutputR::openFile() {
                 "unisim_plot_all(read_unisim_output(\"" +
                 environment().outputFilePath(".txt") +
                 + "\"))\n"
+                + "bringToTop(-1)\n"
                 );
 }
 

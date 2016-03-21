@@ -1,3 +1,5 @@
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QSettings>
 #include <QtWidgets>
 #include <base/dialog.h>
@@ -13,14 +15,26 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 void MainWindow::restore() {
+    // Get screen dimensions
+    QDesktopWidget *desktop = QApplication::desktop();
+    QRect screen = desktop->availableGeometry(this);
+    int W = screen.width(),
+        H = screen.height();
+    // Get latest screen geometry
     QSettings settings;
-    QPoint pos(0,0);
-    QSize siz(500,600);
-
-    QPoint position = settings.value("main_window_geometry/position", pos).toPoint();
-    QSize size = settings.value("main_window_geometry/size", siz).toSize();
-    if (size.isNull()) size = siz;
-    if (position.isNull()) position = pos;
+    QPoint position = settings.value("main_window_geometry/position", QPoint(W/3, H/3)).toPoint();
+    QSize size = settings.value("main_window_geometry/size", QSize(W/3, H/3)).toSize();
+    // Use default if something is askew
+    if (position.isNull()|| size.isNull())
+        return;
+    // Use default if too big
+    if (size.width() > W || size.height() > H)
+        return;
+    // Move to corner if outside
+    if (position.x() + size.width() > W ||
+        position.y() + size.height() > H) {
+        position = QPoint(0,0);
+    }
 
     move(position);
     resize(size);
