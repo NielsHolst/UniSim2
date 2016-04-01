@@ -125,6 +125,11 @@ template<> QDateTime convert(QString source);
 template<> QTime convert(QString source);
 
 //
+// Conversions from String to vector
+//
+template<> QVector<int> convert(QString source);
+
+//
 // Conversions from C string
 //
 
@@ -208,6 +213,23 @@ template<> QStringList convert(QVector<QString> source);
 template<> QStringList convert(QVector<QDate> source);
 template<> QStringList convert(QVector<QTime> source);
 template<> QStringList convert(QVector<QDateTime> source);
+
+//
+// Vector conversions to QString
+//
+
+template<> QString convert(QVector<bool> source);
+template<> QString convert(QVector<char> source);
+template<> QString convert(QVector<int> source);
+template<> QString convert(QVector<long int> source);
+template<> QString convert(QVector<long long int> source);
+template<> QString convert(QVector<float> source);
+template<> QString convert(QVector<double> source);
+template<> QString convert(QVector<long double> source);
+template<> QString convert(QVector<QString> source);
+template<> QString convert(QVector<QDate> source);
+template<> QString convert(QVector<QTime> source);
+template<> QString convert(QVector<QDateTime> source);
 
 } // namespace
 

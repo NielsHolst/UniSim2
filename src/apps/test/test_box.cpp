@@ -3,8 +3,10 @@
 #include <base/box.h>
 #include <base/general.h>
 #include <base/mega_factory.h>
+#include <base/path.h>
 #include <base/port.h>
 #include "test_box.h"
+#include "test_box_cases.h"
 
 using std::unique_ptr;
 using namespace base;
@@ -32,3 +34,26 @@ void TestBox::testNoRun() {
     }
     QVERIFY(excepted);
 }
+
+void TestBox::testVectorInput() {
+    Box *root;
+    Port *port1, *port2;
+    QVector<int> expected1, expected2;
+    expected1 << 7;
+    expected2 << 7 << 9 << 13;
+    try {
+        root = TestBoxCases::case4();
+        port1 = Path("A[numbers1]", root).resolveOne<Port>(root);
+        port2 = Path("A[numbers2]", root).resolveOne<Port>(root);
+    }
+    catch (Exception &ex) {
+        std::cout << qPrintable(ex.what()) << "\n";
+        QFAIL("Unexpected exception");
+    }
+    QCOMPARE(port1->value<QVector<int>>(), expected1);
+    QCOMPARE(port2->value<QVector<int>>(), expected2);
+    root->deleteLater();
+}
+
+
+

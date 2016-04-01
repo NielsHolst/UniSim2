@@ -91,7 +91,7 @@ template <> void assignToScalarFromVector<destT, sourceT>(void *destPtr, const v
     switch (transform) { \
     case Identity: \
         if (n != 1) \
-            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(QString::number(n) + " =! 1"); \
+            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(convert<QString>(*sourceVector)); \
         DEST(destT) = convert<destT>(sourceVector->at(0)); \
         break; \
     default: \

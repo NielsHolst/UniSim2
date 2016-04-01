@@ -37,7 +37,8 @@ public:
     Port(QString name="noname", QObject *parent=0, bool orphan=false);
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
-    Port& equals(const char *value) { return equals(QString(value)); }
+    Port& equals(const char *value);
+    Port& equals(QStringList value);
     Port& imports(QString pathToPort);
     Port& access(Access acc);
     Port& zeroAtReset();

@@ -54,7 +54,7 @@ BaseControlElement::BaseControlElement(QString name, QObject *parent)
 }
 
 void BaseControlElement::reset() {
-    state = value = state0 = state1 = initState;
+    state = value = state0 = state1 = state2 = initState;
     slope = 0;
     tick = 0;
     localReset();

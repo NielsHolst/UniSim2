@@ -3,12 +3,12 @@
 #include <QPluginLoader>
 #include <QSettings>
 #include "box.h"
+#include "dialog.h"
 #include "exception.h"
 #include "factory_plug_in.h"
 #include "mega_factory.h"
 #include "object_pool.h"
 
-//#include "dialog.h"
 
 namespace base {
 
@@ -24,7 +24,7 @@ MegaFactory::MegaFactory() {
         QPluginLoader loader(filePath);
         FactoryPlugIn *factory = qobject_cast<FactoryPlugIn*>(loader.instance());
         if (factory) {
-//            dialog().information(filePath);
+            dialog().information("loading " + filePath +"...");
             _factories << factory;
             for (QString id : factory->inventory()) {
                 productIndex[id] = factory;

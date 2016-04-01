@@ -150,12 +150,12 @@ void Box::amendFamily() {
 }
 
 void Box::enumerateBoxes(int &i) {
-    _id = i++;
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
             box->enumerateBoxes(i);
     }
+    _id = i++;
 }
 
 void Box::initializeFamily() {

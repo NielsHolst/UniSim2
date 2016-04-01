@@ -17,7 +17,7 @@ public:
     VapourFluxSum(QString name, QObject *parent);
 private:
     // Input
-    QString toAdd;
+    QVector<QString> toAdd;
     // Methods
     QList<VapourFluxBase*> fluxes();
     QList<VapourFluxBase*> childFluxes();

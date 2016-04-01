@@ -19,7 +19,8 @@ HEADERS +=  \
     test_box_cases.h \
     test_circle_buffer.h \
     test_command.h \
-    test_general.h \
+    test_convert.h \
+    test_general_split.h \
     test_history.h \
     test_path.h \
     test_port_type.h \
@@ -38,7 +39,8 @@ SOURCES +=  \
     test_box_cases.cpp \
     test_circle_buffer.cpp \
     test_command.cpp \
-    test_general.cpp \
+    test_convert.cpp \
+    test_general_split.cpp \
     test_history.cpp \
     test_path.cpp \
     test_port_type.cpp \

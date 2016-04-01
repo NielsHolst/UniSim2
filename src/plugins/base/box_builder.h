@@ -33,9 +33,11 @@ public:
     BoxBuilder& label(QString la);
     BoxBuilder& transform(QString tr);
     BoxBuilder& transform(PortTransform value);
-    // Data templates
+    // Set value
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value);
+    BoxBuilder& equals(QString value);
+    BoxBuilder& equals(const char *value);
     // State
     const Box* currentBox() const;
     const Port* currentPort() const;
@@ -54,11 +56,14 @@ template <class T> BoxBuilder& BoxBuilder::data(T *valuePtr) {
     return *this;
 }
 
+#define BOXBUILDER_EQUALS \
+    if (!_currentPort) \
+        ThrowException("BoxBuilder: 'equals' must follow 'port'"); \
+    _currentPort->equals(value); \
+    return *this
+
 template <class T> BoxBuilder& BoxBuilder::equals(T value) {
-    if (!_currentPort)
-        ThrowException("BoxBuilder: 'equals' must follow 'port'");
-    _currentPort->equals(value);
-    return *this;
+    BOXBUILDER_EQUALS;
 }
 
 }

@@ -30,7 +30,7 @@ Dialog::Dialog(QWidget *parent)
     writeWelcome();
     writePrompt();
     _progressBar = new QProgressBar(this);
-    _progressBar->setFormat("%p% of %ms");
+    _progressBar->setFormat(" %p% of %ms");
     _progressBar->hide();
     mainWindow()->statusBar()->addPermanentWidget(_progressBar);
     QObject::connect(qApp, &QApplication::focusChanged,

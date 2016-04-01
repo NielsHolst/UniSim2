@@ -46,6 +46,7 @@ private:
     static QMap<QString, Directive> _directives;
 
     // Methods
+    Path(const QObject *context);
     void initDirectives();
     template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = 0);
     QObjects _resolve(int number = -1, const QObject* caller = 0);

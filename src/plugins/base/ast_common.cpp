@@ -2,35 +2,12 @@
 #include <QMapIterator>
 #include "ast_common.h"
 #include "convert.h"
+#include "general.h"
 
 using namespace base;
 using boost::optional;
 
 namespace {
-
-    bool isAmpersanded(QString s) {
-        return s.startsWith("&");
-    }
-
-    QString removeAmpersand(QString s) {
-        int n = s.size();
-        return s.mid(1, n-1);
-    }
-
-    bool isApostrophed(QString s) {
-        if (s.startsWith("\"")) {
-            if (s.endsWith("\""))
-                return true;
-            else
-                ThrowException("Unmatched apostrophe in string").value(s);
-        }
-        return false;
-    }
-
-    QString removeApostrophes(QString s) {
-        int n = s.size();
-        return s.mid(1, n-2);
-    }
 
     bool isValue(QString s) {
         try {
@@ -84,7 +61,7 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
         QString name = QString::fromStdString(pair.name),
                 value = QString::fromStdString(pair.value);
         if (isApostrophed(value))
-            value = removeApostrophes(value);
+            value = deEmbrace(value);
         builder.attribute(name, value);
     }
 
@@ -101,8 +78,15 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
     if (value.is_initialized()) {
         QString val = QString::fromStdString(value.get());
-        if (isApostrophed(val))
-            builder.equals(removeApostrophes(val));
+        if (isApostrophed(val)) {
+            val = deEmbrace(val);
+            if (isParenthesized(val))
+                builder.equals(split(val));
+            else
+                builder.equals(val);
+        }
+        else if (isParenthesized(val))
+            builder.equals(split(val));
         else if (isValue(val))
             builder.equals(val);
         else

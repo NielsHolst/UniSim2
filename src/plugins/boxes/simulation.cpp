@@ -68,7 +68,7 @@ void Simulation::run() {
             dialog().information("reset...");
             resetFamily();
             dialog().information("update...");
-            for (step = 0; step < steps; ++step) {
+            for (step = 1; step <= steps; ++step) {
                 show(time);
                 updateFamily();
             }

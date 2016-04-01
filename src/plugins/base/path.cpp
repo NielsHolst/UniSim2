@@ -18,18 +18,21 @@ QMap<QString, Path::Directive> Path::_directives;
 
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
-Path::Path(QString path, const QObject *context)
+Path::Path(const QObject *context)
     : _originalContext(context), _caller(0)
 {
     initDirectives();
-    // Accept double-colons as single-colons
-    _originalPaths << path.replace("::", ":");
+}
+
+Path::Path(QString path, const QObject *context)
+    : Path(context)
+{
+    _originalPaths << path.split("|", QString::SkipEmptyParts);
 }
 
 Path::Path(QStringList paths, const QObject *context)
-    : _originalContext(context), _caller(0)
+    : Path(context)
 {
-    initDirectives();
     _originalPaths = paths;
 }
 
@@ -134,6 +137,8 @@ QString Path::normaliseBox(QString s) {
 }
 
 QStringList Path::splitBox(QString s) {
+    // Accept double-colons as single-colons
+    s.replace("::", ":");
     // Split
     int colon = s.indexOf(':'),
         leftBrace = s.indexOf('{'),

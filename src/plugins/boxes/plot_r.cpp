@@ -13,6 +13,7 @@ PUBLISH(PlotR)
 PlotR::PlotR(QString name, QObject *parent)
     : Box(name, parent)
 {
+    Input(ports);
     Input(layout).equals("merged");
     Input(ncol).equals(1);
     Input(nrow).equals(-1);
@@ -27,11 +28,25 @@ void PlotR::collectPorts() {
     Q_ASSERT(page);
     QString pageName = page->objectName(),
             plotName = objectName();
-    // Loop through all tracked ports and pick those with matching page and plot name
+    // Loop through all tracked ports and capture those with matching page and plot name
     for (Port *port : Port::trackedPorts()) {
         bool showInThisPlot = (port->page() == pageName && port->plot() == plotName);
         if (showInThisPlot)
             _ports << port;
+    }
+    // Additional ports listed as input for this plot
+    for (QString portName : ports) {
+        QVector<Port*> trackedPorts = Path(portName).resolveMany<Port>();
+        if (trackedPorts.isEmpty())
+            ThrowException("Port not found").value(portName);
+        // Only add ports not already captured
+        for (Port *port : trackedPorts) {
+            if (_ports.contains(port))
+                continue;
+            port->page(page->objectName());
+            port->plot(objectName());
+            _ports << port;
+        }
     }
 }
 
@@ -52,6 +67,8 @@ inline QString apostrophed(QString s) {
 }
 
 QString PlotR::toScript() {
+    if (_ports.isEmpty())
+        return QString();
     QStringList portLabels;
     QString xLabel = apostrophed(xPortLabel());
     for (Port *port : _ports) {

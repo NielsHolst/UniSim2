@@ -25,7 +25,7 @@ PUBLISH(VapourFluxSum)
 VapourFluxSum::VapourFluxSum(QString name, QObject *parent)
     : VapourFluxSumBase(name, parent)
 {
-    Input(toAdd).equals("()");
+    Input(toAdd);
 }
 
 QList<VapourFluxBase*> VapourFluxSum::fluxes() {
@@ -37,9 +37,8 @@ QList<VapourFluxBase*> VapourFluxSum::childFluxes() {
 }
 
 QList<VapourFluxBase*> VapourFluxSum::referredFluxes() {
-    QStringList modelNames = decodeSimpleList(toAdd, this);
     QList<VapourFluxBase*> models;
-    for (auto modelName : modelNames) {
+    for (auto modelName : toAdd) {
         auto flux = Path(modelName).resolveOne<VapourFluxBase>(this);
         models << flux;
     }

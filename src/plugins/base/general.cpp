@@ -47,6 +47,13 @@ QString fullName(const QObject *object) {
 }
 
 QStringList split(QString s, QObject *context) {
+    // Remove embracing parentheses
+    s = s.trimmed();
+    if (s.left(1) == "(" && s.right(1) == ")") {
+        int n = s.size();
+        s = s.left(n-1).right(n-2);
+    }
+    // Split
     QStringList list;
     QString item;
     bool insideAp{false};
@@ -82,33 +89,38 @@ QStringList split(const char *s, QObject *context) {
     return split(QString(s), context);
 }
 
-namespace {
-    void chopParentheses(QString &s, QObject *context) {
-        if (s.left(1) != "(")
-            ThrowException("Value list miss left parenthesis").value(s).context(context);
-        s.remove(0, 1);
-
-        if (s.right(1) != ")")
-            ThrowException("Value list miss right parenthesis").value(s).context(context);
-
-        s.chop(1);
-        s = s.simplified();
-    }
+bool isAmpersanded(QString s) {
+    return s.startsWith("&");
 }
 
-//! Parses a simple list "(A B C)"
-QStringList decodeSimpleList(QString parenthesizedList, QObject *context) {
-    QString s = parenthesizedList.simplified();
-    if (s.size() == 0)
-        return QStringList();
-    if (s[0] != '(') {
-        if (s.endsWith(')'))
-            ThrowException("Value list misses left parenthesis").value(parenthesizedList).context(context);
+QString removeAmpersand(QString s) {
+    int n = s.size();
+    return s.mid(1, n-1);
+}
+
+bool isApostrophed(QString s) {
+    if (s.startsWith("\"")) {
+        if (s.endsWith("\""))
+            return true;
         else
-            return QStringList() << s;
+            ThrowException("Unmatched apostrophe in string").value(s);
     }
-    chopParentheses(s, context);
-    return s.split(" ", QString::SkipEmptyParts);
+    return false;
+}
+
+bool isParenthesized(QString s) {
+    if (s.startsWith("(")) {
+        if (s.endsWith(")"))
+            return true;
+        else
+            ThrowException("Unmatched parenthesis in string").value(s);
+    }
+    return false;
+}
+
+QString deEmbrace(QString s) {
+    int n = s.size();
+    return s.mid(1, n-2);
 }
 
 QString locateFile(QDir baseDir, QDir specificDir, QString filePath) {

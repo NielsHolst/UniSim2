@@ -19,6 +19,7 @@ public:
     QString toScript();
 private:
     // Inputs
+    QVector<QString> ports;
     QString layout;
     int ncol, nrow;
     // Data

@@ -30,7 +30,7 @@ test_boxes.depends = base
 #test.depends = command
 #test.depends = savanna
 #test.depends = vg
-#test.depends = test_boxes
+test.depends = test_boxes
 
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim

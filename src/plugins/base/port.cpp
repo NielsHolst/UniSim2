@@ -30,6 +30,14 @@ Port::Port(QString name, QObject *parent, bool orphan)
 
 // Configure
 
+Port& Port::equals(const char *value) {
+    return equals(QString(value));
+}
+
+Port& Port::equals(QStringList value) {
+    return equals(value.toVector());
+}
+
 Port& Port::imports(QString pathToPort) {
     _importPath = pathToPort;
     return *this;

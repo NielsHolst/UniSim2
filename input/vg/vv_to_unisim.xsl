@@ -14,7 +14,7 @@
 
 <!-- Simulation period used when test-mode > 0 -->
 <xsl:variable name="BeginDate" select="'2001-01-01'"/>
-<xsl:variable name="EndDate" select="'2001-01-10'"/>
+<xsl:variable name="EndDate" select="'2001-12-31'"/>
 
 <!-- Parameters missing in DVV Online must be set here -->
 <xsl:variable name="EnergyScreenOption" select="1"/>  		<!-- 1: EnergyBalanc or 2: OutsideLight --> 
@@ -322,6 +322,7 @@
 </xsl:template>
 
 <xsl:template name="crop-layer">
+	<xsl:param name="layer"/>
 	<box name="windSpeed" class="vg::LeafWindSpeed">
 		<port name="k" value="0.6"/>
 	</box>
@@ -329,7 +330,33 @@
 		<xsl:with-param name="modelName">rs</xsl:with-param>
 	</xsl:call-template>
 	<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
-	<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed"/>
+	<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed">
+		<port name="lightAbsorbed">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'LightAbsorbed')"/>
+			</xsl:attribute>
+		</port>
+		<port name="growthLightLwAbsorbed">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'GrowthLightLwAbsorbed')"/>
+			</xsl:attribute>
+		</port>
+		<port name="floorLwAbsorbed">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'FloorLwAbsorbed')"/>
+			</xsl:attribute>
+		</port>
+		<port name="shelterLoss">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'ShelterLoss')"/>
+			</xsl:attribute>
+		</port>
+		<port name="heatingAbsorbed">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'HeatingAbsorbed')"/>
+			</xsl:attribute>
+		</port>
+	</box>
 	<box name="transpiration" class="vg::LeafTranspiration"/>
 	<!--
 	<box name="condensation">
@@ -343,7 +370,13 @@
 		</box>
 	</box>
 	-->
-	<box name="temperature" class="vg::LeafTemperature"/>
+	<box name="temperature" class="vg::LeafTemperature">
+		<port name="value">
+			<xsl:attribute name="label">
+				<xsl:value-of select="concat($layer, 'Temperature')"/>
+			</xsl:attribute>
+		</port>
+	</box>
 	<box name="photosynthesis" class="vg::LeafPhotosynthesis">
 		<box name="lightResponse" class="vg::LeafLightResponse"/>	
 	</box>
@@ -418,16 +451,6 @@
 		<port name="timeStep" ref="simulationTimeInterval[timeStep]"/>
 		<port name="timeUnit" ref="simulationTimeInterval[timeUnit]"/>
 		<port name="sample" value="12"/>
-<!--	<port name="sample">
-			<xsl:choose>
-				<xsl:when test="string-length($simTimeStep)=0 or string-length($simTimeStep)=0">
-					<xsl:attribute name="value" select="12"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="value" select="$outTimeStep div $simTimeStep"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</port> -->
 		<port name="latitude">
 			<xsl:attribute name="value" select="JobDataSet/Latitude"/>
 		</port>
@@ -447,9 +470,9 @@
 				<xsl:value-of select="$OutdoorsCo2"/>
 			</xsl:attribute>
 		</port>
-		<port name="windSpeed"  page="climate" plot="co2"/>
-		<port name="rh"  page="climate" plot="humidity"/>
-		<port name="ah"  page="climate" plot="humidity"/>
+		<port name="windSpeed" label="outdoorsWindSpeed"/>
+		<port name="rh" label="outdoorsRh"/>
+		<port name="ah" label="outdoorsAh"/>
 		<box name="records" class="boxes::Records">
 			<port name="fileName" value=".../input/sel_dk.txt"/>
 		</box>
@@ -546,8 +569,10 @@
 	
 	<box name="indoors">
 		<box name="given">
-			<box name="airflux" class="AirFluxGiven">
+			<box name="airFlux" class="AirFluxGiven">
+				<port name="value" label="givenAirFluxTotal"/>
 				<box name="infiltration" class="vg::AirFluxInfiltration">
+					<port name="value" label="givenAirFluxInfiltration"/>
 					<port name="leakage">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$Leakage"/>
@@ -556,6 +581,7 @@
 				</box>
 				
 				<box name="crackVentilation" class="vg::PidControlElement">
+					<port name="value" label="givenAirFluxCrack"/>
 					<port name="signal" ref="./target[signal]"/>
 					<port name="Kprop" value="0.1"/>
 					<box name="target" class="vg::ProportionalSignal">
@@ -585,8 +611,10 @@
 					</box>
 				</box>
 				
-				<box name="gravitation" class="AirFluxGravitation"/>
-			</box> <!-- airflux -->
+				<box name="gravitation" class="AirFluxGravitation">
+					<port name="value" label="givenAirFluxGravitation"/>
+				</box>
+			</box> <!-- airFlux -->
 
 			<box name="vapourFlux" class="vg::VapourFluxSum"> 
 				<box name="transpiration" class="vg::VapourFluxTranspiration"/>
@@ -599,7 +627,7 @@
 					<port name="surfaceTemperature" ref="energyFlux/shelter[screensTemperature]"/>
 				</box>
 				<box name="airFluxOutdoors"  class="vg::VapourFluxAir">
-					<port name="airFlux" ref="given/airflux[value]"/>
+					<port name="airFlux" ref="given/airFlux[value]"/>
 				</box>
 			</box>
 			
@@ -614,17 +642,14 @@
 					<port name="vapourFlux" ref="../../vapourFlux/condensationScreens[vapourFlux]"/>
 				</box>
 				<box name="airFlux" class="vg::EnergyFluxAir">
-					<port name="airFlux" ref="given/airflux[value]"/>
+					<port name="airFlux" ref="given/airFlux[value]"/>
 				</box>
 				<box name="growthLights" class="vg::PidControlElement">
 					<port name="Kprop" value="0.5"/>
 					<port name="signal" ref="./growthLights[value]"/>
 					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
 				</box>
-				<box name="shelter" class="vg::EnergyFluxShelters">
-					<port name="coverTemperature" page="climate" plot="temperature"/>
-					<port name="screensTemperature" page="climate" plot="temperature"/>
-				</box>
+				<box name="shelter" class="vg::EnergyFluxShelters"/>
 				<box name="floor" class="vg::EnergyFluxFloor"> 
 					<box name="radiationAbsorbed" class="vg::FloorRadiationAbsorbed"/>
 					<port name="Uindoors">
@@ -642,7 +667,7 @@
 							<xsl:value-of select="$FloorHeatCapacity"/>
 						</xsl:attribute>
 					</port>
-					<port name="temperature" page="climate" plot="temperature"/>
+					<port name="temperature" label="floorTemperature"/>
 				</box>
 				
 				<box name="transpiration" class="vg::EnergyFluxTranspiration"/> 
@@ -660,6 +685,7 @@
 					</box>
 					<box name="demand" class="vg::EnergyFluxHeatingDemand"/>
 					<box name="supply" class="vg::PidControlElement">
+						<port name="value" label="heatingSupply"/>
 						<port name="Kprop" value="0.6"/>
 						<port name="Kint" value="0.01"/>
 						<port name="minimum" ref="../minSupply[value]"/>
@@ -677,16 +703,23 @@
 				</box>
 
 				<box name="cooling"> 
-					<box name="demand" class="vg::EnergyFluxCoolingDemand"/>
+					<box name="demand" class="vg::EnergyFluxCoolingDemand">
+						<port name="value" label="energyFluxCoolingDemand"/>
+					</box>
 					<box name="airSupplyMax" class="vg::AirFluxCoolingSupplyMax">
+						<port name="value" label="airFluxSupplyMaxTotal"/>
 						<box name="byWind" class="vg::VentilationByWind">
+							<port name="value" label="airFluxSupplyMaxWind"/>
 							<port name="baseRate" value="10"/>
 						</box>
 						<box name="byTemp" class="vg::VentilationByTemp">
+							<port name="value" label="airFluxSupplyMaxThermal"/>
 							<port name="dischargeCoefficient" value="0.3"/>
 						</box>
 					</box>
 					<box name="supply" class="vg::PidControlElement">
+						<port name="value" label="energyFluxCoolingSupply"/>
+						<port name="slope" label="energyFluxCoolingSupplySlope"/>
 						<port name="Kprop" value="0.5"/>
 						<port name="maximum" value="0"/>
 						<port name="maxSlope" value="1"/>
@@ -700,7 +733,9 @@
 			</box> <!-- energyFlux -->
 
 			<box name="cooling">
-				<box name="airFlux" class="vg::AirFluxCoolingSupply"/>
+				<box name="airFlux" class="vg::AirFluxCoolingSupply">
+					<port name="value" label="airFluxSupply"/>
+				</box>
 				<box name="vapourFlux" class="vg::VapourFluxAir">
 					<port name="airFlux" ref="cooling/airFlux[value]"/>
 				</box>
@@ -712,6 +747,7 @@
 		
 		<box name="total">
 			<box name="airFlux" class="vg::Sum">
+				<port name="value" label="airFluxTotal"/>
 				<port name="inputs" value="(given/airFlux[value] cooling/airFlux[value])"/>
 			</box>
 			<box name="vapourFlux" class="vg::VapourFluxSum">
@@ -730,17 +766,17 @@
 				</xsl:attribute>
 			</port> 
 			<port name="energyFlux" ref="total/energyFlux[value]"/>
-			<port name="value" page="climate" plot="temperature"/>
+			<port name="value" label="indoorsTemperature"/>
 		</box>
 		<box name="humidity" class="vg::IndoorsHumidity">
-			<port name="rh" page="climate" plot="humidity"/>
-			<port name="ah" page="climate" plot="humidity"/>
+			<port name="rh" label="indoorsRh"/>
+			<port name="ah" label="indoorsAh"/>
 		</box>
 		<box name="co2" class="vg::IndoorsCo2">
-			<port name="value"  page="climate" plot="co2"/>
+			<port name="value" label="indoorsCo2"/>
 		</box>
 		<box name="windSpeed" class="vg::IndoorsWindSpeed">
-			<port name="value"  page="climate" plot="co2"/>
+			<port name="value" label="indoorsWindSpeed"/>
 		</box>
 	</box> <!-- indoors -->
 
@@ -761,6 +797,7 @@
 			<!-- Day/Night setpoints not implemented in MatLab nor UniSim model -->
 			<!-- DeltaX setpoint not implemented in UniSim model -->
 			<box name="maximumRh" class="vg::SignalCollection">
+				<port name="signal" label="setpointMaxRh"/>
 				<port name="rule" value="min"/>
 				<port name="signalReset" value="100"/>
 				<xsl:for-each select="//CultureStep/Setpoints/Setpoint[ParameterId='16']/SetpointTimes//SetpointTime">
@@ -782,6 +819,7 @@
 		
 		<box name="temperature">
 			<box name="ventilation" class="vg::PidControlElement">
+				<port name="value" label="setpointVentilation"/>
 				<port name="initState" ref="./target[signalReset]"/>
 				<port name="signal" ref="./target[signal]"/>
 				<port name="Kprop" value="0.1"/>
@@ -857,6 +895,7 @@
 			<!-- Day/Night setpoints not implemented in MatLab nor UniSim model -->
 			<!-- spTheatmax to avoid cold-fall from screens not implemented in MatLab nor UniSim model-->
 			<box name="heating" class="vg::PidControlElement">
+				<port name="value" label="setpointHeating"/>
 				<port name="initState" ref="./target[signalReset]"/>
 				<port name="signal" ref="./target[signal]"/>
 				<port name="Kprop" value="0.1"/>
@@ -1432,21 +1471,27 @@
 				<port name="wGaussUpperside"  value="0.2778"/>
 				<port name="xGaussLowerside"  value="0.8873"/>
 				<port name="wGaussLowerside"  value="0.2778"/>
-				<xsl:call-template name="crop-layer"/>
+				<xsl:call-template name="crop-layer">
+					<xsl:with-param name="layer">top</xsl:with-param>
+				</xsl:call-template>
 			</box>
 			<box name="middle" class="vg::LeafLayer">
 				<port name="xGaussUpperside"  value="0.5"/>
 				<port name="wGaussUpperside"  value="0.4444"/>
 				<port name="xGaussLowerside"  value="0.5"/>
 				<port name="wGaussLowerside"  value="0.4444"/>
-				<xsl:call-template name="crop-layer"/>
+				<xsl:call-template name="crop-layer">
+					<xsl:with-param name="layer">middle</xsl:with-param>
+				</xsl:call-template>
 			</box>
 			<box name="bottom" class="vg::LeafLayer">
 				<port name="xGaussUpperside"  value="0.8873"/>
 				<port name="wGaussUpperside"  value="0.2778"/>
 				<port name="xGaussLowerside"  value="0.1127"/>
 				<port name="wGaussLowerside"  value="0.2778"/>
-				<xsl:call-template name="crop-layer"/>
+				<xsl:call-template name="crop-layer">
+					<xsl:with-param name="layer">bottom</xsl:with-param>
+				</xsl:call-template>
 			</box>
 		</box>
 		
@@ -1485,6 +1530,7 @@
 
 		<box name="growth" class="vg::CropGrowth">
 			<box name="Pg" class="vg::Sum">
+				<port name="value" label="assimilationRate"/>
 				<port name="inputs"  value="(layers/top/photosynthesis[Pg] layers/middle/photosynthesis[Pg] layers/bottom/photosynthesis[Pg])"/>
 			</box>
 		</box>
@@ -1498,15 +1544,118 @@
 	</box> <!-- crop -->
 
 	<box name="budget" class="vg::Budget"/>
-
 	<box class="OutputR">
-		<port name="xAxis" ref="calendar[date]"/>
+		<port name="xAxis" ref="calendar[dateTime]"/>
 		<port name="layout" value="facetted"/>
 		<box name="climate" class="PageR">
 			<port name="ncol" value="5"/>
-			<box name="co2" class="PlotR"/>
-			<box name="humidity" class="PlotR"/>
-			<box name="temperature" class="PlotR"/>
+			<box name="co2" class="PlotR">
+				<port name="ports" value="(outdoors[windSpeed] indoors/windSpeed[value] indoors/co2[value])"/>
+			</box>
+			<box name="humidity" class="PlotR">
+				<port name="ports" value="(outdoors[rh] indoors/humidity[rh] outdoors[ah] indoors/humidity[ah])"/>
+			</box>
+			<box name="temperature" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value] 
+											given/energyFlux/shelter[coverTemperature] 
+											given/energyFlux/shelter[screensTemperature] energyFlux/floor[temperature])"/>
+			</box>
+			<box name="temperatureCanopy" class="PlotR">
+				<port name="ports" value="layers/*/temperature[value]"/> 
+			</box>
+			<box name="lightAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[lightAbsorbed]"/> 
+			</box>
+			<box name="growthLightLwAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[growthLightLwAbsorbed]"/> 
+			</box>
+			<box name="floorLwAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[floorLwAbsorbed]"/> 
+			</box>
+			<box name="shelterLoss" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[shelterLoss]"/> 
+			</box>
+			<box name="heatingAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[heatingAbsorbed]"/> 
+			</box>
+		</box>
+		<box name="controlled" class="PageR">
+			<port name="ncol" value="3"/>
+			<box name="airFlux" class="PlotR">
+				<port name="ports" value="(given/airFlux[value] given/airFlux/infiltration[value] given/airFlux/crackVentilation[value] given/airFlux/gravitation[value])"/>
+			</box>
+			<box name="airCooling" class="PlotR">
+				<port name="ports" value="(cooling/airSupplyMax[value] cooling/airSupplyMax/byWind[value] cooling/airSupplyMax/byTemp[value])"/>
+			</box>
+			<box name="coolingDemandSupply" class="PlotR">
+				<port name="ports" value="(energyFlux/cooling/demand[value] energyFlux/cooling/supply[value] cooling/supply[slope] cooling/airFlux[value])"/>
+			</box>
+			<box name="setpoints" class="PlotR">
+				<port name="ports" value="(setpoints/temperature/heating[value] setpoints/temperature/ventilation[value] setpoints/humidity/maximumRh[signal] heating/supply[value])"/>
+			</box>
+			<box name="status" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value] indoors/humidity[rh] indoors/co2[value] indoors/total/airFlux[value])"/>
+			</box>
+			<box name="pipes" class="PlotR">
+				<port name="ports" value="pipes/*[temperature]"/>
+			</box>
+		</box>
+		<box name="checkPipes" class="PageR">
+			<port name="ncol" value="1"/>
+			<box name="pipe1" class="PlotR">
+				<port name="ports" value="(pipes/pipe1[nextTemperatureMin] pipes/pipe1[temperature] pipes/pipe1[nextTemperatureMax])"/>
+			</box>
+			<box name="pipe2" class="PlotR">
+				<port name="ports" value="(pipes/pipe2[nextTemperatureMin] pipes/pipe2[temperature] pipes/pipe2[nextTemperatureMax])"/>
+			</box>
+		</box>
+		<box name="production" class="PageR">
+			<port name="ncol" value="2"/>
+			<box name="heating" class="PlotR">
+				<port name="ports" value="(budget[heatingEnergyFlux] budget[heatingEnergyTotal] indoors/temperature[value])"/>
+			</box>
+			<box name="growthLights" class="PlotR">
+				<port name="ports" value="(budget[growthLightsEnergyFlux] growthLights[parEmission] budget[growthLightsEnergyTotal] )"/>
+			</box>
+			<box name="co2" class="PlotR">
+				<port name="ports" value="(budget[co2Flux] budget[co2Total] indoors/co2[value])"/>
+			</box>
+			<box name="crop" class="PlotR">
+				<port name="ports" value="(crop/growth/Pg[value] crop/mass[fruitGrowthRate] crop/yield[freshWeight])"/>
+			</box>
+		</box>
+		<box name="photosynthesis" class="PageR">
+			<port name="ncol" value="5"/>
+			<box name="Pn" class="PlotR">
+				<port name="ports" value="*/photosynthesis[Pn]"/>
+			</box>
+			<box name="Pg" class="PlotR">
+				<port name="ports" value="*/photosynthesis[Pg]"/>
+			</box>
+			<box name="rbH2o" class="PlotR">
+				<port name="ports" value="*/rb[rbH2O]"/>
+			</box>
+			<box name="rbCo2" class="PlotR">
+				<port name="ports" value="*/rb[rbCo2]"/>
+			</box>
+			<box name="rsH2o" class="PlotR">
+				<port name="ports" value="*/rs[rsH2O]"/>
+			</box>
+			<box name="rsCo2" class="PlotR">
+				<port name="ports" value="*/rs[rsCo2]"/>
+			</box>
+			<box name="LUE" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[LUE]"/>
+			</box>
+			<box name="Pnmax" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[Pnmax]"/>
+			</box>
+			<box name="Pgmax" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[Pgmax]"/>
+			</box>
+			<box name="climate" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value] indoors/humidity[rh] indoors/co2[value] indoors/total/airFlux[value])"/>
+			</box>
 		</box>
 	</box>
 	

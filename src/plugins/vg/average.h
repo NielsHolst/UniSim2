@@ -22,7 +22,7 @@ public:
     void initialize();
     void update();
 private:
-    QString inputs;
+    QVector<QString> inputs;
     double value;
     QVector<base::Port*> ports;
 };

@@ -87,6 +87,20 @@ BoxBuilder& BoxBuilder::transform(PortTransform value) {
     return attribute("transform", convert<QString>(value));
 }
 
+// Set value
+
+BoxBuilder& BoxBuilder::equals(QString value) {
+    // Handle a parenthesized string as a string vector
+    if (isParenthesized(value))
+        return equals( base::split(deEmbrace(value)).toVector() );
+    // Or else, handle simply as a string
+    BOXBUILDER_EQUALS;
+}
+
+BoxBuilder& BoxBuilder::equals(const char *value) {
+    return equals(QString(value));
+}
+
 // State
 
 const Box* BoxBuilder::currentBox() const {

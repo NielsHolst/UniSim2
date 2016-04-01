@@ -9,6 +9,7 @@ class TestBox : public QObject
 private slots:
     void testCreate();
     void testNoRun();
+    void testVectorInput();
 };
 
 DECLARE_TEST(TestBox)

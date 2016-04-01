@@ -24,12 +24,9 @@ Sum::Sum(QString name, QObject *parent)
 }
 
 void Sum::initialize() {
-    QStringList items = decodeSimpleList(inputs, this);
-    int n = items.size();
     ports.clear();
-    for (int i = 0; i < n; ++i) {
-        ports << Path(items[i]).resolveMany<Port>();
-    }
+    for (QString input : inputs)
+        ports << Path(input).resolveMany<Port>();
 }
 
 void Sum::update() {

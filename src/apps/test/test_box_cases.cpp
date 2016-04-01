@@ -97,5 +97,18 @@ namespace TestBoxCases {
         return builder.content();
     }
 
+    Box* case4() {
+        BoxBuilder builder;
+        builder.
+            box("Simulation").name("test_box_cases_4").
+                port("steps").equals(2).
+                box("test_boxes::VectorInput").name("A").
+                    port("numbers1").equals("7").
+                    port("numbers2").equals("(7 9 13)").
+                endbox().
+            endbox();
+        return builder.content();
+    }
+
 } // namespace
 
