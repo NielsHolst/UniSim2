@@ -3,7 +3,6 @@
 #include <QSet>
 #include <base/box.h>
 #include <base/command.h>
-#include <base/dialog_stub.h>
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/port.h>
@@ -16,7 +15,6 @@ using namespace base;
 void TestTrack::testDefault() {
     bool excepted{false};
     Environment &env(environment());
-    DialogStub *dialog = new DialogStub(0);
     try {
         env.state.root = TestBoxCases::case3a();
         env.state.root->run();
@@ -26,7 +24,6 @@ void TestTrack::testDefault() {
         std::cout << qPrintable(ex.what()) << "\n";
         excepted = true;
     }
-    delete dialog;
     QVERIFY(!excepted);
 }
 

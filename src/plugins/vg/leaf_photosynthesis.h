@@ -7,7 +7,7 @@
 #ifndef VG_LEAF_PHOTOSYNTHESIS_H
 #define VG_LEAF_PHOTOSYNTHESIS_H
 
-#include <Qpair>
+#include <QPair>
 #include <base/box.h>
 
 namespace vg {

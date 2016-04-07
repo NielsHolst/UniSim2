@@ -33,6 +33,7 @@ HEADERS +=  \
     box_reader_xml.h \
     box_output.h \
     box_step.h \
+    circular_buffer.h \
     command.h  \
     command_help.h  \
     convert.h \
@@ -49,6 +50,7 @@ HEADERS +=  \
     object_pool.h \
     path.h \
     port.h \
+    port_buffer.h \
     port_transform.h \
     port_type.h \
     product_base.h \
@@ -88,6 +90,7 @@ SOURCES +=  \
     object_pool.cpp \
     path.cpp \
     port.cpp \
+    port_buffer.cpp \
     port_transform.cpp \
     port_type.cpp \
     product_base.cpp \

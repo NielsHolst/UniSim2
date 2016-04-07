@@ -11,6 +11,17 @@ private slots:
     void testDate();
     void testIntVector();
     void testDateVector();
+
+    void testDeduceBool();
+    void testDeduceChar();
+    void testDeduceInt();
+    void testDeduceDouble();
+    void testDeduceDate();
+    void testDeduceDateTime();
+    void testDeduceTime();
+    void testDeduceQString();
+
+//    void testCreateBool();
 };
 
 DECLARE_TEST(TestPortType)

@@ -90,10 +90,11 @@ void TestSavanna::testNewPortSum() {
     try {
         savanna = TestBoxCases::case2();
         Box *lion = Path("lion",savanna).resolveOne<Box>(this);
-        Port *port = lion->port("sum2");
-        QCOMPARE(port->value<int>(), 0);
         savanna->run();
-        QCOMPARE(port->value<int>(), 32);
+        Port *sum = lion->port("sum"),
+             *sum2 = lion->port("sum2");
+        QCOMPARE(sum->value<int>(), 77);
+        QCOMPARE(sum2->value<int>(), 32);
         delete savanna;
     }
     catch (Exception &ex) {

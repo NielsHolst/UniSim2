@@ -102,6 +102,10 @@ template<> QString convert(QString source) {
     return source;
 }
 
+template<> QStringList convert(QString source) {
+    return split(source);
+}
+
 
 template<> QDate convert(QString source) {
     QString s = source.simplified();
@@ -152,9 +156,36 @@ template<> QTime convert(QString source) {
     return time;
 }
 
-template<> QVector<int> convert(QString source) {
-    ThrowException("Here we are: " + source);
+//
+// Conversions from String to vector
+//
+
+#define CONVERT_STRING_TO_VECTOR(X) \
+template<> QVector<X> convert(QString source) { \
+    QStringList list = split(source); \
+    return convert<X, QVector>(list); \
 }
+
+template<> QVector<bool> convert(QString source) {
+    QStringList list = split(source);
+    return convert<bool, QVector>(list  );
+}
+
+//CONVERT_STRING_TO_VECTOR(bool)
+CONVERT_STRING_TO_VECTOR(char)
+CONVERT_STRING_TO_VECTOR(int)
+CONVERT_STRING_TO_VECTOR(long int)
+CONVERT_STRING_TO_VECTOR(long long int)
+CONVERT_STRING_TO_VECTOR(float)
+CONVERT_STRING_TO_VECTOR(double)
+CONVERT_STRING_TO_VECTOR(long double)
+CONVERT_STRING_TO_VECTOR(QDate)
+CONVERT_STRING_TO_VECTOR(QDateTime)
+CONVERT_STRING_TO_VECTOR(QTime)
+
+//template<> QVector<QString> convert(QString source) {
+//    return split(source).toVector();
+//}
 
 //
 // Conversions from QDate
@@ -211,6 +242,15 @@ template<> QStringList convert(QVector<QDate> source)           { VECTOR_CONVERT
 template<> QStringList convert(QVector<QTime> source)           { VECTOR_CONVERT_STRINGLIST(QTime); }
 template<> QStringList convert(QVector<QDateTime> source)       { VECTOR_CONVERT_STRINGLIST(QDateTime); }
 
+//
+// Vector conversions from QStringList
+//
+
+
+//
+// Vector conversions to QString
+//
+
 #define VECTOR_CONVERT_STRING \
 return "(" + convert<QStringList>(source).join(" ") + ")"
 
@@ -226,4 +266,5 @@ template<> QString convert(QVector<QString> source)         { VECTOR_CONVERT_STR
 template<> QString convert(QVector<QDate> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QTime> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QDateTime> source)       { VECTOR_CONVERT_STRING; }
+
 } // namespace

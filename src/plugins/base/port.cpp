@@ -147,14 +147,22 @@ void Port::copyFromImport() {
 
 
 void Port::assign(const QVector<Port*> &sources) {
-    PortTransform pt = convert<PortTransform>(transform());
+    PortTransform trans = convert<PortTransform>(transform());
+    // Create buffer for value if necessary
+    if (!_valuePtr) {
+        _valueType = sources.at(0)->type();
+        if (sources.size() > 1 && trans != Identity)
+            _valueType = asVector(_valueType);
+        _valuePtr = portBuffer().createBuffer(_valueType);
+    }
+    // Now assign as scalar or vector
     if (sources.size() == 1) {
         const Port *source = sources.at(0);
-        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, pt, this);
+        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, trans, this);
     }
     else {
         const void *sourceVector = vectorize(_importType, sources);
-        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, pt, this);
+        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, trans, this);
     }
 }
 

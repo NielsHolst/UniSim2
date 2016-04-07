@@ -57,7 +57,7 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
 {
     qi::rule<Iterator, ascii::space_type, Node()> node;
     qi::rule<Iterator, ascii::space_type, std::string()>
-            class_name, object_name, name, value, unquoted_value, quoted_value;
+            class_name, object_name, name, value, unquoted_value, quoted_value, list_value;
     qi::rule<Iterator, ascii::space_type, OptionalValue()> optional_value;
     qi::rule<Iterator, ascii::space_type, NameValuePair()> name_value_pair;
     qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> attributes;
@@ -75,13 +75,15 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         // a class name may be qualified by a namespace name
         class_name %= name >> -(char_(':') > char_(':') > name);
         object_name %= name;
-        // A value may be quoted or unquoted
-        value = (quoted_value | unquoted_value);
+        // A value may be quoted or unquoted, or a list of values
+        value = (quoted_value | unquoted_value | list_value);
         // A quoted value is a string of any characters, except apostrophes;
         // bracing apostrophes are kept in the string
-        quoted_value %= lexeme[char_('"') >> *(char_ - '"') >> char_('"')];
+        quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
         // An unquoted value is for numbers, dates, times and booleans
         unquoted_value %= lexeme[+(char_ - char_(" \t\n \"(){}"))];
+        // A list value is captured; keeping parentheses and everything inside
+        list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
         // A value may be optional
         optional_value %= value;
         // A name-value pair
@@ -105,6 +107,7 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         RULE_NAME(value);
         RULE_NAME(quoted_value);
         RULE_NAME(unquoted_value);
+        RULE_NAME(list_value);
         RULE_NAME(optional_value);
         RULE_NAME(name_value_pair);
         RULE_NAME(attributes);

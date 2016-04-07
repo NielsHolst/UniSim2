@@ -1,8 +1,9 @@
 #include <iostream>
 #include <boost/circular_buffer.hpp>
+#include <base/circular_buffer.h>
 #include "test_circle_buffer.h"
 
-void TestCircleBuffer::testIndices() {
+void TestCircleBuffer::testStdVersion() {
     // Create a circular buffer with a capacity for 3 integers.
     boost::circular_buffer<int> cb(3);
 
@@ -36,5 +37,44 @@ void TestCircleBuffer::testIndices() {
 
     std::cout << "\nB\n";
     for (auto it : cb) std::cout << it << "\n";
+}
 
+void TestCircleBuffer::testUniSimVersion() {
+    QVector<int> buffer;
+    base::CircularBuffer<int> cb(&buffer);
+
+    cb.resize(3);
+    QVERIFY(!cb.isFull());
+
+    cb.push(1);
+    QVERIFY(cb.head() == 1);
+    QVERIFY(cb.tail() == 1);
+    QVERIFY(!cb.isFull());
+
+    cb.push(2);
+    QVERIFY(cb.head() == 2);
+    QVERIFY(cb.tail() == 1);
+    QVERIFY(!cb.isFull());
+
+    cb.push(3);
+    QVERIFY(cb.head() == 3);
+    QVERIFY(cb.tail() == 1);
+    QVERIFY(cb.isFull());
+    QCOMPARE(buffer, QVector<int>() << 1 << 2 << 3);
+    QCOMPARE(cb.at(0), 3);
+    QCOMPARE(cb.at(2), 2);
+
+    cb.push(4);
+    QVERIFY(cb.head() == 4);
+    QVERIFY(cb.tail() == 2);
+    QVERIFY(cb.isFull());
+    QCOMPARE(buffer, QVector<int>() << 4 << 2 << 3);
+    QCOMPARE(cb.at(0), 4);
+    QCOMPARE(cb.at(1), 2);
+    QCOMPARE(cb.at(2), 3);
+
+    cb.push(5);
+    QCOMPARE(buffer, QVector<int>() << 4 << 5 << 3);
+    cb[0] = 7;
+    QCOMPARE(buffer, QVector<int>() << 4 << 7 << 3);
 }

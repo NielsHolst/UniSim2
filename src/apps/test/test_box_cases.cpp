@@ -7,17 +7,16 @@ using namespace base;
 
 namespace TestBoxCases {
 
-    QString Av1, Av3,A1v1;
-    int sum, sum2;
+    int sum2;
 
     Box* case1() {
         BoxBuilder builder;
         builder.
             box().name("A").
-                newPort("v1").data(&Av1).equals(QString("ape")).
-                newPort("v3").data(&Av3).equals("monkey").
+                newPort("v1").equals(QString("ape")).
+                newPort("v3").equals("monkey").
                 box().name("A1").
-                    newPort("v1").data(&A1v1).equals(100).
+                    newPort("v1").equals(100).
                     box().name("a").
                         newPort("v1").
                     endbox().
@@ -57,7 +56,7 @@ namespace TestBoxCases {
             box("Simulation").name("savanna").
                 port("steps").equals(2).
                 box().name("lion").
-                    newPort("sum").data(&sum).equals(77).page("").
+                    newPort("sum").equals(77).page("").
                     newPort("sum2").data(&sum2).imports("./*{Lion}[n]").page("").transform(Sum).
                     box("Lion").name("juvenile").
                         port("n").equals(25).

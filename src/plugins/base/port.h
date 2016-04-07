@@ -10,6 +10,7 @@
 #include "convert.h"
 #include "exception.h"
 #include "initialize.h"
+#include "port_buffer.h"
 #include "port_transform.h"
 #include "port_type.h"
 #include "vector.h"
@@ -84,6 +85,7 @@ public:
     bool hasImport() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
+    template <class T> void deducePortType(T value);
     static QVector<Port*> trackedPorts();
     static PortType commonType(const QVector<Port *> &ports);
 };
@@ -96,11 +98,26 @@ template <class T> Port& Port::data(T *valuePtr) {
     return *this;
 }
 
+// It the value type is unknown then it must be deduced from the value,
+// either from its value as such (if it is a string), or else from its type
+template <class T> void Port::deducePortType(T value) {
+    if (_valueType == Null) {
+        _valueType = (typeOf<T>() == String) ?
+                     base::deducePortType(convert<QString>(value)) : // Superflous conversion to QString to avoid compilation type conflict
+                     typeOf<T>();
+    }
+}
+
 template <class T> Port& Port::equals(T value)
 {
+    // Deduce the value type as necessary
+    deducePortType<T>(value);
+    // Create a buffer for the value if it does not exist
     if (_valuePtr == 0)
-        ThrowException("Cannot set value of non-existing port").context(this);
+        _valuePtr = portBuffer().createBuffer(_valueType);
+    // Import paths are cleared, since the port now has a fixed value
     _importPath.clear();
+    // Copy value to the buffer that _valuePtr points to
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, convert<PortTransform>(transform()));
     return *this;
 }

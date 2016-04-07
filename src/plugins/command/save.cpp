@@ -68,6 +68,7 @@ void save::writePlugins() {
 
 void save::writeClasses() {
     QSet<QString> names;
+    names << "Box";
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
         if (factory->id() != "command")
             names.unite( QSet<QString>::fromList(factory->inventory()) );

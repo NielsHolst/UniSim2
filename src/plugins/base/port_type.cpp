@@ -1,3 +1,6 @@
+#include <QList>
+#include <QVector>
+#include "convert.h"
 #include "exception.h"
 #include "port_type.h"
 
@@ -41,6 +44,30 @@ PortType asVector(PortType type) {
         ThrowException("Cannot convert 'Null' to vector type");
     int i(type);
     return (i%2 == 0) ? PortType(i+1) : type;
+}
+
+template<class T> inline bool isType(QString s) {
+    try {
+        convert<T>(s);
+        return true;
+    }
+    catch(Exception &) {
+    }
+    return false;
+}
+
+PortType deducePortType(QString s) {
+    if (isType<bool>(s)) return Bool;
+    if (isType<char>(s)) return Char;
+    if (isType<int>(s)) return Int;
+    if (isType<long int>(s)) return LongInt;
+    if (isType<long long int>(s)) return LongLongInt;
+    if (isType<double>(s)) return Double;
+    if (isType<long double>(s)) return LongDouble;
+    if (isType<QDate>(s)) return Date;
+    if (isType<QDateTime>(s)) return DateTime;
+    if (isType<QTime>(s)) return Time;
+    return String;
 }
 
 }

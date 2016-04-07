@@ -1,7 +1,6 @@
 #include <QDir>
 #include <QStringList>
 #include <base/command.h>
-#include <base/dialog_stub.h>
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include "test_command.h"
@@ -19,7 +18,6 @@ void TestCommand::testSetwdExecute() {
 //    cd->arguments(QStringList() << "cd" << QDir::rootPath());
     cd->arguments(QStringList() << "cd");
 
-    DialogStub *dialog = new DialogStub(0);
     try {
         cd->execute();
     }
@@ -28,6 +26,5 @@ void TestCommand::testSetwdExecute() {
     }
 //    QCOMPARE(dialog->getInformation(), QDir::rootPath());
     delete cd;
-    dialog->deleteLater();
 }
 

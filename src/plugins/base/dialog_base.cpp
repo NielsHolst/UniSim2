@@ -5,8 +5,7 @@ namespace base {
 DialogBase* DialogBase::_dialog = 0;
 
 DialogBase& dialog() {
-    if (!DialogBase::_dialog)
-        Q_ASSERT(DialogBase::_dialog);
+    Q_ASSERT(DialogBase::_dialog);
     return *DialogBase::_dialog;
 }
 

@@ -13,7 +13,7 @@
 		<port name="initialDateTime" ref="simulationTimeInterval[beginDateTime]"/>
 		<port name="timeStep" ref="simulationTimeInterval[timeStep]"/>
 		<port name="timeUnit" ref="simulationTimeInterval[timeUnit]"/>
-		<port name="sample" value="1"/>
+		<port name="sample" value="12"/>
 		<port name="latitude" value="55.5"/>
 		<port name="longitude" value="10.5"/>
 		<port name="timeZone" value="01"/>

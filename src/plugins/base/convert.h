@@ -8,6 +8,7 @@
 #include <QString>
 #include <QTime>
 #include "exception.h"
+#include "general.h"
 #include "port_type.h"
 
 using boost::numeric_cast;
@@ -120,6 +121,7 @@ template<class T> T convert(QString source) {
 template<> bool convert(QString source);
 template<> char convert(QString source);
 template<> QString convert(QString source);
+template<> QStringList convert(QString source);
 template<> QDate convert(QString source);
 template<> QDateTime convert(QString source);
 template<> QTime convert(QString source);
@@ -127,7 +129,19 @@ template<> QTime convert(QString source);
 //
 // Conversions from String to vector
 //
+
+template<> QVector<bool> convert(QString source);
+template<> QVector<char> convert(QString source);
 template<> QVector<int> convert(QString source);
+template<> QVector<long int> convert(QString source);
+template<> QVector<long long int> convert(QString source);
+template<> QVector<float> convert(QString source);
+template<> QVector<double> convert(QString source);
+template<> QVector<long double> convert(QString source);
+template<> QVector<QString> convert(QString source);
+template<> QVector<QDate> convert(QString source);
+template<> QVector<QDateTime> convert(QString source);
+template<> QVector<QTime> convert(QString source);
 
 //
 // Conversions from C string
@@ -213,6 +227,18 @@ template<> QStringList convert(QVector<QString> source);
 template<> QStringList convert(QVector<QDate> source);
 template<> QStringList convert(QVector<QTime> source);
 template<> QStringList convert(QVector<QDateTime> source);
+
+//
+// Vector conversions from QStringList
+//
+
+template<class T, template<class> class C> C<T> convert(QStringList list) {
+    C<T> result;
+    result.reserve(list.size());
+    for (QString s : list.toVector())
+        result << convert<T>(s);
+    return result;
+}
 
 //
 // Vector conversions to QString

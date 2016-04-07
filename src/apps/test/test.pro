@@ -23,6 +23,7 @@ HEADERS +=  \
     test_general_split.h \
     test_history.h \
     test_path.h \
+    test_port_buffer.h \
     test_port_type.h \
     test_port.h \
     test_savanna.h \
@@ -43,6 +44,7 @@ SOURCES +=  \
     test_general_split.cpp \
     test_history.cpp \
     test_path.cpp \
+    test_port_buffer.cpp \
     test_port_type.cpp \
     test_port.cpp \
     test_savanna.cpp \

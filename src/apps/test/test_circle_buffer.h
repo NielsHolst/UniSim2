@@ -7,7 +7,8 @@ class TestCircleBuffer : public QObject
 {
     Q_OBJECT
 private slots:
-    void testIndices();
+    void testStdVersion();
+    void testUniSimVersion();
 };
 
 DECLARE_TEST(TestCircleBuffer)

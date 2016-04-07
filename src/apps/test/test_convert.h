@@ -7,7 +7,8 @@ class TestConvert : public QObject
 {
     Q_OBJECT
 private slots:
-    void testFromStringList();
+    void testStringListFromString();
+    void testIntFromStringList();
 };
 
 DECLARE_TEST(TestConvert)

@@ -69,7 +69,6 @@ void Vector::reserve(int size) {
     if (_vectorPtr)
         erase();
     _vectorType = _parent->type();
-    Q_ASSERT(_vectorType != Null);
     switch(_vectorType) {
     CASE_RESERVE(bool, Bool, size)
     CASE_RESERVE(char, Char, size)

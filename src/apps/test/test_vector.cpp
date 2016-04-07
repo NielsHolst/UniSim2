@@ -2,7 +2,6 @@
 #include <base/assign.h>
 #include <base/box.h>
 #include <base/box_builder.h>
-#include <base/dialog_stub.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/port.h>
@@ -14,11 +13,9 @@ using std::unique_ptr;
 using namespace base;
 
 void TestVector::initTestCase() {
-    dialogStub = new DialogStub(0);
 }
 
 void TestVector::cleanupTestCase() {
-    dialogStub->deleteLater();
 }
 
 void TestVector::testWithBox() {
