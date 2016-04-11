@@ -1,6 +1,5 @@
 #include <iostream>
 #include <base/box.h>
-#include <base/dialog_stub.h>
 #include <base/general.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
@@ -9,14 +8,6 @@
 #include "test_savanna.h"
 
 using namespace base;
-
-void TestSavanna::initTestCase() {
-    dialogStub = new DialogStub(0);
-}
-
-void TestSavanna::cleanupTestCase() {
-    dialogStub->deleteLater();
-}
 
 void TestSavanna::testDirectCreate() {
     Box *lion = MegaFactory::create<Box>("Lion", "king", 0);

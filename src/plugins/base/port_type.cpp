@@ -46,6 +46,13 @@ PortType asVector(PortType type) {
     return (i%2 == 0) ? PortType(i+1) : type;
 }
 
+PortType asScalar(PortType type) {
+    if (type==Null)
+        ThrowException("Cannot convert 'Null' to scalar type");
+    int i(type);
+    return (i%2 == 1) ? PortType(i-1) : type;
+}
+
 template<class T> inline bool isType(QString s) {
     try {
         convert<T>(s);

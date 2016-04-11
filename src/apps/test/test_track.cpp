@@ -1,6 +1,4 @@
 #include <iostream>
-#include <QFile>
-#include <QSet>
 #include <base/box.h>
 #include <base/command.h>
 #include <base/environment.h>
@@ -12,34 +10,75 @@
 using namespace base;
 
 
-void TestTrack::testDefault() {
-    bool excepted{false};
-    Environment &env(environment());
-    try {
-        env.state.root = TestBoxCases::case3a();
-        env.state.root->run();
-        checkColumnNames();
-    }
-    catch (Exception &ex) {
-        std::cout << qPrintable(ex.what()) << "\n";
-        excepted = true;
-    }
-    QVERIFY(!excepted);
+void TestTrack::testScalar() {
+    run(TestBoxCases::case3a());
+    QSet<QString> expected;
+    expected << "step"
+             << "input2" << "input3" << "input4"
+             << "output1" << "output2" << "output3";
+    checkColumnNames(expected);
+    delete environment().state.root;
 }
 
-void TestTrack::checkColumnNames() {
+void TestTrack::testVector() {
+    run(TestBoxCases::case4());
+    QSet<QString> expected;
+    expected << "step"
+             << "numbers1"
+             << "numbers2_0" << "numbers2_1" << "numbers2_2";
+    checkColumnNames(expected);
+    checkColumnFormat(expected.size());
+    checkColumnData(expected.size());
+    delete environment().state.root;
+}
+
+void TestTrack::run(Box *simulation) {
+    Environment &env(environment());
+    try {
+        env.state.root = simulation;
+        env.state.root->run();
+    }
+    catch (Exception &ex) {
+        QString s = "Unexpected exception: " + ex.what();
+        QFAIL(qPrintable(s));
+    }
+}
+
+void TestTrack::openFile() {
     QString filePath = environment().state.latestOutputFilePath;
-    QFile file (filePath);
+    file.setFileName(filePath);
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     QVERIFY(fileOk);
+}
 
+void TestTrack::checkColumnNames(QSet<QString> expected) {
+    openFile();
     QString line = file.readLine().trimmed();
     QStringList names = line.split("\t");
-
-    QSet<QString> result, expected;
+    QSet<QString> columnNames;
     for (QString name : names)
-        result << name;
-    expected << "step" << "input2" << "input3" << "input4"
-                       << "output1" << "output2" << "output3";
-    QCOMPARE(result, expected);
+        columnNames << name;
+    file.close();
+    QCOMPARE(columnNames, expected);
+}
+
+void TestTrack::checkColumnFormat(int expected) {
+    openFile();
+    file.readLine();
+    QStringList items = QString(file.readLine().trimmed()).split("\t");
+    file.close();
+    QCOMPARE(items.size(), expected);
+}
+
+void TestTrack::checkColumnData(int expected) {
+    openFile();
+    file.readLine();
+    file.readLine();
+    for (int i = 0; i < 3; ++i) {
+        QStringList items = QString(file.readLine().trimmed()).split("\t");
+        QCOMPARE(items.size(), expected);
+    }
+    QString empty = file.readLine().trimmed();
+    file.close();
+    QVERIFY(empty.isEmpty());
 }

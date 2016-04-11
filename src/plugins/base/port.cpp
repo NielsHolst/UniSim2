@@ -203,6 +203,30 @@ bool Port::hasValue() const {
     return _valuePtr != 0;
 }
 
+#define CASE_VALUE_SIZE(X,Y) \
+    case Y##Vector: \
+        return reinterpret_cast<QVector<X>*>(_valuePtr)->size(); \
+        break
+
+int Port::valueSize() const {
+    switch (_valueType) {
+    CASE_VALUE_SIZE(bool, Bool);
+    CASE_VALUE_SIZE(char, Char);
+    CASE_VALUE_SIZE(int, Int);
+    CASE_VALUE_SIZE(long int, LongInt);
+    CASE_VALUE_SIZE(long long int, LongLongInt);
+    CASE_VALUE_SIZE(float, Float);
+    CASE_VALUE_SIZE(double, Double);
+    CASE_VALUE_SIZE(long double, LongDouble);
+    CASE_VALUE_SIZE(QString, String);
+    CASE_VALUE_SIZE(QDate, Date);
+    CASE_VALUE_SIZE(QDateTime, DateTime);
+    CASE_VALUE_SIZE(QTime, Time);
+    default:
+        return 1;
+    }
+}
+
 template <> const void* Port::valuePtr() const {
     return _valuePtr;
 }

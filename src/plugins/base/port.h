@@ -76,6 +76,7 @@ public:
     // Access
     Box *boxParent();
     bool hasValue() const;
+    int valueSize() const;
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
     const Vector* trackPtr() const;

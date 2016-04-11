@@ -10,7 +10,6 @@
 #include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
-#include "layout_r.h"
 #include "output_r.h"
 #include "page_r.h"
 #include "plot_r.h"
@@ -24,93 +23,19 @@ PUBLISH(OutputR)
 OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(xAxis).imports("/*[step]");
-    Input(layout).equals("merged");
-    Input(width).equals(14);
-    Input(height).equals(10);
     Input(clear).equals(true);
 }
 
-//
-// amend
-//
-
-namespace {
-    void copyPortValues(Box *destination, Box *source, QStringList excluding = QStringList()) {
-        QVector<Port*> sourcePorts = Path(".[*]", source).resolveMany<Port>();
-        for (Port *sourcePort : sourcePorts) {
-            QString portName = sourcePort->objectName();
-            if (excluding.contains(portName))
-                continue;
-            Port *destinationPort = destination->peakPort(portName);
-            if (destinationPort) {
-                if (destinationPort->hasImport())
-                    destinationPort->imports(sourcePort->importPath());
-                else
-                    destinationPort->equals(sourcePort->value<QString>());
-            }
-        }
-    }
-}
-
 void OutputR::amend() {
-    // Collect names of pages and plots attributed to tracked ports
-    QVector<Port*> trackedPorts = Port::trackedPorts();
-    QMap<QString, QSet<QString>> pagesWithPlots;
-    for (Port *port : trackedPorts) {
-        pagesWithPlots[port->page()] << port->plot();
+    // Create a page if none are present
+    _pages = Path("./*{PageR}", this).resolveMany<PageR>();
+    if (_pages.empty()) {
+        Box *page = MegaFactory::create<Box>("PageR", "", this);
+        page->amend();
     }
-    // Loop through pages
-    QMapIterator<QString, QSet<QString>> it(pagesWithPlots);
-    while (it.hasNext()) {
-        it.next();
-        // Find existing page by name, or else construct one
-        QString pageName = it.key();
-        Box *page = resolveMaybeOne<PageR>("./" + pageName);
-        bool amendPage = (!page);
-        if (!page)
-            page = MegaFactory::create<PageR>("PageR", pageName, this);
-        // Copy general output settings (i.e. port values) to the page
-        QStringList dontCopy;
-        dontCopy << "ncol" << "nrow";
-        copyPortValues(page, this, dontCopy);
-        // Loop through plots on page
-        QSet<QString> plotNames = it.value();
-        for (QString plotName : plotNames) {
-            // Find existing plot by name, or else construct one
-            Box *plot = page->resolveMaybeOne<PlotR>("./" + plotName);
-            if (!plot) {
-                plot = MegaFactory::create<PlotR>("PlotR", plotName, page);
-                plot->amend();
-            }
-            // Copy general page settings (i.e. port values) to the page
-            copyPortValues(plot, page, dontCopy);
-        }
-        if (amendPage)
-            page->amend();
-    }
-    // Make certain that x-axis is included in output text file
-    setTrackX();
 }
-
-void OutputR::setTrackX() {
-    Port *xPort = port("xAxis");
-    xPort->resolveImports();
-    QVector<Port*> importPorts = xPort->importPorts();
-    if (importPorts.size() != 1) {
-        QString msg{"Expected one x-axis, got '%1'"};
-        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
-    }
-    importPorts[0]->page("");
-}
-
-//
-// initialize
-//
 
 void OutputR::initialize() {
-    // Validate input
-    convert<LayoutR>(layout);
     // Find pages in this output
     _pages = Path("./*{PageR}", this).resolveMany<PageR>();
 }

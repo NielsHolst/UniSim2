@@ -1,4 +1,5 @@
 #include <QTextStream>
+#include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/publish.h>
 #include "layout_r.h"
@@ -15,16 +16,32 @@ PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(xAxis).imports("/*[step]");
-    Input(layout).equals("merged");
     Input(width).equals(14);
     Input(height).equals(10);
     Input(ncol).equals(-1);
     Input(nrow).equals(-1);
 }
 
+void PageR::amend() {
+    // Create a plot if none are present
+    _plots = Path("./*{PlotR}", this).resolveMany<PlotR>();
+    if (_plots.empty()) {
+        Box *plot = MegaFactory::create<Box>("PlotR", "", this);
+        plot->amend();
+    }
+
+    // Make certain xAxis port is tracked
+    Port *xPort = port("xAxis");
+    xPort->resolveImports();
+    QVector<Port*> importPorts = xPort->importPorts();
+    if (importPorts.size() != 1) {
+        QString msg{"Expected one x-axis, got '%1'"};
+        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
+    }
+    importPorts[0]->page("");
+}
+
 void PageR::initialize() {
-    // Validate input
-    convert<LayoutR>(layout);
     // Find plots on this page
     _plots = Path("./*{PlotR}", this).resolveMany<PlotR>();
 }

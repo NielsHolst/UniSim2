@@ -12,6 +12,7 @@ read_unisim_output = function(file_path) {
 		ix_date = (Rformat == "ymd") | (Rformat == "hms") | (Rformat == "ymdhms")
 		read_format = Rformat
 		read_format[ix_date]  = "character"
+		names(read_format) = NULL
 		Rformat[!ix_date]  = NA
 		list(col_names=colnames(sip), Rformat=Rformat, read_format=read_format)
 	}

@@ -14,13 +14,11 @@ namespace base {
         typedVector.resize(ports.size());
         T *destPtr = typedVector.data();
         for (const Port *source : ports) {
-            assign(typeOf<T>(), destPtr, source->type(), source->valuePtr<void>());
+            assign(typeOf<T>(), destPtr, asScalar(source->type()), source->valuePtr<void>());
             ++destPtr;
         }
         return &typedVector;
     }
-
-//    template <> const void* vectorize<int>(QVector<const Port*> &ports);
 
 }
 

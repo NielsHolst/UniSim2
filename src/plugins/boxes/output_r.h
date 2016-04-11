@@ -23,8 +23,6 @@ public:
 
 private:
     // Input
-    QString xAxis, layout;
-    int width, height;
     bool clear;
 
     // Data
@@ -32,8 +30,6 @@ private:
     QFile _file;
 
     // Methods
-    void collectInfo();
-    void setTrackX();
     void writeScript();
     void openFile();
 };

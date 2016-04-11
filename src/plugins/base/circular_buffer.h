@@ -20,8 +20,7 @@ public:
 private:
     // Data
     QVector<T> *_vector;
-    int _size;
-    T _head, _tail;
+    int _size, _head, _tail;
     bool _full;
 };
 

@@ -10,13 +10,14 @@ class PageR : public base::Box
 {
 public:
     PageR(QString name, QObject *parent);
+    void amend();
     void initialize();
     QString toString();
     QString toScript();
     QString functionName() const;
 private:
     // Inputs
-    QString xAxis, layout;
+    QString xAxis;
     int width, height, ncol, nrow;
     // Data
     QVector<PlotR*> _plots;

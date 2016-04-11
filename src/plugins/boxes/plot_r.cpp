@@ -14,7 +14,7 @@ PlotR::PlotR(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(ports);
-    Input(layout).equals("merged");
+    Input(layout).equals("facetted");
     Input(ncol).equals(1);
     Input(nrow).equals(-1);
 }
@@ -94,7 +94,7 @@ QString PlotR::toScript() {
 }
 
 QString PlotR::xPortLabel() {
-    Box *output = Path("ancestors::*{OutputR}", this).resolveOne<Box>(this);
+    Box *output = Path("ancestors::*{PageR}", this).resolveOne<Box>(this);
     QString xPath = output->port("xAxis")->importPath();
     Port *xPort = Path(xPath).resolveOne<Port>(this);
     return xPort->label();

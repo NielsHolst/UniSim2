@@ -90,7 +90,6 @@ namespace TestBoxCases {
                     port("output3").page("").
                 endbox().
                 box("OutputR").
-                    port("xAxis").imports("test_box_cases_3a[step]").
                 endbox().
             endbox();
         return builder.content();
@@ -101,9 +100,16 @@ namespace TestBoxCases {
         builder.
             box("Simulation").name("test_box_cases_4").
                 port("steps").equals(2).
-                box("test_boxes::VectorInput").name("A").
+                box("test_boxes::VectorInput").name("V").
                     port("numbers1").equals("7").
                     port("numbers2").equals("(7 9 13)").
+                endbox().
+                box("OutputR").name("output").
+                    box("PageR").name("page").
+                        box("PlotR").name("plot").
+                            port("ports").equals("(V[*])").
+                        endbox().
+                    endbox().
                 endbox().
             endbox();
         return builder.content();

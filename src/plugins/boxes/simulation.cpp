@@ -3,6 +3,7 @@
 #include <base/environment.h>
 #include <base/path.h>
 #include <base/port.h>
+#include <base/port_type.h>
 #include <base/publish.h>
 #include <base/unique_name.h>
 #include "simulation.h"
@@ -124,25 +125,30 @@ void Simulation::writeDataFrame() {
     for (Port *port : _trackedPorts) {
         Q_ASSERT(port->trackPtr()->size() == nrow);
     }
-    Port *last = _trackedPorts.last();
 
     // Write column labels
+    QStringList list;
     for (Port *port : _trackedPorts) {
-        _stream << port->label();
-        if (port != last)
-            _stream << "\t";
+        int n = port->valueSize();
+        if (n == 1)
+            list << port->label();
+        else {
+            for (int i = 0; i < n; ++i)
+                list << (port->label() + "_" + QString::number(i));
+        }
     }
-    _stream << "\n";
+    _stream << list.join("\t") << "\n";
 
     // Write column format
+    list.clear();
     for (Port *port : _trackedPorts) {
-        _stream << port->format();
-        if (port != last)
-            _stream << "\t";
+        for (int i = 0; i < port->valueSize(); ++i)
+           list << port->format();
     }
-    _stream << "\n";
+    _stream << list.join("\t") << "\n";
 
     // Write column values as text
+    Port *last = _trackedPorts.last();
     for (int row = 0; row < nrow; ++row) {
         for (Port *port : _trackedPorts) {
             _stream << port->trackPtr()->toString(row);

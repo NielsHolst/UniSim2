@@ -43,8 +43,8 @@ void TestBox::testVectorInput() {
     expected2 << 7 << 9 << 13;
     try {
         root = TestBoxCases::case4();
-        port1 = Path("A[numbers1]", root).resolveOne<Port>(root);
-        port2 = Path("A[numbers2]", root).resolveOne<Port>(root);
+        port1 = Path("V[numbers1]", root).resolveOne<Port>(root);
+        port2 = Path("V[numbers2]", root).resolveOne<Port>(root);
     }
     catch (Exception &ex) {
         std::cout << qPrintable(ex.what()) << "\n";

@@ -37,15 +37,4 @@ const void* vectorize(PortType destType, const QVector<Port*> &ports) {
     return 0;
 }
 
-//template <> const void *vectorize<int>(QVector<const Port*> &ports) {
-//    static QVector<int> intVector;
-//    intVector.resize(ports.size());
-//    int *destPtr = intVector.data();
-//    for (const Port *source : ports) {
-//        assign(Int, destPtr, source->type(), source->valuePtr<void>());
-//        ++ destPtr;
-//    }
-//    return &intVector;
-//}
-
 }
