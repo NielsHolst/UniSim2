@@ -55,5 +55,18 @@ void TestBox::testVectorInput() {
     root->deleteLater();
 }
 
+void TestBox::testSiblingImport() {
+    Box *root = TestBoxCases::case5a();
+    root->amendFamily();
+    root->initializeFamily();
+    root->deleteLater();
+}
+
+void TestBox::testParentImport() {
+    Box *root = TestBoxCases::case5b();
+    root->amendFamily();
+    root->initializeFamily();
+    root->deleteLater();
+}
 
 

@@ -31,7 +31,8 @@ private:
     bool _reset;
     Vector _track;
     static unsigned _trackFlags;
-    QMap<QString, QString> _attributes; //!todo _page and _plot should be string lists
+    QMap<QString, QString> _attributes;
+    QStringList _warnings;
 
 public:
     // Configure
@@ -86,6 +87,7 @@ public:
     bool hasImport() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
+    QStringList warnings() const;
     template <class T> void deducePortType(T value);
     static QVector<Port*> trackedPorts();
     static PortType commonType(const QVector<Port *> &ports);

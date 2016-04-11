@@ -34,7 +34,7 @@ public:
     static Box* currentRoot();
     QString className() const;
     QString fullName() const;
-    int id() const;
+    int order() const;
     static int count();
 
     template<class T=QObject> T* resolveOne(QString path);
@@ -60,7 +60,7 @@ private:
     // Data
     QString _name;
     QMap<QString,Port*> _ports, _orphanPorts;
-    int _id;
+    int _order;
     bool _amended;
     static Box *_currentRoot;
     static bool _currentRootIsDirty;

@@ -10,6 +10,8 @@ private slots:
     void testCreate();
     void testNoRun();
     void testVectorInput();
+    void testSiblingImport();
+    void testParentImport();
 };
 
 DECLARE_TEST(TestBox)

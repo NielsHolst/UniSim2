@@ -1,8 +1,13 @@
 #ifndef SAVE_H
 #define SAVE_H
 #include <QFile>
+#include <QSet>
 #include <QTextStream>
 #include <base/command.h>
+
+namespace base {
+    class Box;
+}
 
 namespace command {
 
@@ -19,6 +24,7 @@ private:
     void writePlugins();
     void writeClasses();
     void writePorts();
+    QSet<QString> collectPortNames(base::Box *root);
     void writePattern(QStringList match, QString name);
     void writeEnd();
     void closeFileStream();

@@ -60,10 +60,11 @@ Simulation t_urticae( steps = 30 )
 	{
 		Population density ( newBorn = 2 bufferSize = 5 cohort{page = ""} ageIncrements{page = ""})
 	}
-	OutputR ( xAxis = calendar[date]
-		        width = 10)
+	OutputR ( )
 	{
-		PageR urticae ( ncol = 2 )
+		PageR urticae ( xAxis = calendar[date]
+			              ncol = 2
+			              width = 10 )
 		{
 			PlotR weather ( ports = ( records[Tmin] weather[Tavg] records[Tmax] )
 			                layout = "merged" )

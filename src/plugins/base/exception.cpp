@@ -34,7 +34,7 @@ Exception& Exception::context(const QObject *object) {
         if (!box)
             box = dynamic_cast<const Box *>(object->parent());
         if (box)
-            _fullName += QString(" (#%1)").arg(box->id());
+            _fullName += QString(" (#%1)").arg(box->order());
     }
     return *this;
 }

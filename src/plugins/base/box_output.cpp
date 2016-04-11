@@ -38,10 +38,16 @@ QString BoxOutput::entry(const QObject *object) {
     const Box *box = dynamic_cast<const Box*>(object);
     QString text = beforeEntry() + className(object) + " " + object->objectName();
     if (box)
-        text += QString(" (#%1)").arg(box->id());
-    if (port && port->hasValue())
-        text += ": " + port->value<QString>();
+        text += QString(" (#%1)").arg(box->order());
+    if (port && port->hasValue()) {
+        text += "(" + nameOf(port->type()) + ")";
+        text += " : " + portValue(port);
+    }
     return text + afterEntry();
+}
+
+QString BoxOutput::portValue(const Port *port) {
+    return isVector(port->type()) ? QString("vector") : port->value<QString>();
 }
 
 QString BoxOutput::beforeEntry() {

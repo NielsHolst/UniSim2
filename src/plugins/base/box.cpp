@@ -13,7 +13,7 @@ bool Box::_currentRootIsDirty = true;
 int Box::_count = 0;
 
 Box::Box(QString name, QObject *parent)
-    : QObject(parent), _name(name), _id(0), _amended(false)
+    : QObject(parent), _name(name), _order(0), _amended(false)
 {
     Class(Box);
     setObjectName(name);
@@ -95,8 +95,8 @@ QString Box::fullName() const {
     return base::fullName(this);
 }
 
-int Box::id() const {
-    return _id;
+int Box::order() const {
+    return _order;
 }
 
 int Box::count() {
@@ -155,7 +155,7 @@ void Box::enumerateBoxes(int &i) {
         if (box)
             box->enumerateBoxes(i);
     }
-    _id = i++;
+    _order = i++;
 }
 
 void Box::initializeFamily() {
@@ -215,8 +215,11 @@ void Box::debriefFamily() {
 }
 
 void Box::resolvePortImports() {
-    for (Port *port : _ports.values())
+    for (Port *port : _ports.values()) {
         port->resolveImports();
+        if (!port->warnings().isEmpty())
+            dialog().error("Warnings:\n" + port->warnings().join("\n"));
+    }
 }
 
 void Box::allocatePortBuffers(){

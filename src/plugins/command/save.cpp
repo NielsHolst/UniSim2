@@ -1,4 +1,3 @@
-#include <QSet>
 #include <base/box.h>
 #include <base/command_help.h>
 #include <base/dialog.h>
@@ -79,6 +78,13 @@ void save::writeClasses() {
 }
 
 void save::writePorts() {
+    // Set of all known port names
+    QSet<QString> names;
+
+    // Collect port names of current model
+    if (environment().state.root)
+        names = collectPortNames(environment().state.root);
+
     // Create an object of each class
     Box *root = new Box("root", 0);
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
@@ -87,18 +93,24 @@ void save::writePorts() {
                 MegaFactory::create<Box>(className, className.toLower(), root);
         }
     }
+    // Pool port names
+    names |= collectPortNames(root);
 
-    // Find and sort all unique port names
-    QVector<Port*> ports = Path("*{Port}", root).resolveMany<Port>();
-    QSet<QString> names;
-    for (Port *port : ports)
-        names << port->objectName();
+    // Sort port names
     QStringList sorted = names.toList();
     sorted.sort();
     writePattern(sorted, "support.variable");
 
     // Delete all the objects
     root->deleteLater();
+}
+
+QSet<QString> save::collectPortNames(Box *root) {
+    QSet<QString> names;
+    QVector<Port*> ports = Path("*{Port}", root).resolveMany<Port>();
+    for (Port *port : ports)
+        names << port->objectName();
+    return names;
 }
 
 void save::writePattern(QStringList match, QString name) {

@@ -8,6 +8,7 @@
 namespace base {
 
 class Box;
+class Port;
 
 class BoxOutput
 {
@@ -23,6 +24,7 @@ private:
 
     void addOutput(const QObject *box);
     QString entry(const QObject *object);
+    QString portValue(const Port *port);
     QString beforeEntry();
     QString afterEntry();
     QString indent();

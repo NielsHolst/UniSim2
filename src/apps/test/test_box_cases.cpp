@@ -115,5 +115,34 @@ namespace TestBoxCases {
         return builder.content();
     }
 
+    Box* case5a() {
+        BoxBuilder builder;
+        builder.
+            box("Simulation").name("test_box_cases_3a").
+                port("steps").equals(2).
+                box("ModelA").name("A").
+                    port("input2").imports(".[input1]").
+                endbox().
+                box("OutputR").
+                endbox().
+            endbox();
+        return builder.content();
+    }
+
+    Box* case5b() {
+        BoxBuilder builder;
+        builder.
+            box("Simulation").name("test_box_cases_3a").
+                port("steps").equals(2).
+                box("ModelA").name("parent").
+                    box("ModelA").name("A").
+                        port("input1").imports("parent[input1]").
+                    endbox().
+                endbox().
+                box("OutputR").
+                endbox().
+            endbox();
+        return builder.content();
+    }
 } // namespace
 

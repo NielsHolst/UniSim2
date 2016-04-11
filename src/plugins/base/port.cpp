@@ -121,6 +121,17 @@ void Port::resolveImports() {
     _importType = commonType(_importPorts);
     if (_importType == Null)
         _importType = _valueType;
+    // Check update order relatice to import
+    for (Port *port : _importPorts) {
+        int myOrder = context->order(),
+            importOrder = port->boxParent()->order();
+        QString s = "%1(#%2) imports %3(#%4)";
+        QString msg = s.arg(fullName(this)).arg(myOrder).arg(fullName(port)).arg(importOrder);
+        if (myOrder == importOrder)
+            _warnings << "Warning: Port imports sibling port but the update order of siblings is undefined\n" + msg;
+        else if (myOrder < importOrder)
+            _warnings << "Warning: Port imports a port that will be updated after this port\n" + msg;
+    }
 }
 
 void Port::allocatePortBuffer() {
@@ -257,6 +268,10 @@ QString Port::importPath() const {
 
 QVector<Port*> Port::importPorts() const {
     return _importPorts;
+}
+
+QStringList Port::warnings() const {
+    return _warnings;
 }
 
 QVector<Port*> Port::trackedPorts() {
