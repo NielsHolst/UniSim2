@@ -23,6 +23,7 @@ PUBLISH(OutputR)
 OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
+    Input(ports);
     Input(clear).equals(true);
 }
 
@@ -32,6 +33,22 @@ void OutputR::amend() {
     if (_pages.empty()) {
         Box *page = MegaFactory::create<Box>("PageR", "", this);
         page->amend();
+    }
+    // Additional ports which will show in text output file but not in R plots
+    addExtraPorts();
+}
+
+void OutputR::addExtraPorts() {
+    // Additional ports to be trackes
+    for (QString portName : ports) {
+        QVector<Port*> trackedPorts = Path(portName).resolveMany<Port>();
+        if (trackedPorts.isEmpty())
+            ThrowException("Port not found").value(portName);
+        // Add ports to blank page (which will not show)
+        for (Port *port : trackedPorts) {
+            if (port->page().isNull())
+                port->page("");
+        }
     }
 }
 

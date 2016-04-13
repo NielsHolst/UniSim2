@@ -8,10 +8,12 @@
 using namespace std;
 using namespace base;
 
-void TestPortBuffer::initTestCase() {
+void TestPortBuffer::init() {
+    sim = 0;
 }
 
-void TestPortBuffer::cleanupTestCase() {
+void TestPortBuffer::cleanup() {
+    delete sim;
 }
 
 void TestPortBuffer::testCreateBool() {
@@ -31,15 +33,16 @@ void TestPortBuffer::testCreateBool() {
 
 void TestPortBuffer::testImportNoBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("ModelA").name("A").
-                port("input1").imports(".[input2]").
-                port("input2").equals(777).
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("ModelA").name("A").
+                    port("input1").imports(".[input2]").
+                    port("input2").equals(777).
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -49,20 +52,20 @@ void TestPortBuffer::testImportNoBuffer() {
         QFAIL(qPrintable(s));
     }
     QCOMPARE(sim->resolveOne<Port>("A[input1]")->value<int>(), 777);
-    delete sim;
 }
 
 void TestPortBuffer::testImportFromBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("ModelA").name("A").
-                port("input1").imports(".[input10]").
-                newPort("input10").equals(777).
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("ModelA").name("A").
+                    port("input1").imports(".[input10]").
+                    newPort("input10").equals(777).
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -72,20 +75,20 @@ void TestPortBuffer::testImportFromBuffer() {
         QFAIL(qPrintable(s));
     }
     QCOMPARE(sim->resolveOne<Port>("A[input1]")->value<int>(), 777);
-    delete sim;
 }
 
 void TestPortBuffer::testImportToBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("ModelA").name("A").
-                newPort("input10").imports(".[input2]").
-                port("input2").equals(777).
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("ModelA").name("A").
+                    newPort("input10").imports(".[input2]").
+                    port("input2").equals(777).
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -95,20 +98,20 @@ void TestPortBuffer::testImportToBuffer() {
         QFAIL(qPrintable(s));
     }
     QCOMPARE(sim->resolveOne<Port>("A[input10]")->value<int>(), 777);
-    delete sim;
 }
 
 void TestPortBuffer::testImportBufferToBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("ModelA").name("A").
-                newPort("input10").imports(".[input20]").
-                newPort("input20").equals(777).
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("ModelA").name("A").
+                    newPort("input10").imports(".[input20]").
+                    newPort("input20").equals(777).
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -118,7 +121,6 @@ void TestPortBuffer::testImportBufferToBuffer() {
         QFAIL(qPrintable(s));
     }
     QCOMPARE(sim->resolveOne<Port>("A[input10]")->value<int>(), 777);
-    delete sim;
 }
 
 //
@@ -127,15 +129,16 @@ void TestPortBuffer::testImportBufferToBuffer() {
 
 void TestPortBuffer::testImportVectorNoBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("VectorInput").name("A").
-                port("numbers1").imports(".[numbers2]").
-                port("numbers2").equals("(7 13 9)").
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("VectorInput").name("A").
+                    port("numbers1").imports(".[numbers2]").
+                    port("numbers2").equals("(7 13 9)").
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -147,20 +150,20 @@ void TestPortBuffer::testImportVectorNoBuffer() {
     QVector<int> expected;
     expected << 7 << 13 << 9;
     QCOMPARE(sim->resolveOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
-    delete sim;
 }
 
 void TestPortBuffer::testImportVectorFromBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("VectorInput").name("A").
-                port("numbers1").imports(".[numbers20]").
-                newPort("numbers20").equals("(7 13 9)").
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("VectorInput").name("A").
+                    port("numbers1").imports(".[numbers20]").
+                    newPort("numbers20").equals("(7 13 9)").
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -172,20 +175,20 @@ void TestPortBuffer::testImportVectorFromBuffer() {
     QVector<int> expected;
     expected << 7 << 13 << 9;
     QCOMPARE(sim->resolveOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
-    delete sim;
 }
 
 void TestPortBuffer::testImportVectorToBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("VectorInput").name("A").
-                newPort("numbers10").imports(".[numbers2]").
-                port("numbers2").equals("(7 13 9)").
-            endbox().
-        endbox();
-    Box *sim = builder.content();
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("VectorInput").name("A").
+                    newPort("numbers10").imports(".[numbers2]").
+                    port("numbers2").equals("(7 13 9)").
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
@@ -197,30 +200,30 @@ void TestPortBuffer::testImportVectorToBuffer() {
     QVector<int> expected;
     expected << 7 << 13 << 9;
     QCOMPARE(sim->resolveOne<Port>("A[numbers10]")->value<QVector<int>>(), expected);
-    delete sim;
 }
 
 void TestPortBuffer::testImportVectorBufferToBuffer() {
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            box("VectorInput").name("A").
-                newPort("numbers10").imports(".[numbers20]").
-                newPort("numbers20").equals("(7 13 9)").
-            endbox().
-        endbox();
-    Box *sim = builder.content();
+    QVector<int> actual, expected;
     try {
+        builder.
+            box("Simulation").name("sim").
+                box("VectorInput").name("A").
+                    newPort("numbers10").imports(".[numbers20]").
+                    newPort("numbers20").equals("(7 13 9)").
+                endbox().
+            endbox();
+        sim = builder.content();
+
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
+        actual = sim->resolveOne<Port>("A[numbers10]")->value<QVector<int>>();
     }
     catch(Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QVector<int> expected;
     expected << 7 << 13 << 9;
-    QCOMPARE(sim->resolveOne<Port>("A[numbers10]")->value<QVector<int>>(), expected);
-    delete sim;
+    QCOMPARE(actual, expected);
 }

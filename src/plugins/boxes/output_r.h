@@ -2,6 +2,7 @@
 #define OUTPUT_R_H
 #include <QFile>
 #include <QString>
+#include <QVector>
 #include <base/box.h>
 #include <base/convert.h>
 
@@ -24,12 +25,14 @@ public:
 private:
     // Input
     bool clear;
+    QVector<QString> ports;
 
     // Data
     QVector<PageR*> _pages;
     QFile _file;
 
     // Methods
+    void addExtraPorts();
     void writeScript();
     void openFile();
 };

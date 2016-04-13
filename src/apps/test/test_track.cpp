@@ -11,7 +11,14 @@ using namespace base;
 
 
 void TestTrack::testScalar() {
-    run(TestBoxCases::case3a());
+    try {
+        run(TestBoxCases::case3a());
+    }
+    catch(Exception &ex) {
+        QString s = "Unexpected exception: " + ex.what();
+        QFAIL(qPrintable(s));
+    }
+
     QSet<QString> expected;
     expected << "step"
              << "input2" << "input3" << "input4"
@@ -21,7 +28,14 @@ void TestTrack::testScalar() {
 }
 
 void TestTrack::testVector() {
-    run(TestBoxCases::case4());
+    try {
+        run(TestBoxCases::case4());
+    }
+    catch(Exception &ex) {
+        QString s = "Unexpected exception: " + ex.what();
+        QFAIL(qPrintable(s));
+    }
+
     QSet<QString> expected;
     expected << "step"
              << "numbers1"

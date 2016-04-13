@@ -2,6 +2,7 @@
 #define POPULATION_H
 #include <base/box.h>
 #include <base/circular_buffer.h>
+#include <base/port.h>
 
 namespace boxes {
 
@@ -9,18 +10,20 @@ class Population : public base::Box
 {
 public:
     Population(QString name, QObject *parent);
+    void initialize();
     void reset();
     void update();
 private:
     // Inputs
-    double initial, newBorn, ageIncrement;
-    QVector<double> transferred;
+    double initial, ageIncrement;
     int bufferSize;
-    bool debugMode;
+    double newBorn;
+    QVector<double> gains, losses;
     // Outputs
-    QVector<double> cohort, ageIncrements;
+    QVector<double> cohorts, ageIncrements;
     // Data
-    base::CircularBuffer<double> _cohort, _ageIncrements;
+    base::CircularBuffer<double> _cohorts, _ageIncrements;
+    QVector<base::Port*> _gains, _losses, _newBorns;
 };
 
 }

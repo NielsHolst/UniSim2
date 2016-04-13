@@ -56,11 +56,11 @@ Simulation t_urticae( steps = 30 )
 					 	   a = 0.5189
 						   b = 0.0678 )
 	}
-	Box population
+	Box mite
 	{
-		Population density ( newBorn = 2 bufferSize = 5 cohort{page = ""} ageIncrements{page = ""})
+		Population population ( newBorn = 2 bufferSize = 5 )
 	}
-	OutputR ( )
+	OutputR ( ports = ( population[cohort] population[ageIncrements]) )
 	{
 		PageR urticae ( xAxis = calendar[date]
 			              ncol = 2

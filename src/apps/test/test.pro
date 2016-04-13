@@ -31,6 +31,7 @@ HEADERS +=  \
     test_track.h \
     test_unique_name.h \
     test_vector.h \
+    test_vector_sum.h \
     test_vectorization.h \
     test_weather.h
 
@@ -54,5 +55,6 @@ SOURCES +=  \
     test_track.cpp \
     test_unique_name.cpp \
     test_vector.cpp \
+    test_vector_sum.cpp \
     test_vectorization.cpp \
     test_weather.cpp

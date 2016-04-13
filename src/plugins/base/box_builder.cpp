@@ -90,9 +90,9 @@ BoxBuilder& BoxBuilder::transform(PortTransform value) {
 // Set value
 
 BoxBuilder& BoxBuilder::equals(QString value) {
-    // Handle a parenthesized string as a string vector
-    if (isParenthesized(value))
-        return equals( base::split(deEmbrace(value)).toVector() );
+//    // Handle a parenthesized string as a string vector
+//    if (isParenthesized(value))
+//        return equals( base::split(deEmbrace(value)).toVector() );
     // Or else, handle simply as a string
     BOXBUILDER_EQUALS;
 }

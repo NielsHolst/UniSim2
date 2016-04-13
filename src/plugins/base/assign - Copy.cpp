@@ -142,21 +142,27 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
         ThrowException("Expected 'Identity' transform when assigning to vector").value(transform);
     QVector<destT> *destVector = DEST_PTR(QVector<destT>);
     sourceT source = SOURCE(sourceT);
-    destT destValue = convert<destT>(source);
+    QStringList sourceAsStringList = asStringList<sourceT>(sourcePtr);
 
-    int n = destVector->size();
-    if (n <= 1)
-        destVector->fill(destValue, 1);
-    else if (transform == Copy)
-        destVector->fill(destValue);
-    else if (transform == Split) {
-        if (n>0) destVector->fill(convert<destT>(source/n));
+    if (sourceAsStringList.isEmpty()) {
+        destT destValue = convert<destT>(source);
+        int n = destVector->size();
+        if (n <= 1)
+            destVector->fill(destValue, 1);
+        else if (transform == Copy)
+            destVector->fill(destValue);
+        else if (transform == Split) {
+            if (n>0) destVector->fill(convert<destT>(source/n));
+        }
+        else {
+            QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
+                        "\nor scalar must be transformed by Copy or Split"),
+                    value("Vector size = %1, Transform = %2");
+            ThrowException(msg).value(value.arg(QString::number(n)).arg(convert<QString>(transform)));
+        }
     }
     else {
-        QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
-                    "\nor scalar must be transformed by Copy or Split"),
-                value("Vector size = %1, Transform = %2");
-        ThrowException(msg).value(value.arg(QString::number(n)).arg(convert<QString>(transform)));
+        *destVector = convert<destT, QVector>(sourceAsStringList);
     }
 }
 
@@ -268,30 +274,31 @@ void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourceP
     if (sourcePtr==0)
         ThrowException("Port source of import has not been set").context(context);
 
-    // Split
     if (sourceT == String && isParenthesized(SOURCE(QString))) {
-        QVector<QString> vector = split(SOURCE(QString)).toVector();
-        if (!vector.isEmpty())
+        QStringList sourceAsStringList = asStringList<sourceT>(sourcePtr);
+        if (!sourceAsStringList.isEmpty()) {
+            QVector<QString> vector = sourceAsStringList.toVector();
             assign(destT, destPtr, StringVector, &vector, transform, context);
-    }
-    else {
-        switch (destT) {
-            CASE_ASSIGN(Bool, bool);
-            CASE_ASSIGN(Char, char);
-            CASE_ASSIGN(Int, int);
-            CASE_ASSIGN(LongInt, long int);
-            CASE_ASSIGN(LongLongInt, long long int);
-            CASE_ASSIGN(Float, float);
-            CASE_ASSIGN(Double, double);
-            CASE_ASSIGN(LongDouble, long double);
-            CASE_ASSIGN(String, QString);
-            CASE_ASSIGN(Date, QDate);
-            CASE_ASSIGN(Time, QTime);
-            CASE_ASSIGN(DateTime, QDateTime);
-        case Null:
-            ThrowException("Cannot assign to Null");
-            break;
         }
+    }
+
+
+    switch (destT) {
+        CASE_ASSIGN(Bool, bool);
+        CASE_ASSIGN(Char, char);
+        CASE_ASSIGN(Int, int);
+        CASE_ASSIGN(LongInt, long int);
+        CASE_ASSIGN(LongLongInt, long long int);
+        CASE_ASSIGN(Float, float);
+        CASE_ASSIGN(Double, double);
+        CASE_ASSIGN(LongDouble, long double);
+        CASE_ASSIGN(String, QString);
+        CASE_ASSIGN(Date, QDate);
+        CASE_ASSIGN(Time, QTime);
+        CASE_ASSIGN(DateTime, QDateTime);
+    case Null:
+        ThrowException("Cannot assign to Null");
+        break;
     }
 }
 

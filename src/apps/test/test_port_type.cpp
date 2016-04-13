@@ -11,7 +11,7 @@ void TestPortType::testInt() {
 }
 
 void TestPortType::testDate() {
-
+    QCOMPARE(typeOf<QDate>(), Date);
 }
 
 void TestPortType::testIntVector() {
@@ -19,7 +19,9 @@ void TestPortType::testIntVector() {
 }
 
 void TestPortType::testDateVector() {
-
+    QCOMPARE(deducePortType("(31/12/2001)"), DateVector);
+    QCOMPARE(deducePortType("(31/12/2001 2001/12/31 /12/31/2001)"), DateVector);
+    QCOMPARE(deducePortType("(31/12/2001 2001/12/31 /12/31/2001 x)"), StringVector);
 }
 
 void TestPortType::testDeduceBool() {
@@ -64,12 +66,5 @@ void TestPortType::testDeduceQString() {
     QCOMPARE(deducePortType("(a b "), String);
     QCOMPARE(deducePortType("a38"), String);
 }
-
-//void TestPortType::testCreateBool() {
-//    bool *p = reinterpret_cast<bool*>( createPortData(Bool) );
-//    *p = true;
-//    QVector<bool> *v = reinterpret_cast<QVector<bool>*>( createPortData(BoolVector) );
-//    *v << true << false;
-//}
 
 

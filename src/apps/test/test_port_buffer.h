@@ -2,13 +2,16 @@
 #define TEST_PORT_BUFFER_H
 
 #include "autotest.h"
+namespace base {
+class Box;
+}
 
 class TestPortBuffer : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
+    void init();
+    void cleanup();
 
     void testCreateBool();
 
@@ -21,6 +24,8 @@ private slots:
     void testImportVectorFromBuffer();
     void testImportVectorToBuffer();
     void testImportVectorBufferToBuffer();
+private:
+    base::Box *sim;
 };
 
 DECLARE_TEST(TestPortBuffer)

@@ -121,7 +121,8 @@ void Port::resolveImports() {
     _importType = commonType(_importPorts);
     if (_importType == Null)
         _importType = _valueType;
-    // Check update order relatice to import
+    // Check update order relative to import
+    /*
     for (Port *port : _importPorts) {
         int myOrder = context->order(),
             importOrder = port->boxParent()->order();
@@ -132,6 +133,7 @@ void Port::resolveImports() {
         else if (myOrder < importOrder)
             _warnings << "Warning: Port imports a port that will be updated after this port\n" + msg;
     }
+    */
 }
 
 void Port::allocatePortBuffer() {

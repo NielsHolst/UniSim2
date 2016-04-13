@@ -29,7 +29,6 @@ void PageR::amend() {
         Box *plot = MegaFactory::create<Box>("PlotR", "", this);
         plot->amend();
     }
-
     // Make certain xAxis port is tracked
     Port *xPort = port("xAxis");
     xPort->resolveImports();

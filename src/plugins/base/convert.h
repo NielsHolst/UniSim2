@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QTime>
+#include <QVector>
 #include "exception.h"
 #include "general.h"
 #include "port_type.h"
