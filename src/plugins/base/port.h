@@ -28,10 +28,11 @@ private:
     QString _importPath;
     QVector<Port *> _importPorts;
     Access _access;
-    bool _reset;
+    bool _reset, _doTrack;
     Vector _track;
     static unsigned _trackFlags;
     QMap<QString, QString> _attributes;
+    PortTransform _transform;
     QStringList _warnings;
 
 public:
@@ -63,7 +64,7 @@ public:
     QString label() const;
     QString page() const;
     QString plot() const;
-    QString transform() const;
+    PortTransform transform() const;
 
     // Change
     void resolveImports();
@@ -121,7 +122,7 @@ template <class T> Port& Port::equals(T value)
     // Import paths are cleared, since the port now has a fixed value
     _importPath.clear();
     // Copy value to the buffer that _valuePtr points to
-    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, convert<PortTransform>(transform()));
+    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform());
     return *this;
 }
 

@@ -43,8 +43,9 @@ void PlotR::collectPorts() {
         for (Port *port : trackedPorts) {
             if (_ports.contains(port))
                 continue;
-            port->page(page->objectName());
-            port->plot(objectName());
+            // Add empty string to ensure page and plot names are not Null
+            port->page(page->objectName()+"");
+            port->plot(objectName()+"");
             _ports << port;
         }
     }

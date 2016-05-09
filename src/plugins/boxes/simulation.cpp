@@ -5,6 +5,7 @@
 #include <base/port.h>
 #include <base/port_type.h>
 #include <base/publish.h>
+#include <base/timer.h>
 #include <base/unique_name.h>
 #include "simulation.h"
 
@@ -98,18 +99,14 @@ void Simulation::show(QTime time) {
 }
 
 void Simulation::debrief() {
-    openFileStream();
+    openFileStream(".txt");
     writeDataFrame();
     _file.close();
     environment().incrementFileCounter();
 }
 
-void Simulation::openFileStream() {
-    QString filePath = environment().outputFilePath(".txt");
-    filePath.replace("\\", "/");
-    _file.setFileName(filePath);
-    if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        ThrowException("Cannot open file for output").value(filePath).context(this);
+void Simulation::openFileStream(QString extension) {
+    environment().openOutputFile(_file, extension);
     _stream.setDevice(&_file);
 }
 

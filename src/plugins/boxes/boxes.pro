@@ -21,7 +21,7 @@ HEADERS +=  \
     output_r.h \
     page_r.h \
     plot_r.h \
-#    population.h \
+    population.h \
     random_base.h \
     random_lognormal.h \
     random_normal.h \
@@ -47,7 +47,7 @@ SOURCES +=  \
     output_r.cpp \
     page_r.cpp \
     plot_r.cpp \
-#    population.cpp \
+    population.cpp \
     random_base.cpp \
     random_lognormal.cpp \
     random_normal.cpp \

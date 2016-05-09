@@ -10,7 +10,7 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
     : QObject(parent), _valuePtr(0), _valueType(Null), _importPath(""),
-      _access(Input), _reset(false), _track(this)
+      _access(Input), _reset(false), _doTrack(false), _track(this), _transform(Identity)
 {
     Class(Port);
     setObjectName(name);
@@ -25,7 +25,6 @@ Port::Port(QString name, QObject *parent, bool orphan)
     _attributes["page"] = QString();
     _attributes["plot"] = QString();
     _attributes["label"] = QString();
-    _attributes["transform"] = QString();
 }
 
 // Configure
@@ -83,10 +82,15 @@ SET_ATTRIBUTE(format)
 SET_ATTRIBUTE(page)
 SET_ATTRIBUTE(plot)
 SET_ATTRIBUTE(label)
-SET_ATTRIBUTE(transform)
+
+Port& Port::transform(QString tr) {
+    _transform = convert<PortTransform>(tr);
+    return *this;
+}
 
 Port& Port::transform(PortTransform tr) {
-    return transform(convert<QString>(tr));
+    _transform = tr;
+    return *this;
 }
 
 // Get attributes
@@ -106,7 +110,10 @@ GET_ATTRIBUTE(format)
 GET_ATTRIBUTE(page)
 GET_ATTRIBUTE(plot)
 GET_ATTRIBUTE(label)
-GET_ATTRIBUTE(transform)
+
+PortTransform Port::transform() const {
+    return _transform;
+}
 
 // Change
 
@@ -137,7 +144,8 @@ void Port::resolveImports() {
 }
 
 void Port::allocatePortBuffer() {
-    if (doTrack()) {
+    _doTrack = !(attribute("plot").isNull() && attribute("page").isNull());
+    if (_doTrack) {
         Box *root = boxParent()->currentRoot();
         Port *iterations = root->peakPort("iterations"),
              *steps = root->peakPort("steps");
@@ -160,22 +168,22 @@ void Port::copyFromImport() {
 
 
 void Port::assign(const QVector<Port*> &sources) {
-    PortTransform trans = convert<PortTransform>(transform());
+//    PortTransform trans = convert<PortTransform>(transform());
     // Create buffer for value if necessary
     if (!_valuePtr) {
         _valueType = sources.at(0)->type();
-        if (sources.size() > 1 && trans != Identity)
+        if (sources.size() > 1 && _transform != Identity)
             _valueType = asVector(_valueType);
         _valuePtr = portBuffer().createBuffer(_valueType);
     }
     // Now assign as scalar or vector
     if (sources.size() == 1) {
         const Port *source = sources.at(0);
-        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, trans, this);
+        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
     }
     else {
         const void *sourceVector = vectorize(_importType, sources);
-        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, trans, this);
+        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
     }
 }
 
@@ -257,7 +265,7 @@ Port::Access Port::access() const {
 }
 
 bool Port::doTrack() const {
-    return !(attribute("plot").isNull() && attribute("page").isNull());
+    return _doTrack;
 }
 
 bool Port::hasImport() const {

@@ -38,7 +38,7 @@ private:
     void makePortLabelsUnique();
     void show(QTime time);
     void writeDataFrame();
-    void openFileStream();
+    void openFileStream(QString extension);
     static bool valuesAreEqual(const base::Port *port);
 };
 

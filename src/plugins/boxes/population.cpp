@@ -17,18 +17,13 @@ Population::Population(QString name, QObject *parent)
     Input(initial).equals(100);
     Input(ageIncrement);
     Input(bufferSize).equals(100);
-    Input(newBorn);
-    Input(gains);
-    Input(losses);
-    Input(newBorn);
+    Input(firstCohortGain);
+    Input(cohortsGain);
+    Input(cohortsLoss);
+
+    Output(lastCohortSpill);
     Output(cohorts);
     Output(ageIncrements);
-}
-
-void Population::initialize() {
-    _gains = resolveMany<Port>(gains);
-    _losses = resolveMany<Port>(gains);
-    _newBorns = resolveMany<Port>(gains);
 }
 
 void Population::reset() {
@@ -37,11 +32,21 @@ void Population::reset() {
 
     _cohorts.push(initial);
     _ageIncrements.push(0);
+
+    if (!cohortsGain.isEmpty() && cohortsGain.size() != bufferSize) {
+        QString msg{"cohortsGain must have same vector size (%1) as bufferSize (%2)"};
+        ThrowException(msg.arg(cohortsGain.size()).arg(bufferSize));
+    }
+    if (!cohortsLoss.isEmpty() && cohortsLoss.size() != bufferSize) {
+        QString msg{"cohortsLoss must have same vector size (%1) as bufferSize (%2)"};
+        ThrowException(msg.arg(cohortsLoss.size()).arg(bufferSize));
+    }
 }
 
 namespace {
 
     void add(QVector<double> *receiver, const QVector<double> *vec) {
+        if (vec->isEmpty()) return;
         Q_ASSERT(receiver->size() == vec->size());
         double *p = receiver->data();
         const double *q = vec->data();
@@ -50,12 +55,13 @@ namespace {
             *p++ += *q++;
     }
 
-    void add(QVector<double> *receiver, QList<const QVector<double>*> add) {
-        for (const QVector<double> *vec : add)
-            add(receiver, vec);
-    }
+//    void add(QVector<double> *receiver, QList<const QVector<double>*> add) {
+//        for (const QVector<double> *vec : add)
+//            add(receiver, vec);
+//    }
 
     void sub(QVector<double> *receiver, const QVector<double> *vec) {
+        if (vec->isEmpty()) return;
         Q_ASSERT(receiver->size() == vec->size());
         double *p = receiver->data();
         const double *q = vec->data();
@@ -64,18 +70,19 @@ namespace {
             *p++ -= *q++;
     }
 
-    void sub(QVector<double> *receiver, QList<const QVector<double>*> add) {
-        for (const QVector<double> *vec : add)
-            sub(receiver, vec);
-    }
+//    void sub(QVector<double> *receiver, QList<const QVector<double>*> add) {
+//        for (const QVector<double> *vec : add)
+//            sub(receiver, vec);
+//    }
 
 }
 
 void Population::update() {
-    _cohorts.push(newBorn);
+    add(&cohorts, &cohortsGain);
+    sub(&cohorts, &cohortsLoss);
+    lastCohortSpill = _cohorts.at(1);
+    _cohorts.push(firstCohortGain);
     _ageIncrements.push(ageIncrement);
-    add(&cohorts, &gains);
-    sub(&cohorts, &losses);
 }
 
 

@@ -45,6 +45,13 @@ Environment::~Environment() {
     settings.setValue("environment/latest-output-file-path", state.latestOutputFilePath);
 }
 
+void Environment::openOutputFile(QFile &file, QString extension) {
+    QString filePath = outputFilePath(extension);
+    file.setFileName(filePath);
+    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
+        ThrowException("Cannot open file for output").value(filePath).context(this);
+}
+
 QString Environment::outputFilePath(QString extension) {
     QString fileName = state.latestLoadArg;
     int n = fileName.lastIndexOf(".");
@@ -61,7 +68,7 @@ QString Environment::outputFileNamePath(QString fileName) {
     QString dirInFileName = QFileInfo(fileName).path();
     if (!dirInFileName.isEmpty())
         dir = makeDir(dir, dirInFileName);
-    QString folderPath = dir.absolutePath();
+    QString folderPath = dir.absolutePath().replace("\\", "/");
     return state.latestOutputFilePath = folderPath + "/" + QFileInfo(fileName).fileName();
 }
 

@@ -5,6 +5,7 @@
 #include "general.h"
 #include "path.h"
 #include "port.h"
+#include "timer.h"
 
 namespace base {
 
@@ -19,6 +20,7 @@ Box::Box(QString name, QObject *parent)
     setObjectName(name);
     _currentRoot = this;
     _currentRootIsDirty = true;
+    _timer = new Timer(this);
 }
 
 Box::~Box() {
@@ -103,6 +105,16 @@ int Box::count() {
     return _count;
 }
 
+QString Box::profileReport() const {
+    QString rep = _timer->report();
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            rep += box->profileReport();
+    }
+    return rep;
+}
+
 void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
@@ -133,6 +145,8 @@ void Box::postAmend() {
 void Box::amendFamily() {
     try {
         if (_amended) return;
+        createTimers();
+        _timer->start("amend");
         for (auto child : children()) {
             Box *box = dynamic_cast<Box*>(child);
             if (box)
@@ -143,10 +157,22 @@ void Box::amendFamily() {
         _count = 0;
         enumerateBoxes(_count);
         _amended = true;
+        _timer->stop("amend");
     }
     catch (Exception &ex) {
         dialog().error(ex.what());
     }
+}
+
+void Box::createTimers() {
+    _timer->addProfile("amend");
+    _timer->addProfile("initialize");
+    _timer->addProfile("reset");
+    _timer->addProfile("update-updateImports");
+    _timer->addProfile("update-update");
+    _timer->addProfile("update-trackPorts");
+    _timer->addProfile("cleanup");
+    _timer->addProfile("debrief");
 }
 
 void Box::enumerateBoxes(int &i) {
@@ -159,6 +185,10 @@ void Box::enumerateBoxes(int &i) {
 }
 
 void Box::initializeFamily() {
+    _timer->reset();
+    if (!_amended)
+        amendFamily();
+    _timer->start("initialize");
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
@@ -166,11 +196,14 @@ void Box::initializeFamily() {
     }
     resolvePortImports();
     allocatePortBuffers();
+    collectTrackedPorts();
     updateImports();
     initialize();
+    _timer->stop("initialize");
 }
 
 void Box::resetFamily() {
+    _timer->start("reset");
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
@@ -180,6 +213,7 @@ void Box::resetFamily() {
     updateImports();
     reset();
     trackPorts(Reset);
+    _timer->stop("reset");
 }
 
 void Box::updateFamily() {
@@ -188,12 +222,22 @@ void Box::updateFamily() {
         if (box)
             box->updateFamily();
     }
+
+    _timer->start("update-updateImports");
     updateImports();
+    _timer->stop("update-updateImports");
+
+    _timer->start("update-update");
     update();
+    _timer->stop("update-update");
+
+    _timer->start("update-trackPorts");
     trackPorts(Update);
+    _timer->stop("update-trackPorts");
 }
 
 void Box::cleanupFamily() {
+    _timer->start("cleanup");
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
@@ -202,9 +246,11 @@ void Box::cleanupFamily() {
     updateImports();
     cleanup();
     trackPorts(Cleanup);
+    _timer->stop("cleanup");
 }
 
 void Box::debriefFamily() {
+    _timer->start("debrief");
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
@@ -212,6 +258,7 @@ void Box::debriefFamily() {
     }
     updateImports();
     debrief();
+    _timer->stop("debrief");
 }
 
 void Box::resolvePortImports() {
@@ -227,6 +274,14 @@ void Box::allocatePortBuffers(){
         port->allocatePortBuffer();
 }
 
+void Box::collectTrackedPorts() {
+    _trackedPorts.clear();
+    for (Port *port : _ports.values()) {
+        if (port->doTrack())
+            _trackedPorts << port;
+    }
+}
+
 void Box::updateImports() {
     for (Port *port : _ports.values())
         port->copyFromImport();
@@ -238,7 +293,7 @@ void Box::resetPorts() {
 }
 
 void Box::trackPorts(Step step) {
-    for (Port *port : _ports.values())
+    for (Port *port : _trackedPorts)
         port->track(step);
 }
 

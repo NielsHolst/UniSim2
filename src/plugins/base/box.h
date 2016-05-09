@@ -17,6 +17,7 @@
 namespace base {
 
 class Port;
+class Timer;
 
 class Box : public QObject
 {
@@ -36,6 +37,7 @@ public:
     QString fullName() const;
     int order() const;
     static int count();
+    QString profileReport() const;
 
     template<class T=QObject> T* resolveOne(QString path);
     template<class T=QObject> T* resolveMaybeOne(QString path);
@@ -60,17 +62,21 @@ private:
     // Data
     QString _name;
     QMap<QString,Port*> _ports, _orphanPorts;
+    QVector<Port*> _trackedPorts;
     int _order;
     bool _amended;
+    Timer *_timer;
     static Box *_currentRoot;
     static bool _currentRootIsDirty;
     static int _count;
     // Methods
+    void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void postAmend();
     void enumerateBoxes(int &i);
     void resolvePortImports();
     void allocatePortBuffers();
+    void collectTrackedPorts();
     void resetPorts();
     void trackPorts(Step step);
     void updateImports();

@@ -13,6 +13,7 @@ class Environment : public QObject {
 public:
     Environment();
     ~Environment();
+    void openOutputFile(QFile &file, QString extension);
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
     QString scriptFilePath(QString fileName);

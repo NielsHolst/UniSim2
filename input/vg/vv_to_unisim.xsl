@@ -14,7 +14,7 @@
 
 <!-- Simulation period used when test-mode > 0 -->
 <xsl:variable name="BeginDate" select="'2001-01-01'"/>
-<xsl:variable name="EndDate" select="'2001-12-31'"/>
+<xsl:variable name="EndDate" select="'2001-03-01'"/>
 
 <!-- Parameters missing in DVV Online must be set here -->
 <xsl:variable name="EnergyScreenOption" select="1"/>  		<!-- 1: EnergyBalanc or 2: OutsideLight --> 
@@ -1545,9 +1545,8 @@
 
 	<box name="budget" class="vg::Budget"/>
 	<box class="OutputR">
-		<port name="xAxis" ref="calendar[dateTime]"/>
-		<port name="layout" value="facetted"/>
 		<box name="climate" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="5"/>
 			<box name="co2" class="PlotR">
 				<port name="ports" value="(outdoors[windSpeed] indoors/windSpeed[value] indoors/co2[value])"/>
@@ -1580,6 +1579,7 @@
 			</box>
 		</box>
 		<box name="controlled" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="3"/>
 			<box name="airFlux" class="PlotR">
 				<port name="ports" value="(given/airFlux[value] given/airFlux/infiltration[value] given/airFlux/crackVentilation[value] given/airFlux/gravitation[value])"/>
@@ -1601,6 +1601,7 @@
 			</box>
 		</box>
 		<box name="checkPipes" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="1"/>
 			<box name="pipe1" class="PlotR">
 				<port name="ports" value="(pipes/pipe1[nextTemperatureMin] pipes/pipe1[temperature] pipes/pipe1[nextTemperatureMax])"/>
@@ -1610,6 +1611,7 @@
 			</box>
 		</box>
 		<box name="production" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="2"/>
 			<box name="heating" class="PlotR">
 				<port name="ports" value="(budget[heatingEnergyFlux] budget[heatingEnergyTotal] indoors/temperature[value])"/>
@@ -1625,6 +1627,7 @@
 			</box>
 		</box>
 		<box name="photosynthesis" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="5"/>
 			<box name="Pn" class="PlotR">
 				<port name="ports" value="*/photosynthesis[Pn]"/>

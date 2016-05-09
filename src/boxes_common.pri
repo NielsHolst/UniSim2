@@ -27,6 +27,9 @@ QT -= gui
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wattributes
 
+# Compiler options to speed up code
+QMAKE_CXXFLAGS += -ffast-math
+
 # Additional folders with header files
 INCLUDEPATH += "$$(BOOST_ROOT)"
 

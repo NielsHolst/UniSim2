@@ -10,16 +10,16 @@ class Population : public base::Box
 {
 public:
     Population(QString name, QObject *parent);
-    void initialize();
     void reset();
     void update();
 private:
     // Inputs
     double initial, ageIncrement;
     int bufferSize;
-    double newBorn;
-    QVector<double> gains, losses;
+    double firstCohortGain;
+    QVector<double> cohortsGain, cohortsLoss;
     // Outputs
+    double lastCohortSpill;
     QVector<double> cohorts, ageIncrements;
     // Data
     base::CircularBuffer<double> _cohorts, _ageIncrements;

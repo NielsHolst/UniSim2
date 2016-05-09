@@ -13,6 +13,7 @@ QT += testlib
 # Our project source code
 HEADERS +=  \
     autotest.h \
+    output_file.h \
     test_assign.h \
     test_box.h \
     test_box_builder.h \
@@ -22,7 +23,9 @@ HEADERS +=  \
     test_convert.h \
     test_general_split.h \
     test_history.h \
+    test_new_port.h \
     test_path.h \
+    test_population.h \
     test_port_buffer.h \
     test_port_type.h \
     test_port.h \
@@ -37,6 +40,7 @@ HEADERS +=  \
 
 SOURCES +=  \
     main.cpp \
+    output_file.cpp \
     test_assign.cpp \
     test_box.cpp \
     test_box_builder.cpp \
@@ -46,7 +50,9 @@ SOURCES +=  \
     test_convert.cpp \
     test_general_split.cpp \
     test_history.cpp \
+    test_new_port.cpp \
     test_path.cpp \
+    test_population.cpp \
     test_port_buffer.cpp \
     test_port_type.cpp \
     test_port.cpp \
