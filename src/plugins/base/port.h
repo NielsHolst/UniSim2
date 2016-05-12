@@ -68,9 +68,10 @@ public:
 
     QString attribute(QString name) const;
     QString format() const;
-    QString label() const;
     QString page() const;
     QString plot() const;
+    QString label() const;
+    QStringList labelList() const;
     PortTransform transform() const;
 
     // Change

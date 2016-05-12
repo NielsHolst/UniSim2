@@ -70,3 +70,34 @@ void TestNewPort::testImportNewPortVector() {
         QFAIL(qPrintable(msg));
     }
 }
+
+void TestNewPort::testImportNewPortVectorTransformed() {
+    BoxBuilder builder;
+    Box *root;
+    try {
+        builder.
+            box("Simulation").name("sim").
+                port("steps").equals(30).
+                box("Population").name("pop1").
+                    port("bufferSize").equals(5).
+                endbox().
+                box("OutputR").
+                    box("PageR").
+                        box("PlotR").
+                            port("ports").equals("(pop1[cohorts] ./total[value])").
+                            box().name("total").
+                                newPort("value").imports("pop1[cohorts]").transform(Sum).
+                            endbox().
+                        endbox().
+                    endbox().
+                endbox().
+            endbox();
+        root = builder.content();
+
+        root->run();
+    }
+    catch (Exception &ex) {
+        QString msg = QString("Unexpected exception") + ex.what();
+        QFAIL(qPrintable(msg));
+    }
+}

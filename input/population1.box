@@ -4,8 +4,13 @@ Simulation sim( steps = 30 ) {
     )
   OutputR {
     PageR {
-      PlotR {
-        ports{transform = Sum} = (pop1[cohorts])
+      PlotR (
+        ports = (pop1[cohorts] ./total[value])
+        )
+      {
+        Box total (
+          &value{transform = Sum} = pop1[cohorts]
+          )
       }
     }
   }

@@ -122,11 +122,48 @@ GET_ATTRIBUTE(page)
 GET_ATTRIBUTE(plot)
 GET_ATTRIBUTE(label)
 
+QStringList Port::labelList() const {
+    QStringList list;
+    int n = valueSize();
+    if (n == 1)
+        list << _attributes.label;
+    else {
+        for (int i = 0; i < n; ++i)
+            list << (_attributes.label + "_" + QString::number(i));
+    }
+    return list;
+}
+
 PortTransform Port::transform() const {
     return _attributes.portTransform;
 }
 
 // Change
+
+namespace {
+    PortType deduceTypeFromImportType(PortType importType, PortTransform transform) {
+        PortType type{Null};
+        if (isVector(importType)) {
+            switch (transform) {
+                case Identity:
+                    type = importType;
+                    break;
+                case Sum:
+                case Average:
+                case Min:
+                case Max:
+                case All:
+                case Any:
+                    type = asScalar(importType);
+                    break;
+                case Copy:
+                case Split:
+                    ThrowException("Transform cannot be applied on a vector").value(transform);
+            }
+        }
+        return type;
+    }
+}
 
 void Port::resolveImports() {
     if (_importPath.isEmpty())
@@ -138,7 +175,15 @@ void Port::resolveImports() {
         ThrowException("No matching import ports found").value(_importPath).context(this);
     _importType = commonType(_importPorts);
     if (_importType == Null)
-        _importType = _valueType;
+        ThrowException("Import port is of unknown type").value(_importPath).context(this);
+
+    // Deduce value type from import type (this happens of port is an extra, added port)
+    if (_valueType == Null) {
+        _valueType = deduceTypeFromImportType(_importType, transform());
+//        if (_importPorts.size() > 1 && transform() != Identity)
+//            _valueType = asVector(_valueType);
+    }
+
     // Check update order relative to import
     /*
     for (Port *port : _importPorts) {
@@ -179,15 +224,16 @@ void Port::copyFromImport() {
 
 
 void Port::assign(const QVector<Port*> &sources) {
-//    PortTransform trans = convert<PortTransform>(transform());
     // Create buffer for value if necessary
     if (!_valuePtr) {
-        _valueType = sources.at(0)->type();
-        if (sources.size() > 1 && transform() != Identity)
-            _valueType = asVector(_valueType);
+        if (_valueType == Null) {
+            _valueType = sources.at(0)->type();
+            if (sources.size() > 1 && transform() != Identity)
+                _valueType = asVector(_valueType);
+        }
         _valuePtr = portBuffer().createBuffer(_valueType);
     }
-    // Now assign as scalar or vector
+    // Assign as scalar or vector
     if (sources.size() == 1) {
         const Port *source = sources.at(0);
         base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, transform(), this);

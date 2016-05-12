@@ -36,7 +36,7 @@ void PlotR::collectPorts() {
     }
     // Additional ports listed as input for this plot
     for (QString portName : ports) {
-        QVector<Port*> trackedPorts = Path(portName).resolveMany<Port>();
+        QVector<Port*> trackedPorts = resolveMany<Port>(portName);
         if (trackedPorts.isEmpty())
             ThrowException("Port not found").value(portName);
         // Only add ports not already captured
@@ -67,6 +67,13 @@ inline QString apostrophed(QString s) {
     return "\"" + s + "\"";
 }
 
+inline QStringList apostrophed(QStringList list) {
+    QStringList result;
+    for (int i = 0; i < list.size(); ++i)
+        result << apostrophed(list.at(i));
+    return result;
+}
+
 QString PlotR::toScript() {
     if (_ports.isEmpty())
         return QString();
@@ -75,7 +82,7 @@ QString PlotR::toScript() {
     for (Port *port : _ports) {
         // Avoid x-axis being plotted on y-axis too
         if (port->label() != xLabel)
-            portLabels << apostrophed(port->label());
+            portLabels << apostrophed(port->labelList());
     }
     // Write function call
     QString string;

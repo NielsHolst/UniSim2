@@ -109,7 +109,7 @@ void OutputR::openFile() {
                 "unisim_plot_all(read_unisim_output(\"" +
                 environment().outputFilePath(".txt") +
                 + "\"))\n"
-                + "bringToTop(-1)\n"
+                + "if (!(\"tools:rstudio\" %in% search())) bringToTop(-1)\n"
                 );
 }
 

@@ -81,7 +81,7 @@ QString run::message(QString name) const {
         return "";
 
     QString s = " in " + name + " %1/%2";
-    return s. arg(i->value<int>()). arg(n->value<int>());
+    return s. arg(i->value<int>()-1). arg(n->value<int>());
 }
 
 QString run::errorMessage() const {

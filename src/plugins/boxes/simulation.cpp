@@ -125,15 +125,8 @@ void Simulation::writeDataFrame() {
 
     // Write column labels
     QStringList list;
-    for (Port *port : _trackedPorts) {
-        int n = port->valueSize();
-        if (n == 1)
-            list << port->label();
-        else {
-            for (int i = 0; i < n; ++i)
-                list << (port->label() + "_" + QString::number(i));
-        }
-    }
+    for (Port *port : _trackedPorts)
+        list << port->labelList();
     _stream << list.join("\t") << "\n";
 
     // Write column format

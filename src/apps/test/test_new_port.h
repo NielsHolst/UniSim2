@@ -9,6 +9,7 @@ class TestNewPort : public QObject
 private slots:
     void testImportNewPort();
     void testImportNewPortVector();
+    void testImportNewPortVectorTransformed();
 };
 
 DECLARE_TEST(TestNewPort)
