@@ -1,0 +1,12 @@
+Simulation sim( steps = 30 ) {
+  Population pop1(
+    bufferSize = 5
+    )
+  OutputR {
+    PageR {
+      PlotR {
+        ports{transform = Sum} = (pop1[cohorts])
+      }
+    }
+  }
+}

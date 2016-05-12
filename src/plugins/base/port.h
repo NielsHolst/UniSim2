@@ -22,6 +22,14 @@ class Box;
 class Port : public QObject {
 public:
     enum Access{Input, Output};
+    struct Attributes {
+        QString format, page, plot, label, transform;
+        PortTransform portTransform;
+        Attributes() {
+            transform = "Identity";
+            portTransform = Identity;
+        }
+    };
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
@@ -31,8 +39,7 @@ private:
     bool _reset, _doTrack;
     Vector _track;
     static unsigned _trackFlags;
-    QMap<QString, QString> _attributes;
-    PortTransform _transform;
+    Attributes _attributes;
     QStringList _warnings;
 
 public:
@@ -49,7 +56,7 @@ public:
     Port& noReset();
 
     // Attributes
-    QStringList attributes();
+    static QStringList attributes();
 
     Port& attribute(QString name, QString value);
     Port& format(QString fo);

@@ -10,7 +10,7 @@ unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
     : QObject(parent), _valuePtr(0), _valueType(Null), _importPath(""),
-      _access(Input), _reset(false), _doTrack(false), _track(this), _transform(Identity)
+      _access(Input), _reset(false), _doTrack(false), _track(this)
 {
     Class(Port);
     setObjectName(name);
@@ -21,10 +21,6 @@ Port::Port(QString name, QObject *parent, bool orphan)
         else
             boxParent->addPort(this);
     }
-    _attributes["format"] = QString();
-    _attributes["page"] = QString();
-    _attributes["plot"] = QString();
-    _attributes["label"] = QString();
 }
 
 // Configure
@@ -59,51 +55,66 @@ Port& Port::noReset() {
 
 
 QStringList Port::attributes() {
-    return QStringList( _attributes.keys() );
+    static QStringList attr;
+    if (attr.isEmpty()) {
+        attr << "format" << "page" << "plot" << "label" << "transform";
+    }
+    return attr;
 }
 
 
 // Set attributes
 
+#define CASE_SET_ATTRIBUTE(X,Y) \
+if (name == #X) { \
+    _attributes.X = Y; \
+    return *this; \
+}
+
 Port& Port::attribute(QString name, QString value) {
-    if (!_attributes.contains(name))
-        ThrowException("Unknown attribute").value(name).context(this);
-    _attributes[name] = value;
-    return *this;
+    CASE_SET_ATTRIBUTE(format, value)
+    CASE_SET_ATTRIBUTE(page, value)
+    CASE_SET_ATTRIBUTE(plot, value)
+    CASE_SET_ATTRIBUTE(label, value)
+    if (name == "transform") {
+        _attributes.transform = value;
+        _attributes.portTransform = convert<PortTransform>(value);
+        return *this;
+    }
+    ThrowException("Unknown attribute").value(name).context(this);
 }
 
 #define SET_ATTRIBUTE(X) \
-Port& Port::X(QString fo) { \
-    _attributes[#X] = fo; \
-    return *this; \
+Port& Port::X(QString value) { \
+    return attribute(#X, value); \
 }
 
 SET_ATTRIBUTE(format)
 SET_ATTRIBUTE(page)
 SET_ATTRIBUTE(plot)
 SET_ATTRIBUTE(label)
-
-Port& Port::transform(QString tr) {
-    _transform = convert<PortTransform>(tr);
-    return *this;
-}
+SET_ATTRIBUTE(transform)
 
 Port& Port::transform(PortTransform tr) {
-    _transform = tr;
-    return *this;
+    return attribute("transform", convert<QString>(tr));
 }
 
 // Get attributes
 
+#define CASE_GET_ATTRIBUTE(X) if (name == #X) return _attributes. X
+
 QString Port::attribute(QString name) const {
-    if (!_attributes.contains(name))
-        ThrowException("Unknown attribute").value(name).context(this);
-    return _attributes.value(name);
+    CASE_GET_ATTRIBUTE(format);
+    CASE_GET_ATTRIBUTE(page);
+    CASE_GET_ATTRIBUTE(plot);
+    CASE_GET_ATTRIBUTE(label);
+    CASE_GET_ATTRIBUTE(transform);
+    ThrowException("Unknown attribute").value(name).context(this);
 }
 
 #define GET_ATTRIBUTE(X) \
 QString Port::X() const { \
-    return _attributes.value(#X); \
+    return _attributes. X; \
 }
 
 GET_ATTRIBUTE(format)
@@ -112,7 +123,7 @@ GET_ATTRIBUTE(plot)
 GET_ATTRIBUTE(label)
 
 PortTransform Port::transform() const {
-    return _transform;
+    return _attributes.portTransform;
 }
 
 // Change
@@ -172,18 +183,18 @@ void Port::assign(const QVector<Port*> &sources) {
     // Create buffer for value if necessary
     if (!_valuePtr) {
         _valueType = sources.at(0)->type();
-        if (sources.size() > 1 && _transform != Identity)
+        if (sources.size() > 1 && transform() != Identity)
             _valueType = asVector(_valueType);
         _valuePtr = portBuffer().createBuffer(_valueType);
     }
     // Now assign as scalar or vector
     if (sources.size() == 1) {
         const Port *source = sources.at(0);
-        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, _transform, this);
+        base::assign(_valueType, _valuePtr, source->_valueType, source->_valuePtr, transform(), this);
     }
     else {
         const void *sourceVector = vectorize(_importType, sources);
-        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, _transform, this);
+        base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, transform(), this);
     }
 }
 
