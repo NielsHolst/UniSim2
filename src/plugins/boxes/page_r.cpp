@@ -37,7 +37,7 @@ void PageR::amend() {
         QString msg{"Expected one x-axis, got '%1'"};
         ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
     }
-    importPorts[0]->page("");
+    importPorts[0]->page("default");
 }
 
 void PageR::initialize() {
@@ -70,7 +70,7 @@ QString PageR::toScript() {
       << "  grid.arrange(\n" ;
     bool skipDefaultPlot = (_plots.size() > 1);
     for (PlotR *plot : _plots) {
-        if (skipDefaultPlot && plot->objectName().isEmpty())
+        if (skipDefaultPlot && plot->objectName() == "default")
             continue;
         s << plot->toScript();
     }

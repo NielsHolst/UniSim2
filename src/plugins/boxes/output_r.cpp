@@ -25,6 +25,8 @@ OutputR::OutputR(QString name, QObject *parent)
 {
     Input(ports);
     Input(clear).equals(true);
+    Input(showPlots).equals(true);
+    Input(script);
 }
 
 void OutputR::amend() {
@@ -47,7 +49,7 @@ void OutputR::addExtraPorts() {
         // Add ports to blank page (which will not show)
         for (Port *port : trackedPorts) {
             if (port->page().isNull())
-                port->page("");
+                port->page("default");
         }
     }
 }
@@ -75,7 +77,7 @@ QString OutputR::toScript() {
     s += "unisim_plot_all <- function(df) {\n";
     bool skipDefaultPage = (_pages.size() > 1);
     for (PageR *page : _pages) {
-        if (skipDefaultPage && page->objectName().isEmpty())
+        if (skipDefaultPage && page->objectName()=="default")
             continue;
         s += "  " + page->functionName() + "(df)\n";
     }
@@ -104,13 +106,15 @@ void OutputR::openFile() {
     _file.setFileName(filePath);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
-    environment().copyToClipboard(
-                "source(\""+filePath+"\")\n"
-                "unisim_plot_all(read_unisim_output(\"" +
-                environment().outputFilePath(".txt") +
-                + "\"))\n"
-                + "if (!(\"tools:rstudio\" %in% search())) bringToTop(-1)\n"
-                );
+    QString s;
+    s += "source(\""+filePath+"\")\n";
+    s += "sim = read_unisim_output(\"" + environment().outputFilePath(".txt") + "\")\n";
+    if (showPlots)
+        s += "unisim_plot_all(sim)\n";
+    s += "if (!(\"tools:rstudio\" %in% search())) bringToTop(-1)\n";
+    if (!script.isEmpty())
+        s += "source(\"" + environment().scriptFilePath(script) + "\")\n";
+    environment().copyToClipboard(s);
 }
 
 }

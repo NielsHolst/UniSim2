@@ -97,7 +97,7 @@ void Records::createColumnOutputs() {
             Port &port( NamedOutput(name, values[i]) );
             // Hack! In stead provide list(!) of column names to ignore
             if (name.toLower() != "station")
-                port.page("");
+                port.page("default");
         }
     }
 }

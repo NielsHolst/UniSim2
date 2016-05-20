@@ -24,8 +24,9 @@ public:
 
 private:
     // Input
-    bool clear;
     QVector<QString> ports;
+    bool clear, showPlots;
+    QString script;
 
     // Data
     QVector<PageR*> _pages;

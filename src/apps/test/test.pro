@@ -21,6 +21,7 @@ HEADERS +=  \
     test_circle_buffer.h \
     test_command.h \
     test_convert.h \
+    test_eq.h \
     test_general_split.h \
     test_history.h \
     test_new_port.h \
@@ -34,6 +35,7 @@ HEADERS +=  \
     test_track.h \
     test_unique_name.h \
     test_vector.h \
+    test_vector_op.h \
     test_vector_sum.h \
     test_vectorization.h \
     test_weather.h
@@ -48,6 +50,7 @@ SOURCES +=  \
     test_circle_buffer.cpp \
     test_command.cpp \
     test_convert.cpp \
+    test_eq.cpp \
     test_general_split.cpp \
     test_history.cpp \
     test_new_port.cpp \
@@ -61,6 +64,7 @@ SOURCES +=  \
     test_track.cpp \
     test_unique_name.cpp \
     test_vector.cpp \
+    test_vector_op.cpp \
     test_vector_sum.cpp \
     test_vectorization.cpp \
     test_weather.cpp

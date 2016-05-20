@@ -193,7 +193,7 @@ void Dialog::writeWelcome() {
     info += "\nYour input folder is '" + inputFolder + "'";
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
-    _history.add("load " + latestFile);
+    _history.add("load \"" + latestFile + "\"");
     information(info);
     message("Ready");
 }

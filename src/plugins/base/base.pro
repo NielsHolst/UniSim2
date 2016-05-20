@@ -61,6 +61,7 @@ HEADERS +=  \
     timer.h \
     unique_name.h \
     vector.h \
+    vector_op.h \
     vector_vector.h \
     vectorize.h \
     organisation.h
@@ -100,6 +101,7 @@ SOURCES +=  \
     timer.cpp \
     unique_name.cpp \
     vector.cpp \
+    vector_op.cpp \
     vector_vector.cpp \
     vectorize.cpp
 

@@ -10,7 +10,7 @@ PUBLISH(Fibonacci)
 Fibonacci::Fibonacci(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Output(value).plot("default");
+    Output(value).page("default");
 }
 
 void Fibonacci::reset() {

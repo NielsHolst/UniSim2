@@ -12,10 +12,10 @@ ModelA::ModelA(QString name, QObject *parent)
 {
     Input(input1);
     Input(input2);
-    Input(input3).page("");
-    Input(input4).page("");
-    Output(output1).page("");
-    Output(output2).page("");
+    Input(input3).page("default");
+    Input(input4).page("default");
+    Output(output1).page("default");
+    Output(output2).page("default");
     Output(output3);
     Output(output4);
 }

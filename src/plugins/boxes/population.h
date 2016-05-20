@@ -20,9 +20,9 @@ private:
     QVector<double> cohortsGain, cohortsLoss;
     // Outputs
     double lastCohortSpill;
-    QVector<double> cohorts, ageIncrements;
+    QVector<double> cohorts, age;
     // Data
-    base::CircularBuffer<double> _cohorts, _ageIncrements;
+    base::CircularBuffer<double> _cohorts, _age;
     QVector<base::Port*> _gains, _losses, _newBorns;
 };
 

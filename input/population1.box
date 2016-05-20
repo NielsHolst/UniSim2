@@ -1,17 +1,43 @@
 Simulation sim( steps = 30 ) {
-  Population pop1(
-    bufferSize = 5
+  Box hippodamia {
+    DayDegrees ageScale (
+      T0 = 8.8
+      T = 24.8
+      timeStepDays = 1
     )
+    Population egg (
+      bufferSize = 10
+      ageIncrement = ../ageScale[step]
+    )
+    Gompertz development (
+        x = ../egg[age]
+        dx = ../egg[ageIncrement]
+        yMax = 1
+        a = 100
+        b = 0.1
+    )
+  }
   OutputR {
-    PageR {
+    PageR p1 {
       PlotR (
-        ports = (pop1[cohorts] ./total[value])
-        )
+        ports = (egg[age] egg[cohorts] ./total[eggs])
+      )
       {
         Box total (
-          &value{transform = Sum} = pop1[cohorts]
-          )
+          &eggs{transform = Sum} = egg[cohorts]
+        )
       }
+    }
+    PageR p2 {
+      PlotR (
+        ports = (egg[age])
+        layout = "merged"
+      )
+    }
+    PageR p3 {
+      PlotR (
+        ports = (development[y])
+      )
     }
   }
 }

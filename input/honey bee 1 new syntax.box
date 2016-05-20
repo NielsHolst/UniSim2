@@ -1,0 +1,33 @@
+Simulation sim
+  steps = 30
+  Calendar calendar<
+  Box family
+    apis::LifeStage egg
+      bufferSize = 10
+      numberInit = 100
+      massInit = 0.15
+      Gompertz Pmorph
+        x = ..[age]
+        dx = calendar[timeStepDays]
+        x0 = 0.01
+        y0 = 2.5
+        x0 = 0.99
+        y0 = 5.5
+      <
+      Exponential massIncrement
+        x = ..[mass]
+        r = 0
+      <
+    <
+  <
+  OutputR
+    PageR p1
+      PlotR
+        ports = (egg[number])
+      <
+      PlotR
+        ports = (egg[numberMorphed] egg[massMorphed])
+      <
+    <
+  <
+<
