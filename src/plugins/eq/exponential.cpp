@@ -26,12 +26,14 @@ void Exponential::reset() {
 }
 
 double Exponential::f(double x) {
-    return min(x*(exp(r*dt)-1), yMax);
+    double dx = x*(exp(r*dt)-1),
+           dxMax = yMax - x;
+    return (dx > dxMax) ? dxMax : dx;
 }
 
 void Exponential::update() {
     Q_ASSERT(x.size() == y.size());
     std::transform(x.constBegin(), x.constEnd(), y.begin(), [this](const double &x){return this->f(x);});
 }
-
+// line break in ports: ( \n  )
 }

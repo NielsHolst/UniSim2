@@ -13,7 +13,7 @@ void TestEq::testGompertz() {
            b = 0.1;
     QVector<double> x, result, expected;
     x << 30 << 60 << 90;
-    expected << 15.327994 << 13.238858 << 0.773544;
+    expected << 0.2762402 << 0.3705556 << 0.3924199;
     try {
         builder.
             box("Simulation").name("sim").

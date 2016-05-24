@@ -31,15 +31,15 @@ SUBDIRS += test_boxes
 test_boxes.subdir = src/plugins/test_boxes
 test_boxes.depends = base
 
-#SUBDIRS += test
-#test.subdir = src/apps/test
-#test.depends = base
-#test.depends = boxes
-#test.depends = command
-#test.depends = eq
-#test.depends = savanna
-##test.depends = vg
-#test.depends = test_boxes
+SUBDIRS += test
+test.subdir = src/apps/test
+test.depends = base
+test.depends = boxes
+test.depends = command
+test.depends = eq
+test.depends = savanna
+#test.depends = vg
+test.depends = test_boxes
 
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim

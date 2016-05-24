@@ -19,15 +19,21 @@ LifeStage::LifeStage(QString name, QObject *parent)
     Input(Pmorph).imports("./Pmorph[y]");
     Input(massIncrement).imports("./massIncrement[y]");
     Input(bufferSize).equals(30);
-    Input(numberInit).equals(1);
-    Input(massInit).equals(1);
+    Input(numberInit).equals(0);
+    Input(massInit).equals(0);
     Input(numberNew);
     Input(massNew);
     Output(number);
     Output(mass);
     Output(age);
+    Output(numberSum);
+    Output(massMin);
+    Output(massMax);
+    Output(massAverage);
     Output(numberMorphed);
     Output(massMorphed);
+    Output(numberLeaked);
+    Output(massLeaked);
 }
 
 void LifeStage::initialize() {
@@ -44,6 +50,7 @@ void LifeStage::reset() {
     _number.push(numberInit);
     _mass.push(massInit);
     _age.push(0);
+    updateStatistics();
 }
 
 void LifeStage::update() {
@@ -51,18 +58,25 @@ void LifeStage::update() {
     Cohorts numberMorphedCohorts(bufferSize),
             massMorphedCohorts(bufferSize);
     vector_op::multiply(numberMorphedCohorts, number, Pmorph),
-    vector_op::multiply(massMorphedCohorts, mass, Pmorph);
+    vector_op::multiply(massMorphedCohorts, mass, numberMorphedCohorts);
     vector_op::minus(number, numberMorphedCohorts);
-    vector_op::minus(mass, massMorphedCohorts);
     numberMorphed = vector_op::sum(numberMorphedCohorts);
-    massMorphed = vector_op::sum(massMorphedCohorts);
+    massMorphed = (numberMorphed == 0.) ? 0. : vector_op::sum(massMorphedCohorts)/numberMorphed;
     // Growth
     vector_op::plus(mass, massIncrement);
     // Cohorts development
     vector_op::plus(age, timeStepDays);
-    _number.push(numberNew);
-    _mass.push(massNew);
+    numberLeaked = _number.push(numberNew);
+    massLeaked =_mass.push(massNew)*numberLeaked;
     _age.push(0);
+    updateStatistics();
+}
+
+void LifeStage::updateStatistics() {
+    numberSum = _number.sum();
+    massMin = _mass.min();
+    massMax = _mass.max();
+    massAverage = _mass.average();
 }
 
 }

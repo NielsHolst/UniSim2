@@ -12,14 +12,15 @@ public:
     void update();
 private:
     // input
-    QVector<double> x;
-    double x0,y0, x1,y1, dx, yScale;
+    QVector<double> x, dx;
+    double x0,y0, x1,y1;
     // output
     QVector<double> y;
     // methods
-    double f(double x);
+    double f(double x, double dx);
     // data
     double _a, _b;
+    bool _dxIsScalar;
 };
 
 }

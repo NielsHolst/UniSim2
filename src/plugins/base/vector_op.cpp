@@ -135,4 +135,9 @@ double sum(const Vec &x) {
     return receiver;
 }
 
+double average(const Vec &x) {
+    int n = x.size();
+    return (n==0) ? 0 : sum(x)/n;
+}
+
 } // namespace

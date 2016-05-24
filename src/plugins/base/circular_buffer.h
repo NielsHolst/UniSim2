@@ -1,5 +1,6 @@
 #ifndef CIRCULAR_BUFFER_H
 #define CIRCULAR_BUFFER_H
+#include <numeric>
 #include <QVector>
 
 namespace base {
@@ -15,8 +16,9 @@ public:
     // Empties the cb
     void clear();
     // Puts a value at the next empty place in the buffer (if cb is not yet full),
-    // else puts the value where tail currently is
-    void push(T value);
+    // else puts the value where tail currently is;
+    // returns the value pushed out (lost) from the buffer
+    T push(T value);
     // The cb is empty just after construction and after clear()
     bool isEmpty() const;
     // The cb is full if a value has been pushed size number of times
@@ -29,13 +31,24 @@ public:
     int headIndex() const;
     // Returns value indexed relative to head (at index 0), i.e. and increasing index returns progressively older values
     T at(int i) const;
-    // Works as 'at' but allows the value at the indes position to be changed
-    T& operator[](int i);
+    // Sets the value at(i); returns the value lost from that position
+    T set(int i, T value);
+    // Sum of buffer contents
+    T sum() const;
+    // Average of buffer contents
+    T average() const;
+    // Minimum value of buffer contents
+    T min() const;
+    // Maximum value of buffer contents
+    T max() const;
 private:
     // Data
     QVector<T> *_vector;
     int _size, _head, _tail;
     bool _full;
+    T _sum, _min, _max;
+    // Methods
+    T replace(T &place, T value);
 };
 
 template <class T>
@@ -56,15 +69,44 @@ void CircularBuffer<T>::clear() {
     _vector->fill(T());
     _head = _tail = -1;
     _full = false;
+    _sum = 0;
+    _min = std::numeric_limits<T>::max();
+    _max = -std::numeric_limits<T>::max();
 }
 
 template <class T>
-void CircularBuffer<T>::push(T value) {
+T CircularBuffer<T>::push(T value) {
     if (_full || _head == -1)
         _tail = (_tail + 1) % _size;
+
     _head = (_head + 1) % _size;
-    (*_vector)[_head] = value;
     _full = (_full || _head == _size-1);
+
+    return replace( (*_vector)[_head], value );
+
+
+//    T &place((*_vector)[_head]),
+//      pushedOut = place;
+//    _sum += value - place;
+//    if (value < _min)
+//        _min = value;
+//    if (value > _max)
+//        _max = value;
+//    place = value;
+//    _full = (_full || _head == _size-1);
+//    return pushedOut;
+}
+
+template <class T>
+T CircularBuffer<T>::replace(T &place, T value) {
+    T pushedOut = place;
+    _sum += value - place;
+    if (value < _min)
+        _min = value;
+    if (value > _max)
+        _max = value;
+    place = value;
+    return pushedOut;
 }
 
 template <class T>
@@ -98,8 +140,28 @@ T CircularBuffer<T>::at(int i) const {
 }
 
 template <class T>
-T& CircularBuffer<T>::operator[](int i) {
-    return (*_vector)[ (_head + i) % _size ];
+T CircularBuffer<T>::set(int i, T value) {
+    return replace( (*_vector)[(_head + i) % _size], value );
+}
+
+template <class T>
+T CircularBuffer<T>::sum() const {
+    return _sum;
+}
+
+template <class T>
+T CircularBuffer<T>::average() const {
+    return (_full || _head == -1) ? _sum/_size : _sum/(_head+1);
+}
+
+template <class T>
+T CircularBuffer<T>::min() const {
+    return _min;
+}
+
+template <class T>
+T CircularBuffer<T>::max() const {
+    return _max;
 }
 
 }

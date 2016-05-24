@@ -20,9 +20,13 @@ private:
     Cohorts Pmorph, massIncrement;
     // output
     Cohorts number, mass, age;
-    double numberMorphed, massMorphed;
+    double numberSum, massMin, massMax, massAverage,
+        numberMorphed, massMorphed,
+        numberLeaked, massLeaked;
     // data
     base::CircularBuffer<double> _number, _mass, _age;
+    // methods
+    void updateStatistics();
 };
 
 }
