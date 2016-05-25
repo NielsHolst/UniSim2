@@ -89,15 +89,6 @@ QStringList split(const char *s, QObject *context) {
     return split(QString(s), context);
 }
 
-bool isAmpersanded(QString s) {
-    return s.startsWith("&");
-}
-
-QString removeAmpersand(QString s) {
-    int n = s.size();
-    return s.mid(1, n-1);
-}
-
 bool isApostrophed(QString s) {
     if (s.startsWith("\"")) {
         if (s.endsWith("\""))

@@ -19,8 +19,6 @@ QString fullName(const QObject *object);
 QStringList split(QString s, QObject *context = 0);
 QStringList split(const char *s, QObject *context = 0);
 
-bool isAmpersanded(QString s);
-QString removeAmpersand(QString s);
 bool isApostrophed(QString s);
 bool isParenthesized(QString s);
 QString deEmbrace(QString s);

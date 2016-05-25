@@ -41,6 +41,8 @@ public:
     T min() const;
     // Maximum value of buffer contents
     T max() const;
+    // Re-calculate statistics
+    void updateStatistics();
 private:
     // Data
     QVector<T> *_vector;
@@ -49,6 +51,7 @@ private:
     T _sum, _min, _max;
     // Methods
     T replace(T &place, T value);
+    int sizeUsed() const;
 };
 
 template <class T>
@@ -151,7 +154,13 @@ T CircularBuffer<T>::sum() const {
 
 template <class T>
 T CircularBuffer<T>::average() const {
-    return (_full || _head == -1) ? _sum/_size : _sum/(_head+1);
+    int n = sizeUsed();
+    return (n==0) ? 0 : _sum/n;
+}
+
+template <class T>
+int CircularBuffer<T>::sizeUsed() const {
+    return (_full || _head == -1) ? _size :(_head+1);
 }
 
 template <class T>
@@ -162,6 +171,22 @@ T CircularBuffer<T>::min() const {
 template <class T>
 T CircularBuffer<T>::max() const {
     return _max;
+}
+
+template <class T>
+void CircularBuffer<T>::updateStatistics() {
+    _sum = 0;
+    _min = std::numeric_limits<T>::max();
+    _max = -std::numeric_limits<T>::max();
+    const T *p = _vector->data();
+    int n = sizeUsed();
+    for (int i = 0; i < n; ++i, ++p) {
+        _sum += *p;
+        if (*p < _min)
+            _min = *p;
+        if (*p > _max)
+            _max = *p;
+    }
 }
 
 }

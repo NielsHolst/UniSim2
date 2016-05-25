@@ -73,6 +73,8 @@ void LifeStage::update() {
 }
 
 void LifeStage::updateStatistics() {
+    _number.updateStatistics();
+    _mass.updateStatistics();
     numberSum = _number.sum();
     massMin = _mass.min();
     massMax = _mass.max();

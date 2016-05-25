@@ -1,63 +1,53 @@
-Simulation sim( steps = 300 )
-{
-  Calendar calendar (
-    timeStep = 1
-    timeUnit = "h"
-    )
-  Box hive
-  {
-    apis::LifeStage egg (
-      bufferSize = 250
-      numberInit = 100
-      massInit = 0.15
-    )
-    {
-      Exponential massIncrement (
-        x = ..[mass]
-        r = 0
-      )
-      Gompertz Pmorph (
-        x = ..[age]
-        dx = calendar[timeStepDays]
-        x0 = 2.5
-        y0 = 0.01
-        x1 = 5.5
-        y1 = 0.99
-      )
+Simulation sim {
+  .steps = 300
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Box hive {
+    apis::LifeStage egg {
+      .bufferSize = 250
+      .numberInit = 100
+      .massInit = 0.15
+      Exponential massIncrement {
+        .x = ..[mass]
+        .r = 0
+      }
+      Gompertz Pmorph {
+        .x = ..[age]
+        .dx = calendar[timeStepDays]
+        .x0 = 2.5
+        .y0 = 0.01
+        .x1 = 5.5
+        .y1 = 0.99
+      }
     }
-    apis::LifeStage larva (
-      bufferSize = 300
-      numberNew = ../egg[numberMorphed]
-      massNew = ../egg[massMorphed]
-    )
-    {
-      Exponential massIncrement (
-        x = ..[mass]
-        r = 1.243
-        dt = calendar[timeStepDays]
-        yMax = 150
-      )
-      Gompertz Pmorph (
-        x = ..[mass]
-        dx = ../massIncrement[y]
-        x0 = 130
-        y0 = 0.01
-        x1 = 150
-        y1 = 0.99
-      )
+    apis::LifeStage larva {
+      .bufferSize = 300
+      .numberNew = ../egg[numberMorphed]
+      .massNew = ../egg[massMorphed]
+      Exponential massIncrement {
+        .x = ..[mass]
+        .r = 1.243
+        .dt = calendar[timeStepDays]
+        .yMax = 150
+      }
+      Gompertz Pmorph {
+        .x = ..[mass]
+        .dx = ../massIncrement[y]
+        .x0 = 130
+        .y0 = 0.01
+        .x1 = 150
+        .y1 = 0.99
+      }
     }
   }
-  OutputR
-  {
-    PageR p1
-    {
-      PlotR (
-        ncol = 2
-        ports = (egg[numberMorphed] egg[massMorphed] larva[numberMorphed] larva[massMorphed])
-      )
-      PlotR (
-        ports = (larva[numberSum] larva[numberLeaked] larva[massLeaked] larva[massMin] larva[massMax] larva[massAverage])
-      )
+  OutputR {
+    PageR p1 {
+      PlotR {
+        .ncol = 3
+        .ports = (egg[numberSum] egg[numberMorphed] egg[massMorphed] larva[numberSum] larva[numberMorphed] larva[massMorphed])
+      }
     }
   }
 }

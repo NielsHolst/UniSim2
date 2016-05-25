@@ -15,6 +15,7 @@ HEADERS +=  \
     autotest.h \
     output_file.h \
     test_assign.h \
+    test_ast_boxes.h \
     test_box.h \
     test_box_builder.h \
     test_box_cases.h \
@@ -44,6 +45,7 @@ SOURCES +=  \
     main.cpp \
     output_file.cpp \
     test_assign.cpp \
+    test_ast_boxes.cpp \
     test_box.cpp \
     test_box_builder.cpp \
     test_box_cases.cpp \

@@ -41,7 +41,7 @@ QString NameValuePair::toString() const {
 }
 
 QString ParameterWithAttributes::toString() const {
-    QString s = QString::fromStdString(name);
+    QString s = QString::fromStdString(type) + QString::fromStdString(name);
     if (attributes.size() > 0) {
         s += " with";
         for (auto attr : attributes)
@@ -52,10 +52,12 @@ QString ParameterWithAttributes::toString() const {
 
 void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
     QString nam = QString::fromStdString(name);
-    if (isAmpersanded(nam))
-        builder.newPort(removeAmpersand(nam));
-    else
+    if (type==".")
         builder.port(nam);
+    else {
+        Q_ASSERT(type=="+");
+        builder.newPort(nam);
+    }
 
     for (NameValuePair pair : attributes) {
         QString name = QString::fromStdString(pair.name),
@@ -68,30 +70,26 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
 }
 
 QString Parameter::toString() const {
-    QString val = value.is_initialized() ?
-                  QString::fromStdString(value.get()) :
-                  QString("na");
+    QString val = QString::fromStdString(value);
     return attributedName.toString() + " equals '" + val + "'";
 }
 
 void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
-    if (value.is_initialized()) {
-        QString val = QString::fromStdString(value.get());
-        if (isApostrophed(val)) {
-            val = deEmbrace(val);
-            if (isParenthesized(val))
-                builder.equals(split(val));
-            else
-                builder.equals(val);
-        }
-        else if (isParenthesized(val))
+    QString val = QString::fromStdString(value);
+    if (isApostrophed(val)) {
+        val = deEmbrace(val);
+        if (isParenthesized(val))
             builder.equals(split(val));
-        else if (isValue(val))
-            builder.equals(val);
         else
-            builder.imports(val);
+            builder.equals(val);
     }
+    else if (isParenthesized(val))
+        builder.equals(split(val));
+    else if (isValue(val))
+        builder.equals(val);
+    else
+        builder.imports(val);
 }
 
 void Node::clear() {

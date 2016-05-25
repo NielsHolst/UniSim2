@@ -38,6 +38,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::ParameterWithAttributes,
+    (std::string, type)
     (std::string, name)
     (std::vector<ast::NameValuePair>, attributes)
 )
@@ -45,7 +46,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::Parameter,
     (ast::ParameterWithAttributes, attributedName)
-    (ast::OptionalValue, value)
+    (std::string, value)
 )
 
 #define RULE_NAME(X) X.name(#X)
@@ -58,19 +59,19 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
     qi::rule<Iterator, ascii::space_type, Node()> node;
     qi::rule<Iterator, ascii::space_type, std::string()>
             class_name, object_name, name, value, unquoted_value, quoted_value, list_value;
-    qi::rule<Iterator, ascii::space_type, OptionalValue()> optional_value;
+//    qi::rule<Iterator, ascii::space_type, OptionalValue()> optional_value;
     qi::rule<Iterator, ascii::space_type, NameValuePair()> name_value_pair;
     qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> attributes;
     qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributed_name;
     qi::rule<Iterator, ascii::space_type, Parameter()> parameter;
-    qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
-    qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
+//    qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
+//    qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
 
     std::stringstream _error;
 
     node_parser() : node_parser::base_type(node) {
         // A name has C++ identifier style; a leading ampersand is allowed
-        name %= lexeme[char_("&a-zA-Z_") >> *char_("a-zA-Z0-9_")];
+        name %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
         // classes and objects have a name;
         // a class name may be qualified by a namespace name
         class_name %= name >> -(char_(':') > char_(':') > name);
@@ -85,21 +86,21 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
         // A value may be optional
-        optional_value %= value;
+//        optional_value %= value;
         // A name-value pair
         name_value_pair %= name >> '=' > value;
         // Attributes as a list of name-value pairs
-        attributes %= '{' >> *name_value_pair > '}';
+        attributes %= '(' >> *name_value_pair > ')';
         // A name with optional attributes
-        attributed_name %= name >> -attributes;
+        attributed_name %= char_("\\.+") >> name >> -attributes;
         // A parameter has a name, maybe with attributes, and maybe with a value
-        parameter %= attributed_name >> -('=' > optional_value);
+        parameter %= attributed_name > '=' >> value;
         // A list of parameters
-        parameters %= '(' >> *parameter > ')';
+//        parameters %= '(' >> *parameter > ')';
         // A body with some nodes
-        body %= '{' >> *node > '}';
+//        body %= '{' >> *node > '}';
         // A node has a class name, maybe an object name, maybe parameters, and maybe a body
-        node %= class_name >> -object_name >> -parameters  >> -body;
+        node %= class_name >> -object_name >> '{' >> *parameter >> *node > '}';
         // Rule names
         RULE_NAME(name);
         RULE_NAME(class_name);
@@ -108,13 +109,13 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         RULE_NAME(quoted_value);
         RULE_NAME(unquoted_value);
         RULE_NAME(list_value);
-        RULE_NAME(optional_value);
+//        RULE_NAME(optional_value);
         RULE_NAME(name_value_pair);
         RULE_NAME(attributes);
         RULE_NAME(attributed_name);
         RULE_NAME(parameter);
-        RULE_NAME(parameters);
-        RULE_NAME(body);
+//        RULE_NAME(parameters);
+//        RULE_NAME(body);
         node.name("box");
         // Error handling
         qi::on_error<qi::fail>
