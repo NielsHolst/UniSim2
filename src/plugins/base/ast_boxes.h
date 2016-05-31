@@ -54,23 +54,32 @@ BOOST_FUSION_ADAPT_STRUCT(
 namespace ast {
 
 template <typename Iterator>
-struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
+struct comment_skipper : public qi::grammar<Iterator>
 {
-    qi::rule<Iterator, ascii::space_type, Node()> node;
-    qi::rule<Iterator, ascii::space_type, std::string()>
+    qi::rule<Iterator> _skip;
+
+    comment_skipper()
+        : comment_skipper::base_type(_skip)
+    {
+        _skip = ascii::space | ('#' >> *(char_ - qi::eol) >> qi::eol);
+    }
+};
+
+template <typename Iterator, typename Skipper = comment_skipper<Iterator>>
+struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
+{
+    qi::rule<Iterator, Skipper, Node()> node;
+    qi::rule<Iterator, Skipper, std::string()>
             class_name, object_name, name, value, unquoted_value, quoted_value, list_value;
-//    qi::rule<Iterator, ascii::space_type, OptionalValue()> optional_value;
-    qi::rule<Iterator, ascii::space_type, NameValuePair()> name_value_pair;
-    qi::rule<Iterator, ascii::space_type, std::vector<NameValuePair>()> attributes;
-    qi::rule<Iterator, ascii::space_type, ParameterWithAttributes()> attributed_name;
-    qi::rule<Iterator, ascii::space_type, Parameter()> parameter;
-//    qi::rule<Iterator, ascii::space_type, std::vector<Parameter>()> parameters;
-//    qi::rule<Iterator, ascii::space_type, std::vector<CompositeNode>()> body;
+    qi::rule<Iterator, Skipper, NameValuePair()> name_value_pair;
+    qi::rule<Iterator, Skipper, std::vector<NameValuePair>()> attributes;
+    qi::rule<Iterator, Skipper, ParameterWithAttributes()> attributed_name;
+    qi::rule<Iterator, Skipper, Parameter()> parameter;
 
     std::stringstream _error;
 
-    node_parser() : node_parser::base_type(node) {
-        // A name has C++ identifier style; a leading ampersand is allowed
+    node_grammar() : node_grammar::base_type(node) {
+        // A name has C++ identifier style
         name %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
         // classes and objects have a name;
         // a class name may be qualified by a namespace name
@@ -85,21 +94,15 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         unquoted_value %= lexeme[+(char_ - char_(" \t\n \"(){}"))];
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
-        // A value may be optional
-//        optional_value %= value;
         // A name-value pair
         name_value_pair %= name >> '=' > value;
         // Attributes as a list of name-value pairs
         attributes %= '(' >> *name_value_pair > ')';
         // A name with optional attributes
         attributed_name %= char_("\\.+") >> name >> -attributes;
-        // A parameter has a name, maybe with attributes, and maybe with a value
+        // A parameter has a name, maybe with attributes, and a value
         parameter %= attributed_name > '=' >> value;
-        // A list of parameters
-//        parameters %= '(' >> *parameter > ')';
-        // A body with some nodes
-//        body %= '{' >> *node > '}';
-        // A node has a class name, maybe an object name, maybe parameters, and maybe a body
+        // A node has a class name, maybe an object name, maybe some parameters, and maybe some nodes
         node %= class_name >> -object_name >> '{' >> *parameter >> *node > '}';
         // Rule names
         RULE_NAME(name);
@@ -109,13 +112,10 @@ struct node_parser : qi::grammar<Iterator, ascii::space_type, Node()>
         RULE_NAME(quoted_value);
         RULE_NAME(unquoted_value);
         RULE_NAME(list_value);
-//        RULE_NAME(optional_value);
         RULE_NAME(name_value_pair);
         RULE_NAME(attributes);
         RULE_NAME(attributed_name);
         RULE_NAME(parameter);
-//        RULE_NAME(parameters);
-//        RULE_NAME(body);
         node.name("box");
         // Error handling
         qi::on_error<qi::fail>

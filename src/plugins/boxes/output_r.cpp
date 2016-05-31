@@ -71,7 +71,7 @@ QString OutputR::toScript() {
     s += "rm(list=ls(all=TRUE))\n";
     if (clear)
         s += "graphics.off()\n";
-    s += "source(\"" + environment().scriptFilePath("common.R") + "\")\n\n";
+    s += "source(\"" + environment().filePath(Environment::Script, "common.R") + "\")\n\n";
     for (PageR *page : _pages)
         s += page->toScript();
     s += "unisim_plot_all <- function(df) {\n";
@@ -113,7 +113,7 @@ void OutputR::openFile() {
         s += "unisim_plot_all(sim)\n";
     s += "if (!(\"tools:rstudio\" %in% search())) bringToTop(-1)\n";
     if (!script.isEmpty())
-        s += "source(\"" + environment().scriptFilePath(script) + "\")\n";
+        s += "source(\"" + environment().filePath(Environment::Script, script) + "\")\n";
     environment().copyToClipboard(s);
 }
 

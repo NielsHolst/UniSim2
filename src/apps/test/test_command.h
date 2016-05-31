@@ -7,8 +7,8 @@ class TestCommand : public QObject
 {
     Q_OBJECT
 private slots:
-    void testSetwdCreate();
-    void testSetwdExecute();
+    void testCreate();
+    void testExecute();
 };
 
 DECLARE_TEST(TestCommand)

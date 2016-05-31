@@ -37,6 +37,8 @@ bool BoxReaderBoxes::parse(ast::Node &astRoot) {
         std::istream_iterator<char>(_file),
         std::istream_iterator<char>(),
         std::back_inserter(storage));
+    // Make certain file ends with a line break
+    storage += "\n";
     return ast::parse_boxes(storage.begin(), storage.end(), astRoot);
 }
 

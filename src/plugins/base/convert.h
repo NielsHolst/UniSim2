@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QDateTime>
 #include <QString>
+#include <QStringList>
 #include <QTime>
 #include <QVector>
 #include "exception.h"

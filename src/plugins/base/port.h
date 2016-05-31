@@ -35,6 +35,7 @@ private:
     PortType _valueType, _importType;
     QString _importPath;
     QVector<Port *> _importPorts;
+    bool _importPortMustExist;
     Access _access;
     bool _reset, _doTrack;
     Vector _track;
@@ -50,6 +51,7 @@ public:
     Port& equals(const char *value);
     Port& equals(QStringList value);
     Port& imports(QString pathToPort);
+    Port& importsMaybe(QString pathToPort);
     Port& access(Access acc);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
@@ -127,8 +129,6 @@ template <class T> Port& Port::equals(T value)
     // Create a buffer for the value if it does not exist
     if (_valuePtr == 0)
         _valuePtr = portBuffer().createBuffer(_valueType);
-    // Import paths are cleared, since the port now has a fixed value
-    _importPath.clear();
     // Copy value to the buffer that _valuePtr points to
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform());
     return *this;

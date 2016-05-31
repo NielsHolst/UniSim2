@@ -28,10 +28,6 @@
     ]
   }
   {
-    'match': '\\b(plot|label|page|Rformat|track|transform)\\b'
-    'name': 'keyword.control'
-  }
-  {
     'match': '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
     'name': 'constant.numeric'
   }
@@ -39,11 +35,4 @@
     'match': '='
     'name': 'keyword.operator.assignment'
   }
-  {
-    'match': '\\b(Identity|Sum|Average|Min|Max|Copy|Split|All|Any)\\b'
-    'name': 'support.function'
-  }
-  {
-    'match': '\\b(TRUE|FALSE)\\b'
-    'name': 'constant.language'
-  }
+  

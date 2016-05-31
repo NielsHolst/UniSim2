@@ -17,17 +17,21 @@ int main(int argc, char *argv[])
             saveLoadArg = loadArg;
     loadArg = "test.box";
 
-    QDir &dirInput(base::environment().state.dir.input),
-         saveDirInput = dirInput;
-    dirInput = QDir();
-    dirInput.cd("input");
+    QDir saveDirInput = base::environment().dir(base::Environment::Input),
+         testDirInput = QDir();
+    if (!testDirInput.cd("../src/apps/test/input/")) {
+        std::cout << "'../src/apps/test/input/' path not found from"
+                  << qPrintable(testDirInput.absolutePath());
+        return 0;
+    }
+    base::environment().dir(base::Environment::Input, testDirInput);
 
     int result = AutoTest::run(argc, argv);
     QString msg = (result==0) ? "All tests passed" : "One or more tests failed";
     std::cout << "\n\n" << qPrintable(msg) << "\n";
 
     loadArg = saveLoadArg;
-    dirInput = saveDirInput;
+    base::environment().dir(base::Environment::Input, saveDirInput);
 
     dialog->deleteLater();
     return result;

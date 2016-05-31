@@ -11,7 +11,6 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 QT += widgets
 
 HEADERS +=  \
-    cd.h \
     clear.h \
     help.h \
     list.h \
@@ -21,15 +20,12 @@ HEADERS +=  \
     save.h \
     set.h \
     set_font.h \
-    set_input_folder.h \
-    set_output_folder.h \
-    set_script_folder.h \
+    set_folder.h \
     test.h \
     update.h \
     quit.h
 	
 SOURCES +=  \
-    cd.cpp \
     clear.cpp \
     help.cpp \
     list.cpp \
@@ -39,9 +35,7 @@ SOURCES +=  \
     save.cpp \
     set.cpp \
     set_font.cpp \
-    set_input_folder.cpp \
-    set_output_folder.cpp \
-    set_script_folder.cpp \
+    set_folder.cpp \
     test.cpp \
     update.cpp \
     quit.cpp

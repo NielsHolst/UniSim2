@@ -56,6 +56,9 @@ HEADERS +=  \
     product_base.h \
     product.h \
     random_generator.h \
+    save_grammar_atom.h \
+    save_grammar_base.h \
+    save_grammar_notepad.h \
     test_num.h \
     time_with_units.h \
     timer.h \
@@ -97,6 +100,9 @@ SOURCES +=  \
     port_type.cpp \
     product_base.cpp \
     random_generator.cpp \
+    save_grammar_atom.cpp \
+    save_grammar_base.cpp \
+    save_grammar_notepad.cpp \
     time_with_units.cpp \
     timer.cpp \
     unique_name.cpp \

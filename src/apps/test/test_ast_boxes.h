@@ -8,6 +8,7 @@ class TestAstBoxes : public QObject
     Q_OBJECT
 private slots:
     void testSimple();
+    void testComments();
 private:
     QString filePath(QString fileName);
 };

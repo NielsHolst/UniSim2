@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ColorImpactFile FileFormat="2">
+  <Application Name="ColorImpact 2" Version="2.40"/>
+  <ColorScheme>
+    <Color Hex="007034"/>
+    <Color Hex="003C70"/>
+    <Color Hex="340070"/>
+    <Color Hex="70003C"/>
+    <Color Hex="703400"/>
+  </ColorScheme>
+</ColorImpactFile>

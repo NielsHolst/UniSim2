@@ -15,7 +15,7 @@ PlotR::PlotR(QString name, QObject *parent)
 {
     Input(ports);
     Input(layout).equals("facetted");
-    Input(ncol).equals(1);
+    Input(ncol).equals(-1);
     Input(nrow).equals(-1);
 }
 
@@ -54,6 +54,11 @@ void PlotR::collectPorts() {
 void PlotR::initialize() {
     // Validate
     convert<LayoutR>(layout);
+}
+
+void PlotR::reset() {
+    if (ncol==-1 && nrow==-1)
+        ncol = 1;
 }
 
 QString PlotR::toString() {

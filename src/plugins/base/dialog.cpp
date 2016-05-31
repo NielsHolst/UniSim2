@@ -186,8 +186,8 @@ void Dialog::writePrompt() {
 
 void Dialog::writeWelcome() {
     QString latestFile = environment().state.latestLoadArg,
-            inputFolder = environment().state.dir.input.path(),
-            workFolder = environment().state.dir.work.absolutePath(),
+            workFolder = environment().dir(Environment::Work).absolutePath(),
+            inputFolder = environment().dir(Environment::Input).path(),
             info = latestFile.isEmpty() ? "Welcome to Universal Simulator!" : "Welcome back!";
     info += "\nYour work  folder is '" + workFolder + "'";
     info += "\nYour input folder is '" + inputFolder + "'";

@@ -1,7 +1,9 @@
+#include <QVariant>
 #include <assert.h>
 #include <exception.h>
+#include "environment.h"
 #include "general.h"
-#include <QVariant>
+
 namespace base {
 
 //! Namespaces are currently ignored !
@@ -112,42 +114,6 @@ bool isParenthesized(QString s) {
 QString deEmbrace(QString s) {
     int n = s.size();
     return s.mid(1, n-2);
-}
-
-QString locateFile(QDir baseDir, QDir specificDir, QString filePath) {
-    if (QDir(filePath).isAbsolute())
-        return filePath;
-    QDir dir = locateDir(baseDir, specificDir);
-
-    QString myFilePath = filePath;
-    if (filePath.startsWith("...")) {
-        myFilePath = filePath.mid(4);
-        while (!dir.exists(myFilePath) && dir.cdUp());
-    }
-
-    if (!dir.exists(myFilePath)) {
-        QString msg{"Could not find '%1' in '%2'"};
-        ThrowException(msg.arg(filePath).arg(locateDir(baseDir, specificDir).absolutePath()));
-    }
-    return dir.absolutePath() + "/" + myFilePath;
-}
-
-QDir locateDir(QDir baseDir, QDir specificDir) {
-    if (!baseDir.isAbsolute())
-        ThrowException("Base directory must be an absolute path").value(baseDir.path());
-
-    QString path = (specificDir.isAbsolute()) ?
-                specificDir.absolutePath() :
-                (baseDir.absolutePath() + "/" + specificDir.path());
-    QDir dir(path);
-    return dir;
-}
-
-QDir makeDir(QDir baseDir, QDir specificDir) {
-    QDir dir = locateDir(baseDir, specificDir);
-    if (!dir.mkpath("."))
-        ThrowException("Could not create folder").value(dir.path());
-    return dir;
 }
 
 double accum(const QVector<double> &x) {

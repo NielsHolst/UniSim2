@@ -82,7 +82,7 @@ load::FileType load::fileType(QString fileName) {
 }
 
 QString load::filePath(QString fileName) {
-    QDir dir = locateDir(environment().state.dir.work, environment().state.dir.input);
+    QDir dir = environment().resolveDir(Environment::Input);
     if (!dir.exists())
         ThrowException("Input folder not found").value(dir.absolutePath());
     return dir.absolutePath() + "/" + fileName;

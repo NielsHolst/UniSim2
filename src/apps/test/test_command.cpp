@@ -7,24 +7,20 @@
 
 using namespace base;
 
-void TestCommand::testSetwdCreate() {
-    Command *cd = MegaFactory::create<Command>("cd", "cd", 0);
-    QVERIFY(cd);
-    delete cd;
+void TestCommand::testCreate() {
+    Command *help = MegaFactory::create<Command>("help", "help", 0);
+    QVERIFY(help);
+    delete help;
 }
-void TestCommand::testSetwdExecute() {
-    Command *cd = MegaFactory::create<Command>("cd", "cd", 0);
-    QVERIFY(cd);
-//    cd->arguments(QStringList() << "cd" << QDir::rootPath());
-    cd->arguments(QStringList() << "cd");
-
+void TestCommand::testExecute() {
+    Command *help = MegaFactory::create<Command>("help", "help", 0);
+//    help->arguments(QStringList() << "cd");
     try {
-        cd->execute();
+        help->execute();
     }
     catch (Exception &ex) {
         QFAIL(qPrintable(ex.what()));
     }
-//    QCOMPARE(dialog->getInformation(), QDir::rootPath());
-    delete cd;
+    delete help;
 }
 

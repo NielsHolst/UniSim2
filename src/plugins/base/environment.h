@@ -3,6 +3,9 @@
 
 #include <QDir>
 #include <QObject>
+#include <QMap>
+#include "convert.h"
+#include "exception.h"
 
 namespace base {
 
@@ -11,35 +14,51 @@ class Command;
 
 class Environment : public QObject {
 public:
+    enum Folder {Work, Input, Output, Script, Notepad, Atom, Graphviz};
+    const Folder LastFolder = Graphviz;
+
     Environment();
     ~Environment();
+
     void openOutputFile(QFile &file, QString extension);
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
-    QString scriptFilePath(QString fileName);
+
+    QString filePath(Folder folder, QString fileName);
+    QString folderInfo(Folder folder);
+
+    QDir dir(Folder folder);
+    void dir(Folder folder, QString path);
+    void dir(Folder folder, QDir specificDir);
+    QDir resolveDir(Folder folder, Folder work = Work);
+
     void incrementFileCounter();
     void copyToClipboard(QString text);
 
     struct {
-        struct {
-            QDir work, input, output, script;
-        } dir;
         bool autosave;
         QString latestLoadArg, latestOutputFilePath;
         Box *root;
         Command *command;
     } state;
 private:
+    // Data
+    QMap<Folder, QDir> _dir;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();
     // Methods
     QString fileCounterKey();
     int fileCountervalue();
-    static QDir makeDir(QDir baseDir, QDir specificDir);
+    static QDir makeDirAsNeeded(QDir dirNeeded);
 };
 
 Environment& environment();
+
+template<class T> T convert(Environment::Folder )  { ThrowException("Cannot only convert Folder to QString"); }
+
+template<> QString convert(Environment::Folder transform);
+template<> Environment::Folder convert(QString s);
 
 }
 

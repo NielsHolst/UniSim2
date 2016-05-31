@@ -17,7 +17,7 @@ Exponential::Exponential(QString name, QObject *parent)
     Input(x);
     Input(r).equals(0);
     Input(dt).equals(1);
-    Input(yMax).equals(1);
+    Input(yMax).equals(1e100);
     Output(y);
 }
 

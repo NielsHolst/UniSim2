@@ -9,7 +9,8 @@ namespace base {
 unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _importPath(""),
+    : QObject(parent), _valuePtr(0), _valueType(Null),
+      _importPath(""), _importPortMustExist(true),
       _access(Input), _reset(false), _doTrack(false), _track(this)
 {
     Class(Port);
@@ -35,6 +36,13 @@ Port& Port::equals(QStringList value) {
 
 Port& Port::imports(QString pathToPort) {
     _importPath = pathToPort;
+    _importPortMustExist = true;
+    return *this;
+}
+
+Port& Port::importsMaybe(QString pathToPort) {
+    _importPath = pathToPort;
+    _importPortMustExist = false;
     return *this;
 }
 
@@ -166,13 +174,24 @@ namespace {
 }
 
 void Port::resolveImports() {
+    // Find import ports defined by the import path
     if (_importPath.isEmpty())
         return;
     Box *context = boxParent();
     Path path = Path(_importPath, context);
     _importPorts = path.resolveMany<Port>();
-    if (_importPorts.isEmpty())
-        ThrowException("No matching import ports found").value(_importPath).context(this);
+
+    // Missing import ports may be an error, otherwise accept and clear the import path
+    if (_importPorts.isEmpty()) {
+        if (_importPortMustExist)
+            ThrowException("No matching import ports found").value(_importPath).context(this);
+        else {
+            _importPath.clear();
+            return;
+        }
+    }
+
+    // Import port must have a type
     _importType = commonType(_importPorts);
     if (_importType == Null)
         ThrowException("Import port is of unknown type").value(_importPath).context(this);

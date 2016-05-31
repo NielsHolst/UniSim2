@@ -23,10 +23,13 @@ Environment& environment() {
 
 Environment::Environment() {
     QSettings settings;
-    state.dir.work = QDir(settings.value("environment/dir-work", QString(".")).toString());
-    state.dir.input = QDir(settings.value("environment/dir-input", QString(".")).toString());
-    state.dir.output = QDir(settings.value("environment/dir-output", QString(".")).toString());
-    state.dir.script = QDir(settings.value("environment/dir-script", QString(".")).toString());
+    Folder fo = Folder(0);
+    while (true) {
+        QString key = "environment/dir" + convert<QString>(fo);
+        _dir[fo] = QDir(settings.value(key, QString(".")).toString());
+        if (fo == LastFolder) break;
+        fo = Folder(fo+1);
+    }
     state.autosave = settings.value("environment/autosave", true).toBool();
     state.latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
     state.latestOutputFilePath = settings.value("environment/latest-output-file-path", QString()).toString();
@@ -36,10 +39,13 @@ Environment::Environment() {
 
 Environment::~Environment() {
     QSettings settings;
-    settings.setValue("environment/dir-work", state.dir.work.path());
-    settings.setValue("environment/dir-input", state.dir.input.path());
-    settings.setValue("environment/dir-output", state.dir.output.path());
-    settings.setValue("environment/dir-script", state.dir.script.path());
+    Folder fo = Folder(0);
+    while (true) {
+        QString key = "environment/dir" + convert<QString>(fo);
+        settings.setValue(key, _dir.value(fo).path());
+        if (fo == LastFolder) break;
+        fo = Folder(fo+1);
+    }
     settings.setValue("environment/autosave", state.autosave);
     settings.setValue("environment/latest-load-arg", state.latestLoadArg);
     settings.setValue("environment/latest-output-file-path", state.latestOutputFilePath);
@@ -64,24 +70,88 @@ QString Environment::outputFilePath(QString extension) {
 }
 
 QString Environment::outputFileNamePath(QString fileName) {
-    QDir dir = makeDir(state.dir.work, state.dir.output);
-    QString dirInFileName = QFileInfo(fileName).path();
-    if (!dirInFileName.isEmpty())
-        dir = makeDir(dir, dirInFileName);
-    QString folderPath = dir.absolutePath().replace("\\", "/");
-    return state.latestOutputFilePath = folderPath + "/" + QFileInfo(fileName).fileName();
+    // Resolve dir paths in output and in fileName
+    QString fileNameDirPath = QFileInfo(fileName).path();
+    bool fileNameHasDir = !fileNameDirPath.isEmpty();
+    QDir outputDir = resolveDir(Output),
+         fileNameDir = QDir(fileNameDirPath);
+    bool fileNameHasAbsoluteDir = fileNameHasDir && fileNameDir.isAbsolute();
+
+    // Construct path to output dir
+    QString outputDirPath;
+    if (fileNameHasDir)
+        outputDirPath = fileNameHasAbsoluteDir ?
+                        fileNameDir.absolutePath() :
+                        outputDir.absolutePath() + "/" + fileNameDirPath;
+    else
+        outputDirPath = outputDir.absolutePath();
+    outputDirPath.replace("\\", "/");
+
+    // Create dir as needed and return complete absolute file name path
+    QDir dir = makeDirAsNeeded(outputDirPath);
+    return state.latestOutputFilePath = dir.absoluteFilePath( QFileInfo(fileName).fileName() );
 }
 
-QString Environment::scriptFilePath(QString fileName) {
-    QDir dir = locateDir(state.dir.work, state.dir.script);
-    return dir.absoluteFilePath(fileName);
+QString Environment::filePath(Folder folder, QString fileName) {
+    QString fileNamePath = resolveDir(folder).absoluteFilePath(fileName);
+    if (!QFileInfo(fileNamePath).exists())
+        ThrowException("Could not find file").value(fileNamePath);
+    return fileNamePath;
 }
 
-QDir Environment::makeDir(QDir baseDir, QDir specificDir) {
-    QDir dir = locateDir(baseDir, specificDir);
-    if (!dir.mkpath("."))
-        ThrowException("Could not create folder").value(dir.path());
-    return dir;
+QString Environment::folderInfo(Folder folder) {
+    QString info;
+    QDir folderDir = dir(folder),
+         resolvedDir = resolveDir(folder);
+
+    if (folderDir.isRelative()) {
+        info = "relative path '%1' resolves to '%2'";
+        info = info.arg(folderDir.path()).arg(resolvedDir.absolutePath());
+    }
+    else {
+        info = "absolute path '%1'";
+        info = info.arg(folderDir.absolutePath());
+    }
+    if (!resolvedDir.exists()) {
+        if (folder == Output)
+            info += "\n'" + resolvedDir.absolutePath() +  "' will be created when needed";
+        else
+            info += "\nWarning: '" + resolvedDir.absolutePath() +  "' does not exist";
+    }
+    return info;
+}
+
+QDir Environment::dir(Folder folder) {
+    return _dir.value(folder);
+}
+
+void Environment::dir(Folder folder, QString path) {
+    dir(folder, QDir(path));
+}
+
+void Environment::dir(Folder folder, QDir specificDir) {
+    _dir[folder] = specificDir;
+}
+
+QDir Environment::resolveDir(Folder folder, Folder work) {
+    if (folder == Work)
+        return dir(work);
+
+    QDir workDir = dir(work);
+//    if (!work.isAbsolute())
+//        ThrowException("Work folder must be an absolute path").value(work.path());
+
+    QDir specificDir = dir(folder);
+    QString path = (specificDir.isAbsolute()) ?
+                specificDir.absolutePath() :
+                (workDir.absolutePath() + "/" + specificDir.path());
+    return QDir(path);
+}
+
+QDir Environment::makeDirAsNeeded(QDir dirNeeded) {
+    if (!dirNeeded.mkpath("."))
+        ThrowException("Could not create folder").value(dirNeeded.path());
+    return dirNeeded;
 }
 
 void Environment::incrementFileCounter() {
@@ -103,6 +173,54 @@ QString Environment::fileCounterKey() {
 
 void Environment::copyToClipboard(QString text) {
     QApplication::clipboard()->setText(text);
+}
+
+
+#define FOLDER_CASE(X) \
+    case Environment::X: \
+        s = #X; \
+        break
+
+#define FOLDER_ENTRY(X) \
+    _map[#X] = Environment::X
+
+namespace {
+    const QMap<QString, Environment::Folder>& folderMap() {
+        static QMap<QString, Environment::Folder> _map;
+        if (_map.isEmpty()) {
+            FOLDER_ENTRY(Work);
+            FOLDER_ENTRY(Input);
+            FOLDER_ENTRY(Output);
+            FOLDER_ENTRY(Script);
+            FOLDER_ENTRY(Notepad);
+            FOLDER_ENTRY(Atom);
+            FOLDER_ENTRY(Graphviz);
+        }
+        return _map;
+    }
+}
+
+
+template<> QString convert(Environment::Folder folder) {
+    QString s;
+    switch (folder) {
+        FOLDER_CASE(Work);
+        FOLDER_CASE(Input);
+        FOLDER_CASE(Output);
+        FOLDER_CASE(Script);
+        FOLDER_CASE(Notepad);
+        FOLDER_CASE(Atom);
+        FOLDER_CASE(Graphviz);
+    }
+    return s;
+}
+
+template<> Environment::Folder convert(QString s) {
+    s = s.toLower();
+    s[0] = s.at(0).toUpper();
+    if (folderMap().contains(s))
+        return folderMap().value(s);
+    ThrowException("Unknown folder").value(s);
 }
 
 }

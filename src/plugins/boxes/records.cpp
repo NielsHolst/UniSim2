@@ -72,7 +72,7 @@ void Records::openFile() {
 }
 
 QString Records::filePath() {
-    return locateFile(environment().state.dir.work, environment().state.dir.input, fileName);
+    return environment().filePath(Environment::Input, fileName);
 }
 
 void Records::readLineItems() {

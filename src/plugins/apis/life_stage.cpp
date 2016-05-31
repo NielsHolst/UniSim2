@@ -17,7 +17,7 @@ LifeStage::LifeStage(QString name, QObject *parent)
 {
     Input(timeStepDays).imports("calendar[timeStepDays]");
     Input(Pmorph).imports("./Pmorph[y]");
-    Input(massIncrement).imports("./massIncrement[y]");
+    Input(massIncrement).importsMaybe("./massIncrement[y]");
     Input(bufferSize).equals(30);
     Input(numberInit).equals(0);
     Input(massInit).equals(0);
@@ -63,7 +63,8 @@ void LifeStage::update() {
     numberMorphed = vector_op::sum(numberMorphedCohorts);
     massMorphed = (numberMorphed == 0.) ? 0. : vector_op::sum(massMorphedCohorts)/numberMorphed;
     // Growth
-    vector_op::plus(mass, massIncrement);
+    if (!massIncrement.isEmpty())
+        vector_op::plus(mass, massIncrement);
     // Cohorts development
     vector_op::plus(age, timeStepDays);
     numberLeaked = _number.push(numberNew);
