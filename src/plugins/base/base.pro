@@ -23,6 +23,7 @@ unix {
 
 # Our project header and source code
 HEADERS +=  \
+    any_year.h \
     assign.h \
     ast_boxes.h \
     ast_common.h \
@@ -59,6 +60,8 @@ HEADERS +=  \
     save_grammar_atom.h \
     save_grammar_base.h \
     save_grammar_notepad.h \
+    save_graph_base.h \
+    save_graph_graphviz.h \
     test_num.h \
     time_with_units.h \
     timer.h \
@@ -70,6 +73,7 @@ HEADERS +=  \
     organisation.h
 
 SOURCES +=  \
+    any_year.cpp \
     assign.cpp \
     ast_boxes.cpp \
     ast_common.cpp \
@@ -103,6 +107,8 @@ SOURCES +=  \
     save_grammar_atom.cpp \
     save_grammar_base.cpp \
     save_grammar_notepad.cpp \
+    save_graph_base.cpp \
+    save_graph_graphviz.cpp \
     time_with_units.cpp \
     timer.cpp \
     unique_name.cpp \
@@ -110,6 +116,4 @@ SOURCES +=  \
     vector_op.cpp \
     vector_vector.cpp \
     vectorize.cpp
-
-
 

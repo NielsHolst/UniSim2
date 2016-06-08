@@ -12,6 +12,7 @@ QT += widgets
 
 HEADERS +=  \
     clear.h \
+    graph.h \
     help.h \
     list.h \
     load.h \
@@ -27,6 +28,7 @@ HEADERS +=  \
 	
 SOURCES +=  \
     clear.cpp \
+    graph.cpp \
     help.cpp \
     list.cpp \
     load.cpp \

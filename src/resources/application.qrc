@@ -3,5 +3,6 @@
 	<qresource>
 		<file>boxes_head.cson</file>
 		<file>notepad_grammar_template.xml</file>
+		<file>svg_template3.html</file>
 	</qresource>
 </RCC>

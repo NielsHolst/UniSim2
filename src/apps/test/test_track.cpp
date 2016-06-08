@@ -59,7 +59,7 @@ void TestTrack::run(Box *simulation) {
 }
 
 void TestTrack::openFile() {
-    QString filePath = environment().state.latestOutputFilePath;
+    QString filePath = environment().latestOutputFilePath("txt");
     file.setFileName(filePath);
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     QVERIFY(fileOk);

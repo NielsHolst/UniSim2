@@ -1,3 +1,4 @@
+#include <base/any_year.h>
 #include <base/convert.h>
 #include "test_convert.h"
 
@@ -20,6 +21,40 @@ void TestConvert::testIntFromStringList() {
     QCOMPARE(result, expected);
 }
 
+
+void TestConvert::testDate() {
+    try {
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("24/12/2012"));
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("2012/12/24"));
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("/12/24/2012"));
+
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("24.12.2012"));
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("24-12-2012"));
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("2012.12.24"));
+        QCOMPARE(QDate(2012,12,24), convert<QDate>("2012-12-24"));
+
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("24/12/*")));
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("*/12/24")));
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("/12/24/*")));
+
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("24.12.*")));
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("24-12-*")));
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("*.12.24")));
+        QVERIFY(equals(QDate(2012,12,24), convert<QDate>("*-12-24")));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected exception: " + ex.what()));
+    }
+
+    bool excepted{false};
+    try {
+        convert<QDate>("*/12/*");
+    }
+    catch (Exception &) {
+        excepted = true;
+    }
+    QVERIFY(excepted);
+}
 
 
 

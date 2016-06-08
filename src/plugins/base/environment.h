@@ -20,12 +20,14 @@ public:
     Environment();
     ~Environment();
 
-    void openOutputFile(QFile &file, QString extension);
+    QString openOutputFile(QFile &file, QString extension);
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
 
     QString filePath(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
+
+    QString latestOutputFilePath(QString fileExtension);
 
     QDir dir(Folder folder);
     void dir(Folder folder, QString path);
@@ -37,13 +39,14 @@ public:
 
     struct {
         bool autosave;
-        QString latestLoadArg, latestOutputFilePath;
+        QString latestLoadArg;
         Box *root;
         Command *command;
     } state;
 private:
     // Data
     QMap<Folder, QDir> _dir;
+    QMap<QString,QString> _latestOutputFilePath;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();

@@ -7,7 +7,7 @@ OutputFile::OutputFile() {
 }
 
 QString OutputFile::filePath() {
-    return base::environment().state.latestOutputFilePath;
+    return base::environment().latestOutputFilePath("txt");
 }
 
 QStringList OutputFile::columnLabels() {

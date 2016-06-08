@@ -1,4 +1,5 @@
 #include <QStringList>
+#include "any_year.h"
 #include "convert.h"
 
 #define CANNOT_CONVERT(destT, sourceT) \
@@ -109,6 +110,9 @@ template<> QStringList convert(QString source) {
 
 template<> QDate convert(QString source) {
     QString s = source.simplified();
+    bool hasAnyYear = (s.startsWith("*") != s.endsWith("*"));  // xor
+    if (hasAnyYear)
+        s.replace("*", "2000");
     QDate date = QDate::fromString(s, "d/M/yyyy");
     if (!date.isValid())
         date = QDate::fromString(s, "/M/d/yyyy");
@@ -126,6 +130,8 @@ template<> QDate convert(QString source) {
         date = QDate::fromString(s, "yyyy-M-d");
     if (!date.isValid())
         ThrowException("Cannot convert String to Date").value(source);
+    if (hasAnyYear)
+        setAnyYear(date);
     return date;
 }
 

@@ -3,6 +3,7 @@ Simulation sim {
   Calendar calendar {
     .timeStep = 1
     .timeUnit = "h"
+	.initialDateTime = 1/5/2001
   }
   Box hive {
     apis::LifeStage egg {
@@ -32,7 +33,7 @@ Simulation sim {
         .x = ..[mass]
         .dx = ../massIncrement[y]
         .x0 = 130
-        .y0 = 0.01
+        .y0 = 0.01 
         .x1 = 150
         .y1 = 0.99
       }
@@ -51,9 +52,17 @@ Simulation sim {
       }
     }
   }
+  NectarFlow nectarFlow {
+    .minFlow = 100
+    .maxFlow = 1000
+    .beginDate = 3/5/*
+    .endDate = 10/5/*
+    .beginTime = 7:00
+    .endTime = 12:00
+  }
   OutputR {
     PageR p1 {
-      .xAxis = calendar[totalDays]
+      .xAxis = calendar[date]
       .width = 12
       .height = 8
       PlotR {

@@ -32,7 +32,7 @@ Environment::Environment() {
     }
     state.autosave = settings.value("environment/autosave", true).toBool();
     state.latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
-    state.latestOutputFilePath = settings.value("environment/latest-output-file-path", QString()).toString();
+    _latestOutputFilePath["txt"] = settings.value("environment/latest-output-file-path-txt", QString()).toString();
     state.root = 0;
     state.command = 0;
 }
@@ -48,14 +48,15 @@ Environment::~Environment() {
     }
     settings.setValue("environment/autosave", state.autosave);
     settings.setValue("environment/latest-load-arg", state.latestLoadArg);
-    settings.setValue("environment/latest-output-file-path", state.latestOutputFilePath);
+    settings.setValue("environment/latest-output-file-path-txt", latestOutputFilePath("txt"));
 }
 
-void Environment::openOutputFile(QFile &file, QString extension) {
+QString Environment::openOutputFile(QFile &file, QString extension) {
     QString filePath = outputFilePath(extension);
     file.setFileName(filePath);
     if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
+    return filePath;
 }
 
 QString Environment::outputFilePath(QString extension) {
@@ -89,7 +90,9 @@ QString Environment::outputFileNamePath(QString fileName) {
 
     // Create dir as needed and return complete absolute file name path
     QDir dir = makeDirAsNeeded(outputDirPath);
-    return state.latestOutputFilePath = dir.absoluteFilePath( QFileInfo(fileName).fileName() );
+    QString thePath = dir.absoluteFilePath( QFileInfo(fileName).fileName() );
+    _latestOutputFilePath[QFileInfo(fileName).suffix()] = thePath;
+    return thePath;
 }
 
 QString Environment::filePath(Folder folder, QString fileName) {
@@ -119,6 +122,12 @@ QString Environment::folderInfo(Folder folder) {
             info += "\nWarning: '" + resolvedDir.absolutePath() +  "' does not exist";
     }
     return info;
+}
+
+QString Environment::latestOutputFilePath(QString fileExtension) {
+    return _latestOutputFilePath.contains(fileExtension) ?
+           _latestOutputFilePath.value(fileExtension) :
+           QString();
 }
 
 QDir Environment::dir(Folder folder) {

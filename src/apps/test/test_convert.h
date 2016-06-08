@@ -9,6 +9,7 @@ class TestConvert : public QObject
 private slots:
     void testStringListFromString();
     void testIntFromStringList();
+    void testDate();
 };
 
 DECLARE_TEST(TestConvert)

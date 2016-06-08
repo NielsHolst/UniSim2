@@ -1,7 +1,6 @@
 #include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/environment.h>
-#include <base/exception.h>
 #include <base/publish.h>
 #include <base/save_grammar_atom.h>
 #include <base/save_grammar_notepad.h>
@@ -20,8 +19,21 @@ save::save(QString name, QObject *parent)
 }
 
 void save::doExecute() {
-    if (_args.size() != 2 || _args.at(1) != "grammar")
-        ThrowException("Write: save grammar");
+    bool ok(true);
+    if (_args.size() == 2) {
+        QString arg = _args.at(1);
+        if (arg == "grammar")
+            saveGrammar();
+        else
+            ok = false;
+    }
+    else
+        ok = false;
+    if (!ok)
+        dialog().error("Write: 'save grammar'");
+}
+
+void save::saveGrammar() {
     bool atomOk = environment().dir(Environment::Atom).exists(),
          notepadOk = environment().dir(Environment::Notepad).exists();
     if (atomOk)
@@ -34,6 +46,6 @@ void save::doExecute() {
                        environment().folderInfo(Environment::Atom) + "\n" +
                        "Notepad++ editor:\n  " +
                        environment().folderInfo(Environment::Notepad));
- }
+}
 
 }

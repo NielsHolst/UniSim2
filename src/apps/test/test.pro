@@ -14,6 +14,7 @@ QT += testlib
 HEADERS +=  \
     autotest.h \
     output_file.h \
+    test_any_year.h \
     test_assign.h \
     test_ast_boxes.h \
     test_box.h \
@@ -44,6 +45,7 @@ HEADERS +=  \
 SOURCES +=  \
     main.cpp \
     output_file.cpp \
+    test_any_year.cpp \
     test_assign.cpp \
     test_ast_boxes.cpp \
     test_box.cpp \
