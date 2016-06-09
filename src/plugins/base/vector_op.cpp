@@ -140,4 +140,15 @@ double average(const Vec &x) {
     return (n==0) ? 0 : sum(x)/n;
 }
 
+double sumOfProducts(const Vec &x, const Vec &y) {
+    int i = 0, n = x.size();
+    CHECK_SIZE(y);
+    double receiver = 0;
+    const double *sender1 = x.data();
+    const double *sender2 = y.data();
+    while (i++ < n)
+        receiver += *sender1++ * *sender2++;
+    return receiver;
+}
+
 } // namespace

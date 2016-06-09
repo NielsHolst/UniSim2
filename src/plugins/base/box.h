@@ -32,6 +32,9 @@ public:
     Port* port(QString name);
     const Port* port(QString name) const;
 
+    void help(QString s);
+    QString help() const;
+
     static Box* currentRoot();
     QString className() const;
     QString fullName() const;
@@ -60,7 +63,7 @@ public:
 
 private:
     // Data
-    QString _name;
+    QString _name, _help;
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;

@@ -32,10 +32,10 @@ private:
 
     // outputs
     QDate date;
-    QTime timeOfDay, trueSolarTime, sunrise, sunset;
+    QTime time, trueSolarTime, sunrise, sunset;
     QDateTime dateTime;
-    int day, month, year, hour, minute, second, dayOfYear, totalTime, totalTimeSteps;
-    double timeStepSecs, timeStepDays, totalDays, dateAsReal, dayLength,
+    int dayOfYear, totalTime, totalTimeSteps;
+    double timeStepSecs, timeStepDays, totalDays, dayLength,
         sinb, azimuth, solarConstant, angot, irradiationCorrection;
 
     // methods

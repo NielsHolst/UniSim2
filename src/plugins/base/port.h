@@ -23,7 +23,7 @@ class Port : public QObject {
 public:
     enum Access{Input, Output};
     struct Attributes {
-        QString format, page, plot, label, transform;
+        QString format, page, plot, label, transform, help;
         PortTransform portTransform;
         Attributes() {
             transform = "Identity";
@@ -61,11 +61,12 @@ public:
     static QStringList attributes();
 
     Port& attribute(QString name, QString value);
-    Port& format(QString fo);
-    Port& page(QString pa);
-    Port& plot(QString pl);
-    Port& label(QString la);
-    Port& transform(QString t);
+    Port& format(QString s);
+    Port& page(QString s);
+    Port& plot(QString s);
+    Port& label(QString s);
+    Port& transform(QString s);
+    Port& help(QString s);
     Port& transform(PortTransform t);
 
     QString attribute(QString name) const;
@@ -74,6 +75,7 @@ public:
     QString plot() const;
     QString label() const;
     QStringList labelList() const;
+    QString help() const;
     PortTransform transform() const;
 
     // Change

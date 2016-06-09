@@ -39,8 +39,6 @@ enum PortType {
     Null
 };
 
-//bool isVector(Type x) { return int(x)%2==0; }
-
 template <class T> PortType typeOf() { return Null; }
 
 #define TYPEOF(X,Y) \
@@ -61,6 +59,7 @@ TYPEOF(QTime, Time)
 TYPEOF(QDateTime, DateTime)
 
 QString nameOf(PortType type);
+bool isScalar(PortType type);
 bool isVector(PortType type);
 PortType asVector(PortType type);
 PortType asScalar(PortType type);

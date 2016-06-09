@@ -25,87 +25,35 @@ constexpr double DEGREES = 1./RAD;
 
 PUBLISH(Calendar)
 
-/*! \class Calendar
- * \brief Calendar is ...
- *
- * Inputs
- * ------
- * - _latitude_ is geographical latitude of the system [-180;180]
- * - _longitude_ is geographical longitude of the system [-180;180]
- * - _timeZone_ is time zone in hours relative to GMT, e.g., Copenhagen has_timeZone_ = 1 [-12..12]
- * - _initialDate_ is the initial date of the simulation; default is 1/1/2000 [DD/MM/YYYY or YYYY/MM/DD]
- * - _initialTimeOfDay_ is the initial time of the simulation;
- * default is midnight, i.e. at the beginning of _initialDate_ [HH/MM/SS or HH/MM]
- * - _timeStep_ is the duration of one integration time step in units determined by _timeUnit_ [1..N]
- * - _timeUnit_ is the unit of _timeStep_ [s,m,h,d,y]
- * - _sample_ is the default sampling frequency for output; default is 1 [1..N]. Example: If _timeStep_ = 5 and _timeUnit_ = m
- * then _sample_ = 12 will yield an output every hour
- *
- * Outputs
- * -------
- * - _date_ is the current date [QDate]
- * - _timeOfDay_ is the current time of day [QTime]
- * - _trueSolarTime_ is the true solar time [QTime]
- * - _dateTime_ is the current date and time [QDateTime]
- * - _timeStepSecs_ is the duration of _timeStep_ in seconds [s]
- * - _totalTimeSteps_ is the total number of time steps performed since beginning (reset) of simulation [0..N]
- * - _totalTime_ is like _totalTimeSteps_ but in units determined by _timeUnit_ [0..N]
- * - _totalDays_ is like _totalTimeSteps_ but in days [R]
- * - _dayOfYear_ is the day number in year, also known as Julian day
- * - _day_ is the current day of the month [1..31]
- * - _month_ is the current month of the year [1..12]
- * - _year_ is the current year [N]
- * - _hour_ is the current hour of the day [0..23]
- * - _minute_ is the current minute of the hour [0..59)]
- * - _second_ is the current second of the minute [0..59]
- * - _dateAsReal_ is _date:_ as a real number measured in years [R]
- * - _dayLength_ is day length [h]
- * - _sinb_ is the sine of sun elevation [-1;1]
- * - _azimuth_ is the azimuth of the sun relative to north [-180;180]
- * - _sunrise_ is the time (needs adjustment to local/astronomic time!) of sunrise [QTime]
- * - _sunset_ is the time (needs adjustment to local/astronomic time!) of sunset [QTime]
- * - _solarConstant_ is the solar constant, i.e. irradiation at the top of the atmsphere [MJ/m<SUP>2</SUP>/d]
- * - _angot_ is the Angot value, i.e. the irradiation reaching the Earth surface
- * under optimal atmospheric conditions [MJ/m<SUP>2</SUP>/d]
- * - _irradiationCorrection_ is a correction factor on the daily irradiation [MJ/m<SUP>2</SUP>/d]
- * depending on sun elevation [R]
- */
-
 Calendar::Calendar(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(latitude).equals(52);
-    Input(longitude).equals(11);
-    Input(timeZone).equals(1);
-    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC));
-    Input(timeStep).equals(1);
-    Input(timeUnit).equals('d');
-    Input(sample).equals(1);
-    Output(date);
-    Output(timeOfDay);
-    Output(trueSolarTime);
-    Output(dateTime);
-    Output(timeStepSecs);
-    Output(timeStepDays);
-    Output(totalTimeSteps);
-    Output(totalTime);
-    Output(totalDays);
-    Output(dayOfYear);
-    Output(day);
-    Output(month);
-    Output(year);
-    Output(hour);
-    Output(minute);
-    Output(second);
-    Output(dateAsReal);
-    Output(dayLength);
-    Output(sinb);
-    Output(azimuth);
-    Output(sunrise);
-    Output(sunset);
-    Output(solarConstant);
-    Output(angot);
-    Output(irradiationCorrection);
+    help("keeps check on date, time and other sun-earth relations");
+    Input(latitude).equals(52).help("Latitude (degrees)");
+    Input(longitude).equals(11).help("Longitiude (degrees)");
+    Input(timeZone).equals(1).help("Time zone (h)");
+    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts");
+    Input(timeStep).equals(1).help("Time step in units of timeUnit");
+    Input(timeUnit).equals('d').help("Unit os time step (y,d,h,m,s");
+    Input(sample).equals(1).help("The frequency at which output is sampled");
+    Output(date).help("Current date");
+    Output(time).help("Current time of the day");
+    Output(trueSolarTime).help("Current true solar time of the day");
+    Output(dateTime).help("Current date and time");
+    Output(timeStepSecs).help("Time step duration (s)");
+    Output(timeStepDays).help("Time step duration (d)");
+    Output(totalTimeSteps).help("Total number of time steps since calendar was reset");
+    Output(totalTime).help("Total time since calendar was reset; in units of timeUnit");
+    Output(totalDays).help("Total time since calendar was reset (d)");;
+    Output(dayOfYear).help("Julian day");
+    Output(dayLength).help("Astronomic day length");
+    Output(sinb).help("Sine of solar height over the horizon");
+    Output(azimuth).help("The compass direction of the sun relative to north [-180;180]");
+    Output(sunrise).help("Time of sunrise");
+    Output(sunset).help("Time of sunset");
+    Output(solarConstant).help("The irradiation at the top of the atmsphere (MJ/m^2/d)");
+    Output(angot).help("The irradiation at Earth surface under optimal atmospheric conditions (MJ/m^2/d)");
+    Output(irradiationCorrection).help("Correction factor on daily irradiation depending on sun elevation");
 }
 
 void Calendar::initialize() {
@@ -129,23 +77,10 @@ void Calendar::update() {
 
 void Calendar::updateDerived() {
     date = dateTime.date();
-    timeOfDay = dateTime.time();
-    day = date.day();
-    month = date.month();
+    time = dateTime.time();
     dayOfYear = date.dayOfYear();
-    year = date.year();
-    hour = timeOfDay.hour();
-    minute = timeOfDay.minute();
-    second = timeOfDay.second();
-
     totalTime = totalTimeSteps*timeStep;
     totalDays = totalTime*TimeWithUnits::conversionFactor(_timeUnit, Days);
-
-    QDateTime beginning = QDateTime(QDate(year,1,1), QTime(), Qt::UTC);
-    double secsPassed = beginning.secsTo(dateTime);
-    double secsInYear = date.daysInYear()*24*60*60;
-    dateAsReal = double(year) + secsPassed/secsInYear;
-
     updateSun();
     updateRadiation();
     updateAzimuth();
@@ -166,14 +101,14 @@ void Calendar::updateSun() {
     sunrise = QTime(12,00).addSecs(-halfDay);
     sunset = QTime(12,00).addSecs(halfDay);
 
-    double h = hour + minute/60. + second/3600.;
+    double h = time.hour() + time.minute()/60. + time.second()/3600.;
     sinb = sinLD + cosLD*cos(2.*PI*(h + 12.)/24.);
     if (sinb < 0.) sinb = 0.;
 
     double dsinb = 3600.*(dayLength*sinLD + 24.*cosLD*sqrt(1. - aob*aob)/PI);
     double dsinbe = 3600.*(dayLength*(sinLD + 0.4*(sinLD*sinLD + cosLD*cosLD*0.5)) +
                            12.*cosLD*(2. + 3.*0.4*sinLD)*sqrt(1. - aob*aob)/PI);
-    solarConstant = 1370.*(1. + 0.033*cos(2.*PI*day/365.));
+    solarConstant = 1370.*(1. + 0.033*cos(2.*PI*dayOfYear/365.));
     angot = solarConstant*dsinb*1e-6;
     irradiationCorrection = sinb*(1. + 0.4*sinb)/dsinbe;
 }
@@ -189,7 +124,7 @@ void Calendar::updateRadiation() {
 */
 void Calendar::updateAzimuth() {
     // First, the fractional year y is calculated, in radians.
-    double y = 2*PI*(dayOfYear-1+(hour-12.)/24)/365.;
+    double y = 2*PI*(dayOfYear-1+(time.hour()-12.)/24)/365.;
 
     //From y, we can estimate the equation of time (in minutes) and the solar declination angle (in radians).
     double eqtime =
@@ -205,7 +140,7 @@ void Calendar::updateAzimuth() {
     // where eqtime is in minutes, longitude is in degrees, timezone is in hours from UTC
 
     // True solar time
-    double tst = hour*60 + minute + second/60. + timeOffset;
+    double tst = time.hour()*60 + time.minute() + time.second()/60. + timeOffset;
     trueSolarTime = QTime::fromMSecsSinceStartOfDay(int(tst+0.5)*60*1000);
     if (!trueSolarTime.isValid())
         trueSolarTime = QTime(0,0);

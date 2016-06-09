@@ -12,12 +12,12 @@ public:
     void update();
 private:
     // input
-    QVector<double> x;
+    QVector<double> y;
     double r, dt, yMax;
     // output
-    QVector<double> y;
+    QVector<double> dy;
     // methods
-    double f(double x);
+    double fdy(double y);
 };
 
 }

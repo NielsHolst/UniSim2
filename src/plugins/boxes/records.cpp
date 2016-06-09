@@ -18,6 +18,8 @@ Records::Records(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(fileName).equals("records.txt");
+    Input(dateColumnName).equals("Date");
+    Input(timeColumnName).equals("Time");
     Input(calendarDateTime).imports("calendar[dateTime]");
 
     Output(currentDateTime);
@@ -55,9 +57,9 @@ void Records::readColumnNames() {
     for (int i = 0; i < lineItems.size(); ++i) {
         QString id = lineItems[i];
         columnNames.append(id);
-        if (id.toLower()  == "date")
+        if (id == dateColumnName)
             dateColumn = i;
-        else if (id.toLower() == "time")
+        else if (id == timeColumnName)
             timeColumn = i;
     }
     file.close();
@@ -95,9 +97,7 @@ void Records::createColumnOutputs() {
         QString name = columnNames[i];
         if (i != dateColumn && i != timeColumn) {
             Port &port( NamedOutput(name, values[i]) );
-            // Hack! In stead provide list(!) of column names to ignore
-            if (name.toLower() != "station")
-                port.page("default");
+            port.page("default");
         }
     }
 }

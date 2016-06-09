@@ -101,6 +101,7 @@ void Simulation::show(QTime time) {
 void Simulation::debrief() {
     openFileStream(".txt");
     writeDataFrame();
+    dialog().information("Data frame written to '" + environment().latestOutputFilePath("txt") + "'");
     _file.close();
     environment().incrementFileCounter();
 }

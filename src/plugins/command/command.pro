@@ -14,6 +14,7 @@ HEADERS +=  \
     clear.h \
     graph.h \
     help.h \
+    help_class.h \
     list.h \
     load.h \
     profile.h \
@@ -30,6 +31,7 @@ SOURCES +=  \
     clear.cpp \
     graph.cpp \
     help.cpp \
+    help_class.cpp \
     list.cpp \
     load.cpp \
     profile.cpp \

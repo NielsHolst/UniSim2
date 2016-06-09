@@ -16,8 +16,8 @@ LifeStage::LifeStage(QString name, QObject *parent)
     _age(&age)
 {
     Input(timeStepDays).imports("calendar[timeStepDays]");
-    Input(Pmorph).imports("./Pmorph[y]");
-    Input(massIncrement).importsMaybe("./massIncrement[y]");
+    Input(Pmorph).imports("./Pmorph[dy]");
+    Input(massIncrement).importsMaybe("./massIncrement[dy]");
     Input(bufferSize).equals(30);
     Input(numberInit).equals(0);
     Input(massInit).equals(0);

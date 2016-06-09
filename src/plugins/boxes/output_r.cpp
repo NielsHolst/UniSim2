@@ -3,6 +3,7 @@
 #include <QMapIterator>
 #include <QSet>
 #include <QTextStream>
+#include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/general.h>
@@ -23,10 +24,10 @@ PUBLISH(OutputR)
 OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(ports);
-    Input(clear).equals(true);
-    Input(showPlots).equals(true);
-    Input(script);
+    help("creates output and scripts for R");
+    Input(clear).equals(true).help("Clear R graphics and work space?");
+    Input(showPlots).equals(true).help("Show R plots?");
+    Input(script).help("Name of R script to run after auto-generated R script");
 }
 
 void OutputR::amend() {
@@ -35,22 +36,6 @@ void OutputR::amend() {
     if (_pages.empty()) {
         Box *page = MegaFactory::create<Box>("PageR", "", this);
         page->amend();
-    }
-    // Additional ports which will show in text output file but not in R plots
-    addExtraPorts();
-}
-
-void OutputR::addExtraPorts() {
-    // Additional ports to be trackes
-    for (QString portName : ports) {
-        QVector<Port*> trackedPorts = Path(portName).resolveMany<Port>();
-        if (trackedPorts.isEmpty())
-            ThrowException("Port not found").value(portName);
-        // Add ports to blank page (which will not show)
-        for (Port *port : trackedPorts) {
-            if (port->page().isNull())
-                port->page("default");
-        }
     }
 }
 
@@ -68,9 +53,11 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
-    s += "rm(list=ls(all=TRUE))\n";
-    if (clear)
+    if (clear) {
+        s += "rm(list=ls(all=TRUE))\n";
         s += "graphics.off()\n";
+    }
+
     s += "source(\"" + environment().filePath(Environment::Script, "common.R") + "\")\n\n";
     for (PageR *page : _pages)
         s += page->toScript();
@@ -91,6 +78,8 @@ QString OutputR::toScript() {
 
 void OutputR::debrief() {
     writeScript();
+    dialog().information("R script written to '" + environment().latestOutputFilePath("R") + "'");
+    dialog().information("Executable R script copied to clipboard");
 }
 
 void OutputR::writeScript() {

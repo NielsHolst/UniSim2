@@ -38,6 +38,10 @@ QString nameOf(PortType type) {
     return s;
 }
 
+bool isScalar(PortType type) {
+    return int(type)%2 == 0;
+}
+
 bool isVector(PortType type) {
     return int(type)%2 == 1;
 }

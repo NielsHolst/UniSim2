@@ -20,6 +20,7 @@ public:
     QString toScript();
 private:
     // Inputs
+    bool hide;
     QVector<QString> ports;
     QString layout;
     int ncol, nrow;

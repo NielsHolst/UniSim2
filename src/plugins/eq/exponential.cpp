@@ -14,26 +14,27 @@ PUBLISH(Exponential)
 Exponential::Exponential(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(x);
-    Input(r).equals(0);
-    Input(dt).equals(1);
-    Input(yMax).equals(1e100);
-    Output(y);
+    help("calculates y-increments for given x-increments along an exponential growth curve");
+    Input(y).help("Current y-values");
+    Input(r).equals(0).help("Exponential growth rate (per day) of any y");
+    Input(dt).imports("calendar[timeStepDays]").help("Time step (days) for any y");
+    Input(yMax).equals(1e100).help("The maximum value of any y");
+    Output(dy).help("By how much will y increase over the time step (dx)? Will match the size of y" );
 }
 
 void Exponential::reset() {
-    y.fill(0, x.size());
+    dy.fill(0, y.size());
 }
 
-double Exponential::f(double x) {
-    double dx = x*(exp(r*dt)-1),
-           dxMax = yMax - x;
-    return (dx > dxMax) ? dxMax : dx;
+double Exponential::fdy(double y) {
+    double dy = y*(exp(r*dt)-1),
+           dyMax = yMax - y;
+    return (dy > dyMax) ? dyMax : dy;
 }
 
 void Exponential::update() {
-    Q_ASSERT(x.size() == y.size());
-    std::transform(x.constBegin(), x.constEnd(), y.begin(), [this](const double &x){return this->f(x);});
+    Q_ASSERT(y.size() == dy.size());
+    std::transform(y.constBegin(), y.constEnd(), dy.begin(), [this](const double &y){return this->fdy(y);});
 }
 // line break in ports: ( \n  )
 }

@@ -25,7 +25,7 @@ public:
 
 private:
     // inputs
-    QString fileName;
+    QString fileName, dateColumnName, timeColumnName;
     QDateTime calendarDateTime;
 
     // outputs

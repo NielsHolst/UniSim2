@@ -27,6 +27,7 @@ void multiply(Vec &v, const Vec &x, const Scalar &y);
 // Summary
 double sum(const Vec &x);
 double average(const Vec &x);
+double sumOfProducts(const Vec &x, const Vec &y);
 
 } //namespace
 

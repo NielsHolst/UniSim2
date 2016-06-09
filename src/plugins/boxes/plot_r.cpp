@@ -13,6 +13,7 @@ PUBLISH(PlotR)
 PlotR::PlotR(QString name, QObject *parent)
     : Box(name, parent)
 {
+    Input(hide).equals(false);
     Input(ports);
     Input(layout).equals("facetted");
     Input(ncol).equals(-1);
@@ -80,7 +81,7 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (_ports.isEmpty())
+    if (hide || _ports.isEmpty())
         return QString();
     QStringList portLabels;
     QString xLabel = apostrophed(xPortLabel());

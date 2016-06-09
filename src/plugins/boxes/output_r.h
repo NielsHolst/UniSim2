@@ -24,7 +24,6 @@ public:
 
 private:
     // Input
-    QVector<QString> ports;
     bool clear, showPlots;
     QString script;
 
@@ -33,7 +32,6 @@ private:
     QFile _file;
 
     // Methods
-    void addExtraPorts();
     void writeScript();
     void openFile();
 };

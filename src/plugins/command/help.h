@@ -10,6 +10,7 @@ public:
     help(QString name, QObject *parent);
 private:
     void doExecute();
+    void writeCommands();
 };
 
 }

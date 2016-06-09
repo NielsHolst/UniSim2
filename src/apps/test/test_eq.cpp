@@ -34,7 +34,7 @@ void TestEq::testGompertz() {
         ThrowException(QString("Unexpected exception:\n") + ex.what());
     }
 
-    result = sim->resolveOne<Port>("gompertz[y]")->value<QVector<double>>();
+    result = sim->resolveOne<Port>("gompertz[dy]")->value<QVector<double>>();
     QVERIFY(TestNum::eq(result.at(0), expected.at(0)));
     QVERIFY(TestNum::eq(result.at(1), expected.at(1)));
     QVERIFY(TestNum::eq(result.at(2), expected.at(2)));

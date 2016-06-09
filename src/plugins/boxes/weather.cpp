@@ -11,8 +11,8 @@ PUBLISH(Weather)
 Weather::Weather(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(Tmin).imports("descendants::*[Tmin]");
-    Input(Tmax).imports("descendants::*[Tmax]");
+    Input(Tmin).importsMaybe("descendants::*[Tmin]");
+    Input(Tmax).importsMaybe("descendants::*[Tmax]");
     Output(Tavg);
 }
 

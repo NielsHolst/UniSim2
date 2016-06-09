@@ -14,6 +14,7 @@ PUBLISH(Zigmoid)
 Zigmoid::Zigmoid(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("has not been tested");
     Input(xMin).equals(0);
     Input(xMax).equals(1);
     Input(yMax).equals(1);

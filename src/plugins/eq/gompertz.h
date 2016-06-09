@@ -15,7 +15,7 @@ private:
     QVector<double> x, dx;
     double x0,y0, x1,y1;
     // output
-    QVector<double> y;
+    QVector<double> dy;
     // methods
     double f(double x, double dx);
     // data

@@ -37,13 +37,13 @@ Port& Port::equals(QStringList value) {
 Port& Port::imports(QString pathToPort) {
     _importPath = pathToPort;
     _importPortMustExist = true;
-    return *this;
+    return help("Defaults to " + pathToPort);
 }
 
 Port& Port::importsMaybe(QString pathToPort) {
     _importPath = pathToPort;
     _importPortMustExist = false;
-    return *this;
+    return help("Defaults to " + pathToPort + " (if it exists)");
 }
 
 Port& Port::access(Access acc) {
@@ -84,6 +84,7 @@ Port& Port::attribute(QString name, QString value) {
     CASE_SET_ATTRIBUTE(page, value)
     CASE_SET_ATTRIBUTE(plot, value)
     CASE_SET_ATTRIBUTE(label, value)
+    CASE_SET_ATTRIBUTE(help, value)
     if (name == "transform") {
         _attributes.transform = value;
         _attributes.portTransform = convert<PortTransform>(value);
@@ -102,6 +103,7 @@ SET_ATTRIBUTE(page)
 SET_ATTRIBUTE(plot)
 SET_ATTRIBUTE(label)
 SET_ATTRIBUTE(transform)
+SET_ATTRIBUTE(help)
 
 Port& Port::transform(PortTransform tr) {
     return attribute("transform", convert<QString>(tr));
@@ -117,6 +119,7 @@ QString Port::attribute(QString name) const {
     CASE_GET_ATTRIBUTE(plot);
     CASE_GET_ATTRIBUTE(label);
     CASE_GET_ATTRIBUTE(transform);
+    CASE_GET_ATTRIBUTE(help);
     ThrowException("Unknown attribute").value(name).context(this);
 }
 
@@ -129,6 +132,7 @@ GET_ATTRIBUTE(format)
 GET_ATTRIBUTE(page)
 GET_ATTRIBUTE(plot)
 GET_ATTRIBUTE(label)
+GET_ATTRIBUTE(help)
 
 QStringList Port::labelList() const {
     QStringList list;
@@ -150,24 +154,25 @@ PortTransform Port::transform() const {
 
 namespace {
     PortType deduceTypeFromImportType(PortType importType, PortTransform transform) {
+        if (isScalar(importType))
+            return importType;
+
         PortType type{Null};
-        if (isVector(importType)) {
-            switch (transform) {
-                case Identity:
-                    type = importType;
-                    break;
-                case Sum:
-                case Average:
-                case Min:
-                case Max:
-                case All:
-                case Any:
-                    type = asScalar(importType);
-                    break;
-                case Copy:
-                case Split:
-                    ThrowException("Transform cannot be applied on a vector").value(transform);
-            }
+        switch (transform) {
+            case Identity:
+                type = importType;
+                break;
+            case Sum:
+            case Average:
+            case Min:
+            case Max:
+            case All:
+            case Any:
+                type = asScalar(importType);
+                break;
+            case Copy:
+            case Split:
+                ThrowException("Transform cannot be applied on a vector").value(transform);
         }
         return type;
     }
@@ -199,6 +204,8 @@ void Port::resolveImports() {
     // Deduce value type from import type (this happens of port is an extra, added port)
     if (_valueType == Null) {
         _valueType = deduceTypeFromImportType(_importType, transform());
+        if (_valueType == Null)
+            ThrowException("Unexpected error: Type of imported value is Null");
 //        if (_importPorts.size() > 1 && transform() != Identity)
 //            _valueType = asVector(_valueType);
     }

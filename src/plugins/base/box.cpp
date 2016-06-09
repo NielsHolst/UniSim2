@@ -80,6 +80,14 @@ const Port* Box::port(QString name) const {
     return port; \
 }
 
+void Box::help(QString s) {
+    _help = s;
+}
+
+QString Box::help() const {
+    return _help;
+}
+
 Box* Box::currentRoot() {
     if (!_currentRootIsDirty || _currentRoot==0)
         return _currentRoot;
