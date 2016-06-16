@@ -1,3 +1,4 @@
+#include <QStringListIterator>
 #include <QTextStream>
 #include "environment.h"
 #include "exception.h"
@@ -38,7 +39,13 @@ void SaveGrammarNotepad::writeClasses() {
 }
 
 void SaveGrammarNotepad::writePorts() {
-    _output = _output.replace("#Keywords3", portNames().join(sep));
+    QStringList decoratedPortNames;
+    QStringListIterator it(portNames());
+    while (it.hasNext()) {
+        QString s = it.next();
+        decoratedPortNames << "." + s; // << "["  + s + "]"; does not highlight port
+    }
+    _output = _output.replace("#Keywords3", decoratedPortNames.join(sep));
 }
 
 void SaveGrammarNotepad::writeAttributes() {

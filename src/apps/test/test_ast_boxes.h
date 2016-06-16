@@ -9,6 +9,7 @@ class TestAstBoxes : public QObject
 private slots:
     void testSimple();
     void testComments();
+    void testWhitespaceInVector();
 private:
     QString filePath(QString fileName);
 };

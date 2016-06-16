@@ -57,6 +57,10 @@ QString Exception::what() const {
     QString text = QString{"Error: %1"}.arg(_message);
     if (!_value.isEmpty())
         text += QString("\nValue: '%1'").arg(_value);
+    if (!_value1.isEmpty())
+        text += QString("\nValue1: '%1'").arg(_value1);
+    if (!_value2.isEmpty())
+        text += QString("\nValue2: '%1'").arg(_value2);
     if (!_fullName.isEmpty())
         text += QString("\nObject: %1").arg(_fullName);
     if (!_hint.isEmpty())
@@ -66,39 +70,32 @@ QString Exception::what() const {
     return text;
 }
 
-template <> Exception& Exception::value(bool v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(bool v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(char v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(char v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(const char *v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(const char *v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(QString v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(QString v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(QDate v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(QDate v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(QTime v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(QTime v) {
+    return convert<QString>(v);
 }
 
-template <> Exception& Exception::value(QDateTime v) {
-    _value = convert<QString>(v);
-    return *this;
+template <> QString Exception::asString(QDateTime v) {
+    return convert<QString>(v);
 }
 
 

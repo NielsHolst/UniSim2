@@ -20,7 +20,6 @@ private:
     double f(double x, double dx);
     // data
     double _a, _b;
-    bool _dxIsScalar;
 };
 
 }

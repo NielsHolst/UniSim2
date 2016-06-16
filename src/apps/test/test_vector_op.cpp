@@ -1,3 +1,4 @@
+#include <base/test_num.h>
 #include <base/vector_op.h>
 #include "test_vector_op.h"
 
@@ -8,7 +9,7 @@ void TestVectorOp::testPlusVecVec() {
     v << 2 << 4 << 8;
     x << 5 << 13 << 11;
     expected << 7 << 17 << 19;
-    vector_op::plus(v,x);
+    vector_op::add(v,x);
     QCOMPARE(v, expected);
 }
 
@@ -17,17 +18,16 @@ void TestVectorOp::testPlusVecScalar() {
     double x = 13;
     v << 2 << 4 << 8;
     expected << 15 << 17 << 21;
-    vector_op::plus(v,x);
+    vector_op::add(v,x);
     QCOMPARE(v, expected);
 }
 
 void TestVectorOp::testPlusVecVecVec() {
     QVector<double> v, x, y, expected;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     y << 5 << 13 << 11;
     expected << 7 << 17 << 19;
-    vector_op::plus(v,x,y);
+    vector_op::sum(v,x,y);
     QCOMPARE(v, expected);
 
 }
@@ -35,10 +35,9 @@ void TestVectorOp::testPlusVecVecVec() {
 void TestVectorOp::testPlusVecVecScalar() {
     QVector<double> v, x, expected;
     double y = 13;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     expected << 15 << 17 << 21;
-    vector_op::plus(v,x,y);
+    vector_op::sum(v,x,y);
     QCOMPARE(v, expected);
 }
 
@@ -49,7 +48,7 @@ void TestVectorOp::testMinusVecVec() {
     v << 2 << 4 << 8;
     x << 5 << 13 << 11;
     expected << -3 << -9 << -3;
-    vector_op::minus(v,x);
+    vector_op::subtract(v,x);
     QCOMPARE(v, expected);
 }
 
@@ -58,17 +57,16 @@ void TestVectorOp::testMinusVecScalar() {
     double x = 13;
     v << 2 << 4 << 8;
     expected << -11 << -9 << -5;
-    vector_op::minus(v,x);
+    vector_op::subtract(v,x);
     QCOMPARE(v, expected);
 }
 
 void TestVectorOp::testMinusVecVecVec() {
     QVector<double> v, x, y, expected;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     y << 5 << 13 << 11;
     expected << -3 << -9 << -3;
-    vector_op::minus(v,x,y);
+    vector_op::difference(v,x,y);
     QCOMPARE(v, expected);
 
 }
@@ -76,10 +74,9 @@ void TestVectorOp::testMinusVecVecVec() {
 void TestVectorOp::testMinusVecVecScalar() {
     QVector<double> v, x, expected;
     double y = 13;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     expected << -11 << -9 << -5;
-    vector_op::minus(v,x,y);
+    vector_op::difference(v,x,y);
     QCOMPARE(v, expected);
 }
 
@@ -105,11 +102,10 @@ void TestVectorOp::testMultiplyVecScalar() {
 
 void TestVectorOp::testMultiplyVecVecVec() {
     QVector<double> v, x, y, expected;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     y << 5 << 13 << 11;
     expected << 10 << 52 << 88;
-    vector_op::multiply(v,x,y);
+    vector_op::product(v,x,y);
     QCOMPARE(v, expected);
 
 }
@@ -117,10 +113,9 @@ void TestVectorOp::testMultiplyVecVecVec() {
 void TestVectorOp::testMultiplyVecVecScalar() {
     QVector<double> v, x, expected;
     double y = 13;
-    v.fill(0,3);
     x << 2 << 4 << 8;
     expected << 26 << 52 << 104;
-    vector_op::multiply(v,x,y);
+    vector_op::product(v,x,y);
     QCOMPARE(v, expected);
 }
 
@@ -135,4 +130,21 @@ void TestVectorOp::testSum() {
 
 }
 
+void TestVectorOp::testWeightedAverage() {
+    QVector<double> x, y;
+    double v, expected((2*7 + 4*11 + 8*13)/double(7+11+13));
+    x << 2 << 4 << 8;
+    y << 7 << 11 << 13;
+    v = vector_op::weightedAverage(x,y);
+    QVERIFY(TestNum::eq(v, expected));
+}
+
+void TestVectorOp::testSumOfProducts() {
+    QVector<double> x, y;
+    double v, expected(2*7 + 4*11 + 8*13);
+    x << 2 << 4 << 8;
+    y  << 7 << 11 << 13;
+    v = vector_op::sumOfProducts(x,y);
+    QVERIFY(TestNum::eq(v, expected));
+}
 

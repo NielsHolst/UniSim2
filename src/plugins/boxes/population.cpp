@@ -6,6 +6,7 @@
 #include "population.h"
 
 using namespace base;
+using namespace vector_op;
 
 namespace boxes {
 
@@ -47,10 +48,13 @@ void Population::reset() {
 
 void Population::update() {
     if (!cohortsGain.isEmpty())
-        vector_op::plus(cohorts, cohortsGain);
+        add(cohorts,
+            cohortsGain, this);
     if (!cohortsLoss.isEmpty())
-        vector_op::minus(cohorts, cohortsLoss);
-    vector_op::plus(age, ageIncrement);
+        subtract(cohorts,
+                 cohortsLoss, this);
+    add(age,
+        ageIncrement);
     lastCohortSpill = _cohorts.at(1);
     _cohorts.push(firstCohortGain);
     _age.push(0);

@@ -25,7 +25,7 @@ OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("creates output and scripts for R");
-    Input(clear).equals(true).help("Clear R graphics and work space?");
+    Input(clear).equals(false).help("Clear R graphics and work space?");
     Input(showPlots).equals(true).help("Show R plots?");
     Input(script).help("Name of R script to run after auto-generated R script");
 }

@@ -23,6 +23,8 @@ private slots:
     void testMultiplyVecVecScalar();
 
     void testSum();
+    void testWeightedAverage();
+    void testSumOfProducts();
 };
 
 DECLARE_TEST(TestVectorOp)

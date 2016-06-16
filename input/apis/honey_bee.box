@@ -1,8 +1,8 @@
 Simulation sim {
-  .steps = 30
+  .steps = 1500
   Calendar calendar {
     .timeStep = 1
-    .timeUnit = "d"
+    .timeUnit = "h"
     .initialDateTime = 1/4/2001
   }
   Box weather {
@@ -12,9 +12,55 @@ Simulation sim {
       .fileName = "weather_denmark.txt"
     }
   } 
+  NectarFlow nectarFlow {
+    .maxFlow = 150 // ml/min
+    .beginDate = 5/4/*
+    .endDate = 20/4/*
+    .beginTime = 7:00
+    .endTime = 12:00
+  }
+  
   Box hive {
+  
+    
+    Box demand {
+      HoneyDemandRespiration respiration {
+        .cohortNumbers = worker[number]
+        .respirationRate = 7       // (mg/d) Harbo (JAR, 1993); for nurse bee    
+      }
+      HoneyDemandGrowth growth {
+        .cohortNumbers = larva[number]
+        .cohortDemands = larva[number]
+        .cost = 0.3     // Harbo (JAR, 1993)
+        Exponential massIncrement {
+          .y = larva[mass]
+          .dt = calendar[timeStepDays]
+          .r = 0.326    // log(140/0.15)/21
+          .yMax = 150
+        }
+      }
+    }
+
+    Box supply {
+      HoneySupply honey {
+        .cohortNumbers = worker[number]
+        .conversionFactor = 0.3
+      }
+    }
+
+    EnergyBudget budget {
+      .supply = ../supply/honey[value]
+      .demandRespiration = ../demand/respiration[value]
+      .demandGrowth = ../demand/growth[value]
+      .storeHolding = ../honey[holding]
+      .storeCapacity = ../honey[capacity]
+    }
+    
+    HoneyStore honey {
+    }
+    
     apis::LifeStage egg {
-      .bufferSize = 10 #250
+      .maxAge = 10
       .numberNew = 50
       .massNew = 0.15
       Gompertz Pmorph {
@@ -27,33 +73,23 @@ Simulation sim {
       }
     }
     apis::LifeStage larva {
-      .bufferSize = 25 #300
+      .maxAge = 25
       .numberNew = ../egg[numberMorphed]
       .massNew = ../egg[massMorphed]
-      Exponential massIncrement {
-        .y = ..[mass]
-        .r = 0.326    # log(140/0.15)/21
-        .yMax = 150
-      }
+      .massIncrement = demand/growth/massIncrement[dy]
       Gompertz Pmorph {
         .x = ..[mass]
-        .dx = ../massIncrement[y]
+        .dx = demand/growth/massIncrement[dy]
         .x0 = 130
         .y0 = 0.01 
         .x1 = 150
         .y1 = 0.99
       }
-     NectarDemand demand {
-       .numberWorkers = worker[number]
-       .numberLarvae = ..[number]
-       .massIncrement = ../massIncrement[dy]
-       .conversionRatio = 1.5  # Harbo (JAR, 1993)
-       .workerDemand = 7       # Harbo (JAR, 1993); for nurse bee or pollen-foraging bee
-     }
     }
     apis::LifeStage worker {
-      .bufferSize = 75 #1800
+      .maxAge = 75 
       .numberInit = 5000
+      .massInit = 150
       .numberNew = ../larva[numberMorphed]
       .massNew = ../larva[massMorphed]
       Gompertz Pmorph {
@@ -66,32 +102,25 @@ Simulation sim {
       }
     }
   }
-  NectarFlow nectarFlow {
-    .minFlow = 100
-    .maxFlow = 1000
-    .beginDate = 3/5/*
-    .endDate = 10/5/*
-    .beginTime = 7:00
-    .endTime = 12:00
-    .concentration = 0.20 # Kim et al. (2011) http://www.pnas.org/content/108/40/16618.full
-  }
+  
   OutputR {
-    .script = "honey_bee.R"
+    //.script = "honey_bee.R"
+    .clear = TRUE
     PageR p1 {
       .xAxis = calendar[dateTime]
       .width = 12
       .height = 8
       PlotR {
-        .nrow = 3
-        .ports = (*[numberSum] *[numberMorphed] *[massMorphed])
+        .nrow = 5
+        .ports = (*[ageAverage] *[numberSum] *[massAverage] *[numberMorphed] *[massMorphed])
       }
       PlotR {
-        .ports = (weather[temperature] nectarFlow[flow] demand[demandLarvae] demand[demandWorkers] demand[demandTotal])
+        .ports = ( nectarFlow[flow] )
       }
-      PlotR {
-        .hide = TRUE
-        .ports = (larva[number] larva[mass] larva/massIncrement[y] larva/massIncrement[dy])
-        }
+      // PlotR {
+        // .hide = TRUE
+        // .ports = (larva[number] larva[mass] larva/Pmorph[x] larva/Pmorph[dx] larva/Pmorph[dy])
+        // }
     }
   }
 }

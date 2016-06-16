@@ -109,7 +109,7 @@ template<> QStringList convert(QString source) {
 
 
 template<> QDate convert(QString source) {
-    QString s = source.simplified();
+    QString s = source.trimmed();
     bool hasAnyYear = (s.startsWith("*") != s.endsWith("*"));  // xor
     if (hasAnyYear)
         s.replace("*", "2000");
@@ -153,7 +153,7 @@ template<> QDateTime convert(QString source) {
 }
 
 template<> QTime convert(QString source) {
-    QString s = source.simplified();
+    QString s = source.trimmed();
     QTime time = QTime::fromString(s, "h:m:s");
     if (!time.isValid())
         time = QTime::fromString(s, "h:m");
@@ -172,12 +172,12 @@ template<> QVector<X> convert(QString source) { \
     return convert<X, QVector>(list); \
 }
 
-template<> QVector<bool> convert(QString source) {
-    QStringList list = split(source);
-    return convert<bool, QVector>(list  );
-}
+//template<> QVector<bool> convert(QString source) {
+//    QStringList list = split(source);
+//    return convert<bool, QVector>(list  );
+//}
 
-//CONVERT_STRING_TO_VECTOR(bool)
+CONVERT_STRING_TO_VECTOR(bool)
 CONVERT_STRING_TO_VECTOR(char)
 CONVERT_STRING_TO_VECTOR(int)
 CONVERT_STRING_TO_VECTOR(long int)

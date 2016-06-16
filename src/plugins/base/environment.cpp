@@ -117,9 +117,9 @@ QString Environment::folderInfo(Folder folder) {
     }
     if (!resolvedDir.exists()) {
         if (folder == Output)
-            info += "\n'" + resolvedDir.absolutePath() +  "' will be created when needed";
+            info += "\n  '" + resolvedDir.absolutePath() +  "' will be created when needed";
         else
-            info += "\nWarning: '" + resolvedDir.absolutePath() +  "' does not exist";
+            info += "\n  Warning: '" + resolvedDir.absolutePath() +  "' does not exist";
     }
     return info;
 }

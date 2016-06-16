@@ -1,13 +1,13 @@
-# abc def
-ModelA a { # abc def
+// abc def
+ModelA a { // abc def
 	.input1 = 2
 	.input4 = 32
 	ModelA b {
-	# abc def
+	// abc def
 		.input1 = 2
-	} #		##
-	ModelA c {#
-	}#abc def
-}#
-# abc
-  #
+	} //		////
+	ModelA c {//
+	}//abc def
+}//
+// abc
+  //

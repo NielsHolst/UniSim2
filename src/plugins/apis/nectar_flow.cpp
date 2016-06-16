@@ -12,17 +12,14 @@ NectarFlow::NectarFlow(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("yields current nectar flow available from flowers");
-    Input(concentration).equals(0.20).help("Ratio of sugar/total mass");
-    Input(minFlow).help("Minimum nectar flow (unit?)");
-    Input(maxFlow);
+    Input(minFlow).help("Minimum nectar flow (ml/min)");
+    Input(maxFlow).help("Maximum nectar flow (ml/min)");
     Input(beginDate).equals(QDate(anyYear(), 1, 1));
     Input(endDate).equals(QDate(anyYear(), 12, 31));
-    Input(currentDate).imports("calendar[date]");
     Input(beginTime).equals(QTime(0,0));
     Input(endTime).equals(QTime(0,0));
     Input(currentTime).imports("calendar[time]");
-    Input(timeStepSecs).imports("calendar[timeStepSecs]");
-    Output(flow).help("unit?");
+    Output(flow).help("Current nectar flow (ml/min)");
 }
 
 void NectarFlow::reset() {

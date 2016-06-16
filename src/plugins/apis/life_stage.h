@@ -15,16 +15,17 @@ public:
 private:
     typedef QVector<double> Cohorts;
     // input
-    int bufferSize;
+    int maxAge;
     double timeStepDays, numberInit, massInit, numberNew, massNew;
     Cohorts Pmorph, massIncrement;
     // output
     Cohorts number, mass, age;
-    double numberSum, massMin, massMax, massAverage,
+    double numberSum, massAverage, ageAverage,
         numberMorphed, massMorphed,
         numberLeaked, massLeaked;
     // data
     base::CircularBuffer<double> _number, _mass, _age;
+    int _bufferSize;
     // methods
     void updateStatistics();
 };

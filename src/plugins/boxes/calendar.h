@@ -18,8 +18,8 @@ class Calendar : public base::Box
 public: 
     Calendar(QString name, QObject *parent);
 	//standard methods
-	void initialize();
-	void reset();
+    void initialize();
+    void reset();
 	void update();
 
 private:

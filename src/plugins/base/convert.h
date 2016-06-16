@@ -111,7 +111,7 @@ template<> QDateTime convert(long double source);
 
 template<class T> T convert(QString source) {
     try {
-        return lexical_cast<T>(source.toStdString());
+        return lexical_cast<T>(source.trimmed().toStdString());
     }
     catch(const bad_lexical_cast &)
     {

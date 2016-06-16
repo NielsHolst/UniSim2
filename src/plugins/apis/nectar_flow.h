@@ -14,7 +14,7 @@ public:
     void update();
 private:
     // input
-    double minFlow, maxFlow, concentration, timeStepSecs;
+    double minFlow, maxFlow;
     QDate beginDate, endDate, currentDate;
     QTime beginTime, endTime, currentTime;
     // output

@@ -2,10 +2,10 @@
 #define HELP_CLASS_H
 #include <QStringList>
 #include <base/command.h>
+#include <base/port.h>
 
 namespace base {
     class Box;
-    class Port;
 }
 
 namespace command {

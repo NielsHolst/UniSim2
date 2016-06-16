@@ -57,10 +57,15 @@ Calendar::Calendar(QString name, QObject *parent)
 }
 
 void Calendar::initialize() {
-    if (sample < 1) sample = 1; // To increase user robustness
+    // Some classes may need the outputs already in their initialize phase
+    reset();
 }
 
 void Calendar::reset() {
+    if (sample < 1)
+        ThrowException("Sample frequency ('sample') must be larger than zero").value(sample);
+    if (timeStep < 1)
+        ThrowException("Time step ('timeStep') must be larger than zero").value(timeStep);
     _timeUnit = TimeWithUnits::charToUnit(timeUnit, this);
     timeStepSecs = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Seconds);
     timeStepDays = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Days);

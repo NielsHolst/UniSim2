@@ -28,26 +28,44 @@ public:
     Exception& hint(QString s);
     Exception& id(QString s);
     template <class T> Exception& value(T v);
+    template <class T> Exception& value1(T v);
+    template <class T> Exception& value2(T v);
 
     QString id() const;
     QString what() const;
 private:
-    QString _message, _value, _hint, _fullName, _file, _id;
+    // data
+    QString _message, _value, _value1, _value2, _hint, _fullName, _file, _id;
     int _line;
+    // methods
+    template <class T> QString asString(T v);
 };
 
 template <class T> Exception& Exception::value(T v) {
-    _value = QString::fromStdString(boost::lexical_cast<std::string>(v));
+    _value = asString(v);
     return *this;
 }
 
-template <> Exception& Exception::value(bool v);
-template <> Exception& Exception::value(char v);
-template <> Exception& Exception::value(const char *v);
-template <> Exception& Exception::value(QString v);
-template <> Exception& Exception::value(QDate v);
-template <> Exception& Exception::value(QTime v);
-template <> Exception& Exception::value(QDateTime v);
+template <class T> Exception& Exception::value1(T v) {
+    _value1 = asString(v);
+    return *this;
+}
+template <class T> Exception& Exception::value2(T v) {
+    _value2 = asString(v);
+    return *this;
+}
+
+template <class T> QString Exception::asString(T v) {
+    return QString::fromStdString(boost::lexical_cast<std::string>(v));
+}
+
+template <> QString Exception::asString(bool v);
+template <> QString Exception::asString(char v);
+template <> QString Exception::asString(const char *v);
+template <> QString Exception::asString(QString v);
+template <> QString Exception::asString(QDate v);
+template <> QString Exception::asString(QTime v);
+template <> QString Exception::asString(QDateTime v);
 
 }
 #endif

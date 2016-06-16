@@ -1,16 +1,17 @@
+#include <QObject>
 #include <exception.h>
 #include "vector_op.h"
 
 #define CHECK_SIZE(X) \
     if (X.size() != n) ThrowException("Vectors must be of equals size"). \
-                       value(QString::number(X.size()) + "!=" + QString::number(n))
+                       value2(X.size()).value1(n).context(context_)
 
 namespace vector_op {
 
 //
 // Unary
 //
-void plus(Vec &v, const Vec &x) {
+void add(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
     CHECK_SIZE(x);
     double *receiver = v.data();
@@ -19,14 +20,14 @@ void plus(Vec &v, const Vec &x) {
         *receiver++ += *sender++;
 }
 
-void plus(Vec &v, const Scalar &x) {
+void add(Vec &v, const Scalar &x) {
     int i = 0, n = v.size();
     double *receiver = v.data();
     while (i++ < n)
         *receiver++ += x;
 }
 
-void minus(Vec &v, const Vec &x) {
+void subtract(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
     CHECK_SIZE(x);
     double *receiver = v.data();
@@ -35,14 +36,14 @@ void minus(Vec &v, const Vec &x) {
         *receiver++ -= *sender++;
 }
 
-void minus(Vec &v, const Scalar &x) {
+void subtract(Vec &v, const Scalar &x) {
     int i = 0, n = v.size();
     double *receiver = v.data();
     while (i++ < n)
         *receiver++ -= x;
 }
 
-void multiply(Vec &v, const Vec &x) {
+void multiply(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
     CHECK_SIZE(x);
     double *receiver = v.data();
@@ -62,10 +63,10 @@ void multiply(Vec &v, const Scalar &x) {
 // Binary
 //
 
-void plus(Vec &v, const Vec &x, const Vec &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void sum(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
+    int i = 0, n = x.size();
     CHECK_SIZE(y);
+    v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
     const double *sender2 = y.data();
@@ -73,19 +74,19 @@ void plus(Vec &v, const Vec &x, const Vec &y) {
         *receiver++ = *sender1++ + *sender2++;
 }
 
-void plus(Vec &v, const Vec &x, const Scalar &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void sum(Vec &v, const Vec &x, const Scalar &y) {
+    int i = 0, n = x.size();
+    v.resize(n);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
         *receiver++ = *sender++ + y;
 }
 
-void minus(Vec &v, const Vec &x, const Vec &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void difference(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
+    int i = 0, n = x.size();
     CHECK_SIZE(y);
+    v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
     const double *sender2 = y.data();
@@ -93,19 +94,19 @@ void minus(Vec &v, const Vec &x, const Vec &y) {
         *receiver++ = *sender1++ - *sender2++;
 }
 
-void minus(Vec &v, const Vec &x, const Scalar &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void difference(Vec &v, const Vec &x, const Scalar &y) {
+    int i = 0, n = x.size();
+    v.resize(n);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
         *receiver++ = *sender++ - y;
 }
 
-void multiply(Vec &v, const Vec &x, const Vec &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void product(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
+    int i = 0, n = x.size();
     CHECK_SIZE(y);
+    v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
     const double *sender2 = y.data();
@@ -113,9 +114,9 @@ void multiply(Vec &v, const Vec &x, const Vec &y) {
         *receiver++ = *sender1++ * *sender2++;
 }
 
-void multiply(Vec &v, const Vec &x, const Scalar &y) {
-    int i = 0, n = v.size();
-    CHECK_SIZE(x);
+void product(Vec &v, const Vec &x, const Scalar &y) {
+    int i = 0, n = x.size();
+    v.resize(n);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
@@ -140,7 +141,20 @@ double average(const Vec &x) {
     return (n==0) ? 0 : sum(x)/n;
 }
 
-double sumOfProducts(const Vec &x, const Vec &y) {
+double weightedAverage(const Vec &x, const Vec &weights, QObject *context_) {
+    int i = 0, n = x.size();
+    CHECK_SIZE(weights);
+    double weightedSum = 0, sumOfWeights = 0;
+    const double *sender1 = x.data();
+    const double *sender2 = weights.data();
+    while (i++ < n) {
+        sumOfWeights += *sender2;
+        weightedSum += *sender1++ * *sender2++;
+    }
+    return (sumOfWeights == 0) ? 0. : weightedSum/sumOfWeights;
+}
+
+double sumOfProducts(const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
     CHECK_SIZE(y);
     double receiver = 0;

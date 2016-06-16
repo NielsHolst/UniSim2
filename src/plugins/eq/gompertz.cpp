@@ -32,15 +32,12 @@ Gompertz::Gompertz(QString name, QObject *parent)
 void Gompertz::reset() {
     CHECK_Y(y0);
     CHECK_Y(y1);
-    _dxIsScalar = (dx.size() == 1);
-    if (!_dxIsScalar && dx.size() != x.size())
-        ThrowException("dx must have length 1 or length of x").value(dx.size()).context(this);
-
-    dy.fill(0, x.size());
     double A = log(-log(y0)),
            B = log(-log(y1));
     _b = (B-A)/(x0-x1),
     _a = exp(A + _b*x0);
+
+    dy.resize(x.size());
 }
 
 inline double F(double x, double a, double b) {
@@ -55,11 +52,14 @@ double Gompertz::f(double x, double dx) {
 }
 
 void Gompertz::update() {
-    Q_ASSERT(x.size() == dy.size());
-    Q_ASSERT(_dxIsScalar || x.size() == dx.size());
+    bool dxIsScalar = (dx.size() == 1);
+    if (!dxIsScalar && x.size() != dx.size())
+        ThrowException("x and dx vectors must match in size, or else dx could be a scalar").value1(x.size()).value2(dx.size()).context(this);
+
     const double *px = x.data();
     double *py = dy.data();
-    if (_dxIsScalar) {
+
+    if (dxIsScalar) {
         double dx0 = dx.at(0);
         for (int i=0; i <x.size(); ++i)
             *py++ = f(*px++, dx0);

@@ -63,6 +63,8 @@ QStringList split(QString s, QObject *context) {
         char ch = s.at(i).toLatin1();
         switch (ch) {
         case ' ':
+        case '\t':
+        case '\n':
             if (insideAp)
                 item += ch;
             else {

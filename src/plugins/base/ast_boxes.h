@@ -61,7 +61,7 @@ struct comment_skipper : public qi::grammar<Iterator>
     comment_skipper()
         : comment_skipper::base_type(_skip)
     {
-        _skip = ascii::space | ('#' >> *(char_ - qi::eol) >> qi::eol);
+        _skip = ascii::space | ("//" >> *(char_ - qi::eol) >> qi::eol);
     }
 };
 
