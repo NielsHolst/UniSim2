@@ -16,6 +16,10 @@ using std::max;
 using std::min;
 using std::numeric_limits;
 
+namespace {
+    const QObject *_context;
+}
+
 namespace base {
 
 #define DEST_PTR(destT) \
@@ -40,11 +44,11 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
     const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>);
     const sourceT *sourceData = sourceVector->data();
     int i = 0, n = sourceVector->size();
-    sourceT value;
+    sourceT value = sourceT();
     switch (transform) {
     case Identity:
         if (n != 1)
-            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(QString::number(n) + " =! 1");
+            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(n).context(_context);
         value = *sourceData;
         break;
     case Sum:
@@ -61,12 +65,12 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
     case Min:
         value = numeric_limits<sourceT>::max();
         while (i++<n)
-            value += min(value, *sourceData++);
+            value = min(value, *sourceData++);
         break;
     case Max:
         value = numeric_limits<sourceT>::min();
         while (i++<n)
-            value += max(value, *sourceData++);
+            value = max(value, *sourceData++);
         break;
     case All:
         value = true;
@@ -80,7 +84,7 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
         break;
     case Copy:
     case Split:
-        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(transform);
+        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(convert<QString>(transform)).context(_context);
     }
     DEST(destT) = convert<destT>(value);
 }
@@ -92,11 +96,11 @@ template <> void assignToScalarFromVector<destT, sourceT>(void *destPtr, const v
     switch (transform) { \
     case Identity: \
         if (n != 1) \
-            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(convert<QString>(*sourceVector)); \
+            ThrowException("Cannot assign to scalar from vector. Expected vector size = 1").value(convert<QString>(*sourceVector)).context(_context); \
         DEST(destT) = convert<destT>(sourceVector->at(0)); \
         break; \
     default: \
-        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(transform); \
+        ThrowException("Transform cannot be applied when assigning a vector to a scalar").value(convert<QString>(transform)).context(_context); \
     } \
 }
 
@@ -139,7 +143,7 @@ QStringList asStringList<QString>(const void *sourcePtr) {
 template <class destT, class sourceT>
 void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransform transform) {
     if (transform != Identity)
-        ThrowException("Expected 'Identity' transform when assigning to vector").value(transform);
+        ThrowException("Expected 'Identity' transform when assigning to vector").value(convert<QString>(transform)).context(_context);
     QVector<destT> *destVector = DEST_PTR(QVector<destT>);
     sourceT source = SOURCE(sourceT);
     destT destValue = convert<destT>(source);
@@ -156,14 +160,13 @@ void assignToVectorFromScalar(void *destPtr, const void *sourcePtr, PortTransfor
         QString msg("When assigning a scalar to a vector, vector size must be 0 or 1,"
                     "\nor scalar must be transformed by Copy or Split"),
                 value("Vector size = %1, Transform = %2");
-        ThrowException(msg).value(value.arg(QString::number(n)).arg(convert<QString>(transform)));
+        ThrowException(msg).value(value.arg(QString::number(n)).arg(convert<QString>(transform))).context(_context);
     }
 }
 
 #define ASSIGN_TO_VECTOR_FROM_VECTOR_INTRO(destT, sourceT) \
     if (transform != Identity) \
-        ThrowException("Expected 'Identity' transform when assigning Vector to Vector").value(transform); \
-\
+        ThrowException("Expected 'Identity' transform when assigning Vector to Vector").value(convert<QString>(transform)).context(_context); \
     QVector<destT> *destVector = DEST_PTR(QVector<destT>); \
     const QVector<sourceT> *sourceVector = SOURCE_PTR(QVector<sourceT>);
 
@@ -217,7 +220,7 @@ case sourcePortT##Vector: \
 
 #define CANNOT_ASSIGN_FROM_NULL \
 case Null: \
-    ThrowException("Cannot assign from Null"); \
+    ThrowException("Cannot assign from this type").value(nameOf(sourceT)).context(_context); \
     break;
 
 #define CASE_ASSIGN_TO_SCALAR(destT) \
@@ -262,11 +265,12 @@ case destPortType##Vector: \
     CASE_ASSIGN_TO_VECTOR(destCppType) \
     break
 
-void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, QObject *context) {
+void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, const QObject *context) {
+    _context = context;
     if (destPtr==0)
-        ThrowException("Port data has not been set").context(context);
+        ThrowException("Port data has not been set").context(_context);
     if (sourcePtr==0)
-        ThrowException("Port source of import has not been set").context(context);
+        ThrowException("Port source of import has not been set").context(_context);
 
     // Split
     if (sourceT == String && isParenthesized(SOURCE(QString))) {

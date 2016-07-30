@@ -12,15 +12,15 @@ CONFIG += debug
 
 # Set suffix 'd' for debug version
 CONFIG(debug, debug|release) {
-    SUFFIX = d
+    SUFFIX = _d
 }
 else {
-    SUFFIX =
+    SUFFIX = _r
 }
 
 # What we are building
 CONFIG += console c++11
-#CONFIG -= app_bundle ??
+CONFIG -= app_bundle # do not bundle app on Mac OS
 QT += core 
 QT -= gui
 
@@ -31,12 +31,16 @@ QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wattributes
 QMAKE_CXXFLAGS += -ffast-math
 
 # Additional folders with header files
-INCLUDEPATH += "$$(BOOST_ROOT)"
+BOOST_PATH = $$(BOOST_ROOT)
+!isEmpty(BOOST_PATH) {
+    INCLUDEPATH += "$$(BOOST_ROOT)"
+    message($$join(BOOST_PATH, " ", "Including "))
+}
 
-# Own libraries that we use, except boxes does not itself use boxes
+# Own libraries that we use, except 'base' does not itself use 'base'
 !equals(BOXES_PLUGIN_NAME, "base") {
-    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
-    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
-    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
+    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_r
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_d
+    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_r
+    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_d
 }

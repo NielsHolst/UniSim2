@@ -19,7 +19,7 @@ update::update(QString name, QObject *parent)
 }
 
 void update::doExecute() {
-    Box *root = environment().state.root;
+    Box *root = environment().root();
     if (_args.size() > 1) {
         ThrowException("Command 'update' takes no arguments");
     }

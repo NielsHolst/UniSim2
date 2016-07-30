@@ -15,10 +15,14 @@ public:
 private:
     // input
     double minFlow, maxFlow;
-    QDate beginDate, endDate, currentDate;
-    QTime beginTime, endTime, currentTime;
+    QDate beginDate, endDate;
+    QTime beginTime, endTime;
+    QDateTime currentDateTime;
+    double timeStepSecs;
     // output
-    double flow;
+    double value, rate;
+    // methods
+    void updateValue();
 };
 
 }

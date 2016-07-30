@@ -12,11 +12,11 @@ public:
     void update();
 private:
     // input
-    double supply, demandRespiration, demandGrowth,
+    double supplyPotential, demandRespiration, demandGrowth, costGrowth,
         storeHolding, storeCapacity;
     // output
-    double realisedSupply, supplyRespiration, supplyGrowth, supplyStore,
-        supplyDemandGrowth;
+    double supplyAvailable, supplyRespiration, supplyGrowth, changeInStore,
+        supplyDemandRespiration, supplyDemandGrowth;
 };
 
 }

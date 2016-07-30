@@ -5,6 +5,7 @@
 #include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/port.h>
+#include <base/port_transform.h>
 #include <base/vector.h>
 #include <base/vector_vector.h>
 #include "test_vector.h"
@@ -67,9 +68,9 @@ void TestVector::testWithSimulationIterated() {
     QCOMPARE(trackValue->size(), 15);
 
     QVector<int> vectorIteration, vectorStep, vectorValue;
-    assign(IntVector, &vectorIteration, IntVector, trackIteration->ptr());
-    assign(IntVector, &vectorStep, IntVector, trackStep->ptr());
-    assign(IntVector, &vectorValue, IntVector, trackValue->ptr());
+    assign(IntVector, &vectorIteration, IntVector, trackIteration->ptr(), PortTransform::Identity, 0);
+    assign(IntVector, &vectorStep, IntVector, trackStep->ptr(), PortTransform::Identity, 0);
+    assign(IntVector, &vectorValue, IntVector, trackValue->ptr(), PortTransform::Identity, 0);
 
     VectorVector vectors;
     vectors.append(trackIteration);

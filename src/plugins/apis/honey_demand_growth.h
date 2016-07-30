@@ -13,9 +13,9 @@ public:
 private:
     // input
     QVector<double> cohortNumbers, cohortDemands;
-    double cost;
+    double cost, timeStepSecs;
     // output
-    double value;
+    double value, rate, netTotal, costTotal;
 };
 
 }

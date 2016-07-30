@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QSet>
 #include <base/box.h>
 #include <base/exception.h>
@@ -126,6 +127,12 @@ void TestPath::testNormalise() {
     QCOMPARE(Path(".[v]").normalise(),
         QString("self:*{Box}/children:v{Port}"));
 
+    QCOMPARE(Path("..[v]").normalise(),
+        QString("parent:*{Box}/children:v{Port}"));
+
+    QCOMPARE(Path("...[v]").normalise(),
+        QString("nearest:v{Port}"));
+
     QCOMPARE(Path("/").normalise(),
         QString("self:*{Box}"));
 
@@ -141,25 +148,30 @@ void TestPath::testNormalise() {
     QCOMPARE(Path("../../plant[v]").normalise(),
         QString("parent:*{Box}/parent:*{Box}/children:plant{Box}/children:v{Port}"));
 
+    QCOMPARE(Path(".../plant[v]").normalise(), Path("nearest:plant[v]").normalise());
+
     QCOMPARE(Path(".../plant[v]").normalise(),
-        QString("nearest:*{Box}/children:plant{Box}/children:v{Port}"));
+        QString("nearest:plant{Box}/children:v{Port}"));
 }
 
-void TestPath::testNormaliseInvalid() {
-    Path("plant/./fruit/area[v]").normalise();
-    Path("plant/../fruit/area[v]").normalise();
-    Path("plant/.../fruit/area[v]").normalise();
-    Path("plant/fruit/area/.").normalise();
-    Path("plant/fruit/area/..").normalise();
-    Path("plant/fruit/area/...").normalise();
-    Path("././plant/fruit/area").normalise();
-    Path("./../plant/fruit/area").normalise();
-    Path("./.../plant/fruit/area").normalise();
-    Path(".././plant/fruit/area").normalise();
-    Path("../.../plant/fruit/area").normalise();
-    Path("..././plant/fruit/area").normalise();
-    Path(".../../plant/fruit/area").normalise();
-    Path(".../.../plant/fruit/area").normalise();
+
+void TestPath::testRobustness() {
+    // Search paths may be dubious but should not cause a hard crash
+    setContext("A2");
+    try {
+        Path("plant/.../fruit/area[v]", _context).resolveMany();
+        Path("plant/fruit/area/...", _context).resolveMany();
+        Path("././plant/fruit/area", _context).resolveMany();
+        Path("./../plant/fruit/area", _context).resolveMany();
+        Path("./.../plant/fruit/area", _context).resolveMany();
+        Path(".././plant/fruit/area", _context).resolveMany();
+        Path("../.../plant/fruit/area", _context).resolveMany();
+        Path("..././plant/fruit/area", _context).resolveMany();
+        Path(".../../plant/fruit/area", _context).resolveMany();
+        Path(".../.../plant/fruit/area", _context).resolveMany();
+    }
+    catch (Exception &ex) {
+    }
 }
 
 void TestPath::testSetContext() {
@@ -209,13 +221,18 @@ void TestPath::testParent() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path("../*", _context).resolveMany(),
-    absolute = Path("/A/*").resolveMany();
-    compareVectors(relative, absolute, 3);
+    try {
+        relative = Path("../*", _context).resolveMany(),
+        absolute = Path("/A/*").resolveMany();
+        compareVectors(relative, absolute, 3);
 
-    relative = Path("..[v3]", _context).resolveMany(),
-    absolute = Path("/A[v3]").resolveMany();
-    compareVectors(relative, absolute, 1);
+        relative = Path("..[v3]", _context).resolveMany(),
+        absolute = Path("/A[v3]").resolveMany();
+        compareVectors(relative, absolute, 1);
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable(ex.what()));
+    }
 
     QVERIFY(Path("parent:X", _context).resolveMany().isEmpty());
 }
@@ -224,25 +241,42 @@ void TestPath::testNearest() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
 
-    relative = Path(".../c[v2]", _context).resolveMany(),
-    absolute = Path("/A/A2/c[v2]").resolveMany();
-    compareVectors(relative, absolute, 1);
+    try {
+        relative = Path(".../c", _context).resolveMany(),
+        absolute = Path("/A/A2/c").resolveMany();
+        compareVectors(relative, absolute, 1);
 
-    relative = Path("...[v2]", _context).resolveMany(),
-    absolute = Path("/A/A2[v2]").resolveMany();
-    compareVectors(relative, absolute, 1);
+        relative = Path(".../A2", _context).resolveMany(),
+        absolute = Path("/A/A2").resolveMany();
+        compareVectors(relative, absolute, 1);
 
-    relative = Path("...[v3]", _context).resolveMany(),
-    absolute = Path("/A[v3]").resolveMany();
-    compareVectors(relative, absolute, 1);
+        relative = Path(".../A1", _context).resolveMany(),
+        absolute = Path("/A/A1").resolveMany();
+        compareVectors(relative, absolute, 1);
 
-    relative = Path(".../*{Port}", _context).resolveMany(),
-    absolute = Path("/A/A2[v2]").resolveMany();
-    compareVectors(relative, absolute, 1);
+        relative = Path(".../c[v2]", _context).resolveMany(),
+        absolute = Path("/A/A2/c[v2]").resolveMany();
+        compareVectors(relative, absolute, 1);
 
-    relative = Path(".../*{Box}", _context).resolveMany(),
-    absolute = Path("/A/A2/a").resolveMany();
-    compareVectors(relative, absolute, 1);
+        relative = Path("...[v2]", _context).resolveMany(),
+        absolute = Path("/A/A2[v2]").resolveMany();
+        compareVectors(relative, absolute, 1);
+
+        relative = Path("...[v3]", _context).resolveMany(),
+        absolute = Path("/A[v3]").resolveMany();
+        compareVectors(relative, absolute, 1);
+
+        relative = Path(".../*{Port}", _context).resolveMany(),
+        absolute = Path("/A/A2[v2]").resolveMany();
+        compareVectors(relative, absolute, 1);
+
+        relative = Path(".../*{Box}", _context).resolveMany(),
+        absolute = Path("/A/A2/a").resolveMany();
+        compareVectors(relative, absolute, 1);
+    }
+    catch (Exception &ex) {
+        QFAIL( qPrintable("Unexpected: " + ex.what()) );
+    }
 }
 
 void TestPath::testDescendants() {

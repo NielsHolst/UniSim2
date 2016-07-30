@@ -1,10 +1,11 @@
 Simulation sim {
-  .steps = 1500
+  .steps = 2400
   Calendar calendar {
     .timeStep = 1
     .timeUnit = "h"
-    .initialDateTime = 1/4/2001
+    .initialDateTime = 1/2/2001
   }
+  
   Box weather {
     +temperature = ./records[Tair]
     +windspeed = ./records[Windspeed]
@@ -12,30 +13,29 @@ Simulation sim {
       .fileName = "weather_denmark.txt"
     }
   } 
+  
   NectarFlow nectarFlow {
-    .maxFlow = 150 // ml/min
-    .beginDate = 5/4/*
-    .endDate = 20/4/*
+    .maxFlow = 500 // ml/h
+    .beginDate = 1/4/*
+    .endDate = 31/8/*
     .beginTime = 7:00
     .endTime = 12:00
   }
   
   Box hive {
-  
     
     Box demand {
       HoneyDemandRespiration respiration {
-        .cohortNumbers = worker[number]
         .respirationRate = 7       // (mg/d) Harbo (JAR, 1993); for nurse bee    
       }
       HoneyDemandGrowth growth {
         .cohortNumbers = larva[number]
-        .cohortDemands = larva[number]
+        .cohortDemands = ./massIncrement[dy]
         .cost = 0.3     // Harbo (JAR, 1993)
         Exponential massIncrement {
           .y = larva[mass]
           .dt = calendar[timeStepDays]
-          .r = 0.326    // log(140/0.15)/21
+          .r = 1.243    // log(140/0.15)/5.5
           .yMax = 150
         }
       }
@@ -43,13 +43,13 @@ Simulation sim {
 
     Box supply {
       HoneySupply honey {
-        .cohortNumbers = worker[number]
+        .cohortNumbers = forager[number]
         .conversionFactor = 0.3
       }
     }
 
     EnergyBudget budget {
-      .supply = ../supply/honey[value]
+      .supplyPotential = ../supply/honey[value]
       .demandRespiration = ../demand/respiration[value]
       .demandGrowth = ../demand/growth[value]
       .storeHolding = ../honey[holding]
@@ -57,48 +57,111 @@ Simulation sim {
     }
     
     HoneyStore honey {
+      .initial = 10
+      .change = ../budget[changeInStore]
     }
     
     apis::LifeStage egg {
-      .maxAge = 10
-      .numberNew = 50
+      .maxAge = 5
+      .numberNew = ./fecundity[value]
       .massNew = 0.15
+      apis::Fecundity fecundity {
+        .maxFecundity = 1800
+        .slope = 7680
+        .intercept = -53800
+      }
       Gompertz Pmorph {
         .x = ..[age]
         .dx = calendar[timeStepDays]
         .x0 = 2.5
         .y0 = 0.01
-        .x1 = 5.5
+        .x1 = 3.5
         .y1 = 0.99
       }
     }
     apis::LifeStage larva {
-      .maxAge = 25
+      .maxAge = 11
       .numberNew = ../egg[numberMorphed]
       .massNew = ../egg[massMorphed]
-      .massIncrement = demand/growth/massIncrement[dy]
+      .massIncrement = ./supply[cohortSupplies]
+      HoneySupplyGrowth supply {}
       Gompertz Pmorph {
         .x = ..[mass]
-        .dx = demand/growth/massIncrement[dy]
+        .dx = ../supply[cohortSupplies]
         .x0 = 130
         .y0 = 0.01 
         .x1 = 150
         .y1 = 0.99
       }
     }
-    apis::LifeStage worker {
-      .maxAge = 75 
-      .numberInit = 5000
-      .massInit = 150
+    apis::LifeStage capped {
+      .maxAge = 16
       .numberNew = ../larva[numberMorphed]
       .massNew = ../larva[massMorphed]
       Gompertz Pmorph {
         .x = ..[age]
         .dx = calendar[timeStepDays]
-        .x0 = 20
+        .x0 = 13
         .y0 = 0.01
-        .x1 = 35
-        .y1 = 0.95
+        .x1 = 14
+        .y1 = 0.99
+      }
+    }
+    apis::LifeStage housekeeper {
+      .maxAge = 35 
+      .numberInit = 2000
+      .massInit = 150
+      .numberNew = ../capped[numberMorphed]
+      .massNew = ../capped[massMorphed]
+      Gompertz Pmorph {
+        .x = ..[age]
+        .dx = calendar[timeStepDays]
+        .x0 = 18
+        .y0 = 0.05
+        .x1 = 28
+        .y1 = 0.99
+      }
+    }
+    apis::LifeStage forager {
+      .maxAge = 30 
+      .numberInit = 2000
+      .massInit = 150
+      .numberNew(transform=Sum) = ../housekeeper[numberMorphed]|../housekeeper[numberLeaked]
+      .massNew(transform=Sum) = ../housekeeper[massMorphed]|../housekeeper[massLeaked]
+      Box recruitment {
+        Box conditions {
+          +all(transform=Min) = ./*[value]
+          Transition sunrise {
+            .input = calendar[time]
+            .threshold = calendar[sunrise]
+            .thresholdBand = 0.5 // half an hour
+          }
+          Transition sunset {
+            .input = calendar[time]
+            .threshold = calendar[sunset]
+            .thresholdBand = 0.25 // quarter of an hour
+            .increasingValue = FALSE
+          }
+          Transition wind {
+            .input = weather[windspeed]
+            .threshold = 8
+            .thresholdBand = 10
+            .increasingValue = FALSE
+          }
+          Transition temperature {
+            .input = weather[temperature]
+            .threshold = 8
+            .thresholdBand = 12
+          }
+         }
+      }
+      Gompertz Pmorph {
+        .x = ..[age]
+        .dx = calendar[timeStepDays]
+        .x0 = 2
+        .y0 = 0.01
+        .x1 = 17
+        .y1 = 0.99
       }
     }
   }
@@ -111,16 +174,41 @@ Simulation sim {
       .width = 12
       .height = 8
       PlotR {
-        .nrow = 5
-        .ports = (*[ageAverage] *[numberSum] *[massAverage] *[numberMorphed] *[massMorphed])
+        .ncol = 5
+        .ports = (*[ageAverage] *[numberSum] *[massAverage])
+        .script = "month_breaks.R"
       }
       PlotR {
-        .ports = ( nectarFlow[flow] )
+        .ports = (nectarFlow[rate] supply/honey[rate] 
+                   demand/respiration[rate] demand/growth[rate] 
+                   demand/respiration[total] demand/growth[netTotal] demand/growth[costTotal])
+        .script = "month_breaks.R"
       }
       // PlotR {
         // .hide = TRUE
         // .ports = (larva[number] larva[mass] larva/Pmorph[x] larva/Pmorph[dx] larva/Pmorph[dy])
         // }
+    }
+    PageR p2 {
+      .xAxis = calendar[dateTime]
+      .width = 12
+      .height = 8
+      PlotR {
+        .ports = (budget[supplyPotential] budget[supplyAvailable] budget[changeInStore])
+      }
+      PlotR {
+        .ports = (budget[supplyDemandRespiration] budget[supplyDemandGrowth])
+      }
+      PlotR {
+        .ports =(honey[holding])
+      }
+      PlotR {
+        .ports =(recruitment/conditions/sunrise[value] recruitment/conditions/sunset[value] recruitment/conditions/temperature[value] recruitment/conditions/wind[value])
+        .layout = "merged"
+      }
+      PlotR {
+        .ports =(recruitment/conditions[all])
+      }
     }
   }
 }

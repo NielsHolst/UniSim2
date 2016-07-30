@@ -22,7 +22,7 @@ void SaveGraphBase::writeGraphFile() {
 
 QVector<Box*> SaveGraphBase::boxesToGraph() {
     QVector<Box*> boxes;
-    Box *root = environment().state.root;
+    Box *root = environment().root();
     if (root)
         boxes = root->resolveMany<Box>("*");
     return boxes;
@@ -31,7 +31,7 @@ QVector<Box*> SaveGraphBase::boxesToGraph() {
 QVector<QPair<Port*, Port*>> SaveGraphBase::portEdgesToGraph() {
     QVector<Port*> all;
     QVector<QPair<Port*, Port*>> edges;
-    Box *root = environment().state.root;
+    Box *root = environment().root();
     if (root) {
         root->initializeFamily();
         all = root->resolveMany<Port>("*[*]");

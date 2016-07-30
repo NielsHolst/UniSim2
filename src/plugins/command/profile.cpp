@@ -20,7 +20,7 @@ profile::profile(QString name, QObject *parent)
 }
 
 void profile::doExecute() {
-    Box *root = environment().state.root;
+    Box *root = environment().root();
     if (_args.size() > 2) {
         throw Exception("Command 'profile' takes no arguments");
     }

@@ -1,5 +1,6 @@
 #include <base/any_year.h>
 #include <base/convert.h>
+#include <base/test_num.h>
 #include "test_convert.h"
 
 using namespace base;
@@ -56,5 +57,16 @@ void TestConvert::testDate() {
     QVERIFY(excepted);
 }
 
+void TestConvert::testTimeToDouble() {
+    QTime time(16,10,30);
+    double hours;
+    try {
+        hours = convert<double>(time);
+        QVERIFY(TestNum::eq(hours, 16.+10./60.+30./3600.));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected exception: " + ex.what()));
+    }
+}
 
 

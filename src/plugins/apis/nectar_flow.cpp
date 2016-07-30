@@ -12,26 +12,34 @@ NectarFlow::NectarFlow(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("yields current nectar flow available from flowers");
-    Input(minFlow).help("Minimum nectar flow (ml/min)");
-    Input(maxFlow).help("Maximum nectar flow (ml/min)");
+    Input(minFlow).help("Minimum nectar flow (ml/h)");
+    Input(maxFlow).help("Maximum nectar flow (ml/h)");
     Input(beginDate).equals(QDate(anyYear(), 1, 1));
     Input(endDate).equals(QDate(anyYear(), 12, 31));
     Input(beginTime).equals(QTime(0,0));
     Input(endTime).equals(QTime(0,0));
-    Input(currentTime).imports("calendar[time]");
-    Output(flow).help("Current nectar flow (ml/min)");
+    Input(currentDateTime).imports("calendar[dateTime]");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+    Output(value).help("Nectar flow within this time steo (ml   )");
+    Output(rate).help("Nectar flow rate (ml/h)");
 }
 
 void NectarFlow::reset() {
-    flow = minFlow;
+    rate = minFlow;
+    updateValue();
 }
 
 void NectarFlow::update() {
-    bool dateIsRight = isAfterOrEquals(currentDate, beginDate) &&
-                       isBeforeOrEquals(currentDate, endDate),
-         timeIsRight = currentTime >= beginTime &&
-                       (currentTime <= endTime || endTime == QTime(0,0));
-    flow = dateIsRight && timeIsRight ? maxFlow : minFlow;
+    bool dateIsRight = isAfterOrEquals(currentDateTime.date(), beginDate) &&
+                       isBeforeOrEquals(currentDateTime.date(), endDate),
+         timeIsRight = currentDateTime.time() >= beginTime &&
+                       (currentDateTime.time() <= endTime || endTime == QTime(0,0));
+    rate = dateIsRight && timeIsRight ? maxFlow : minFlow;
+    updateValue();
+}
+
+void NectarFlow::updateValue() {
+    value = rate*timeStepSecs*3600.;
 }
 
 }

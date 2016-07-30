@@ -43,8 +43,7 @@ void load::doExecute() {
         ThrowException("Too many arguments. Write 'load <file-name>'."
                         "\nIf the file name contains spaces then enclose it in apostrophes").value(_args.join(" "));
     }
-    delete env.state.root;
-    env.state.root = 0;
+    env.deleteRoot();
     readFile(fileName);
     env.state.latestLoadArg = fileName;
 }
@@ -62,8 +61,8 @@ void load::readFile(QString fileName) {
             break;
         }
         reader->parse(filePath(fileName));
-        environment().state.root = builder.content();
-        Q_ASSERT(environment().state.root);
+        environment().root(builder.content());
+        Q_ASSERT(environment().root());
     }
     catch (Exception &ex) {
         dialog().error(QString("Load failed\n") + ex.what());

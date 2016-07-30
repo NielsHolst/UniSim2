@@ -10,6 +10,7 @@ private slots:
     void testStringListFromString();
     void testIntFromStringList();
     void testDate();
+    void testTimeToDouble();
 };
 
 DECLARE_TEST(TestConvert)

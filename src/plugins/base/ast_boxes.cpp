@@ -17,7 +17,7 @@ bool parse_boxes(Iterator begin, Iterator end, Node &result) {
     std::string errorText = parser._error.str();
     if (!ok && !errorText.empty()) {
         QString msg = QString::fromStdString(errorText);
-        base::dialog().information(msg.replace("\t", "  "));
+        base::dialog().error(msg.replace("\t", "  "));
     }
     return (ok && begin == end);
 }

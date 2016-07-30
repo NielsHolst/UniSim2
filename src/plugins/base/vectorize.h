@@ -14,7 +14,7 @@ namespace base {
         typedVector.resize(ports.size());
         T *destPtr = typedVector.data();
         for (const Port *source : ports) {
-            assign(typeOf<T>(), destPtr, asScalar(source->type()), source->valuePtr<void>());
+            assign(typeOf<T>(), destPtr, asScalar(source->type()), source->valuePtr<void>(), PortTransform::Identity, source);
             ++destPtr;
         }
         return &typedVector;

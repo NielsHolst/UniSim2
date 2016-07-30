@@ -24,7 +24,7 @@ private slots:
     void testValidateStep();
 
     void testNormalise();
-    void testNormaliseInvalid();
+    void testRobustness();
 
     void testSetContext();
     void testSelf();

@@ -87,7 +87,7 @@ void Dialog::information(QString s) {
     repaint();
 }
 
-void Dialog::error(QString s) {
+void Dialog::errorImpl(QString s) {
     insertText("\n" + s, _errorColor);
     repaint();
 }

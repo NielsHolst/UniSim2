@@ -10,6 +10,8 @@ private slots:
     void testImportNewPort();
     void testImportNewPortVector();
     void testImportNewPortVectorTransformed();
+
+    void testImportNewPortTransformed();
 };
 
 DECLARE_TEST(TestNewPort)

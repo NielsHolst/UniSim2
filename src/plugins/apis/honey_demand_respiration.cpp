@@ -13,14 +13,22 @@ HoneyDemandRespiration::HoneyDemandRespiration(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes honey demand for adult respiration");
-    Input(cohortNumbers).help("Worker cohort numbers");
+    Input(workers).imports("houserkeeper[number]|forager[number]").transform(Sum).help("Number of workers");
     Input(respirationRate).equals(7).help("Honey used for worker bee respiration (mg/d/bee");
-    Input(timeStepDays).imports("calendar[timeStepDays]");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]");
     Output(value).help("Respiration demand over this time step (g)");
+    Output(rate).help("Respiration demand rate (g/h)");
+    Output(total).help("Total mass of honey used for respiration (g");
+}
+
+void HoneyDemandRespiration::reset() {
+    total = 0;
 }
 
 void HoneyDemandRespiration::update() {
-    value = sum(cohortNumbers)*respirationRate*timeStepDays/1000.;
+    rate = workers*respirationRate/1000./24.;
+    value = rate*timeStepSecs/3600.;
+    total += value;
 }
 
 }

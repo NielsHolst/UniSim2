@@ -28,7 +28,7 @@ void test::doExecute() {
         endbox();
 
     Environment &env(environment());
-    env.state.root = builder.content();
+    env.root(builder.content());
 
     DialogBase &dia(dialog());
     dia.information("Loaded FibSim");

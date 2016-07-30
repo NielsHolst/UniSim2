@@ -52,10 +52,10 @@ private:
     QObjects _resolve(int number = -1, const QObject* caller = 0);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
-    QString normaliseBox(QString s);
+    QString normaliseBox(QString defaultDirective, QString s);
     QStringList splitBox(QString s);
-    QString normalisePort();
-    QObjects nearest(const QObject *p, QString tail);
+    QString normalisePort(QString directive);
+    QObjects nearest(const QObject *p, QString box, QString type, QString tail);
     QObject* findContext();
     void addCandidates(QString path, QObjects &candidates);
     void removeEmptyCandidates();

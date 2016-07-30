@@ -24,7 +24,7 @@ void DialogStub::information(QString s) {
     _information = s;
 }
 
-void DialogStub::error(QString s) {
+void DialogStub::errorImpl(QString s) {
     std::cout << "DIALOG ERROR: " << qPrintable(s) << "\n";
     _error = s;
 }

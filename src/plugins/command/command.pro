@@ -12,6 +12,9 @@ QT += widgets
 
 HEADERS +=  \
     clear.h \
+    find.h \
+    general.h \
+    go.h \
     graph.h \
     help.h \
     help_class.h \
@@ -29,6 +32,9 @@ HEADERS +=  \
 	
 SOURCES +=  \
     clear.cpp \
+    find.cpp \
+    general.cpp \
+    go.cpp \
     graph.cpp \
     help.cpp \
     help_class.cpp \

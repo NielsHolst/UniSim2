@@ -7,7 +7,7 @@ class QObject;
 
 namespace base {
 
-void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform = Identity, QObject *context = 0);
+void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, const QObject *context);
 
 } //namespace
 

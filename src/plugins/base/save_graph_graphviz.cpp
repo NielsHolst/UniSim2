@@ -131,7 +131,7 @@ void SaveGraphGraphviz::writeNode(QString id, QString label) {
 inline int depth(const Box *box) {
     int i(0);
     QObject *p = const_cast<QObject*>( dynamic_cast<const QObject*>(box) );
-    while (p && p != environment().state.root) {
+    while (p && p != environment().root()) {
         p = p->parent();
         ++i;
     }

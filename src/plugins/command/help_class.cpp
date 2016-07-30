@@ -13,7 +13,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(help_class)
-HELP(help_help_class, "save grammar", "save grammar for Atom and Notepad++ editors")
+HELP(help_help_class, "help <class name>", "shows class documentation")
 
 help_class::help_class(QString name, QObject *parent)
     : Command(name, parent), _box(0)

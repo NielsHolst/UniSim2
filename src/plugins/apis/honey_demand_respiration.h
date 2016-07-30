@@ -8,13 +8,13 @@ class HoneyDemandRespiration : public base::Box
 {
 public:
     HoneyDemandRespiration(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // input
-    QVector<double> cohortNumbers;
-    double timeStepDays, respirationRate;
+    double workers, respirationRate, timeStepSecs;
     // output
-    double value;
+    double value, rate, total;
 };
 
 }

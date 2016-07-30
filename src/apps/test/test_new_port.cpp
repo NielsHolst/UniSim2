@@ -101,3 +101,43 @@ void TestNewPort::testImportNewPortVectorTransformed() {
         QFAIL(qPrintable(msg));
     }
 }
+
+void TestNewPort::testImportNewPortTransformed() {
+    BoxBuilder builder;
+    Box *root;
+    try {
+        builder.
+            box("Simulation").name("sim").
+                port("steps").equals(30).
+                box("Box").name("collection").
+                    newPort("minimum").imports("./*[input1]").transform(Min).
+                    box("ModelA").name("a").
+                        port("input1").equals(13).
+                    endbox().
+                    box("ModelA").name("b").
+                        port("input1").equals(7).
+                    endbox().
+                    box("ModelA").name("c").
+                        port("input1").equals(9).
+                    endbox().
+                endbox().
+                box("OutputR").
+                    box("PageR").
+                        box("PlotR").
+                            port("ports").equals("(*[*])").
+                        endbox().
+                    endbox().
+                endbox().
+            endbox();
+        root = builder.content();
+
+        root->run();
+
+        int value = root->resolveOne<Port>("collection[minimum]")->value<int>();
+        QCOMPARE(value, 7);
+    }
+    catch (Exception &ex) {
+        QString msg = QString("Unexpected exception") + ex.what();
+        QFAIL(qPrintable(msg));
+    }
+}

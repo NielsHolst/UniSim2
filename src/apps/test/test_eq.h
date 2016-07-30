@@ -8,7 +8,6 @@ class TestEq : public QObject
     Q_OBJECT
 private slots:
     void testGompertz();
-    void testZigmoid();
 };
 
 DECLARE_TEST(TestEq)

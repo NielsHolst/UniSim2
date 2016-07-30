@@ -20,11 +20,19 @@ public:
     Environment();
     ~Environment();
 
+    Box* root();
+    void root(Box *newRoot);
+    void deleteRoot();
+
+    Box* current();
+    void current(Box *newCurrent);
+
     QString openOutputFile(QFile &file, QString extension);
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
 
     QString filePath(Folder folder, QString fileName);
+    QString fileContent(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
 
     QString latestOutputFilePath(QString fileExtension);
@@ -40,11 +48,11 @@ public:
     struct {
         bool autosave;
         QString latestLoadArg;
-        Box *root;
         Command *command;
     } state;
 private:
     // Data
+    Box *_root, *_current;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     // Singleton

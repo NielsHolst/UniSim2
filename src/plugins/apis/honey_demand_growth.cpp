@@ -15,11 +15,16 @@ HoneyDemandGrowth::HoneyDemandGrowth(QString name, QObject *parent)
     help("computes honey demand for juvenile growth");
     Input(cohortNumbers).help("Larva cohort numbers");
     Input(cohortDemands).help("Larva cohort growth demands (mg)");
-    Input(cost).equals(0.3).help("Larva cohort numbers");
+    Input(cost).equals(0.3).help("Relative cost per unit of biomass browth");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+    Output(rate).help("Growth demand rate, including conversion cost (g/h)");
     Output(value).help("Growth demand over this time step, including conversion cost (g)");
+    Output(netTotal).help("Total mass of honey converted to biomass growth (g)");
+    Output(costTotal).help("Total mass of honey used for biomass conversion cost (g)");
 }
 
 void HoneyDemandGrowth::reset() {
+    netTotal = costTotal = 0.;
 }
 
 void HoneyDemandGrowth::update() {
@@ -28,6 +33,9 @@ void HoneyDemandGrowth::update() {
             cohortNumbers, cohortDemands);
 
     value = sum(cohortDemandsTotal)/(1-cost)/1000.;
+    rate = value/timeStepSecs*3600.;
+    netTotal += value*(1-cost);
+    costTotal += value*cost;
 }
 
 }

@@ -22,7 +22,7 @@ public:
     void finished();
     void message(QString s);
     void information(QString s);
-    void error(QString s);
+    void errorImpl(QString s);
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 private slots:

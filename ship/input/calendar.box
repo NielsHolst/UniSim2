@@ -1,0 +1,8 @@
+Simulation calendar_demo ( steps = 240 )
+{
+	boxes::Calendar cal ( dayLength { plot = cal }
+		                    sunrise { plot = sun }
+								        sunset { plot = sun } 	)
+  OutputR ( width = 6
+		        height = 4 )
+}

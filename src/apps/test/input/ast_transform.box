@@ -1,0 +1,7 @@
+ModelA a { 
+	.input1(transform=Sum) = (b[input1] b[input2])
+	ModelA b {
+			.input1 = 3
+			.input2 = 11
+	}
+}

@@ -1,4 +1,5 @@
 #include <QTextStream>
+#include <base/environment.h>
 #include <base/path.h>
 #include <base/publish.h>
 #include "layout_r.h"
@@ -15,7 +16,8 @@ PlotR::PlotR(QString name, QObject *parent)
 {
     Input(hide).equals(false);
     Input(ports);
-    Input(layout).equals("facetted");
+    Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
+    Input(script).help("R code that will be added to the ggplot");
     Input(ncol).equals(-1);
     Input(nrow).equals(-1);
 }
@@ -103,7 +105,10 @@ QString PlotR::toScript() {
           << "ncol=" << dim("ncol") << ", "
           << "nrow=" << dim("nrow");
     }
-    s << "),\n";
+    s << ")";
+    if (!script.isEmpty())
+        s << "+" << environment().fileContent(Environment::Script, script).trimmed();
+    s << ",\n";
     return string;
 }
 

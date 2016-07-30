@@ -132,14 +132,14 @@ template <class T> Port& Port::equals(T value)
     if (_valuePtr == 0)
         _valuePtr = portBuffer().createBuffer(_valueType);
     // Copy value to the buffer that _valuePtr points to
-    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform());
+    base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform(), this);
     return *this;
 }
 
 template <class T> T Port::value() const
 {
     T value;
-    base::assign(typeOf<T>(), &value, _valueType, _valuePtr);
+    base::assign(typeOf<T>(), &value, _valueType, _valuePtr, PortTransform::Identity, this);
     return value;
 }
 

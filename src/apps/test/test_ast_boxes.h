@@ -10,6 +10,7 @@ private slots:
     void testSimple();
     void testComments();
     void testWhitespaceInVector();
+    void testBadTransform();
 private:
     QString filePath(QString fileName);
 };

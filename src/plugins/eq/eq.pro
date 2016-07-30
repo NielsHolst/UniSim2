@@ -11,11 +11,11 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 HEADERS +=  \
     exponential.h \
     gompertz.h \
-    zigmoid.h
+    transition.h
 	
 SOURCES +=  \
     exponential.cpp \
     gompertz.cpp \
-    zigmoid.cpp
+    transition.cpp
 
 

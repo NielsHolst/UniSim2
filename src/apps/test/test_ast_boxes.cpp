@@ -63,6 +63,19 @@ void TestAstBoxes::testWhitespaceInVector() {
              VecString() << "abc" << "def" << "ghi");
 }
 
+void TestAstBoxes::testBadTransform() {
+    bool excepted{false};
+    BoxBuilder builder;
+    BoxReaderBase *reader = new BoxReaderBoxes(&builder);
+    try {
+        reader->parse(filePath("ast_transform.box"));
+    }
+    catch (Exception &ex) {
+        excepted = true;
+    }
+    QVERIFY(excepted);
+}
+
 QString TestAstBoxes::filePath(QString fileName) {
     return environment().filePath(Environment::Input, fileName);
 }

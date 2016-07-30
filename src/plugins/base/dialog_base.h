@@ -14,12 +14,20 @@ public:
     virtual void finished() = 0;
     virtual void message(QString s) = 0;
     virtual void information(QString s) = 0;
-    virtual void error(QString s) = 0;
+    void error(QString s);
     friend DialogBase& dialog();
+    void resetErrorCount();
+    int errorCount() const;
 private:
+    // singleton data
     static DialogBase *_dialog;
+    // data
+    int _errorCount;
+    // methods
+    virtual void errorImpl(QString s) = 0;
 };
 
+// singleton method
 DialogBase& dialog();
 
 }

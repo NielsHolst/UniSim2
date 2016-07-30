@@ -24,6 +24,10 @@ private slots:
     void testToDoubleFromTime();
     void testToDoubleFromDateTime();
 
+    void testToIntFromIntVector();
+    void testToDoubleFromIntVector();
+    void testToIntFromStringVector();
+
 };
 
 DECLARE_TEST(TestAssign)

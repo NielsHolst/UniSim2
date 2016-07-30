@@ -12,10 +12,10 @@ public:
 private:
     // input
     QVector<double> cohortNumbers;
-    double cropVolume, handlingTime, apparency, conversionFactor,
+    double cropVolume, handlingTime, conversionFactor,
         nectarFlow, timeStepSecs;
     // output
-    double value;
+    double value, rate;
 };
 
 }

@@ -13,21 +13,25 @@ PUBLISH(HoneySupply)
 HoneySupply::HoneySupply(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes potential and realised honey supply");
+    help("computes potential honey supply");
     Input(cohortNumbers).help("Forager cohort numbers");
-    Input(cropVolume).equals(40).help("Volume of forager crop (ml)");
+    Input(cropVolume).equals(0.030).help("Volume of forager crop (ml)");
     Input(handlingTime).equals(10).help("Interval between foraging trips (min)");
-    Input(apparency).equals(1).help("Apparency of ressource ]0;1]");
-    Input(conversionFactor).equals(1).help("Convertion factor from nectar to honey (mg/ml)");
-    Input(nectarFlow).imports("nectarFlow[flow]");
+    Input(conversionFactor).equals(1).help("Conversion factor from nectar to honey (g/ml)");
+    Input(nectarFlow).imports("nectarFlow[rate]");
     Input(timeStepSecs).imports("calendar[timeStepSecs]");
-    Output(value).help("Potential supply of honey over this time step (g)");
+    Output(value).help("Supply of honey over this time step (g)");
+    Output(rate).help("Honey supply rate (g/h)");
 }
 
 void HoneySupply::update() {
-    double demandRate = sum(cohortNumbers)*cropVolume/handlingTime,
-           supplyRate = TestNum::eqZero(demandRate) ? 0 : demandRate*(1. - exp(-apparency*nectarFlow/demandRate));
-    value = conversionFactor*supplyRate*timeStepSecs*60;
+    double demandRate = sum(cohortNumbers)*cropVolume/handlingTime, // ml/min
+           flowRate = nectarFlow/60., // ml/min
+           supplyRate = TestNum::eqZero(demandRate) ? 0 : demandRate*(1. - exp(-flowRate/demandRate));
+    // g/h = g/ml * ml/min * min/h
+    rate = conversionFactor*supplyRate*60;
+    // g = g/h * s * h/s
+    value = rate*timeStepSecs/3600.;
 }
 
 }

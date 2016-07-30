@@ -23,11 +23,11 @@ run::run(QString name, QObject *parent)
 }
 
 void run::doExecute() {
-    Environment &env(environment());
     if (_args.size() > 2)
         ThrowException("Command 'run' takes at most one argument");
+    dialog().resetErrorCount();
     doLoad();
-    if (!env.state.command->hasError())
+    if (dialog().errorCount() == 0)
         doRun();
 }
 
@@ -37,7 +37,7 @@ void run::doLoad() {
 }
 
 void run::doRun() {
-    _root = environment().state.root;
+    _root = environment().root();
     if (!_root) {
         dialog().error("Nothing to run");
         return;

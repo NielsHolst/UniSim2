@@ -56,6 +56,7 @@ void Path::initDirectives() {
 Path::QObjects Path::_resolve(int number, const QObject *caller) {
     _caller = caller;
     _candidates.clear();
+    _current.normalisedContext = 0;
     for (int i = 0; i <_originalPaths.size(); ++i) {
         normalise(i);
         if (_current.normalisedContext == 0)
@@ -72,22 +73,46 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
     return _candidates;
 }
 
+inline bool hasDirective(QString s) { return s.indexOf(':') > -1; }
+
 QString Path::normalise(int ix) {
-    QString result;
      _current.originalPath = _originalPaths.at(ix);
-    int leftBracket = _current.originalPath.indexOf('[');
+     _current.normalisedContext = _originalContext;
+
+     int leftBracket = _current.originalPath.indexOf('[');
     QStringList base = _current.originalPath.left(leftBracket).split('/');
+
+    if (base.isEmpty())
+        ThrowException("Path invalid or empty").value(_current.originalPath).context(_caller);
 
     if (isAbsolute()) {
         base.removeAt(0);
         if (base.at(0).isEmpty()) base[0] = "*";
     }
 
-    result = normaliseFirstBox(base.at(0));
-    for (int i = 1; i < base.size(); ++i)
-        result += "/" + normaliseBox(base.at(i));
+    // We need special treatment for triple-dots
+    QString result;
+    int next = 1;
+    if (_current.originalPath.startsWith("...[")) {
+        if (base.size() == 1)
+            return _current.normalisedPath = normalisePort("nearest");
+        else
+            ThrowException("Illegal path format").value(_current.originalPath).context(_caller);
+    }
+    if (base.at(0) == "...") {
+        if (base.size() == 1)
+            ThrowException("Illegal path format").value(_current.originalPath).context(_caller);
+        result = normaliseBox("nearest", base.at(1));
+        next = 2;
+    }
+    else {
+        result = normaliseFirstBox(base.at(0));
+    }
 
-    QString port = normalisePort();
+    for (int i = next; i < base.size(); ++i)
+        result += "/" + normaliseBox("children", base.at(i));
+
+    QString port = normalisePort("children");
     if (!port.isEmpty())
         result += "/" + port;
 
@@ -118,7 +143,6 @@ QString Path::normaliseFirstBox(QString s) {
     }
     else if (directive.isEmpty()) {
         directive = "selfordescendants";
-//        directive = "descendants";
         _current.normalisedContext = Box::currentRoot();
     }
     else {
@@ -128,11 +152,11 @@ QString Path::normaliseFirstBox(QString s) {
     return directive + ":" + parts.at(1) + "{" + parts.at(2) + "}";
 }
 
-QString Path::normaliseBox(QString s) {
+QString Path::normaliseBox(QString defaultDirective, QString s) {
     QStringList parts = splitBox(s);
     QString directive = parts.at(0);
     if (directive.isEmpty())
-        directive = "children";
+        directive = defaultDirective;
     return directive + ":" + parts.at(1) + "{" + parts.at(2) + "}";
 }
 
@@ -167,29 +191,37 @@ QStringList Path::splitBox(QString s) {
             ThrowException("Dot notation cannot follow directive").value(_current.originalPath).context(_caller);
         box = "*";
     }
-
+    if (isNearest)
+        ThrowException("Triple-dots only allowed at path beginning").value(_current.originalPath).context(_caller);
     // Combine
     return QStringList() << directive << box << type;
 }
 
-QString Path::normalisePort() {
+QString Path::normalisePort(QString directive) {
     int leftBracket = _current.originalPath.indexOf('['),
         rightBracket = _current.originalPath.indexOf(']');
     if (leftBracket*rightBracket < 0)
         ThrowException("Missing matching bracket").value(_current.originalPath).context(_originalContext);
     if (leftBracket == -1) return "";
-    return "children:" +
+    return directive + ":" +
             _current.originalPath.mid(leftBracket+1, rightBracket-leftBracket-1) +
             "{Port}";
 }
 
-Path::QObjects Path::nearest(const QObject *p, QString tail) {
-    Path path(tail, p);
+Path::QObjects Path::nearest(const QObject *p, QString box, QString type, QString tail) {
+    QString s;
+    if (type == "Port")
+        s = ".[" + box + "]" ;
+    else if (tail.isEmpty())
+        s = "./" + box;
+    else
+        s = "./" + box + "/" +tail;
+    Path path(s, p);
     QObjects candidates = path._resolve();
     if (candidates.isEmpty()) {
         const QObject *parent = p->parent();
         if (parent)
-            return nearest(parent, tail);
+            return nearest(parent, box, type, tail);
     }
     return candidates;
 }
@@ -299,6 +331,9 @@ void Path::addCandidates(QString path, QObjects &candidates) {
             box = parts.at(1),
             type = parts.at(2);
 
+    if (type=="Port" && !tail.isEmpty())
+        ThrowException("Illegal path; nothing can follow the port").value(_current.originalPath).context(_caller);
+
     QObjects newCandidates;
     for (const QObject *candidate : candidates) {
         if (!candidate) continue;
@@ -315,7 +350,7 @@ void Path::addCandidates(QString path, QObjects &candidates) {
             newCandidates << filter(candidate->parent(), box, type);
             break;
         case Nearest:
-            newCandidates << nearest(candidate, tail);
+            newCandidates << nearest(candidate, box, type, tail);
             isNearest = true;
             break;
         case SelfOrDescendants:

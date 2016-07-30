@@ -62,7 +62,7 @@ QStringList SaveGrammarBase::classNames() {
 
 QStringList SaveGrammarBase::portNames() {
     // Collect port names of current root
-    QSet<QString> names = collectPortNames(environment().state.root);
+    QSet<QString> names = collectPortNames(environment().root());
 
     // Create an object of each class
     Box *root = new Box("root", 0);

@@ -19,7 +19,7 @@ list::list(QString name, QObject *parent)
 }
 
 void list::doExecute() {
-    Box *root = environment().state.root;
+    Box *root = environment().root();
     if (root) {
         BoxOutput output(root, BoxOutput::Indented);
         dialog().information(output.asText());

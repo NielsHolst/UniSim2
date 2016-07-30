@@ -24,7 +24,7 @@ void TestTrack::testScalar() {
              << "input2" << "input3" << "input4"
              << "output1" << "output2" << "output3";
     checkColumnNames(expected);
-    delete environment().state.root;
+    environment().deleteRoot();
 }
 
 void TestTrack::testVector() {
@@ -43,14 +43,14 @@ void TestTrack::testVector() {
     checkColumnNames(expected);
     checkColumnFormat(expected.size());
     checkColumnData(expected.size());
-    delete environment().state.root;
+    environment().deleteRoot();
 }
 
 void TestTrack::run(Box *simulation) {
     Environment &env(environment());
     try {
-        env.state.root = simulation;
-        env.state.root->run();
+        env.root(simulation);
+        env.root()->run();
     }
     catch (Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();

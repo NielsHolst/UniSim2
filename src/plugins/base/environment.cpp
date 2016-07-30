@@ -1,9 +1,10 @@
-#include <stdio.h>
 #include <QApplication>
 #include <QClipboard>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QSettings>
+#include "box.h"
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
@@ -21,7 +22,9 @@ Environment& environment() {
     return *Environment::_environment;
 }
 
-Environment::Environment() {
+Environment::Environment()
+    : _root(0), _current(0)
+{
     QSettings settings;
     Folder fo = Folder(0);
     while (true) {
@@ -33,7 +36,6 @@ Environment::Environment() {
     state.autosave = settings.value("environment/autosave", true).toBool();
     state.latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
     _latestOutputFilePath["txt"] = settings.value("environment/latest-output-file-path-txt", QString()).toString();
-    state.root = 0;
     state.command = 0;
 }
 
@@ -49,6 +51,26 @@ Environment::~Environment() {
     settings.setValue("environment/autosave", state.autosave);
     settings.setValue("environment/latest-load-arg", state.latestLoadArg);
     settings.setValue("environment/latest-output-file-path-txt", latestOutputFilePath("txt"));
+}
+Box* Environment::root() {
+    return _root;
+}
+
+void Environment::root(Box *newRoot) {
+    _current = _root = newRoot;
+}
+
+void Environment::deleteRoot() {
+    delete _root;
+    _current = _root = 0;
+}
+
+Box* Environment::current() {
+    return _current;
+}
+
+void Environment::current(Box *newCurrent) {
+    _current = newCurrent;
 }
 
 QString Environment::openOutputFile(QFile &file, QString extension) {
@@ -101,6 +123,15 @@ QString Environment::filePath(Folder folder, QString fileName) {
         ThrowException("Could not find file").value(fileNamePath);
     return fileNamePath;
 }
+
+QString Environment::fileContent(Folder folder, QString fileName) {
+    QString fileNamePath = filePath(folder, fileName);
+    QFile file(fileNamePath);
+    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        ThrowException("Could not open file").value(fileNamePath);
+    return QString( file.readAll() );
+}
+
 
 QString Environment::folderInfo(Folder folder) {
     QString info;
