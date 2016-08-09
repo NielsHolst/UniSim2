@@ -10,7 +10,8 @@ PUBLISH(Fibonacci)
 Fibonacci::Fibonacci(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Output(value).page("default");
+    help("produces Fibonacci sequence");
+    Output(value).help("Number in sequence");
 }
 
 void Fibonacci::reset() {

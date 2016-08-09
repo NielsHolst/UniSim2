@@ -14,13 +14,14 @@ PUBLISH(Buffer)
 Buffer::Buffer(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(initial);
-    Input(input);
-    Input(increment);
-    Input(size).equals(100);
-    Output(sum);
-    Output(average);
-    Output(buffer);
+    help("is a first in-first out buffer");
+    Input(initial).help("Initial amount at first place in buffer");
+    Input(input).help("Input to next place in buffer");
+    Input(increment).help("Increment added to every place in buffer");
+    Input(size).equals(100).help("Number of places in buffer");
+    Output(sum).help("Total amount in buffer");
+    Output(average).help("Average amount of places used in buffer");
+    Output(buffer).help("The buffer itself");
 }
 
 void Buffer::reset() {

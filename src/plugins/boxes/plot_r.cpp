@@ -14,6 +14,7 @@ PUBLISH(PlotR)
 PlotR::PlotR(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("produces an R plot");
     Input(hide).equals(false);
     Input(ports);
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");

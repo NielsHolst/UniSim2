@@ -10,7 +10,7 @@
 namespace base {
 
 Box *Box::_currentRoot = 0;
-bool Box::_currentRootIsDirty = true;
+Box *Box::_savedCurrentRoot = 0;
 int Box::_count = 0;
 
 Box::Box(QString name, QObject *parent)
@@ -19,7 +19,6 @@ Box::Box(QString name, QObject *parent)
     Class(Box);
     setObjectName(name);
     _currentRoot = this;
-    _currentRootIsDirty = true;
     _timer = new Timer(this);
 }
 
@@ -88,13 +87,31 @@ QString Box::help() const {
     return _help;
 }
 
+void Box::sideEffects(QString s) {
+    _sideEffects = s;
+}
+
+QString Box::sideEffects() const {
+    return _sideEffects;
+}
+
 Box* Box::currentRoot() {
-    if (!_currentRootIsDirty || _currentRoot==0)
-        return _currentRoot;
-    Box *p = _currentRoot;
-    while (dynamic_cast<Box*>(p->parent()))
-        p = dynamic_cast<Box*>(p->parent());
-   return p;
+    if (_currentRoot==0)
+        return 0;
+    while (true) {
+        Box *p = dynamic_cast<Box*>(_currentRoot->parent());
+        if (!p) break;
+        _currentRoot = p;
+    }
+    return _currentRoot;
+}
+
+void Box::saveCurrentRoot() {
+    _savedCurrentRoot = _currentRoot;
+}
+
+void Box::restoreCurrentRoot() {
+    _currentRoot = _savedCurrentRoot;
 }
 
 QString Box::className() const {

@@ -34,7 +34,6 @@ QMAKE_CXXFLAGS += -ffast-math
 BOOST_PATH = $$(BOOST_ROOT)
 !isEmpty(BOOST_PATH) {
     INCLUDEPATH += "$$(BOOST_ROOT)"
-    message($$join(BOOST_PATH, " ", "Including "))
 }
 
 # Own libraries that we use, except 'base' does not itself use 'base'

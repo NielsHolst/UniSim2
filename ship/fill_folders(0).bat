@@ -10,9 +10,6 @@ md bin\developer
 md bin\developer\plugins
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
-rem Copy icon file
-copy *.ico bin
-
 rem Copy MS files
 pushd \Windows\System32
 copy atl.dll %UNISIM_BIN%\end-user
@@ -20,6 +17,12 @@ copy comctl32.dll %UNISIM_BIN%\end-user
 copy mfc42u.dll %UNISIM_BIN%\end-user
 copy msvcrt.dll %UNISIM_BIN%\end-user
 copy oleaut32.dll %UNISIM_BIN%\end-user
+
+copy atl.dll %UNISIM_BIN%\developer
+copy comctl32.dll %UNISIM_BIN%\developer
+copy mfc42u.dll %UNISIM_BIN%\developer
+copy msvcrt.dll %UNISIM_BIN%\developer
+copy oleaut32.dll %UNISIM_BIN%\developer
 popd
 
 rem Copy exe and DLL files
@@ -38,6 +41,11 @@ copy libwinpthread-1.dll %UNISIM_BIN%\end-user
 copy libgcc_s_dw2-1.dll %UNISIM_BIN%\end-user
 copy libstd*.dll %UNISIM_BIN%\end-user
 
+copy icu*.dll %UNISIM_BIN%\developer
+copy libwinpthread-1.dll %UNISIM_BIN%\developer
+copy libgcc_s_dw2-1.dll %UNISIM_BIN%\developer
+copy libstd*.dll %UNISIM_BIN%\developer
+
 rem copy Qt libraries
 copy qt5core.dll %UNISIM_BIN%\end-user
 copy qt5gui.dll %UNISIM_BIN%\end-user
@@ -46,26 +54,40 @@ copy Qt5PrintSupport.dll %UNISIM_BIN%\end-user
 copy qt5test.dll %UNISIM_BIN%\end-user
 copy Qt5Widgets.dll %UNISIM_BIN%\end-user
 copy qt5xmlpatterns.dll %UNISIM_BIN%\end-user
+
+copy qt5cored.dll %UNISIM_BIN%\developer
+copy qt5guid.dll %UNISIM_BIN%\developer
+copy Qt5Networkd.dll %UNISIM_BIN%\developer
+copy Qt5PrintSupportd.dll %UNISIM_BIN%\developer
+copy qt5testd.dll %UNISIM_BIN%\developer
+copy Qt5Widgetsd.dll %UNISIM_BIN%\developer
+copy qt5xmlpatternsd.dll %UNISIM_BIN%\developer
 popd
 
 rem create Qt plugin folders
 pushd %UNISIM_BIN%
 md end-user\imageformats
 md end-user\platforms
+md developer\imageformats
+md developer\platforms
 popd
 
 rem copy Qt plugin folders
 pushd %QT_PLUGINS%
 copy imageformats %UNISIM_BIN%\end-user\imageformats
 copy platforms %UNISIM_BIN%\end-user\platforms
-del %UNISIM_BIN%\end-user\imageformats\*d.dll
-del %UNISIM_BIN%\end-user\platforms\*d.dll
+
+copy imageformats %UNISIM_BIN%\end-user\imageformats
+copy platforms %UNISIM_BIN%\end-user\platforms
 popd
 
 rem Remove test modules
 pushd %UNISIM_BIN%
 del /Q end-user\test*.*
 del /Q end-user\plugins\test*.*
+
+del /Q developer\test*.*
+del /Q developer\plugins\test*.*
 popd
 
 pause

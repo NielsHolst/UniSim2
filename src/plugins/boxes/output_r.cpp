@@ -25,9 +25,12 @@ OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("creates output and scripts for R");
+    sideEffects("writes an R script to the output folder\n"
+                "copies another R script to the clipboard");
     Input(clear).equals(false).help("Clear R graphics and work space?");
     Input(showPlots).equals(true).help("Show R plots?");
     Input(script).help("Name of R script to run after auto-generated R script");
+    Input(useRStudio).equals(true).help("Use RStudio (true) or RGui (false)");
 }
 
 void OutputR::amend() {
@@ -100,7 +103,8 @@ void OutputR::openFile() {
     s += "sim = read_unisim_output(\"" + environment().outputFilePath(".txt") + "\")\n";
     if (showPlots)
         s += "unisim_plot_all(sim)\n";
-    s += "if (!(\"tools:rstudio\" %in% search())) bringToTop(-1)\n";
+    if (!useRStudio)
+        s += "bringToTop(-1)\n";
     if (!script.isEmpty())
         s += "source(\"" + environment().filePath(Environment::Script, script) + "\")\n";
     environment().copyToClipboard(s);

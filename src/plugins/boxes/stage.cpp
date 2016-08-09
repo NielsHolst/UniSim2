@@ -23,12 +23,13 @@ PUBLISH(Stage)
 Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent), dd(0)
 {
-    Input(dt).equals(1);
-    Input(inflow);
-    Input(initial);
-    Input(phaseOutflowProportion); // Proportion that will change phase in next time step
-    Output(latestInflow);
-    Output(outflow);
+    help("delays inflow to emerge as a time-distributed outflow");
+    Input(dt).equals(1).help("Time step");
+    Input(inflow).help("Amount of inflow");
+    Input(initial).help("Initial amount of inflow");
+    Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
+    Output(latestInflow).help("Amount that just flowed in");
+    Output(outflow).help("Outflow emerging from the stage");
 }
 
 DistributedDelayBase* Stage::createDistributedDelay() {

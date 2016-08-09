@@ -19,6 +19,7 @@ private:
     // Inputs
     QString xAxis;
     int width, height, ncol, nrow;
+    bool useRStudio;
     // Data
     QVector<PlotR*> _plots;
     // Methods

@@ -24,6 +24,7 @@ private:
     void setNameLengths();
     void writeHelp();
     QStringList portsHelp(base::Port::Access access);
+    QString sideEffects();
 };
 
 }

@@ -46,7 +46,9 @@ void help_class::doExecute() {
 
 void help_class::createBox(QString className) {
     try {
+        Box::saveCurrentRoot();
         _box = MegaFactory::create<Box>(className, "helpObject", 0);
+        Box::restoreCurrentRoot();
     }
     catch (Exception &) {
         _box = 0;
@@ -68,11 +70,13 @@ inline QString pad(QString s, int width) {
 }
 
 void help_class::writeHelp() {
-    QString msg = _box->className() + " " + _box->help() +
+    QString msg = "\n" + _box->className() + " " + _box->help() +
             "\n\nInput:\n" +
             portsHelp(Port::Input).join("\n") +
             "\n\nOutput:\n" +
             portsHelp(Port::Output).join("\n");
+    if (!_box->sideEffects().isEmpty())
+        msg += "\n\nSide effects:\n" + sideEffects();
     dialog().information(msg);
 }
 
@@ -87,6 +91,14 @@ QStringList help_class::portsHelp(Port::Access access) {
     if (list.isEmpty())
         list << "none";
     return list;
+}
+
+QString help_class::sideEffects() {
+    QStringList lines = _box->sideEffects().split("\n");
+    QString s;
+    for (int i = 0; i < lines.size(); ++i)
+        s += QString("(%1) %2\n").arg(i+1).arg(lines.at(i));
+    return s;
 }
 
 }

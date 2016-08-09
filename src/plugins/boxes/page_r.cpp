@@ -15,11 +15,13 @@ PUBLISH(PageR)
 PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("produces a page of plots for R");
     Input(xAxis).imports("/*[step]");
-    Input(width).equals(14);
-    Input(height).equals(10);
-    Input(ncol).equals(-1);
-    Input(nrow).equals(-1);
+    Input(width).equals(14).help("Width of page (ignored useRStudio is set)");
+    Input(height).equals(10).help("Height of page (ignored useRStudio is set)");
+    Input(ncol).equals(-1).help("No. of columns to arrange plots in");
+    Input(nrow).equals(-1).help("No. of rows to arrange plots in");
+    Input(useRStudio).imports("..[useRStudio]");
 }
 
 void PageR::amend() {
@@ -61,13 +63,15 @@ QString PageR::dim(QString portName) {
 QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
-    s << functionName() << " <- function(df) {\n"
-      << "  windows("
-      << port("width")->value<int>()
-      << ", "
-      << port("height")->value<int>()
-      << ")\n"
-      << "  grid.arrange(\n" ;
+    s << functionName() << " <- function(df) {\n";
+    if (!useRStudio) {
+      s << "  windows("
+        << port("width")->value<int>()
+        << ", "
+        << port("height")->value<int>()
+        << ")\n";
+    }
+    s << "  grid.arrange(\n" ;
     bool skipDefaultPlot = (_plots.size() > 1);
     for (PlotR *plot : _plots) {
         if (skipDefaultPlot && plot->objectName() == "default")

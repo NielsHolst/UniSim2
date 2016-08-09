@@ -34,8 +34,13 @@ public:
 
     void help(QString s);
     QString help() const;
+    void sideEffects(QString s);
+    QString sideEffects() const;
 
     static Box* currentRoot();
+    static void saveCurrentRoot();
+    static void restoreCurrentRoot();
+
     QString className() const;
     QString fullName() const;
     int order() const;
@@ -63,14 +68,13 @@ public:
 
 private:
     // Data
-    QString _name, _help;
+    QString _name, _help, _sideEffects;
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;
     bool _amended;
     Timer *_timer;
-    static Box *_currentRoot;
-    static bool _currentRootIsDirty;
+    static Box *_currentRoot, *_savedCurrentRoot;
     static int _count;
     // Methods
     void createTimers();

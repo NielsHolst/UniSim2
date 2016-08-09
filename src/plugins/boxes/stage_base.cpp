@@ -19,19 +19,19 @@ namespace boxes {
 StageBase::StageBase(QString name, QObject *parent)
     : Box(name, parent), ddBase(0)
 {
-    Input(k).equals(30);
-    Input(duration).equals(100);
-    Input(growthFactor).equals(1);
-    Input(sdRatio).equals(1);
-    Input(instantMortality);  // Mortality [0..100] will be applied in the next time step, before @F inflow is added
-    Input(instantLossRate);   // Works just like @F mortality except the scale is a ratio [0..1]
-    Input(phaseInflow);       // Inflow of dimension @F {k}
-    Output(content).page("default");
-    Output(inflowTotal);
-    Output(phaseInflowTotal);
-    Output(phaseOutflowTotal);
-    Output(growth);
-    Output(phaseOutflow);
+    Input(k).equals(30).help("Distribution parameter; use small k for larger dispersion in output");
+    Input(duration).equals(100).help("Average delay between inflow and outflow");
+    Input(growthFactor).equals(1).help("Factor by which outflow will be scaled relative to inflow");
+//    Input(sdRatio).equals(1);
+    Input(instantMortality).help("Mortality [0..100] applied before inflow is added");
+    Input(instantLossRate).help("Works just like instantMortality except the scale is a ratio [0..1]");
+    Input(phaseInflow).help("Sideways inflow of dimension k");
+    Output(content).help("Total content inside the stage");
+    Output(inflowTotal).help("Accumulated total inflow");
+    Output(phaseInflowTotal).help("Accumulated total sideways inflow");
+    Output(phaseOutflowTotal).help("Accumulated total sideway outflow");
+    Output(growth).help("Net change in content during this time step");
+    Output(phaseOutflow).help("Sideways outflow");
 }
 
 StageBase::~StageBase() {

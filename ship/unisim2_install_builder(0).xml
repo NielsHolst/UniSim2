@@ -7,7 +7,6 @@
     <licenseFile>gpl-3.0.txt</licenseFile>
     <leftImage>squirrel 163x314.png</leftImage>
     <logoImage>squirrel 48x48.png</logoImage>
-    <disableSplashScreen>1</disableSplashScreen>
     <componentList>
         <component>
             <name>default</name>
@@ -50,8 +49,9 @@
                     <name>programfileswindows</name>
                     <platforms>windows</platforms>
                     <distributionFileList>
-                        <distributionDirectory>
-                            <origin>bin</origin>
+                        <distributionDirectory allowWildcards="1">
+                            <includeFiles>*.exe;*.dll</includeFiles>
+                            <origin>../bin</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -63,7 +63,7 @@
                 </folder>
                 <folder>
                     <description>Personal UniSim Folder</description>
-                    <destination>${windows_folder_personal}/${product_shortname}-${product_version}</destination>
+                    <destination>${windows_folder_personal}/${product_shortname}</destination>
                     <name>personalunisim</name>
                     <platforms>windows</platforms>
                     <distributionFileList>
@@ -92,7 +92,7 @@
                     <name>${product_fullname}</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/bin/end-user/${product_shortname}_r.exe</windowsExec>
+                    <windowsExec>${installdir}/${product_shortname}_r.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
                     <windowsIcon></windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
@@ -112,7 +112,7 @@
             <description>Installer.Parameter.installdir.description</description>
             <explanation>Installer.Parameter.installdir.explanation</explanation>
             <value></value>
-            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <default>${platform_install_prefix}/${product_shortname}</default>
             <allowEmptyValue>0</allowEmptyValue>
             <ask>yes</ask>
             <cliOptionName>prefix</cliOptionName>

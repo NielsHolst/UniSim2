@@ -14,10 +14,21 @@ include("$$_PRO_FILE_PWD_/../../boxes_common.pri")
 
 # What we are building
 TEMPLATE = lib
-DESTDIR = "$$_PRO_FILE_PWD_/../../../bin/plugins"
 TARGET = $$BOXES_PLUGIN_NAME$${SUFFIX}
+DESTDIR = "$$_PRO_FILE_PWD_/../../../bin/plugins"
 DEFINES += BOXES_PLUGIN_NAME=$$BOXES_PLUGIN_NAME
 DEFINES += BOXES_PLUGIN_NAME_TEXT=\\\"$${BOXES_PLUGIN_NAME}\\\"
+
+# Plugin destination folder set from environment or not
+#UNISIM_PLUGINS_VAR = $$(UNISIM_PLUGINS)
+#isEmpty(UNISIM_PLUGINS_VAR) {
+#    DESTDIR = "$$_PRO_FILE_PWD_/../../../bin/plugins"
+#    message("Using local plugins destination")
+#}
+#!isEmpty(UNISIM_PLUGINS_VAR) {
+#    DESTDIR= "$$(UNISIM_PLUGINS)"
+#    message($$join(UNISIM_PLUGINS_VAR, " ", "Including "))
+#}
 
 # Own library source code on which we depend
 DEPENDPATH += $$_PRO_FILE_PWD_/../base

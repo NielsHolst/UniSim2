@@ -8,12 +8,13 @@ PUBLISH(DayDegrees)
 
 DayDegrees::DayDegrees(QString name, QObject *parent)
     : Box(name, parent) {
-    Input(T0).equals(0);
-    Input(Topt).equals(100);
-    Input(Tmax).equals(100);
+    help("computes linear day-degrees");
+    Input(T0).equals(0).help("Lower temperature threshold");
+    Input(Topt).equals(100).help("Optimum temperate; linear decline from here to Tmax");
+    Input(Tmax).equals(100).help("Upper temperature threshold");
     Input(T).imports("weather[Tavg]");
-    Output(step);
-    Output(total);
+    Output(step).help("Increment in day-degrees");
+    Output(total).help("Total day-degrees since reset");
 }
 
 void DayDegrees::update() {

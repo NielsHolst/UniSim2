@@ -3,11 +3,9 @@
     <fullName>Universal Simulator</fullName>
     <version>2.0.0</version>
     <installerFilename></installerFilename>
-    <readmeFile>readme.txt</readmeFile>
     <licenseFile>gpl-3.0.txt</licenseFile>
     <leftImage>squirrel 163x314.png</leftImage>
     <logoImage>squirrel 48x48.png</logoImage>
-    <disableSplashScreen>1</disableSplashScreen>
     <componentList>
         <component>
             <name>default</name>
@@ -78,33 +76,33 @@
             </folderList>
             <startMenuShortcutList>
                 <startMenuShortcut>
-                    <comment>Uninstall ${product_fullname}</comment>
-                    <name>Uninstall ${product_fullname}</name>
-                    <runAsAdmin>0</runAsAdmin>
-                    <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
-                    <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon></windowsIcon>
-                    <windowsPath>${installdir}/</windowsPath>
-                </startMenuShortcut>
-                <startMenuShortcut>
                     <comment>Run Universal Simulator</comment>
-                    <name>${product_fullname}</name>
+                    <name>${product_fullname} (end-user)</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/bin/end-user/${product_shortname}_r.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon></windowsIcon>
+                    <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Run Universal Simulator</comment>
+                    <name>${product_fullname} (developer)</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/bin/developer/${product_shortname}_d.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
             </startMenuShortcutList>
         </component>
     </componentList>
+    <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <outputDirectory>.</outputDirectory>
     <saveRelativePaths>1</saveRelativePaths>
-    <startMenuGroupName>${product_fullname}</startMenuGroupName>
     <vendor>Aarhus University</vendor>
     <parameterList>
         <directoryParameter>

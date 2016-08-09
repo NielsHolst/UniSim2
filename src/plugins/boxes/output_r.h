@@ -24,7 +24,7 @@ public:
 
 private:
     // Input
-    bool clear, showPlots;
+    bool clear, showPlots, useRStudio;
     QString script;
 
     // Data

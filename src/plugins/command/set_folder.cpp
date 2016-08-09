@@ -51,7 +51,7 @@ void set_folder::showAllFolders() {
         environment().folderInfo(Environment::Notepad) +
         "\nAtom editor folder:\n  " +
         environment().folderInfo(Environment::Atom) +
-        "\nGraphviz folder:\n  " +
+        "\nGraphviz folder (experimental):\n  " +
         environment().folderInfo(Environment::Graphviz);
     dialog().information(info);
 }
