@@ -20,6 +20,13 @@ void TestVector::testWithSimulation() {
             port("steps").equals(4).
             box("Fibonacci").name("fibonacci").
             endbox().
+            box("OutputR").
+                box("PageR").
+                    box("PlotR").
+                        port("ports").equals("(fibonacci[value])").
+                    endbox().
+                endbox().
+            endbox().
         endbox();
     Box *sim = builder.content();
 
@@ -37,12 +44,19 @@ void TestVector::testWithSimulation() {
 void TestVector::testWithSimulationIterated() {
     BoxBuilder builder;
     builder.
-        box("Simulation").
+        box("Simulation").name("sim").
             port("iterations").equals(3).
             port("iteration").page("default").
             port("step").page("default").
             port("steps").equals(4).
             box("Fibonacci").name("fibonacci").
+            endbox().
+            box("OutputR").
+                box("PageR").
+                    box("PlotR").
+                        port("ports").equals("(sim[iteration] sim[step] fibonacci[value])").
+                    endbox().
+                endbox().
             endbox().
         endbox();
     Box *sim = builder.content();

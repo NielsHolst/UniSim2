@@ -1,5 +1,5 @@
-#ifndef DIALOG_STUB_H
-#define DIALOG_STUB_H
+#ifndef BASE_DIALOG_STUB_H
+#define BASE_DIALOG_STUB_H
 
 #include "dialog_base.h"
 

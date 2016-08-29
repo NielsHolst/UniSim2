@@ -1,5 +1,5 @@
-#ifndef INITIALIZE_H
-#define INITIALIZE_H
+#ifndef BASE_INITIALIZE_H
+#define BASE_INITIALIZE_H
 #include "port_transform.h"
 #include "port_type.h"
 

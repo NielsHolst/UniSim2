@@ -13,9 +13,8 @@ int main(int argc, char *argv[])
     new base::ObjectPool(&app);
     base::DialogStub *dialog = new base::DialogStub(0);
 
-    QString &loadArg(base::environment().state.latestLoadArg),
-            saveLoadArg = loadArg;
-    loadArg = "test.box";
+    QString saveLoadArg = base::environment().latestLoadArg();
+    base::environment().latestLoadArg("test.box");
 
     QDir saveDirInput = base::environment().dir(base::Environment::Input),
          testDirInput = QDir();
@@ -30,7 +29,7 @@ int main(int argc, char *argv[])
     QString msg = (result==0) ? "All tests passed" : "One or more tests failed";
     std::cout << "\n\n" << qPrintable(msg) << "\n";
 
-    loadArg = saveLoadArg;
+    base::environment().latestLoadArg(saveLoadArg);
     base::environment().dir(base::Environment::Input, saveDirInput);
 
     dialog->deleteLater();

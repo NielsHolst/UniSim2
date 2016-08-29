@@ -1,6 +1,0 @@
-Simulation chicken(steps=50 step{track=off}) {
-	Calendar calendar(initialDate = weather[firstDateTime])
-	Records weather(fileName="weather/flakkebjerg 2009.txt")
-	Stage egg(initial=100 duration=22) 
-	OutputR (xAxis=calendar[date]) 
-}

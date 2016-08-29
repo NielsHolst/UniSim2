@@ -1,5 +1,5 @@
-#ifndef BOX_STEP_H
-#define BOX_STEP_H
+#ifndef BASE_BOX_STEP_H
+#define BASE_BOX_STEP_H
 #include "convert.h"
 
 namespace base {

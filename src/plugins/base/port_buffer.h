@@ -1,5 +1,5 @@
-#ifndef PORT_BUFFER_H
-#define PORT_BUFFER_H
+#ifndef BASE_PORT_BUFFER_H
+#define BASE_PORT_BUFFER_H
 #include <QList>
 #include <QObject>
 #include <QVector>

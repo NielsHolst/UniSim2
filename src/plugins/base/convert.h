@@ -1,5 +1,5 @@
-#ifndef CONVERT
-#define CONVERT
+#ifndef BASE_CONVERT
+#define BASE_CONVERT
 
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>

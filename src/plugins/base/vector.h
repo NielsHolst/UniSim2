@@ -1,5 +1,5 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef BASE_VECTOR_H
+#define BASE_VECTOR_H
 #include "port_type.h"
 
 namespace base {

@@ -3,8 +3,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef EXCEPTION_H
-#define EXCEPTION_H
+#ifndef BASE_EXCEPTION_H
+#define BASE_EXCEPTION_H
 
 #include <boost/lexical_cast.hpp>
 #include <QDate>

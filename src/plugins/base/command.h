@@ -1,5 +1,5 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef BASE_COMMAND_H
+#define BASE_COMMAND_H
 #include <QObject>
 #include <QStringList>
 
@@ -14,7 +14,7 @@ public:
     void execute();
     bool hasError() const;
     static QStringList help();
-
+    static void submit(QStringList com, QObject *parent);
 protected:
     QStringList _args;
     void helpText(QString help);

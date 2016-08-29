@@ -1,5 +1,5 @@
-#ifndef FACTORY_PLUG_IN_H
-#define FACTORY_PLUG_IN_H
+#ifndef BASE_FACTORY_PLUG_IN_H
+#define BASE_FACTORY_PLUG_IN_H
 
 #include <QString>
 #include <QtPlugin>

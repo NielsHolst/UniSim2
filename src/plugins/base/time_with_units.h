@@ -1,5 +1,5 @@
-#ifndef TIME_WITH_UNITS_H
-#define TIME_WITH_UNITS_H
+#ifndef BASE_TIME_WITH_UNITS_H
+#define BASE_TIME_WITH_UNITS_H
 #include <QDateTime>
 #include <QMap>
 #include <QString>

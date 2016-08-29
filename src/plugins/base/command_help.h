@@ -1,5 +1,5 @@
-#ifndef COMMAND_HELP_H
-#define COMMAND_HELP_H
+#ifndef BASE_COMMAND_HELP_H
+#define BASE_COMMAND_HELP_H
 #include <QString>
 #include <QMap>
 #include <QVector>

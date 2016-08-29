@@ -34,7 +34,7 @@ void load::doExecute() {
     case 0:
         // Zero arguments when called from run command
     case 1:
-        fileName = env.state.latestLoadArg;
+        fileName = env.latestLoadArg();
         break;
     case 2:
         fileName = _args.at(1);
@@ -45,7 +45,7 @@ void load::doExecute() {
     }
     env.deleteRoot();
     readFile(fileName);
-    env.state.latestLoadArg = fileName;
+    env.latestLoadArg(fileName);
 }
 
 void load::readFile(QString fileName) {

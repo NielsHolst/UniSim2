@@ -1,5 +1,5 @@
-#ifndef PRODUCT_BASE_H
-#define PRODUCT_BASE_H
+#ifndef BASE_PRODUCT_BASE_H
+#define BASE_PRODUCT_BASE_H
 
 #include <QMap>
 #include <QString>

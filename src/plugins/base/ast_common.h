@@ -1,5 +1,5 @@
-#ifndef AST_COMMON_H
-#define AST_COMMON_H
+#ifndef BASE_AST_COMMON_H
+#define BASE_AST_COMMON_H
 #include <string>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>

@@ -1,5 +1,5 @@
-#ifndef TEST_NUM_H
-#define TEST_NUM_H
+#ifndef BASE_TEST_NUM_H
+#define BASE_TEST_NUM_H
 
 #include <float.h>
 #include <cmath>

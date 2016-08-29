@@ -1,4 +1,5 @@
 #include <typeinfo>
+#include <QApplication>
 #include <QDir>
 #include <QPluginLoader>
 #include <QSettings>
@@ -17,8 +18,10 @@ int MegaFactory::productCount = 0;
 
 MegaFactory::MegaFactory() {
     setObjectName("MegaFactory");
-    QDir dir = QDir::current();
-    dir.cd("plugins");
+    QDir dir(QApplication::applicationDirPath());
+    bool gotoPlugins = dir.cd("plugins");
+    if (!gotoPlugins)
+        dialog().error("Could not find plugins folder,\nexpected here: " + dir.absolutePath()+"/plugins");
     foreach (QString filename, dir.entryList(QDir::Files)) {
         QString filePath = dir.absoluteFilePath(filename);
         QPluginLoader loader(filePath);
@@ -35,6 +38,10 @@ MegaFactory::MegaFactory() {
             }
         }
     }
+}
+
+void MegaFactory::loadPlugins() {
+    me();
 }
 
 namespace {

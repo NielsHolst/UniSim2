@@ -1,5 +1,5 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef BASE_TIMER_H
+#define BASE_TIMER_H
 #include <QMap>
 #include <QObject>
 #include <QPair>

@@ -1,5 +1,5 @@
-#ifndef SAVE_GRAMMAR_ATOM_H
-#define SAVE_GRAMMAR_ATOM_H
+#ifndef BASE_SAVE_GRAMMAR_ATOM_H
+#define BASE_SAVE_GRAMMAR_ATOM_H
 #include <QString>
 #include "save_grammar_base.h"
 

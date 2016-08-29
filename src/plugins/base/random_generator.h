@@ -1,5 +1,5 @@
-#ifndef RANDOM_GENERATOR_H
-#define RANDOM_GENERATOR_H
+#ifndef BASE_RANDOM_GENERATOR_H
+#define BASE_RANDOM_GENERATOR_H
 #include <QObject>
 #include <boost/random/mersenne_twister.hpp>
 

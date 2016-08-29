@@ -1,5 +1,5 @@
-#ifndef ORGANISATION_H
-#define ORGANISATION_H
+#ifndef BASE_ORGANISATION_H
+#define BASE_ORGANISATION_H
 
 #include <QApplication>
 

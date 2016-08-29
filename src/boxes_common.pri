@@ -12,17 +12,16 @@ CONFIG += debug
 
 # Set suffix 'd' for debug version
 CONFIG(debug, debug|release) {
-    SUFFIX = _d
+    SUFFIX = d
 }
 else {
-    SUFFIX = _r
+    SUFFIX =
 }
 
 # What we are building
-CONFIG += console c++11
+CONFIG += c++11
 CONFIG -= app_bundle # do not bundle app on Mac OS
 QT += core 
-QT -= gui
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wattributes
@@ -38,8 +37,8 @@ BOOST_PATH = $$(BOOST_ROOT)
 
 # Own libraries that we use, except 'base' does not itself use 'base'
 !equals(BOXES_PLUGIN_NAME, "base") {
-    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_r
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_d
-    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_r
-    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase_d
+    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
+    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
+    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
 }

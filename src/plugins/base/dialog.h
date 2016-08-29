@@ -1,5 +1,5 @@
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef BASE_DIALOG_H
+#define BASE_DIALOG_H
 
 #include <QTextCursor>
 //#include <QWidget>
@@ -24,7 +24,9 @@ public:
     void information(QString s);
     void errorImpl(QString s);
 protected:
+//    bool eventFilter(QObject *obj, QEvent *event);
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private slots:
     void receivedFocus(QWidget *old, QWidget *now);
 private:
@@ -34,6 +36,7 @@ private:
     QProgressBar *_progressBar;
     QString _prompt;
     QColor _informationColor, _errorColor;
+    bool _firstInformation, _gotoEnd;
     // Methods
     QMainWindow* mainWindow();
     void saveFont();

@@ -38,6 +38,7 @@ HEADERS +=  \
     command.h  \
     command_help.h  \
     convert.h \
+    copy_folder.h \
     dialog.h \
     dialog_base.h \
     dialog_stub.h \
@@ -87,6 +88,7 @@ SOURCES +=  \
     command.cpp \
     command_help.cpp  \
     convert.cpp \
+    copy_folder.cpp \
     dialog.cpp \
     dialog_base.cpp \
     dialog_stub.cpp \

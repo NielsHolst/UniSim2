@@ -1,5 +1,8 @@
 <project>
-    <shortName>UniSim</shortName>
+		<preInstallationActionList>
+				<setInstallerVariable name="suffix" value="d"/>
+		</preInstallationActionList>
+    <shortName>UniversalSimulator</shortName>
     <fullName>Universal Simulator</fullName>
     <version>2.0.0</version>
     <installerFilename></installerFilename>
@@ -61,7 +64,7 @@
                 </folder>
                 <folder>
                     <description>Personal UniSim Folder</description>
-                    <destination>${windows_folder_personal}/${product_shortname}</destination>
+                    <destination>${windows_folder_appdata}/${project.vendor}/${project.fullName}</destination>
                     <name>personalunisim</name>
                     <platforms>windows</platforms>
                     <distributionFileList>
@@ -77,20 +80,10 @@
             <startMenuShortcutList>
                 <startMenuShortcut>
                     <comment>Run Universal Simulator</comment>
-                    <name>${product_fullname} (end-user)</name>
+                    <name>${product_fullname}</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/bin/end-user/${product_shortname}_r.exe</windowsExec>
-                    <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
-                    <windowsPath>${installdir}</windowsPath>
-                </startMenuShortcut>
-                <startMenuShortcut>
-                    <comment>Run Universal Simulator</comment>
-                    <name>${product_fullname} (developer)</name>
-                    <runAsAdmin>0</runAsAdmin>
-                    <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/bin/developer/${product_shortname}_d.exe</windowsExec>
+                    <windowsExec>${installdir}/bin/unisim${suffix}.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
                     <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
@@ -98,6 +91,20 @@
             </startMenuShortcutList>
         </component>
     </componentList>
+    <postInstallationActionList>
+				<registrySet>
+					 <key>HKEY_CURRENT_USER\Software\${project.vendor}\${project.fullName}</key>
+					 <name>Version</name>
+					 <type>REG_SZ</type>
+					 <value>${project.version}</value>
+				</registrySet>
+				<registrySet>
+					 <key>HKEY_CURRENT_USER\Software\${project.vendor}\${project.fullName}</key>
+					 <name>IsFreshInstall</name>
+					 <type>REG_DWORD</type>
+					 <value>1</value>
+				</registrySet>
+    </postInstallationActionList>
     <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
@@ -110,7 +117,7 @@
             <description>Installer.Parameter.installdir.description</description>
             <explanation>Installer.Parameter.installdir.explanation</explanation>
             <value></value>
-            <default>${platform_install_prefix}/${product_shortname}</default>
+            <default>${platform_install_prefix}/${project.fullName}</default>
             <allowEmptyValue>0</allowEmptyValue>
             <ask>yes</ask>
             <cliOptionName>prefix</cliOptionName>

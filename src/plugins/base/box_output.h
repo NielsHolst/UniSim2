@@ -1,5 +1,5 @@
-#ifndef BOX_OUTPUT_H
-#define BOX_OUTPUT_H
+#ifndef BASE_BOX_OUTPUT_H
+#define BASE_BOX_OUTPUT_H
 
 #include <QObject>
 #include <QStack>

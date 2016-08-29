@@ -1,0 +1,20 @@
+Hi Bitrock,
+
+What is the best practice in the following (common) scenario ?
+
+1. I have a Qt project on Github.
+ 
+2. I use Github to synchronize my source code across three platforms: Linux, OS X and Windows. 
+
+3. I build my software separately on each platform using Qt Creator. This results in three sets of platform-specific, binary files.
+
+4. How should I use InstallBuilder to create an installation file for each platform?
+
+4a. Should I select one platform (say, Linux) to build all three installation files? This would entail copying the binary files from the other two platforms to the Linux platform. A bit of a hazzle but then I could build all three installation files by just one click in InstallBuilder, right?
+
+4b. Or, should I install InstallBuilder three times, once on each platform, and then build the installation files, one platform at a time? With this procedure I wouldn't need to copy the binary files between platforms but I would need to synchronize the InstallBuilder project file across platforms.
+
+What would you recommend?
+
+Thanks for a great product,
+Niels.

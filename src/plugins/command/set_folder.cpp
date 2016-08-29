@@ -1,8 +1,10 @@
+#include <QApplication>
 #include <base/command_help.h>
 #include <base/publish.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include "reconfigure.h"
 #include "set_folder.h"
 
 using namespace base;
@@ -39,7 +41,7 @@ void set_folder::doExecute() {
 
 void set_folder::showAllFolders() {
     QString info =
-        "Working folder:\n  " +
+        "Work folder:\n  " +
         environment().folderInfo(Environment::Work) +
         "\nInput folder:\n  " +
         environment().folderInfo(Environment::Input) +
@@ -47,12 +49,12 @@ void set_folder::showAllFolders() {
         environment().folderInfo(Environment::Output) +
         "\nScript folder:\n  " +
         environment().folderInfo(Environment::Script) +
-        "\nNotepad++ editor folder:\n  " +
-        environment().folderInfo(Environment::Notepad) +
         "\nAtom editor folder:\n  " +
         environment().folderInfo(Environment::Atom) +
-        "\nGraphviz folder (experimental):\n  " +
-        environment().folderInfo(Environment::Graphviz);
+        "\nNotepad++ editor folder:\n  " +
+        environment().folderInfo(Environment::Notepad);
+//        "\nGraphviz folder (experimental):\n  " +
+//        environment().folderInfo(Environment::Graphviz);
     dialog().information(info);
 }
 
@@ -62,6 +64,10 @@ void set_folder::showFolder(QString folderType) {
 
 void set_folder::setFolder(QString folderType, QString folderPath) {
     Environment::Folder folder = convert<Environment::Folder>(folderType);
+    if (folderPath == "HOME")
+        folderPath = reconfigure::destination().absolutePath();
+    else if (folderPath == "DEV")
+        folderPath = QApplication::applicationDirPath() + "/..";
     environment().dir(folder, folderPath);
     showFolder(folderType);
 }

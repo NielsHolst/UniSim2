@@ -1,5 +1,5 @@
-#ifndef AST_BOXES_H
-#define AST_BOXES_H
+#ifndef BASE_AST_BOXES_H
+#define BASE_AST_BOXES_H
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>

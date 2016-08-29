@@ -1,5 +1,5 @@
-#ifndef BOX_READER_BOXES_H
-#define BOX_READER_BOXES_H
+#ifndef BASE_BOX_READER_BOXES_H
+#define BASE_BOX_READER_BOXES_H
 
 #include <fstream>
 #include "box_reader_base.h"

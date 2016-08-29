@@ -1,5 +1,5 @@
-#ifndef UNIQUE_NAME_H
-#define UNIQUE_NAME_H
+#ifndef BASE_UNIQUE_NAME_H
+#define BASE_UNIQUE_NAME_H
 #include <QObject>
 #include <QStringList>
 #include <QVector>

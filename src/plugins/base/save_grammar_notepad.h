@@ -1,5 +1,5 @@
-#ifndef SAVE_GRAMMAR_NOTEPAD_H
-#define SAVE_GRAMMAR_NOTEPAD_H
+#ifndef BASE_SAVE_GRAMMAR_NOTEPAD_H
+#define BASE_SAVE_GRAMMAR_NOTEPAD_H
 #include <QString>
 #include "save_grammar_base.h"
 

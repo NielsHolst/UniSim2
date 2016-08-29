@@ -1,5 +1,5 @@
-#ifndef PRODUCT_H
-#define PRODUCT_H
+#ifndef BASE_PRODUCT_H
+#define BASE_PRODUCT_H
 #include <QObject>
 #include <QString>
 #include "product_base.h"

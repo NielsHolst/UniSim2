@@ -3,8 +3,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PATH_H
-#define PATH_H
+#ifndef BASE_PATH_H
+#define BASE_PATH_H
 
 #include <QObject>
 #include <QList>

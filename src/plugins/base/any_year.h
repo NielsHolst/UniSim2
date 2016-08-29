@@ -1,5 +1,5 @@
-#ifndef ANY_YEAR_H
-#define ANY_YEAR_H
+#ifndef BASE_ANY_YEAR_H
+#define BASE_ANY_YEAR_H
 
 #include <QDate>
 

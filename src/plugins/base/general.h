@@ -1,5 +1,5 @@
-#ifndef GENERAL_H
-#define GENERAL_H
+#ifndef BASE_GENERAL_H
+#define BASE_GENERAL_H
 #include <QObject>
 #include <QString>
 #include <QVector>

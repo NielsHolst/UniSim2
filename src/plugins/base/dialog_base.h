@@ -1,5 +1,5 @@
-#ifndef DIALOG_BASE_H
-#define DIALOG_BASE_H
+#ifndef BASE_DIALOG_BASE_H
+#define BASE_DIALOG_BASE_H
 
 #include <QTextEdit>
 #include <QString>

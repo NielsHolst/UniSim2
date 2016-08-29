@@ -1,5 +1,5 @@
-#ifndef VECTORIZE_H
-#define VECTORIZE_H
+#ifndef BASE_VECTORIZE_H
+#define BASE_VECTORIZE_H
 #include <QVector>
 #include "assign.h"
 #include "port_type.h"

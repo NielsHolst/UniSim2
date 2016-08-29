@@ -1,5 +1,5 @@
-#ifndef MEGA_FACTORY_H
-#define MEGA_FACTORY_H
+#ifndef BASE_MEGA_FACTORY_H
+#define BASE_MEGA_FACTORY_H
 
 #include <QMap>
 #include <QObject>
@@ -13,10 +13,13 @@ class FactoryPlugIn;
 class MegaFactory : public QObject
 {
 public:
+    static void loadPlugins();
+
     template <class T>
     static T* create(QString className, QString objectName, QObject *parent);
 
     static const QList<base::FactoryPlugIn*> &factories();
+
 
 private:
     // methods

@@ -1,5 +1,5 @@
-#ifndef BOX_READER_BASE_H
-#define BOX_READER_BASE_H
+#ifndef BASE_BOX_READER_BASE_H
+#define BASE_BOX_READER_BASE_H
 
 #include "box_builder.h"
 

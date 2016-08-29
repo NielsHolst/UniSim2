@@ -21,6 +21,7 @@ HEADERS +=  \
     list.h \
     load.h \
     profile.h \
+    reconfigure.h \
     reset.h \
     run.h \
     save.h \
@@ -42,6 +43,7 @@ SOURCES +=  \
     list.cpp \
     load.cpp \
     profile.cpp \
+    reconfigure.cpp \
     reset.cpp \
     run.cpp \
     save.cpp \

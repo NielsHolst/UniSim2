@@ -1,5 +1,5 @@
-#ifndef OBJECT_POOL_H
-#define OBJECT_POOL_H
+#ifndef BASE_OBJECT_POOL_H
+#define BASE_OBJECT_POOL_H
 
 #include <memory>
 #include <QList>

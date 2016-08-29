@@ -1,5 +1,5 @@
-#ifndef SAVE_GRAPH_GRAPHVIZ_H
-#define SAVE_GRAPH_GRAPHVIZ_H
+#ifndef BASE_SAVE_GRAPH_GRAPHVIZ_H
+#define BASE_SAVE_GRAPH_GRAPHVIZ_H
 #include <QFile>
 #include <QList>
 #include <QMap>

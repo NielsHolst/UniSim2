@@ -1,5 +1,5 @@
-#ifndef CIRCULAR_BUFFER_H
-#define CIRCULAR_BUFFER_H
+#ifndef BASE_CIRCULAR_BUFFER_H
+#define BASE_CIRCULAR_BUFFER_H
 #include <numeric>
 #include <QVector>
 

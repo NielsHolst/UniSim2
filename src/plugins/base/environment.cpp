@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
+#include <QStandardPaths>
 #include "box.h"
 #include "environment.h"
 #include "general.h"
@@ -13,6 +14,8 @@
 namespace base {
 
 Environment *Environment::_environment = 0;
+
+const QString PATH_NOT_SET = "/FolderNotSet";
 
 Environment& environment() {
     if (!Environment::_environment) {
@@ -26,17 +29,13 @@ Environment::Environment()
     : _root(0), _current(0)
 {
     QSettings settings;
-    Folder fo = Folder(0);
-    while (true) {
-        QString key = "environment/dir" + convert<QString>(fo);
-        _dir[fo] = QDir(settings.value(key, QString(".")).toString());
-        if (fo == LastFolder) break;
-        fo = Folder(fo+1);
-    }
-    state.autosave = settings.value("environment/autosave", true).toBool();
-    state.latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
+    _isNewInstallation = !settings.contains("environment/latest-load-arg");
+    if (_isNewInstallation)
+        initDir();
+    else
+        getDirSettings();
+    _latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
     _latestOutputFilePath["txt"] = settings.value("environment/latest-output-file-path-txt", QString()).toString();
-    state.command = 0;
 }
 
 Environment::~Environment() {
@@ -48,8 +47,7 @@ Environment::~Environment() {
         if (fo == LastFolder) break;
         fo = Folder(fo+1);
     }
-    settings.setValue("environment/autosave", state.autosave);
-    settings.setValue("environment/latest-load-arg", state.latestLoadArg);
+    settings.setValue("environment/latest-load-arg", _latestLoadArg);
     settings.setValue("environment/latest-output-file-path-txt", latestOutputFilePath("txt"));
 }
 Box* Environment::root() {
@@ -73,6 +71,15 @@ void Environment::current(Box *newCurrent) {
     _current = newCurrent;
 }
 
+QString Environment::homePath() const {
+    QStringList paths =
+        QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    if (paths.isEmpty())
+        ThrowException("Cannot find home folder");
+    return paths.at(0) + "/UniversalSimulator";
+
+}
+
 QString Environment::openOutputFile(QFile &file, QString extension) {
     QString filePath = outputFilePath(extension);
     file.setFileName(filePath);
@@ -82,7 +89,7 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
 }
 
 QString Environment::outputFilePath(QString extension) {
-    QString fileName = state.latestLoadArg;
+    QString fileName = _latestLoadArg;
     int n = fileName.lastIndexOf(".");
 
     char numberFilled[16];
@@ -149,16 +156,30 @@ QString Environment::folderInfo(Folder folder) {
     if (!resolvedDir.exists()) {
         if (folder == Output)
             info += "\n  '" + resolvedDir.absolutePath() +  "' will be created when needed";
-        else
-            info += "\n  Warning: '" + resolvedDir.absolutePath() +  "' does not exist";
+        else{
+            bool shouldExist = (folder == Input || folder == Script) ||
+                               (folder != Input && folder != Script && folderDir.dirName() != PATH_NOT_SET);
+            if (shouldExist)
+                info += "\n  Warning: '" + resolvedDir.absolutePath() +  "' does not exist";
+            else
+                info += "\n  Warning: You have not set this folder";
+        }
     }
     return info;
 }
 
-QString Environment::latestOutputFilePath(QString fileExtension) {
+QString Environment::latestOutputFilePath(QString fileExtension) const {
     return _latestOutputFilePath.contains(fileExtension) ?
            _latestOutputFilePath.value(fileExtension) :
            QString();
+}
+
+void Environment::latestLoadArg(QString arg) {
+    _latestLoadArg = arg;
+}
+
+QString Environment::latestLoadArg() const {
+    return _latestLoadArg;
 }
 
 QDir Environment::dir(Folder folder) {
@@ -208,13 +229,58 @@ int Environment::fileCountervalue() {
 }
 
 QString Environment::fileCounterKey() {
-    return "environment/file-counter/" + QFileInfo(state.latestLoadArg).baseName();
+    return "environment/file-counter/" + QFileInfo(_latestLoadArg).baseName();
 }
 
 void Environment::copyToClipboard(QString text) {
     QApplication::clipboard()->setText(text);
 }
 
+bool Environment::isNewInstallation() const {
+    return _isNewInstallation;
+}
+
+void Environment::initDir() {
+    _dir[Work] = QDir(homePath());
+    _dir[Input] = "input";
+    _dir[Output] = "output";
+    _dir[Script] = "script";
+    _dir[Atom] = findAtomDir();
+    _dir[Notepad] = findNotepadDir();
+    _dir[Graphviz] = findGraphvizDir();
+}
+
+QDir Environment::findAtomDir() {
+    QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
+                                          ".atom/packages/language-boxes/grammars", QStandardPaths::LocateDirectory);
+    if (path.isEmpty())
+        path = PATH_NOT_SET;
+    return QDir(path);
+}
+
+QDir Environment::findNotepadDir() {
+    QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
+                                          "AppData/Roaming/Notepad++", QStandardPaths::LocateDirectory);
+    if (path.isEmpty())
+        path = PATH_NOT_SET;
+    return QDir(path);
+}
+
+QDir Environment::findGraphvizDir() {
+    QString path = PATH_NOT_SET;
+    return QDir(path);
+}
+
+void Environment::getDirSettings() {
+    QSettings settings;
+    Folder fo = Folder(0);
+    while (true) {
+        QString key = "environment/dir" + convert<QString>(fo);
+        _dir[fo] = QDir(settings.value(key, QString(".")).toString());
+        if (fo == LastFolder) break;
+        fo = Folder(fo+1);
+    }
+}
 
 #define FOLDER_CASE(X) \
     case Environment::X: \

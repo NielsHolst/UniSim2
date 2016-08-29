@@ -1,5 +1,5 @@
-#ifndef PORT_TYPE_H
-#define PORT_TYPE_H
+#ifndef BASE_PORT_TYPE_H
+#define BASE_PORT_TYPE_H
 #include <QDate>
 #include <QDateTime>
 #include <QString>

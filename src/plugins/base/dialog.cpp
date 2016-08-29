@@ -22,13 +22,16 @@ Dialog::Dialog(QWidget *parent)
     : DialogBase(parent),
       _prompt("> "),
       _informationColor(QColor("blue")),
-      _errorColor(QColor("red"))
+      _errorColor(QColor("red")),
+      _firstInformation(true),
+      _gotoEnd(false)
 {
     setObjectName("dialog");
     setDocument(_textDocument = new QTextDocument(this));
     restoreFont();
     writeWelcome();
     writePrompt();
+    setAcceptRichText(false);
     _progressBar = new QProgressBar(this);
     _progressBar->setFormat(" %p% of %ms");
     _progressBar->hide();
@@ -36,7 +39,6 @@ Dialog::Dialog(QWidget *parent)
     QObject::connect(qApp, &QApplication::focusChanged,
                      this, &Dialog::receivedFocus);
 }
-
 
 Dialog::~Dialog() {
     saveFont();
@@ -52,10 +54,22 @@ void Dialog::saveFont() {
 
 void Dialog::restoreFont() {
     QSettings settings;
-    QString family = settings.value("font/family", QString()).toString();
-    bool ok;
-    int pt = settings.value("font/size", 0).toInt(&ok);
-    if (!ok) pt = 0;
+
+    QString family;
+    QStringList preferredFonts;
+    preferredFonts
+        << "InputMonoCompressed Light"
+        << "Consolas"
+        << "Andale Mono"
+        << "Arial Narrow"
+        << "Arial";
+    for (int i=0; i <preferredFonts.size(); ++i) {
+        family = settings.value("font/family", preferredFonts.at(i)).toString();
+        if (!family.isEmpty())
+            break;
+    }
+
+    int pt = settings.value("font/size", 11).toInt();
 
     QTextCursor cursor = textCursor();
     QTextCharFormat format = cursor.charFormat();
@@ -83,7 +97,12 @@ void Dialog::message(QString s) {
 }
 
 void Dialog::information(QString s) {
-    insertText("\n" + s, _informationColor);
+    if (_firstInformation)
+        _firstInformation = false;
+    else
+        s = "\n" + s;
+
+    insertText(s, _informationColor);
     repaint();
 }
 
@@ -93,6 +112,7 @@ void Dialog::errorImpl(QString s) {
 }
 
 void Dialog::keyPressEvent(QKeyEvent *event) {
+    _gotoEnd = false;
     QTextCursor cursor;
     switch (event->key()) {
     case Qt::Key_Escape:
@@ -161,9 +181,20 @@ void Dialog::keyPressEvent(QKeyEvent *event) {
 }
 
 void Dialog::receivedFocus(QWidget *old, QWidget *now) {
-    if (!old && now == this)
-        moveCursor(QTextCursor::End);
+    _gotoEnd = (!old && now == this);
 }
+
+void Dialog::mousePressEvent(QMouseEvent *event) {
+    if (_gotoEnd)  {
+        event->accept();
+        moveCursor(QTextCursor::End);
+        _gotoEnd = false;
+    }
+    else {
+        QTextEdit::mousePressEvent(event);
+    }
+}
+
 
 QMainWindow* Dialog::mainWindow() {
     return dynamic_cast<QMainWindow*>(parent());
@@ -185,16 +216,24 @@ void Dialog::writePrompt() {
 }
 
 void Dialog::writeWelcome() {
-    QString latestFile = environment().state.latestLoadArg,
-            workFolder = environment().dir(Environment::Work).absolutePath(),
-            inputFolder = environment().dir(Environment::Input).path(),
-            info = latestFile.isEmpty() ? "Welcome to Universal Simulator!" : "Welcome back!";
-    info += "\nYour work  folder is '" + workFolder + "'";
-    info += "\nYour input folder is '" + inputFolder + "'";
+    message("Initializing...");
+    QString latestFile = environment().latestLoadArg();
+    information(latestFile.isEmpty() ? "Welcome to Universal Simulator!" : "Welcome back!");
+    information("Loading plugins...");
+    MegaFactory::loadPlugins();
+
+    if (environment().isNewInstallation()) {
+        information("\nReconfiguring...");
+        Command::submit(QStringList() << "reconfigure", this);
+    }
+
+    QString info = "Work folder:\n  " + environment().folderInfo(Environment::Work) +
+                   "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
     _history.add("load \"" + latestFile + "\"");
     information(info);
+
     message("Ready");
 }
 
@@ -251,33 +290,11 @@ void Dialog::clearLine() {
 }
 
 void Dialog::submitCommand() {
-    Command *command(0);
     QTextBlock block = _textDocument->findBlock(cursorPosition());
     QString line = block.text().mid(_prompt.size()).simplified();
-    QStringList items;
-    try {
-        items = base::split(line);
-        if (!items.isEmpty()) {
-            try {
-                if (items.first().contains("_"))
-                    ThrowException("Illegal characted in command");
-                command = MegaFactory::create<Command>(items.first(), items.first(), this);
-            }
-            catch (Exception &ex) {
-                error("Unknown command: '" + line + "'");
-                command = 0;
-            }
-        }
-    }
-    catch(Exception &ex) {
-        error(ex.what());
-        command = 0;
-    }
-
-    if (command) {
-        command->arguments(items);
-        command->execute();
-    }
+    QStringList items = base::split(line);
+    if (!items.isEmpty())
+        Command::submit(items, this);
     if (!line.isEmpty())
         _history.add(line);
 }

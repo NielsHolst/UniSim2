@@ -1,5 +1,5 @@
-#ifndef BOX_READER_XML_H
-#define BOX_READER_XML_H
+#ifndef BASE_BOX_READER_XML_H
+#define BASE_BOX_READER_XML_H
 
 #include <QFile>
 #include <QMap>

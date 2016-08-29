@@ -1,5 +1,5 @@
-#ifndef ENVIRONMENT_H
-#define ENVIRONMENT_H
+#ifndef BASE_ENVIRONMENT_H
+#define BASE_ENVIRONMENT_H
 
 #include <QDir>
 #include <QObject>
@@ -27,6 +27,8 @@ public:
     Box* current();
     void current(Box *newCurrent);
 
+    QString homePath() const;
+
     QString openOutputFile(QFile &file, QString extension);
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
@@ -35,7 +37,9 @@ public:
     QString fileContent(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
 
-    QString latestOutputFilePath(QString fileExtension);
+    QString latestOutputFilePath(QString fileExtension) const;
+    void latestLoadArg(QString arg);
+    QString latestLoadArg() const;
 
     QDir dir(Folder folder);
     void dir(Folder folder, QString path);
@@ -45,22 +49,25 @@ public:
     void incrementFileCounter();
     void copyToClipboard(QString text);
 
-    struct {
-        bool autosave;
-        QString latestLoadArg;
-        Command *command;
-    } state;
+    bool isNewInstallation() const;
 private:
     // Data
     Box *_root, *_current;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
+    QString _latestLoadArg;
+    bool _isNewInstallation;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();
     // Methods
     QString fileCounterKey();
     int fileCountervalue();
+    void initDir();
+    QDir findAtomDir();
+    QDir findNotepadDir();
+    QDir findGraphvizDir();
+    void getDirSettings();
     static QDir makeDirAsNeeded(QDir dirNeeded);
 };
 

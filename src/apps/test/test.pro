@@ -24,6 +24,7 @@ HEADERS +=  \
     test_circle_buffer.h \
     test_command.h \
     test_convert.h \
+    test_copy_folder.h \
     test_eq.h \
     test_general_split.h \
     test_history.h \
@@ -56,6 +57,7 @@ SOURCES +=  \
     test_circle_buffer.cpp \
     test_command.cpp \
     test_convert.cpp \
+    test_copy_folder.cpp \
     test_eq.cpp \
     test_general_split.cpp \
     test_history.cpp \

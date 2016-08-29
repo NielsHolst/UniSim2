@@ -1,5 +1,5 @@
-#ifndef HISTORY_H
-#define HISTORY_H
+#ifndef BASE_HISTORY_H
+#define BASE_HISTORY_H
 #include <QStringList>
 #include <QVector>
 

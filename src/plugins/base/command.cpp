@@ -3,6 +3,7 @@
 #include "environment.h"
 #include "exception.h"
 #include "general.h"
+#include "mega_factory.h"
 
 namespace base {
 
@@ -32,7 +33,6 @@ void Command::execute() {
         _error = true;
         dialog().error(ex.what());
     }
-    environment().state.command = this;
 }
 
 bool Command::hasError() const {
@@ -47,6 +47,18 @@ void Command::helpText(QString help) {
 QStringList Command::help() {
     _help.sort();
     return _help;
+}
+
+void Command::submit(QStringList com, QObject *parent) {
+    Command *command;
+    try {
+        command = MegaFactory::create<Command>(com.first(), com.first(), parent);
+        command->arguments(com);
+        command->execute();
+    }
+    catch(Exception &ex) {
+        dialog().error(ex.what());
+    }
 }
 
 }

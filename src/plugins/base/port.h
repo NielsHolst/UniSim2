@@ -1,5 +1,5 @@
-#ifndef PORT_H
-#define PORT_H
+#ifndef BASE_PORT_H
+#define BASE_PORT_H
 #include <QObject>
 #include <QMap>
 #include <QString>

@@ -1,5 +1,5 @@
-#ifndef BOX_BUILDER_H
-#define BOX_BUILDER_H
+#ifndef BASE_BOX_BUILDER_H
+#define BASE_BOX_BUILDER_H
 #include <QList>
 #include <QObject>
 #include <QStack>

@@ -1,5 +1,5 @@
-#ifndef BOX_H
-#define BOX_H
+#ifndef BASE_BOX_H
+#define BASE_BOX_H
 #include <QMap>
 #include <QObject>
 #include <QVariant>

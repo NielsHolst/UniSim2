@@ -1,5 +1,5 @@
-#ifndef ASSIGN_H
-#define ASSIGN_H
+#ifndef BASE_ASSIGN_H
+#define BASE_ASSIGN_H
 #include "port_transform.h"
 #include "port_type.h"
 

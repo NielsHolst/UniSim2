@@ -1,5 +1,5 @@
-#ifndef VECTOR_VECTOR_H
-#define VECTOR_VECTOR_H
+#ifndef BASE_VECTOR_VECTOR_H
+#define BASE_VECTOR_VECTOR_H
 #include <QString>
 #include <QVector>
 #include "vector.h"

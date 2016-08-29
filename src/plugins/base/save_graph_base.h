@@ -1,5 +1,5 @@
-#ifndef SAVE_GRAPH_BASE_H
-#define SAVE_GRAPH_BASE_H
+#ifndef BASE_SAVE_GRAPH_BASE_H
+#define BASE_SAVE_GRAPH_BASE_H
 #include <QFile>
 #include <QObject>
 #include <QPair>

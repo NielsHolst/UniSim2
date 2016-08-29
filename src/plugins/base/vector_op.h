@@ -1,5 +1,5 @@
-#ifndef VECTOR_OP_H
-#define VECTOR_OP_H
+#ifndef BASE_VECTOR_OP_H
+#define BASE_VECTOR_OP_H
 #include <QVector>
 
 class QObject;
