@@ -1,6 +1,6 @@
 <project>
     <shortName>UniversalSimulator</shortName>
-    <fullName>Universal Simulator</fullName>
+    <fullName>UniversalSimulator</fullName>
     <version>2.0.0</version>
     <installerFilename></installerFilename>
     <licenseFile>gpl-3.0.txt</licenseFile>
@@ -39,14 +39,8 @@
                 <folder>
                     <description>Program Files</description>
                     <destination>${installdir}</destination>
-                    <name>programfileslinux</name>
-                    <platforms>linux</platforms>
-                </folder>
-                <folder>
-                    <description>Program Files</description>
-                    <destination>${installdir}</destination>
-                    <name>programfileswindows</name>
-                    <platforms>windows</platforms>
+                    <name>programfilesall</name>
+                    <platforms>all</platforms>
                     <distributionFileList>
                         <distributionDirectory>
                             <origin>bin</origin>
@@ -54,16 +48,10 @@
                     </distributionFileList>
                 </folder>
                 <folder>
-                    <description>Program Files</description>
-                    <destination>${installdir}</destination>
-                    <name>programfilesosx</name>
-                    <platforms>osx</platforms>
-                </folder>
-                <folder>
-                    <description>Personal UniSim Folder</description>
-                    <destination>${windows_folder_appdata}/${vendor}/${product_fullname}</destination>
+                    <description>UniSim Data</description>
+                    <destination>${installdir}/data</destination>
                     <name>personalunisim</name>
-                    <platforms>windows</platforms>
+                    <platforms>all</platforms>
                     <distributionFileList>
                         <distributionDirectory>
                             <origin>input</origin>
@@ -73,6 +61,17 @@
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>UniversalSimulator.run</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
             </folderList>
             <startMenuShortcutList>
                 <startMenuShortcut>
@@ -80,27 +79,93 @@
                     <name>${product_fullname}</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/bin/${product_shortname}_r.exe</windowsExec>
+                    <windowsExec>${installdir}/bin/unisim${suffix}.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
                     <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
             </startMenuShortcutList>
         </component>
+        <component>
+            <name>desktopshortcut</name>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>Universal Simulator</comment>
+                    <exec>${installdir}/UniversalSimulator.run</exec>
+                    <icon>${installdir}/bin/N86.ico</icon>
+                    <name>Universal Simulator</name>
+                    <path>${installdir}</path>
+                    <platforms>linux osx</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec></windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath></windowsPath>
+
+                    <!--
+		<windowsExec>${installdir}/bin/myprogram.exe</windowsExec>
+		<windowsExecArgs></windowsExecArgs>
+		<windowsIcon></windowsIcon>
+		<windowsPath>${installdir}/bin</windowsPath>
+		-->
+                </shortcut>
+                <shortcut>
+                    <comment>Run Universal Simulator</comment>
+                    <exec></exec>
+                    <icon></icon>
+                    <name>Universal Simulator</name>
+                    <path></path>
+                    <platforms>windows</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/bin/unisim${suffix}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/bin/N86.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+        </component>
     </componentList>
+    <preInstallationActionList>
+        <setInstallerVariable name="suffix" value="d"/>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <registrySet>
+            <key>HKEY_CURRENT_USER\Software\${project.vendor}\${project.fullName}</key>
+            <name>Version</name>
+            <type>REG_SZ</type>
+            <value>${project.version}</value>
+        </registrySet>
+        <registrySet>
+            <key>HKEY_CURRENT_USER\Software\${project.vendor}\${project.fullName}</key>
+            <name>IsFreshInstall</name>
+            <type>REG_DWORD</type>
+            <value>1</value>
+        </registrySet>
+    </postInstallationActionList>
+    <preUninstallationActionList>
+        <deleteFile path="~/.config/AarhusUniversity/*.conf"/>
+        <deleteFile path="~/.config/Aarhus University/*.conf"/>
+        <deleteFile path="~/.config/AarhusUniversity/"/>
+        <deleteFile path="~/.config/Aarhus University/"/>
+    </preUninstallationActionList>
     <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <outputDirectory>.</outputDirectory>
     <saveRelativePaths>1</saveRelativePaths>
-    <vendor>Aarhus University</vendor>
+    <vendor>AarhusUniversity</vendor>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
             <description>Installer.Parameter.installdir.description</description>
             <explanation>Installer.Parameter.installdir.explanation</explanation>
             <value></value>
-            <default>${platform_install_prefix}/${product_shortname}</default>
+            <default>${platform_install_prefix}/${project.fullName}</default>
             <allowEmptyValue>0</allowEmptyValue>
             <ask>yes</ask>
             <cliOptionName>prefix</cliOptionName>

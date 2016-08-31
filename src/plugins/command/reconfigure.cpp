@@ -1,4 +1,3 @@
-#include <QStandardPaths>
 #include <base/command_help.h>
 #include <base/copy_folder.h>
 #include <base/dialog.h>
@@ -29,11 +28,13 @@ void reconfigure::doExecute() {
 }
 
 QDir reconfigure::source() {
-    QStringList paths =
-        QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
-    if (paths.isEmpty())
-        ThrowException("Cannot find app data folder");
-    return QDir(paths.at(0));
+    QDir dir = QDir(environment().homePath());
+    QString path("../UniversalSimulator/data");
+    bool ok = dir.cd(path);
+    if (!ok)
+        ThrowException("Cannot find default data folder").
+                value(environment().homePath() + "/" + path);
+    return dir;
 }
 
 QDir reconfigure::destination() {

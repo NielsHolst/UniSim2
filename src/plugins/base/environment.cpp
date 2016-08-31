@@ -76,7 +76,7 @@ QString Environment::homePath() const {
         QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
     if (paths.isEmpty())
         ThrowException("Cannot find home folder");
-    return paths.at(0) + "/UniversalSimulator";
+    return paths.at(0) + "/UniversalSimulatorHome";
 
 }
 
@@ -90,7 +90,7 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
 
 QString Environment::outputFilePath(QString extension) {
     QString fileName = _latestLoadArg;
-    int n = fileName.lastIndexOf(".");
+//    int n = fileName.lastIndexOf(".");
 
     char numberFilled[16];
     sprintf(numberFilled, "%04d", fileCountervalue());
