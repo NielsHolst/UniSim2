@@ -96,7 +96,8 @@ QString Environment::outputFilePath(QString extension) {
     sprintf(numberFilled, "%04d", fileCountervalue());
 
     QString ext = (extension.at(0) == '.') ? extension : ("." + extension);
-    return outputFileNamePath(fileName.left(n) + "_" + numberFilled + ext);
+//    return outputFileNamePath(fileName.left(n) + "_" + numberFilled + ext);
+    return outputFileNamePath(QFileInfo(fileName).baseName() + "_" + numberFilled + ext);
 }
 
 QString Environment::outputFileNamePath(QString fileName) {
