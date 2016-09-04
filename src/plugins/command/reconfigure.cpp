@@ -1,3 +1,4 @@
+#include <QStandardPaths>
 #include <base/command_help.h>
 #include <base/copy_folder.h>
 #include <base/dialog.h>
@@ -19,22 +20,14 @@ reconfigure::reconfigure(QString name, QObject *parent)
 }
 
 void reconfigure::doExecute() {
-    QString msg = "Copying default data files:\n" +
-                  source().absolutePath() +
-                  " -> " +
-                   destination().absolutePath() +"...";
+    QString msg = "Copying default data files to " +
+                   destination().absolutePath();
     dialog().information(msg);
     copyFolder(source(), destination());
 }
 
 QDir reconfigure::source() {
-    QDir dir = QDir(environment().homePath());
-    QString path("../UniversalSimulator/data");
-    bool ok = dir.cd(path);
-    if (!ok)
-        ThrowException("Cannot find default data folder").
-                value(environment().homePath() + "/" + path);
-    return dir;
+    return QDir(":/data");
 }
 
 QDir reconfigure::destination() {

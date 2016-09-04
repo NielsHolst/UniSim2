@@ -18,7 +18,7 @@ PlotR::PlotR(QString name, QObject *parent)
     Input(hide).equals(false);
     Input(ports);
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
-    Input(script).help("R code that will be added to the ggplot");
+    Input(end).help("R code that will be added to the ggplot");
     Input(ncol).equals(-1);
     Input(nrow).equals(-1);
 }
@@ -97,7 +97,7 @@ QString PlotR::toScript() {
     QString string;
     QTextStream s(&string);
     s << "    "
-      << "unisim_plot_" << layout << "(df, "
+      << "plot_" << layout << "(df, "
       << xLabel << ", "
       << "c(" << portLabels.join(", ") << ")";
 
@@ -107,8 +107,8 @@ QString PlotR::toScript() {
           << "nrow=" << dim("nrow");
     }
     s << ")";
-    if (!script.isEmpty())
-        s << "+" << environment().fileContent(Environment::Script, script).trimmed();
+    if (!end.isEmpty())
+        s << "+" << environment().fileContent(Environment::Script, end).trimmed();
     s << ",\n";
     return string;
 }

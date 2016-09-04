@@ -5,6 +5,9 @@ library(plyr)
 library(reshape2)
 library(scales)
 
+rm(list=ls(all=TRUE))
+graphics.off ()
+
 read_unisim_output = function(file_path) {
 
 	column_info = function(file_path) {

@@ -1,4 +1,4 @@
-set SUFFIX=d
+set SUFFIX=
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
 set QT_PLUGINS="C:\Qt\5.4\mingw491_32\plugins"
 
@@ -21,8 +21,8 @@ copy oleaut32.dll %UNISIM_BIN%
 popd
 
 rem Copy exe and DLL files
-copy ..\bin\*%SUFFIX%.exe bin
-copy ..\bin\*%SUFFIX%.dll bin
+copy ..\bin\unisim*%SUFFIX%.exe bin
+copy ..\bin\base*%SUFFIX%.dll bin
 copy ..\bin\plugins\*%SUFFIX%.dll bin\plugins
 
 rem copy MinGW libraries
@@ -53,22 +53,5 @@ pushd %QT_PLUGINS%
 copy imageformats %UNISIM_BIN%\imageformats
 copy platforms %UNISIM_BIN%\platforms
 popd
-
-rem Remove test modules
-pushd %UNISIM_BIN%
-del /Q test*.*
-del /Q plugins\test*.*
-popd
-
-rem Copy input folder
-rd /Q /S input
-md input
-md input\book
-xcopy ..\input\book\*.* input\book /S
-
-rem Copy script folder
-rd /Q /S script
-md script
-xcopy ..\script\*.* script /S
 
 pause

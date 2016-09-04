@@ -27,8 +27,7 @@ cp /lib/i386-linux-gnu/librt.so.1 	  		bin/lib
 cp /lib/i386-linux-gnu/libglib-2.0.so.0   		bin/lib
 cp /lib/i386-linux-gnu/libm.so.6 	  		bin/lib
 
-# Copy UniSim executables and libs
-cp ../bin/test$suffix bin
+# Copy UniSim executable and libs
 cp ../bin/unisim$suffix bin
 cp ../bin/libbase$suffix* bin/lib
 
@@ -52,17 +51,6 @@ cp ~/Qt5.5.1/5.5/gcc/lib/libQt5Test.so.5.5		bin/lib
 # Copy Qt plugin folders
 cp ~/Qt5.5.1/5.5/gcc/plugins/imageformats/* bin/lib/imageformats
 cp ~/Qt5.5.1/5.5/gcc/plugins/platforms/* bin/lib/platforms
-
-# Copy input folder
-rm -rf input
-mkdir input
-mkdir input/book
-cp -r ../input/book/* input/book 
-
-# Copy script folder
-rm -rf script
-mkdir script
-cp ../script/* script 
 
 echo "END"
 

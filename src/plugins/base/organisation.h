@@ -7,7 +7,7 @@ namespace base {
 
 struct Organisation{
     Organisation() {
-        QCoreApplication::setOrganizationName("Aarhus University");
+        QCoreApplication::setOrganizationName("AarhusUniversity");
         QCoreApplication::setOrganizationDomain("www.ecolmod.org");
         QCoreApplication::setApplicationName("Universal Simulator");
     }

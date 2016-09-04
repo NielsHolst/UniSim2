@@ -27,10 +27,9 @@ OutputR::OutputR(QString name, QObject *parent)
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\n"
                 "copies another R script to the clipboard");
-    Input(clear).equals(false).help("Clear R graphics and work space?");
-    Input(showPlots).equals(true).help("Show R plots?");
-    Input(script).help("Name of R script to run after auto-generated R script");
-    Input(useRStudio).equals(true).help("Use RStudio (true) or RGui (false)");
+    Input(begin).help("Name of R script run before auto-generated R script").equals("begin.R");
+    Input(end).help("Name of R script run after auto-generated R script").equals("end.R");
+    Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
 }
 
 void OutputR::amend() {
@@ -56,15 +55,9 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
-    if (clear) {
-        s += "rm(list=ls(all=TRUE))\n";
-        s += "graphics.off()\n";
-    }
-
-    s += "source(\"" + environment().filePath(Environment::Script, "common.R") + "\")\n\n";
     for (PageR *page : _pages)
         s += page->toScript();
-    s += "unisim_plot_all <- function(df) {\n";
+    s += "plot_all <- function(df) {\n";
     bool skipDefaultPage = (_pages.size() > 1);
     for (PageR *page : _pages) {
         if (skipDefaultPage && page->objectName()=="default")
@@ -82,6 +75,7 @@ QString OutputR::toScript() {
 void OutputR::debrief() {
     writeScript();
     dialog().information("R script written to '" + environment().latestOutputFilePath("R") + "'");
+    copyToClipboard();
     dialog().information("Executable R script copied to clipboard");
 }
 
@@ -93,20 +87,19 @@ void OutputR::writeScript() {
 }
 
 void OutputR::openFile() {
-    QString filePath = environment().outputFilePath(".R");
-    filePath.replace("\\", "/");
-    _file.setFileName(filePath);
+    _filePathR = environment().outputFilePath(".R");
+    _filePathR.replace("\\", "/");
+    _file.setFileName(_filePathR);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        ThrowException("Cannot open file for output").value(filePath).context(this);
+        ThrowException("Cannot open file for output").value(_filePathR).context(this);
+}
+
+void OutputR::copyToClipboard() {
     QString s;
-    s += "source(\""+filePath+"\")\n";
-    s += "sim = read_unisim_output(\"" + environment().outputFilePath(".txt") + "\")\n";
-    if (showPlots)
-        s += "unisim_plot_all(sim)\n";
-    if (!useRStudio)
-        s += "bringToTop(-1)\n";
-    if (!script.isEmpty())
-        s += "source(\"" + environment().filePath(Environment::Script, script) + "\")\n";
+    s += "source(\"" + environment().filePath(Environment::Script, begin) + "\")\n";
+    s += "source(\""+_filePathR+"\")\n";
+    s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";
+    s += "source(\"" + environment().filePath(Environment::Script, end) + "\")\n";
     environment().copyToClipboard(s);
 }
 

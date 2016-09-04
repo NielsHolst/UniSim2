@@ -5,7 +5,10 @@ library(plyr)
 library(reshape2)
 library(scales)
 
-read_unisim_output = function(file_path) {
+rm(list=ls(all=TRUE))
+graphics.off ()
+
+read_output = function(file_path) {
 
 	column_info = function(file_path) {
 		sip = read.table(file_path, header=TRUE, sep="\t", stringsAsFactors=FALSE, nrows=1)
@@ -36,7 +39,7 @@ read_unisim_output = function(file_path) {
 	U
 }
 
-unisim_plot_facetted = function(df, id.x, cols, ncol, nrow) {
+plot_facetted = function(df, id.x, cols, ncol, nrow) {
 	if (!(id.x %in% cols)) cols = c(id.x, cols)
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
@@ -46,7 +49,7 @@ unisim_plot_facetted = function(df, id.x, cols, ncol, nrow) {
 		facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
 }
 
-unisim_plot_merged = function(df, id.x, cols) {
+plot_merged = function(df, id.x, cols) {
 	if (!(id.x %in% cols)) cols = c(id.x, cols)
 	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
 	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +

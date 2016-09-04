@@ -95,8 +95,7 @@
             </desktopShortcutList>
         </component>
     </componentList>
-
-    <!--
+		<!--
     <preBuildActionList>
 			<runProgram>
 					<program>${build_project_directory}/fill_folders_win.bat</program>
@@ -108,13 +107,13 @@
     </preBuildActionList>
 		-->
     <preInstallationActionList>
-        <setInstallerVariable name="suffix" value=""/>
+        <setInstallerVariable name="suffix" value="d"/>
     </preInstallationActionList>
     <preUninstallationActionList>
         <deleteFile path="~/.config/AarhusUniversity/*.conf"/>
         <deleteFile path="~/.config/Aarhus University/*.conf"/>
         <deleteFile path="~/.config/AarhusUniversity/"/>
-        <deleteFile path="~/.config/Aarhus University/"/>f
+        <deleteFile path="~/.config/Aarhus University/"/>
     </preUninstallationActionList>
     <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>

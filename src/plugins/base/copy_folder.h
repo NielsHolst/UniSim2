@@ -9,7 +9,7 @@ namespace base {
 void copyFolder(QDir source, QDir destination);
 void copyFolderHard(QDir source, QDir destination);
 void copyFile(QString sourcePath, QString destinationPath);
-void backupFolder(QDir dir);
+void renameFolder(QDir dir);
 
 } //namespace
 

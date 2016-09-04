@@ -22,7 +22,7 @@ private:
     // Inputs
     bool hide;
     QVector<QString> ports;
-    QString layout, script;
+    QString layout, end;
     int ncol, nrow;
     // Data
     QVector<base::Port*> _ports;

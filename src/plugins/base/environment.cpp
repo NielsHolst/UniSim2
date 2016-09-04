@@ -29,7 +29,8 @@ Environment::Environment()
     : _root(0), _current(0)
 {
     QSettings settings;
-    _isNewInstallation = !settings.contains("environment/latest-load-arg");
+//    _isNewInstallation = !settings.contains("environment/latest-load-arg");
+    _isNewInstallation = !QDir(homePath()).exists();
     if (_isNewInstallation)
         initDir();
     else
@@ -90,13 +91,11 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
 
 QString Environment::outputFilePath(QString extension) {
     QString fileName = _latestLoadArg;
-//    int n = fileName.lastIndexOf(".");
 
     char numberFilled[16];
     sprintf(numberFilled, "%04d", fileCountervalue());
 
     QString ext = (extension.at(0) == '.') ? extension : ("." + extension);
-//    return outputFileNamePath(fileName.left(n) + "_" + numberFilled + ext);
     return outputFileNamePath(QFileInfo(fileName).baseName() + "_" + numberFilled + ext);
 }
 

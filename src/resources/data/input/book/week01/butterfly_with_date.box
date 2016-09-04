@@ -1,0 +1,34 @@
+Simulation sim {
+	.steps = 70
+  Calendar calendar {
+    .initialDateTime = 1/5/2016
+  }
+	Box butterfly {
+		Stage egg {
+			.initial = 100 
+			.duration = 7
+		}
+		Stage larva {
+			.inflow = ../egg[outflow]
+			.duration = 15
+		}
+		Stage pupa {
+			.inflow = ../larva[outflow]
+			.duration = 7
+		}
+		Stage adult {
+			.inflow = ../pupa[outflow]
+			.duration = 30
+		}
+	}
+	OutputR {
+		.clear = TRUE
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (butterfly/*[content])
+      }
+		}
+	}
+}
+

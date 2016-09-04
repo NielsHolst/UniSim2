@@ -16,15 +16,34 @@ namespace {
 
 void copyFolder(QDir source, QDir destination) {
     if (destination.exists())
-        backupFolder(destination);
+        renameFolder(destination);
     copyFolderHard(source, destination);
 }
 
-void copyFolderHard(QDir source, QDir destination) {
-    // Create destination folder if needed
-    bool ok = source.mkpath(destination.absolutePath());
+void renameFolder(QDir dir) {
+    QString oldPath = dir.absolutePath();
+    int i = 1;
+    while (QDir(numbered(oldPath, i)).exists())
+        ++i;
+    QString newPath = numbered(oldPath, i);
+
+    QString info = oldPath + " -> " + newPath;
+    dialog().information("Renaming folder: " + info);
+
+    bool ok = QDir().rename(oldPath, newPath);
     if (!ok)
-        ThrowException("Cannot create destination folder").value(destination.absolutePath());
+        ThrowException("Cannot rename folder").value(info)
+                      .hint("Close all other open programs then try again");
+}
+
+void copyFolderHard(QDir source, QDir destination) {
+    // Create destination folder if needed; folders along the path are also created if needed
+    if (!destination.exists()) {
+        bool ok = QDir().mkpath(destination.absolutePath());
+        if (!ok)
+            ThrowException("Cannot create destination folder").value(destination.absolutePath())
+                    .hint("Close all other open programs then try again");
+    }
 
     // Copy folder
     QDirIterator it(source);
@@ -53,16 +72,6 @@ void copyFile(QString sourcePath, QString destinationPath) {
     bool fileCopied = source.copy(destinationPath);
     if (!fileCopied)
         ThrowException("Cannot copy file").value(sourcePath+" -> "+destinationPath);
-}
-
-void backupFolder(QDir dir) {
-    QString path = dir.absolutePath();
-    int i = 1;
-    while (QDir(numbered(path, i)).exists())
-        ++i;
-    QString newPath = numbered(path, i);
-    dialog().information("Backing up folder:\n" + path + " -> " + newPath + "...");
-    copyFolderHard(dir, QDir(newPath));
 }
 
 } //namespace

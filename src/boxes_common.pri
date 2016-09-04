@@ -7,8 +7,8 @@
 #-------------------------------------------------
 
 # Build one or the other version
-CONFIG += debug
-#CONFIG += release
+#CONFIG += debug
+CONFIG += release
 
 # Set suffix 'd' for debug version
 CONFIG(debug, debug|release) {
@@ -20,7 +20,6 @@ else {
 
 # What we are building
 CONFIG += c++11
-CONFIG -= app_bundle # do not bundle app on Mac OS
 QT += core 
 
 # Compiler options to silence warnings when compiling Boost

@@ -225,9 +225,10 @@ void Dialog::writeWelcome() {
     if (environment().isNewInstallation()) {
         information("\nReconfiguring...");
         Command::submit(QStringList() << "reconfigure", this);
+        Command::submit(QStringList() << "save" << "grammar", this);
     }
 
-    QString info = "Work folder:\n  " + environment().folderInfo(Environment::Work) +
+    QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
@@ -264,6 +265,7 @@ int Dialog::cursorLine() {
             return i;
     }
     Q_ASSERT(false);
+    return 0;
 }
 
 bool Dialog::bounceCursor(bool sticky) {

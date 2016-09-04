@@ -24,16 +24,17 @@ public:
 
 private:
     // Input
-    bool clear, showPlots, useRStudio;
-    QString script;
+    QString begin, end, outputFileNameVariable;
 
     // Data
     QVector<PageR*> _pages;
     QFile _file;
+    QString _filePathR;
 
     // Methods
-    void writeScript();
     void openFile();
+    void writeScript();
+    void copyToClipboard();
 };
 
 } // boxes
