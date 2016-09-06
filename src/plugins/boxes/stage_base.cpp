@@ -28,6 +28,7 @@ StageBase::StageBase(QString name, QObject *parent)
     Input(phaseInflow).help("Sideways inflow of dimension k");
     Output(content).help("Total content inside the stage");
     Output(inflowTotal).help("Accumulated total inflow");
+    Output(outflowTotal).help("Accumulated total outflow");
     Output(phaseInflowTotal).help("Accumulated total sideways inflow");
     Output(phaseOutflowTotal).help("Accumulated total sideway outflow");
     Output(growth).help("Net change in content during this time step");

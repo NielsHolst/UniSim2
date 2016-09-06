@@ -24,7 +24,7 @@ Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent), dd(0)
 {
     help("delays inflow to emerge as a time-distributed outflow");
-    Input(dt).equals(1).help("Time step");
+    Input(timeStep).equals(1).help("Time step");
     Input(inflow).help("Amount of inflow");
     Input(initial).help("Initial amount of inflow");
     Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
@@ -73,7 +73,7 @@ void Stage::update() {
         phaseInflowTotal += accum(phaseInflow);
     }
 
-    if (TestNum::eqZero(dt)) {
+    if (TestNum::eqZero(timeStep)) {
         content = dd->content() + inflowPending;
         outflow = growth = 0.;
         return;
@@ -85,7 +85,7 @@ void Stage::update() {
         ThrowException("Input must be >= 0").value(inflowPending).context(this);
     }
 
-    dd->update(inflowPending, dt, growthFactor);
+    dd->update(inflowPending, timeStep, growthFactor);
     inflowPending = 0;
 
     if (phaseOutflowProportion == 0.) {

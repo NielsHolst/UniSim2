@@ -1,5 +1,6 @@
 page_1 <- function(df) {
   grid.arrange(
+    plot_facetted(df, "step", c("content"), ncol=1, nrow=NULL),
     nrow = NULL,
     ncol = NULL
   )

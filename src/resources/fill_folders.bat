@@ -1,13 +1,14 @@
-rd /Q /S input
-md input
-md input\book\weather
-md input\book\week01
+rd /Q /S data
+md data
+md data\input
+md data\input\book\weather
+md data\input\book\demo
+md data\input\book\week01
+md data\script
 
-copy ..\..\input\book\weather input\book\weather
-copy ..\..\input\book\week01 input\book\week01
-
-rd /Q /S script
-md script
-copy ..\..\script script
+copy ..\..\input\book\weather data\input\book\weather
+copy ..\..\input\book\demo data\input\book\demo
+copy ..\..\input\book\week01 data\input\book\week01
+copy ..\..\script data\script
 
 pause

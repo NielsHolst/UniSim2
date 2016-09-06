@@ -22,7 +22,6 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.clear = TRUE
     PageR {
       .xAxis = calendar[date]
       PlotR {

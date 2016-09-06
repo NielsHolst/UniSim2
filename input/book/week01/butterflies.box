@@ -37,11 +37,8 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.clear = TRUE
     PageR {
       .xAxis = sim[step]
-			.width = 6
-			.height = 5
 			.ncol = 2
       PlotR {
         .ports = (hero/*[content])

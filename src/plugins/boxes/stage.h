@@ -18,7 +18,7 @@ public:
     DistributedDelayBase* createDistributedDelay();
 private:
     // inputs
-    double dt, inflow, initial, phaseOutflowProportion;
+    double timeStep, inflow, initial, phaseOutflowProportion;
 
     // outputs
     double latestInflow, outflow;

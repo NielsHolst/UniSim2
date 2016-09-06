@@ -4,4 +4,8 @@
 *.autosave
 bin/
 build*/
+output/
+ship/bin/
+ship/*.exe
+src/resources/data/
 tmp/

@@ -1,1 +1,0 @@
-scale_x_datetime(breaks = date_breaks("months"), labels = date_format("%b"))

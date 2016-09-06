@@ -23,6 +23,13 @@
 		<file>data/input/book/week01/butterfly.box</file>
 		<file>data/input/book/week01/butterfly_with_date.box</file>
 		<file>data/input/book/week01/egg.box</file>
+		<file>data/input/book/week01/egg02.box</file>
+		<file>data/input/book/week01/egg03.box</file>
+		<file>data/input/book/week01/egg04.box</file>
+		<file>data/input/book/week01/egg05.box</file>
 		<file>data/input/book/week01/butterflies.box</file>
+	</qresource>
+	<qresource>
+		<file>data/input/book/demo/insect.box</file>
 	</qresource>
 </RCC>

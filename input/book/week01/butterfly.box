@@ -19,7 +19,6 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.clear = TRUE
     PageR {
       .xAxis = sim[step]
       PlotR {
