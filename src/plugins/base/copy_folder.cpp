@@ -12,6 +12,13 @@ namespace {
     QString numbered(QString s, int i) {
         return s + "_" + QString::number(i);
     }
+
+    void makeWritable(QString fileNamePath) {
+        QFile::setPermissions(fileNamePath, QFileDevice::WriteOwner);
+        QFile::setPermissions(fileNamePath, QFileDevice::WriteUser);
+        QFile::setPermissions(fileNamePath, QFileDevice::WriteOther);
+    }
+
 }
 
 void copyFolder(QDir source, QDir destination) {
@@ -72,6 +79,8 @@ void copyFile(QString sourcePath, QString destinationPath) {
     bool fileCopied = source.copy(destinationPath);
     if (!fileCopied)
         ThrowException("Cannot copy file").value(sourcePath+" -> "+destinationPath);
+    // Avoid read-only permission
+    makeWritable(destinationPath);
 }
 
 } //namespace

@@ -32,8 +32,11 @@ void run::doExecute() {
 }
 
 void run::doLoad() {
-    Command *loadCom = new load("load", this);
-    loadCom->execute();
+    QStringList com;
+    com << "load";
+    if (_args.size() == 2)
+        com << _args[1];
+    Command::submit(com, this);
 }
 
 void run::doRun() {

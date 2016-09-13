@@ -1,35 +1,28 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
-	<qresource>
-		<file>boxes_head.cson</file>
-		<file>notepad_grammar_template.xml</file>
-		<file>svg_template3.html</file>
-	</qresource>
-	<qresource>
-		<file>data/script/begin.R</file>
-		<file>data/script/copy grammar to atom.bat</file>
-		<file>data/script/end.R</file>
-		<file>data/script/honey_bee.R</file>
-		<file>data/script/month_breaks.R</file>
-		<file>data/script/profile.R</file>
-	</qresource>
-	<qresource>
-		<file>data/input/book/weather/braunschweig 2009.txt</file>
-		<file>data/input/book/weather/flakkebjerg 2009.txt</file>
-		<file>data/input/book/weather/geneva 2009.txt</file>
-		<file>data/input/book/weather/ljubljana 2009.txt</file>
-	</qresource>
-	<qresource>
-		<file>data/input/book/week01/butterfly.box</file>
-		<file>data/input/book/week01/butterfly_with_date.box</file>
-		<file>data/input/book/week01/egg.box</file>
-		<file>data/input/book/week01/egg02.box</file>
-		<file>data/input/book/week01/egg03.box</file>
-		<file>data/input/book/week01/egg04.box</file>
-		<file>data/input/book/week01/egg05.box</file>
-		<file>data/input/book/week01/butterflies.box</file>
-	</qresource>
-	<qresource>
-		<file>data/input/book/demo/insect.box</file>
-	</qresource>
+  <qresource>
+    <file>boxes_head.cson</file>
+    <file>notepad_grammar_template.xml</file>
+    <file>svg_template3.html</file>
+    <file>version.txt</file>
+    <file>data/input/book/demo/insect.box</file>
+    <file>data/input/book/weather/braunschweig 2009.txt</file>
+    <file>data/input/book/weather/flakkebjerg 2009.txt</file>
+    <file>data/input/book/weather/geneva 2009.txt</file>
+    <file>data/input/book/weather/ljubljana 2009.txt</file>
+    <file>data/input/book/week01/butterflies.box</file>
+    <file>data/input/book/week01/butterfly.box</file>
+    <file>data/input/book/week01/butterfly_with_date.box</file>
+    <file>data/input/book/week01/egg.box</file>
+    <file>data/input/book/week01/egg02.box</file>
+    <file>data/input/book/week01/egg03.box</file>
+    <file>data/input/book/week01/egg04.box</file>
+    <file>data/input/book/week01/egg05.box</file>
+    <file>data/script/begin.R</file>
+    <file>data/script/copy grammar to atom.bat</file>
+    <file>data/script/end.R</file>
+    <file>data/script/honey_bee.R</file>
+    <file>data/script/month_breaks.R</file>
+    <file>data/script/profile.R</file>
+  </qresource>
 </RCC>

@@ -2,6 +2,8 @@
 *.user
 *.user.*
 *.autosave
+Make*
+object_script*
 bin/
 build*/
 output/
@@ -9,3 +11,5 @@ ship/bin/
 ship/*.exe
 src/resources/data/
 tmp/
+debug/
+release/

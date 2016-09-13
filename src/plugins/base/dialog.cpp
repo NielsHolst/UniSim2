@@ -217,19 +217,25 @@ void Dialog::writePrompt() {
 
 void Dialog::writeWelcome() {
     message("Initializing...");
-    QString latestFile = environment().latestLoadArg();
-    information(latestFile.isEmpty() ? "Welcome to Universal Simulator!" : "Welcome back!");
+    information(environment().isFirstInstallation() ?
+                "Welcome to Universal Simulator!" : "Welcome back!");
     information("Loading plugins...");
     MegaFactory::loadPlugins();
 
     if (environment().isNewInstallation()) {
-        information("\nReconfiguring...");
+        information("\nNew installation detected; reconfiguring HOME folder...");
         Command::submit(QStringList() << "reconfigure", this);
-        Command::submit(QStringList() << "save" << "grammar", this);
+        Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this);
+        environment().updateInstallation();
     }
+
+    if (environment().isFirstInstallation())
+        Command::submit(QStringList() << "save" << "grammar", this);
 
     QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
+
+    QString latestFile = environment().latestLoadArg();
     if (!latestFile.isEmpty())
         info += "\nYour latest file was '" + latestFile + "'";
     _history.add("load \"" + latestFile + "\"");

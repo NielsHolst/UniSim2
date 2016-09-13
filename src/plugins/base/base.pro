@@ -50,6 +50,7 @@ HEADERS +=  \
     initialize.h \
     mega_factory.h \
     object_pool.h \
+    organisation.h \
     path.h \
     port.h \
     port_buffer.h \
@@ -71,7 +72,7 @@ HEADERS +=  \
     vector_op.h \
     vector_vector.h \
     vectorize.h \
-    organisation.h
+    version.h
 
 SOURCES +=  \
     any_year.cpp \
@@ -117,5 +118,6 @@ SOURCES +=  \
     vector.cpp \
     vector_op.cpp \
     vector_vector.cpp \
-    vectorize.cpp
+    vectorize.cpp  \
+    version.cpp
 

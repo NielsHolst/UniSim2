@@ -7,8 +7,9 @@
 #-------------------------------------------------
 
 # Build one or the other version
-#CONFIG += debug
+# AUTO-CONFIG-BEGIN
 CONFIG += release
+# AUTO-CONFIG-END
 
 # Set suffix 'd' for debug version
 CONFIG(debug, debug|release) {
@@ -30,9 +31,10 @@ QMAKE_CXXFLAGS += -ffast-math
 
 # Additional folders with header files
 BOOST_PATH = $$(BOOST_ROOT)
-!isEmpty(BOOST_PATH) {
-    INCLUDEPATH += "$$(BOOST_ROOT)"
+isEmpty(BOOST_PATH) {
+    error("Cannot find enviroment variable BOOST_ROOT")
 }
+INCLUDEPATH += "$$(BOOST_ROOT)"
 
 # Own libraries that we use, except 'base' does not itself use 'base'
 !equals(BOXES_PLUGIN_NAME, "base") {

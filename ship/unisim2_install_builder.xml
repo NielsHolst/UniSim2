@@ -1,11 +1,11 @@
 <project>
     <shortName>UniversalSimulator</shortName>
     <fullName>UniversalSimulator</fullName>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <installerFilename></installerFilename>
-    <licenseFile>gpl-3.0.txt</licenseFile>
-    <leftImage>squirrel 163x314.png</leftImage>
-    <logoImage>squirrel 48x48.png</logoImage>
+    <licenseFile>builder-input/gpl-3.0.txt</licenseFile>
+    <leftImage>builder-input/squirrel 163x314.png</leftImage>
+    <logoImage>builder-input/squirrel 48x48.png</logoImage>
     <componentList>
         <component>
             <name>default</name>

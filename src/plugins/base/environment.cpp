@@ -9,6 +9,7 @@
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
+#include "version.h"
 
 
 namespace base {
@@ -29,9 +30,8 @@ Environment::Environment()
     : _root(0), _current(0)
 {
     QSettings settings;
-//    _isNewInstallation = !settings.contains("environment/latest-load-arg");
-    _isNewInstallation = !QDir(homePath()).exists();
-    if (_isNewInstallation)
+    _isFirstInstallation = !QDir(homePath()).exists();
+    if (_isFirstInstallation)
         initDir();
     else
         getDirSettings();
@@ -124,7 +124,7 @@ QString Environment::outputFileNamePath(QString fileName) {
     return thePath;
 }
 
-QString Environment::filePath(Folder folder, QString fileName) {
+QString Environment::filePath(Folder folder, QString fileName) const {
     QString fileNamePath = resolveDir(folder).absoluteFilePath(fileName);
     if (!QFileInfo(fileNamePath).exists())
         ThrowException("Could not find file").value(fileNamePath);
@@ -182,7 +182,15 @@ QString Environment::latestLoadArg() const {
     return _latestLoadArg;
 }
 
-QDir Environment::dir(Folder folder) {
+QString Environment::inputFileNamePath(QString fileName) const {
+    QString loadFileNamePath = filePath(Input, _latestLoadArg);
+    QDir loadDir = QFileInfo(loadFileNamePath).absoluteDir();
+    QString fileNamePath = loadDir.absoluteFilePath(fileName),
+            cleaned = QDir::cleanPath(fileNamePath);
+    return cleaned;
+}
+
+QDir Environment::dir(Folder folder) const {
     return _dir.value(folder);
 }
 
@@ -194,7 +202,7 @@ void Environment::dir(Folder folder, QDir specificDir) {
     _dir[folder] = specificDir;
 }
 
-QDir Environment::resolveDir(Folder folder, Folder work) {
+QDir Environment::resolveDir(Folder folder, Folder work) const {
     if (folder == Work)
         return dir(work);
 
@@ -236,8 +244,28 @@ void Environment::copyToClipboard(QString text) {
     QApplication::clipboard()->setText(text);
 }
 
+bool Environment::isFirstInstallation() const {
+    return _isFirstInstallation;
+}
+
 bool Environment::isNewInstallation() const {
-    return _isNewInstallation;
+    QFile file(homePath() + "/.version");
+    bool isNew(true);
+    if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
+        QString currentVersion = file.readAll();
+        isNew = (currentVersion != versionRaw());
+    }
+    file.close();
+    return isNew;
+}
+
+void Environment::updateInstallation() const {
+    QString fileNamePath = homePath() + "/.version";
+    QFile file(fileNamePath);
+    if (file.open(QIODevice::Text|QIODevice::WriteOnly))
+        file.write(qPrintable(versionRaw()));
+    else
+        ThrowException("Cannot update version file").value(fileNamePath);
 }
 
 void Environment::initDir() {

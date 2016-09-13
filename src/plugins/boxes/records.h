@@ -35,7 +35,7 @@ private:
     QVector<double> values;
 
     // methods
-    QString filePath();
+    QString fileNamePath();
     void openFile();
     void readLineItems();
     void readColumnNames();

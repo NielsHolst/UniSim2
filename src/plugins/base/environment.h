@@ -33,7 +33,7 @@ public:
     QString outputFilePath(QString extension);
     QString outputFileNamePath(QString fileName);
 
-    QString filePath(Folder folder, QString fileName);
+    QString filePath(Folder folder, QString fileName) const;
     QString fileContent(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
 
@@ -41,22 +41,27 @@ public:
     void latestLoadArg(QString arg);
     QString latestLoadArg() const;
 
-    QDir dir(Folder folder);
+    QString inputFileNamePath(QString fileName) const;
+
+    QDir dir(Folder folder) const;
     void dir(Folder folder, QString path);
     void dir(Folder folder, QDir specificDir);
-    QDir resolveDir(Folder folder, Folder work = Work);
+    QDir resolveDir(Folder folder, Folder work = Work) const;
 
     void incrementFileCounter();
     void copyToClipboard(QString text);
 
+    bool isFirstInstallation() const;
     bool isNewInstallation() const;
+    void updateInstallation() const;
+
 private:
     // Data
     Box *_root, *_current;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg;
-    bool _isNewInstallation;
+    bool _isFirstInstallation;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();

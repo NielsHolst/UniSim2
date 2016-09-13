@@ -8,6 +8,8 @@
 #include <base/publish.h>
 #include "records.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 
 namespace boxes {
@@ -50,7 +52,7 @@ void Records::readColumnNames() {
     openFile();
     readLineItems();
     if (pastLastLine)
-        ThrowException("Records file is empty").value(filePath()).context(this);
+        ThrowException("Records file is empty").value(fileNamePath()).context(this);
 
     dateColumn = -1;
     timeColumn = -1;
@@ -66,15 +68,15 @@ void Records::readColumnNames() {
 }
 
 void Records::openFile() {
-    file.setFileName(filePath());
+    file.setFileName(fileNamePath());
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!fileOk)
-        ThrowException("Cannot open records file").value(filePath()).context(this);
+        ThrowException("Cannot open records file").value(fileNamePath()).context(this);
     pastLastLine = false;
 }
 
-QString Records::filePath() {
-    return environment().filePath(Environment::Input, fileName);
+QString Records::fileNamePath() {
+    return environment().inputFileNamePath(fileName);
 }
 
 void Records::readLineItems() {
@@ -131,7 +133,7 @@ void Records::readToFirstLine() {
 void Records::advanceFirstLine() {
     readLineItems();
     if (pastLastLine)
-        ThrowException("Records file is empty").value(filePath()).context(this);
+        ThrowException("Records file is empty").value(fileNamePath()).context(this);
     extractValues();
     advanceTime();
     for (int i = 0; i < nextColumnValues->size(); ++i)

@@ -6,7 +6,7 @@ Simulation sim {
     .initialDateTime = 1/5/2009
   }
   Records weather {
-    .fileName = "weather/flakkebjerg 2009.txt"
+    .fileName = "../weather/flakkebjerg 2009.txt"
   }
   Stage egg {
     .timeStep = ./time[step]

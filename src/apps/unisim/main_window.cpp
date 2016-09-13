@@ -3,13 +3,14 @@
 #include <QSettings>
 #include <QtWidgets>
 #include <base/dialog.h>
+#include <base/version.h>
 #include "main_window.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setCentralWidget( _dialog = new base::Dialog(this) );
-    setWindowTitle("Universal Simulator 2.0");
+    setWindowTitle("Universal Simulator " + base::version());
     restore();
 }
 
