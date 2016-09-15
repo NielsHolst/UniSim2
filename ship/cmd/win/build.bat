@@ -1,7 +1,7 @@
 @rem Set up version
 @set MAJOR=2
 @set MINOR=0
-@set SUB=1
+@set SUB=2
 @set CONFIG=release
 @echo Building version %MAJOR%.%MINOR%.%SUB% %CONFIG%
 @
@@ -58,12 +58,6 @@ for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\.
 @..\bin\update-installer-project %MAJOR% %MINOR% %SUB%
 @if errorlevel 1 goto :end_fail
 @
-@echo = Generate installer =
-@set SAVE_PATH=%PATH%
-@set PATH=%PATH%;%INSTALL_BUILDER_PATH%
-builder-cli build ..\..\unisim2_install_builder.xml"
-@set PATH=%SAVE_PATH%
-
 @echo *** SUCCESS ***
 pause
 exit
