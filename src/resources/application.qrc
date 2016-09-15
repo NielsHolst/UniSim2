@@ -18,6 +18,8 @@
     <file>data/input/book/week01/egg03.box</file>
     <file>data/input/book/week01/egg04.box</file>
     <file>data/input/book/week01/egg05.box</file>
+    <file>data/input/conductance/cabbage-nightshade.box</file>
+    <file>data/input/conductance/carrot-stellaria.box</file>
     <file>data/script/begin.R</file>
     <file>data/script/copy grammar to atom.bat</file>
     <file>data/script/end.R</file>

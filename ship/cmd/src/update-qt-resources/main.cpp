@@ -93,7 +93,7 @@ bool writeQrc() {
             "  </qresource>\n"
             "</RCC>";
     _dataFiles.clear();
-    if (!collectDataFiles(QDir(pathResources() + "/data/input/book")) ||
+    if (!collectDataFiles(QDir(pathResources() + "/data/input")) ||
         !collectDataFiles(QDir(pathResources() + "/data/script")))
             return false;
     file.write(qPrintable(head+body()+tail));
