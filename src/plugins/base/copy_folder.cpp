@@ -14,9 +14,12 @@ namespace {
     }
 
     void makeWritable(QString fileNamePath) {
-        QFile::setPermissions(fileNamePath, QFileDevice::WriteOwner);
-        QFile::setPermissions(fileNamePath, QFileDevice::WriteUser);
-        QFile::setPermissions(fileNamePath, QFileDevice::WriteOther);
+        QFile::setPermissions(fileNamePath,
+                              QFileDevice::ReadOwner|QFileDevice::WriteOwner|
+                              QFileDevice::ReadUser|QFileDevice::WriteUser|
+                              QFileDevice::ReadGroup|QFileDevice::WriteGroup|
+                              QFileDevice::ReadOther|QFileDevice::WriteOther
+                              );
     }
 
 }

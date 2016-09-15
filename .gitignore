@@ -2,10 +2,15 @@
 *.user
 *.user.*
 *.autosave
+*.DS*
+*.o
+moc_*
+.qmake*
+*.app
+qrc_application*
 Make*
 object_script*
 bin/
-build*/
 output/
 ship/bin/
 ship/*.exe

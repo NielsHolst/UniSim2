@@ -12,14 +12,15 @@ QT += widgets
 
 # What we are building
 TEMPLATE = lib
+CONFIG -= lib_bundle
 DESTDIR = "$$_PRO_FILE_PWD_/../../../bin"
 TARGET = base$${SUFFIX}
 
 # Location of library when installed on Unix
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+#unix {
+#    target.path = /usr/lib
+#    INSTALLS += target
+#}
 
 # Our project header and source code
 HEADERS +=  \

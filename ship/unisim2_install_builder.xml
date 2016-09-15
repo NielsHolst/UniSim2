@@ -39,12 +39,26 @@
                 <folder>
                     <description>Program Files</description>
                     <destination>${installdir}</destination>
-                    <name>programfilesall</name>
-                    <platforms>all</platforms>
+                    <name>programfileswindowslinux</name>
+                    <platforms>windows linux</platforms>
                     <distributionFileList>
                         <distributionDirectory>
                             <origin>bin</origin>
                         </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfilesosx</name>
+                    <platforms>osx</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>../bin</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>builder-input/unisim.command</origin>
+                        </distributionFile>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -80,7 +94,7 @@
             <desktopShortcutList>
                 <shortcut>
                     <comment>UniversalSimulator</comment>
-                    <exec>${installdir}/UniversalSimulator.run</exec>
+                    <exec>${installdir}/bin/unisim.command</exec>
                     <icon>${installdir}/bin/N86.ico</icon>
                     <name>UniversalSimulator</name>
                     <path>${installdir}</path>
@@ -116,6 +130,9 @@
         <deleteFile path="~/.config/AarhusUniversity/"/>
         <deleteFile path="~/.config/Aarhus University/"/>f
     </preUninstallationActionList>
+    <finalPageActionList>
+        <createSymLink target="${installdir}/bin/unisim.command" linkName="~/Desktop/Universal Simulator" progressText="Create Desktop Shortcut"/>
+    </finalPageActionList>
     <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
