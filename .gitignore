@@ -1,3 +1,5 @@
+*.user
+*.user.*
 *.jar
 *.user
 *.user.*
@@ -15,6 +17,7 @@ output/
 ship/bin/
 ship/*.exe
 src/resources/data/
+*.qrc
 tmp/
 debug/
 release/

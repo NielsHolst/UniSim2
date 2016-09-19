@@ -1,6 +1,6 @@
 MAJOR=2
 MINOR=0
-SUB=1
+SUB=3
 CONFIG=release
 echo Building $MAJOR.$MINOR.$SUB $CONFIG
 

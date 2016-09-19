@@ -1,0 +1,17 @@
+Simulation sim {
+	.iterations = 200
+	.steps = 10000
+	.stopSteps = jump[finished]
+	Jump jump {
+		.initial = sim[iteration]
+	}
+	OutputR {
+		.end = "end_jump4.R"
+		PageR {
+			.xAxis = sim[step]
+			PlotR {
+				.ports = (jump[value])
+			}
+		}
+	}
+}

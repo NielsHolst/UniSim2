@@ -1,7 +1,7 @@
 @rem Set up version
 @set MAJOR=2
 @set MINOR=0
-@set SUB=2
+@set SUB=3
 @set CONFIG=release
 @echo Building version %MAJOR%.%MINOR%.%SUB% %CONFIG%
 @

@@ -51,11 +51,11 @@ void run::doRun() {
     bool noError = !(hasErrorPort && hasErrorPort->value<bool>());
 
     QString msg = noError ? "Finished" : "Interrupted";
+    QString msgIteration = message("iteration");
     msg += messageTime();
-    msg += message("iteration");
-    msg += message("step");
-
-    QString errorMsg;
+    msg += msgIteration;
+    if (msgIteration.isEmpty())
+        msg += message("step");
 
     if (noError)
         dialog().information(msg);

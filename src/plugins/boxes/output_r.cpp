@@ -27,8 +27,8 @@ OutputR::OutputR(QString name, QObject *parent)
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\n"
                 "copies another R script to the clipboard");
-    Input(begin).help("Name of R script run before auto-generated R script").equals("begin.R");
-    Input(end).help("Name of R script run after auto-generated R script").equals("end.R");
+    Input(begin).equals("begin.R").help("Name of R script run before auto-generated R script");
+    Input(end).equals("end.R").help("Name of R script run after auto-generated R script");
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
 }
 

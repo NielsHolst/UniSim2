@@ -23,6 +23,7 @@ public:
 private:
     // Inputs
     int iterations, steps;
+    bool stopIterations, stopSteps;
     // Outputs
     int iteration, step, executionTime;
     bool hasError;

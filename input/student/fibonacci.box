@@ -1,0 +1,13 @@
+Simulation sim {
+	.steps = 15
+	Fibonacci fibo {
+	}
+	OutputR {
+		PageR {
+			.xAxis = sim[step]
+			PlotR {
+				.ports = (fibo[value])
+			}
+		}
+	}
+}

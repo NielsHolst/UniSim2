@@ -15,13 +15,17 @@ SUBDIRS += command
 command.subdir = src/plugins/command
 command.depends = base
 
-SUBDIRS += conductance
-conductance.subdir = src/plugins/conductance
-conductance.depends = base
+#SUBDIRS += conductance
+#conductance.subdir = src/plugins/conductance
+#conductance.depends = base
 
 SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
+
+SUBDIRS += student
+student.subdir = src/plugins/student
+student.depends = base
 
 #SUBDIRS += savanna
 #savanna.subdir = src/plugins/savanna
@@ -52,7 +56,8 @@ unisim.subdir = src/apps/unisim
 unisim.depends = base
 unisim.depends = boxes
 unisim.depends = command
-unisim.depends = conductance
+#unisim.depends = conductance
 unisim.depends = eq
+unisim.depends = student
 #unisim.depends = savanna
 #unisim.depends = vg

@@ -20,9 +20,17 @@
     <file>data/input/book/week01/egg05.box</file>
     <file>data/input/conductance/cabbage-nightshade.box</file>
     <file>data/input/conductance/carrot-stellaria.box</file>
+    <file>data/input/student/fibonacci.box</file>
+    <file>data/input/student/jump.box</file>
+    <file>data/input/student/jump2.box</file>
+    <file>data/input/student/jump3.box</file>
+    <file>data/input/student/jump4.box</file>
     <file>data/script/begin.R</file>
     <file>data/script/copy grammar to atom.bat</file>
     <file>data/script/end.R</file>
+    <file>data/script/end_jump.R</file>
+    <file>data/script/end_jump3.R</file>
+    <file>data/script/end_jump4.R</file>
     <file>data/script/honey_bee.R</file>
     <file>data/script/month_breaks.R</file>
     <file>data/script/profile.R</file>

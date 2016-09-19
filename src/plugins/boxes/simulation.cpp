@@ -20,6 +20,8 @@ Simulation::Simulation(QString name, QObject *parent)
 {
     Input(iterations).equals(1);
     Input(steps).equals(1);
+    Input(stopIterations).equals(false);
+    Input(stopSteps).equals(false);
     Output(iteration).noReset().format("factor");
     Output(step);
     Output(executionTime);
@@ -66,11 +68,11 @@ void Simulation::run() {
         time.start();
         dialog().information("initialize...");
         initializeFamily();
-        for (iteration = 0; iteration < iterations; ++iteration) {
+        for (iteration = 1; !stopIterations && iteration <= iterations; ++iteration) {
             dialog().information("reset...");
             resetFamily();
             dialog().information("update...");
-            for (step = 1; step <= steps; ++step) {
+            for (step = 1; !stopSteps && step <= steps; ++step) {
                 show(time);
                 updateFamily();
             }
