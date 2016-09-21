@@ -38,7 +38,9 @@ fi
 target=../../../bin/unisim$suffix.app
 
 echo = Create App bundle =
+sudo cp ../../../bin/*.dylib /usr/lib
 ~/Qt/5.7/clang_64/bin/macdeployqt $target -always-overwrite
+install_name_tool -change @executable_path/../Frameworks/libbase$suffix.1.dylib /usr/lib/libbase$suffix.1.dylib ../../../bin/unisim.app/Contents/MacOS/unisim
 
 echo = Copy UniSim plugins =
 mkdir $target/Contents/MacOS/plugins

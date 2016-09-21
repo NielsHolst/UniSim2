@@ -1,0 +1,1 @@
+sudo cp ./bin/*.dylib /usr/lib

@@ -1,7 +1,7 @@
 @rem Set up version
 @set MAJOR=2
 @set MINOR=0
-@set SUB=3
+@set SUB=4
 @set CONFIG=release
 @echo Building version %MAJOR%.%MINOR%.%SUB% %CONFIG%
 @
@@ -57,7 +57,15 @@ for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\.
 @echo = Set installer version number =
 @..\bin\update-installer-project %MAJOR% %MINOR% %SUB%
 @if errorlevel 1 goto :end_fail
-@
+@echo = Build installer =
+@pushd "C:\Program Files\BitRock InstallBuilder for Qt 16.7.0\bin
+@builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml
+@popd
+
+@echo =restore to debug version =
+@call update-qt-resources.bat %MAJOR% %MINOR% %SUB% debug
+@..\bin\update-qt-project debug
+
 @echo *** SUCCESS ***
 pause
 exit

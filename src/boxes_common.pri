@@ -8,7 +8,7 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += release
+CONFIG += debug
 # AUTO-CONFIG-END
 
 # Set suffix 'd' for debug version
@@ -36,12 +36,7 @@ isEmpty(BOOST_PATH) {
 }
 INCLUDEPATH += "$$(BOOST_ROOT)"
 
-# Own libraries that we use, except 'base' does not itself use 'base'
+# Own libraries that we use, except 'base' does not itself
 !equals(BOXES_PLUGIN_NAME, "base") {
-    win32:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
-    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbase
-    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -lbased
-#    else:unix:CONFIG(release, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/based.framework/Versions/1/ -lbase
-#    else:unix:CONFIG(debug, debug|release): LIBS += -L$$_PRO_FILE_PWD_/../../../bin/based.framework/Versions/1/ -lbased
+    LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -luniversal_simulator_base$${SUFFIX}
 }
