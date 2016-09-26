@@ -1,0 +1,21 @@
+Simulation {
+	.steps = 200
+	Sequence temperature {
+		.min = 0
+		.max = 40
+	}
+	DayDegrees dd {
+		.T0 = 5
+		.Topt = 25
+		.Tmax = 35
+		.T = temperature[value]
+	}
+	OutputR {
+		PageR {
+			.xAxis = temperature[value]
+			PlotR {
+				.ports = (dd[step])
+			}
+		}
+	}
+}

@@ -1,9 +1,8 @@
 @rem Set up version
 @set MAJOR=2
 @set MINOR=0
-@set SUB=4
-@set CONFIG=release
-@echo Building version %MAJOR%.%MINOR%.%SUB% %CONFIG%
+@set SUB=5
+@echo Building version %MAJOR%.%MINOR%.%SUB% release
 @
 @echo = Set path to Qt build environment =
 @set QTENV="C:\Qt\5.4\mingw491_32\bin\qtenv2.bat"
@@ -29,11 +28,13 @@
 @popd
 @
 @echo = Update Qt resources =
-call update-qt-resources.bat %MAJOR% %MINOR% %SUB% %CONFIG%
+call update-qt-resources.bat 
 @if errorlevel 1 goto :end_fail
+..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% release
+
 @
 @rem Update Qt project 
-@..\bin\update-qt-project %CONFIG%
+@..\bin\update-qt-project release
 @if errorlevel 1 goto :end_fail
 @
 @echo = Delete shadow folder =
@@ -51,7 +52,7 @@ for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\.
 @popd
 @
 @echo = Copy binary files =
-@call fill-folders.bat %CONFIG%
+@call fill-folders.bat 
 @if errorlevel 1 goto :end_fail
 @
 @echo = Set installer version number =
@@ -62,7 +63,7 @@ for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\.
 @builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml
 @popd
 
-@echo =restore to debug version =
+@echo = Restore to debug version =
 @call update-qt-resources.bat %MAJOR% %MINOR% %SUB% debug
 @..\bin\update-qt-project debug
 

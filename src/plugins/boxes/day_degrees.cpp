@@ -23,7 +23,7 @@ void DayDegrees::update() {
     else if (T < Topt)
         step = T - T0;
     else if (T < Tmax)
-        step = Tmax - T;
+        step = Topt - T;
     else
         step = 0;
     total += step;

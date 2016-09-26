@@ -101,6 +101,7 @@ void Calendar::updateSun() {
     Q_ASSERT(TestNum::neZero(cosLD));
     double aob = sinLD/cosLD;
     if (aob > 1) aob = 1.;
+    if (aob < -1) aob = -1.;
     dayLength = 12.*(1. + 2.*asin(aob)/PI);
     int halfDay = dayLength/2.*60*60;
     sunrise = QTime(12,00).addSecs(-halfDay);

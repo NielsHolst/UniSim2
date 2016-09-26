@@ -37,6 +37,9 @@ public:
     QString fileContent(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
 
+    void currentLoadArg(QString arg);
+    QString currentLoadArg() const;
+
     QString latestOutputFilePath(QString fileExtension) const;
     void latestLoadArg(QString arg);
     QString latestLoadArg() const;
@@ -60,7 +63,7 @@ private:
     Box *_root, *_current;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
-    QString _latestLoadArg;
+    QString _latestLoadArg, _currentLoadArg;
     bool _isFirstInstallation;
     // Singleton
     static Environment *_environment;

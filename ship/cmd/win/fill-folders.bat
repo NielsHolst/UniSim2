@@ -1,10 +1,5 @@
-echo = Set config suffix =
-set SUFFIX=d
-IF x%1 EQU x goto :end_fail
-IF x%1 EQU xrelease set SUFFIX=
-
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
-set QT_PLUGINS="C:\Qt\5.4\mingw491_32\plugins"
+set QT_PLUGINS=C:\Qt\5.4\mingw491_32\plugins
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
 echo = Clean target bin and  =
@@ -22,9 +17,9 @@ copy oleaut32.dll %UNISIM_BIN%
 popd
 
 echo = Copy exe and DLL files =
-copy %UNISIM_SHIP%\..\bin\unisim*%SUFFIX%.exe %UNISIM_BIN%
-copy %UNISIM_SHIP%\..\bin\base*%SUFFIX%.dll %UNISIM_BIN%
-copy %UNISIM_SHIP%\..\bin\plugins\*%SUFFIX%.dll %UNISIM_BIN%\plugins
+copy %UNISIM_SHIP%\..\bin\unisim.exe %UNISIM_BIN%
+copy %UNISIM_SHIP%\..\bin\base.dll %UNISIM_BIN%
+copy %UNISIM_SHIP%\..\bin\plugins\*.dll %UNISIM_BIN%\plugins
 
 echo = Copy MinGW libraries =
 pushd %QT_ROOT%
@@ -34,13 +29,13 @@ copy libgcc_s_dw2-1.dll %UNISIM_BIN%
 copy libstd*.dll %UNISIM_BIN%
 
 echo = Copy Qt libraries =
-copy qt5core%SUFFIX%.dll %UNISIM_BIN%
-copy qt5gui%SUFFIX%.dll %UNISIM_BIN%
-copy Qt5Network%SUFFIX%.dll %UNISIM_BIN%
-copy Qt5PrintSupport%SUFFIX%.dll %UNISIM_BIN%
-copy qt5test%SUFFIX%.dll %UNISIM_BIN%
-copy Qt5Widgets%SUFFIX%.dll %UNISIM_BIN%
-copy qt5xmlpatterns%SUFFIX%.dll %UNISIM_BIN%
+copy qt5core.dll %UNISIM_BIN%
+copy qt5gui.dll %UNISIM_BIN%
+copy Qt5Network.dll %UNISIM_BIN%
+copy Qt5PrintSupport.dll %UNISIM_BIN%
+copy qt5test.dll %UNISIM_BIN%
+copy Qt5Widgets.dll %UNISIM_BIN%
+copy qt5xmlpatterns.dll %UNISIM_BIN%
 popd
 
 echo = Create Qt plugin folders =

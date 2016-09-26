@@ -1,1 +1,0 @@
-..\bin\update-qt-project debug

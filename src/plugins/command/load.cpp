@@ -44,6 +44,7 @@ void load::doExecute() {
                         "\nIf the file name contains spaces then enclose it in apostrophes").value(_args.join(" "));
     }
     env.deleteRoot();
+    env.currentLoadArg(fileName);
     readFile(fileName);
     env.latestLoadArg(fileName);
 }

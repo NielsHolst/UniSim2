@@ -34,10 +34,23 @@ Simulation sim {
         .T = weather[Tavg]
       }
 		}
-    Stage adult {
-      .inflow = ../pupa[outflow]
-      .duration = 28
-      .timeStep = 1
+    Box adult {
+      Stage adult {
+        .inflow = ../../pupa[outflow]
+        .duration = 28
+        .timeStep = 1
+      }
+      Stage preOviposition {
+        .inflow = ../../pupa[outflow]
+        .duration = 5
+        .timeStep = 1
+      }
+      Stage oviposition {
+        .inflow = ../preOviposition[outflow]
+        .duration = 10
+        .timeStep = 1
+        .growthFactor = 40
+      }
     }
 	}
 	OutputR {

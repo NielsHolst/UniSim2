@@ -1,11 +1,12 @@
 <project>
     <shortName>UniversalSimulator</shortName>
     <fullName>UniversalSimulator</fullName>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
     <installerFilename></installerFilename>
     <licenseFile>builder-input/gpl-3.0.txt</licenseFile>
     <leftImage>builder-input/squirrel 163x314.png</leftImage>
     <logoImage>builder-input/squirrel 48x48.png</logoImage>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <componentList>
         <component>
             <name>default</name>
@@ -53,11 +54,28 @@
                     <name>programfilesosx</name>
                     <platforms>osx</platforms>
                     <distributionFileList>
-                        <distributionDirectory>
-                            <origin>../bin</origin>
-                        </distributionDirectory>
                         <distributionFile>
-                            <origin>builder-input/unisim.command</origin>
+                            <origin>../bin/unisim.app</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Library Files</description>
+                    <destination>/usr/lib</destination>
+                    <name>libraryfilesosx</name>
+                    <platforms>osx</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.0.0.dylib</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.0.dylib</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.dylib</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../../../../usr/lib/libuniversal_simulator_base.dylib</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -128,17 +146,17 @@
         <deleteFile path="~/.config/AarhusUniversity/*.conf"/>
         <deleteFile path="~/.config/Aarhus University/*.conf"/>
         <deleteFile path="~/.config/AarhusUniversity/"/>
-        <deleteFile path="~/.config/Aarhus University/"/>f
+        <deleteFile path="~/.config/Aarhus University/"/>
     </preUninstallationActionList>
-    <finalPageActionList>
-        <createSymLink target="${installdir}/bin/unisim.command" linkName="~/Desktop/Universal Simulator" progressText="Create Desktop Shortcut"/>
-    </finalPageActionList>
     <disableSplashScreen>1</disableSplashScreen>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <outputDirectory>.</outputDirectory>
     <saveRelativePaths>1</saveRelativePaths>
     <vendor>AarhusUniversity</vendor>
+    <finalPageActionList>
+        <createSymLink linkName="~/Desktop/Universal Simulator" progressText="Create Desktop Shortcut" target="${installdir}/unisim.app"/>
+    </finalPageActionList>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>

@@ -31,9 +31,9 @@ student.depends = base
 #savanna.subdir = src/plugins/savanna
 #savanna.depends = base
 
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
 
 #SUBDIRS += test_boxes
 #test_boxes.subdir = src/plugins/test_boxes
@@ -60,4 +60,4 @@ unisim.depends = command
 unisim.depends = eq
 unisim.depends = student
 #unisim.depends = savanna
-#unisim.depends = vg
+unisim.depends = vg
