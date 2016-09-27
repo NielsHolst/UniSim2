@@ -18,7 +18,7 @@ popd
 
 echo = Copy exe and DLL files =
 copy %UNISIM_SHIP%\..\bin\unisim.exe %UNISIM_BIN%
-copy %UNISIM_SHIP%\..\bin\base.dll %UNISIM_BIN%
+copy %UNISIM_SHIP%\..\bin\universal_simulator_base.dll %UNISIM_BIN%
 copy %UNISIM_SHIP%\..\bin\plugins\*.dll %UNISIM_BIN%\plugins
 
 echo = Copy MinGW libraries =

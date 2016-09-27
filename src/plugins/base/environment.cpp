@@ -174,14 +174,6 @@ QString Environment::latestOutputFilePath(QString fileExtension) const {
            QString();
 }
 
-void Environment::currentLoadArg(QString arg) {
-    _currentLoadArg = arg;
-}
-
-QString Environment::currentLoadArg() const {
-    return _currentLoadArg;
-}
-
 void Environment::latestLoadArg(QString arg) {
     _latestLoadArg = arg;
 }
@@ -191,7 +183,7 @@ QString Environment::latestLoadArg() const {
 }
 
 QString Environment::inputFileNamePath(QString fileName) const {
-    QString loadFileNamePath = filePath(Input, _currentLoadArg);
+    QString loadFileNamePath = filePath(Input, _latestLoadArg);
     QDir loadDir = QFileInfo(loadFileNamePath).absoluteDir();
     QString fileNamePath = loadDir.absoluteFilePath(fileName),
             cleaned = QDir::cleanPath(fileNamePath);
@@ -290,7 +282,7 @@ QDir Environment::findAtomDir() {
     QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
                                           ".atom/packages/language-boxes/grammars", QStandardPaths::LocateDirectory);
     if (path.isEmpty()) {
-        path = "/Applications/Atom.app/Contents/Resources/app/apm/templates/language/grammars";
+        path = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
         if (!QDir(path).exists())
             path = "";
     }
