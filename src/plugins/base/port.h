@@ -22,6 +22,7 @@ class Box;
 class Port : public QObject {
 public:
     enum Access{Input, Output};
+    enum Mode{Uninitialized, Fixed, Referenced, MaybeReferenced};
     struct Attributes {
         QString format, page, plot, label, transform, help;
         PortTransform portTransform;
@@ -33,6 +34,7 @@ public:
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
+    Mode _mode;
     QString _importPath;
     QVector<Port *> _importPorts;
     bool _importPortMustExist;
@@ -126,6 +128,7 @@ template <class T> void Port::deducePortType(T value) {
 
 template <class T> Port& Port::equals(T value)
 {
+    _mode = Fixed;
     // Deduce the value type as necessary
     deducePortType<T>(value);
     // Create a buffer for the value if it does not exist

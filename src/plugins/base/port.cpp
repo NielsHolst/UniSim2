@@ -9,7 +9,7 @@ namespace base {
 unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
-    : QObject(parent), _valuePtr(0), _valueType(Null),
+    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(Uninitialized),
       _importPath(""), _importPortMustExist(true),
       _access(Input), _reset(false), _doTrack(false), _track(this)
 {
@@ -35,12 +35,14 @@ Port& Port::equals(QStringList value) {
 }
 
 Port& Port::imports(QString pathToPort) {
+    _mode = Referenced;
     _importPath = pathToPort;
     _importPortMustExist = true;
     return help("Defaults to " + pathToPort);
 }
 
 Port& Port::importsMaybe(QString pathToPort) {
+    _mode = MaybeReferenced;
     _importPath = pathToPort;
     _importPortMustExist = false;
     return help("Defaults to " + pathToPort + " (if it exists)");
@@ -180,7 +182,7 @@ namespace {
 
 void Port::resolveImports() {
     // Find import ports defined by the import path
-    if (_importPath.isEmpty())
+    if (!hasImport())
         return;
     Box *context = boxParent();
     Path path = Path(_importPath, context);
@@ -352,7 +354,7 @@ bool Port::doTrack() const {
 }
 
 bool Port::hasImport() const {
-    return !_importPath.isEmpty();
+    return _mode!=Fixed && !_importPath.isEmpty();
 }
 
 QString Port::importPath() const {
