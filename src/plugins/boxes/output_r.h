@@ -25,6 +25,8 @@ public:
 private:
     // Input
     QString begin, end, outputFileNameVariable;
+    bool popUp;
+    double width, height;
 
     // Data
     QVector<PageR*> _pages;
@@ -32,6 +34,7 @@ private:
     QString _filePathR;
 
     // Methods
+    QString popUpCode();
     void openFile();
     void writeScript();
     void copyToClipboard();

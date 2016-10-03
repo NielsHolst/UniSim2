@@ -4,13 +4,12 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <QFile>
-#include <base/exception.h>
+#include "exception.h"
 #include "data_grid.h"
-#include "utilities.h"
+//#include "utilities.h"
 
-using namespace base;
 
-namespace vg {
+namespace base {
 
 DataGrid::DataGrid(QString _filePath, QObject *parent)
     : QObject(parent), filePath(_filePath)

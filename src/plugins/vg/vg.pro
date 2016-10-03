@@ -32,9 +32,8 @@ HEADERS +=  \
     crop_lai.h \
     crop_radiation.h \
     crop_yield.h \
-    data_grid.h \
     date_time_signal.h \
-    day_degrees.h \
+#    day_degrees.h \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_condensation.h \
@@ -62,7 +61,6 @@ HEADERS +=  \
     indoors_light.h \
     indoors_temperature.h \
     indoors_wind_speed.h \
-    interpolate.h \
     leaf_layer.h \
     leaf_light_response.h \
     leaf_photosynthesis.h \
@@ -128,9 +126,8 @@ SOURCES += \
     crop_lai.cpp \
     crop_radiation.cpp \
     crop_yield.cpp \
-    data_grid.cpp \
     date_time_signal.cpp \
-    day_degrees.cpp \
+#    day_degrees.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_condensation.cpp \

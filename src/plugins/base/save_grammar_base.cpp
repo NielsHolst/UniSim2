@@ -68,8 +68,10 @@ QStringList SaveGrammarBase::portNames() {
     Box *root = new Box("root", 0);
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
         if (factory->id() != "command") {
-            for (QString className : factory->inventory())
-                MegaFactory::create<Box>(className, className.toLower(), root);
+            for (QString className : factory->inventory()) {
+                QString qualifiedClassName = factory->id()+ "::" + className;
+                MegaFactory::create<Box>(qualifiedClassName, className.toLower(), root);
+            }
         }
     }
     // Pool port names

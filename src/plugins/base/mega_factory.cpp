@@ -33,10 +33,9 @@ MegaFactory::MegaFactory() {
             dialog().information("loading " + filePath +"...");
             _factories << factory;
             for (QString id : factory->inventory()) {
-                productIndex[id] = factory;
+                productIndex.insert(id, factory);
                 QString idWithNamespace = factory->id() + "::" + id;
-                productIndex[idWithNamespace] = factory;
-//                dialog().information(id + " " + idWithNamespace);
+                productIndex.insert(idWithNamespace, factory);
 
             }
         }
@@ -68,7 +67,7 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     case 0:
         ThrowException("Unknown class").value(className);
     case 1:
-        factory = me()->productIndex[className];
+        factory = me()->productIndex.value(className);
         creation = factory->create(removeNamespace(className), objectName, parent);
         break;
     default:

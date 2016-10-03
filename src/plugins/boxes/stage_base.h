@@ -12,7 +12,6 @@ class StageBase : public base::Box
 public:
     StageBase(QString name, QObject *parent);
     ~StageBase();
-    void initialize();
     void reset();
 
     const double *data();

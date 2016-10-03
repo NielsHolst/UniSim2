@@ -18,9 +18,12 @@ PlotR::PlotR(QString name, QObject *parent)
     Input(hide).equals(false);
     Input(ports);
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
-    Input(end).help("R code that will be added to the ggplot");
+    Input(end).help("Name of R script code that will be added to the ggplot");
+    Input(endCode).help("R code that will be added to the ggplot");
     Input(ncol).equals(-1);
     Input(nrow).equals(-1);
+    Input(iteration).imports("/*[iteration]");
+    Input(iterationId).equals("iteration");
 }
 
 void PlotR::amend() {
@@ -99,16 +102,19 @@ QString PlotR::toScript() {
     s << "    "
       << "plot_" << layout << "(df, "
       << xLabel << ", "
+      << (iteration > 2 ? ("\""+iterationId+"\"") : "NULL") << ", "
       << "c(" << portLabels.join(", ") << ")";
 
-    if (convert<LayoutR>(layout) == Facetted) {
+//    if (convert<LayoutR>(layout) == Facetted) {
         s << ", "
           << "ncol=" << dim("ncol") << ", "
           << "nrow=" << dim("nrow");
-    }
+//    }
     s << ")";
     if (!end.isEmpty())
         s << "+" << environment().fileContent(Environment::Script, end).trimmed();
+    if (!endCode.isEmpty())
+        s << "+" << endCode;
     s << ",\n";
     return string;
 }

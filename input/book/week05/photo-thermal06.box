@@ -1,0 +1,29 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2009
+  }
+  Records weather {
+    .fileName = "../weather/flakkebjerg 2009.txt"
+  }
+  Box photoThermalTime {
+    +step = ptTimeStep[value]
+    DayDegrees dayDegrees {
+      .T = weather[Tavg]
+      .T0 = 10
+    }
+    DayLengthScale ptTimeStep {
+      .dayLength = calendar[dayLength]
+      .valueToScale = dayDegrees[step]
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .layout = "merged"
+        .ports = (photoThermalTime[step] dayDegrees[step])
+      }
+    }
+  }
+}

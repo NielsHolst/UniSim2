@@ -22,7 +22,7 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(steps).equals(1);
     Input(stopIterations).equals(false);
     Input(stopSteps).equals(false);
-    Output(iteration).noReset().format("factor");
+    Output(iteration).noReset();
     Output(step);
     Output(executionTime);
     Output(hasError);
@@ -98,6 +98,10 @@ void Simulation::show(QTime time) {
         dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
         nextShowProgress += 0.01;
     }
+}
+
+void Simulation::cleanup() {
+    step = 0;
 }
 
 void Simulation::debrief() {

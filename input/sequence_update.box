@@ -1,0 +1,15 @@
+Simulation sim {
+	.steps = 10
+	Sequence seq {
+    .by = "update"
+		.min = 5
+		.max = 15
+	}
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (seq[value])
+      }
+    }
+  }
+}

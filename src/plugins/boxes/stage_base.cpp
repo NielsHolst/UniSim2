@@ -39,21 +39,13 @@ StageBase::~StageBase() {
     delete ddBase;
 }
 
-void StageBase::initialize()
+void StageBase::reset()
 {
     if (k <= 0)
         ThrowException("k must be > 0").value(k).context(this);
-
     if (duration <= 0)
         ThrowException("Duration must be > 0").value(duration).context(this);
-
     ddBase = createDistributedDelay();
-}
-
-
-void StageBase::reset()
-{
-    Q_ASSERT(ddBase);
     ddBase->scale(0);
     content = inflowTotal = outflowTotal = phaseInflowTotal = phaseOutflowTotal = growth = 0.;
     phaseOutflow.resize(k);

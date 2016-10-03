@@ -19,8 +19,9 @@ public:
 private:
     // Inputs
     QString xAxis;
-    int width, height, ncol, nrow;
-    bool useRStudio;
+    double width, height;
+    int ncol, nrow;
+    bool popUp;
     // Data
     QVector<PlotR*> _plots;
     static int _commonPageNumber;

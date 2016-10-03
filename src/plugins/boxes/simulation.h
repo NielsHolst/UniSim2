@@ -18,6 +18,7 @@ public:
     Simulation(QString name, QObject *parent);
     void amend();
     void initialize();
+    void cleanup();
     void debrief();
     void run();
 private:

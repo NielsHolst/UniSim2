@@ -1,3 +1,5 @@
+#include <base/dialog.h>
+
 #include <base/publish.h>
 #include "day_degrees.h"
 using namespace base;
@@ -13,6 +15,8 @@ DayDegrees::DayDegrees(QString name, QObject *parent)
     Input(Topt).equals(100).help("Optimum temperate; linear decline from here to Tmax");
     Input(Tmax).equals(100).help("Upper temperature threshold");
     Input(T).imports("weather[Tavg]");
+    Input(scale).equals(1).help("Scaling factor applied to step");
+    Input(resetTotal).equals(false).help("Reset total to zero?");
     Output(step).help("Increment in day-degrees");
     Output(total).help("Total day-degrees since reset");
 }
@@ -26,6 +30,9 @@ void DayDegrees::update() {
         step = Topt - T;
     else
         step = 0;
+    step *= scale;
+    if (resetTotal)
+        total = 0;
     total += step;
 }
 

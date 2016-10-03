@@ -39,20 +39,32 @@ read_output = function(file_path) {
 	U
 }
 
-plot_facetted = function(df, id.x, cols, ncol, nrow) {
-	if (!(id.x %in% cols)) cols = c(id.x, cols)
-	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
-	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
-		geom_line(size=1.1) +
-		theme(legend.position="none") +
-		xlab("") + ylab("") +
-		facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
+melted = function(df, id_x, id_iteration, cols) {
+  cols_id = c(id_x, id_iteration)
+  cols_final = union(cols, cols_id)
+  M = melt(df[ ,cols_final], id.vars=cols_id, value.name="Value", variable.name="Variable")
+  if (!is.null(id_iteration)) M$iter = factor(M[,id_iteration])
+  M
 }
 
-plot_merged = function(df, id.x, cols) {
-	if (!(id.x %in% cols)) cols = c(id.x, cols)
-	M = melt(df[ ,cols], id.vars=id.x, value.name="Value", variable.name="Variable")
-	ggplot(M, aes_string(x=id.x, y="Value", color="Variable")) +
+plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = melted(df, id_x, id_iteration, cols)
+	P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
+		geom_line(size=1.1) +
+		theme(legend.position="none") +
+		xlab("") + ylab("")
+
+  if (is.null(M$iter))
+		P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") else
+		P + facet_grid(iter~Variable, scales="free_y") 
+}
+
+plot_merged = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = melted(df, id_x, id_iteration, cols)
+	P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
 		geom_line(size=1.1) +
 		xlab("") + ylab("")
+  if (is.null(M$iter))
+		P else
+		P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
 }

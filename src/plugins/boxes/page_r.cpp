@@ -19,11 +19,11 @@ PageR::PageR(QString name, QObject *parent)
 {
     help("produces a page of plots for R");
     Input(xAxis).imports("/*[step]");
-//    Input(width).equals(14).help("Width of page (ignored useRStudio is set)");
-//    Input(height).equals(10).help("Height of page (ignored useRStudio is set)");
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
-//    Input(useRStudio).imports("..[useRStudio]");
+    Input(popUp).imports("..[popUp]");
+    Input(width).imports("..[width]");
+    Input(height).imports("..[height]");
 }
 
 void PageR::amend() {
@@ -69,13 +69,13 @@ QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
     s << functionName() << " <- function(df) {\n";
-//    if (!useRStudio) {
-//      s << "  windows("
-//        << port("width")->value<int>()
-//        << ", "
-//        << port("height")->value<int>()
-//        << ")\n";
-//    }
+    if (popUp) {
+      s << "  open_graph("
+        << port("width")->value<int>()
+        << ", "
+        << port("height")->value<int>()
+        << ")\n";
+    }
     s << "  grid.arrange(\n" ;
     bool skipDefaultPlot = (_plots.size() > 1);
     for (PlotR *plot : _plots) {

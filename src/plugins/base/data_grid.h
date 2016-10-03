@@ -14,10 +14,10 @@
 #include <QPair>
 #include <QStringList>
 #include <QVector>
-#include <base/convert.h>
+#include "convert.h"
 
 
-namespace vg {
+namespace base {
 
 class DataGrid : public QObject
 {

@@ -8,15 +8,18 @@ class Sequence : public base::Box
 {
 public:
     Sequence(QString name, QObject *parent);
+    void amend();
     void reset();
     void update();
 private:
     // Inputs
-    int counter, counterMax;
+    int counter, counterMax, offset;
     double min, max;
-    QString interval;
+    QString by;
     // Outputs
     double value;
+    // Methods
+    void updateValue();
 };
 
 }

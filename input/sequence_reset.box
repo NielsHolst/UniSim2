@@ -1,0 +1,21 @@
+Simulation sim {
+  .iterations = 4
+	.steps = 10
+	Sequence seq1 {
+    .by = "reset"
+		.min = 7
+		.max = 10
+	}
+	Sequence seq2 {
+    .by = "update"
+		.min = 5
+		.max = 15
+	}
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (seq1[value] seq2[value])
+      }
+    }
+  }
+}

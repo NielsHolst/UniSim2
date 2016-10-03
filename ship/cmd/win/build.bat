@@ -1,7 +1,7 @@
 @rem Set up version
 @set MAJOR=2
 @set MINOR=0
-@set SUB=6
+@set SUB=7
 @echo Building version %MAJOR%.%MINOR%.%SUB% release
 @
 @echo = Set path to Qt build environment =
@@ -65,6 +65,7 @@ for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\.
 
 @echo = Restore to debug version =
 @call update-qt-resources.bat %MAJOR% %MINOR% %SUB% debug
+@..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% debug
 @..\bin\update-qt-project debug
 
 @echo *** SUCCESS ***

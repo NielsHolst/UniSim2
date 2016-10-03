@@ -34,6 +34,7 @@ HEADERS +=  \
     command_help.h  \
     convert.h \
     copy_folder.h \
+    data_grid.h \
     dialog.h \
     dialog_base.h \
     dialog_stub.h \
@@ -43,6 +44,7 @@ HEADERS +=  \
     general.h \
     history.h \
     initialize.h \
+    interpolate.h \
     mega_factory.h \
     object_pool.h \
     organisation.h \
@@ -85,6 +87,7 @@ SOURCES +=  \
     command_help.cpp  \
     convert.cpp \
     copy_folder.cpp \
+    data_grid.cpp \
     dialog.cpp \
     dialog_base.cpp \
     dialog_stub.cpp \

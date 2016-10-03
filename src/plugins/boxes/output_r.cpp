@@ -30,6 +30,9 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(begin).equals("begin.R").help("Name of R script run before auto-generated R script");
     Input(end).equals("end.R").help("Name of R script run after auto-generated R script");
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
+    Input(popUp).equals(false).help("Show pages in pop-up windows?");
+    Input(width).equals(14).help("Width of pop-up windows (only used if popUp is set)");
+    Input(height).equals(10).help("Height of pop-up windows (only used if popUp  is set)");
 }
 
 void OutputR::amend() {
@@ -55,6 +58,8 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
+    if (popUp)
+        s += popUpCode();
     for (PageR *page : _pages)
         s += page->toScript();
     s += "plot_all <- function(df) {\n";
@@ -66,6 +71,16 @@ QString OutputR::toScript() {
     }
     s += "}\n";
     return s;
+}
+
+QString OutputR::popUpCode() {
+    return  "open_graph = function(width=7, height=7, ...) {\n"
+              "if (.Platform$OS.type != \"windows\") {\n"
+                "X11(width=width, height=height, type=\"cairo\", ...)\n"
+              "} else {\n"
+                "windows(width=width, height=height, ...)\n"
+              "}\n"
+            "}\n";
 }
 
 //

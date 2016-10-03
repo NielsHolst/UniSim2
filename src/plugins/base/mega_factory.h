@@ -1,7 +1,7 @@
 #ifndef BASE_MEGA_FACTORY_H
 #define BASE_MEGA_FACTORY_H
 
-#include <QMap>
+#include <QMultiMap>
 #include <QObject>
 #include "exception.h"
 #include "general.h"
@@ -27,7 +27,7 @@ private:
     static MegaFactory* me();
     static QObject* createObject(QString className, QString objectName, QObject *parent=0);
     // data
-    typedef QMap<QString, FactoryPlugIn*> ProductIndex;
+    typedef QMultiMap<QString, FactoryPlugIn*> ProductIndex;
     static MegaFactory *_me;
     ProductIndex productIndex;
     QList<base::FactoryPlugIn*> _factories;

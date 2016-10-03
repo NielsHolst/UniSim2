@@ -10,9 +10,11 @@
 #include <base/box.h>
 #include "surface_radiation_outputs.h"
 
-namespace vg {
+namespace base {
+    class DataGrid;
+}
 
-class DataGrid;
+namespace vg {
 
 class Cover : public vg::SurfaceRadiationOutputs
 {
@@ -35,7 +37,7 @@ private:
     double U, heatCapacity;
 
     // Data
-    DataGrid *dirTransTable;
+    base::DataGrid *dirTransTable;
 };
 } //namespace
 

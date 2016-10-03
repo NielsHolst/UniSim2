@@ -11,7 +11,8 @@ public:
     void update();
 private:
     // Inputs
-    double T0, Topt, Tmax, T;
+    double T0, Topt, Tmax, T, scale;
+    bool resetTotal;
     // Outputs
     double step, total;
 };

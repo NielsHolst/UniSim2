@@ -5,13 +5,13 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <QMap>
+#include <base/data_grid.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/general.h>
+#include <base/interpolate.h>
 #include <base/publish.h>
-#include "interpolate.h"
 #include "cover.h"
-#include "data_grid.h"
 
 using std::min;
 using namespace base;
@@ -55,7 +55,7 @@ Cover::Cover(QString name, QObject *parent)
 {
     Input(greenhouseShade).imports("geometry[shade]");
     Input(chalk).imports("controllers/chalk[signal]");
-    Input(directTransmissionFile).equals(".../input/direct_transmission_single.txt");
+    Input(directTransmissionFile).equals("input/direct_transmission_single.txt");
     Input(latitude).imports("calendar[latitude]");
     Input(azimuth).imports("calendar[azimuth]");
     Input(area).imports("..[area]");

@@ -474,7 +474,7 @@
 		<port name="rh" label="outdoorsRh"/>
 		<port name="ah" label="outdoorsAh"/>
 		<box name="records" class="boxes::Records">
-			<port name="fileName" value=".../input/sel_dk.txt"/>
+			<port name="fileName" value="input/sel_dk.txt"/>
 		</box>
 	</box>
 
@@ -1545,6 +1545,7 @@
 
 	<box name="budget" class="vg::Budget"/>
 	<box class="OutputR">
+		<port name="popUp" value="TRUE"/>
 		<box name="climate" class="PageR">
 			<port name="xAxis" ref="calendar[dateTime]"/>
 			<port name="ncol" value="5"/>

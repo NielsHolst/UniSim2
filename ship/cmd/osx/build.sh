@@ -1,6 +1,6 @@
 MAJOR=2
 MINOR=0
-SUB=4
+SUB=7
 echo
 echo Building $MAJOR.$MINOR.$SUB
 echo

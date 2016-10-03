@@ -22,8 +22,8 @@ private:
     // Inputs
     bool hide;
     QVector<QString> ports;
-    QString layout, end;
-    int ncol, nrow;
+    QString layout, end, endCode, iterationId;
+    int ncol, nrow, iteration;
     // Data
     QVector<base::Port*> _ports;
     // Methods

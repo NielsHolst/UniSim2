@@ -1,16 +1,11 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
-*/
-#ifndef UNISIM_INTERPOLATE_H
-#define UNISIM_INTERPOLATE_H
+#ifndef BASE_INTERPOLATE_H
+#define BASE_INTERPOLATE_H
 
 #include <QMap>
 #include "data_grid.h"
-#include <base/exception.h>
+#include "exception.h"
 
-namespace vg {
+namespace base {
 
 template<class X, class Y> QPair<int,int> bracket(const QVector<X> increasing, X x);
 template<class X, class Y, class Z> double interpolate(QPair<X,Y> p1, QPair<X,Y> p2, Z x);
