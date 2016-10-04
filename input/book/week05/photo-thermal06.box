@@ -1,3 +1,4 @@
+// book/week05/photo-thermal06.box
 Simulation sim {
   .steps = 365
   Calendar calendar {

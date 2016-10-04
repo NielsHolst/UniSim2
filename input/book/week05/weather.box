@@ -1,3 +1,4 @@
+// book/week05/weather.box
 Simulation sim {
   .steps = 365
   Calendar calendar {
@@ -10,9 +11,6 @@ Simulation sim {
     PageR {
       PlotR {
         .ports = (weather[T])
-      }
-      PlotR {
-        .ports = (calendar[dayOfYear])
       }
     }
   }
