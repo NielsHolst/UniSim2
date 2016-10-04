@@ -9,11 +9,10 @@ Simulation sim {
   Box photoThermalTime {
     +step = ptTimeStep[value]
     DayDegrees dayDegrees {
-      .T = weather[Tavg]
       .T0 = 10
+      .T = weather[Tavg]
     }
     DayLengthScale ptTimeStep {
-      .dayLength = calendar[dayLength]
       .valueToScale = dayDegrees[step]
     }
   }
@@ -22,7 +21,7 @@ Simulation sim {
       .xAxis = calendar[date]
       PlotR {
         .layout = "merged"
-        .ports = (weather[Tavg] photoThermalTime[step] dayDegrees[step])
+        .ports = (photoThermalTime[step] dayDegrees[step])
       }
     }
   }

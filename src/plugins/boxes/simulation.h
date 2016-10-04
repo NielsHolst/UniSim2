@@ -26,7 +26,7 @@ private:
     int iterations, steps;
     bool stopIterations, stopSteps;
     // Outputs
-    int iteration, step, executionTime;
+    int iteration, step, finalStep, executionTime;
     bool hasError;
     QString errorMsg;
     // Data

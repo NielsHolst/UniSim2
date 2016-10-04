@@ -73,7 +73,7 @@ Cover::Cover(QString name, QObject *parent)
 }
 
 void Cover::initialize() {
-    QString filePath = environment().filePath(Environment::Input, directTransmissionFile);
+    QString filePath = environment().inputFileNamePath(directTransmissionFile);
     dirTransTable = new DataGrid(filePath, this);
 }
 

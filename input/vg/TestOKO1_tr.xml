@@ -754,10 +754,11 @@
 				<port name="circadian" value="FALSE"/>
 			</box>
 		</box>
-		<box name="physTime" class="vg::DayDegrees">
+		<box name="physTime" class="DayDegrees">
 			<port name="T" ref="indoors/temperature[value]"/>
 			<port name="isTicking" ref="../periods[flag]"/>
-			<port name="doReset" ref="../periods[flagDown]"/>
+			<port name="resetTotal" ref="../periods[flagDown]"/>
+			<port name="timeStepDays" ref="calendar[timeStepDays]"/>
 		</box>
 		<!--Tomato lai-->
 		<box name="lai" class="vg::FruitCropLai">

@@ -11,8 +11,8 @@ public:
     void update();
 private:
     // Inputs
-    double T0, Topt, Tmax, T, scale;
-    bool resetTotal;
+    double T0, Topt, Tmax, T, timeStepDays;
+    bool resetTotal, isTicking;
     // Outputs
     double step, total;
 };

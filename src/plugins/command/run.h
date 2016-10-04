@@ -22,7 +22,7 @@ private:
     void doRun();
     void doSave();
     QString messageTime() const;
-    QString message(QString name) const;
+    QString message(QString counter, QString total, QString in) const;
     QString errorMessage() const;
 };
 

@@ -51,11 +51,11 @@ void run::doRun() {
     bool noError = !(hasErrorPort && hasErrorPort->value<bool>());
 
     QString msg = noError ? "Finished" : "Interrupted";
-    QString msgIteration = message("iteration");
+    QString msgIteration = message("iteration", "iterations", "iteration");
     msg += messageTime();
     msg += msgIteration;
     if (msgIteration.isEmpty())
-        msg += message("step");
+        msg += message("finalStep", "steps", "step");
 
     if (noError)
         dialog().information(msg);
@@ -77,13 +77,13 @@ QString run::messageTime() const {
     return s.arg(dt).arg(units);
 }
 
-QString run::message(QString name) const {
-    Port *i = _root->peakPort(name),
-         *n = _root->peakPort(name+"s");
+QString run::message(QString counter, QString total, QString in) const {
+    Port *i = _root->peakPort(counter),
+         *n = _root->peakPort(total);
     if (!i || !n || n->value<int>() == 1)
         return "";
 
-    QString s = " in " + name + " %1/%2";
+    QString s = " in " + in + " %1/%2";
     return s. arg(i->value<int>()-1). arg(n->value<int>());
 }
 

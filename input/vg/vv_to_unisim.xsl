@@ -1455,10 +1455,11 @@
 			<xsl:with-param name="modelName">periods</xsl:with-param>
 		</xsl:call-template>
 
-		<box name="physTime" class="vg::DayDegrees">
+		<box name="physTime" class="DayDegrees">
 			<port name="T" ref="indoors/temperature[value]"/>
 			<port name="isTicking" ref="../periods[flag]"/>
-			<port name="doReset" ref="../periods[flagDown]"/>
+			<port name="resetTotal" ref="../periods[flagDown]"/>
+      <port name="timeStepDays" ref="calendar[timeStepDays]"/>
 		</box>
 
 		<xsl:call-template name="extract-crop-model">

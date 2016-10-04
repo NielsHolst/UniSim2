@@ -33,7 +33,6 @@ HEADERS +=  \
     crop_radiation.h \
     crop_yield.h \
     date_time_signal.h \
-#    day_degrees.h \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_condensation.h \
@@ -69,7 +68,6 @@ HEADERS +=  \
     leaf_transpiration.h \
     leaf_wind_speed.h \
     outdoors.h \
-    physiological_time.h \
     pid_control_element.h \
     pipe.h \
     proportional_signal.h \
@@ -127,7 +125,6 @@ SOURCES += \
     crop_radiation.cpp \
     crop_yield.cpp \
     date_time_signal.cpp \
-#    day_degrees.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_condensation.cpp \
@@ -163,7 +160,6 @@ SOURCES += \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
     outdoors.cpp \
-    physiological_time.cpp \
     pid_control_element.cpp \
     pipe.cpp \
     proportional_signal.cpp \

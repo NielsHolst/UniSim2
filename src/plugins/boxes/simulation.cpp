@@ -24,6 +24,7 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(stopSteps).equals(false);
     Output(iteration).noReset();
     Output(step);
+    Output(finalStep);
     Output(executionTime);
     Output(hasError);
     Output(errorMsg);
@@ -101,6 +102,7 @@ void Simulation::show(QTime time) {
 }
 
 void Simulation::cleanup() {
+    finalStep = step;
     step = 0;
 }
 
