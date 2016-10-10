@@ -1,0 +1,22 @@
+Simulation {
+	.steps = 30
+	Sequence dayLength {
+		.min = 5
+		.max = 18
+	}
+	ProportionalSignal fecundity {
+    .input = dayLength[value]
+		.minSignal = 0
+		.maxSignal = 1500
+		.threshold = 8
+		.thresholdBand = 4
+	}
+	OutputR {
+		PageR {
+			.xAxis = dayLength[value]
+			PlotR {
+				.ports = (fecundity[signal])
+			}
+		}
+	}
+}

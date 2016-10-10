@@ -66,6 +66,9 @@ public:
     void cleanupFamily();
     void debriefFamily();
 
+    void resolvePortImports();
+    void updateImports();
+
 private:
     // Data
     QString _name, _help, _sideEffects;
@@ -81,12 +84,10 @@ private:
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void postAmend();
     void enumerateBoxes(int &i);
-    void resolvePortImports();
     void allocatePortBuffers();
     void collectTrackedPorts();
     void resetPorts();
     void trackPorts(Step step);
-    void updateImports();
 };
 
 template<class T> T* Box::resolveOne(QString path) {

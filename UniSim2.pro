@@ -7,9 +7,9 @@ base.subdir = src/plugins/base
 #apis.subdir = src/plugins/apis
 #apis.depends = base
 
-SUBDIRS += awe
-awe.subdir = src/plugins/awe
-awe.depends = base
+#SUBDIRS += awe
+#awe.subdir = src/plugins/awe
+#awe.depends = base
 
 SUBDIRS += boxes
 boxes.subdir = src/plugins/boxes
@@ -38,7 +38,7 @@ vg.depends = base
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
 #unisim.depends = apis
-unisim.depends = awe
+#unisim.depends = awe
 unisim.depends = base
 unisim.depends = boxes
 unisim.depends = command

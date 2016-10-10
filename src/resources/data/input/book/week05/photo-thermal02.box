@@ -1,0 +1,13 @@
+Simulation sim {
+  .steps = 10
+  DayLengthScale light {
+    .dayLength = 18
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (light[value])
+      }
+    }
+  }
+}

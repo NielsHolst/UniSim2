@@ -27,6 +27,8 @@ private slots:
     void testToIntFromIntVector();
     void testToDoubleFromIntVector();
     void testToIntFromStringVector();
+    void testToStringIdentityFromStringVector();
+    void testToStringVectorIdentityFromString();
 
 };
 

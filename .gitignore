@@ -16,7 +16,6 @@ bin/
 output/
 ship/bin/
 ship/*.exe
-src/resources/data/
 *.qrc
 tmp/
 debug/

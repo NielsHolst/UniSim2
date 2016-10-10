@@ -126,3 +126,32 @@ void TestAssign::testToIntFromStringVector() {
     }
     QVERIFY(excepted);
 }
+
+void TestAssign::testToStringIdentityFromStringVector() {
+    bool excepted{false};
+    QString dest;
+    QVector<QString> source;
+    source << "ABZ";
+    try {
+        assign(String, &dest, StringVector, &source, PortTransform::Identity, 0);
+    }
+    catch (Exception &ex) {
+        excepted = true;
+    }
+    QVERIFY(!excepted);
+    QCOMPARE(dest, QString("ABZ"));
+}
+
+void TestAssign::testToStringVectorIdentityFromString() {
+    bool excepted{false};
+    QVector<QString> dest;
+    QString source{"ABZ"};
+    try {
+        assign(StringVector, &dest, String, &source, PortTransform::Identity, 0);
+    }
+    catch (Exception &ex) {
+        excepted = true;
+    }
+    QVERIFY(!excepted);
+    QCOMPARE(dest, QVector<QString>() << "ABZ");
+}

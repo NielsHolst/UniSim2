@@ -1,0 +1,19 @@
+Simulation sim {
+	.steps = 4
+	.iterations = 100
+	.stopIterations = scenario[atEnd]
+	Scenarios scenario {
+		.fileName = "scenarios_3.txt"
+	}
+	Calendar calendar {
+		.initialDateTime = scenario[Date]
+	}
+	OutputR {
+		PageR {
+			.xAxis = calendar[date]
+			PlotR {
+				.ports = (scenario[*])
+			}
+		}
+	}
+}

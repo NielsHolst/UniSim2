@@ -1,12 +1,12 @@
 Simulation sim {
-	.steps = 730
+	.steps = 1825
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
   awe::Weather weather {
   }
   awe::Rotation field {
-    .crops = (maize maize springWheat)
+    .crops = (maize maize springWheat springWheat)
     awe::Crop maize {
       .sowingDate = 1/5/*
       .harvestDate = 20/9/*
@@ -41,15 +41,22 @@ Simulation sim {
 	OutputR {
     PageR {
       .xAxis = calendar[date]
+			.ncol = 2
       PlotR {
         .ports = (weather[T])
       }
       PlotR {
         .ports = (*[lai])
       }
+      PlotR events{
+        .ports = (*[sowToday] *[harvestToday])
+      }
+      PlotR {
+        .ports = (*[currentCropIndex] *[nextCropIndex])
+      }
       PlotR {
         .hide = TRUE
-        .ports = (field[currentCrop])
+        .ports = (field[currentCrop] field[currentCropIndex])
       }
 		}
 	}

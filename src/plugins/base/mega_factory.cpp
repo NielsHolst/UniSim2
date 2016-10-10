@@ -71,10 +71,18 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
         creation = factory->create(removeNamespace(className), objectName, parent);
         break;
     default:
-        QString msg = "More than one class is named '%1'. Qualify class name with plug-in name";
-        ThrowException(msg.arg(className));
+        QString msg = "Qualify class name with plug-in name as in:\n" + qualifiedClassNames(className).join("\n");
+        ThrowException(msg);
     }
     return creation;
+}
+
+QStringList MegaFactory::qualifiedClassNames(QString className) {
+    QList<FactoryPlugIn*> factories = me()->productIndex.values(className);
+    QStringList result;
+    for (auto factory : factories)
+        result << (factory->id() + "::" + className);
+    return result;
 }
 
 const QList<FactoryPlugIn*>& MegaFactory::factories() {

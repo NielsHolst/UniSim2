@@ -1,0 +1,15 @@
+Simulation sim {
+	.steps = 10
+	Sequence dayLength {
+		.min = 5
+		.max = 18
+	}
+	OutputR {
+		PageR {
+			.xAxis = sim[step]
+			PlotR {
+				.ports = (dayLength[value])
+			}
+		}
+	}
+}

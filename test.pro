@@ -19,6 +19,10 @@ SUBDIRS += savanna
 savanna.subdir = src/plugins/savanna
 savanna.depends = base
 
+SUBDIRS += student
+student.subdir = src/plugins/student
+student.depends = base
+
 SUBDIRS += vg
 vg.subdir = src/plugins/vg
 vg.depends = base
@@ -34,6 +38,7 @@ test.depends = boxes
 test.depends = command
 test.depends = eq
 test.depends = savanna
+test.depends = student
 test.depends = vg
 test.depends = test_boxes
 

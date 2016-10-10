@@ -31,6 +31,16 @@ void PlotR::amend() {
 }
 
 void PlotR::collectPorts() {
+    // Check that 'ports' are not referenced
+    if (port("ports")->hasImport())
+        ThrowException("You cannot set 'ports' to a reference value")
+                .value(port("ports")->importPath() + " (a reference value)")
+                .hint("Enclose the value in parentheses to make it a vector of strings")
+                .id("PortsIsReference")
+                .context(this);
+    if (ports.isEmpty())
+        ThrowException("'ports' cannot be empty").context(this);
+    // Get context
     Box *page = dynamic_cast<Box*>(parent());
     Q_ASSERT(page);
     QString pageName = page->objectName(),
@@ -55,6 +65,11 @@ void PlotR::collectPorts() {
             port->plot(objectName()+"");
             _ports << port;
         }
+    }
+    // Check for empty 'ports' or 'ports' referenced by mistake
+    if (_ports.isEmpty()) {
+        ThrowException("Ports not found")
+                .value("(" + QStringList(ports.toList()).join(" ") + ")");
     }
 }
 

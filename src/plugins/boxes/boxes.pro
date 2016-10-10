@@ -16,7 +16,6 @@ HEADERS +=  \
     day_degrees.h \
     distributed_delay_base.h \
     distributed_delay.h \
-    fibonacci.h \
     layout_r.h \
     output_r.h \
     page_r.h \
@@ -29,6 +28,7 @@ HEADERS +=  \
     random_uniform.h \
     records.h \
     sandy.h \
+    scenarios.h \
     sequence.h \
     simulation.h \
     stage_base.h \
@@ -42,7 +42,6 @@ SOURCES +=  \
     day_degrees.cpp \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
-    fibonacci.cpp \
     layout_r.cpp \
     output_r.cpp \
     page_r.cpp \
@@ -55,6 +54,7 @@ SOURCES +=  \
     random_uniform.cpp \
     records.cpp \
     sandy.cpp \
+    scenarios.cpp \
     sequence.cpp \
     simulation.cpp \
     stage_base.cpp \

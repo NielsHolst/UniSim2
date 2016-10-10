@@ -45,34 +45,33 @@ void TestPopulation::testOk() {
     catch(Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
-
-        std::cout << qPrintable(output.columnLabels().join(", ")) << "\n"
-                  << qPrintable(output.filePath()) << "\n";
-        QCOMPARE(output.columnLabels().size(), 11);
-        QCOMPARE(output.numRows(), 9);
-
-        cohortCols << "cohorts_0" << "cohorts_1" << "cohorts_2";
-
-        expected.clear();
-        expected << "10" << "0" << "0";
-        QCOMPARE(output.row(0, cohortCols), expected);
-        QCOMPARE(output.cell(0, "lastCohortSpill"), QString("0"));
-
-        expected.clear();
-        expected << "20" << "4" << "20";
-        QCOMPARE(output.row(1, cohortCols), expected);
-        QCOMPARE(output.cell(1, "lastCohortSpill"), QString("30"));
-
-        expected.clear();
-        expected << "30" << "34" << "4";
-        QCOMPARE(output.row(2, cohortCols), expected);
-        QCOMPARE(output.cell(2, "lastCohortSpill"), QString("40"));
-
-        expected.clear();
-        expected << "4" << "64" << "24";
-        QCOMPARE(output.row(3, cohortCols), expected);
-        QCOMPARE(output.cell(3, "lastCohortSpill"), QString("40"));
     }
+    std::cout << qPrintable(output.columnLabels().join(", ")) << "\n"
+              << qPrintable(output.filePath()) << "\n";
+    QCOMPARE(output.columnLabels().size(), 11);
+    QCOMPARE(output.numRows(), 9);
+
+    cohortCols << "cohorts_0" << "cohorts_1" << "cohorts_2";
+
+    expected.clear();
+    expected << "10" << "0" << "0";
+    QCOMPARE(output.row(0, cohortCols), expected);
+    QCOMPARE(output.cell(0, "lastCohortSpill"), QString("0"));
+
+    expected.clear();
+    expected << "20" << "4" << "20";
+    QCOMPARE(output.row(1, cohortCols), expected);
+    QCOMPARE(output.cell(1, "lastCohortSpill"), QString("30"));
+
+    expected.clear();
+    expected << "30" << "34" << "4";
+    QCOMPARE(output.row(2, cohortCols), expected);
+    QCOMPARE(output.cell(2, "lastCohortSpill"), QString("40"));
+
+    expected.clear();
+    expected << "4" << "64" << "24";
+    QCOMPARE(output.row(3, cohortCols), expected);
+    QCOMPARE(output.cell(3, "lastCohortSpill"), QString("40"));
 
     delete sim;
 }

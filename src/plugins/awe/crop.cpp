@@ -15,6 +15,7 @@ Crop::Crop(QString name, QObject *parent)
     : Box(name,parent)
 {
     Input(currentCrop).imports("..[currentCrop]");
+    Input(nextCrop).imports("..[nextCrop]");
     Input(date).imports("calendar[date]");
     Input(sowingDate).equals("1/4/*").help("Date of sowing");
     Input(harvestDate).equals("1/8/*").help("Date of harvest");
@@ -28,6 +29,8 @@ Crop::Crop(QString name, QObject *parent)
     Output(lai).help("Leaf area index (m @Sup {2}/m @Sup {2}).");
     Output(sowToday).help("Is the crop sowed today?");
     Output(harvestToday).help("Is the crop sowed today?");
+    Output(isSown);
+    Output(isHarvested);
 }
 
 void Crop::initialize() {
@@ -42,13 +45,23 @@ void Crop::initialize() {
 
 void Crop::reset() {
     lai = 0.;
+    isSown = isHarvested = sowToday = harvestToday = false;
 }
 
 void Crop::update() {
-    bool isCurrent = (currentCrop == objectName());
-    sowToday = isCurrent && equals(date, sowingDate);
+    bool isCurrent = (currentCrop == objectName()),
+         isNext = (nextCrop == objectName());
+    sowToday = isNext && equals(date, sowingDate);
+    if (sowToday) {
+        isSown = true;
+        isHarvested = false;
+    }
     harvestToday = isCurrent && equals(date, harvestDate);
-    lai = isCurrent ? interpolateLai() : 0.;
+    if (harvestToday) {
+        isSown = false;
+        isHarvested = true;
+    }
+    lai = isCurrent && isSown && !sowToday  ? interpolateLai() : 0.;
 }
 
 double Crop::interpolateLai() const {

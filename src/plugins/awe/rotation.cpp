@@ -19,26 +19,51 @@ Rotation::Rotation(QString name, QObject *parent)
 {
     Input(crops).help("Vector specifying sequence of crops");
     Output(currentCrop);
+    Output(nextCrop);
+    Output(currentCropIndex);
+    Output(nextCropIndex);
     Output(lai).help("Leaf area index of the current crop");
 }
 
-void Rotation::initialize() {
-    _crops = resolveMany<Box>("./*{awe::Crop}");
-    if (_crops.isEmpty())
-        ThrowException("No crops defined in rotation");
-}
-
 void Rotation::reset() {
-    _currentCropIndex = (_crops.size() == 1) ? 1 : _crops.size()-1;
-    update();
+    _length = crops.size();
+    _isGrowing.fill(false, _length);
+    currentCropIndex = _length - 1;
+    nextCropIndex = (currentCropIndex + 1)%_length;
+    updateCrop();
 }
 
 void Rotation::update() {
-    int nextIndex = (_currentCropIndex + 1)/_crops.size();
-    if (_crops[nextIndex]->port("sowToday")->value<bool>())
-        _currentCropIndex = nextIndex;
-    currentCrop = crops.at(_currentCropIndex);
-    lai = _crops[_currentCropIndex]->port("lai")->value<double>();
+    updateCropIndex();
+    updateCrop();
+}
+
+void Rotation::updateCropIndex() {
+    bool currentIsGrowing = _isGrowing.at(currentCropIndex),
+         sowToday = findCropModel(nextCropIndex)->port("sowToday")->value<bool>(),
+         harvestToday = findCropModel(currentCropIndex)->port("harvestToday")->value<bool>();
+    if (!currentIsGrowing && sowToday) {
+        _isGrowing[currentCropIndex] = true;
+        currentCropIndex = nextCropIndex;
+        nextCropIndex = (currentCropIndex + 1)%_length;
+    }
+    else if (currentIsGrowing && harvestToday) {
+        _isGrowing[currentCropIndex] = false;
+    }
+}
+
+Box* Rotation::findCropModel(int cropIndex) {
+    QString path = "./" + crops.at(cropIndex) + "{Crop}";
+    Box *model = resolveMaybeOne<Box>(path);
+    if (!model)
+        ThrowException("Crop does not exist in rotation").value(crops.at(cropIndex));
+    return model;
+}
+
+void Rotation::updateCrop() {
+    currentCrop = crops.at(currentCropIndex);
+    nextCrop = crops.at(nextCropIndex);
+    lai = findCropModel(currentCropIndex)->port("lai")->value<double>();
 }
 
 }

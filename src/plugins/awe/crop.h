@@ -18,7 +18,7 @@ public:
 
 private:
     // inputs
-    QString currentCrop;
+    QString currentCrop, nextCrop;
     QDate sowingDate, harvestDate, date;
     double weedExchangeRate, maxYield,
            maxYieldLossPct, slopeYieldLossPct, ddSum;
@@ -26,7 +26,7 @@ private:
 
     // outputs
     double lai;
-    bool sowToday, harvestToday;
+    bool sowToday, harvestToday, isSown, isHarvested;
 
     // data
     QMap<double, double> laiXY;

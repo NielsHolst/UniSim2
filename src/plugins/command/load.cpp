@@ -61,7 +61,7 @@ void load::readFile(QString fileName) {
             reader = new BoxReaderXml(&builder);
             break;
         }
-        reader->parse(filePath(fileName));
+        reader->parse(environment().filePath(Environment::Input, fileName));
         environment().root(builder.content());
         Q_ASSERT(environment().root());
     }
@@ -79,13 +79,6 @@ load::FileType load::fileType(QString fileName) {
         return Xml;
     QString s = suffix.isEmpty() ? "Missing" : "Wrong";
     ThrowException(s + " file type. Must be '.box' or '.xml'").value(fileName);
-}
-
-QString load::filePath(QString fileName) {
-    QDir dir = environment().resolveDir(Environment::Input);
-    if (!dir.exists())
-        ThrowException("Input folder not found").value(dir.absolutePath());
-    return dir.absolutePath() + "/" + fileName;
 }
 
 }

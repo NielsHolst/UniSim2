@@ -6,7 +6,7 @@ Simulation sim {
   awe::Weather weather {
   }
   awe::Rotation field {
-    .crops = (maize maize springWheat)
+    .crops = (maize springWheat)
     awe::Crop maize {
       .sowingDate = 1/5/*
       .harvestDate = 20/9/*
@@ -41,25 +41,26 @@ Simulation sim {
   awe::SeedBank seedBank {
     .initial = 1000
     .yearlyMortality = 0.1
-    .yearlyEmergence = 0
-    .emergenceCalendar = (0 5 30 60 70 50 10 0 0 0 0 0)
+    .yearlyEmergence = 0.2
+    .emergenceByMonth = (0 5 30 60 70 50 10 0 0 0 0 0)
   }
-
+	
 	OutputR {
     PageR {
       .xAxis = calendar[date]
+			.ncol = 2
       PlotR {
         .ports = (weather[T])
       }
       PlotR {
-        .ports = (*[lai])
+        .ports = (field[lai] seedBank[cropEffectOnEmergence])
       }
       PlotR {
-        .ports = (seedBank[density])
+        .ports = (seedBank[total])
       }
       PlotR {
-        .hide = TRUE
-        .ports = (field[currentCrop])
+				.layout = "merged"
+        .ports = (seedBank[dailyEmergenceRatio] seedBank[dailyEmergenceRatioPotential])
       }
 		}
 	}

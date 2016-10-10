@@ -12,8 +12,6 @@ class Rotation : public base::Box
 {
 public:
     Rotation(QString name, QObject *parent=0);
-
-    void initialize();
     void reset();
     void update();
 
@@ -21,11 +19,18 @@ private:
     // inputs
     QVector<QString> crops;
     // output
-    QString currentCrop;
+    QString currentCrop, nextCrop;
+    int currentCropIndex, nextCropIndex;
     double lai;
     // state
-    QVector<base::Box*> _crops;
-    int _currentCropIndex;
+    int _length;
+    Box *_currentCropModel;
+    QVector<bool> _isGrowing;
+
+    // methods
+    Box* findCropModel(int cropIndex);
+    void updateCropIndex();
+    void updateCrop();
 };
 
 }

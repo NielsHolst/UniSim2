@@ -20,6 +20,7 @@ HEADERS +=  \
     test_box.h \
     test_box_builder.h \
     test_box_cases.h \
+    test_box_script.h \
     test_calendar.h \
     test_circle_buffer.h \
     test_command.h \
@@ -35,6 +36,7 @@ HEADERS +=  \
     test_port_type.h \
     test_port.h \
     test_savanna.h \
+    test_scenarios.h \
     test_simulation.h \
     test_track.h \
     test_unique_name.h \
@@ -42,7 +44,8 @@ HEADERS +=  \
     test_vector_op.h \
     test_vector_sum.h \
     test_vectorization.h \
-    test_weather.h
+    test_weather.h \
+    input_file_path.h
 
 SOURCES +=  \
     main.cpp \
@@ -53,6 +56,7 @@ SOURCES +=  \
     test_box.cpp \
     test_box_builder.cpp \
     test_box_cases.cpp \
+    test_box_script.cpp \
     test_calendar.cpp \
     test_circle_buffer.cpp \
     test_command.cpp \
@@ -68,6 +72,7 @@ SOURCES +=  \
     test_port_type.cpp \
     test_port.cpp \
     test_savanna.cpp \
+    test_scenarios.cpp \
     test_simulation.cpp \
     test_track.cpp \
     test_unique_name.cpp \

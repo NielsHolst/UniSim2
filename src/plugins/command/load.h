@@ -15,7 +15,6 @@ private:
     // Methods
     void doExecute();
     void readFile(QString fileName);
-    QString filePath(QString fileName);
     enum FileType {Boxes, Xml};
     FileType fileType(QString fileName);
 };

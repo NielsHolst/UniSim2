@@ -1,33 +1,28 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
-*/
-#ifndef AWE_SEED_BANK_H
-#define AWE_SEED_BANK_H
-
-#include <QObject>
-#include <usbase/model.h>
+#ifndef SEED_BANK_H
+#define SEED_BANK_H
+#include <QMap>
+#include <QVector>
+#include <base/box.h>
 
 namespace awe {
 
-    class SeedBank : public UniSim::Model
+class SeedBank : public base::Box
 {
-	//Q_OBJECT
 public:
-    SeedBank(UniSim::Identifier name, QObject *parent=0);
+    SeedBank(QString name, QObject *parent=0);
 	
     void initialize();
     void reset();
 	void update();
 	
 private:
-    // parameters
-    double initialDensity, yearlyEmergenceRate, yearlyMortalityRate, cropLaiExp;
-    QString emergenceString;
+    // inputs
+    int dayOfYear;
+    double initial, yearlyEmergence, yearlyMortality, cropLaiExp, cropLai;
+    QVector<double> emergenceByMonth;
 
     // pull variables
-    double density, dormant, total,
+    double nonDormant, dormant, total,
         dailyEmergenceRatio, totalEmergenceRatio,
         dailyEmergenceDensity, totalEmergenceDensity,
         dailyEmergenceRatioPotential, cropEffectOnEmergence;
@@ -40,11 +35,8 @@ private:
     double dailySurvivalRate, emergenceScaling;
     QMap<int,double> emergenceCalendar;    // indexed by mid-month day of the year from Dec to Jan
 
-    // links
-    UniSim::Model *calendar, *rotation;
-
     // methods
-    void decodeEmergence();
+    void initEmergenceCalendar();
     double lookupEmergence(int dayOfYear) const;
     void fitEmergence();
     void scaleEmergence(double factor);

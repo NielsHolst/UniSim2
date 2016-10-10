@@ -8,8 +8,6 @@
 #include <base/publish.h>
 #include "records.h"
 
-#include <base/dialog.h>
-
 using namespace base;
 
 namespace boxes {
@@ -38,9 +36,12 @@ Records::Records(QString name, QObject *parent)
 }
 
 void Records::amend() {
+    // Allow imports defined in amend step
+    resolvePortImports();
+    updateImports();
+    // Create outputs
     readColumnNames();
     createColumnOutputs();
-    readFromFirstToLastLine();
 }
 
 Records::~Records() {
@@ -56,6 +57,7 @@ void Records::readColumnNames() {
 
     dateColumn = -1;
     timeColumn = -1;
+    columnNames.clear();
     for (int i = 0; i < lineItems.size(); ++i) {
         QString id = lineItems[i];
         columnNames.append(id);
@@ -68,6 +70,8 @@ void Records::readColumnNames() {
 }
 
 void Records::openFile() {
+    if (file.isOpen())
+        file.close();
     file.setFileName(fileNamePath());
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!fileOk)
@@ -99,7 +103,6 @@ void Records::createColumnOutputs() {
         QString name = columnNames[i];
         if (i != dateColumn && i != timeColumn) {
             Port &port( NamedOutput(name, values[i]) );
-            port.page("default");
         }
     }
 }
@@ -116,6 +119,7 @@ void Records::readFromFirstToLastLine() {
 }
 
 void Records::reset() {
+    readFromFirstToLastLine();
     readToFirstLine();
     update();
 }

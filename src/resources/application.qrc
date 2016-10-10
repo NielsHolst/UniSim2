@@ -6,9 +6,13 @@
     <file>svg_template3.html</file>
     <file>version.txt</file>
     <file>data/input/book/demo/insect.box</file>
+    <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
+    <file>data/input/book/weather/flakkebjerg 2009 Tavg.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009.txt</file>
+    <file>data/input/book/weather/geneva 2009 Tavg.txt</file>
     <file>data/input/book/weather/geneva 2009.txt</file>
+    <file>data/input/book/weather/ljubljana 2009 Tavg.txt</file>
     <file>data/input/book/weather/ljubljana 2009.txt</file>
     <file>data/input/book/week01/butterflies.box</file>
     <file>data/input/book/week01/butterfly.box</file>
@@ -25,6 +29,17 @@
     <file>data/input/book/week04/proportional.box</file>
     <file>data/input/book/week04/proportional02.box</file>
     <file>data/input/book/week04/sequence.box</file>
+    <file>data/input/book/week05/photo-thermal01.box</file>
+    <file>data/input/book/week05/photo-thermal02.box</file>
+    <file>data/input/book/week05/photo-thermal03.box</file>
+    <file>data/input/book/week05/photo-thermal04.box</file>
+    <file>data/input/book/week05/photo-thermal05.box</file>
+    <file>data/input/book/week05/photo-thermal06.box</file>
+    <file>data/input/book/week05/photo-thermal07.box</file>
+    <file>data/input/book/week05/weather.box</file>
+    <file>data/input/book/week06/butterfly.box</file>
+    <file>data/input/book/week06/butterfly02.box</file>
+    <file>data/input/book/week06/weather_files.txt</file>
     <file>data/input/conductance/cabbage-nightshade.box</file>
     <file>data/input/conductance/carrot-stellaria.box</file>
     <file>data/input/student/eggx.box</file>
@@ -34,7 +49,9 @@
     <file>data/input/student/jump3.box</file>
     <file>data/input/student/jump4.box</file>
     <file>data/script/begin.R</file>
+    <file>data/script/butterfly_analysis.R</file>
     <file>data/script/end.R</file>
+    <file>data/script/end_butterfly.R</file>
     <file>data/script/end_jump.R</file>
     <file>data/script/end_jump3.R</file>
     <file>data/script/end_jump4.R</file>
