@@ -1,6 +1,6 @@
 MAJOR=2
 MINOR=0
-SUB=7
+SUB=9
 echo
 echo Building $MAJOR.$MINOR.$SUB
 echo
@@ -27,8 +27,8 @@ pushd ../../..
 make -B
 popd	
 
-echo = Move base library =
-sudo mv ../../../bin/*.dylib /usr/lib
+echo = Copy base library =
+sudo cp ../../../bin/*.dylib /usr/lib
 
 echo = Create App bundle =
 target=../../../bin/unisim
