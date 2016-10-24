@@ -27,9 +27,17 @@ SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
 
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
+
 SUBDIRS += student
 student.subdir = src/plugins/student
 student.depends = base
+
+SUBDIRS += tuta_absoluta
+tuta_absoluta.subdir = src/plugins/tuta_absoluta
+tuta_absoluta.depends = base
 
 SUBDIRS += vg
 vg.subdir = src/plugins/vg
@@ -44,5 +52,7 @@ unisim.depends = boxes
 unisim.depends = command
 #unisim.depends = conductance
 unisim.depends = eq
+unisim.depends = PestTox
 unisim.depends = student
+unisim.depends = tuta_absoluta
 unisim.depends = vg

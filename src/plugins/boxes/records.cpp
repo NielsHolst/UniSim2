@@ -101,9 +101,8 @@ void Records::createColumnOutputs() {
     nextColumnValues->fill(0., n);
     for (int i = 0; i < n; ++i) {
         QString name = columnNames[i];
-        if (i != dateColumn && i != timeColumn) {
-            Port &port( NamedOutput(name, values[i]) );
-        }
+        if (i != dateColumn && i != timeColumn)
+            NamedOutput(name, values[i]);
     }
 }
 

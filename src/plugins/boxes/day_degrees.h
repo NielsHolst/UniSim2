@@ -8,6 +8,7 @@ class DayDegrees : public base::Box
 {
 public: 
     DayDegrees(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // Inputs

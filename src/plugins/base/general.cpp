@@ -138,4 +138,36 @@ void increment(double *x, const double *toAdd, int n) {
         *x += *toAdd;
 }
 
+//! Returns the full path for the file with given file name
+/*! The file is searched in the order:
+ *  home/fileName
+ *  home/subFolder/fileName
+ *  home/../fileName
+ *  home/../subFolder/fileName
+ *  home/../../fileName
+ *  home/../../subFolder/fileName
+ *  etc.
+ *  If the file is not found, the first file path above is returned.
+*/
+//QFileInfo findNearestFile(QDir home, QString subFolder, QString fileName) {
+//    QDir dir = home;
+//    while (true) {
+//        QString filePath[2];
+//        filePath[0] = dir.absolutePath() + "/" + fileName;
+//        filePath[1] = dir.absolutePath() + "/" + subFolder + "/" + fileName;
+//        if (QFileInfo(filePath[0]).exists()) {
+//            break;
+//        }
+//        if (QFileInfo(filePath[1]).exists()) {
+//            dir.cd(subFolder);
+//            break;
+//        }
+//        if (!dir.cdUp()) {
+//            dir = home;
+//            break;
+//        }
+//    }
+//    return QFileInfo(dir.filePath(fileName));
+//}
+
 } //namespace

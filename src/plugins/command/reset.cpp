@@ -30,7 +30,6 @@ void reset::doExecute() {
     environment().dir(Environment::Work, documents + "/UniSim");
     environment().dir(Environment::Input, "./input");
     environment().dir(Environment::Output, "./output");
-    environment().dir(Environment::Script, "./script");
     environment().dir(Environment::Notepad, home + "/AppData/Roaming/Notepad++");
     environment().dir(Environment::Atom, home + "/.atom/packages/language-boxes/grammars");
     set_folder::showAllFolders();

@@ -5,6 +5,16 @@
     <file>notepad_grammar_template.xml</file>
     <file>svg_template3.html</file>
     <file>version.txt</file>
+    <file>data/input/apis/honey_bee error.box</file>
+    <file>data/input/apis/honey_bee.box</file>
+    <file>data/input/apis/honey_bee.R</file>
+    <file>data/input/apis/weather_denmark.txt</file>
+    <file>data/input/awe/1-add-weather.box</file>
+    <file>data/input/awe/2-add-rotation.box</file>
+    <file>data/input/awe/3-add-weed-seed-bank.box</file>
+    <file>data/input/awe/4-add-weed-emergence.box</file>
+    <file>data/input/awe/5-add-weed-life-stages(0).box</file>
+    <file>data/input/awe/5-add-weed-life-stages.box</file>
     <file>data/input/book/demo/insect.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
@@ -39,24 +49,70 @@
     <file>data/input/book/week05/weather.box</file>
     <file>data/input/book/week06/butterfly.box</file>
     <file>data/input/book/week06/butterfly02.box</file>
+    <file>data/input/book/week06/butterfly_analysis.R</file>
+    <file>data/input/book/week06/end_butterfly.R</file>
     <file>data/input/book/week06/weather_files.txt</file>
     <file>data/input/conductance/cabbage-nightshade.box</file>
     <file>data/input/conductance/carrot-stellaria.box</file>
+    <file>data/input/lunch/flakkebjerg.txt</file>
+    <file>data/input/lunch/geneva.txt</file>
+    <file>data/input/lunch/ipm0.box</file>
+    <file>data/input/lunch/ipm1.box</file>
+    <file>data/input/lunch/ipm2.box</file>
+    <file>data/input/lunch/ipm3.box</file>
+    <file>data/input/lunch/ipm4.box</file>
+    <file>data/input/lunch/ipm5.box</file>
+    <file>data/input/lunch/ipm6.box</file>
+    <file>data/input/lunch/ipm7.box</file>
+    <file>data/input/misc/day-degrees.box</file>
+    <file>data/input/sandy/sandy.box</file>
+    <file>data/input/sandy/sandy1.box</file>
+    <file>data/input/sandy/sandy2a.box</file>
+    <file>data/input/sandy/sandy2b.box</file>
+    <file>data/input/sandy/sandy2c.box</file>
+    <file>data/input/sandy/sandy2d.box</file>
+    <file>data/input/sandy/sandy3a.box</file>
+    <file>data/input/sandy/sandy3b.box</file>
+    <file>data/input/sandy/sandy4a.box</file>
+    <file>data/input/sandy/sandy4b.box</file>
+    <file>data/input/sandy/sandy_.box</file>
+    <file>data/input/sandy/t_urticae.box</file>
+    <file>data/input/sandy/t_urticae_sandy.box</file>
+    <file>data/input/sandy/t_urticae_simulation.box</file>
+    <file>data/input/scripts/begin.R</file>
+    <file>data/input/scripts/end.R</file>
+    <file>data/input/scripts/end_jump.R</file>
+    <file>data/input/scripts/end_jump3.R</file>
+    <file>data/input/scripts/end_jump4.R</file>
+    <file>data/input/scripts/month_breaks.R</file>
+    <file>data/input/scripts/profile.R</file>
+    <file>data/input/student/bmsb/bmsb.box</file>
+    <file>data/input/student/bmsb/bmsbNiels.box</file>
+    <file>data/input/student/bmsb/weather/2015MSP14922Stn.txt</file>
     <file>data/input/student/eggx.box</file>
+    <file>data/input/student/EmeraldAsh/emeraldAshV2.box</file>
+    <file>data/input/student/EmeraldAsh/emeraldAshV2Niels.box</file>
+    <file>data/input/student/EmeraldAsh/weather/ClimDataV3.txt</file>
     <file>data/input/student/fibonacci.box</file>
     <file>data/input/student/jump.box</file>
     <file>data/input/student/jump2.box</file>
     <file>data/input/student/jump3.box</file>
     <file>data/input/student/jump4.box</file>
-    <file>data/script/begin.R</file>
-    <file>data/script/butterfly_analysis.R</file>
-    <file>data/script/end.R</file>
-    <file>data/script/end_butterfly.R</file>
-    <file>data/script/end_jump.R</file>
-    <file>data/script/end_jump3.R</file>
-    <file>data/script/end_jump4.R</file>
-    <file>data/script/honey_bee.R</file>
-    <file>data/script/month_breaks.R</file>
-    <file>data/script/profile.R</file>
+    <file>data/input/student/tuta/leafminer.box</file>
+    <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
+    <file>data/input/vg/crops.xml</file>
+    <file>data/input/vg/input/direct_transmission_single.txt</file>
+    <file>data/input/vg/input/sel_dk.txt</file>
+    <file>data/input/vg/sel_dk.txt</file>
+    <file>data/input/vg/TestOKO1.xml</file>
+    <file>data/input/vg/TestOKO1_tr.xml</file>
+    <file>data/input/vg/transform1.bat</file>
+    <file>data/input/vg/transform_all.bat</file>
+    <file>data/input/vg/transform_OKO1.bat</file>
+    <file>data/input/vg/vv_to_unisim.xsl</file>
+    <file>data/input/weather/braunschweig 2009.txt</file>
+    <file>data/input/weather/flakkebjerg 2009.txt</file>
+    <file>data/input/weather/geneva 2009.txt</file>
+    <file>data/input/weather/ljubljana 2009.txt</file>
   </qresource>
 </RCC>

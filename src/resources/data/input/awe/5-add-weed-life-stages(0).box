@@ -1,0 +1,116 @@
+Simulation sim {
+	.steps = 730
+  Calendar calendar {
+    .initialDateTime = 1/1/2010
+  }
+  awe::Weather weather {
+  }
+  awe::Rotation field {
+    .crops = (maize springWheat)
+    awe::Crop maize {
+      .sowingDate = 1/5/*
+      .harvestDate = 20/9/*
+      .maxYield = 800
+      .maxYieldLossPct = 80
+      .slopeYieldLossPct = 0.5
+      .laiX = (0 200 620 700 800 940 1200 1808 2572)
+      .laiY = (0   0 0.5 0.9 1.8   5    5    5    3)
+      .ddSum = ./time[total]
+      DayDegrees time {
+        .T = weather[T]
+        .T0 = 0
+        .resetTotal = ..[sowToday]
+      }
+    }
+    awe::Crop springWheat {
+      .sowingDate = 15/4/*
+      .harvestDate = 15/8/*
+      .maxYield = 700
+      .maxYieldLossPct = 40
+      .slopeYieldLossPct = 0.1
+      .laiX = (0 110 210 310 410 510 610 1000 1200 1650)
+      .laiY = (0   0 0.3 0.8 1.6 2.9   5    5    5    2)
+      .ddSum = ./time[total]
+      DayDegrees time {
+        .T = weather[T]
+        .T0 = 0
+        .resetTotal = ..[sowToday]
+      }                          T]
+    }
+  }
+
+	Box weed {
+		awe::SeedBank seedBank {
+			.initial = 1000
+			.yearlyMortality = 0.1
+			.yearlyEmergence = 0.2
+			.emergenceByMonth = (0 5 30 60 70 50 10 0 0 0 0 0)
+		}	
+			DayDegrees time {
+			.T = weather[T]
+			.T0 = 0
+		}
+		Box seedling {
+			+duration = 50
+			Stage density {
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+			Stage densityEqs {
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+		}
+		Box juvenile {
+			+duration = 600
+			Stage density {
+				.inflow = seedling/density[outflow]
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+			Stage densityEqs {
+				.inflow = seedling/densityEqs[outflow]
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+		}
+		Box mature {
+			+duration = 300
+			Stage density {
+				.inflow = juvenile/density[outflow]
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+			Stage densityEqs {
+				.inflow = juvenile/densityEqs[outflow]
+				.step = ../../time[step]
+				.duration = ..[duration] 
+			}
+		}
+		Stage seedsOnPlant {
+			.step = ../time[step]
+			.duration = ..[duration] 
+		}
+  }
+	
+	OutputR {
+    PageR {
+      .xAxis = calendar[date]
+			.ncol = 2
+      PlotR {
+        .ports = (weather[T])
+      }
+      PlotR {
+        .ports = (field[lai] seedBank[cropEffectOnEmergence])
+      }
+      PlotR {
+        .ports = (seedBank[total])
+      }
+      PlotR {
+				.layout = "merged"
+        .ports = (seedBank[dailyEmergenceRatio] seedBank[dailyEmergenceRatioPotential])
+      }
+		}
+	}
+}
+

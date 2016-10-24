@@ -133,15 +133,6 @@ QString Environment::filePath(Folder folder, QString fileName) const {
     return fileNamePath;
 }
 
-QString Environment::fileContent(Folder folder, QString fileName) {
-    QString fileNamePath = filePath(folder, fileName);
-    QFile file(fileNamePath);
-    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        ThrowException("Could not open file").value(fileNamePath);
-    return QString( file.readAll() );
-}
-
-
 QString Environment::folderInfo(Folder folder) {
     QString info;
     QDir folderDir = dir(folder),
@@ -159,8 +150,8 @@ QString Environment::folderInfo(Folder folder) {
         if (folder == Output)
             info += "\n  '" + resolvedDir.absolutePath() +  "' will be created when needed";
         else{
-            bool shouldExist = (folder == Input || folder == Script) ||
-                               (folder != Input && folder != Script && folderDir.dirName() != PATH_NOT_SET);
+            bool shouldExist = (folder == Input) ||
+                               (folder != Input && folderDir.dirName() != PATH_NOT_SET);
             if (shouldExist)
                 info += "\n  Warning: '" + resolvedDir.absolutePath() +  "' does not exist";
             else
@@ -192,13 +183,33 @@ QString Environment::latestLoadArg() const {
     return _latestLoadArg;
 }
 
-QString Environment::inputFileNamePath(QString fileName) const {
+QDir Environment::currentBoxScriptFolder() const {
     QString loadFileNamePath = filePath(Input, _currentLoadArg);
-    QDir loadDir = QFileInfo(loadFileNamePath).absoluteDir();
-    QString fileNamePath = loadDir.absoluteFilePath(fileName),
-            cleaned = QDir::cleanPath(fileNamePath);
-    return cleaned;
+    return QFileInfo(loadFileNamePath).absoluteDir();
 }
+
+QString Environment::inputFileNamePath(QString fileName) const {
+    QDir dir = currentBoxScriptFolder();
+    QString fileNamePath;
+    bool found;
+    do {
+        fileNamePath = dir.absoluteFilePath(fileName);
+        found = QFileInfo(fileNamePath).exists();
+        if (found) break;
+    } while (dir.cdUp());
+    return found ?
+           QDir::cleanPath(fileNamePath) :
+           currentBoxScriptFolder().absoluteFilePath(fileName);
+}
+
+QString Environment::inputFileContent(QString fileName) const {
+    QString fileNamePath = inputFileNamePath(fileName);
+    QFile file(fileNamePath);
+    if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+        ThrowException("Could not open file").value(fileNamePath);
+    return QString( file.readAll() );
+}
+
 
 QDir Environment::dir(Folder folder) const {
     return _dir.value(folder);
@@ -282,7 +293,6 @@ void Environment::initDir() {
     _dir[Work] = QDir(homePath());
     _dir[Input] = "input";
     _dir[Output] = "output";
-    _dir[Script] = "script";
     _dir[Atom] = findAtomDir();
     _dir[Notepad] = findNotepadDir();
     _dir[Graphviz] = findGraphvizDir();
@@ -341,7 +351,6 @@ namespace {
             FOLDER_ENTRY(Work);
             FOLDER_ENTRY(Input);
             FOLDER_ENTRY(Output);
-            FOLDER_ENTRY(Script);
             FOLDER_ENTRY(Notepad);
             FOLDER_ENTRY(Atom);
             FOLDER_ENTRY(Graphviz);
@@ -357,7 +366,6 @@ template<> QString convert(Environment::Folder folder) {
         FOLDER_CASE(Work);
         FOLDER_CASE(Input);
         FOLDER_CASE(Output);
-        FOLDER_CASE(Script);
         FOLDER_CASE(Notepad);
         FOLDER_CASE(Atom);
         FOLDER_CASE(Graphviz);

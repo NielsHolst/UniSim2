@@ -118,16 +118,13 @@ QString PlotR::toScript() {
       << "plot_" << layout << "(df, "
       << xLabel << ", "
       << (iteration > 2 ? ("\""+iterationId+"\"") : "NULL") << ", "
-      << "c(" << portLabels.join(", ") << ")";
-
-//    if (convert<LayoutR>(layout) == Facetted) {
-        s << ", "
-          << "ncol=" << dim("ncol") << ", "
-          << "nrow=" << dim("nrow");
-//    }
-    s << ")";
+      << "c(" << portLabels.join(", ") << ")"
+      << ", "
+      << "ncol=" << dim("ncol") << ", "
+      << "nrow=" << dim("nrow")
+      << ")";
     if (!end.isEmpty())
-        s << "+" << environment().fileContent(Environment::Script, end).trimmed();
+        s << "+" << environment().inputFileContent(end).trimmed();
     if (!endCode.isEmpty())
         s << "+" << endCode;
     s << ",\n";

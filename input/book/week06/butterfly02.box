@@ -52,7 +52,7 @@ Simulation sim {
       .xAxis = calendar[date]
       PlotR {
         .ports = (*[content])
-        .end = "month_breaks.R"
+        .end = "scripts/month_breaks.R"
       }
       PlotR {
 //        .hide = TRUE

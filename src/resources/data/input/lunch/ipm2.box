@@ -1,0 +1,25 @@
+Simulation IPM {
+  .steps = 14
+  Calendar calendar {
+    .initialDateTime = 1/5/2009
+  }
+  Records weather {
+    .fileName = "flakkebjerg.txt"
+  }
+  Box butterfly {
+    Stage egg {
+      .initial = 100
+      .duration = 5
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (*[content])
+      }
+      PlotR {
+        .ports = (weather[Tavg])
+      }
+    }
+  }
+}

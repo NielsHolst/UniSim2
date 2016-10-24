@@ -1,5 +1,5 @@
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
-set QT_PLUGINS=C:\Qt\5.4\mingw491_32\plugins
+set QT_PLUGINS=C:\Qt\5.7\mingw53_32\plugins
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
 echo = Clean target bin and  =

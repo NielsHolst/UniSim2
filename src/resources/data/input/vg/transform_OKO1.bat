@@ -1,0 +1,2 @@
+call transform1 TestOKO1
+pause

@@ -27,8 +27,8 @@ OutputR::OutputR(QString name, QObject *parent)
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\n"
                 "copies another R script to the clipboard");
-    Input(begin).equals("begin.R").help("Name of R script run before auto-generated R script");
-    Input(end).equals("end.R").help("Name of R script run after auto-generated R script");
+    Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
+    Input(end).equals("scripts/end.R").help("Name of R script run after auto-generated R script");
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(14).help("Width of pop-up windows (only used if popUp is set)");
@@ -111,10 +111,10 @@ void OutputR::openFile() {
 
 void OutputR::copyToClipboard() {
     QString s;
-    s += "source(\"" + environment().filePath(Environment::Script, begin) + "\")\n";
+    s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
     s += "source(\""+_filePathR+"\")\n";
     s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";
-    s += "source(\"" + environment().filePath(Environment::Script, end) + "\")\n";
+    s += "source(\"" + environment().inputFileNamePath(end) + "\")\n";
     environment().copyToClipboard(s);
 }
 

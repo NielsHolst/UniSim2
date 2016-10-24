@@ -14,7 +14,7 @@ class Command;
 
 class Environment : public QObject {
 public:
-    enum Folder {Work, Input, Output, Script, Notepad, Atom, Graphviz};
+    enum Folder {Work, Input, Output, Notepad, Atom, Graphviz};
     const Folder LastFolder = Graphviz;
 
     Environment();
@@ -34,7 +34,6 @@ public:
     QString outputFileNamePath(QString fileName);
 
     QString filePath(Folder folder, QString fileName) const;
-    QString fileContent(Folder folder, QString fileName);
     QString folderInfo(Folder folder);
 
     void currentLoadArg(QString arg);
@@ -44,7 +43,9 @@ public:
     void latestLoadArg(QString arg);
     QString latestLoadArg() const;
 
+    QDir currentBoxScriptFolder() const;
     QString inputFileNamePath(QString fileName) const;
+    QString inputFileContent(QString fileName) const;
 
     QDir dir(Folder folder) const;
     void dir(Folder folder, QString path);

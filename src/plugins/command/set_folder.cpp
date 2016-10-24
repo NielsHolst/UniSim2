@@ -47,8 +47,6 @@ void set_folder::showAllFolders() {
         environment().folderInfo(Environment::Input) +
         "\nOutput folder:\n  " +
         environment().folderInfo(Environment::Output) +
-        "\nScript folder:\n  " +
-        environment().folderInfo(Environment::Script) +
         "\nAtom editor folder:\n  " +
         environment().folderInfo(Environment::Atom) +
         "\nNotepad++ editor folder:\n  " +
