@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class primarydistributionsoil : public base::Box
+class PrimaryDistributionSoil : public base::Box
 {
 public:
-    primarydistributionsoil(QString name, QObject *parent);
-    void reset();
+    PrimaryDistributionSoil(QString name, QObject *parent);
     void update();
 
 private:

@@ -10,9 +10,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (primarydistributionleaf)
+PUBLISH (PrimaryDistributionLeaf)
 	
-primarydistributionleaf::primarydistributionleaf(QString name, QObject *parent)
+PrimaryDistributionLeaf::PrimaryDistributionLeaf(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -28,14 +28,7 @@ primarydistributionleaf::primarydistributionleaf(QString name, QObject *parent)
 
 }
 
-void primarydistributionleaf::reset() {
-
-    Doserl = 0.;
-    fi = 0.;
-
-}
-
-void primarydistributionleaf::update() {
+void PrimaryDistributionLeaf::update() {
 
     fi = 0.25*stage1 + 0.5*stage2 + 0.7*stage3 + 0.9*stage4;
     Doserl = (Doseappl - Dosedrift) * fi;

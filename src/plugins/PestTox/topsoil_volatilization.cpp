@@ -3,23 +3,22 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include "topsoil_volatilization.h"
 #include <cmath>
 #include <base/publish.h>
+#include "general.h"
+#include "topsoil_volatilization.h"
 
 using namespace base;
 
 namespace PestTox {
 
-PUBLISH (topsoilvolatilization)
+PUBLISH (TopsoilVolatilization)
 	
-topsoilvolatilization::topsoilvolatilization(QString name, QObject *parent)
+TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
     Input(Tsa).equals(25.);           // degrees celsius
-    Input(MWair).equals(28.97);       // g/mol
-    Input(MVair).equals(20.1);        // Molar volume air; cm3/mol
     Input(MV).equals(140.83);         //molar volume; density 1.704 g/cm3, molar mass 169.07 g/mol
     Input(BLair).equals(0.00475);     // m or 4.75 mm as per Mackay (2001)
     Input(Pd).equals(0.01);           //penetration depth of 1 cm = 0.01 m
@@ -46,23 +45,7 @@ topsoilvolatilization::topsoilvolatilization(QString name, QObject *parent)
     Output(ke);                //transport velocity through boundary layer (m/s)
 }
 
-void topsoilvolatilization::reset() {
-
-    Bw = 0.;    
-    Dbl = 0.;
-    Ba = 0.;
-    Bea = 0.;
-    Bew = 0.;
-    Da = 0.;
-    Dw = 0.;
-    Dv = 0.;
-    ksv = 0.;
-    Dpl = 0.;
-    ke = 0.;
-
-}
-
-void topsoilvolatilization::update() {
+void TopsoilVolatilization::update() {
 
     Ba = 1./10000. * 1./1000. * (pow((Tsa + 273.15), 1.75)*sqrt(((1./MWair) + (1./MW))) / (Pair*pow((pow(MVair, 1./3.) + pow(MV, 1./3.)), 2)));
     ke = Ba / BLair;
@@ -74,7 +57,7 @@ void topsoilvolatilization::update() {
     Da = 3600. * 24. * Bea * farea * Za / Dpl;
     Dw = 3600. * 24. * Bew * farea * Zw / Dpl;
     Dv = 1./((1./Dbl)+(1./(Da + Dw)));
-    ksv = Dv/(VZ);
+    ksv = Dv/VZ;
 
 }
 

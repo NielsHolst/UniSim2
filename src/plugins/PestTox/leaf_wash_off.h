@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class leafwashoff : public base::Box
+class LeafWashOff : public base::Box
 {
 public:
-    leafwashoff(QString name, QObject *parent);
-    void reset();
+    LeafWashOff(QString name, QObject *parent);
     void update();
 
 private:
@@ -22,7 +21,7 @@ private:
     double P, woc, inflow, kov;
 
     // Output
-    double washoff, outflow, concentration;
+    double value, outflow, concentration;
 };
 
 } //namespace

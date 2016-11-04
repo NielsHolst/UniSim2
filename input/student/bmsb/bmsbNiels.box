@@ -22,8 +22,8 @@ Simulation sim {
         .isTicking = ./development[on]
         EggDevelopment development {
           .currentDate = calendar[date]
-          .fromDate = /2/1/*
-          .toDate = /6/1/*
+          .fromDate = /4/6/2015
+          .toDate = /6/6/2015
         }
 			}
 		}
@@ -67,13 +67,13 @@ Simulation sim {
 			.layout = "merged"
 			.ports = (pest/*[content] pest/adult/adult[content])
 			.end = "scripts/month_breaks.R"
-      .endCode = "scale_y_log10(limits = c(0.1, NA))" 
+      .endCode = "scale_y_log10(limits=c(0.1, NA))"
 		  }
 		  PlotR {
 			.layout = "merged"
 			.ports = (pest/adult/preOviposition[content] pest/adult/oviposition[content])
 			.end = "scripts/month_breaks.R"
-      .endCode = "scale_y_log10(limits = c(0.1, NA))" 
+      .endCode = "scale_y_log10(limits=c(0.1, NA))"
 		  }		  
   
 		  PlotR {
@@ -81,7 +81,7 @@ Simulation sim {
         .end = "scripts/month_breaks.R"
 		  }
 		  PlotR {
-				.ports = (egg/time[isTicking])
+				.ports = (egg/time/development[on])
         .end = "scripts/month_breaks.R"
 		  }
 		  PlotR {

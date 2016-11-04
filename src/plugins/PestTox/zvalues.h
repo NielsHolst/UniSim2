@@ -10,18 +10,17 @@
 
 namespace PestTox {
 
-class zvalues : public base::Box
+class ZValues : public base::Box
 {
 public:
-    zvalues(QString name, QObject *parent);
-    void reset();
+    ZValues(QString name, QObject *parent);
     void update();
 
 private:
     // Input
     double MW, Pd,
     Psol, VP, foc, pb, fa, fw, fs, farea,
-    KocpH, TrefVP, Tsa, R, Sp;
+    KocpH, Tsa, R, Sp;
 
     // Output
     double Za, Zw, Zs, VPTadap, Vs, Vw, Va, VZ;

@@ -10,10 +10,10 @@
 
 namespace PestTox {
 
-class application : public base::Box
+class Application : public base::Box
 {
 public:
-    application(QString name, QObject *parent);
+    Application(QString name, QObject *parent);
     void reset();
     void update();
 

@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class leafphotodegradation : public base::Box
+class LeafPhotoDegradation : public base::Box
 {
 public:
-    leafphotodegradation(QString name, QObject *parent);
-    void reset();
+    LeafPhotoDegradation(QString name, QObject *parent);
     void update();
 
 private:
@@ -22,7 +21,7 @@ private:
     double I, kOH, dl;
 
     // Output
-    double concentration, outflow, kld, log_OH;
+    double concentration, outflow, kl, log_OH;
 };
 
 } //namespace

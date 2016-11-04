@@ -76,10 +76,11 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
 inline bool hasDirective(QString s) { return s.indexOf(':') > -1; }
 
 QString Path::normalise(int ix) {
-     _current.originalPath = _originalPaths.at(ix);
+     _current.originalPath = _originalPaths.at(ix).simplified();
+     _current.originalPath.remove(QChar(' '));
      _current.normalisedContext = _originalContext;
 
-     int leftBracket = _current.originalPath.indexOf('[');
+    int leftBracket = _current.originalPath.indexOf('[');
     QStringList base = _current.originalPath.left(leftBracket).split('/');
 
     if (base.isEmpty())

@@ -1,5 +1,5 @@
-#ifndef EAB_FECUNDITY_H
-#define EAB_FECUNDITY_H
+#ifndef FIBONACCI_H
+#define FIBONACCI_H
 #include <base/box.h>
 
 namespace student {
@@ -10,7 +10,7 @@ public:
     EabFecundity(QString name, QObject *parent);
     void update();
 private:
-    // Inputs
+    // Input
     double ashState;
     // Outputs
     double perCapita;

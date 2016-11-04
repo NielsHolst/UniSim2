@@ -31,7 +31,7 @@ HEADERS +=  \
     test_history.h \
     test_new_port.h \
     test_path.h \
-    test_population.h \
+#    test_population.h \
     test_port_buffer.h \
     test_port_type.h \
     test_port.h \
@@ -67,7 +67,7 @@ SOURCES +=  \
     test_history.cpp \
     test_new_port.cpp \
     test_path.cpp \
-    test_population.cpp \
+#    test_population.cpp \
     test_port_buffer.cpp \
     test_port_type.cpp \
     test_port.cpp \

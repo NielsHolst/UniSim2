@@ -12,9 +12,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (primarydistributiondrifttoair)
+PUBLISH (PrimaryDistributionToAir)
 	
-primarydistributiondrifttoair::primarydistributiondrifttoair(QString name, QObject *parent)
+PrimaryDistributionToAir::PrimaryDistributionToAir(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -36,17 +36,8 @@ primarydistributiondrifttoair::primarydistributiondrifttoair(QString name, QObje
 
 }
 
-void primarydistributiondrifttoair::reset() {
 
-    fXpass = 0.;
-    Xpass = 0.;
-    Dosedrift = 0.;
-    fd = 0.;
-
-}
-
-
-void primarydistributiondrifttoair::update() {    
+void PrimaryDistributionToAir::update() {
 
     int npass = int((W -(2.*Pnsz))/Nd);
     fXpass = 0;

@@ -4,7 +4,7 @@ Simulation sim {
     .initialDateTime = 1/1/2009
     .latitude = 60
   }
-	Box butterfly {
+	Box honeybee {
     Box queen {
       ProportionalSignal fecundity {
         .input = calendar[dayLength]
@@ -36,7 +36,7 @@ Simulation sim {
       .xAxis = calendar[date]
       PlotR {
         .ports = (*[content] queen/fecundity[signal])
-        .end = "month_breaks.R"
+        .end = "scripts/month_breaks.R"
       }
 		}
 	}

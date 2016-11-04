@@ -59,11 +59,11 @@ Simulation sim {
       .ncol = 2
       PlotR {
         .ports = (*[content])
-        .end = "month_breaks.R"
+        .end = "scripts/month_breaks.R"
       }
       PlotR {
         .ports = (*[outflowTotal])
-        .end = "month_breaks.R"
+        .end = "scripts/month_breaks.R"
       }
 		}
 	}

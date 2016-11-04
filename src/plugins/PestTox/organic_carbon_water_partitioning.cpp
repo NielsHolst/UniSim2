@@ -11,9 +11,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (organiccarbonwaterpartitioning)
+PUBLISH (OrganicCarbonWaterPartitioning)
 	
-organiccarbonwaterpartitioning::organiccarbonwaterpartitioning(QString name, QObject *parent)
+OrganicCarbonWaterPartitioning::OrganicCarbonWaterPartitioning(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -21,18 +21,11 @@ organiccarbonwaterpartitioning::organiccarbonwaterpartitioning(QString name, QOb
     Input(pH).equals(7.);
     Input(pKa).equals(0.8);   //The acid dissociation constants for glyphosate are pKa1 0.8 (1st phosphonic), pKa2 2.3 (carboxylate), pKa3 6.0 (2nd phosphonic), and pKa4 11.0 (amine).
 
-
     Output(KocpH);
 
 }
 
-void organiccarbonwaterpartitioning::reset() {
-
-    KocpH = 0.;
-
-}
-
-void organiccarbonwaterpartitioning::update() {
+void OrganicCarbonWaterPartitioning::update() {
 
     KocpH = Koc * pow(10, -pH)/(pow(10, -pH)+ pow(10, -pKa));
 

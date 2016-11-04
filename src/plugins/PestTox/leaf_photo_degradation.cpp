@@ -12,9 +12,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (leafphotodegradation)
+PUBLISH (LeafPhotoDegradation)
 	
-leafphotodegradation::leafphotodegradation(QString name, QObject *parent)
+LeafPhotoDegradation::LeafPhotoDegradation(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -23,22 +23,15 @@ leafphotodegradation::leafphotodegradation(QString name, QObject *parent)
     Input(dl).equals(12);             // hours (h)
 
     Output(log_OH);            //log10(OH), log (molecules/cm3)
-    Output(kld);               // day-1
+    Output(kl);               // day-1
     Output(concentration);     //kg a.i/ha
     Output(outflow);           //fraction removed by degradation
 }
 
-void leafphotodegradation::reset() {
-    concentration = 0.;
-    outflow = 0.;
-    log_OH = 0.;
-    kld = 0.;
-}
-
-void leafphotodegradation::update() {
+void LeafPhotoDegradation::update() {
 
     log_OH = (0.0003 * I) + 4.7783;
-    kld = 3600.*24.*kOH*pow(10, (log_OH * dl/24.));
+    kl = 3600.*24.*kOH*pow(10, (log_OH * dl/24.));
 
 }
 

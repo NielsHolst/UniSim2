@@ -61,17 +61,18 @@ Simulation sim {
 			.layout = "merged"
 			.ports = (pest/*[content] pest/adult/adult[content])
 			.end = "scripts/month_breaks.R"
-      .endCode = "scale_y_log10(limits = c(0.1, NA))" 
+      .endCode = "scale_y_log10(limits=c(0.1, NA))"
 		  }
 		  PlotR {
 			.layout = "merged"
 			.ports = (pest/adult/preOviposition[content] pest/adult/oviposition[content])
 			.end = "scripts/month_breaks.R"
-      .endCode = "scale_y_log10(limits = c(0.1, NA))" 
+      .endCode = "scale_y_log10(limits=c(0.1, NA))"
 		  }		  
   
 		  PlotR {
 				.ports = (weather[Tavg])
+        .end = "scripts/month_breaks.R"
 		  }
 		}
 	}

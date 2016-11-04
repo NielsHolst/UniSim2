@@ -15,9 +15,6 @@ Simulation sim {
 	Records weather {	
 		.fileName = "weather/ClimDataV3.txt"
 	}	
-  Box ash {
-    +state = 4.0
-  }
 	//EAB box
 	Box eab{
 			Stage egg {
@@ -63,10 +60,11 @@ Simulation sim {
 							.timeStep = 1
 							.inflow = adult[outflow]
 							.duration = 18
-							.growthFactor = ./fecundity[perCapita]							
+							.growthFactor = ./fecundity[perCapita]		
               EabFecundity fecundity {
-                .ashState = ash[state]
-              }
+                .ashState = 2
+              }  
+               
 						}
 				}
 		}	//End EAB box

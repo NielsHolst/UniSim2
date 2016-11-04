@@ -10,19 +10,19 @@
 
 namespace PestTox {
 
-class leafuptake : public base::Box
+class LeafUptake : public base::Box
 {
 public:
-    leafuptake(QString name, QObject *parent);
-    void reset();
+    LeafUptake(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double a, b, R, T, MV, leaftype;
+    int leafType;
+    double a, b, Tair, MV;
 
     // Output
-    double V, Ed, log_klu, klu;
+    double V, Ed, log_kl, kl;
 };
 
 } //namespace

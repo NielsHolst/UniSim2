@@ -22,7 +22,7 @@ void TestPopulation::testOk() {
                     port("ageIncrement").equals(5).
                     port("initial").equals(10).
                     port("firstCohortGain").equals(4).
-                    port("cohortsGain").imports("../gain[vector]").
+                    port("cohortsGain").imports("./gain[vector]").
                     box().name("gain").
                         newPort("vector").equals("(10.0 30.0 20.0)").
                     endbox().
@@ -46,6 +46,11 @@ void TestPopulation::testOk() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
+
+    if (sim->port("hasError")->value<bool>()) {
+        QFAIL(qPrintable(sim->port("errorMsg")->value<QString>()));
+    }
+
     std::cout << qPrintable(output.columnLabels().join(", ")) << "\n"
               << qPrintable(output.filePath()) << "\n";
     QCOMPARE(output.columnLabels().size(), 11);

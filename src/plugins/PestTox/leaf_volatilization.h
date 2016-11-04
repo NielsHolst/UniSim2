@@ -10,20 +10,19 @@
 
 namespace PestTox {
 
-class leafvolatilization : public base::Box
+class LeafVolatilization : public base::Box
 {
 
 public:
-    leafvolatilization(QString name, QObject *parent);
-    void reset();
+    LeafVolatilization(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double VP, Ea, R, Tr, Doseappl, Ta;
+    double VP, Ea, Doseappl, Tair;
 
     // Output
-    double ln_ER, ER, fv, fr, kTr, klv;
+    double ln_ER, ER, fv, fr, kTr, kl;
 
 
 };

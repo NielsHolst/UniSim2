@@ -6,14 +6,15 @@
 #include "zvalues.h"
 #include <cmath>
 #include <base/publish.h>
+#include "general.h"
 
 using namespace base;
 
 namespace PestTox {
 
-PUBLISH (zvalues)
+PUBLISH (ZValues)
 	
-zvalues::zvalues(QString name, QObject *parent)
+ZValues::ZValues(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -27,7 +28,6 @@ zvalues::zvalues(QString name, QObject *parent)
     Input(fw).equals(0.25);           //fraction of water in the soil
     Input(fs).equals(0.5);            //fraction of solids in the soil
     Input(KocpH).equals(5.678e-6);    //The acid dissociation constants for glyphosate are pKa1 0.8 (1st phosphonic), pKa2 2.3 (carboxylate), pKa3 6.0 (2nd phosphonic), and pKa4 11.0 (amine).
-    Input(TrefVP).equals(25.);        //reference temperature of vapour pressure (degrees celsius)
     Input(Tsa).equals(30.);           //Average soil air temperature in the month of pesticide application  (degrees celsius)
     Input(R).equals(8.3145);          //J mol-1 K-1
     Input(Sp).equals(0.5);            //soil porosity
@@ -45,23 +45,11 @@ zvalues::zvalues(QString name, QObject *parent)
 
 }
 
-void zvalues::reset() {
-    Za = 0.;
-    Zw = 0.;
-    Zs = 0.;
-    Vs = 0.;
-    Vw = 0.;
-    Va = 0.;
-    VPTadap = 0.;
-    VZ = 0.;
-
-}
-
-void zvalues::update() {
-
-    VPTadap = VP * exp((1./10.)*(Tsa - TrefVP));
+void ZValues::update() {
+    const double Tref = 25.;
+    VPTadap = VP * exp((1./10.)*(Tsa - Tref));
     Zw = 1000.*Psol/(VPTadap * MW);
-    Za = 1./(R*(Tsa + 273.15));
+    Za = 1./(R*(Tsa + T0));
     Zs = (KocpH *foc * pb * Zw) / (1. - Sp);
     Vs = Pd*fs*farea;
     Vw = Pd*fw*farea;

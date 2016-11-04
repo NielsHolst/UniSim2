@@ -11,9 +11,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (primarydistributionsoil)
+PUBLISH (PrimaryDistributionSoil)
 	
-primarydistributionsoil::primarydistributionsoil(QString name, QObject *parent)
+PrimaryDistributionSoil::PrimaryDistributionSoil(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -24,12 +24,7 @@ primarydistributionsoil::primarydistributionsoil(QString name, QObject *parent)
     Output(Dosers);          //kg a.i/ha
 }
 
-void primarydistributionsoil::reset() {
-
-    Dosers = 0.;
-}
-
-void primarydistributionsoil::update() {
+void PrimaryDistributionSoil::update() {
 
     Dosers = Doseappl - (Doserl + Dosedrift);
 }

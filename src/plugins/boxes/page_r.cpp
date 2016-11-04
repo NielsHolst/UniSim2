@@ -21,9 +21,9 @@ PageR::PageR(QString name, QObject *parent)
     Input(xAxis).imports("/*[step]");
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
-    Input(popUp).imports("..[popUp]");
-    Input(width).imports("..[width]");
-    Input(height).imports("..[height]");
+    Input(popUp).imports("ancestors::*[popUp]");
+    Input(width).imports("ancestors::*[width]");
+    Input(height).imports("ancestors::*[height]");
 }
 
 void PageR::amend() {

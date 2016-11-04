@@ -10,9 +10,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH(application)
+PUBLISH(Application)
 	
-application::application(QString name, QObject *parent)
+Application::Application(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Input(day).equals(1);          //day of application (day)
@@ -22,12 +22,12 @@ application::application(QString name, QObject *parent)
     Output(Doseappl);    //Take the value of the dose applied on the day, otherwise zero (kg a.i/ha)
 }
 
-void application::reset() {
+void Application::reset() {
     daysPassed = 0;
     Doseappl = 0;
 }
 
-void application::update() {
+void Application::update() {
     ++daysPassed;
     Doseappl = (daysPassed == day) ? ((ae * ar)/(0.75*1000.)) : 0.;
 }

@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class organiccarbonwaterpartitioning : public base::Box
+class OrganicCarbonWaterPartitioning : public base::Box
 {
 public:
-    organiccarbonwaterpartitioning(QString name, QObject *parent);
-    void reset();
+    OrganicCarbonWaterPartitioning(QString name, QObject *parent);
     void update();
 
 private:

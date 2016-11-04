@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    QDate currentDate, fromDate, toDate;
+    QDate fromDate, toDate, currentDate;
     // Outputs
     bool on;
 };

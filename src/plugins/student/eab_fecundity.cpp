@@ -10,7 +10,7 @@ PUBLISH(EabFecundity)
 EabFecundity::EabFecundity(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(ashState).equals(1);
+    Input(ashState);
     Output(perCapita);
 }
 

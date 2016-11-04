@@ -21,16 +21,18 @@ find::find(QString name, QObject *parent)
 
 void find::doExecute() {
     QVector<QObject*> matches;
-    if (_args.size() == 2) {
-        QString path = _args.at(1);
+    int n = _args.size();
+    if (n > 1) {
         Box *box = environment().current();
         if (box) {
+            QString path;
+            for (int i = 1; i < n; ++i)
+                path += _args.at(i);
             matches = box->resolveMany<QObject>(path);
             if (matches.isEmpty())
                 dialog().error("No matches");
-            else {
+            else
                 dialog().information(info(matches));
-            }
         }
         else
             dialog().error("No matches; no objects loaded");

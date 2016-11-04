@@ -1,0 +1,59 @@
+Simulation sim {
+	.steps = 70
+	Box hero {
+		Stage egg {
+			.initial = 40 
+			.duration = 10
+		}
+		Stage larva {
+			.inflow = ../egg[outflow]
+			.duration = 21
+		}
+		Stage pupa {
+			.inflow = ../larva[outflow]
+			.duration = 10
+		}
+		Stage adult {
+			.inflow = ../pupa[outflow]
+			.duration = 14
+		}
+	}
+	Box io {
+		Stage egg {
+			.initial = 100 
+			.duration = 7
+		}
+		Stage larva {
+			.inflow = ../egg[outflow]
+			.duration = 15
+		}
+		Stage pupa {
+			.inflow = ../larva[outflow]
+			.duration = 7
+		}
+		Stage adult {
+			.inflow = ../pupa[outflow]
+			.duration = 30
+		}
+	}
+	OutputR {
+		.popUp = TRUE
+		.width = 10
+		.height = 4
+    PageR {
+      .xAxis = sim[step]
+	    PlotR {
+        .ports = (hero/*[content])
+      }
+  	}
+	   PageR {
+      .xAxis = sim[step]
+			.width = 8
+			.height = 3
+	    PlotR {
+        .ports = (io/*[content])
+      }
+		}
+	}
+}
+

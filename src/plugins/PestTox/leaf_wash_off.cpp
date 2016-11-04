@@ -12,9 +12,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (leafwashoff)
+PUBLISH (LeafWashOff)
 	
-leafwashoff::leafwashoff(QString name, QObject *parent)
+LeafWashOff::LeafWashOff(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -25,23 +25,16 @@ leafwashoff::leafwashoff(QString name, QObject *parent)
 
     Output(outflow); //kg a.i/ha
     Output(concentration); //kg a.i/ha
-    Output(washoff); //kg a.i/ha
+    Output(value); //kg a.i/ha
     //sum of the 3 leaf removal processes, or
     //dose of the pesticides reaching the leaves that are removed from the leaves before the next rain event
 }
 
-void leafwashoff::reset() {
-
-    washoff = 0.;
-    outflow = 0.;
-    concentration = 0.;
-}
-
-void leafwashoff::update() {
+void LeafWashOff::update() {
 
     outflow = (concentration*kov) + (concentration*woc*P*0.1);
     concentration += (concentration < 0) ? 0: inflow - outflow;
-    washoff = concentration*woc*P*0.1;    
+    value = concentration*woc*P*0.1;
 
 }
 

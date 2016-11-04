@@ -76,6 +76,9 @@ Simulation sim {
 		PlotR{
 			.ports=(eab/*[content])
 		   }							    
+		PlotR{
+			.ports=(oviposition[outflowTotal])
+		   }							    
 		 }
 	 }	
 }

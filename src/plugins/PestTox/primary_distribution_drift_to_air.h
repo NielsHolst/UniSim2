@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class primarydistributiondrifttoair : public base::Box
+class PrimaryDistributionToAir : public base::Box
 {
 public:
-    primarydistributiondrifttoair(QString name, QObject *parent);
-    void reset();
+    PrimaryDistributionToAir(QString name, QObject *parent);
     void update();
 
 //Iin shared functions i.e. functions which shares functions, "private" is replaced by "protected".

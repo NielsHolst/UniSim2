@@ -10,16 +10,15 @@
 
 namespace PestTox {
 
-class topsoilvolatilization : public base::Box
+class TopsoilVolatilization : public base::Box
 {
 public:
-    topsoilvolatilization(QString name, QObject *parent);
-    void reset();
+    TopsoilVolatilization(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double MWair, MVair, Tsa, Pd,
+    double Tsa, Pd,
     MV, BLair, fa, fw, farea, Pair,
     Za, Zw, VZ, MW, viscosity;
 

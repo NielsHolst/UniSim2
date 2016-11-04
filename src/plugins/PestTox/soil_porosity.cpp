@@ -10,9 +10,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (soilporosity)
+PUBLISH (SoilPorosity)
 	
-soilporosity::soilporosity(QString name, QObject *parent)
+SoilPorosity::SoilPorosity(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -23,13 +23,13 @@ soilporosity::soilporosity(QString name, QObject *parent)
 
 }
 
-void soilporosity::reset() {
+void SoilPorosity::reset() {
 
-    Sp = 0.;
+    update();
 
 }
 
-void soilporosity::update() {
+void SoilPorosity::update() {
 
     Sp = fa + fw;
 

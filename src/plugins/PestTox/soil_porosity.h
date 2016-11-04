@@ -10,10 +10,10 @@
 
 namespace PestTox {
 
-class soilporosity : public base::Box
+class SoilPorosity : public base::Box
 {
 public:
-    soilporosity(QString name, QObject *parent);
+    SoilPorosity(QString name, QObject *parent);
     void reset();
     void update();
 

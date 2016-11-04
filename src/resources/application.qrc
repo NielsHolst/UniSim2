@@ -15,7 +15,12 @@
     <file>data/input/awe/4-add-weed-emergence.box</file>
     <file>data/input/awe/5-add-weed-life-stages(0).box</file>
     <file>data/input/awe/5-add-weed-life-stages.box</file>
+    <file>data/input/book/demo/butterflies-common-k.box</file>
     <file>data/input/book/demo/insect.box</file>
+    <file>data/input/book/demo/jump/end_jump3.R</file>
+    <file>data/input/book/demo/jump/jump1.box</file>
+    <file>data/input/book/demo/jump/jump2.box</file>
+    <file>data/input/book/demo/jump/jump3.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009 Tavg.txt</file>
@@ -25,6 +30,8 @@
     <file>data/input/book/weather/ljubljana 2009 Tavg.txt</file>
     <file>data/input/book/weather/ljubljana 2009.txt</file>
     <file>data/input/book/week01/butterflies.box</file>
+    <file>data/input/book/week01/butterflies_popup.box</file>
+    <file>data/input/book/week01/butterflies_popup_2.box</file>
     <file>data/input/book/week01/butterfly.box</file>
     <file>data/input/book/week01/butterfly_with_date.box</file>
     <file>data/input/book/week01/egg.box</file>
@@ -81,23 +88,56 @@
     <file>data/input/sandy/t_urticae_simulation.box</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
-    <file>data/input/scripts/end_jump.R</file>
-    <file>data/input/scripts/end_jump3.R</file>
-    <file>data/input/scripts/end_jump4.R</file>
     <file>data/input/scripts/month_breaks.R</file>
     <file>data/input/scripts/profile.R</file>
+    <file>data/input/student/bmsb/bmsb(0).box</file>
     <file>data/input/student/bmsb/bmsb.box</file>
     <file>data/input/student/bmsb/bmsbNiels.box</file>
     <file>data/input/student/bmsb/weather/2015MSP14922Stn.txt</file>
     <file>data/input/student/eggx.box</file>
+    <file>data/input/student/EmeraldAsh/emeraldAshV2(0).box</file>
     <file>data/input/student/EmeraldAsh/emeraldAshV2.box</file>
     <file>data/input/student/EmeraldAsh/emeraldAshV2Niels.box</file>
     <file>data/input/student/EmeraldAsh/weather/ClimDataV3.txt</file>
     <file>data/input/student/fibonacci.box</file>
-    <file>data/input/student/jump.box</file>
-    <file>data/input/student/jump2.box</file>
-    <file>data/input/student/jump3.box</file>
-    <file>data/input/student/jump4.box</file>
+    <file>data/input/student/PestTox/fate_LC50_684_wbz0_2012.box</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_LC50_684_wbz0_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_LC50_684_wbz0_2013.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_LC50_684_wbz30_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_LC50_684_wbz30_2013.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_Pnsz0_2012 - sensitivity analysis_buffer zone width vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_Pnsz0_2013 - sensitivity analysis_buffer zone width vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_Pnsz30_2012 - sensitivity analysis_buffer zone width vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_Pnsz30_2013 - sensitivity analysis_buffer zone width vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2012 - sensitivity analysis_population vs concentrations in the water and topsoil.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2012 - sensitivity analysis_rainfall vs macropore flow.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2012 - sensitivity analysis_rainfall vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2012 - sensitivity analysis_rainfall vs washoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2013 - sensitivity analysis_population vs concentrations in the water and topsoil.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2013 - sensitivity analysis_rainfall vs macropore flow.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2013 - sensitivity analysis_rainfall vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2013 - sensitivity analysis_rainfall vs washoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz0_2013.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_population vs concentrations in the water and topsoil.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_population vs duration.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_population vs eggs per female.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_rainfall vs macropore flow.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_rainfall vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012 - sensitivity analysis_rainfall vs washoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013 - sensitivity analysis_population vs concentrations in the water and topsoil.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013 - sensitivity analysis_population vs eggs per female.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013 - sensitivity analysis_rainfall vs macropore flow.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013 - sensitivity analysis_rainfall vs runoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013 - sensitivity analysis_rainfall vs washoff.xml</file>
+    <file>data/input/student/PestTox/PestTox_fate and transport_wbz30_2013.xml</file>
+    <file>data/input/student/PestTox/PestTox_spray drift_Pnsz0_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_spray drift_Pnsz0_2013.xml</file>
+    <file>data/input/student/PestTox/PestTox_spray drift_Pnsz30_2012.xml</file>
+    <file>data/input/student/PestTox/PestTox_spray drift_Pnsz30_2013.xml</file>
+    <file>data/input/student/PestTox/weather/Loei.txt</file>
+    <file>data/input/student/PestTox/weather/Pathumthani.txt</file>
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
     <file>data/input/vg/crops.xml</file>
