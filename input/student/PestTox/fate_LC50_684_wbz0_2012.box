@@ -1,5 +1,5 @@
 Simulation {
-	.steps = 250
+	.steps = 30
   Calendar calendar {
     .initialDateTime = 1/4/2012
 		.latitude = 14.02
@@ -226,9 +226,23 @@ Simulation {
 					}
 				}
 				Box surface {
-						PestTox::surfacewaterdegradationfinal degradation {
+						PestTox::SurfaceWaterDegradation degradation {
+							.inflow = soil/top/degradation[Dosers]
+							.DT50 = 4.5
+							.ff = 0.995
+							.Q = 2.1
 						}
 				}
+			}
+		}
+	}
+	OutputR {
+		.popUp = TRUE
+		.width = 12
+		.height = 8
+		PageR temperature {
+			PlotR {
+				.ports = (weather[Tavg] soilTemperature[value])
 			}
 		}
 	}

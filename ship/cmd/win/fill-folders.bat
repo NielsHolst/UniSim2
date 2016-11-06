@@ -1,6 +1,16 @@
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
-set QT_PLUGINS=C:\Qt\5.7\mingw53_32\plugins
 set UNISIM_BIN=%UNISIM_SHIP%\bin
+
+set QT_PLUGINS=C:\Qt\5.7\mingw53_32\plugins
+if exist %QT_PLUGINS% goto :qt_root_ok
+set QT_PLUGINS=C:\Qt\5.4\mingw491_32\plugins
+if exist %QT_PLUGINS% goto :qt_root_ok
+echo .
+echo Could not find %QT_PLUGINS%
+echo .
+goto :end_fail
+
+:qt_root_ok
 
 echo = Clean target bin and  =
 rd /Q /S %UNISIM_BIN%
@@ -37,7 +47,6 @@ copy qt5test.dll %UNISIM_BIN%
 copy Qt5Widgets.dll %UNISIM_BIN%
 copy qt5xmlpatterns.dll %UNISIM_BIN%
 popd
-
 echo = Create Qt plugin folders =
 pushd %UNISIM_BIN%
 md imageformats
@@ -55,5 +64,6 @@ exit /B 0
 
 :end_fail
 @echo *** BUILD FAILURE ***
+pause
 exit /B 1
 

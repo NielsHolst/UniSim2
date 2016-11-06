@@ -28,12 +28,11 @@ HEADERS += \
     run_off_amount.h \
     soil_porosity.h \
     soil_temperature.h \
-    surface_water_degradation_final.h \
+    surface_water_degradation.h \
     topsoil_degradation.h \
     topsoil_in_soil.h \
     topsoil_volatilization.h \
     topsoil_run_off.h \
-    water_degradation_rate_constant.h \
     water_viscosity.h \
     zvalues.h
 
@@ -56,11 +55,10 @@ SOURCES += \
     run_off_amount.cpp \
     soil_porosity.cpp \
     soil_temperature.cpp \
-    surface_water_degradation_final.cpp \
+    surface_water_degradation.cpp \
     topsoil_degradation.cpp \
     topsoil_in_soil.cpp \
     topsoil_volatilization.cpp \
     topsoil_run_off.cpp \
-    water_degradation_rate_constant.cpp \
     water_viscosity.cpp \
     zvalues.cpp

@@ -36,7 +36,7 @@ isEmpty(BOOST_PATH) {
 }
 INCLUDEPATH += "$$(BOOST_ROOT)"
 
-# Own libraries that we use, except 'base' does not itself
+# Own libraries that we use, except 'base' does not use itself
 !equals(BOXES_PLUGIN_NAME, "base") {
     LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -luniversal_simulator_base$${SUFFIX}
 }

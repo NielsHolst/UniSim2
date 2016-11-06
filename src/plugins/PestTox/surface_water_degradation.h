@@ -10,19 +10,18 @@
 
 namespace PestTox {
 
-class surfacewaterdegradationfinal  : public base::Box
+class SurfaceWaterDegradation  : public base::Box
 {
 public:
-    surfacewaterdegradationfinal (QString name, QObject *parent);
-    void reset();
+    SurfaceWaterDegradation (QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double inflow, k, ff, Q, Tref, Tair;
+    double inflow, DT50, ff, Q, Tw;
 
     // Output
-    double concentration, outflow, Tw, kwd, fsdT;
+    double concentration, outflow, kwd, fsdT;
 
 };
 
