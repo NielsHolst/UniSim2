@@ -6,27 +6,23 @@
 #ifndef CROP_H
 #define CROP_H
 
+#include <QDate>
 #include <base/box.h>
 
 namespace PestTox {
 
-class crop : public base::Box
+class Crop : public base::Box
 {
 public:
-    crop(QString name, QObject *parent);
-    void reset();
+    Crop(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double seeds;
-    int day;
+    QDate sowingDate, date;
 
     // Output
-    double seedsSown;
-
-    // Data
-    int daysPassed;
+    int sown;
 };
 
 } //namespace

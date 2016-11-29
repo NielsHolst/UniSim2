@@ -3,26 +3,26 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_TOPSOILRUNOFF_H
-#define PESTTOX_TOPSOILRUNOFF_H
+#ifndef SOIL_STRUCTURE_H
+#define SOIL_STRUCTURE_H
 
 #include <base/box.h>
 
 namespace PestTox {
 
-class topsoilrunoff : public base::Box
+class SoilStructure : public base::Box
 {
 public:
-    topsoilrunoff(QString name, QObject *parent);
+    SoilStructure(QString name, QObject *parent);
     void reset();
     void update();
 
 private:
     // Input
-    double S, wbz, Doseaflrm, Doseldw, P, KocpH, fom, Q;
+    double fa, fw;
 
     // Output
-    double Fslope, Fbuffer, F, fsr, Kd;
+    double porosity, fs;
 };
 
 } //namespace

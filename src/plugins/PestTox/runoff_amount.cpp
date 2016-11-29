@@ -3,7 +3,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include "run_off_amount.h"
+#include "runoff_amount.h"
 #include <cmath>
 #include <base/publish.h>
 
@@ -12,9 +12,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (runoffamount)
+PUBLISH (RunoffAmount)
 	
-runoffamount::runoffamount(QString name, QObject *parent)
+RunoffAmount::RunoffAmount(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -25,13 +25,7 @@ runoffamount::runoffamount(QString name, QObject *parent)
 
 }
 
-void runoffamount::reset() {
-
-    Q = 0.;
-
-}
-
-void runoffamount::update() {
+void RunoffAmount::update() {
 
 //  x is for loamy soils and y is for sandy soils
 

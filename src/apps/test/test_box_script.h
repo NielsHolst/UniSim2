@@ -11,6 +11,12 @@ private slots:
     void testPlotRPortsAsScalar();
     void testPlotRPortsAsReference();
 
+    void testStringInDoubleQuotes();
+    void testStringInSingleQuotes();
+    void testStringInFancyQuotes();
+    void testNonAscii();
+    void testPathWithSpaces();
+
     void testLoadAbsolutePath();
 private:
     QFile _file;

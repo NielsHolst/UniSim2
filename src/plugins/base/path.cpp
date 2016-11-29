@@ -3,6 +3,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
+#include <algorithm>
 #include <iostream>
 #include <QRegExp>
 #include "box.h"
@@ -70,6 +71,9 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
         QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
         ThrowException(msg.arg(_candidates.size()).arg(number)).value(_current.originalPath).context(_caller);
     }
+//    sort(_candidates.begin(), _candidates.end(),
+//         [](Port *a, Port *b) { return a->objectName() < b->objectName(); });
+
     return _candidates;
 }
 

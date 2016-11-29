@@ -1,0 +1,3 @@
+ModelA a {
+	.input1 = 2|(uniform 1 8)
+}

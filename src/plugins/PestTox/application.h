@@ -6,6 +6,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <QDate>
 #include <base/box.h>
 
 namespace PestTox {
@@ -14,19 +15,15 @@ class Application : public base::Box
 {
 public:
     Application(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:
     // Input
-    int day;
-    double ae, ar;
+    QDate applicationDate, date;
+    double concentration, rate;
 
     // Output
-    double Doseappl;
-
-    // Data
-    int daysPassed;
+    double dose;
 };
 
 } //namespace

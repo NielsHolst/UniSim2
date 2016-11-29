@@ -2,7 +2,7 @@
 #define TEST_TRACK_H
 
 #include <QFile>
-#include <QSet>
+#include <QVector>
 #include "autotest.h"
 
 namespace base {
@@ -15,6 +15,7 @@ class TestTrack : public QObject
 private slots:
     void testScalar();
     void testVector();
+    void testTrackPtr();
 private:
     QFile file;
     void run(base::Box *simulation);
@@ -23,6 +24,8 @@ private:
     void checkColumnNames(QSet<QString> expected);
     void checkColumnFormat(int expected);
     void checkColumnData(int expected);
+    base::Box* buildJump(int start, int length);
+    QVector<int> runJump(base::Box *sim);
 };
 
 DECLARE_TEST(TestTrack)

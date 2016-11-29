@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class macroporeflow : public base::Box
+class MacroporeFlow : public base::Box
 {
 public:
-    macroporeflow(QString name, QObject *parent);
-    void reset();
+    MacroporeFlow(QString name, QObject *parent);
     void update();
 
 private:

@@ -3,26 +3,23 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_FRACTIONOFRAINRUNOFF_H
-#define PESTTOX_FRACTIONOFRAINRUNOFF_H
+#ifndef PRIMARY_DISTRIBUTION_AIR_H
+#define PRIMARY_DISTRIBUTION_AIR_H
 
-#include <base/box.h>
+#include "primary_distribution_base.h"
 
 namespace PestTox {
 
-class fractionofrainrunoff : public base::Box
+class PrimaryDistributionAir : public PrimaryDistributionBase
 {
 public:
-    fractionofrainrunoff(QString name, QObject *parent);
-    void reset();
+    PrimaryDistributionAir(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double Q, P;
-
-    // Output
-    double frr;
+    double boomWidth, exposureZoneWidth,
+        a1, b1, a2, b2;
 };
 
 } //namespace

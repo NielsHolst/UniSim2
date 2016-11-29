@@ -5,6 +5,7 @@
 */
 #include "leaf_uptake.h"
 #include <cmath>
+#include <base/exception.h>
 #include <base/publish.h>
 #include "general.h"
 
@@ -15,32 +16,26 @@ namespace PestTox {
 PUBLISH (LeafUptake)
 	
 LeafUptake::LeafUptake(QString name, QObject *parent)
-	: Box(name, parent)
+    : LossRate(name, parent)
 {
-
-    Input(a).equals(0.);
-    Input(b).equals(0.);
-    Input(Tair).equals(25.);             //deg C
-    Input(MV).equals(140.83);         //cm3/mol
-    Input(leafType).equals(1);        //types of leaves, citrus = 1, pear = 2
-
-    Output(Ed);
-    Output(kl);               //rate constant of the uptake process, day-1
-    Output(log_kl);           //log10(k)
-    Output(V);
+    Input(leafType).equals("NonWaxy").help("Either 'Waxy' or 'NonWaxy'");
+    Input(Tair).imports("weather[Tavg]");
+    Input(MV).imports("applications[molarVolume]");
 }
 
-void LeafUptake::update() {
+double LeafUptake::computeInstantaneous() {
+    double V = 0.945*MV + 2.772,
+           B = R*2.303*(Tair + T0),
+           log_klu;
 
-    V = (0.9445 * MV) + 2.7717;
-    Ed = (leafType == 1) ? 78.875 * exp(3.470*MV/1000.) : 63.222 * exp(2.874*MV/1000.);
-    if(leafType == 1)
-        a = 0.8, b = -0.1167;
+    if (leafType == "NonWaxy")
+        log_klu = -4.93 + 5.30e-3*V - 63.222*exp(2.874*MV/1000)/B;
+    else if (leafType == "Waxy")
+        log_klu = -5.31 + 5.84e-3*V - 78.875*exp(3.470*MV/1000)/B;
     else
-        a = 3.231, b = 6.341e-2;
-    log_kl  = a - b*V - (Ed*1000)/(R*2.3*(Tair + T0));
-    kl = pow(10, log_kl)*3600.*24.;
+        ThrowException("LeafType must be either 'Waxy' or 'NonWaxy").value(leafType).context(this);
 
+    return pow(10., log_klu);       // per second
 }
 
 } //namespace

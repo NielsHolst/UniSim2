@@ -3,25 +3,24 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_LEAFWASHOFF_H
-#define PESTTOX_LEAFWASHOFF_H
+#ifndef LEAF_WASH_OFF_H
+#define LEAF_WASH_OFF_H
 
-#include <base/box.h>
+#include "loss_rate.h"
 
 namespace PestTox {
 
-class LeafWashOff : public base::Box
+class LeafWashOff : public LossRate
 {
 public:
     LeafWashOff(QString name, QObject *parent);
-    void update();
 
 private:
     // Input
-    double P, woc, inflow, kov;
+    double rainfall, washOffCoefficient;
 
-    // Output
-    double value, outflow, concentration;
+    // Methods
+    double computeInstantaneous();
 };
 
 } //namespace

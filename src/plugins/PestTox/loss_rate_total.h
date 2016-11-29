@@ -3,26 +3,31 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_LEAFOVERALLRATECONSTANT_H
-#define PESTTOX_LEAFOVERALLRATECONSTANT_H
+#ifndef LOSS_RATE_TOTAL_H
+#define LOSS_RATE_TOTAL_H
 
 #include <base/box.h>
 
 namespace PestTox {
 
-class leafoverallrateconstant : public base::Box
+class LossRateTotal : public base::Box
 {
 public:
-    leafoverallrateconstant(QString name, QObject *parent);
-    void reset();
+    LossRateTotal(QString name, QObject *parent);
+    void amend();
     void update();
 
 private:
     // Input
-    double klu, klv, kld;
+    QString path;
+    double amount;
 
     // Output
-    double kov;
+    double fractionLost, amountLost;
+    QVector<double> _outputRates, _outputAmounts;
+
+    // Data
+    QVector<const double*> _inputs;
 };
 
 } //namespace

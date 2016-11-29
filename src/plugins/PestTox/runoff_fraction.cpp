@@ -3,7 +3,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include "fraction_of_rain_run_off.h"
+#include "runoff_fraction.h"
 #include <base/publish.h>
 
 
@@ -11,9 +11,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (fractionofrainrunoff)
+PUBLISH (RunoffFraction)
 	
-fractionofrainrunoff::fractionofrainrunoff(QString name, QObject *parent)
+RunoffFraction::RunoffFraction(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -25,13 +25,7 @@ fractionofrainrunoff::fractionofrainrunoff(QString name, QObject *parent)
 
 }
 
-void fractionofrainrunoff::reset() {
-
-    frr = 0.;
-
-}
-
-void fractionofrainrunoff::update() {
+void RunoffFraction::update() {
 
     frr = (P > 0) ? Q/P : 0;
 

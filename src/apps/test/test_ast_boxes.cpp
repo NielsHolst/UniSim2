@@ -8,47 +8,52 @@
 #include <base/exception.h>
 #include <base/port.h>
 #include "test_ast_boxes.h"
+#include "input_file_path.h"
 
 using namespace base;
 
+void TestAstBoxes::init() {
+    builder = new BoxBuilder ;
+    reader = new BoxReaderBoxes(builder);
+}
+
+void TestAstBoxes::cleanup(){
+    delete builder;
+    delete reader;
+}
+
 void TestAstBoxes::testSimple() {
-    BoxBuilder builder;
-    BoxReaderBase *reader = new BoxReaderBoxes(&builder);
     try {
-        reader->parse(filePath("ast_simple.box"));
+        reader->parse(inputFilePath("ast_simple.box"));
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder.content();
+    Box *root = builder->content();
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
 
 void TestAstBoxes::testComments() {
-    BoxBuilder builder;
-    BoxReaderBase *reader = new BoxReaderBoxes(&builder);
     try {
-        reader->parse(filePath("ast_comments.box"));
+        reader->parse(inputFilePath("ast_comments.box"));
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder.content();
+    Box *root = builder->content();
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
 
 void TestAstBoxes::testWhitespaceInVector() {
-    BoxBuilder builder;
-    BoxReaderBase *reader = new BoxReaderBoxes(&builder);
     try {
-        reader->parse(filePath("ast_whitespace_in_vector.box"));
+        reader->parse(inputFilePath("ast_whitespace_in_vector.box"));
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder.content();
+    Box *root = builder->content();
 
     typedef QVector<int> VecInt;
     QCOMPARE(root->resolveOne<Port>("a[numbers1]")->value<VecInt>(),
@@ -65,10 +70,8 @@ void TestAstBoxes::testWhitespaceInVector() {
 
 void TestAstBoxes::testBadTransform() {
     bool excepted{false};
-    BoxBuilder builder;
-    BoxReaderBase *reader = new BoxReaderBoxes(&builder);
     try {
-        reader->parse(filePath("ast_transform.box"));
+        reader->parse(inputFilePath("ast_transform.box"));
     }
     catch (Exception &ex) {
         excepted = true;
@@ -76,8 +79,13 @@ void TestAstBoxes::testBadTransform() {
     QVERIFY(excepted);
 }
 
-QString TestAstBoxes::filePath(QString fileName) {
-    return environment().filePath(Environment::Input, fileName);
+void TestAstBoxes::testDistribution() {
+    try {
+        reader->parse(inputFilePath("ast_distribution.box"));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected: " + ex.what()));
+    }
 }
 
 

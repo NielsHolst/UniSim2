@@ -70,13 +70,17 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
 }
 
 QString Parameter::toString() const {
-    QString val = QString::fromStdString(value);
-    return attributedName.toString() + " equals '" + val + "'";
+    QString val = QString::fromStdString(value),
+            s = attributedName.toString() + " equals '" + val + "'";
+    if (distribution.size() > 0)
+        s += " | (" + QString::fromStdString(distribution) + ")";
+    return s;
 }
 
 void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
-    QString val = QString::fromStdString(value);
+    QString val = QString::fromStdString(value),
+            dist = QString::fromStdString(distribution);
     if (isApostrophed(val)) {
         val = deEmbrace(val);
         if (isParenthesized(val))
@@ -90,6 +94,8 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
         builder.equals(val);
     else
         builder.imports(val);
+    if (!dist.isEmpty())
+        builder.distribution(dist);
 }
 
 void Node::clear() {

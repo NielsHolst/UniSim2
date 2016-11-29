@@ -3,7 +3,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include "topsoil_run_off.h"
+#include "topsoil_runoff.h"
 #include <cmath>
 #include <base/publish.h>
 
@@ -12,9 +12,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (topsoilrunoff)
+PUBLISH (TopSoilRunoff)
 	
-topsoilrunoff::topsoilrunoff(QString name, QObject *parent)
+TopSoilRunoff::TopSoilRunoff(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -33,16 +33,7 @@ topsoilrunoff::topsoilrunoff(QString name, QObject *parent)
     Output(fsr);
 }
 
-void topsoilrunoff::reset() {
-    Fslope = 0.;
-    Fbuffer = 0.;
-    F = 0.;
-    fsr = 0.;
-    Kd = 0.;
-
-}
-
-void topsoilrunoff::update() {
+void TopSoilRunoff::update() {
 
     if (S > 0.2){
         Fslope = 1;

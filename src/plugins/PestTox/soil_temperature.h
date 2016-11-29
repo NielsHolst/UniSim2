@@ -10,16 +10,16 @@
 
 namespace PestTox {
 
-class SoilTempetarure : public base::Box
+class SoilTemperature : public base::Box
 {
 public:
-    SoilTempetarure(QString name, QObject *parent);
+    SoilTemperature(QString name, QObject *parent);
     void reset();
     void update();
 
 private:
     // Input
-    double airTemperature;
+    double Tmin, Tmax, dayLength;
 
     // Output
     double value;

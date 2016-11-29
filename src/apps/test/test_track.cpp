@@ -1,5 +1,6 @@
 #include <iostream>
 #include <base/box.h>
+#include <base/box_builder.h>
 #include <base/command.h>
 #include <base/environment.h>
 #include <base/mega_factory.h>
@@ -8,7 +9,7 @@
 #include "test_track.h"
 
 using namespace base;
-
+using std::cout;
 
 void TestTrack::testScalar() {
     try {
@@ -56,6 +57,52 @@ void TestTrack::run(Box *simulation) {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
+}
+
+void TestTrack::testTrackPtr() {
+    QVector<int>
+        output1 = runJump( buildJump(17, 8) ),
+        output2 = runJump( buildJump(32, 8) ),
+        expected1,
+        expected2;
+    expected1 << 17 << 52 << 26 << 13 << 40 << 20 << 10 << 5;
+    expected2 << 32 << 16 <<  8 <<  4 <<  2 <<  1 <<  4 << 2;
+    QCOMPARE(output1, expected1);
+    QCOMPARE(output2, expected2);
+//    for (int x : output1)
+//        cout << x << " ";
+//    cout << "\n";
+//    for (int x : output2)
+//        cout << x << " ";
+//    cout << "\n";
+}
+
+base::Box* TestTrack::buildJump(int start, int length) {
+    BoxBuilder builder;
+    builder.
+        box("Simulation").name("sim").
+            port("steps").equals(length-1).
+            box("Jump").name("jump").
+                port("initial").equals(start).
+            endbox().
+            box("OutputR").
+                box("PageR").
+                    box("PlotR").
+                        port("ports").equals("(jump[value])").
+                    endbox().
+                endbox().
+            endbox().
+        endbox();
+    return builder.content();
+}
+
+QVector<int> TestTrack::runJump(base::Box *sim) {
+    sim->run();
+
+    Port *value = sim->resolveOne<Port>("jump[value]");
+    const Vector* vector = value->trackPtr();
+    const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
+    return *values;
 }
 
 void TestTrack::openFile() {

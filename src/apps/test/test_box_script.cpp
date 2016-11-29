@@ -36,6 +36,36 @@ void TestBoxScript::testPlotRPortsAsReference() {
     QVERIFY(errors < dialog().errorCount());
 }
 
+void TestBoxScript::testStringInDoubleQuotes() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "box_script/string_in_double_quotes.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+}
+
+void TestBoxScript::testStringInSingleQuotes() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "box_script/string_in_single_quotes.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+}
+
+void TestBoxScript::testStringInFancyQuotes() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "box_script/string_in_fancy_quotes.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+}
+
+void TestBoxScript::testNonAscii() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "box_script/non_ascii.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+}
+
+void TestBoxScript::testPathWithSpaces() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "box_script/path_with_spaces.box", 0);
+    QVERIFY(errors < dialog().errorCount());
+}
+
 void TestBoxScript::testLoadAbsolutePath() {
     QString fileNamePath = inputFilePath("test_box_script_ports_as_vector.box");
     QFileInfo info(fileNamePath);

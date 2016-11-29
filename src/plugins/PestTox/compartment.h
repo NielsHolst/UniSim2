@@ -3,26 +3,26 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_SOILPOROSITY_H
-#define PESTTOX_SOILPOROSITY_H
+#ifndef COMPARTMENT_H
+#define COMPARTMENT_H
 
+#include <QDate>
 #include <base/box.h>
 
 namespace PestTox {
 
-class SoilPorosity : public base::Box
+class Compartment : public base::Box
 {
 public:
-    SoilPorosity(QString name, QObject *parent);
-    void reset();
+    Compartment(QString name, QObject *parent);
     void update();
 
 private:
     // Input
-    double fa, fw;
+    double gain, loss;
 
     // Output
-    double Sp;
+    double load;
 };
 
 } //namespace

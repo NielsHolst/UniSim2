@@ -38,6 +38,7 @@ public:
     template <class T> BoxBuilder& equals(T value);
     BoxBuilder& equals(QString value);
     BoxBuilder& equals(const char *value);
+    BoxBuilder& distribution(QString value);
     // State
     const Box* currentBox() const;
     const Port* currentPort() const;

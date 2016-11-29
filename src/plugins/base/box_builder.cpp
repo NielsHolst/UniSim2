@@ -101,6 +101,10 @@ BoxBuilder& BoxBuilder::equals(const char *value) {
     return equals(QString(value));
 }
 
+BoxBuilder& BoxBuilder::distribution(QString value) {
+    return *this;
+}
+
 // State
 
 const Box* BoxBuilder::currentBox() const {

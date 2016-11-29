@@ -10,21 +10,23 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (SoilTempetarure)
+PUBLISH (SoilTemperature)
 	
-SoilTempetarure::SoilTempetarure(QString name, QObject *parent)
+SoilTemperature::SoilTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(airTemperature).equals(110.);
+    Input(Tmin).imports("weather[Tmin]");
+    Input(Tmax).imports("weather[Tmax]");
+    Input(dayLength).imports("calendar[dayLength]");
     Output(value);
 }
 
-void SoilTempetarure::reset() {
+void SoilTemperature::reset() {
     update();
 }
 
-void SoilTempetarure::update() {
-    value = 1.05*airTemperature - 1.5;
+void SoilTemperature::update() {
+    value = dayLength*Tmax + (1.-dayLength)*Tmin;
 }
 
 } //namespace

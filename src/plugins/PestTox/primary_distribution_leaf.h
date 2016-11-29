@@ -3,14 +3,14 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_PRIMARYDISTRIBUTIONLEAF_H
-#define PESTTOX_PRIMARYDISTRIBUTIONLEAF_H
+#ifndef PRIMARY_DISTRIBUTION_LEAF_H
+#define PRIMARY_DISTRIBUTION_LEAF_H
 
-#include <base/box.h>
+#include "primary_distribution_base.h"
 
 namespace PestTox {
 
-class PrimaryDistributionLeaf : public base::Box
+class PrimaryDistributionLeaf : public PrimaryDistributionBase
 {
 public:
     PrimaryDistributionLeaf(QString name, QObject *parent);
@@ -18,12 +18,8 @@ public:
 
 private:
     // Input
-    double Doseappl, Dosedrift,
-        stage1, stage2, stage3, stage4;
-
-    // Output
-    double Doserl, fi;
-
+    double fractionTakenAir;
+    QVector<double> fractionsByCropStage, stageContent;
 };
 
 } //namespace

@@ -5,6 +5,7 @@
 */
 #include "primary_distribution_leaf.h"
 #include <base/publish.h>
+#include <base/vector_op.h>
 
 using namespace base;
 
@@ -13,26 +14,17 @@ namespace PestTox {
 PUBLISH (PrimaryDistributionLeaf)
 	
 PrimaryDistributionLeaf::PrimaryDistributionLeaf(QString name, QObject *parent)
-	: Box(name, parent)
+    : PrimaryDistributionBase(name, parent)
 {
-
-    Input(Doseappl).equals(1.);         //applied dosage kg a.i/ha
-    Input(Dosedrift).equals(1.);
-    Input(stage1).equals(0.);            //leaf development
-    Input(stage2).equals(0.);            //tillering
-    Input(stage3).equals(0.);            //stem elongation
-    Input(stage4).equals(0.);            //senescence
-
-    Output(Doserl);
-    Output(fi);                   //fraction intercepted
-
+    Input(fractionTakenAir).imports("../surroundings[fractionTaken]");
+    Input(stageContent).imports("crop/*{Stage}[content]");
+    Input(fractionsByCropStage);
 }
 
 void PrimaryDistributionLeaf::update() {
-
-    fi = 0.25*stage1 + 0.5*stage2 + 0.7*stage3 + 0.9*stage4;
-    Doserl = (Doseappl - Dosedrift) * fi;
-
+    double fractionLeft = 1. - fractionTakenAir;
+    fractionTaken = vector_op::sumOfProducts(fractionsByCropStage, stageContent)*fractionLeft;
+    doseTaken = doseApplied*fractionTaken;
 }
 
 } //namespace

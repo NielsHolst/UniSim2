@@ -13,9 +13,9 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (macroporeflow)
+PUBLISH (MacroporeFlow)
 	
-macroporeflow::macroporeflow(QString name, QObject *parent)
+MacroporeFlow::MacroporeFlow(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
@@ -47,22 +47,7 @@ macroporeflow::macroporeflow(QString name, QObject *parent)
 
 }
 
-void macroporeflow::reset() {
-    fporemobile = 0.;
-    Vporemobile = 0.;
-    Vporeimmobile = 0.;
-    C = 0.;
-    Cused = 0.;
-    Cfree = 0.;
-    Pcapacitymm = 0.;
-    Preqh = 0.;
-    Preqday = 0.;
-    Pi = 0.;
-    fmp = 0.;
-
-}
-
-void macroporeflow::update() {
+void MacroporeFlow::update() {
 
     fporemobile = 0.72 * fsand + 0.35 * fsilt + 0.14 * fclay;
     Vporemobile = fporemobile * (fw * fa);

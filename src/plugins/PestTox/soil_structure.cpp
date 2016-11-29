@@ -3,35 +3,42 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include "soil_porosity.h"
+#include "soil_structure.h"
 #include <base/publish.h>
+#include <base/test_num.h>
 
 using namespace base;
 
 namespace PestTox {
 
-PUBLISH (SoilPorosity)
+PUBLISH (SoilStructure)
 	
-SoilPorosity::SoilPorosity(QString name, QObject *parent)
+SoilStructure::SoilStructure(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
     Input(fa).equals(0.25);     //fraction of air in the soil
     Input(fw).equals(0.25);     //fraction of water in the soil
 
-    Output(Sp);
+    Output(fs);
+    Output(porosity);
 
 }
 
-void SoilPorosity::reset() {
+void SoilStructure::reset() {
 
     update();
 
 }
 
-void SoilPorosity::update() {
+void SoilStructure::update() {
 
-    Sp = fa + fw;
+    porosity = fa + fw;
+    fs = 1. - porosity;
+
+    double sum = fa+fw+fs;
+    if (TestNum::ne(sum, 1.))
+        ThrowException("Sum of soil fractions must equal 1").value(sum).context(this);
 
 }
 

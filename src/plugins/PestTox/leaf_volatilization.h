@@ -6,25 +6,22 @@
 #ifndef PESTTOX_LEAFVOLATILIZATION_H
 #define PESTTOX_LEAFVOLATILIZATION_H
 
-#include <base/box.h>
+#include "loss_rate.h"
 
 namespace PestTox {
 
-class LeafVolatilization : public base::Box
+class LeafVolatilization : public LossRate
 {
 
 public:
     LeafVolatilization(QString name, QObject *parent);
-    void update();
-
 private:
     // Input
-    double VP, Ea, Doseappl, Tair;
-
+    double VP, Ea, Tref, Tair, load;
     // Output
-    double ln_ER, ER, fv, fr, kTr, kl;
-
-
+    double evaporationRate, Tcorrection;
+    // Methods
+    double computeInstantaneous();
 };
 
 } //namespace

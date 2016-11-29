@@ -6,23 +6,20 @@
 #ifndef PESTTOX_LEAFUPTAKE_H
 #define PESTTOX_LEAFUPTAKE_H
 
-#include <base/box.h>
+#include "loss_rate.h"
 
 namespace PestTox {
 
-class LeafUptake : public base::Box
+class LeafUptake : public LossRate
 {
 public:
     LeafUptake(QString name, QObject *parent);
-    void update();
-
 private:
     // Input
-    int leafType;
-    double a, b, Tair, MV;
-
-    // Output
-    double V, Ed, log_kl, kl;
+    QString leafType;
+    double Tair, MV;
+    // Methods
+    double computeInstantaneous();
 };
 
 } //namespace

@@ -68,7 +68,7 @@ QString PageR::dim(QString portName) {
 QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
-    s << functionName() << " <- function(df) {\n";
+    s << functionName() << " <- function(df, ...) {\n";
     if (popUp) {
       s << "  open_graph("
         << port("width")->value<int>()
@@ -83,7 +83,8 @@ QString PageR::toScript() {
             continue;
         s << plot->toScript();
     }
-    s << "    nrow = " << dim("nrow") << ",\n"
+    s << "    ...,\n"
+      << "    nrow = " << dim("nrow") << ",\n"
       << "    ncol = " << dim("ncol") << "\n  )\n}\n";
     return string;
 }

@@ -27,7 +27,7 @@ struct ParameterWithAttributes {
 
 struct Parameter {
     ParameterWithAttributes attributedName;
-    std::string value;
+    std::string value, distribution;
     QString toString() const;
     void addToBuilder(base::BoxBuilder &builder);
 };

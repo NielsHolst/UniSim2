@@ -4,31 +4,25 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include "crop.h"
+#include <base/any_year.h>
 #include <base/publish.h>
 
 using namespace base;
 
 namespace PestTox {
 
-PUBLISH(crop)
+PUBLISH(Crop)
 	
-crop::crop(QString name, QObject *parent)
+Crop::Crop(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(day).equals(1);            //sowing time (day)
-    Input(seeds).equals(1.);      //proportion of seeds (fraction)
-
-    Output(seedsSown);
+    Input(sowingDate).equals("1/5/*").help("Date of sowing");
+    Input(date).imports("calendar[date]");
+    Output(sown).help("Seeds sown today ? (0 or 1)");
 }
 
-void crop::reset() {
-    daysPassed = 0;
-    seedsSown = 0;
-}
-
-void crop::update() {
-    ++daysPassed;
-    seedsSown = (daysPassed == day) ? seeds : 0.;
+void Crop::update() {
+    sown = equals(sowingDate, date) ? 1 : 0;
 }
 
 } //namespace

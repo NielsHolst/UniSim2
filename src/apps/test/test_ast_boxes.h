@@ -3,16 +3,24 @@
 
 #include "autotest.h"
 
+namespace base  {
+    class BoxBuilder;
+    class BoxReaderBase;
+}
 class TestAstBoxes : public QObject
 {
     Q_OBJECT
 private slots:
+    void init();
+    void cleanup();
     void testSimple();
     void testComments();
     void testWhitespaceInVector();
     void testBadTransform();
+    void testDistribution();
 private:
-    QString filePath(QString fileName);
+    base::BoxBuilder *builder;
+    base::BoxReaderBase *reader;
 };
 
 DECLARE_TEST(TestAstBoxes)

@@ -4,6 +4,7 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include "application.h"
+#include <base/any_year.h>
 #include <base/publish.h>
 
 using namespace base;
@@ -15,21 +16,16 @@ PUBLISH(Application)
 Application::Application(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(day).equals(1);          //day of application (day)
-    Input(ae).equals(360.);     //active ingredient (g a.e/L)
-    Input(ar).equals(6.25);     //application rate (L/ha)
+    Input(date).imports("calendar[date]");
+    Input(applicationDate).equals("1/5/*").help("Date of application");
+    Input(concentration).equals(480.).help("Concentration (g a.i/L)");
+    Input(rate).equals(6.25).help("Application rate (L/ha)");
 
-    Output(Doseappl);    //Take the value of the dose applied on the day, otherwise zero (kg a.i/ha)
-}
-
-void Application::reset() {
-    daysPassed = 0;
-    Doseappl = 0;
+    Output(dose).help("Dose applied today (g a.i. per ha");
 }
 
 void Application::update() {
-    ++daysPassed;
-    Doseappl = (daysPassed == day) ? ((ae * ar)/(0.75*1000.)) : 0.;
+    dose = equals(date, applicationDate) ? concentration*rate : 0.;
 }
 
 } //namespace

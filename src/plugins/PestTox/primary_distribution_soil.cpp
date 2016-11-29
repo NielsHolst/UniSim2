@@ -5,7 +5,9 @@
 */
 #include "primary_distribution_soil.h"
 #include <cmath>
+#include <base/exception.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 
 using namespace base;
 
@@ -14,19 +16,21 @@ namespace PestTox {
 PUBLISH (PrimaryDistributionSoil)
 	
 PrimaryDistributionSoil::PrimaryDistributionSoil(QString name, QObject *parent)
-	: Box(name, parent)
+    : PrimaryDistributionBase(name, parent)
 {
-
-    Input(Doseappl).equals(0.);     //kg a.i/ha
-    Input(Doserl).equals(0.);       //kg a.i/ha
-    Input(Dosedrift).equals(0.);    //kg a.i/ha
-
-    Output(Dosers);          //kg a.i/ha
+    Input(fractionTakenSurroundings).imports("../surroundings[fractionTaken]");
+    Input(fractionTakenCrop).imports("../crop[fractionTaken]");
 }
 
 void PrimaryDistributionSoil::update() {
+    double alreadyTaken = fractionTakenSurroundings + fractionTakenCrop ;
+    bool withinBounds = (TestNum::geZero(alreadyTaken) && TestNum::le(alreadyTaken, 1.));
+    if (!withinBounds)
+        ThrowException("Already taken fraction should be inside [0;1]").
+                value(alreadyTaken).context(this);
 
-    Dosers = Doseappl - (Doserl + Dosedrift);
+    fractionTaken = 1. - alreadyTaken;
+    doseTaken = doseApplied*fractionTaken;
 }
 
 } //namespace

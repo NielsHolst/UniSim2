@@ -1,0 +1,267 @@
+Simulation sim {
+	.steps = 250
+  Calendar calendar {
+    .initialDateTime = 15/3/2012
+		.latitude = 14.02
+  }
+  Records weather {
+    .fileName = "weather/Pathumthani.txt"
+  }
+	PestTox::SoilTemperature soilTemperature {
+	}
+	Box field {
+		+area = 10000
+	}
+	PestTox::Crop crop {
+		.sowingDate = 1/4/*
+		DayDegrees time {
+			.T0  = 10
+		}
+		Stage leafDevelopment {
+			.inflow = ..[sown]
+			.duration = 84
+			.timeStep = ../time[step]
+		}
+		Stage tillering {
+			.inflow = ../leafDevelopment[outflow]
+			.duration = 282
+			.timeStep = ../time[step]
+		}
+		Stage stemElongation {
+			.inflow = ../tillering[outflow]
+			.duration = 657
+			.timeStep = ../time[step]
+		}
+		Stage senescence {
+			.inflow = ../stemElongation[outflow]
+			.duration = 1518
+			.timeStep = ../time[step]
+		}
+	}
+	Box applications { // Create Applications class to provide help at origin
+		+dose(transform=Sum) = ./*[dose]
+		+boomWidth = 24
+		+vapourPressure = 1e-5 // vapour pressure at Tref (Pa)
+		+Tref = 25
+		+activationEnergyVolatilization = 95 		// (kJ/mol) 
+		+molarVolume = 96.61	// (cm3/mol)
+		+oxidationRate = 79e-12 // cm3/mol/h
+		PestTox::Application app1 {
+			.applicationDate = 14/4/*
+			.concentration = 360
+			.rate = 3.125
+		}
+		PestTox::Application app2 {
+			.applicationDate = 28/4/*
+			.concentration = 360
+			.rate = 3.125
+		}
+	}
+	Box distribution {
+		PestTox::PrimaryDistributionAir surroundings {
+			.a1 = 2.723	
+			.b1 = 1.526 
+			.a2 = 0.039 
+			.b2 = 0.1292 
+			.exposureZoneWidth = 1
+		}
+		PestTox::PrimaryDistributionLeaf crop {
+			.fractionsByCropStage = (0.25 0.5 0.7 0.9)
+		}
+		PestTox::PrimaryDistributionSoil soil {
+		}
+	}
+	Box compartments {
+		Compartment onCrop {
+			.gain = distribution/crop[doseTaken]
+			.loss = ./losses/realised[amountLost]
+			Box losses {
+				Box potential {
+					PestTox::LeafVolatilization volatilization {
+					}
+					PestTox::LeafUptake uptake {
+						.leafType = "NonWaxy"
+					}
+					PestTox::LeafPhotoDegradation photoDegradation{
+						.fileName = "weather/free_radicals_table.txt"
+						.kOH = 79e-12
+					} 
+					PestTox::LeafWashOff washOff {
+						.washOffCoefficient = 0.01
+					}
+				}
+				LossRateTotal realised {
+          .amount = onCrop[load]
+				}
+			}
+		}
+		Compartment inCrop {
+			.gain = onCrop/losses/realised[uptakeAmount]
+		}
+		Compartment air {
+			.gain = onCrop/losses/realised[volatilizationAmount]
+		}
+		Compartment soil {
+			.gain = distribution/soil[doseTaken]
+		}
+		Compartment surroundings {
+			.gain = distribution/surroundings[doseTaken]
+		}
+		Compartment degraded {
+			.gain = onCrop/losses/realised[photoDegradationAmount]
+		}
+	}
+	OutputR {
+		.popUp = TRUE
+		.width = 15
+		.height = 8
+		// .end = "pesticide_end.R"
+		PageR crop {
+			.xAxis = calendar[date]
+			.ncol = 4
+			PlotR {
+				.layout = "merged"
+				.ports = (crop/*[content])
+			}
+			PlotR {
+				.ports = (applications[dose] volatilization[evaporationRate] volatilization[Tcorrection])
+			}
+			PlotR {
+				.layout = "merged"
+				.ports = (distribution/*[fractionTaken])
+			}
+			PlotR {
+				.ports = (distribution/*[doseTaken])
+			}
+			PlotR {
+				.ports = (compartments/*[load])
+			}
+			PlotR {
+				.ports = (realised[volatilizationAmount] realised[uptakeAmount] realised[photoDegradationAmount] realised[washOffAmount])
+			}
+		}
+	}
+}	
+	// Box distribution {
+	// Box secondary {  
+			// Box soil {
+				// +ff = 0.995
+				// PestTox::WaterViscosity waterViscosity {
+					// .temperature = soilTemperature[value]
+				// }
+				// PestTox::SoilStructure structure {
+					// .fa = 0.25
+					// .fw = 0.25
+				// }
+				// PestTox::OrganicCarbonWaterPartitioning organicCarbon {
+					// .Koc = 20100
+					// .pH = 5
+					// .pKa = 0.8
+				// }
+				// PestTox::ZValues zValues {
+					// .VP = secondary[VP]
+					// .Psol = 11.5
+					// .MW = 169.07
+					// .foc = 0.2
+					// .pb = 1.365
+					// .Pd = 0.01
+					// .fs = structure[fs]
+					// .fa = structure[fa]
+					// .fw = structure[fw]
+					// .KocpH = organicCarbon[KocpH]
+					// .Tsa = weather[Tavg]
+					// .farea = field[area]
+					// .Sp = structure[porosity]
+				// }
+				// Box top {
+					// Box fraction {
+						// PestTox::TopsoilInSoil inSolids {
+							// .Z = zValues[Zs]
+							// .V = zValues[Vs]
+							// .VZ = zValues[VZ]
+						// }
+						// PestTox::TopsoilInSoil inAir {
+							// .Z = zValues[Za]
+							// .V = zValues[Va]
+							// .VZ = zValues[VZ]
+						// }
+						// PestTox::TopsoilInSoil inWater {
+							// .Z = zValues[Zw]
+							// .V = zValues[Vw]
+							// .VZ = zValues[VZ]
+						// }
+					// }
+					// PestTox::TopSoilRunoff runoff {
+						// .S = 0.18
+						// .wbz = 0
+						// .P = weather[Rain]
+						// .KocpH = organicCarbon[KocpH]
+						// .fom = 0.1
+						// .Q = ./amount[Q]
+						// PestTox::RunoffAmount amount {
+							// .P = weather[Rain]
+							// .fsand = 0.1043
+						// }
+						// PestTox::RunoffFraction fraction {
+							// .P = weather[Rain]
+							// .Q = ../amount[Q]
+						// }
+					// }
+					// PestTox::MacroporeFlow macroporeFlow {
+						// .fsand = 0.10
+						// .fsilt = 0.31
+						// .fclay = 0.59
+						// .fa = structure[fa]
+						// .fw = structure[fw]
+						// .fmacropore = 0.3
+						// .Flowrate = 0.35
+						// .tpevent = 3
+						// .P = weather[Rain]
+						// .frr = runoff/fraction[frr]
+						// .Tf = 1
+						// .frsw = soil/top/fraction/inWater[fr]
+					// }
+					// PestTox::TopsoilVolatilization volatilization {
+						// .Tsa = weather[Tavg]
+						// .MW = 169.07
+						// .MV = 96.61
+						// .Pair = 1
+						// .fa = structure[fa]
+						// .fw = structure[fw]
+						// .BLair = 0.00475
+						// .farea = field[area]
+						// .Za = zValues[Za]
+						// .viscosity = soil/waterViscosity[value]
+						// .Pd = 0.1
+						// .Zw = zValues[Zw]
+						// .VZ = zValues[VZ]
+					// }
+					// PestTox::TopsoilDegradation degradation {
+						// .DT50 = 3
+						// .inflow = primary/soil[Dosers]
+						// .Doseldw = leaf/washOff[value]
+						// .ff = soil[ff]
+						// .Tsoil = soilTemperature[value]
+						// .fw = structure[fw]
+						// .rf = 0.7
+						// .Q = 2.1
+						// .Vrsmc = 0.5
+						// .Sp = structure[porosity]
+						// .ksv = volatilization[ksv]
+						// .frsa = soil/top/fraction/inAir[fr]
+						// .frsa = soil/top/fraction/inWater[fr]
+						// .fsr = runoff[fsr] 
+						// .fmp = macroporeFlow[fmp] //move above this one
+					// }
+				// }
+				// Box surface {
+						// PestTox::SurfaceWaterDegradation degradation {
+							// .inflow = soil/top/degradation[Dosesr]
+							// .DT50 = 4.5
+							// .ff = soil[ff]
+							// .Q = 2.1
+						// }
+				// }
+			// }
+		// }
+	// }

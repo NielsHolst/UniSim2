@@ -38,6 +38,7 @@ HEADERS +=  \
     dialog.h \
     dialog_base.h \
     dialog_stub.h \
+    distribution.h \
     environment.h \
     exception.h \
     factory_plug_in.h \
@@ -91,6 +92,7 @@ SOURCES +=  \
     dialog.cpp \
     dialog_base.cpp \
     dialog_stub.cpp \
+    distribution.cpp \
     environment.cpp \
     exception.cpp \
     general.cpp \

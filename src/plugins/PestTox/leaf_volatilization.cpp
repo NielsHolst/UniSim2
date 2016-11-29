@@ -8,7 +8,6 @@
 #include <base/publish.h>
 #include "general.h"
 
-using namespace std;
 using namespace base;
 
 namespace PestTox {
@@ -16,33 +15,22 @@ namespace PestTox {
 PUBLISH(LeafVolatilization)
 
 LeafVolatilization::LeafVolatilization(QString name, QObject *parent)
-	: Box(name, parent)
+    : LossRate(name, parent)
 {
-
-    Input(VP).equals(5.73e-8);    //vapor pressure of the pesticide (Pa) at 25 degC
-    Input(Ea).equals(95.);        //activation energy in kJ/mol (default value)
-    Input(Tair).equals(25.);        //air temperature at the time of pesticide application, degC
-    Input(Doseappl).equals(3.6);  //application rate (kg/ha)automatically converted to microgram/m2
-
-    Output(ln_ER);         //evaporation rate in microgram/m2/h (in C++ log is "ln", and log10 is "log")
-    Output(kTr);           //rate constant of vaporization at reference temperature, (day-1) at 25 deg C
-    Output(ER);            //evaporation rate (microgram/m2/day)
-    Output(fv);            //fraction of pesticide emitted in 1 day
-    Output(fr);            //Fraction remaining on leaf -or-fraction of pesticide reaching the leave still there in 1 day
-    Output(kl);           //rate constant of vaporization at actual temperature, (day-1)
-
+    Input(VP).imports("applications[vapourPressure]");
+    Input(Ea).imports("applications[activationEnergyVolatilization]");
+    Input(Tref).imports("applications[Tref]");
+    Input(Tair).imports("weather[Tavg]");
+    Input(load).imports("onCrop[load]");
+    Output(Tcorrection).help("Temperature correction factor (scalar)");
+    Output(evaporationRate).help("Evaporation rate from leaves (g/ha/h)");
 }
 
-void LeafVolatilization::update() {
-    const double Tref = 25.;
-    double x = (VP > 0) ? log(VP) : 0;
-    ln_ER = 12.2 + 0.933 * x;
-    ER = 24. * exp(ln_ER);
-    fv = (ER/(Doseappl*(1e9/1e4)) <1) ? ER/(Doseappl*(1e9/1e4)) : 0.99;
-    fr = 1. - fv;
-    kTr = -log(fr);
-    kl = kTr * exp(((Ea*1000.)/R)*((1./(Tref + T0)) - (1./(Tair + T0))));
-
+double LeafVolatilization::computeInstantaneous() {
+    double evaporationRateTref = exp(12.2 + 0.933 * log(VP)) * 1e-6 * 1e4; // g/ha/h = myg/m2/h * g/myg * m2/ha
+    Tcorrection = Ea*1000./R*((1./(Tref + T0)) - 1./(Tair + T0)); // 1 = kJ/mol * J/KJ / (J/mol/K) / K
+    evaporationRate = evaporationRateTref * exp(Tcorrection) / 3600; // g/ha/s = g/ha/h / (s/h)
+    return (load > 0) ? evaporationRate/load : 0.; // s-1 = g/ha/s / (g/ha)
   }
 
 } //namespace

@@ -3,14 +3,14 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef PESTTOX_PRIMARYDISTRIBUTIONSOIL_H
-#define PESTTOX_PRIMARYDISTRIBUTIONSOIL_H
+#ifndef PRIMARY_DISTRIBUTION_SOIL_H
+#define PRIMARY_DISTRIBUTION_SOIL_H
 
-#include <base/box.h>
+#include "primary_distribution_base.h"
 
 namespace PestTox {
 
-class PrimaryDistributionSoil : public base::Box
+class PrimaryDistributionSoil : public PrimaryDistributionBase
 {
 public:
     PrimaryDistributionSoil(QString name, QObject *parent);
@@ -18,10 +18,7 @@ public:
 
 private:
     // Input
-    double Doseappl, Doserl, Dosedrift;
-
-    // Output
-    double Dosers;
+    double fractionTakenSurroundings, fractionTakenCrop;
 };
 
 } //namespace

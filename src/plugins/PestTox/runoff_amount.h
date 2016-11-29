@@ -10,11 +10,10 @@
 
 namespace PestTox {
 
-class runoffamount : public base::Box
+class RunoffAmount : public base::Box
 {
 public:
-    runoffamount(QString name, QObject *parent);
-    void reset();
+    RunoffAmount(QString name, QObject *parent);
     void update();
 
 private:
