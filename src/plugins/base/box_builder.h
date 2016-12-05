@@ -24,12 +24,11 @@ public:
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
     BoxBuilder& imports(QString pathToPort);
+    BoxBuilder& track();
     // Attributes by name
     BoxBuilder& attribute(QString name, QString value);
     // Attributes direct
     BoxBuilder& format(QString value);
-    BoxBuilder& page(QString pa);
-    BoxBuilder& plot(QString pl);
     BoxBuilder& label(QString la);
     BoxBuilder& transform(QString tr);
     BoxBuilder& transform(PortTransform value);

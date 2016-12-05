@@ -24,7 +24,7 @@ public:
     enum Access{Input, Output};
     enum Mode{Uninitialized, Fixed, Referenced, MaybeReferenced};
     struct Attributes {
-        QString format, page, plot, label, transform, help;
+        QString format, label, transform, help;
         PortTransform portTransform;
         Attributes() {
             transform = "Identity";
@@ -39,8 +39,8 @@ private:
     QVector<Port *> _importPorts;
     bool _importPortMustExist;
     Access _access;
-    bool _reset, _doTrack;
-    Vector _track;
+    bool _reset, _hasTrack;
+    Vector _trackBuffer;
     static unsigned _trackFlags;
     Attributes _attributes;
     QStringList _warnings;
@@ -64,8 +64,6 @@ public:
 
     Port& attribute(QString name, QString value);
     Port& format(QString s);
-    Port& page(QString s);
-    Port& plot(QString s);
     Port& label(QString s);
     Port& transform(QString s);
     Port& help(QString s);
@@ -73,8 +71,6 @@ public:
 
     QString attribute(QString name) const;
     QString format() const;
-    QString page() const;
-    QString plot() const;
     QString label() const;
     QStringList labelList() const;
     QString help() const;
@@ -88,6 +84,7 @@ public:
     void assign(const QVector<Port *> &sources);
     void track(Step step);
     void format(PortType type);
+    void track();
 
     // Access
     Box *boxParent();
@@ -98,7 +95,7 @@ public:
     const Vector* trackPtr() const;
     PortType type() const;
     Access access() const;
-    bool doTrack() const;
+    bool hasTrack() const;
     bool hasImport() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;

@@ -19,7 +19,7 @@ Sandy::Sandy(QString name, QObject *parent)
     Input(a).equals(1);
     Input(b).equals(1);
     Input(x);
-    Output(value).page("default");
+    Output(value).track();
 }
 
 void Sandy::reset() {

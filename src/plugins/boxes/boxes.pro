@@ -18,6 +18,7 @@ HEADERS +=  \
     distributed_delay.h \
     layout_r.h \
     output_r.h \
+    output_text.h \
     page_r.h \
     plot_r.h \
     population.h \
@@ -44,6 +45,7 @@ SOURCES +=  \
     distributed_delay.cpp \
     layout_r.cpp \
     output_r.cpp \
+    output_text.cpp \
     page_r.cpp \
     plot_r.cpp \
     population.cpp \

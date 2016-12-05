@@ -11,7 +11,7 @@ unsigned Port::_trackFlags = Reset | Update;
 Port::Port(QString name, QObject *parent, bool orphan)
     : QObject(parent), _valuePtr(0), _valueType(Null), _mode(Uninitialized),
       _importPath(""), _importPortMustExist(true),
-      _access(Input), _reset(false), _doTrack(false), _track(this)
+      _access(Input), _reset(false), _hasTrack(false), _trackBuffer(this)
 {
     Class(Port);
     setObjectName(name);
@@ -83,8 +83,6 @@ if (name == #X) { \
 
 Port& Port::attribute(QString name, QString value) {
     CASE_SET_ATTRIBUTE(format, value)
-    CASE_SET_ATTRIBUTE(page, value)
-    CASE_SET_ATTRIBUTE(plot, value)
     CASE_SET_ATTRIBUTE(label, value)
     CASE_SET_ATTRIBUTE(help, value)
     if (name == "transform") {
@@ -101,8 +99,6 @@ Port& Port::X(QString value) { \
 }
 
 SET_ATTRIBUTE(format)
-SET_ATTRIBUTE(page)
-SET_ATTRIBUTE(plot)
 SET_ATTRIBUTE(label)
 SET_ATTRIBUTE(transform)
 SET_ATTRIBUTE(help)
@@ -117,8 +113,6 @@ Port& Port::transform(PortTransform tr) {
 
 QString Port::attribute(QString name) const {
     CASE_GET_ATTRIBUTE(format);
-    CASE_GET_ATTRIBUTE(page);
-    CASE_GET_ATTRIBUTE(plot);
     CASE_GET_ATTRIBUTE(label);
     CASE_GET_ATTRIBUTE(transform);
     CASE_GET_ATTRIBUTE(help);
@@ -131,8 +125,6 @@ QString Port::X() const { \
 }
 
 GET_ATTRIBUTE(format)
-GET_ATTRIBUTE(page)
-GET_ATTRIBUTE(plot)
 GET_ATTRIBUTE(label)
 GET_ATTRIBUTE(help)
 
@@ -228,14 +220,13 @@ void Port::resolveImports() {
 }
 
 void Port::allocatePortBuffer() {
-    _doTrack = !(attribute("plot").isNull() && attribute("page").isNull());
-    if (_doTrack) {
+    if (_hasTrack) {
         Box *root = boxParent()->currentRoot();
         Port *iterations = root->peakPort("iterations"),
              *steps = root->peakPort("steps");
         int ite = iterations ? iterations->value<int>() : 1,
             ste = steps ? steps->value<int>() : 1;
-        _track.reserve(ite*ste);
+        _trackBuffer.reserve(ite*ste);
     }
 }
 
@@ -273,8 +264,8 @@ void Port::assign(const QVector<Port*> &sources) {
 }
 
 void Port::track(Step step) {
-    if (doTrack() && (step & _trackFlags))
-        _track.append(_valuePtr);
+    if (_hasTrack && (step & _trackFlags))
+        _trackBuffer.append(_valuePtr);
 }
 
 void Port::format(PortType type) {
@@ -338,7 +329,7 @@ template <> const void* Port::valuePtr() const {
 }
 
 const Vector* Port::trackPtr() const {
-    return doTrack() ? &_track : 0;
+    return _hasTrack ? &_trackBuffer : 0;
 }
 
 PortType Port::type() const {
@@ -349,8 +340,12 @@ Port::Access Port::access() const {
     return _access;
 }
 
-bool Port::doTrack() const {
-    return _doTrack;
+void Port::track() {
+    _hasTrack = true;
+}
+
+bool Port::hasTrack() const {
+    return _hasTrack;
 }
 
 bool Port::hasImport() const {

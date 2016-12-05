@@ -9,14 +9,14 @@ struct Input {
 };
 
 struct Output {
-    std::vector<int> sequence;
+    int *sequence;
+    int size;
 };
 
 extern "C" Output __declspec(dllexport) run1(Input input);
 
 extern "C" void __declspec(dllexport) run2(const Input *input, Output *output); // Caller owns both pointers
 
-extern "C" void __declspec(dllexport) close();
 }
 
 #endif 

@@ -302,7 +302,7 @@ void Box::allocatePortBuffers(){
 void Box::collectTrackedPorts() {
     _trackedPorts.clear();
     for (Port *port : _ports.values()) {
-        if (port->doTrack())
+        if (port->hasTrack())
             _trackedPorts << port;
     }
 }

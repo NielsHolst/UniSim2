@@ -1,3 +1,4 @@
+#include <QVector>
 #include <base/box.h>
 #include <base/box_builder.h>
 #include <base/dialog_stub.h>
@@ -16,6 +17,8 @@ static QObject *rootObject = 0;
 static QWidget *rootWidget = 0;
 static ObjectPool *pool = 0;
 static DialogBase *dialog =0;
+
+QVector<int> _sequence;
 
 void init() {
     if (!rootObject) {
@@ -53,7 +56,14 @@ Box* buildJump(int start, int length) {
     return builder.content();
 }
 
-std::vector<int> runJump(Box *sim) {
+void copyToSequence(const QVector<int> *values) {
+    _sequence.resize(values->size());
+    int i = 0;
+    for (int value : *values)
+        _sequence[i++] = value;
+}
+
+void runJump(Box *sim) {
     sim->run();
 
     Port *value = sim->resolveOne<Port>("jump[value]");
@@ -61,26 +71,32 @@ std::vector<int> runJump(Box *sim) {
     Q_ASSERT(vector);
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
     Q_ASSERT(values);
-    return values->toStdVector();
+    copyToSequence(values);
 }
 
 Output run1(Input input) {
     init();
+
     Box *sim = buildJump(input.start, input.length);
-    std::vector<int> output = runJump(sim);
+    runJump(sim);
     delete (sim);
-    return Output{output};
+
+    return Output{_sequence.data(), _sequence.size()};
 }
 
 void run2(const Input *input, Output *output) {
     init();
+
     if (!input)
         ThrowException("run2: input argument is null");
     if (!output)
         ThrowException("run2: output argument is null");
+
     Box *sim = buildJump(input->start, input->length);
-    *output = Output{runJump(sim)};
+    runJump(sim);
     delete (sim);
+
+    *output =  Output{_sequence.data(), _sequence.size()};
 }
 
 }

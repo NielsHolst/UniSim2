@@ -32,7 +32,7 @@ Simulation::Simulation(QString name, QObject *parent)
 
 void Simulation::amend() {
     if (iterations > 1)
-        port("iteration")->page("default");
+        port("iteration")->track();
 }
 
 void Simulation::initialize() {

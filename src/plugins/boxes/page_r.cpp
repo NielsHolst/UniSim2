@@ -41,7 +41,7 @@ void PageR::amend() {
         QString msg{"Expected one x-axis, got '%1'"};
         ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
     }
-    importPorts[0]->page("default");
+    importPorts[0]->track();
 }
 
 void PageR::initialize() {

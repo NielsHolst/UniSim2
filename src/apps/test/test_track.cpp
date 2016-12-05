@@ -112,6 +112,10 @@ void TestTrack::openFile() {
     QVERIFY(fileOk);
 }
 
+QString toString(QSet<QString> set) {
+    return QStringList(set.toList()).join(" ");
+}
+
 void TestTrack::checkColumnNames(QSet<QString> expected) {
     openFile();
     QString line = file.readLine().trimmed();
@@ -120,7 +124,10 @@ void TestTrack::checkColumnNames(QSet<QString> expected) {
     for (QString name : names)
         columnNames << name;
     file.close();
-    QCOMPARE(columnNames, expected);
+    if (columnNames != expected) {
+        QString s{"Sets differ got(%1) != expected(%2)"};
+        QFAIL(qPrintable(s.arg(toString(columnNames)).arg(toString(expected))));
+    }
 }
 
 void TestTrack::checkColumnFormat(int expected) {

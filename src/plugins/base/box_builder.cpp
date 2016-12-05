@@ -63,6 +63,11 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::track() {
+    _currentPort->track();
+    return *this;
+}
+
 // Attributes by name
 
 BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
@@ -78,8 +83,6 @@ BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
 BoxBuilder& BoxBuilder::X(QString value) { return attribute(#X, value); }
 
 SET_ATTRIBUTE_DIRECT(format)
-SET_ATTRIBUTE_DIRECT(page)
-SET_ATTRIBUTE_DIRECT(plot)
 SET_ATTRIBUTE_DIRECT(label)
 SET_ATTRIBUTE_DIRECT(transform)
 
