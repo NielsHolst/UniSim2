@@ -1,25 +1,16 @@
 #ifndef OUTPUT_TEXT_H
 #define OUTPUT_TEXT_H
-#include <QFile>
-#include <QString>
-#include <QVector>
-#include <base/box.h>
-#include <base/convert.h>
+#include "output_ports.h"
 
-class QFile;
 
 namespace boxes {
 
 class PageR;
 
-class OutputText : public base::Box
+class OutputText : public OutputPorts
 {
 public:
     OutputText(QString name, QObject *parent);
-
-private:
-    // Input
-    QVector<QString> ports;
 };
 
 } // boxes

@@ -77,7 +77,9 @@ QStringList OutputFile::column(int i) {
     file.readLine();
     while (!file.atEnd()) {
         QStringList row = QString(file.readLine()).split("\t");
-        list << row.at(i);
+        QString s = row.at(i);
+        s.remove("\n");
+        list << s;
     }
     close();
     return list;

@@ -1,6 +1,6 @@
 #ifndef PLOT_R_H
 #define PLOT_R_H
-#include <base/box.h>
+#include "output_ports.h"
 #include "output_r.h"
 
 namespace base {
@@ -9,11 +9,10 @@ namespace base {
 
 namespace boxes {
 
-class PlotR : public base::Box
+class PlotR : public OutputPorts
 {
 public:
     PlotR(QString name, QObject *parent);
-    void amend();
     void reset();
     void initialize();
     QString toString();
@@ -24,10 +23,7 @@ private:
     QVector<QString> ports;
     QString layout, end, endCode, iterationId;
     int ncol, nrow, iteration;
-    // Data
-    QVector<base::Port*> _ports;
     // Methods
-    void collectPorts();
     QString xPortLabel();
     QString dim(QString portName);
 };

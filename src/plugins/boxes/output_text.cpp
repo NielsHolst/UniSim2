@@ -8,10 +8,9 @@ namespace boxes {
 PUBLISH(OutputText)
 
 OutputText::OutputText(QString name, QObject *parent)
-    : Box(name, parent)
+    : OutputPorts(name, parent)
 {
     help("creates an output text file");
-    Input(ports).help("Vector of ports to include in plot");
 }
 
 }

@@ -12,11 +12,10 @@ namespace boxes {
 PUBLISH(PlotR)
 
 PlotR::PlotR(QString name, QObject *parent)
-    : Box(name, parent)
+    : OutputPorts(name, parent)
 {
     help("produces an R plot");
     Input(hide).equals(false);
-    Input(ports).help("Vector of ports to include in plot");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
     Input(end).help("Name of R script code that will be added to the ggplot");
     Input(endCode).help("R code that will be added to the ggplot");
@@ -24,59 +23,6 @@ PlotR::PlotR(QString name, QObject *parent)
     Input(nrow).equals(-1);
     Input(iteration).imports("/*[iteration]");
     Input(iterationId).equals("iteration");
-}
-
-void PlotR::amend() {
-    collectPorts();
-}
-
-void PlotR::collectPorts() {
-//    // Check that 'ports' are not referenced
-//    if (port("ports")->hasImport())
-//        ThrowException("You cannot set 'ports' to a reference value")
-//                .value(port("ports")->importPath() + " (a reference value)")
-//                .hint("Enclose the value in parentheses to make it a vector of strings")
-//                .id("PortsIsReference")
-//                .context(this);
-    if (ports.isEmpty())
-        ThrowException("'ports' cannot be empty").context(this);
-//    // Get context
-//    Box *page = dynamic_cast<Box*>(parent());
-//    Q_ASSERT(page);
-//    QString pageName = page->objectName(),
-//            plotName = objectName();
-//    // Loop through all tracked ports and capture those with matching page and plot name
-//    for (Port *port : Port::trackedPorts()) {
-//        bool showInThisPlot = (port->page() == pageName && port->plot() == plotName);
-//        if (showInThisPlot)
-//            _ports << port;
-//    }
-    // Collect the ports
-    _ports.clear();
-    for (QString portName : ports) {
-        QVector<Port*> trackedPorts = resolveMany<Port>(portName);
-        // Only add ports not already captured
-        for (Port *port : trackedPorts) {
-            if (_ports.contains(port))
-                continue;
-            // Ensure port will be tracked
-            port->track();
-            _ports << port;
-        }
-    }
-    // Check for empty 'ports' or 'ports' referenced by mistake
-    if (_ports.isEmpty()) {
-        QString maybeHint, maybeId,
-                shownValue{ QStringList(ports.toList()).join(" ") };
-        if (port("ports")->hasImport()) {
-            maybeHint = "Enclose the value in parentheses to make it a vector of strings";
-            maybeId = "PortsIsReference";
-        }
-        else
-            shownValue = "(" + shownValue + ")";
-
-        ThrowException("Ports not found").value(shownValue).hint(maybeHint).id(maybeId);
-    }
 }
 
 void PlotR::initialize() {
@@ -91,7 +37,7 @@ void PlotR::reset() {
 
 QString PlotR::toString() {
     QString s = "Plot: " + objectName() + "\n";
-    for (const Port *port : _ports)
+    for (const Port *port : trackedPorts())
         s += "  Port: " + port->objectName() + "\n";
     return s;
 }
@@ -108,11 +54,11 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (hide || _ports.isEmpty())
+    if (hide || trackedPorts().isEmpty())
         return QString();
     QStringList portLabels;
     QString xLabel = apostrophed(xPortLabel());
-    for (Port *port : _ports) {
+    for (Port *port : trackedPorts()) {
         // Avoid x-axis being plotted on y-axis too
         if (port->label() != xLabel)
             portLabels << apostrophed(port->labelList());
