@@ -1,20 +1,21 @@
+#include "exception.h"
 #include "port_buffer.h"
-#include "object_pool.h"
-
 
 namespace base {
 
 PortBuffer *PortBuffer::_portBuffer = 0;
 
-PortBuffer& portBuffer() {
+PortBuffer& portBuffer(QObject *parent) {
     if (!PortBuffer::_portBuffer) {
-        PortBuffer::_portBuffer = new PortBuffer;
-        objectPool()->attach("PortBuffer", PortBuffer::_portBuffer);
+        PortBuffer::_portBuffer = new PortBuffer(parent);
     }
     return *PortBuffer::_portBuffer;
 }
 
-PortBuffer::PortBuffer() {
+PortBuffer::PortBuffer(QObject *parent)
+    : QObject(parent)
+{
+    Q_ASSERT(parent);
 }
 
 #define DELETE_PORT_BUFFER(X) \
@@ -34,6 +35,7 @@ PortBuffer::~PortBuffer() {
     DELETE_PORT_BUFFER(Date);
     DELETE_PORT_BUFFER(Time);
     DELETE_PORT_BUFFER(DateTime);
+    PortBuffer::_portBuffer = 0;
 }
 
 #define CASE_CREATE_PORT_BUFFER(X,Y) \

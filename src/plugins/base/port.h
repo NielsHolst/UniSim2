@@ -130,7 +130,7 @@ template <class T> Port& Port::equals(T value)
     deducePortType<T>(value);
     // Create a buffer for the value if it does not exist
     if (_valuePtr == 0)
-        _valuePtr = portBuffer().createBuffer(_valueType);
+        _valuePtr = portBuffer(this).createBuffer(_valueType);
     // Copy value to the buffer that _valuePtr points to
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform(), this);
     return *this;

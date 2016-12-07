@@ -30,6 +30,7 @@ HEADERS +=  \
     test_general_split.h \
     test_history.h \
     test_new_port.h \
+    test_output_buffer.h \
     test_output_text.h \
     test_path.h \
 #    test_population.h \
@@ -67,6 +68,7 @@ SOURCES +=  \
     test_general_split.cpp \
     test_history.cpp \
     test_new_port.cpp \
+    test_output_buffer.cpp \
     test_output_text.cpp \
     test_path.cpp \
 #    test_population.cpp \

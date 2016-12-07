@@ -37,7 +37,7 @@ void PlotR::reset() {
 
 QString PlotR::toString() {
     QString s = "Plot: " + objectName() + "\n";
-    for (const Port *port : trackedPorts())
+    for (const Port *port : myPorts())
         s += "  Port: " + port->objectName() + "\n";
     return s;
 }
@@ -54,11 +54,11 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (hide || trackedPorts().isEmpty())
+    if (hide || myPorts().isEmpty())
         return QString();
     QStringList portLabels;
     QString xLabel = apostrophed(xPortLabel());
-    for (Port *port : trackedPorts()) {
+    for (Port *port : myPorts()) {
         // Avoid x-axis being plotted on y-axis too
         if (port->label() != xLabel)
             portLabels << apostrophed(port->labelList());

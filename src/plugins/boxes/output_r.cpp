@@ -42,6 +42,11 @@ void OutputR::amend() {
         Box *page = MegaFactory::create<Box>("PageR", "", this);
         page->amend();
     }
+    // Create text output if not present
+    if ( Path("./*{OutputText}", this).resolveMany<Box>().empty() ) {
+        Box *textOutput = MegaFactory::create<Box>("OutputText", "", this);
+        textOutput->amend();
+    }
 }
 
 void OutputR::initialize() {

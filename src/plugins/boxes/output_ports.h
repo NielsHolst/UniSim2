@@ -14,14 +14,16 @@ class OutputPorts : public base::Box
 public:
     OutputPorts(QString name, QObject *parent);
     void amend() final;
-    const QVector<base::Port*> & trackedPorts();
+    virtual void doAmend(){}
+    const QVector<base::Port*> & myPorts();
 private:
     // Inputs
     QVector<QString> ports;
     // Data
-    QVector<base::Port*> _ports;
+    QVector<base::Port*> _myPorts;
     // Methods
     void collectPorts();
+    void checkPortsValue();
 };
 
 }

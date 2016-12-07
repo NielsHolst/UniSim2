@@ -118,7 +118,7 @@ Simulation sim {
 		// .end = "pesticide_end.R"
 		PageR crop {
 			.xAxis = calendar[date]
-			.ncol = 4
+			.ncol = 3
 			PlotR {
 				.layout = "merged"
 				.ports = (crop/*[content])

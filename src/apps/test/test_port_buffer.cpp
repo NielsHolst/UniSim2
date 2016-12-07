@@ -17,14 +17,18 @@ void TestPortBuffer::cleanup() {
 }
 
 void TestPortBuffer::testCreateBool() {
-    bool *p = reinterpret_cast<bool*>( portBuffer().createBuffer(Bool) ),
-         *q = reinterpret_cast<bool*>( portBuffer().createBuffer(Bool) );
+    QObject *parent = new QObject;
+
+    bool *p = reinterpret_cast<bool*>( portBuffer(parent).createBuffer(Bool) ),
+         *q = reinterpret_cast<bool*>( portBuffer(parent).createBuffer(Bool) );
     *p = true;
     *q = false;
-    QVector<bool> *u = reinterpret_cast<QVector<bool>*>( portBuffer().createBuffer(BoolVector) ),
-                  *v = reinterpret_cast<QVector<bool>*>( portBuffer().createBuffer(BoolVector) );
+    QVector<bool> *u = reinterpret_cast<QVector<bool>*>( portBuffer(parent).createBuffer(BoolVector) ),
+                  *v = reinterpret_cast<QVector<bool>*>( portBuffer(parent).createBuffer(BoolVector) );
     *u << true << false;
     *v << false << true;
+
+    delete parent;
 }
 
 //

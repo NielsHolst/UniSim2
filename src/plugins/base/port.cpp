@@ -250,7 +250,7 @@ void Port::assign(const QVector<Port*> &sources) {
             if (sources.size() > 1 && transform() != Identity)
                 _valueType = asVector(_valueType);
         }
-        _valuePtr = portBuffer().createBuffer(_valueType);
+        _valuePtr = portBuffer(this).createBuffer(_valueType);
     }
     // Assign as scalar or vector
     if (sources.size() == 1) {

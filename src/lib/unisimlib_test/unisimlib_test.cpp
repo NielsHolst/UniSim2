@@ -45,12 +45,8 @@ Box* buildJump(int start, int length) {
             box("Jump").name("jump").
                 port("initial").equals(start).
             endbox().
-            box("OutputR").
-                box("PageR").
-                    box("PlotR").
-                        port("ports").equals("(jump[value])").
-                    endbox().
-                endbox().
+            box("OutputBuffer").
+                port("ports").equals("(jump[value])").
             endbox().
         endbox();
     return builder.content();

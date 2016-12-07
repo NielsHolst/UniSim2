@@ -16,7 +16,7 @@ class Command;
 
 class PortBuffer : public QObject {
 public:
-    PortBuffer();
+    PortBuffer(QObject *parent);
     ~PortBuffer();
     void* createBuffer(PortType type);
 private:
@@ -35,11 +35,11 @@ private:
     DECLARE_PORT_BUFFER(QDateTime, DateTime);
     // Singleton
     static PortBuffer *_portBuffer;
-    friend PortBuffer& portBuffer();
+    friend PortBuffer& portBuffer(QObject *parent);
     // Methods
 };
 
-PortBuffer& portBuffer();
+PortBuffer& portBuffer(QObject *parent);
 
 }
 

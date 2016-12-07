@@ -17,6 +17,7 @@ HEADERS +=  \
     distributed_delay_base.h \
     distributed_delay.h \
     layout_r.h \
+    output_buffer.h \
     output_ports.h \
     output_r.h \
     output_text.h \
@@ -45,6 +46,7 @@ SOURCES +=  \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
     layout_r.cpp \
+    output_buffer.cpp \
     output_ports.cpp \
     output_r.cpp \
     output_text.cpp \

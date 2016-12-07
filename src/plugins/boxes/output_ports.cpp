@@ -15,41 +15,45 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
 
 void OutputPorts::amend() {
     collectPorts();
+    doAmend();
 }
 
 void OutputPorts::collectPorts() {
-    if (ports.isEmpty())
-        ThrowException("'ports' cannot be empty").context(this);
+    // Check ports value
+    checkPortsValue();
+    // Collect only my ports
+    _myPorts.clear();
     // Collect the ports
-    _ports.clear();
     for (QString portName : ports) {
         QVector<Port*> trackedPorts = resolveMany<Port>(portName);
         // Only add ports not already captured
         for (Port *port : trackedPorts) {
-            if (_ports.contains(port))
+            if (_myPorts.contains(port))
                 continue;
             // Ensure port will be tracked
             port->track();
-            _ports << port;
+            _myPorts << port;
         }
     }
-    // Check for empty 'ports' or 'ports' referenced by mistake
-    if (_ports.isEmpty()) {
-        QString maybeHint, maybeId,
-                shownValue{ QStringList(ports.toList()).join(" ") };
-        if (port("ports")->hasImport()) {
-            maybeHint = "Enclose the value in parentheses to make it a vector of strings";
-            maybeId = "PortsIsReference";
-        }
-        else
-            shownValue = "(" + shownValue + ")";
-
-        ThrowException("Ports not found").value(shownValue).hint(maybeHint).id(maybeId);
+    // Check if no ports given were actually found
+    if (!ports.isEmpty() && _myPorts.isEmpty()) {
+        QString shownValue{ "(" + QStringList(ports.toList()).join(" ") + ")" };
+        ThrowException("No ports found").value(shownValue).context(this);
     }
 }
 
-const QVector<base::Port*> & OutputPorts::trackedPorts() {
-    return _ports;
+void OutputPorts::checkPortsValue() {
+    if (port("ports")->hasImport()) {
+        ThrowException("Ports not found")
+            .value(QStringList(ports.toList()).join(" "))
+            .hint("Enclose the value in parentheses to make it a vector of paths")
+            .id("PortsIsReference")
+            .context(this);
+    }
+}
+
+const QVector<base::Port*> & OutputPorts::myPorts() {
+    return _myPorts;
 }
 
 
