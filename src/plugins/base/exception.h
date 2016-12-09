@@ -33,10 +33,12 @@ public:
 
     QString id() const;
     QString what() const;
+    static int count();
 private:
     // data
     QString _message, _value, _value1, _value2, _hint, _fullName, _file, _id;
     int _line;
+    static int _count;
     // methods
     template <class T> QString asString(T v);
 };

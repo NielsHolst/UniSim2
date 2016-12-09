@@ -12,9 +12,12 @@
 
 namespace base {
 
+int Exception::_count = 0;
+
 Exception::Exception(QString message)
     : _message(message)
 {
+    ++_count;
 }
 
 Exception& Exception::file(const char *s) {
@@ -68,6 +71,10 @@ QString Exception::what() const {
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
     return text;
+}
+
+int Exception::count() {
+    return _count;
 }
 
 template <> QString Exception::asString(bool v) {

@@ -16,6 +16,7 @@ private slots:
     void testSimple();
     void testComments();
     void testWhitespaceInVector();
+    void testWhitespaceInPath();
     void testBadTransform();
     void testDistribution();
 private:

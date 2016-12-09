@@ -23,37 +23,40 @@ void TestAstBoxes::cleanup(){
 }
 
 void TestAstBoxes::testSimple() {
+    Box *root;
     try {
         reader->parse(inputFilePath("ast_simple.box"));
+        root = builder->content();
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder->content();
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
 
 void TestAstBoxes::testComments() {
+    Box *root;
     try {
         reader->parse(inputFilePath("ast_comments.box"));
+        root = builder->content();
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder->content();
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
 
 void TestAstBoxes::testWhitespaceInVector() {
+    Box *root;
     try {
         reader->parse(inputFilePath("ast_whitespace_in_vector.box"));
+        root = builder->content();
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
-    Box *root = builder->content();
 
     typedef QVector<int> VecInt;
     QCOMPARE(root->resolveOne<Port>("a[numbers1]")->value<VecInt>(),
@@ -68,6 +71,26 @@ void TestAstBoxes::testWhitespaceInVector() {
              VecString() << "abc" << "def" << "ghi");
 }
 
+void TestAstBoxes::testWhitespaceInPath() {
+    Box *root;
+    Port *x, *y, *z;
+    try {
+        reader->parse(inputFilePath("ast_whitespace_in_path.box"));
+        root = builder->content();
+        root->run();
+        x = root->resolveOne<Port>("a[input2]");
+        y = root->resolveOne<Port>("a[input1]");
+        z = root->resolveOne<Port>("a [ input2 ]");
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected: " + ex.what()));
+    }
+
+    QCOMPARE(x->value<int>(), 7);
+    QCOMPARE(y->value<int>(), 3);
+    QCOMPARE(z->value<int>(), 7);
+}
+
 void TestAstBoxes::testBadTransform() {
     bool excepted{false};
     try {
@@ -80,12 +103,20 @@ void TestAstBoxes::testBadTransform() {
 }
 
 void TestAstBoxes::testDistribution() {
+    Box *root;
+    Port *input1, *input2;
     try {
         reader->parse(inputFilePath("ast_distribution.box"));
+        root = builder->content();
+        root->run();
+        input1 = root->resolveOne<Port>("a[input1]");
+        input2 = root->resolveOne<Port>("a[input2]");
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
     }
+    QCOMPARE(input1->value<int>(), 20);
+    QCOMPARE(input2->value<int>(), 25);
 }
 
 

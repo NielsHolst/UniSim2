@@ -3,6 +3,7 @@
 #include "box_builder.h"
 #include "box_step.h"
 #include "dialog.h"
+#include "distribution.h"
 #include "mega_factory.h"
 #include "path.h"
 
@@ -105,6 +106,17 @@ BoxBuilder& BoxBuilder::equals(const char *value) {
 }
 
 BoxBuilder& BoxBuilder::distribution(QString value) {
+    value = value.simplified();
+    QStringList items = value.split(" ", QString::SkipEmptyParts);
+    if (items.empty())
+        ThrowException("Missing distribution parameters").context(_currentPort);
+
+    QString className = items.first();
+    items.removeFirst();
+
+    Distribution *dist= MegaFactory::create<Distribution>(className, className, _currentPort);
+    dist->arguments(items);
+
     return *this;
 }
 

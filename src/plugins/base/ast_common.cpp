@@ -1,3 +1,4 @@
+#include <iostream> // test
 #include <QMap>
 #include <QMapIterator>
 #include "ast_common.h"
@@ -72,15 +73,19 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
 QString Parameter::toString() const {
     QString val = QString::fromStdString(value),
             s = attributedName.toString() + " equals '" + val + "'";
-    if (distribution.size() > 0)
-        s += " | (" + QString::fromStdString(distribution) + ")";
     return s;
 }
 
 void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
     QString val = QString::fromStdString(value),
-            dist = QString::fromStdString(distribution);
+            dist;
+    if (val.contains("@") && !isApostrophed(val)) {
+        int pos = val.indexOf("@");
+        dist = deEmbrace(val.mid(pos+1));
+        val = val.left(pos);
+    }
+
     if (isApostrophed(val)) {
         val = deEmbrace(val);
         if (isParenthesized(val))
@@ -94,7 +99,7 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
         builder.equals(val);
     else
         builder.imports(val);
-    if (!dist.isEmpty())
+    if (!dist.isNull())
         builder.distribution(dist);
 }
 

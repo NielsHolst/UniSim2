@@ -70,7 +70,7 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
 {
     qi::rule<Iterator, Skipper, Node()> node;
     qi::rule<Iterator, Skipper, std::string()>
-            class_name, object_name, name, value, unquoted_value, quoted_value, list_value, distribution;
+            class_name, object_name, name, value, unquoted_value, quoted_value, list_value;
     qi::rule<Iterator, Skipper, NameValuePair()> name_value_pair;
     qi::rule<Iterator, Skipper, std::vector<NameValuePair>()> attributes;
     qi::rule<Iterator, Skipper, ParameterWithAttributes()> attributed_name;
@@ -90,8 +90,10 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // A quoted value is a string of any characters, except apostrophes;
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
-        // An unquoted value is for numbers, dates, times and booleans
-        unquoted_value %= lexeme[+(char_ - char_(" \t\n \"(){}|"))];
+        // An unquoted value is for numbers, dates, times, booleans and path expressions
+        unquoted_value %= lexeme[+(char_ - char_(" \t\n\"{}()[]@"))]
+                >> -(char_('[') > name > char_(']'))
+                >> -(char_('@') > list_value);
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
         // A name-value pair
@@ -100,10 +102,8 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         attributes %= '(' >> *name_value_pair > ')';
         // A name with optional attributes
         attributed_name %= char_("\\.+") >> name >> -attributes;
-        // A distribution is a list preceeded by a pipe
-        distribution %= char_('|') > list_value;
         // A parameter has a name, maybe with attributes, and a value and maybe a distribution
-        parameter %= attributed_name > '=' >> value >> -distribution;
+        parameter %= attributed_name > '=' >> value;
         // A node has a class name, maybe an object name, maybe some parameters, and maybe some nodes
         node %= class_name >> -object_name >> '{' >> *parameter >> *node > '}';
         // Rule names
@@ -117,7 +117,6 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         RULE_NAME(name_value_pair);
         RULE_NAME(attributes);
         RULE_NAME(attributed_name);
-        RULE_NAME(distribution);
         RULE_NAME(parameter);
         node.name("box");
         // Error handling
