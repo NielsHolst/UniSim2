@@ -113,14 +113,13 @@ Simulation {
 				}
 			}
 			Box soil {
-				+fa = 0.25
-				+fw = 0.25
-				PestTox WaterViscosity waterViscosity {
+				+ff = 0.995
+				PestTox::WaterViscosity waterViscosity {
 					.temperature = soilTemperature[value]
 				}
-				PestTox::SoilPorosity porosity {
-					.fa = soil[fa]
-					.fw = soil[fw]
+				PestTox::SoilStructure structure {
+					.fa = 0.25
+					.fw = 0.25
 				}
 				PestTox::OrganicCarbonWaterPartitioning organicCarbon {
 					.Koc = 20100
@@ -134,13 +133,13 @@ Simulation {
 					.foc = 0.2
 					.pb = 1.365
 					.Pd = 0.01
-					.fs = 0.5
-					.fa = soil[fa]
-					.fw = soil[fw]
+					.fs = structure[fs]
+					.fa = structure[fa]
+					.fw = structure[fw]
 					.KocpH = organicCarbon[KocpH]
 					.Tsa = weather[Tavg]
 					.farea = field[area]
-					.Sp = soil/porosity[Sp]
+					.Sp = structure[porosity]
 				}
 				Box top {
 					Box fraction {
@@ -180,28 +179,26 @@ Simulation {
 						.fsand = 0.10
 						.fsilt = 0.31
 						.fclay = 0.59
-						.fa = soil[fa]
-						.fw = soil[fw]
+						.fa = structure[fa]
+						.fw = structure[fw]
 						.fmacropore = 0.3
 						.Flowrate = 0.35
 						.tpevent = 3
 						.P = weather[Rain]
 						.frr = runoff/fraction[frr]
 						.Tf = 1
-						.frsw = soil/fraction/inWater[fr]
+						.frsw = soil/top/fraction/inWater[fr]
 					}
 					PestTox::TopsoilVolatilization volatilization {
 						.Tsa = weather[Tavg]
 						.MW = 169.07
 						.MV = 96.61
 						.Pair = 1
-						.fa = soil[fa]
-						.fw = soil[fw]
+						.fa = structure[fa]
+						.fw = structure[fw]
 						.BLair = 0.00475
 						.farea = field[area]
 						.Za = zValues[Za]
-						.fa = porosity[fa]
-						.fw = porosity[fw]
 						.viscosity = soil/waterViscosity[value]
 						.Pd = 0.1
 						.Zw = zValues[Zw]
@@ -211,25 +208,25 @@ Simulation {
 						.DT50 = 3
 						.inflow = primary/soil[Dosers]
 						.Doseldw = leaf/washOff[value]
-						.ff = 0.995
-						.Tair = weather[Tavg]
-						.fw = soil[fw]
+						.ff = soil[ff]
+						.Tsoil = soilTemperature[value]
+						.fw = structure[fw]
 						.rf = 0.7
 						.Q = 2.1
 						.Vrsmc = 0.5
-						.Sp = soil/porosity[value]
+						.Sp = structure[porosity]
 						.ksv = volatilization[ksv]
-						.frsa = soil/fraction/inAir[fr]
-						.frsa = soil/fraction/inWater[fr]
+						.frsa = soil/top/fraction/inAir[fr]
+						.frsa = soil/top/fraction/inWater[fr]
 						.fsr = runoff[fsr] 
 						.fmp = macroporeFlow[fmp] //move above this one
 					}
 				}
 				Box surface {
 						PestTox::SurfaceWaterDegradation degradation {
-							.inflow = soil/top/degradation[Dosers]
+							.inflow = soil/top/degradation[Dosesr]
 							.DT50 = 4.5
-							.ff = 0.995
+							.ff = soil[ff]
 							.Q = 2.1
 						}
 				}

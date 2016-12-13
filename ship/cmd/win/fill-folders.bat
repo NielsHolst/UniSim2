@@ -1,16 +1,18 @@
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
-set QT_PLUGINS=C:\Qt\5.7\mingw53_32\plugins
-if exist %QT_PLUGINS% goto :qt_root_ok
-set QT_PLUGINS=C:\Qt\5.4\mingw491_32\plugins
-if exist %QT_PLUGINS% goto :qt_root_ok
+set QT_ROOT=C:\Qt\5.7\mingw53_32
+if exist %QT_ROOT% goto :qt_root_ok
+set QT_ROOT=C:\Qt\5.4\mingw491_32
+if exist %QT_ROOT% goto :qt_root_ok
 echo .
-echo Could not find %QT_PLUGINS%
+echo Could not find %QT_ROOT%
 echo .
 goto :end_fail
 
 :qt_root_ok
+set QT_BIN=%QT_ROOT%\bin
+set QT_PLUGINS=%QT_ROOT%\plugins
 
 echo = Clean target bin and  =
 rd /Q /S %UNISIM_BIN%
@@ -32,7 +34,7 @@ copy %UNISIM_SHIP%\..\bin\universal_simulator_base.dll %UNISIM_BIN%
 copy %UNISIM_SHIP%\..\bin\plugins\*.dll %UNISIM_BIN%\plugins
 
 echo = Copy MinGW libraries =
-pushd %QT_ROOT%
+pushd %QT_BIN%
 copy icu*.dll %UNISIM_BIN%\
 copy libwinpthread-1.dll %UNISIM_BIN%
 copy libgcc_s_dw2-1.dll %UNISIM_BIN%

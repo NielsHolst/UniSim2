@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <QVector>
 #include <base/box.h>
 #include <base/box_builder.h>
@@ -13,6 +14,11 @@ using namespace base;
 namespace UniSim {
 
 static int counter = 0;
+
+static int argc = 1;
+static char *argv;
+static QApplication *app = 0;
+
 static QObject *rootObject = 0;
 static QWidget *rootWidget = 0;
 static ObjectPool *pool = 0;
@@ -20,8 +26,11 @@ static DialogBase *dialog =0;
 
 QVector<int> _sequence;
 
-void init() {
+void _init() {
     if (!rootObject) {
+        argv = new char[16];
+        *argv = 0;
+        app = new QApplication(argc, &argv);
         rootObject = new QObject;
         rootWidget = new QWidget;
         pool = new ObjectPool(rootObject);
@@ -71,7 +80,7 @@ void runJump(Box *sim) {
 }
 
 Output run1(Input input) {
-    init();
+    _init();
 
     Box *sim = buildJump(input.start, input.length);
     runJump(sim);
@@ -81,7 +90,7 @@ Output run1(Input input) {
 }
 
 void run2(const Input *input, Output *output) {
-    init();
+    _init();
 
     if (!input)
         ThrowException("run2: input argument is null");

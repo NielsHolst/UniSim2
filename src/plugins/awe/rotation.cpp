@@ -53,7 +53,7 @@ void Rotation::updateCropIndex() {
 }
 
 Box* Rotation::findCropModel(int cropIndex) {
-    QString path = "./" + crops.at(cropIndex) + "{Crop}";
+    QString path = "./" + crops.at(cropIndex) + "<Crop>";
     Box *model = resolveMaybeOne<Box>(path);
     if (!model)
         ThrowException("Crop does not exist in rotation").value(crops.at(cropIndex));

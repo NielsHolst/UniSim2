@@ -57,13 +57,13 @@ namespace TestBoxCases {
                 port("steps").equals(2).
                 box().name("lion").
                     newPort("sum").equals(77).track().
-                    newPort("sum2").data(&sum2).imports("./*{Lion}[n]").track().transform(Sum).
+                    newPort("sum2").data(&sum2).imports("./*<Lion>[n]").track().transform(Sum).
                     box("Lion").name("juvenile").
                         port("n").equals(25).
                     endbox().
                     box("Lion").name("adult").
                         port("n").equals(7).
-                        port("preyDensity").imports("*{Grazer}[density]").transform(Sum).
+                        port("preyDensity").imports("*<Grazer>[density]").transform(Sum).
                     endbox().
                 endbox().
                 box("Grazer").name("zebra").

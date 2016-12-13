@@ -1,12 +1,12 @@
 #include <iostream>
-#include <QApplication>
+//#include <QApplication>
 #include <base/exception.h>
 #include "unisimlib_test.h"
 
 using std::cout;
 
 void run1(QString id, int begin, int n) {
-    cout << "\nBegin " << qPrintable(id) << "\n";
+//    cout << "\nBegin " << qPrintable(id) << "\n";
 
     UniSim::Input input{begin, n};
     UniSim::Output output = UniSim::run1(input);
@@ -34,7 +34,7 @@ void run2(QString id, int begin, int n) {
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+//    QApplication app(argc, argv);
 
     std::cout << "Hello A\n";
 

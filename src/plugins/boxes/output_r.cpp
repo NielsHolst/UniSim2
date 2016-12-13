@@ -37,13 +37,13 @@ OutputR::OutputR(QString name, QObject *parent)
 
 void OutputR::amend() {
     // Create a page if none are present
-    _pages = Path("./*{PageR}", this).resolveMany<PageR>();
+    _pages = Path("./*<PageR>", this).resolveMany<PageR>();
     if (_pages.empty()) {
         Box *page = MegaFactory::create<Box>("PageR", "", this);
         page->amend();
     }
     // Create text output if not present
-    if ( Path("./*{OutputText}", this).resolveMany<Box>().empty() ) {
+    if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
         Box *textOutput = MegaFactory::create<Box>("OutputText", "", this);
         textOutput->amend();
     }
@@ -51,7 +51,7 @@ void OutputR::amend() {
 
 void OutputR::initialize() {
     // Find pages in this output
-    _pages = Path("./*{PageR}", this).resolveMany<PageR>();
+    _pages = Path("./*<PageR>", this).resolveMany<PageR>();
 }
 
 QString OutputR::toString() {

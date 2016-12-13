@@ -1,0 +1,187 @@
+Simulation sim {
+	.steps=300 // until september: duration of the growing season here.
+	Calendar calendar {
+		.timeStep = 1
+		.timeUnit = "d" // single quote by tradition because 1 letter
+		.initialDateTime = 01/01/2009 // let's say that it will start at this date
+	}
+	Records weather {
+		.fileName = "book/weather/flakkebjerg 2009.txt"	// to try 
+	}
+	
+		// need to find the "real" parameters value (T0,  initial, duration...) for wheat
+	Box WinterWheat {
+		// S. avenae should start migrating in the field at that stage.
+		// threshold value for S. avenae at this stage: Mer enn 3 bladlus per straa eller 60% av straaene med bladlus VIPS
+		Stage shootingWheat { 
+		// is it the number of tillers or the number of plant?
+		.initial = 100 //check the value 
+		.timeStep = ./time[step]
+		.duration =150 //check the value
+			DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 0 
+			}
+		}
+		Stage floweringWheat {
+		// threshold value for S. avenae at this stage: 10 bladlus per straa eller 90% av straaene med bladlus (VIPS)
+		.inflow = ../shootingWheat[outflow]
+		.timeStep = ./time[step]
+		.duration = 150 //check the value
+			DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 0 
+			}
+		}
+		Stage grainMilkyWheat {
+		// threshold value for S. avenae at this stage: 15 bladlus per straa eller 95% av straaene med bladlus (VIPS)
+		.inflow=../floweringWheat[outflow]
+		.timeStep= ./time[step]
+		.duration= 550 //check the value
+			DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 0 
+			}
+		}
+		Stage grainScenescenceWheat {  
+		// S. avenae should start migrating out of the field at that stage
+		.inflow=../grainMilkyWheat[outflow]
+		.timeStep=./time[step]
+		.duration= 200 //check the value
+			DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 0 
+			}
+		}
+		
+	}
+	
+	//need to add mortality at each stage. The mortality will increase with the senescence of the wheat !!
+	Box S_avenae {
+		Stage nymph_Apterous{
+		.timeStep = ./time[step]
+		.initial = 0
+		.inflow = fecundity[nb_apterous_nymph]
+		.duration=15 //check the value
+			DayDegrees time {
+			.T=weather[Tavg]
+			.T0=5 // check literature in Brabec et al. 2014. It is an estimate for SA, MD and RP
+			}
+		}
+		
+		Stage nymph_Alates {
+		.timeStep = ./time[step]
+		.initial = 0
+		.inflow = fecundity[nb_alates_nymph]
+		.duration= 22 //check the value. The time of the 4th instar for individuals which will become alate is 1,5times longer than
+		// the duration of this stage for apterous individuals  Carter et al 1982 in Plantegenest et al 2001
+			DayDegrees time {
+			.T=weather[Tavg]
+			.T0=5 
+			}
+		}
+		
+		Stage adult_Apterous {
+			.initial=10
+			.inflow=nymph_Apterous[outflow]
+			.timeStep=./time[step]
+			.duration=20 
+				DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 5
+				}
+		}
+		// working hypothesis: all adult_Alates will leave the field after moulting and before to
+		// produce offspring. This hyp has been done also in Plantegenest et al. 2001.
+		
+		Stage adult_Alates {
+			.initial=10
+			.inflow=nymph_Alates[outflow]
+			.timeStep=./time[step]
+			.duration=20 
+				DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 5
+				}
+		}
+	
+			
+		// calculate the density of aphid which will influence the proportion of alates produced by the apterous adults.
+		Density_per_tiller aphid_density {
+		.nb_nymph_apterous= nymph_Apterous[content]
+		.nb_nymph_alates= nymph_Alates[content]
+		.nb_adult_apterous= adult_Apterous[content]
+		.nb_adult_alates= adult_Alates[content] // only the new adult alates, the other has emmigrated
+		.nb_plant= 100
+		}
+		
+		// THE PROBLEM IS HERE BECAUSE OF THE SDENSITY MEASURE. It is negative between May and July!
+		//Alate2 porportion_alates {
+		//.density=aphid_density[density]
+		//.percentage_senescence=grainScenescenceWheat[outflowTotal] // inflow or outflowTotal ?? like in fecundity
+		//.b1=12 // the parameters will have to be better estimated check .cpp file and the .doc about the references
+		//.a1=2.1972
+		//.b2=1
+		//.a2=2.1972
+		//}
+		
+		ProportionalSignal reproduction_rate {
+		.input= grainScenescenceWheat[outflowTotal]
+		.minSignal=0.1
+		.maxSignal=10
+		.threshold=1
+		.thresholdBand=50 
+		.increasingSignal=FALSE // if the input is above the threshold (1),the fecundity will decrease from 20 to 0
+		}
+		
+		Aph_fecundity fecundity{
+		.proportion_alate=0.3
+		//.proportion_alate= proportion_alates[proportion]
+		.density_apterous=adult_Apterous[content]
+		//.reproduction_rate=10
+		.reproduction_rate=reproduction_rate[signal]
+		}
+	}
+	
+	OutputR {
+		PageR{
+		.xAxis= calendar[date]
+		.ncol = 2
+		PlotR{
+			.layout = "merged"
+			.ports = (S_avenae/*[content]) // all grand children of S.avenae
+			.end = "scripts/month_breaks.R"
+			}
+		PlotR{
+			.layout = "merged"
+			.ports = (WinterWheat/*[content])
+			.end = "scripts/month_breaks.R"
+			}
+		
+		PlotR{
+			.layout = "merged"
+			.ports = (S_avenae/*[outflowTotal])
+			.end = "scripts/month_breaks.R"
+			}
+		PlotR{
+			.layout = "merged"
+			.ports = (WinterWheat/*[outflowTotal])
+			.end = "scripts/month_breaks.R"
+			}
+		}
+		PageR{
+		.xAxis= calendar[date]
+		.ncol = 2
+		PlotR{
+			.layout = "merged"
+			.ports = (reproduction_rate[signal])
+			.end = "scripts/month_breaks.R"
+			}
+		PlotR{
+			.layout = "merged"
+			.ports = (aphid_density[density])
+			.end = "scripts/month_breaks.R"
+			}
+		}
+	}
+}

@@ -43,7 +43,7 @@ void save_output::doExecute() {
 
 void save_output::collectPortsWithTrack() {
     _ports.clear();
-    Path path("*{Port}", this);
+    Path path("*<Port>", this);
     QVector<Port*> all = path.resolve<Port>(-1, this);
     for (Port *port : all) {
         if (port->trackPtr())

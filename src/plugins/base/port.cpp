@@ -365,7 +365,7 @@ QStringList Port::warnings() const {
 }
 
 QVector<Port*> Port::trackedPorts() {
-    QVector<base::Port*> result, all = Path("*{Port}").resolveMany<Port>();
+    QVector<base::Port*> result, all = Path("*<Port>").resolveMany<Port>();
     for (Port *port : all) {
         if (port->trackPtr())
             result << port;

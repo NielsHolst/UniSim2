@@ -24,7 +24,7 @@ void OutputText::initialize() {
 
 void OutputText::collectAllTrackedPorts() {
     _allTrackedPorts.clear();
-    QVector<Port*> all = Path("*{Port}").resolveMany<Port>();
+    QVector<Port*> all = Path("*<Port>").resolveMany<Port>();
     for (Port *port : all) {
         if (port->trackPtr())
             _allTrackedPorts << port;

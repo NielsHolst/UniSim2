@@ -110,48 +110,48 @@ void TestPath::testValidateStep() {
 
 void TestPath::testNormalise() {
     QCOMPARE(Path("plant/fruit/area[v]").normalise(),
-         QString("selfordescendants:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+         QString("selfordescendants:plant<Box>/children:fruit<Box>/children:area<Box>/children:v<Port>"));
 
     QCOMPARE(Path("children::plant/fruit/nearest:area[v]").normalise(),
-         QString("children:plant{Box}/children:fruit{Box}/nearest:area{Box}/children:v{Port}"));
+         QString("children:plant<Box>/children:fruit<Box>/nearest:area<Box>/children:v<Port>"));
 
     QCOMPARE(Path("./plant/fruit/area[v]").normalise(),
-        QString("self:*{Box}/children:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+        QString("self:*<Box>/children:plant<Box>/children:fruit<Box>/children:area<Box>/children:v<Port>"));
 
     QCOMPARE(Path("../plant/fruit/area[v]").normalise(),
-        QString("parent:*{Box}/children:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+        QString("parent:*<Box>/children:plant<Box>/children:fruit<Box>/children:area<Box>/children:v<Port>"));
 
     QCOMPARE(Path("/plant/fruit/area[v]").normalise(),
-        QString("self:plant{Box}/children:fruit{Box}/children:area{Box}/children:v{Port}"));
+        QString("self:plant<Box>/children:fruit<Box>/children:area<Box>/children:v<Port>"));
 
     QCOMPARE(Path(".[v]").normalise(),
-        QString("self:*{Box}/children:v{Port}"));
+        QString("self:*<Box>/children:v<Port>"));
 
     QCOMPARE(Path("..[v]").normalise(),
-        QString("parent:*{Box}/children:v{Port}"));
+        QString("parent:*<Box>/children:v<Port>"));
 
     QCOMPARE(Path("...[v]").normalise(),
-        QString("nearest:v{Port}"));
+        QString("nearest:v<Port>"));
 
     QCOMPARE(Path("/").normalise(),
-        QString("self:*{Box}"));
+        QString("self:*<Box>"));
 
     QCOMPARE(Path("/plant").normalise(),
-        QString("self:plant{Box}"));
+        QString("self:plant<Box>"));
 
     QCOMPARE(Path("/plant[v]").normalise(),
-        QString("self:plant{Box}/children:v{Port}"));
+        QString("self:plant<Box>/children:v<Port>"));
 
     QCOMPARE(Path("../plant[v]").normalise(),
-        QString("parent:*{Box}/children:plant{Box}/children:v{Port}"));
+        QString("parent:*<Box>/children:plant<Box>/children:v<Port>"));
 
     QCOMPARE(Path("../../plant[v]").normalise(),
-        QString("parent:*{Box}/parent:*{Box}/children:plant{Box}/children:v{Port}"));
+        QString("parent:*<Box>/parent:*<Box>/children:plant<Box>/children:v<Port>"));
 
     QCOMPARE(Path(".../plant[v]").normalise(), Path("nearest:plant[v]").normalise());
 
     QCOMPARE(Path(".../plant[v]").normalise(),
-        QString("nearest:plant{Box}/children:v{Port}"));
+        QString("nearest:plant<Box>/children:v<Port>"));
 }
 
 
@@ -187,7 +187,7 @@ void TestPath::testSelf() {
     absolute = Path("/A/A2").resolveMany();
     compareVectors(relative, absolute, 1);
 
-    relative = Path("self:*{Box}", _context).resolveMany(),
+    relative = Path("self:*<Box>", _context).resolveMany(),
     absolute = Path("/A/A2").resolveMany();
     compareVectors(relative, absolute, 1);
 
@@ -266,11 +266,11 @@ void TestPath::testNearest() {
         absolute = Path("/A[v3]").resolveMany();
         compareVectors(relative, absolute, 1);
 
-        relative = Path(".../*{Port}", _context).resolveMany(),
+        relative = Path(".../*<Port>", _context).resolveMany(),
         absolute = Path("/A/A2[v2]").resolveMany();
         compareVectors(relative, absolute, 1);
 
-        relative = Path(".../*{Box}", _context).resolveMany(),
+        relative = Path(".../*<Box>", _context).resolveMany(),
         absolute = Path("/A/A2/a").resolveMany();
         compareVectors(relative, absolute, 1);
     }
@@ -413,7 +413,7 @@ void TestPath::testBarePort() {
     setContext("A2");
     QVector<QObject*> relative;
 
-    relative = Path("*{Port}", _context).resolveMany();
+    relative = Path("*<Port>", _context).resolveMany();
     QCOMPARE(relative.size(), 12);
 }
 

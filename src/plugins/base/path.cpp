@@ -154,7 +154,7 @@ QString Path::normaliseFirstBox(QString s) {
         _current.normalisedContext = _originalContext;
     }
 
-    return directive + ":" + parts.at(1) + "{" + parts.at(2) + "}";
+    return directive + ":" + parts.at(1) + "<" + parts.at(2) + ">";
 }
 
 QString Path::normaliseBox(QString defaultDirective, QString s) {
@@ -162,7 +162,7 @@ QString Path::normaliseBox(QString defaultDirective, QString s) {
     QString directive = parts.at(0);
     if (directive.isEmpty())
         directive = defaultDirective;
-    return directive + ":" + parts.at(1) + "{" + parts.at(2) + "}";
+    return directive + ":" + parts.at(1) + "<" + parts.at(2) + ">";
 }
 
 QStringList Path::splitBox(QString s) {
@@ -170,8 +170,8 @@ QStringList Path::splitBox(QString s) {
     s.replace("::", ":");
     // Split
     int colon = s.indexOf(':'),
-        leftBrace = s.indexOf('{'),
-        rightBrace = s.indexOf('}');
+        leftBrace = s.indexOf('<'),
+        rightBrace = s.indexOf('>');
     bool hasDirective = (colon>-1),
          hasType = (leftBrace>-1);
     QString directive = hasDirective ? s.left(colon) : "",
@@ -210,7 +210,7 @@ QString Path::normalisePort(QString directive) {
     if (leftBracket == -1) return "";
     return directive + ":" +
             _current.originalPath.mid(leftBracket+1, rightBracket-leftBracket-1) +
-            "{Port}";
+            "<Port>";
 }
 
 Path::QObjects Path::nearest(const QObject *p, QString box, QString type, QString tail) {

@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=0
-set SUB=11
+set SUB=13
 echo Building version %MAJOR%.%MINOR%.%SUB% release
 
 echo = Set path to Qt build environment =
@@ -18,7 +18,7 @@ goto :end_fail
 :ok_qt 
 
 echo = Set path to InstallBuilder =
-set INSTALL_BUILDER_PATH=C:\Program Files\BitRock InstallBuilder for Qt 16.7.0\bin
+set INSTALL_BUILDER_PATH="C:\Program Files\BitRock InstallBuilder for Qt 16.7.0\bin"
 if exist %INSTALL_BUILDER_PATH% goto :ok_builder
 
 set INSTALL_BUILDER_PATH="C:\Program Files (x86)\BitRock InstallBuilder for Qt 16.8.0\bin"
@@ -37,7 +37,6 @@ popd
 
 echo = Clean out old builds =
 pushd ..\..\..
-dir
 call clean
 popd
 

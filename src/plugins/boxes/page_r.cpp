@@ -28,7 +28,7 @@ PageR::PageR(QString name, QObject *parent)
 
 void PageR::amend() {
     // Create a plot if none are present
-    _plots = Path("./*{PlotR}", this).resolveMany<PlotR>();
+    _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
     if (_plots.empty()) {
         Box *plot = MegaFactory::create<Box>("PlotR", "", this);
         plot->amend();
@@ -46,7 +46,7 @@ void PageR::amend() {
 
 void PageR::initialize() {
     // Find plots on this page
-    _plots = Path("./*{PlotR}", this).resolveMany<PlotR>();
+    _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
 }
 void PageR::reset() {
     _commonPageNumber = _myPageNumber = 0;

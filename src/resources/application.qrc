@@ -136,11 +136,16 @@
     <file>data/input/student/PestTox/PestTox_spray drift_Pnsz0_2013.xml</file>
     <file>data/input/student/PestTox/PestTox_spray drift_Pnsz30_2012.xml</file>
     <file>data/input/student/PestTox/PestTox_spray drift_Pnsz30_2013.xml</file>
+    <file>data/input/student/PestTox/verification/pesticide.box</file>
+    <file>data/input/student/PestTox/verification/pesticide_end.R</file>
+    <file>data/input/student/PestTox/weather/free_radicals_table.txt</file>
     <file>data/input/student/PestTox/weather/Loei.txt</file>
     <file>data/input/student/PestTox/weather/Pathumthani.txt</file>
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
+    <file>data/input/test5.4.box</file>
     <file>data/input/vg/crops.xml</file>
+    <file>data/input/vg/ig2.box</file>
     <file>data/input/vg/input/direct_transmission_single.txt</file>
     <file>data/input/vg/input/sel_dk.txt</file>
     <file>data/input/vg/sel_dk.txt</file>
