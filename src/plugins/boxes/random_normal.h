@@ -17,7 +17,7 @@ class RandomNormal : public RandomBase
 public: 
     RandomNormal(QString name, QObject *parent);
     ~RandomNormal();
-    void initialize();
+    void doInitialize();
 private:
     // Inputs
     double mean, sd;

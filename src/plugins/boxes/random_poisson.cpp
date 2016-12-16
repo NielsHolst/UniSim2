@@ -18,8 +18,7 @@ RandomPoisson::~RandomPoisson() {
     delete variate;
 }
 
-void RandomPoisson::initialize() {
-    RandomBase::initialize();
+void RandomPoisson::doInitialize() {
     distribution = new Distribution(mean);
     variate = new Variate(*randomGenerator(), *distribution);
 }

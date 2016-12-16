@@ -17,8 +17,7 @@ RandomUniform::~RandomUniform() {
     delete variate;
 }
 
-void RandomUniform::initialize() {
-    RandomBase::initialize();
+void RandomUniform::doInitialize() {
     distribution = new Distribution(port("minValue")->value<double>(),
                                     port("maxValue")->value<double>());
     variate = new Variate(*randomGenerator(), *distribution);

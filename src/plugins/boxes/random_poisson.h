@@ -12,7 +12,7 @@ class RandomPoisson : public RandomBase
 public: 
     RandomPoisson(QString name, QObject *parent);
     ~RandomPoisson();
-    void initialize();
+    void doInitialize();
 private:
     // Inputs
     double mean;

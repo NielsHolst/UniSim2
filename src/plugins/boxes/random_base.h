@@ -8,17 +8,18 @@ class RandomBase : public base::Box
 {
 public: 
     RandomBase(QString name, QObject *parent);
-    void initialize();
-    void reset();
-    void update();
+    void initialize() final;
+    void reset() final;
+    void update() final;
 private:
     // Inputs
     double minValue, maxValue;
     int maxTries;
-    bool drawAtInitialize, drawAtReset, drawAtUpdate;
+    bool drawAtReset, drawAtUpdate;
     // Outputs
     double value;
     // Methods
+    virtual void doInitialize() = 0;
     virtual double drawValue() = 0;
     void nextValue();
 };

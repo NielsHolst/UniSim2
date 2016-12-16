@@ -18,7 +18,7 @@ void normal::parseArguments(QStringList args) {
     sd = convert<double>(args.at(1));
 }
 
-double normal::computeLevel(int levelNumber, int noOfLevels) const {
+double normal::computeLevel(int , int ) const {
     return 0.;
 }
 

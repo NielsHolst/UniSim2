@@ -13,17 +13,17 @@ namespace boxes {
 RandomBase::RandomBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(minValue).equals(-std::numeric_limits<double>::max());
-    Input(maxValue).equals(std::numeric_limits<double>::max());
+    Input(minValue).equals(-std::numeric_limits<double>::infinity());
+    Input(maxValue).equals(std::numeric_limits<double>::infinity());
     Input(maxTries).equals(100);
-    Input(drawAtInitialize).equals(false);
     Input(drawAtReset).equals(true);
     Input(drawAtUpdate).equals(false);
     Output(value);
 }
 
 void RandomBase::initialize() {
-    if (drawAtInitialize) nextValue();
+    doInitialize();
+    nextValue();
 }
 
 void RandomBase::reset() {
