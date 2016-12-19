@@ -57,7 +57,7 @@ void help_class::createBox(QString className) {
 
 void help_class::setNameLengths() {
     _maxPortNameLength = _maxPortTypeNameLength = 0;
-    for (const Port *port : _box->resolveMany<Port>(".[*]")) {
+    for (const Port *port : _box->findMany<Port>(".[*]")) {
         if (port->objectName().size() > _maxPortNameLength)
             _maxPortNameLength = port->objectName().size();
         if (nameOf(port->type()).size() > _maxPortTypeNameLength)
@@ -82,7 +82,7 @@ void help_class::writeHelp() {
 
 QStringList help_class::portsHelp(Port::Access access) {
     QStringList list;
-    for (const Port *port : _box->resolveMany<Port>(".[*]"))
+    for (const Port *port : _box->findMany<Port>(".[*]"))
         if (port->access() == access)
             list << "." +
                     pad(port->objectName(), _maxPortNameLength) +

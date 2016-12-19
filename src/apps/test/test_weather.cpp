@@ -27,7 +27,7 @@ void TestPortWeather::testOk() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    double Tavg = sim->resolveOne<Port>("weather[Tavg]")->value<double>();
+    double Tavg = sim->findOne<Port>("weather[Tavg]")->value<double>();
     QVERIFY(TestNum::eq(Tavg, 20.5));
     delete sim;
 }

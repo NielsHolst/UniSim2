@@ -31,7 +31,7 @@ void TestVectorSum::testOk() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QVector<double> sum = sim->resolveOne<Port>("sum[value]")->value<QVector<double>>();
+    QVector<double> sum = sim->findOne<Port>("sum[value]")->value<QVector<double>>();
     QCOMPARE(sum.size(), 3);
     QVERIFY(TestNum::eq(sum[0], 11.0));
     QVERIFY(TestNum::eq(sum[1], 33.0));

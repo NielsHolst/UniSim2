@@ -99,7 +99,7 @@ base::Box* TestTrack::buildJump(int start, int length) {
 QVector<int> TestTrack::runJump(base::Box *sim) {
     sim->run();
 
-    Port *value = sim->resolveOne<Port>("jump[value]");
+    Port *value = sim->findOne<Port>("jump[value]");
     const Vector* vector = value->trackPtr();
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
     return *values;

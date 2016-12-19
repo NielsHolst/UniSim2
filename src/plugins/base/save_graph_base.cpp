@@ -24,7 +24,7 @@ QVector<Box*> SaveGraphBase::boxesToGraph() {
     QVector<Box*> boxes;
     Box *root = environment().root();
     if (root)
-        boxes = root->resolveMany<Box>("*");
+        boxes = root->findMany<Box>("*");
     return boxes;
 }
 
@@ -34,7 +34,7 @@ QVector<QPair<Port*, Port*>> SaveGraphBase::portEdgesToGraph() {
     Box *root = environment().root();
     if (root) {
         root->initializeFamily();
-        all = root->resolveMany<Port>("*[*]");
+        all = root->findMany<Port>("*[*]");
         for (Port *receiver : all) {
             for (Port *sender : receiver->importPorts()) {
                 edges << qMakePair(sender, receiver);

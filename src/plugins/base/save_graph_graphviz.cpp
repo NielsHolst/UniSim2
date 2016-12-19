@@ -92,7 +92,7 @@ void SaveGraphGraphviz::writeBoxRelations() {
     _stream << "edge[style=\"setlinewidth(8)\", color=gray];\n";
     QVector<Box*> parents = boxesToGraph();
     for (Box *parent : parents) {
-        QVector<Box*> children = parent->resolveMany<Box>("./*");
+        QVector<Box*> children = parent->findMany<Box>("./*");
         for (Box *child : children) {
             writeEdge(id(parent), id(child));
         }

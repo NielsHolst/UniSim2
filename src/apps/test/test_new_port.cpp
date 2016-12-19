@@ -27,8 +27,8 @@ void TestNewPort::testImportNewPort() {
         root = builder.content();
 
         root->run();
-        QCOMPARE(root->resolveOne<Port>("A[input1]")->value<int>(), 1234);
-        QCOMPARE(root->resolveOne<Port>("A[input2]")->value<int>(), 5678);
+        QCOMPARE(root->findOne<Port>("A[input1]")->value<int>(), 1234);
+        QCOMPARE(root->findOne<Port>("A[input2]")->value<int>(), 5678);
     }
     catch (Exception &ex) {
         QString msg = QString("Unexpected exception") + ex.what();
@@ -62,8 +62,8 @@ void TestNewPort::testImportNewPortVector() {
         root->run();
         expected1 << 12 << 34;
         expected2 << 5 << 67 << 8 << 9;
-        QCOMPARE(root->resolveOne<Port>("A[numbers1]")->value<QVector<int>>(), expected1);
-        QCOMPARE(root->resolveOne<Port>("A[numbers2]")->value<QVector<int>>(), expected2);
+        QCOMPARE(root->findOne<Port>("A[numbers1]")->value<QVector<int>>(), expected1);
+        QCOMPARE(root->findOne<Port>("A[numbers2]")->value<QVector<int>>(), expected2);
     }
     catch (Exception &ex) {
         QString msg = QString("Unexpected exception") + ex.what();
@@ -133,7 +133,7 @@ void TestNewPort::testImportNewPortTransformed() {
 
         root->run();
 
-        int value = root->resolveOne<Port>("collection[minimum]")->value<int>();
+        int value = root->findOne<Port>("collection[minimum]")->value<int>();
         QCOMPARE(value, 7);
     }
     catch (Exception &ex) {

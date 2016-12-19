@@ -15,6 +15,7 @@ private slots:
     void testDeduceBool();
     void testDeduceChar();
     void testDeduceInt();
+    void testDeduceIntOneChar();
     void testDeduceDouble();
     void testDeduceDate();
     void testDeduceDateTime();

@@ -26,7 +26,7 @@ void TestOutputBuffer::testOk() {
         QFAIL(qPrintable(s));
     }
 
-    Port *value = sim->resolveOne<Port>("fibo[value]");
+    Port *value = sim->findOne<Port>("fibo[value]");
     const Vector* vector = value->trackPtr();
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
 

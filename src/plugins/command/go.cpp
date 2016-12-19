@@ -26,7 +26,7 @@ void go::doExecute() {
         QString path = _args.at(1);
         Box *box = environment().current();
         if (box) {
-            matches = box->resolveMany<QObject>(path);
+            matches = box->findMany<QObject>(path);
             if (matches.isEmpty())
                 dialog().error("No matches");
             else if (matches.size() > 1) {

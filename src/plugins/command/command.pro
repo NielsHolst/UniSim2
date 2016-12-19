@@ -31,6 +31,7 @@ HEADERS +=  \
     set_folder.h \
     test.h \
     update.h \
+    write.h \
     quit.h
 	
 SOURCES +=  \
@@ -54,6 +55,7 @@ SOURCES +=  \
     set_folder.cpp \
     test.cpp \
     update.cpp \
+    write.cpp \
     quit.cpp
 
 

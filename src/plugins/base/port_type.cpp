@@ -145,12 +145,12 @@ namespace {
 PortType deducePortType(QString s) {
     if (isVector(s)) return deducePortTypeVector(s);
     if (isType<bool>(s)) return Bool;
-    if (isType<char>(s)) return Char;
     if (isType<int>(s)) return Int;
     if (isType<long int>(s)) return LongInt;
     if (isType<long long int>(s)) return LongLongInt;
     if (isType<double>(s)) return Double;
     if (isType<long double>(s)) return LongDouble;
+    if (isType<char>(s)) return Char;
     if (isType<QDate>(s)) return Date;
     if (isType<QDateTime>(s)) return DateTime;
     if (isType<QTime>(s)) return Time;

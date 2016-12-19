@@ -27,9 +27,9 @@ SUBDIRS += student
 student.subdir = src/plugins/student
 student.depends = base
 
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
 
 SUBDIRS += test_boxes
 test_boxes.subdir = src/plugins/test_boxes
@@ -44,6 +44,6 @@ test.depends = distribution
 test.depends = eq
 test.depends = savanna
 test.depends = student
-#test.depends = vg
+test.depends = vg
 test.depends = test_boxes
 

@@ -25,7 +25,7 @@ void OutputPorts::collectPorts() {
     _myPorts.clear();
     // Collect the ports
     for (QString portName : ports) {
-        QVector<Port*> trackedPorts = resolveMany<Port>(portName);
+        QVector<Port*> trackedPorts = findMany<Port>(portName);
         // Only add ports not already captured
         for (Port *port : trackedPorts) {
             if (_myPorts.contains(port))

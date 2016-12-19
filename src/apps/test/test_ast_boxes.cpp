@@ -59,15 +59,15 @@ void TestAstBoxes::testWhitespaceInVector() {
     }
 
     typedef QVector<int> VecInt;
-    QCOMPARE(root->resolveOne<Port>("a[numbers1]")->value<VecInt>(),
+    QCOMPARE(root->findOne<Port>("a[numbers1]")->value<VecInt>(),
              VecInt() << 7 << 9 << 13);
-    QCOMPARE(root->resolveOne<Port>("a[numbers1]")->value<VecInt>(),
+    QCOMPARE(root->findOne<Port>("a[numbers1]")->value<VecInt>(),
              VecInt() << 7 << 9 << 13);
 
     typedef QVector<QString> VecString;
-    QCOMPARE(root->resolveOne<Port>("b[s1]")->value<VecString>(),
+    QCOMPARE(root->findOne<Port>("b[s1]")->value<VecString>(),
              VecString() << "abc" << "def" << "ghi");
-    QCOMPARE(root->resolveOne<Port>("b[s2]")->value<VecString>(),
+    QCOMPARE(root->findOne<Port>("b[s2]")->value<VecString>(),
              VecString() << "abc" << "def" << "ghi");
 }
 
@@ -78,9 +78,9 @@ void TestAstBoxes::testWhitespaceInPath() {
         reader->parse(inputFilePath("ast_whitespace_in_path.box"));
         root = builder->content();
         root->run();
-        x = root->resolveOne<Port>("a[input2]");
-        y = root->resolveOne<Port>("a[input1]");
-        z = root->resolveOne<Port>("a [ input2 ]");
+        x = root->findOne<Port>("a[input2]");
+        y = root->findOne<Port>("a[input1]");
+        z = root->findOne<Port>("a [ input2 ]");
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));
@@ -109,8 +109,8 @@ void TestAstBoxes::testDistribution() {
         reader->parse(inputFilePath("ast_distribution.box"));
         root = builder->content();
         root->run();
-        input1 = root->resolveOne<Port>("a[input1]");
-        input2 = root->resolveOne<Port>("a[input2]");
+        input1 = root->findOne<Port>("a[input1]");
+        input2 = root->findOne<Port>("a[input2]");
     }
     catch (Exception &ex) {
         QFAIL(qPrintable("Unexpected: " + ex.what()));

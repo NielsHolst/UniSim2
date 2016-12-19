@@ -41,6 +41,11 @@ void TestPortType::testDeduceInt(){
     QCOMPARE(type, Int);
 }
 
+void TestPortType::testDeduceIntOneChar(){
+    PortType type = deducePortType("7");
+    QCOMPARE(type, Int);
+}
+
 void TestPortType::testDeduceDouble() {
     PortType type = deducePortType("3.14");
     QCOMPARE(type, Double);

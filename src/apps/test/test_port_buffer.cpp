@@ -55,7 +55,7 @@ void TestPortBuffer::testImportNoBuffer() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QCOMPARE(sim->resolveOne<Port>("A[input1]")->value<int>(), 777);
+    QCOMPARE(sim->findOne<Port>("A[input1]")->value<int>(), 777);
 }
 
 void TestPortBuffer::testImportFromBuffer() {
@@ -78,7 +78,7 @@ void TestPortBuffer::testImportFromBuffer() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QCOMPARE(sim->resolveOne<Port>("A[input1]")->value<int>(), 777);
+    QCOMPARE(sim->findOne<Port>("A[input1]")->value<int>(), 777);
 }
 
 void TestPortBuffer::testImportToBuffer() {
@@ -101,7 +101,7 @@ void TestPortBuffer::testImportToBuffer() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QCOMPARE(sim->resolveOne<Port>("A[input10]")->value<int>(), 777);
+    QCOMPARE(sim->findOne<Port>("A[input10]")->value<int>(), 777);
 }
 
 void TestPortBuffer::testImportBufferToBuffer() {
@@ -124,7 +124,7 @@ void TestPortBuffer::testImportBufferToBuffer() {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-    QCOMPARE(sim->resolveOne<Port>("A[input10]")->value<int>(), 777);
+    QCOMPARE(sim->findOne<Port>("A[input10]")->value<int>(), 777);
 }
 
 //
@@ -153,7 +153,7 @@ void TestPortBuffer::testImportVectorNoBuffer() {
     }
     QVector<int> expected;
     expected << 7 << 13 << 9;
-    QCOMPARE(sim->resolveOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
+    QCOMPARE(sim->findOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
 }
 
 void TestPortBuffer::testImportVectorFromBuffer() {
@@ -178,7 +178,7 @@ void TestPortBuffer::testImportVectorFromBuffer() {
     }
     QVector<int> expected;
     expected << 7 << 13 << 9;
-    QCOMPARE(sim->resolveOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
+    QCOMPARE(sim->findOne<Port>("A[numbers1]")->value<QVector<int>>(), expected);
 }
 
 void TestPortBuffer::testImportVectorToBuffer() {
@@ -203,7 +203,7 @@ void TestPortBuffer::testImportVectorToBuffer() {
     }
     QVector<int> expected;
     expected << 7 << 13 << 9;
-    QCOMPARE(sim->resolveOne<Port>("A[numbers10]")->value<QVector<int>>(), expected);
+    QCOMPARE(sim->findOne<Port>("A[numbers10]")->value<QVector<int>>(), expected);
 }
 
 void TestPortBuffer::testImportVectorBufferToBuffer() {
@@ -222,7 +222,7 @@ void TestPortBuffer::testImportVectorBufferToBuffer() {
         sim->amendFamily();
         sim->initializeFamily();
         sim->resetFamily();
-        actual = sim->resolveOne<Port>("A[numbers10]")->value<QVector<int>>();
+        actual = sim->findOne<Port>("A[numbers10]")->value<QVector<int>>();
     }
     catch(Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();

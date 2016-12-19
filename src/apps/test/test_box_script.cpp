@@ -14,7 +14,7 @@ void TestBoxScript::testPlotRPortsAsVector() {
     QCOMPARE(errors, dialog().errorCount());
 
     Box *sim = environment().root();
-    Box *plot = sim->resolveOne<Box>("plot");
+    Box *plot = sim->findOne<Box>("plot");
     QVector<QString> value = plot->port("ports")->value<QVector<QString>>();
     QCOMPARE(value, QVector<QString>() << "sim[step]");
 }
@@ -25,7 +25,7 @@ void TestBoxScript::testPlotRPortsAsScalar() {
     QCOMPARE(errors, dialog().errorCount());
 
     Box *sim = environment().root();
-    Box *plot = sim->resolveOne<Box>("plot");
+    Box *plot = sim->findOne<Box>("plot");
     QVector<QString> value = plot->port("ports")->value<QVector<QString>>();
     QCOMPARE(value, QVector<QString>() << "sim[step]");
 }

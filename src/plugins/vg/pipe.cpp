@@ -73,7 +73,7 @@ Pipe::Pipe(QString name, QObject *parent)
 }
 
 void Pipe::initialize() {
-    QVector<Box*> preceedingPipes = resolveMany<Box>("preceedingsibling::*");
+    QVector<Box*> preceedingPipes = findMany<Box>("preceedingsibling::*");
     for (Box *pipe : preceedingPipes) {
         energyFluxFromPreceedingPipes << pipe->port("energyFlux")->valuePtr<double>();
     }

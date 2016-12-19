@@ -43,20 +43,6 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     ports[name] = port;
 }
 
-#define PEAKPORT \
-    Path path(".[" + name + "]", this); \
-    auto ports = (path.resolve()); \
-    QString value{" (%1 found)"}; \
-    int n = ports.size(); \
-    switch (n) { \
-    case 0: \
-        return 0; \
-    case 1: \
-        return dynamic_cast<Port*>(ports.at(0)); \
-    default: \
-        ThrowException("Port name not unique within box").value(name+value.arg(n)).context(this);; \
-    }
-
 Port* Box::peakPort(QString name) {
     return _ports.contains(name) ? _ports.value(name) : 0;
 }
@@ -322,5 +308,26 @@ void Box::trackPorts(Step step) {
         port->track(step);
 }
 
+void Box::toText(QTextStream &text, WriteOptions options, int indentation) const {
+    if (options == WriteOptions::None)
+        options = WriteOptions::Boxes | WriteOptions::Ports | WriteOptions::Help | WriteOptions::Recurse;
+
+    Box *me = const_cast<Box*>(this);
+    QString fill;
+    fill.fill(' ', indentation);
+
+    text << fill << className() << " " << objectName() << "{\n";
+
+    if (options && WriteOptions::Ports) {
+        for (Port *port : me->findMany<Port>(".[*]")) {
+            text << fill << "  " << port->objectName() << "\n";
+        }
+    }
+
+    for (Box *box : me->findMany<Box>("./*")) {
+        box->toText(text, options, indentation+2);
+    }
+    text << fill << "}\n";
+}
 
 }

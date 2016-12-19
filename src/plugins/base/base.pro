@@ -70,7 +70,8 @@ HEADERS +=  \
     vector_op.h \
     vector_vector.h \
     vectorize.h \
-    version.h
+    version.h \
+    enum_functions.h
 
 SOURCES +=  \
     any_year.cpp \
