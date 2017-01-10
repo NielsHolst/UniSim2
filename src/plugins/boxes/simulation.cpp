@@ -35,26 +35,25 @@ void Simulation::amend() {
 }
 
 void Simulation::run() {
-    dialog().message("Running...");
     nextShowProgress = 0.01;
     hasError = false;
     QTime time;
     try {
         time.start();
-        dialog().information("initialize...");
+        environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
         for (iteration = 1; !stopIterations && iteration <= iterations; ++iteration) {
-            dialog().information("reset...");
+            environment().computationStep(ComputationStep::Reset);
             resetFamily();
-            dialog().information("update...");
+            environment().computationStep(ComputationStep::Update);
             for (step = 1; !stopSteps && step <= steps; ++step) {
                 show(time);
                 updateFamily();
             }
-            dialog().information("cleanup...");
+            environment().computationStep(ComputationStep::Cleanup);
             cleanupFamily();
         }
-        dialog().information("debrief...");
+        environment().computationStep(ComputationStep::Debrief);
         debriefFamily();
     }
     catch (Exception &ex) {
@@ -62,7 +61,7 @@ void Simulation::run() {
         errorMsg = ex.what();
     }
     dialog().finished();
-    dialog().message("Ready");
+//    environment().computationStep(ComputationStep::Ready);
     executionTime = time.elapsed();
 }
 

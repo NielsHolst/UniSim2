@@ -4,13 +4,19 @@
 #include <QMap>
 #include <QString>
 #include <QStringList>
+#include <QTextStream>
 #include <QVector>
 #include "assign.h"
 #include "box_step.h"
+#include "construction_step.h"
 #include "convert.h"
+#include "enum_functions.h"
+#include "environment.h"
 #include "exception.h"
 #include "initialize.h"
+#include "port_access.h"
 #include "port_buffer.h"
+#include "port_mode.h"
 #include "port_transform.h"
 #include "port_type.h"
 #include "vector.h"
@@ -19,10 +25,9 @@ namespace base {
 
 class Box;
 
-class Port : public QObject {
+class Port : public QObject, public ConstructionStep {
 public:
-    enum Access{Input, Output};
-    enum Mode{Uninitialized, Fixed, Referenced, MaybeReferenced};
+    enum class ToTextOptions{None=0};
     struct Attributes {
         QString format, label, transform, help;
         PortTransform portTransform;
@@ -34,16 +39,19 @@ public:
 private:
     void *_valuePtr;
     PortType _valueType, _importType;
-    Mode _mode;
+    PortMode _mode;
+    ComputationStep _portValueStep;
     QString _importPath;
     QVector<Port *> _importPorts;
     bool _importPortMustExist;
-    Access _access;
-    bool _reset, _hasTrack;
+    PortAccess _access;
+    bool _reset, _hasTrack, _valueOverridden;
     Vector _trackBuffer;
     static unsigned _trackFlags;
     Attributes _attributes;
     QStringList _warnings;
+
+    void checkValueOverridden();
 
 public:
     // Configure
@@ -54,7 +62,7 @@ public:
     Port& equals(QStringList value);
     Port& imports(QString pathToPort);
     Port& importsMaybe(QString pathToPort);
-    Port& access(Access acc);
+    Port& access(PortAccess acc);
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
@@ -90,20 +98,25 @@ public:
     Box *boxParent();
     bool hasValue() const;
     int valueSize() const;
+    QString valueAsString() const;
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
     const Vector* trackPtr() const;
     PortType type() const;
-    Access access() const;
+    PortAccess access() const;
     bool hasTrack() const;
     bool hasImport() const;
+    bool isValueOverridden() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
     QStringList warnings() const;
+    void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
     template <class T> void deducePortType(T value);
     static QVector<Port*> trackedPorts();
     static PortType commonType(const QVector<Port *> &ports);
 };
+
+DEFINE_ENUM_FUNCTIONS(Port::ToTextOptions)
 
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
@@ -125,7 +138,8 @@ template <class T> void Port::deducePortType(T value) {
 
 template <class T> Port& Port::equals(T value)
 {
-    _mode = Fixed;
+    _mode = PortMode::Fixed;
+    _portValueStep = environment().computationStep();
     // Deduce the value type as necessary
     deducePortType<T>(value);
     // Create a buffer for the value if it does not exist
@@ -133,6 +147,7 @@ template <class T> Port& Port::equals(T value)
         _valuePtr = portBuffer(this).createBuffer(_valueType);
     // Copy value to the buffer that _valuePtr points to
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform(), this);
+    checkValueOverridden();
     return *this;
 }
 

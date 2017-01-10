@@ -2,8 +2,10 @@
 #include "box.h"
 #include "box_builder.h"
 #include "box_step.h"
+#include "computation_step.h"
 #include "dialog.h"
 #include "distribution.h"
+#include "environment.h"
 #include "mega_factory.h"
 #include "path.h"
 
@@ -12,7 +14,7 @@ namespace base {
 BoxBuilder::BoxBuilder()
     : _content(0), _currentBox(0), _currentPort(0)
 {
-    dialog().information("construct...");
+    environment().computationStep(ComputationStep::Construct);
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
@@ -131,8 +133,7 @@ const Port* BoxBuilder::currentPort() const {
 }
 
 Box* BoxBuilder::content() {
-
-    dialog().information("amend...");
+    environment().computationStep(ComputationStep::Amend);
     if (_content)
         _content->amendFamily();
     else

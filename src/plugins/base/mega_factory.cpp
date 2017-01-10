@@ -5,6 +5,7 @@
 #include <QPluginLoader>
 #include <QSettings>
 #include "box.h"
+#include "construction_step.h"
 #include "dialog.h"
 #include "exception.h"
 #include "factory_plug_in.h"
@@ -61,19 +62,25 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     if (className == "Box") {
         creation = new Box(objectName, parent);
         setClassName(creation, "Box");
-        return creation;
     }
-    switch (me()->productIndex.count(className)) {
-    case 0:
-        ThrowException("Unknown class").value(className);
-    case 1:
-        factory = me()->productIndex.value(className);
-        creation = factory->create(removeNamespace(className), objectName, parent);
-        break;
-    default:
-        QString msg = "Qualify class name with plug-in name as in:\n" + qualifiedClassNames(className).join("\n");
-        ThrowException(msg);
+    else {
+        switch (me()->productIndex.count(className)) {
+        case 0:
+            ThrowException("Unknown class").value(className);
+        case 1:
+            factory = me()->productIndex.value(className);
+            creation = factory->create(removeNamespace(className), objectName, parent);
+            break;
+        default:
+            QString msg = "Qualify class name with plug-in name as in:\n" + qualifiedClassNames(className).join("\n");
+            ThrowException(msg);
+        }
     }
+
+    ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
+    if (step)
+        step->finishConstruction();
+
     return creation;
 }
 

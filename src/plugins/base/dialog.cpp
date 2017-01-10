@@ -216,10 +216,11 @@ void Dialog::writePrompt() {
 }
 
 void Dialog::writeWelcome() {
-    message("Initializing...");
+    environment().computationStep(ComputationStep::Start);
+
     information(environment().isFirstInstallation() ?
                 "Welcome to Universal Simulator!" : "Welcome back!");
-    information("Loading plugins...");
+    information("\nLoading plugins...");
     MegaFactory::loadPlugins();
 
     if (environment().isNewInstallation()) {
@@ -241,7 +242,7 @@ void Dialog::writeWelcome() {
     _history.add("load \"" + latestFile + "\"");
     information(info);
 
-    message("Ready");
+    environment().computationStep(ComputationStep::Ready);
 }
 
 

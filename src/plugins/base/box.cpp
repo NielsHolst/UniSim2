@@ -1,6 +1,7 @@
 #include <iostream>
 #include "box.h"
 #include "dialog.h"
+#include "environment.h"
 #include "exception.h"
 #include "general.h"
 #include "path.h"
@@ -19,12 +20,17 @@ Box::Box(QString name, QObject *parent)
     Class(Box);
     setObjectName(name);
     _currentRoot = this;
+//    _computationStep = environment().computationStep();
     _timer = new Timer(this);
 }
 
 Box::~Box() {
     if (this == _currentRoot)
         _currentRoot = 0;
+}
+
+ComputationStep Box::computationStep() const {
+    return _computationStep;
 }
 
 void Box::addPort(Port *port) {
@@ -308,24 +314,33 @@ void Box::trackPorts(Step step) {
         port->track(step);
 }
 
-void Box::toText(QTextStream &text, WriteOptions options, int indentation) const {
-    if (options == WriteOptions::None)
-        options = WriteOptions::Boxes | WriteOptions::Ports | WriteOptions::Help | WriteOptions::Recurse;
+void Box::toText(QTextStream &text, ToTextOptions options, int indentation) const {
+    if (options == ToTextOptions::None)
+        options = ToTextOptions::Boxes | ToTextOptions::Ports | ToTextOptions::Help | ToTextOptions::Recurse;
 
     Box *me = const_cast<Box*>(this);
     QString fill;
     fill.fill(' ', indentation);
 
-    text << fill << className() << " " << objectName() << "{\n";
+    text << fill << className() << " " << objectName()
+         << "{ // " << convert<QString>(constructionStep())
+         << "\n";
 
-    if (options && WriteOptions::Ports) {
+    if (options && ToTextOptions::Ports) {
         for (Port *port : me->findMany<Port>(".[*]")) {
-            text << fill << "  " << port->objectName() << "\n";
+            if (port->access() == PortAccess::Input)
+                port->toText(text, Port::ToTextOptions::None, indentation+2);
+        }
+        for (Port *port : me->findMany<Port>(".[*]")) {
+            if (port->access() == PortAccess::Output)
+                port->toText(text, Port::ToTextOptions::None, indentation+2);
         }
     }
 
-    for (Box *box : me->findMany<Box>("./*")) {
-        box->toText(text, options, indentation+2);
+    if (options && ToTextOptions::Recurse) {
+        for (Box *box : me->findMany<Box>("./*")) {
+            box->toText(text, options, indentation+2);
+        }
     }
     text << fill << "}\n";
 }

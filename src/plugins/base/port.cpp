@@ -9,9 +9,11 @@ namespace base {
 unsigned Port::_trackFlags = Reset | Update;
 
 Port::Port(QString name, QObject *parent, bool orphan)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(Uninitialized),
+    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
+      _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true),
-      _access(Input), _reset(false), _hasTrack(false), _trackBuffer(this)
+      _access(PortAccess::Input), _reset(false), _hasTrack(false), _valueOverridden(false),
+      _trackBuffer(this)
 {
     Class(Port);
     setObjectName(name);
@@ -35,20 +37,31 @@ Port& Port::equals(QStringList value) {
 }
 
 Port& Port::imports(QString pathToPort) {
-    _mode = Referenced;
+    _mode = PortMode::Referenced;
+    _portValueStep = environment().computationStep();
     _importPath = pathToPort;
     _importPortMustExist = true;
+    checkValueOverridden();
     return help("Defaults to " + pathToPort);
 }
 
 Port& Port::importsMaybe(QString pathToPort) {
-    _mode = MaybeReferenced;
+    _mode = PortMode::MaybeReferenced;
+    _portValueStep = environment().computationStep();
     _importPath = pathToPort;
     _importPortMustExist = false;
+    checkValueOverridden();
     return help("Defaults to " + pathToPort + " (if it exists)");
 }
 
-Port& Port::access(Access acc) {
+void Port::checkValueOverridden() {
+    Box *boxParent = dynamic_cast<Box*>(parent());
+    if (!boxParent)
+        ThrowException("Parent of Box class expected").context(this);
+    _valueOverridden =  !boxParent->underConstruction();
+}
+
+Port& Port::access(PortAccess acc) {
     _access = acc;
     return *this;
 }
@@ -324,6 +337,19 @@ int Port::valueSize() const {
     }
 }
 
+QString Port::valueAsString() const {
+    QString s;
+    if (isVector(type())) {
+        QVector<QString> vec = value<QVector<QString>>();
+        QStringList list(vec.toList());
+        s = "(" + list.join(" ") + ")";
+    }
+    else {
+        s = value<QString>();
+    }
+    return s;
+}
+
 template <> const void* Port::valuePtr() const {
     return _valuePtr;
 }
@@ -336,7 +362,7 @@ PortType Port::type() const {
     return _valueType;
 }
 
-Port::Access Port::access() const {
+PortAccess Port::access() const {
     return _access;
 }
 
@@ -349,7 +375,11 @@ bool Port::hasTrack() const {
 }
 
 bool Port::hasImport() const {
-    return _mode!=Fixed && !_importPath.isEmpty();
+    return _mode!=PortMode::Fixed && !_importPath.isEmpty();
+}
+
+bool Port::isValueOverridden() const {
+    return _valueOverridden;
 }
 
 QString Port::importPath() const {
@@ -362,6 +392,33 @@ QVector<Port*> Port::importPorts() const {
 
 QStringList Port::warnings() const {
     return _warnings;
+}
+
+void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
+    QString fill;
+    fill.fill(' ', indentation);
+    QString prefix;
+    if (access() == PortAccess::Input) {
+        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
+    }
+    else{
+        prefix = "//>";
+    }
+
+    QString amended = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
+    QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
+    QString assignment = hasImport() ? _importPath : valueAsString();
+    if (_valueType == Char || _valueType == String)
+        assignment = "\"" + assignment + "\"";
+
+    text << fill
+         << prefix << objectName()
+         << equalSign << assignment
+         << " // "
+         << convert<QString>(_mode)
+         << " " << convert<QString>(_portValueStep)
+         << amended
+         << "\n";
 }
 
 QVector<Port*> Port::trackedPorts() {

@@ -5,6 +5,8 @@
 #include <base/convert.h>
 #include <base/exception.h>
 #include <base/general.h>
+#include <base/port.h>
+#include <base/port_access.h>
 #include <base/publish.h>
 #include "records.h"
 
@@ -92,7 +94,7 @@ void Records::readLineItems() {
     pastLastLine = lineItems.isEmpty();
 }
 
-#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).zeroAtReset()
+#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).access(PortAccess::Output).zeroAtReset()
 
 void Records::createColumnOutputs() {
     int n = columnNames.size();

@@ -61,6 +61,7 @@ void run::doRun() {
         dialog().information(msg);
     else
         dialog().error(msg + errorMessage());
+    environment().computationStep(ComputationStep::Ready);
 }
 
 QString run::messageTime() const {

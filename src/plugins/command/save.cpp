@@ -40,12 +40,18 @@ void save::saveGrammar() {
         SaveGrammarAtom().write();
     if (notepadOk)
         SaveGrammarNotepad().write();
-    if (!atomOk && !notepadOk)
-        dialog().error("Nothing written.\nUse 'set folder <editor name> <path>' to locate your editor(s).\n"
-                       "Atom editor:\n  " +
-                       environment().folderInfo(Environment::Atom) + "\n" +
-                       "Notepad++ editor:\n  " +
-                       environment().folderInfo(Environment::Notepad));
+    if (!atomOk && !notepadOk) {
+        QString msg{"Looked for Atom folder at %1\n"
+                    "Looked for Notepad++ folder at %2\n"
+                    "Neither was found. Grammar not saved."};
+        dialog().error(msg.arg(environment().dir(Environment::Atom).absolutePath()).
+                           arg(environment().dir(Environment::Notepad).absolutePath()));
+    }
+//        dialog().error("Nothing written.\nUse 'set folder <editor name> <path>' to locate your editor(s).\n"
+//                       "Atom editor:\n  " +
+//                       environment().folderInfo(Environment::Atom) + "\n" +
+//                       "Notepad++ editor:\n  " +
+//                       environment().folderInfo(Environment::Notepad));
 }
 
 }

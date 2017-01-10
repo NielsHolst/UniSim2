@@ -43,9 +43,9 @@ student.depends = base
 #tuta_absoluta.subdir = src/plugins/tuta_absoluta
 #tuta_absoluta.depends = base
 
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
 
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
@@ -60,4 +60,4 @@ unisim.depends = eq
 #unisim.depends = PestTox
 unisim.depends = student
 #unisim.depends = tuta_absoluta
-unisim.depends = vg
+#unisim.depends = vg

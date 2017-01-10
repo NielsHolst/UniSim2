@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <base/command.h>
 #include <base/port.h>
+#include <base/port_access.h>
 
 namespace base {
     class Box;
@@ -23,7 +24,7 @@ private:
     void createBox(QString className);
     void setNameLengths();
     void writeHelp();
-    QStringList portsHelp(base::Port::Access access);
+    QStringList portsHelp(base::PortAccess access);
     QString sideEffects();
 };
 

@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QObject>
 #include <QMap>
+#include "computation_step.h"
 #include "convert.h"
 #include "exception.h"
 
@@ -26,6 +27,9 @@ public:
 
     Box* current();
     void current(Box *newCurrent);
+
+    ComputationStep computationStep() const;
+    void computationStep(ComputationStep step);
 
     QString homePath() const;
 
@@ -62,6 +66,7 @@ public:
 private:
     // Data
     Box *_root, *_current;
+    ComputationStep _computationStep;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg, _currentLoadArg;
@@ -73,9 +78,9 @@ private:
     QString fileCounterKey();
     int fileCountervalue();
     void initDir();
-    QDir findAtomDir();
-    QDir findNotepadDir();
-    QDir findGraphvizDir();
+    QDir findAtomDir() const;
+    QDir findNotepadDir() const;
+    QDir findGraphvizDir() const;
     void getDirSettings();
     static QDir makeDirAsNeeded(QDir dirNeeded);
 };

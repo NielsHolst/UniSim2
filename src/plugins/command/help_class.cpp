@@ -72,15 +72,15 @@ inline QString pad(QString s, int width) {
 void help_class::writeHelp() {
     QString msg = "\n" + _box->className() + " " + _box->help() +
             "\n\nInput:\n" +
-            portsHelp(Port::Input).join("\n") +
+            portsHelp(PortAccess::Input).join("\n") +
             "\n\nOutput:\n" +
-            portsHelp(Port::Output).join("\n");
+            portsHelp(PortAccess::Output).join("\n");
     if (!_box->sideEffects().isEmpty())
         msg += "\n\nSide effects:\n" + sideEffects();
     dialog().information(msg);
 }
 
-QStringList help_class::portsHelp(Port::Access access) {
+QStringList help_class::portsHelp(PortAccess access) {
     QStringList list;
     for (const Port *port : _box->findMany<Port>(".[*]"))
         if (port->access() == access)

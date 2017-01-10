@@ -12,6 +12,9 @@ private:
     // Methods
     void doExecute();
     void writeFile();
+    void edit();
+    // Data
+    QString _filePath;
 };
 
 }

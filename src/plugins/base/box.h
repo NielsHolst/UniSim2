@@ -6,30 +6,31 @@
 #include <QVariant>
 #include <QVector>
 #include "box_step.h"
+#include "construction_step.h"
 #include "enum_functions.h"
 #include "general.h"
 #include "path.h"
 #include "port.h"
+#include "port_access.h"
 
 #define RETURN_PLUGIN_NAME(x) #x
 
-#define Input(X) (*new Port(#X, this)).data(& X).access(Port::Input)
-#define Output(X) (*new Port(#X, this)).data(& X).access(Port::Output).zeroAtReset()
+#define Input(X) (*new Port(#X, this)).data(& X).access(PortAccess::Input)
+#define Output(X) (*new Port(#X, this)).data(& X).access(PortAccess::Output).zeroAtReset()
 
 namespace base {
 
 class Port;
 class Timer;
 
-enum class WriteOptions{None=0, Boxes=1, Ports=2, ChangedPorts=4, Help=8, Recurse=16};
-DEFINE_ENUM_FUNCTIONS(WriteOptions)
-
-class Box : public QObject
+class Box : public QObject, public ConstructionStep
 {
 public:
+    enum class ToTextOptions{None=0, Boxes=1, Ports=2, ChangedPorts=4, Help=8, Recurse=16};
     Box(QString name, QObject *parent);
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
+    ComputationStep computationStep() const;
     void addPort(Port *port);
     void addOrphanPort(Port *port);
     Port* peakPort(QString name);
@@ -74,10 +75,11 @@ public:
     void resolvePortImports();
     void updateImports();
 
-    void toText(QTextStream &text, WriteOptions options, int indentation = 0) const;
+    void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
 private:
     // Data
     QString _name, _help, _sideEffects;
+    ComputationStep _computationStep;
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;
@@ -95,6 +97,8 @@ private:
     void resetPorts();
     void trackPorts(Step step);
 };
+
+DEFINE_ENUM_FUNCTIONS(Box::ToTextOptions)
 
 template<class T> T* Box::findOne(QString path) {
     return Path(path, this).resolveOne<T>(this);

@@ -32,6 +32,8 @@ HEADERS +=  \
     circular_buffer.h \
     command.h  \
     command_help.h  \
+    computation_step.h \
+    construction_step.h \
     convert.h \
     copy_folder.h \
     data_grid.h \
@@ -39,6 +41,7 @@ HEADERS +=  \
     dialog_base.h \
     dialog_stub.h \
     distribution.h \
+    enum_functions.h \
     environment.h \
     exception.h \
     factory_plug_in.h \
@@ -51,7 +54,9 @@ HEADERS +=  \
     organisation.h \
     path.h \
     port.h \
+    port_access.h \
     port_buffer.h \
+    port_mode.h \
     port_transform.h \
     port_type.h \
     product_base.h \
@@ -70,8 +75,7 @@ HEADERS +=  \
     vector_op.h \
     vector_vector.h \
     vectorize.h \
-    version.h \
-    enum_functions.h
+    version.h
 
 SOURCES +=  \
     any_year.cpp \
@@ -87,6 +91,8 @@ SOURCES +=  \
     box_step.cpp \
     command.cpp \
     command_help.cpp  \
+    computation_step.cpp \
+    construction_step.cpp \
     convert.cpp \
     copy_folder.cpp \
     data_grid.cpp \
@@ -103,7 +109,9 @@ SOURCES +=  \
     object_pool.cpp \
     path.cpp \
     port.cpp \
+    port_access.cpp \
     port_buffer.cpp \
+    port_mode.cpp \
     port_transform.cpp \
     port_type.cpp \
     product_base.cpp \

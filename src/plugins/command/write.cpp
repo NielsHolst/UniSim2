@@ -1,3 +1,4 @@
+#include <QDesktopServices>
 #include <QFile>
 #include <QTextStream>
 #include "base/box.h"
@@ -24,13 +25,9 @@ write::write(QString name, QObject *parent)
 
 
 void write::doExecute() {
-    switch (_args.size()) {
-    case 1:
-        writeFile();
-        break;
-    default:
-        ThrowException("'write' command takes no arguments.");
-    }
+    writeFile();
+    if (_args.contains("edit"))
+        edit();
 }
 
 void write::writeFile() {
@@ -42,12 +39,20 @@ void write::writeFile() {
         environment().openOutputFile(file, ".box");
         QTextStream text(&file);
 
-        root->toText(text, WriteOptions());
+        root->toText(text, Box::ToTextOptions::None);
+        _filePath = environment().outputFilePath(".box");
 
         QString info("Box script written to '%1'");
-        dialog().information(info.arg(environment().outputFilePath(".box")));
+        dialog().information(info.arg(_filePath));
         environment().incrementFileCounter();
     }
+}
+
+void write::edit() {
+    QString url = "file:///" + _filePath;
+    bool ok = QDesktopServices::openUrl(QUrl(url));
+    if (!ok)
+        ThrowException("Could not open editor");
 }
 
 }

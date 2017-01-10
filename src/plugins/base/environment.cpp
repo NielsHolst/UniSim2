@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include "box.h"
+#include "dialog.h"
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
@@ -70,6 +71,31 @@ Box* Environment::current() {
 
 void Environment::current(Box *newCurrent) {
     _current = newCurrent;
+}
+
+ComputationStep Environment::computationStep() const {
+    return _computationStep;
+}
+void Environment::computationStep(ComputationStep step) {
+    // Change step
+    _computationStep = step;
+    // Show step in dialog
+    QString end = (step==ComputationStep::Ready) ? "." : "...";
+    dialog().information(convert<QString>(step) + end);
+    // Show step in status bar
+    switch (step) {
+    case ComputationStep::Start:
+        dialog().message("Starting...");
+        break;
+    case ComputationStep::Ready:
+        dialog().message("Ready");
+        break;
+    case ComputationStep::Initialize:
+        dialog().message("Running...");
+        break;
+    default:
+        ; // keep current message
+    }
 }
 
 QString Environment::homePath() const {
@@ -212,7 +238,16 @@ QString Environment::inputFileContent(QString fileName) const {
 
 
 QDir Environment::dir(Folder folder) const {
-    return _dir.value(folder);
+    QDir value = _dir.value(folder);
+    if (folder == Notepad) {
+        if (!value.exists())
+            value = findNotepadDir();
+    }
+    else if (folder == Atom) {
+        if (!value.exists())
+            value = findAtomDir();
+    }
+    return value;
 }
 
 void Environment::dir(Folder folder, QString path) {
@@ -298,29 +333,27 @@ void Environment::initDir() {
     _dir[Graphviz] = findGraphvizDir();
 }
 
-QDir Environment::findAtomDir() {
-    QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
+QDir Environment::findAtomDir() const {
+    QString path1 = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
                                           ".atom/packages/language-boxes/grammars", QStandardPaths::LocateDirectory);
-    if (path.isEmpty()) {
-        path = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
-        if (!QDir(path).exists())
-            path = "";
-    }
+    QString path2 = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
+    QString path = path1.isEmpty() ? path2 : path1;
 
-    if (path.isEmpty())
-        path = PATH_NOT_SET;
+//    if (path.isEmpty())
+//        path = PATH_NOT_SET;
     return QDir(path);
 }
 
-QDir Environment::findNotepadDir() {
+QDir Environment::findNotepadDir() const {
     QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
                                           "AppData/Roaming/Notepad++", QStandardPaths::LocateDirectory);
+    QDir dir = path;
     if (path.isEmpty())
-        path = PATH_NOT_SET;
-    return QDir(path);
+        dir.setPath("/user-name/AppData/Roaming/Notepad++");
+    return dir;
 }
 
-QDir Environment::findGraphvizDir() {
+QDir Environment::findGraphvizDir() const {
     QString path = PATH_NOT_SET;
     return QDir(path);
 }
@@ -334,6 +367,10 @@ void Environment::getDirSettings() {
         if (fo == LastFolder) break;
         fo = Folder(fo+1);
     }
+    if (_dir[Atom]==QDir(".") || !_dir[Atom].exists())
+        _dir[Atom] = findAtomDir();
+    if (_dir[Notepad]==QDir(".") || !_dir[Notepad].exists())
+        _dir[Notepad] = findNotepadDir();
 }
 
 #define FOLDER_CASE(X) \
