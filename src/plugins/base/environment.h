@@ -78,6 +78,7 @@ private:
     QString fileCounterKey();
     int fileCountervalue();
     void initDir();
+    void checkNotepadDir() const;
     QDir findAtomDir() const;
     QDir findNotepadDir() const;
     QDir findGraphvizDir() const;

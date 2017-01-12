@@ -21,6 +21,9 @@
     <file>data/input/book/demo/jump/jump1.box</file>
     <file>data/input/book/demo/jump/jump2.box</file>
     <file>data/input/book/demo/jump/jump3.box</file>
+    <file>data/input/book/demo/logistic/logistic1.box</file>
+    <file>data/input/book/demo/logistic/logistic2.box</file>
+    <file>data/input/book/demo/logistic/logistic3.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009 Tavg.txt</file>
@@ -88,17 +91,19 @@
     <file>data/input/sandy/t_urticae_simulation.box</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
+    <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/month_breaks.R</file>
     <file>data/input/scripts/profile.R</file>
     <file>data/input/student/bmsb/bmsb(0).box</file>
     <file>data/input/student/bmsb/bmsb.box</file>
     <file>data/input/student/bmsb/bmsbNiels.box</file>
     <file>data/input/student/bmsb/weather/2015MSP14922Stn.txt</file>
+    <file>data/input/student/eab/emeraldAshV2(0).box</file>
+    <file>data/input/student/eab/emeraldAshV2.box</file>
+    <file>data/input/student/eab/emeraldAshV2Niels.box</file>
+    <file>data/input/student/eab/emeraldAshV5.box</file>
+    <file>data/input/student/eab/weather/ClimDataV3.txt</file>
     <file>data/input/student/eggx.box</file>
-    <file>data/input/student/EmeraldAsh/emeraldAshV2(0).box</file>
-    <file>data/input/student/EmeraldAsh/emeraldAshV2.box</file>
-    <file>data/input/student/EmeraldAsh/emeraldAshV2Niels.box</file>
-    <file>data/input/student/EmeraldAsh/weather/ClimDataV3.txt</file>
     <file>data/input/student/fibonacci.box</file>
     <file>data/input/student/PestTox/fate_LC50_684_wbz0_2012.box</file>
     <file>data/input/student/PestTox/PestTox_fate and transport_LC50_684_wbz0_2012.xml</file>

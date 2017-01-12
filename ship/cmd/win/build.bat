@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=0
-set SUB=13
+set SUB=14
 echo Building version %MAJOR%.%MINOR%.%SUB% release
 
 echo = Set path to Qt build environment =
@@ -40,14 +40,14 @@ pushd ..\..\..
 call clean
 popd
 
-REM echo = Build ship apps =
-REM del /S /Q ..\bin
-REM pushd ..\src
-REM qmake ship-cmd.pro
-REM if errorlevel 1 goto :end_fail
-REM mingw32-make
-REM if errorlevel 1 goto :end_fail
-REM popd
+echo = Build ship apps =
+del /S /Q ..\bin
+pushd ..\src
+qmake ship-cmd.pro
+if errorlevel 1 goto :end_fail
+mingw32-make
+if errorlevel 1 goto :end_fail
+popd
 
 echo = Update Qt resources =
 call update-qt-resources.bat 
@@ -57,9 +57,6 @@ if errorlevel 1 goto :end_fail
 rem Update Qt project 
 ..\bin\update-qt-project release
 if errorlevel 1 goto :end_fail
-
-echo = Delete shadow folder =
-for /f %%i in ('dir /a:d /b ..\..\..\..\build-UniSim2*') do rmdir /s /q "..\..\..\..\%%i"
 
 echo = Delete bin target folder =
 del /S /Q ..\..\..\bin

@@ -28,7 +28,6 @@ void SaveGrammarBase::write() {
 
 
 void SaveGrammarBase::openFileStream() {
-    dialog().information("saving grammar to " + grammarFilePath() + "...");
     _file.setFileName(grammarFilePath());
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(grammarFilePath());
@@ -36,6 +35,7 @@ void SaveGrammarBase::openFileStream() {
 }
 
 void SaveGrammarBase::closeFileStream() {
+    dialog().information("grammar saved to " + grammarFilePath() + "...");
     _file.close();
 }
 

@@ -22,8 +22,6 @@ MegaFactory::MegaFactory() {
     setObjectName("MegaFactory");
     QDir dir(QApplication::applicationDirPath());
     bool gotoPlugins = dir.cd("plugins");
-//    QDir dir("/Users/nielsholst/qdev/UniSim2/bin/plugins");
-//    dialog().information("Dir = "+ dir.absolutePath());
     if (!gotoPlugins)
         dialog().error("Could not find plugins folder,\nexpected here: " + dir.absolutePath()+"/plugins");
     foreach (QString filename, dir.entryList(QDir::Files)) {

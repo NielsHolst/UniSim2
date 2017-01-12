@@ -69,10 +69,17 @@ plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
 
 plot_merged = function(df, id_x, id_iteration, cols, ncol, nrow) {
   M = melted(convert(df), id_x, id_iteration, cols)
-	P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
-		geom_line(size=1.1) +
-		xlab("") + ylab("")
-  if (is.null(M$iter))
-		P else
-		P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
+  if (length(cols) == 1 & !is.null(M$iter)) { # If only one y merge iterations
+    ggplot(M, aes_string(x=id_x, y="Value", color="iter")) +
+      geom_line(size=1.1) +
+      xlab("") + ylab("")
+  } else {
+    P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
+      geom_line(size=1.1) +
+      xlab("") + ylab("")
+    if (is.null(M$iter))
+      P else
+      P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
+  }
 }
+

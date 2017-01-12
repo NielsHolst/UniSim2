@@ -24,7 +24,7 @@ CONFIG += c++11
 QT += core 
 
 # Compiler options to silence warnings when compiling Boost
-QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wattributes
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
 
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math

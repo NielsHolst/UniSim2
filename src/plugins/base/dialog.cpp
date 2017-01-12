@@ -216,24 +216,24 @@ void Dialog::writePrompt() {
 }
 
 void Dialog::writeWelcome() {
-    environment().computationStep(ComputationStep::Start);
-
-    information(environment().isFirstInstallation() ?
-                "Welcome to Universal Simulator!" : "Welcome back!");
-    information("\nLoading plugins...");
     MegaFactory::loadPlugins();
 
+    information(environment().isFirstInstallation() ?
+                "\nWelcome to Universal Simulator!" : "\nWelcome back!");
+
+    environment().computationStep(ComputationStep::Start);
+
     if (environment().isNewInstallation()) {
-        information("\nNew installation detected; reconfiguring HOME folder...");
+        information("New installation detected; reconfiguring HOME folder...");
         Command::submit(QStringList() << "reconfigure", this);
         Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this);
         environment().updateInstallation();
     }
 
-    if (environment().isFirstInstallation())
-        Command::submit(QStringList() << "save" << "grammar", this);
+//    if (environment().isFirstInstallation())
+//        Command::submit(QStringList() << "save" << "grammar", this);
 
-    QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
+    QString info = "Work folder:\n  " + environment().folderInfo(Environment::Work) +
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
 
     QString latestFile = environment().latestLoadArg();

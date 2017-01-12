@@ -10,6 +10,7 @@
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
+#include "save_grammar_notepad.h"
 #include "version.h"
 
 
@@ -80,8 +81,9 @@ void Environment::computationStep(ComputationStep step) {
     // Change step
     _computationStep = step;
     // Show step in dialog
-    QString end = (step==ComputationStep::Ready) ? "." : "...";
-    dialog().information(convert<QString>(step) + end);
+    QString info = (step == ComputationStep::Start || step == ComputationStep::Ready) ?
+                    QString() : (convert<QString>(step) + "...");
+    dialog().information(info);
     // Show step in status bar
     switch (step) {
     case ComputationStep::Start:
@@ -333,24 +335,43 @@ void Environment::initDir() {
     _dir[Graphviz] = findGraphvizDir();
 }
 
-QDir Environment::findAtomDir() const {
-    QString path1 = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
-                                          ".atom/packages/language-boxes/grammars", QStandardPaths::LocateDirectory);
-    QString path2 = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
-    QString path = path1.isEmpty() ? path2 : path1;
+inline QString userPath(QString path) {
+    return QStandardPaths::locate(QStandardPaths::RuntimeLocation,
+                                  path,
+                                  QStandardPaths::LocateDirectory);
+}
 
-//    if (path.isEmpty())
-//        path = PATH_NOT_SET;
+QDir Environment::findAtomDir() const {
+    QString winPath = userPath(".atom/packages/language-boxes/grammars"),
+            macPath = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
+    QString path = winPath.isEmpty() ? macPath : winPath;
     return QDir(path);
 }
 
 QDir Environment::findNotepadDir() const {
-    QString path = QStandardPaths::locate(QStandardPaths::RuntimeLocation,
-                                          "AppData/Roaming/Notepad++", QStandardPaths::LocateDirectory);
-    QDir dir = path;
-    if (path.isEmpty())
+    QString appDataPath = userPath("AppData"),
+            notepadPath = userPath("AppData/Roaming/Notepad++");
+    bool createNotepad = !appDataPath.isEmpty() && notepadPath.isEmpty();
+    if (createNotepad) {
+        QDir appData(appDataPath);
+        appData.mkdir("Roaming/Notepad++");
+        try {
+            SaveGrammarNotepad().write();
+        }
+        catch (Exception &) {
+        }
+    }
+
+    notepadPath = userPath("AppData/Roaming/Notepad++");
+    bool noNotepadPath = notepadPath.isEmpty();
+    QDir dir(notepadPath);
+    if (noNotepadPath)
         dir.setPath("/user-name/AppData/Roaming/Notepad++");
     return dir;
+}
+
+void Environment::checkNotepadDir() const {
+
 }
 
 QDir Environment::findGraphvizDir() const {
