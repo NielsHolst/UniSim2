@@ -1,6 +1,7 @@
 #ifndef BASE_MEGA_FACTORY_H
 #define BASE_MEGA_FACTORY_H
 
+#include <QDir>
 #include <QMultiMap>
 #include <QObject>
 #include "exception.h"
@@ -19,8 +20,7 @@ public:
     static T* create(QString className, QString objectName, QObject *parent);
 
     static const QList<base::FactoryPlugIn*> &factories();
-
-
+    static QDir pluginsDir();
 private:
     // methods
     MegaFactory();

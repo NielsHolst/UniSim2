@@ -20,10 +20,12 @@ int MegaFactory::productCount = 0;
 
 MegaFactory::MegaFactory() {
     setObjectName("MegaFactory");
-    QDir dir(QApplication::applicationDirPath());
-    bool gotoPlugins = dir.cd("plugins");
-    if (!gotoPlugins)
-        dialog().error("Could not find plugins folder,\nexpected here: " + dir.absolutePath()+"/plugins");
+    QDir dir = pluginsDir();
+    bool notFound = (dir == QDir("/"));
+    if (notFound)
+        dialog().error("Could not find plugins folder,\nexpected near here: " +
+                       QDir(QApplication::applicationDirPath()).absolutePath());
+
     foreach (QString filename, dir.entryList(QDir::Files)) {
         QString filePath = dir.absoluteFilePath(filename);
         QPluginLoader loader(filePath);
@@ -39,6 +41,17 @@ MegaFactory::MegaFactory() {
             }
         }
     }
+}
+
+QDir MegaFactory::pluginsDir() {
+    QDir dir(QApplication::applicationDirPath());
+    bool found;
+    do {
+        found = dir.cd("plugins");
+        if (found) break;
+        dir.cdUp();
+    } while (dir != QDir("/"));
+    return dir;
 }
 
 void MegaFactory::loadPlugins() {

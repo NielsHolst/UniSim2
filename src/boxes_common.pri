@@ -26,6 +26,11 @@ QT += core
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
 
+# Compiler options to silence warnings when compiling under Mac OS X
+MY_HASH = $$LITERAL_HASH
+NO_PRAGMA_MESSAGES = $$join(MY_HASH, , -Wno-\\, pragma-messages)
+QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
+
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math
 

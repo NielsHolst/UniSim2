@@ -5,7 +5,7 @@
 #include "box_reader_base.h"
 
 namespace ast {
-    class Node;
+    struct Node;
 }
 namespace base {
 

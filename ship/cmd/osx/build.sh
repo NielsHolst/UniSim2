@@ -1,9 +1,17 @@
+#!/bin/bash -vx
+
 MAJOR=2
 MINOR=0
-SUB=9
+SUB=14
 echo
 echo Building $MAJOR.$MINOR.$SUB
 echo
+
+echo = Clean out old builds =
+pushd ../../..
+./clean.sh
+popd
+
 echo = Build ship apps =
 rm -r ../bin
 pushd ../src
@@ -17,9 +25,6 @@ echo = Update Qt resources
 
 echo = Update Qt project
 ../bin/update-qt-project release
-
-echo = Delete target bin folder
-rm -r ../../../bin
 
 echo = Build Universal Simulator =
 pushd ../../..
@@ -46,5 +51,9 @@ otool -L  $target_app/Contents/MacOS/unisim$suffix
 echo = Set installer version number =
 ../bin/update-installer-project $MAJOR $MINOR $SUB
 
+echo = Restore to debug version =
+../bin/update-qt-project debug
+
+#!/bin/bash +vx
 echo "END"
 

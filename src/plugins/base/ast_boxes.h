@@ -65,6 +65,9 @@ struct comment_skipper : public qi::grammar<Iterator>
     }
 };
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-shift-op-parentheses"
+
 template <typename Iterator, typename Skipper = comment_skipper<Iterator>>
 struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
 {
@@ -133,6 +136,8 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         );
     }
 };
+
+#pragma clang diagnostic pop
 
 bool parse_boxes(Iterator begin, Iterator end, Node &result);
 

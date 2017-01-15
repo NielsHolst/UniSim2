@@ -1,0 +1,10 @@
+rm -r *.o
+rm -r object_script.*.*
+rm -r Makefile.o
+rm -r UniversalSimulator*-installer.exe
+rm -r debug
+rm -r release
+rm -r ../build-*-Desktop*
+rm -r output
+rm -r bin
+rm -r ship/bin
