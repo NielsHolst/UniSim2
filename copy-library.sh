@@ -1,1 +1,1 @@
-sudo cp ./bin/*.dylib /usr/lib
+cp ./bin/*.dylib /usr/lib

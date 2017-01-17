@@ -10,6 +10,7 @@
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
+#include "save_grammar_atom.h"
 #include "save_grammar_notepad.h"
 #include "version.h"
 
@@ -335,22 +336,31 @@ void Environment::initDir() {
     _dir[Graphviz] = findGraphvizDir();
 }
 
-inline QString userPath(QString path) {
-    return QStandardPaths::locate(QStandardPaths::RuntimeLocation,
-                                  path,
-                                  QStandardPaths::LocateDirectory);
-}
+//inline QDir homeDir() { return QDir(QStandardPaths::locate(QStandardPaths::HomeLocation, "", QStandardPaths::LocateDirectory)); }
+inline QDir homeDir() { return QDir::home(); }
 
 QDir Environment::findAtomDir() const {
-    QString winPath = userPath(".atom/packages/language-boxes/grammars"),
-            macPath = "/Applications/Atom/Contents/Resources/app/apm/templates/language/grammars";
-    QString path = winPath.isEmpty() ? macPath : winPath;
-    return QDir(path);
+    QString path = ".atom/packages/language-boxes/grammars";
+    QDir dir = homeDir().filePath(path);
+    if (!dir.exists()) {
+        if (homeDir().mkpath(path)) {
+            try {
+                SaveGrammarAtom().write();
+            }
+            catch (Exception &) {
+            }
+        }
+    }
+
+    dir = homeDir().filePath(path);
+    if (!dir.exists())
+        dir.setPath("/Users/user-name/"+path);
+    return dir;
 }
 
 QDir Environment::findNotepadDir() const {
-    QString appDataPath = userPath("AppData"),
-            notepadPath = userPath("AppData/Roaming/Notepad++");
+    QString appDataPath = homeDir().absolutePath() + "/AppData",
+            notepadPath = homeDir().absolutePath() + "/AppData/Roaming/Notepad++";
     bool createNotepad = !appDataPath.isEmpty() && notepadPath.isEmpty();
     if (createNotepad) {
         QDir appData(appDataPath);
@@ -362,16 +372,12 @@ QDir Environment::findNotepadDir() const {
         }
     }
 
-    notepadPath = userPath("AppData/Roaming/Notepad++");
+    notepadPath = homeDir().absolutePath() + "/AppData/Roaming/Notepad++";
     bool noNotepadPath = notepadPath.isEmpty();
     QDir dir(notepadPath);
     if (noNotepadPath)
         dir.setPath("/user-name/AppData/Roaming/Notepad++");
     return dir;
-}
-
-void Environment::checkNotepadDir() const {
-
 }
 
 QDir Environment::findGraphvizDir() const {

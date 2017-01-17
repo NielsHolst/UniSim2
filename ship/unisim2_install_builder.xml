@@ -1,12 +1,11 @@
 <project>
     <shortName>UniversalSimulator</shortName>
     <fullName>UniversalSimulator</fullName>
-    <version>2.0.14</version>
+    <version>2.0.15</version>
     <installerFilename></installerFilename>
     <licenseFile>builder-input/gpl-3.0.txt</licenseFile>
     <leftImage>builder-input/squirrel 163x314.png</leftImage>
     <logoImage>builder-input/squirrel 48x48.png</logoImage>
-    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <componentList>
         <component>
             <name>default</name>
@@ -152,6 +151,7 @@
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <outputDirectory>.</outputDirectory>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <saveRelativePaths>1</saveRelativePaths>
     <vendor>AarhusUniversity</vendor>
     <finalPageActionList>

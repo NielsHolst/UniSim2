@@ -30,3 +30,7 @@ RC_FILE = "$$_PRO_FILE_PWD_/../../resources/unisim.rc"
 
 # Load file resource
 RESOURCES = "$$_PRO_FILE_PWD_/../../resources/application.qrc"
+
+# Load icon on OS X
+ICON = ../icon/squirrel.icns
+
