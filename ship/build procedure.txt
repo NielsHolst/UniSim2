@@ -1,4 +1,4 @@
-Windows
+(A) Windows
 =======
 1. Edit C:\data\QDev\UniSim2\ship\cmd\win\build.bat.
 - Update SUB version number.
@@ -11,3 +11,27 @@ Windows
 3. Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
 
 4. Update ecolmod.org/download.html.
+
+5. In Bash:
+> git push origin master
+> push_tag.sh 2.0.n
+
+(B) Mac OS X
+============
+
+1. In Finder go to nielsholst/qdev and delete UniSim2 folder.
+
+2. In Chrome go to Github and copy clone path.
+ 
+3. In Terminal: 
+- go to ~/qdev
+- type >git clone 
+
+4. Edit ~/qdev/UniSim2/ship/cmd/osx/build.sh.
+- Update SUB version number.
+
+5. Open InstallBuilder and build the installer.
+
+6. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb). The installer is a zip file.
+
+7. Update ecolmod.org/download.html.

@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=0
-set SUB=14
+set SUB=15
 echo Building version %MAJOR%.%MINOR%.%SUB% release
 
 echo = Set path to Qt build environment =
@@ -54,14 +54,11 @@ call update-qt-resources.bat
 if errorlevel 1 goto :end_fail
 ..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% release
 
-rem Update Qt project 
+echo = Update Qt project  =
 ..\bin\update-qt-project release
 if errorlevel 1 goto :end_fail
 
-echo = Delete bin target folder =
-del /S /Q ..\..\..\bin
-
-echo = Build UniSim =
+echo = Build Universal Simulator =
 pushd ..\..\..
 qmake UniSim2.pro
 if errorlevel 1 goto :end_fail
@@ -83,7 +80,6 @@ builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml
 popd
 
 echo = Restore to debug version =
-call update-qt-resources.bat %MAJOR% %MINOR% %SUB% debug
 ..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% debug
 ..\bin\update-qt-project debug
 

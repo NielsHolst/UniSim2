@@ -60,21 +60,21 @@
                 </folder>
                 <folder>
                     <description>Library Files</description>
-                    <destination>/usr/lib</destination>
+                    <destination>~/lib</destination>
                     <name>libraryfilesosx</name>
                     <platforms>osx</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.0.0.dylib</origin>
+                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.0.0.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.0.dylib</origin>
+                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.0.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../../usr/lib/libuniversal_simulator_base.1.dylib</origin>
+                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../../usr/lib/libuniversal_simulator_base.dylib</origin>
+                            <origin>../../../../usr/lib/libuniversal_simulator_base.dylib</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

@@ -60,7 +60,7 @@
                 </folder>
                 <folder>
                     <description>Library Files</description>
-                    <destination>~/lib</destination>
+                    <destination>/usr/lib</destination>
                     <name>libraryfilesosx</name>
                     <platforms>osx</platforms>
                     <distributionFileList>

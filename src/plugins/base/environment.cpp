@@ -351,7 +351,6 @@ QDir Environment::findAtomDir() const {
             }
         }
     }
-
     dir = homeDir().filePath(path);
     if (!dir.exists())
         dir.setPath("/Users/user-name/"+path);
@@ -359,24 +358,20 @@ QDir Environment::findAtomDir() const {
 }
 
 QDir Environment::findNotepadDir() const {
-    QString appDataPath = homeDir().absolutePath() + "/AppData",
-            notepadPath = homeDir().absolutePath() + "/AppData/Roaming/Notepad++";
-    bool createNotepad = !appDataPath.isEmpty() && notepadPath.isEmpty();
-    if (createNotepad) {
-        QDir appData(appDataPath);
-        appData.mkdir("Roaming/Notepad++");
-        try {
-            SaveGrammarNotepad().write();
-        }
-        catch (Exception &) {
+    QString path = "AppData/Roaming/Notepad++";
+    QDir dir = homeDir().filePath(path);
+    if (!dir.exists()) {
+        if (homeDir().mkpath(path)) {
+            try {
+                SaveGrammarNotepad().write();
+            }
+            catch (Exception &) {
+            }
         }
     }
-
-    notepadPath = homeDir().absolutePath() + "/AppData/Roaming/Notepad++";
-    bool noNotepadPath = notepadPath.isEmpty();
-    QDir dir(notepadPath);
-    if (noNotepadPath)
-        dir.setPath("/user-name/AppData/Roaming/Notepad++");
+    dir = homeDir().filePath(path);
+    if (!dir.exists())
+        dir.setPath("/Users/user-name/"+path);
     return dir;
 }
 

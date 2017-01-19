@@ -31,6 +31,9 @@ MY_HASH = $$LITERAL_HASH
 NO_PRAGMA_MESSAGES = $$join(MY_HASH, , -Wno-\\, pragma-messages)
 QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
 
+# Compiler options to silence warnings when compiling under Win
+QMAKE_CXXFLAGS += -Wno-unknown-pragmas
+
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math
 

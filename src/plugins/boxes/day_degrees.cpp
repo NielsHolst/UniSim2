@@ -1,4 +1,3 @@
-#include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>
 #include "day_degrees.h"
