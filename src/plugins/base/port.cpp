@@ -56,9 +56,9 @@ Port& Port::importsMaybe(QString pathToPort) {
 
 void Port::checkValueOverridden() {
     Box *boxParent = dynamic_cast<Box*>(parent());
-    if (!boxParent)
-        ThrowException("Parent of Box class expected").context(this);
-    _valueOverridden =  !boxParent->underConstruction();
+//    if (!boxParent)
+//        ThrowException("Parent of Box class expected").context(this);
+    _valueOverridden =  boxParent && !boxParent->underConstruction();
 }
 
 Port& Port::access(PortAccess acc) {

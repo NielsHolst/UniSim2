@@ -18,7 +18,7 @@ public:
 private:
     // data
     base::Box *_box;
-    int _maxPortNameLength, _maxPortTypeNameLength;
+    int _maxPortNameLength, _maxValueLength;
     // methods
     void doExecute();
     void createBox(QString className);

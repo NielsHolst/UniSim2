@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <base/box.h>
 #include <base/command_help.h>
 #include <base/convert.h>
@@ -56,17 +57,15 @@ void help_class::createBox(QString className) {
 }
 
 void help_class::setNameLengths() {
-    _maxPortNameLength = _maxPortTypeNameLength = 0;
+    _maxPortNameLength = _maxValueLength = 0;
     for (const Port *port : _box->findMany<Port>(".[*]")) {
-        if (port->objectName().size() > _maxPortNameLength)
-            _maxPortNameLength = port->objectName().size();
-        if (nameOf(port->type()).size() > _maxPortTypeNameLength)
-            _maxPortTypeNameLength = nameOf(port->type()).size();
+        _maxPortNameLength = std::max(_maxPortNameLength, port->objectName().size());
+        _maxValueLength = std::max(_maxValueLength, port->valueAsString().size());
     }
 }
 
-inline QString pad(QString s, int width) {
-    return s + QString().fill(' ', width - s.size() + 1);
+inline QString value(const Port *port) {
+    return port->hasImport() ? port->importPath() : port->valueAsString();
 }
 
 void help_class::writeHelp() {
@@ -82,12 +81,16 @@ void help_class::writeHelp() {
 
 QStringList help_class::portsHelp(PortAccess access) {
     QStringList list;
-    for (const Port *port : _box->findMany<Port>(".[*]"))
-        if (port->access() == access)
-            list << "." +
-                    pad(port->objectName(), _maxPortNameLength) +
-                    pad(nameOf(port->type()), _maxPortTypeNameLength) +
-                    port->help();
+    for (const Port *port : _box->findMany<Port>(".[*]")) {
+        if (port->access() == access) {
+            QString item;
+            item = "." + port->objectName().leftJustified(_maxPortNameLength);
+            QString value =  (access == PortAccess::Input) ? port->valueAsString() : "";
+            item += " " + value.rightJustified(_maxValueLength);
+            item += " " + port->help();
+            list << item;
+        }
+    }
     if (list.isEmpty())
         list << "none";
     return list;

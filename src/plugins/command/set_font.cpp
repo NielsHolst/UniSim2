@@ -2,13 +2,15 @@
 #include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>
+#include <QFont>
+#include <QFontDatabase>
+#include <QTextCharFormat>
+#include <QTextCursor>
 #include "set_font.h"
 
 using namespace base;
 
 namespace command {
-
-QFontDatabase set_font::_fontDatabase;
 
 PUBLISH(set_font)
 HELP(set_font, "set font", "shows console font name and size")
@@ -20,12 +22,19 @@ set_font::set_font(QString name, QObject *parent)
     : set(name, parent)
 {
     Class(set_font);
+    _previousFamily = currentFamily();
+    _previousPointSize = currentPointSize();
+}
+
+QString set_font::currentFamily() {
+    return dialog().font().family();
+}
+
+int set_font::currentPointSize() {
+    return dialog().font().pointSize();
 }
 
 void set_font::doExecute() {
-    _cursor = dialog().textCursor();
-    _format = _cursor.charFormat();
-    _font = _format.font();
     bool ok;
     int pt;
     QStringList &a(_args);
@@ -56,31 +65,36 @@ void set_font::doExecute() {
 }
 
 void set_font::showFont() {
-    QString s{"%1 %2pt"};
-    dialog().information(s.arg(_format.font().family()).arg(_format.fontPointSize()));
+    QString s0{"Font set to %1 %2pt (was %3 %4pt)"};
+    QString s = s0
+                .arg(currentFamily())
+                .arg(currentPointSize())
+                .arg(_previousFamily)
+                .arg(_previousPointSize);
+    dialog().information(s);
 }
 
 void set_font::setFont(int pt) {
-    _font = _fontDatabase.font(_font.family(), QString(), pt);
-    _format.setFont(_font);
-    _cursor.setCharFormat(_format);
-    dialog().setTextCursor(_cursor);
+    dialog().setFont(currentFamily(), pt);
     showFont();
 }
 
 void set_font::setFont(QString family) {
-    _font = _fontDatabase.font(family, QString(), _font.pointSize());
-    _format.setFont(_font);
-    _cursor.setCharFormat(_format);
-    dialog().setTextCursor(_cursor);
-    showFont();
+    // Show all fonts
+    if (family == "ALL") {
+        QStringList fam = QFontDatabase().families();
+        dialog().information(fam.join("\n"));
+    }
+    // Change font family
+    else {
+        if (family == "courier") family = "Courier"; // Lowercase "courier" crashes in Windows
+        dialog().setFont(family, currentPointSize());
+        showFont();
+    }
 }
 
 void set_font::setFont(QString family, int pt) {
-    _font = _fontDatabase.font(family, QString(), pt);
-    _format.setFont(_font);
-    _cursor.setCharFormat(_format);
-    dialog().setTextCursor(_cursor);
+    dialog().setFont(family, pt);
     showFont();
 }
 

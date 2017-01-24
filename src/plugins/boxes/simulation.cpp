@@ -30,7 +30,7 @@ Simulation::Simulation(QString name, QObject *parent)
 }
 
 void Simulation::amend() {
-    if (iterations > 1)
+//    if (iterations > 1)
         port("iteration")->track();
 }
 
@@ -42,7 +42,7 @@ void Simulation::run() {
         time.start();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
-        for (iteration = 1; !stopIterations && iteration <= iterations; ++iteration) {
+        for (iteration = 1; !stopIterations || iteration <= iterations; ++iteration) {
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
             environment().computationStep(ComputationStep::Update);

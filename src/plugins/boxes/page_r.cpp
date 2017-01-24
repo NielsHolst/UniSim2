@@ -21,9 +21,8 @@ PageR::PageR(QString name, QObject *parent)
     Input(xAxis).imports("/*[step]");
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
-    Input(popUp).imports("ancestors::*[popUp]");
-    Input(width).imports("ancestors::*[width]");
-    Input(height).imports("ancestors::*[height]");
+    Input(width).imports("ancestors::*<OutputR>[width]");
+    Input(height).imports("ancestors::*<OutputR>[height]");
 }
 
 void PageR::amend() {
@@ -45,9 +44,14 @@ void PageR::amend() {
 }
 
 void PageR::initialize() {
+    // See if pop-up is in effect
+    Port *popUpPort = findOne<Port>("ancestors::*<OutputR>[popUp]");
+    _popUp = popUpPort->value<bool>();
+
     // Find plots on this page
     _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
 }
+
 void PageR::reset() {
     _commonPageNumber = _myPageNumber = 0;
 }
@@ -69,7 +73,7 @@ QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
     s << functionName() << " <- function(df, ...) {\n";
-    if (popUp) {
+    if (_popUp) {
       s << "  open_graph("
         << port("width")->value<int>()
         << ", "

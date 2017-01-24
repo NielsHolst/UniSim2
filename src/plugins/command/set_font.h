@@ -1,9 +1,5 @@
 #ifndef SET_FONT_H
 #define SET_FONT_H
-#include <QFont>
-#include <QFontDatabase>
-#include <QTextCharFormat>
-#include <QTextCursor>
 #include "set.h"
 
 namespace command {
@@ -14,12 +10,12 @@ public:
     set_font(QString name, QObject *parent);
 private:
     // Data
-    static QFontDatabase _fontDatabase;
-    QFont _font;
-    QTextCursor _cursor;
-    QTextCharFormat _format;
+    QString _previousFamily;
+    int _previousPointSize;
     // Methods
     void doExecute();
+    QString currentFamily();
+    int currentPointSize();
     void showFont();
     void setFont(int pt);
     void setFont(QString family);

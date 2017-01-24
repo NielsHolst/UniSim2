@@ -48,6 +48,7 @@ Simulation sim {
 	}
 	OutputR {
     .end = "butterfly_analysis.R"
+    .popUp = TRUE
     PageR {
       .xAxis = calendar[date]
       PlotR {

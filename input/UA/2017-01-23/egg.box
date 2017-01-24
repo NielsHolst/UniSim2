@@ -2,7 +2,7 @@ Simulation sim {
     .steps = 14
     Stage egg {
         .initial = 100 
-        .duration = 30
+        .duration = 7
     }
     OutputR {
         PageR {

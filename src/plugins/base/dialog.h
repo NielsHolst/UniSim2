@@ -23,8 +23,9 @@ public:
     void message(QString s);
     void information(QString s);
     void errorImpl(QString s);
+    void setFont(QString family, int pt);
+    QFont font();
 protected:
-//    bool eventFilter(QObject *obj, QEvent *event);
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private slots:
@@ -39,6 +40,9 @@ private:
     bool _firstInformation, _gotoEnd;
     // Methods
     QMainWindow* mainWindow();
+    bool resetFont();
+    bool fontExists(QString family);
+    QString preferredFamily();
     void saveFont();
     void restoreFont();
     QTextCursor getCursor();

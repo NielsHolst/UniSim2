@@ -1,6 +1,7 @@
 #ifndef BASE_DIALOG_BASE_H
 #define BASE_DIALOG_BASE_H
 
+#include <QFont>
 #include <QTextEdit>
 #include <QString>
 
@@ -14,6 +15,8 @@ public:
     virtual void finished() = 0;
     virtual void message(QString s) = 0;
     virtual void information(QString s) = 0;
+    virtual void setFont(QString, int) {}
+    virtual QFont font() { return QFont(); }
     void error(QString s);
     friend DialogBase& dialog();
     void resetErrorCount();

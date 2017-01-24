@@ -12,8 +12,9 @@ QT += widgets
 
 # What we are building
 TEMPLATE = lib
-#CONFIG -= lib_bundle
-DESTDIR = "$$_PRO_FILE_PWD_/../../../bin"
+#CONFIG += lib_bundle
+win32:DESTDIR = "$$_PRO_FILE_PWD_/../../../bin"
+macx:DESTDIR = "~/lib"
 TARGET = universal_simulator_base$${SUFFIX}
 
 # Our project header and source code

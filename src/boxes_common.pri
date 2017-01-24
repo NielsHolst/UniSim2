@@ -29,10 +29,10 @@ QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-dec
 # Compiler options to silence warnings when compiling under Mac OS X
 MY_HASH = $$LITERAL_HASH
 NO_PRAGMA_MESSAGES = $$join(MY_HASH, , -Wno-\\, pragma-messages)
-QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
+macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
 
 # Compiler options to silence warnings when compiling under Win
-QMAKE_CXXFLAGS += -Wno-unknown-pragmas
+win32:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math
@@ -40,11 +40,12 @@ QMAKE_CXXFLAGS += -ffast-math
 # Additional folders with header files
 BOOST_PATH = $$(BOOST_ROOT)
 isEmpty(BOOST_PATH) {
-    error("Cannot find enviroment variable BOOST_ROOT")
+    BOOST_PATH = $$_PRO_FILE_PWD_/../../../../boost_library
 }
-INCLUDEPATH += "$$(BOOST_ROOT)"
+INCLUDEPATH += $${BOOST_PATH}
 
 # Own libraries that we use, except 'base' does not use itself
 !equals(BOXES_PLUGIN_NAME, "base") {
-    LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -luniversal_simulator_base$${SUFFIX}
+    win32:LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -luniversal_simulator_base$${SUFFIX}
+    macx:LIBS += -L$$(HOME)/lib -luniversal_simulator_base$${SUFFIX}
 }

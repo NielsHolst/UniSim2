@@ -32,21 +32,17 @@ pushd ../../..
 make -B
 popd	
 
-echo = Copy base library =
-sudo cp ../../../bin/*.dylib /usr/lib
-
 echo = Create App bundle =
-target=../../../bin/unisim
-target_app=$target.app
-~/Qt/5.7/clang_64/bin/macdeployqt $target_app -always-overwrite
-base=libuniversal_simulator_base.1.dylib
-install_name_tool -change @executable_path/../Frameworks/$base /usr/lib/$base $target_app/Contents/MacOS/unisim
-rm $target_app/Contents/Frameworks/*.dylib
+target=../../../bin/unisim.app
+~/Qt/5.7/clang_64/bin/macdeployqt $target -always-overwrite -libpath=/users/nielsholst/lib
+
+echo = Remove base library from bundle so that it only occurs in ~/lib
+rm $target/Contents/Frameworks/*.dylib
 
 echo = Copy UniSim plugins =
-mkdir $target_app/Contents/MacOS/plugins
-cp ../../../bin/plugins/*.dylib $target_app/Contents/MacOS/plugins
-otool -L  $target_app/Contents/MacOS/unisim$suffix
+mkdir $target/Contents/MacOS/plugins
+cp ../../../bin/plugins/*.dylib $target/Contents/MacOS/plugins
+otool -L  $target/Contents/MacOS/unisim$suffix
 
 echo = Set installer version number =
 ../bin/update-installer-project $MAJOR $MINOR $SUB

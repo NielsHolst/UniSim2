@@ -52,23 +52,34 @@ void Dialog::saveFont() {
     settings.setValue("font/size", format.fontPointSize());
 }
 
+void Dialog::setFont(QString family, int pt) {
+    // Construct font
+    QString family2 = fontExists(family) ? family : preferredFamily();
+    QFont font = QFontDatabase().font(family2, QString(), pt);
+
+    // Set cursor to use font
+    QTextCursor cursor = dialog().textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    format.setFont(font);
+    cursor.setCharFormat(format);
+    setTextCursor(cursor);
+}
+
+QFont Dialog::font() {
+    QTextCursor cursor = dialog().textCursor();
+    QTextCharFormat format = cursor.charFormat();
+    return format.font();
+}
+
+inline QString defaultFamily() {
+    return QGuiApplication::font().family();
+}
+
 void Dialog::restoreFont() {
     QSettings settings;
-
-    QString family;
-    QStringList preferredFonts;
-    preferredFonts
-        << "InputMonoCompressed Light"
-        << "Consolas"
-        << "Andale Mono"
-        << "Arial Narrow"
-        << "Arial";
-    for (int i=0; i <preferredFonts.size(); ++i) {
-        family = settings.value("font/family", preferredFonts.at(i)).toString();
-        if (!family.isEmpty())
-            break;
-    }
-
+    QString family = resetFont() ?
+                     preferredFamily() :
+                     settings.value("font/family", preferredFamily()).toString();
     int pt = settings.value("font/size", 11).toInt();
 
     QTextCursor cursor = textCursor();
@@ -77,6 +88,32 @@ void Dialog::restoreFont() {
     cursor.setCharFormat(format);
     setTextCursor(cursor);
 }
+
+bool Dialog::resetFont() {
+    QString stored = QSettings().value("font/family").toString();
+    return stored.isEmpty() || stored == defaultFamily();
+}
+
+QString Dialog::preferredFamily() {
+    QList<QString> preferred;
+    preferred
+        << "InputMonoCompressed Light"
+        << "Consolas"
+        << "Andale Mono"
+        << "Menlo"
+        << "Courier";
+    for (QString family : preferred) {
+        if (fontExists(family))
+            return family;
+    }
+    return QGuiApplication::font().family();
+}
+
+bool Dialog::fontExists(QString family) {
+    return QFontDatabase().font(family, QString(), 10).family() !=
+           QGuiApplication::font().family();
+}
+
 
 void Dialog::progress(int current, int total) {
     _progressBar->setMaximum(total);

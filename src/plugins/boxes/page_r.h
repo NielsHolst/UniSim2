@@ -21,8 +21,8 @@ private:
     QString xAxis;
     double width, height;
     int ncol, nrow;
-    bool popUp;
     // Data
+    bool _popUp;
     QVector<PlotR*> _plots;
     static int _commonPageNumber;
     int _myPageNumber;
