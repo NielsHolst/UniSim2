@@ -25,7 +25,7 @@
  
 3. In Terminal: 
 - go to ~/qdev
-- type >git clone 
+- type >git clone <paste clone path>
 
 4. Edit ~/qdev/UniSim2/ship/cmd/osx/build.sh.
 - Update SUB version number.

@@ -21,8 +21,7 @@ private:
     // Inputs
     double kDiffuse, scattering, sinb,
         lightDiffuse, lightDirect,
-        absorptivityTop, absorptivityMiddle, absorptivityBottom,
-        lai;
+        absorptivityTop, absorptivityMiddle, absorptivityBottom;
 
     // Outputs
     double

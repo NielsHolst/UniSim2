@@ -11,7 +11,7 @@
 
 namespace vg {
 
-class SurfaceRadiation;
+struct SurfaceRadiation;
 
 class Shelters : public ShelterBase
 {

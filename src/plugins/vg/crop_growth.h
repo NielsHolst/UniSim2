@@ -20,7 +20,7 @@ public:
 private:
     // Inputs
     double Tcrop, Pg, timeStep,
-        massRoot, massStem, massLeaf, massFruit, massTotal,
+        massRoot, massStem, massLeaf, massFruit,
         respRoot, respStem, respLeaf, respFruit,
         grossGrowthRate, maintenanceRespiration;
     // Outputs
