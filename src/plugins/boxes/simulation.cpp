@@ -42,7 +42,7 @@ void Simulation::run() {
         time.start();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
-        for (iteration = 1; !stopIterations || iteration <= iterations; ++iteration) {
+        for (iteration = 1; !stopIterations && iteration <= iterations; ++iteration) {
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
             environment().computationStep(ComputationStep::Update);
