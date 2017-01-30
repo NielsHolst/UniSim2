@@ -1,0 +1,125 @@
+// book/food-web/savanna-1.box
+Simulation sim {
+  .steps = 3000
+  // Time step is 1 month
+  Calendar calendar {
+    .initialDateTime = 1/1/2000
+    .timeStep = 30
+    .timeUnit = "d"
+  }
+  Box lion {
+    Stage cub {
+      .initial = 0 
+      .inflow = ../mature/offspring[newborn]
+      .duration = 9
+    }
+    Stage kid {
+      .initial = 2 
+      .inflow = ../cub[outflow]
+      .duration = 36
+    }
+    Stage adolescent {
+      .initial = 2 
+      .inflow = ../kid[outflow]
+      .duration = 24
+    }
+    Box mature {
+      Stage mature {
+        .initial = 8 
+        .inflow = .../adolescent[outflow]
+        .duration = 180
+      }
+      ProportionalSignal offspring {
+        +newborn = .[signal]
+        .input(transform=Sum) = lion/descendants::*[content]
+        .threshold = 10
+        .thresholdBand = 5
+        .minSignal = 0
+        .maxSignal = 0.5
+        .increasingSignal = FALSE
+      }
+    }
+  }
+  Box leopard {
+    Stage cub {
+      .initial = 10 
+      .duration = 2
+    }
+    Stage kid {
+      .initial = 6 
+      .inflow = ../cub[outflow]
+      .duration = 12
+    }
+    Stage adolescent {
+      .initial = 4 
+      .inflow = ../kid[outflow]
+      .duration = 18
+    }
+    Stage mature {
+      .initial = 8 
+      .inflow = ../adolescent[outflow]
+      .duration = 140
+    }
+  }
+  Box zebra {
+    Stage foal {
+      .initial = 10 
+      .duration = 6
+    }
+    Stage kid {
+      .initial = 6 
+      .inflow = ../foal[outflow]
+      .duration = 36
+    }
+    Stage adolescent {
+      .initial = 6 
+      .inflow = ../kid[outflow]
+      .duration = 15
+    }
+    Stage mature {
+      .initial = 8 
+      .inflow = ../adolescent[outflow]
+      .duration = 180
+    }
+  }
+  Box gazelle {
+    Stage calf {
+      .initial = 10 
+      .duration = 6
+    }
+    Stage kid {
+      .initial = 6 
+      .inflow = ../calf[outflow]
+      .duration = 18
+    }
+    Stage adolescent {
+      .initial = 6 
+      .inflow = ../kid[outflow]
+      .duration = 24
+    }
+    Stage mature {
+      .initial = 8 
+      .inflow = ../adolescent[outflow]
+      .duration = 72
+    }
+  }
+  OutputR {
+    .popUp = TRUE
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      PlotR {
+        .ports = (lion/descendants::*[content] lion/mature/offspring[newborn])
+      }
+      PlotR {
+        .ports = (leopard/*[content])
+      }
+      PlotR {
+        .ports = (zebra/*[content])
+      }
+      PlotR {
+        .ports = (gazelle/*[content])
+      }
+    }
+  }
+}

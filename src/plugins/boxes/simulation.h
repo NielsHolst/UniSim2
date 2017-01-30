@@ -21,7 +21,8 @@ public:
 private:
     // Inputs
     int iterations, steps;
-    bool stopIterations, stopSteps;
+    bool stopIterations, stopSteps,
+        useStopIterations, useStopSteps;
     // Outputs
     int iteration, step, finalStep, executionTime;
     bool hasError;

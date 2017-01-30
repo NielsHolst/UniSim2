@@ -1,14 +1,20 @@
 Simulation sim {
-    .steps = 14
+    .iterations = 4
+    .steps = 90  
+    Scenarios scenarios {
+        .fileName = "egg-scenarios-2.txt"
+    }
     Stage egg {
         .initial = 100 
-        .duration = 30
+        .duration = scenarios[duration]
+        .k = scenarios[k]
     }
     OutputR {
         PageR {
             .xAxis = sim[step]
             PlotR {
                 .ports = (egg[content])
+                .end = "egg-end-3.R"
             }
         }
     }

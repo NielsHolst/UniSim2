@@ -5,6 +5,8 @@
     <file>notepad_grammar_template.xml</file>
     <file>svg_template3.html</file>
     <file>version.txt</file>
+    <file>data/input/apis/honeybee.box</file>
+    <file>data/input/apis/honeybee_end.R</file>
     <file>data/input/apis/honey_bee error.box</file>
     <file>data/input/apis/honey_bee.box</file>
     <file>data/input/apis/honey_bee.R</file>
@@ -24,6 +26,7 @@
     <file>data/input/book/demo/logistic/logistic1.box</file>
     <file>data/input/book/demo/logistic/logistic2.box</file>
     <file>data/input/book/demo/logistic/logistic3.box</file>
+    <file>data/input/book/foodweb/savanna-1.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009 Tavg.txt</file>
@@ -149,6 +152,16 @@
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
     <file>data/input/test5.4.box</file>
+    <file>data/input/UA/2017-01-23/egg-1.box</file>
+    <file>data/input/UA/2017-01-23/egg-2.box</file>
+    <file>data/input/UA/2017-01-23/egg-3.box</file>
+    <file>data/input/UA/2017-01-23/egg-end-3.R</file>
+    <file>data/input/UA/2017-01-23/egg-scenarios-1.txt</file>
+    <file>data/input/UA/2017-01-23/egg-scenarios-2.txt</file>
+    <file>data/input/UA/2017-01-23/egg-scenarios.txt</file>
+    <file>data/input/UA/2017-01-23/egg.box</file>
+    <file>data/input/UA/2017-01-23/pop-scenarios-1.txt</file>
+    <file>data/input/UA/2017-01-23/population-1.box</file>
     <file>data/input/vg/crops.xml</file>
     <file>data/input/vg/ig2.box</file>
     <file>data/input/vg/input/direct_transmission_single.txt</file>

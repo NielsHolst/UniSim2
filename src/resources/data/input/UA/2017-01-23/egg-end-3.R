@@ -1,0 +1,1 @@
+plot(sim$step, sim$content)

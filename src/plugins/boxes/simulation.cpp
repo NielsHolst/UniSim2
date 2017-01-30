@@ -21,6 +21,8 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(steps).equals(1);
     Input(stopIterations).equals(false);
     Input(stopSteps).equals(false);
+    Input(useStopIterations).equals(false);
+    Input(useStopSteps).equals(false);
     Output(iteration).noReset();
     Output(step);
     Output(finalStep);
@@ -42,11 +44,23 @@ void Simulation::run() {
         time.start();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
-        for (iteration = 1; !stopIterations && iteration <= iterations; ++iteration) {
+
+        for (iteration = 1;
+             (useStopIterations && !stopIterations && iterations==1) ||         // apply flag only
+             (useStopIterations && !stopIterations && iteration<=iterations) || // apply both lag and count
+             (!useStopIterations && iteration<=iterations);                     // apply count only
+              ++iteration)
+        {
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
             environment().computationStep(ComputationStep::Update);
-            for (step = 1; !stopSteps && step <= steps; ++step) {
+
+            for (step = 1;
+                 (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
+                 (useStopSteps && !stopSteps && step<=steps) || // apply both lag and count
+                 (!useStopSteps && step<=steps);                // apply count only
+                 ++step)
+            {
                 show(time);
                 updateFamily();
             }
