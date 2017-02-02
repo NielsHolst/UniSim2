@@ -13,7 +13,7 @@ class DataFrame : public QObject
 {
 public:
     DataFrame(QObject *parent = 0);
-    void read(QString fileNamePath, QString sep = " \t");
+    void read(QString fileName);
     int ncol() const;
     int nrow() const;
     QStringList colnames() const;

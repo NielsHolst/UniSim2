@@ -31,9 +31,9 @@ SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
 
-#SUBDIRS += PestTox
-#PestTox.subdir = src/plugins/PestTox
-#PestTox.depends = base
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
 
 SUBDIRS += student
 student.subdir = src/plugins/student

@@ -2,6 +2,7 @@ Simulation sim {
 	.steps = 4
 	.iterations = 100
 	.stopIterations = scenario[atEnd]
+	.useStopIterations = TRUE
 	Scenarios scenario {
 		.fileName = "scenarios_3.txt"
 	}

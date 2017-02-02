@@ -327,6 +327,27 @@ void Environment::updateInstallation() const {
         ThrowException("Cannot update version file").value(fileNamePath);
 }
 
+bool Environment::isLinux() const {
+#ifdef Q_OS_LINUX
+    return true;
+#endif
+    return false;
+}
+
+bool Environment::isMac() const {
+#ifdef Q_OS_MACOS
+    return true;
+#endif
+    return false;
+}
+
+bool Environment::isWindows() const {
+#ifdef Q_OS_WIN
+    return true;
+#endif
+    return false;
+}
+
 void Environment::initDir() {
     _dir[Work] = QDir(homePath());
     _dir[Input] = "input";

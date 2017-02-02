@@ -65,16 +65,16 @@
                     <platforms>osx</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.0.0.dylib</origin>
+                            <origin>/users/nielsholst/lib/libuniversal_simulator_base.1.0.0.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.0.dylib</origin>
+                            <origin>/users/nielsholst/lib/libuniversal_simulator_base.1.0.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../usr/lib/libuniversal_simulator_base.1.dylib</origin>
+                            <origin>/users/nielsholst/lib/libuniversal_simulator_base.1.dylib</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../../../usr/lib/libuniversal_simulator_base.dylib</origin>
+                            <origin>/users/nielsholst/lib/libuniversal_simulator_base.dylib</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

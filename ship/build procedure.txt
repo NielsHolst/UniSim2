@@ -29,6 +29,7 @@
 
 4. Edit ~/qdev/UniSim2/ship/cmd/osx/build.sh.
 - Update SUB version number.
+- Launch buid.sh.
 
 5. Open InstallBuilder and build the installer.
 

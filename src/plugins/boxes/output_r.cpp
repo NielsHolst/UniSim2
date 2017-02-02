@@ -63,7 +63,7 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
-    if (popUp)
+    if (popUp && !environment().isMac())
         s += popUpCode();
     for (PageR *page : _pages)
         s += page->toScript();

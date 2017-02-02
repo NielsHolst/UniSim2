@@ -26,6 +26,7 @@ HEADERS +=  \
     test_command.h \
     test_convert.h \
     test_copy_folder.h \
+    test_data_frame.h \
     test_eq.h \
     test_general_split.h \
     test_history.h \
@@ -64,6 +65,7 @@ SOURCES +=  \
     test_command.cpp \
     test_convert.cpp \
     test_copy_folder.cpp \
+    test_data_frame.cpp \
     test_eq.cpp \
     test_general_split.cpp \
     test_history.cpp \

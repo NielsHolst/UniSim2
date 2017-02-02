@@ -21,7 +21,7 @@ void TestTrack::testScalar() {
     }
 
     QSet<QString> expected;
-    expected << "step"
+    expected << "step" << "iteration"
              << "input2" << "input3" << "input4"
              << "output1" << "output2" << "output3";
     checkColumnNames(expected);
@@ -38,7 +38,7 @@ void TestTrack::testVector() {
     }
 
     QSet<QString> expected;
-    expected << "step"
+    expected << "step" << "iteration"
              << "numbers1"
              << "numbers2_0" << "numbers2_1" << "numbers2_2";
     checkColumnNames(expected);
@@ -126,6 +126,7 @@ void TestTrack::checkColumnNames(QSet<QString> expected) {
     file.close();
     if (columnNames != expected) {
         QString s{"Sets differ got(%1) != expected(%2)"};
+        std::cout << "HALLO\n";
         QFAIL(qPrintable(s.arg(toString(columnNames)).arg(toString(expected))));
     }
 }

@@ -63,6 +63,9 @@ public:
     bool isNewInstallation() const;
     void updateInstallation() const;
 
+    bool isLinux() const;
+    bool isMac() const;
+    bool isWindows() const;
 private:
     // Data
     Box *_root, *_current;

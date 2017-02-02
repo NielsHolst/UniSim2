@@ -8,7 +8,10 @@
 #include <QTime>
 #include <QVector>
 #include <base/box.h>
-#include <base/environment.h>
+
+namespace base {
+class DataFrame;
+}
 
 namespace boxes {
 
@@ -17,27 +20,21 @@ class Scenarios : public base::Box
 public:
     Scenarios(QString name, QObject *parent);
     void amend();
-    void initialize();
     void reset();
-    void debrief();
 
 private:
     // inputs
-    QString fileName, separator;
+    QString fileName;
     // outputs
     QVector<QString> values;
     bool atEnd;
     // methods
-    void openFile();
-    void readColumnNames();
+    void readDataFrame();
     void createColumnOutputs();
-    void readLineItems();
-    void updateValues();
-    void checkSeparator();
+    void copyValues();
     // data
-	QFile file;
-    QStringList lineItems, columnNames;
-    bool pastLastLine;
+    base::DataFrame *_df;
+    int _ixRow;
 };
 
 }

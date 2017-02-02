@@ -6,6 +6,12 @@
 #include <base/organisation.h>
 #include "autotest.h"
 
+inline QString inputPath() {
+    // Direct run
+//    return "../src/apps/test/input/";
+    // Debugger run
+    return "C:/data/qdev/UniSim2/src/apps/test/input/";
+}
 
 int main(int argc, char *argv[])
 {
@@ -18,8 +24,9 @@ int main(int argc, char *argv[])
 
     QDir saveDirInput = base::environment().dir(base::Environment::Input),
          testDirInput = QDir();
-    if (!testDirInput.cd("../src/apps/test/input/")) {
-        std::cout << "'../src/apps/test/input/' path not found from"
+    if (!testDirInput.cd(inputPath())) {
+        std::cout << qPrintable(inputPath())
+                  << " path not found from "
                   << qPrintable(testDirInput.absolutePath());
         return 0;
     }

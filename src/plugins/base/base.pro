@@ -37,6 +37,7 @@ HEADERS +=  \
     construction_step.h \
     convert.h \
     copy_folder.h \
+    data_frame.h \
     data_grid.h \
     dialog.h \
     dialog_base.h \
@@ -96,6 +97,7 @@ SOURCES +=  \
     construction_step.cpp \
     convert.cpp \
     copy_folder.cpp \
+    data_frame.cpp \
     data_grid.cpp \
     dialog.cpp \
     dialog_base.cpp \
