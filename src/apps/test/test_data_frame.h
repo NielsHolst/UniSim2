@@ -8,7 +8,10 @@ class TestDataFrame : public QObject
     Q_OBJECT
 private slots:
     void testDimensions();
-    void testContent();
+    void testContentBothLabelled();
+    void testContentColumnLabelled();
+    void testContentRowLabelled();
+    void testContentNoLabelling();
 };
 
 DECLARE_TEST(TestDataFrame)

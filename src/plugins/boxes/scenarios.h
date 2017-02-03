@@ -1,13 +1,9 @@
 #ifndef SCENARIOS_H
 #define SCENARIOS_H
 
-#include <QDate>
-#include <QDateTime>
-#include <QDir>
-#include <QFile>
-#include <QTime>
 #include <QVector>
 #include <base/box.h>
+#include <base/data_frame.h>
 
 namespace base {
 class DataFrame;
@@ -33,7 +29,7 @@ private:
     void createColumnOutputs();
     void copyValues();
     // data
-    base::DataFrame *_df;
+    base::DataFrame _df;
     int _ixRow;
 };
 

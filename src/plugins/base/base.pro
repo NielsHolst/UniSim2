@@ -51,6 +51,7 @@ HEADERS +=  \
     history.h \
     initialize.h \
     interpolate.h \
+    matrix.h \
     mega_factory.h \
     object_pool.h \
     organisation.h \
@@ -108,6 +109,7 @@ SOURCES +=  \
     general.cpp \
     history.cpp \
     initialize.cpp \
+    matrix.cpp \
     mega_factory.cpp \
     object_pool.cpp \
     path.cpp \

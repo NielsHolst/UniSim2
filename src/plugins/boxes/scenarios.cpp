@@ -1,11 +1,4 @@
-#include <iostream>
-#include <QtAlgorithms>
-#include <QDir>
-#include <QTime>
-#include <base/convert.h>
-#include <base/data_frame.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/publish.h>
 #include "scenarios.h"
 
@@ -16,8 +9,7 @@ namespace boxes {
 PUBLISH(Scenarios)
 
 Scenarios::Scenarios(QString name, QObject *parent)
-    : Box(name, parent),
-      _df(new DataFrame(this))
+    : Box(name, parent)
 {
     Input(fileName).equals("scenarios.txt");
     Output(atEnd);
@@ -32,16 +24,15 @@ void Scenarios::amend() {
 }
 
 void Scenarios::readDataFrame() {
-    QString fileNamePath = environment().inputFileNamePath(fileName);
-    _df->read(fileNamePath);
-    if (_df->nrow() == 0)
+    _df.read(fileName, DataFrame::ColumnLabelled);
+    if (_df.numRow() == 0)
         ThrowException("Data frame file is empty").value(fileName).context(this);
 }
 
 void Scenarios::createColumnOutputs() {
-    values.fill(QString(), _df->ncol());
+    values.fill(QString(), _df.numCol());
     int i(0);
-    for (QString colname : _df->colnames().toVector()) {
+    for (QString colname : _df.colNames().toVector()) {
         Port *port = new Port(colname, this);
         port->data(&values[i++]);
     }
@@ -50,12 +41,12 @@ void Scenarios::createColumnOutputs() {
 void Scenarios::reset() {
     Q_ASSERT(!atEnd);
     copyValues();
-    atEnd = (++_ixRow == _df->nrow());
+    atEnd = (++_ixRow == _df.numRow());
 }
 
 void Scenarios::copyValues() {
     int i(0);
-    for (QString value : _df->row(_ixRow))
+    for (QString value : _df.row(_ixRow))
         values[i++] = value;
 }
 

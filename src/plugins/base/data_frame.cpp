@@ -1,4 +1,5 @@
 #include <QFile>
+#include <QFileInfo>
 #include <QMapIterator>
 #include "environment.h"
 #include "exception.h"
@@ -14,16 +15,24 @@ DataFrame::DataFrame(QObject *parent)
     setObjectName("DataFrame");
 }
 
-void DataFrame::read(QString fileName) {
+void DataFrame::read(QString fileName, Labelling labelling) {
     QFile file;
-    QString fileNamePath = environment().inputFileNamePath(fileName);
+    QString fileNamePath = QFileInfo(fileName).isAbsolute() ?
+                fileName :
+                environment().inputFileNamePath(fileName);
+
     file.setFileName(fileNamePath);
     bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!fileOk)
         ThrowException("Cannot open file").value(fileNamePath).context(this);
 
+    bool hasRowNames = (labelling==RowLabelled || labelling==BothLabelled),
+         hasColNames = (labelling==ColumnLabelled || labelling==BothLabelled);
+
     _rows.clear();
-    _colnames.clear();
+    _rowNames.clear();
+    _colNames.clear();
+
     QString line;
     int n = -1;
     while (true) {
@@ -39,34 +48,69 @@ void DataFrame::read(QString fileName) {
             ThrowException(msg.arg(n2).arg(n)).value(line).context(this);
         }
         n = n2;
-        if (_colnames.isEmpty()) {
-            int c(0);
-            for (QString name : items.toVector()) _colnames[name] = c++;
+        _rows << items;
+    }
+
+    if (!_rows.isEmpty()) {
+        if (hasRowNames) {
+            QStringList names;
+            for (QStringList row : _rows.toList()) names << row.at(0);
+            if (hasColNames) names.removeFirst();
+            int ixRow(0);
+            for (QString name : names.toVector()) _rowNames[name] = ixRow++;
         }
-        else {
-            _rows << items;
+
+        if (hasColNames) {
+            QStringList names = _rows.at(0);
+            if (hasRowNames) names.removeFirst();
+            int ixCol(0);
+            for (QString name : names.toVector()) _colNames[name] = ixCol++;
+        }
+
+        if (hasColNames) _rows.removeFirst();
+
+        if (hasRowNames) {
+            int n = _rows.size();
+            for (int i=0; i<n; ++i)
+                _rows[i].removeFirst();
         }
     }
 }
 
-int DataFrame::ncol() const {
-    return (nrow() == 0) ? 0 : _rows.at(0).size();
+int DataFrame::numCol() const {
+    return (numRow() == 0) ? 0 : _rows.at(0).size();
 }
 
-int DataFrame::nrow() const {
+int DataFrame::numRow() const {
     return _rows.size();
 }
 
-QStringList DataFrame::colnames() const {
-    return QStringList(_colnames.keys());
+QStringList DataFrame::colNames() const {
+    return QStringList(_colNames.keys());
 }
 
-int DataFrame::ixcol(QString colname) const {
-    QMap<QString,int>::const_iterator it = _colnames.constFind(colname);
-    if (it == _colnames.constEnd())
-        ThrowException("No column with that name").value(colname).context(this)
-                .hint("Valid names:\n" + QStringList(_colnames.keys()).join("\n"));
+QStringList DataFrame::rowNames() const {
+    return QStringList(_rowNames.keys());
+}
+
+int DataFrame::lookup(const QMap<QString,int> &names, QString name, QString direction) const {
+    QMap<QString,int>::const_iterator it = names.constFind(name);
+    if (it == names.constEnd())
+        ThrowException("No " + direction + " with that name").value(name).context(this)
+                .hint("Valid names:\n" + QStringList(names.keys()).join("\n"));
     return it.value();
+}
+
+int DataFrame::ixRow(QString rowName) const {
+    if (_rowNames.isEmpty())
+        ThrowException("Dataframe has no row names");
+    return lookup(_rowNames, rowName, "ow");
+}
+
+int DataFrame::ixCol(QString colName) const {
+    if (_colNames.isEmpty())
+        ThrowException("Dataframe has no column names");
+    return lookup(_colNames, colName, "column");
 }
 
 QStringList DataFrame::row(int i) const {
@@ -74,17 +118,29 @@ QStringList DataFrame::row(int i) const {
 }
 
 QStringList DataFrame::col(int i) const {
-    if (i<0 || i>=ncol()) {
-        QString msg("Column index out of bounds (0..%1)");
-        ThrowException(msg.arg(ncol()-1)).value(i).context(this);
-    }
     QStringList co;
     for (QStringList row : _rows) co << row.at(i);
     return co;
 }
 
-QStringList DataFrame::col(QString colname) const {
-    return col( ixcol(colname) );
+QString DataFrame::at(int row, int col) const {
+    return _rows.at(row).at(col);
+}
+
+QString DataFrame::operator()(int row, int col) const {
+    return at(row,col);
+}
+
+QStringList DataFrame::row(QString rowName) const {
+    return row( ixRow(rowName) );
+}
+
+QStringList DataFrame::col(QString colName) const {
+    return col( ixCol(colName) );
+}
+
+const QVector<QStringList>& DataFrame::rows() const {
+    return _rows;
 }
 
 } //namespace
