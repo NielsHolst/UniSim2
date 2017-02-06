@@ -1,40 +1,71 @@
 #ifndef BASE_DATA_FRAME_H
 #define BASE_DATA_FRAME_H
 
-#include <QMap>
-#include <QObject>
 #include <QStringList>
 #include <QVector>
-
+#include "convert.h"
+#include "table.h"
 
 namespace base {
 
-class DataFrame : public QObject
+class DataFrame : public Table
 {
 public:
-    enum Labelling {ColumnLabelled, RowLabelled, BothLabelled, NoLabelling};
     DataFrame(QObject *parent = 0);
-    void read(QString fileName, Labelling labelling = ColumnLabelled);
+    void read(QString fileName, Labelling labelling);
     int numRow() const;
     int numCol() const;
-    QStringList rowNames() const;
-    QStringList colNames() const;
-    int ixRow(QString rowName) const;
-    int ixCol(QString colName) const;
-    QStringList row(int i) const;
-    QStringList col(int i) const;
-    QString at(int row, int col) const;
-    QString operator()(int row, int col) const;
-    QStringList row(QString rowName) const;
-    QStringList col(QString colName) const;
-    const QVector<QStringList>& rows() const;
+    template <class T=QString> QVector<T> row(int i) const;
+    template <class T=QString> QVector<T> col(int i) const;
+    template <class T=QString> T at(int row, int col) const;
+    template <class T=QString> T operator()(int row, int col) const;
+    template <class T=QString> QVector<T> row(QString rowName) const;
+    template <class T=QString> QVector<T> col(QString colName) const;
+    template <class T=QString> QVector<QVector<T>> rows() const;
 private:
     // Data
-    QMap<QString,int> _rowNames, _colNames;
     QVector<QStringList> _rows;
-    // Methods
-    int lookup(const QMap<QString,int> &names, QString name, QString direction) const;
 };
+
+template <class T>
+QVector<T> DataFrame::row(int i) const {
+    return convert<T, QVector>( _rows.at(i) );
+}
+
+template <class T>
+QVector<T> DataFrame::col(int i) const {
+    QVector<T> co;
+    for (QStringList row : _rows) co << convert<T>( row.at(i) );
+    return co;
+}
+
+template <class T>
+T DataFrame::at(int row, int col) const {
+    return convert<T>( _rows.at(row).at(col) );
+}
+
+template <class T>
+T DataFrame::operator()(int row, int col) const {
+    return at(row,col);
+}
+
+template <class T>
+QVector<T> DataFrame::row(QString rowName) const {
+    return row( ixRow(rowName) );
+}
+
+template <class T>
+QVector<T> DataFrame::col(QString colName) const {
+    return col( ixCol(colName) );
+}
+
+template <class T>
+QVector<QVector<T>> DataFrame::rows() const {
+    QVector<QVector<T>> all;
+    for (QStringList row : _rows) all << convert<T, QVector>( row );
+    return all;
+}
+
 
 
 } //namespace

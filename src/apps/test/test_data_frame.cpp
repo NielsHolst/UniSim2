@@ -7,7 +7,7 @@ using namespace base;
 void TestDataFrame::testDimensions() {
     DataFrame df;
     try {
-        df.read( inputFilePath("data_frame/df1.txt"), DataFrame::BothLabelled);
+        df.read( inputFilePath("data_frame/df1.txt"), Table::BothLabelled);
         QCOMPARE(df.numCol(), 2);
         QCOMPARE(df.numRow(), 2);
     }
@@ -19,7 +19,7 @@ void TestDataFrame::testDimensions() {
 void TestDataFrame::testContentBothLabelled() {
     DataFrame df;
     try {
-        df.read( inputFilePath("data_frame/df2.txt"), DataFrame::BothLabelled);
+        df.read( inputFilePath("data_frame/df2.txt"), Table::BothLabelled);
         QCOMPARE(df.numCol(), 2);
         QCOMPARE(df.numRow(), 2);
 
@@ -31,11 +31,11 @@ void TestDataFrame::testContentBothLabelled() {
         QCOMPARE(df.ixRow("Row1"), 0);
         QCOMPARE(df.ixRow("Row2"), 1);
 
-        QCOMPARE(df.row(0), QStringList() << "7" << "9");
-        QCOMPARE(df.row(1), QStringList() << "A B" << "111");
+        QCOMPARE(df.row(0), QVector<QString>() << "7" << "9");
+        QCOMPARE(df.row(1), QVector<QString>() << "A B" << "111");
 
-        QCOMPARE(df.col(0), QStringList() << "7" << "A B");
-        QCOMPARE(df.col(1), QStringList() << "9" << "111");
+        QCOMPARE(df.col(0), QVector<QString>() << "7" << "A B");
+        QCOMPARE(df.col(1), QVector<QString>() << "9" << "111");
 
         QCOMPARE(df(0,0), QString("7"));
         QCOMPARE(df(1,1), QString("111"));
@@ -59,12 +59,12 @@ void TestDataFrame::testContentColumnLabelled() {
 
         QVERIFY(df.rowNames().isEmpty());
 
-        QCOMPARE(df.row(0), QStringList() << "Row1" <<"7" << "9");
-        QCOMPARE(df.row(1), QStringList() << "Row2" << "A B" << "111");
+        QCOMPARE(df.row(0), QVector<QString>() << "Row1" <<"7" << "9");
+        QCOMPARE(df.row(1), QVector<QString>() << "Row2" << "A B" << "111");
 
-        QCOMPARE(df.col(0), QStringList() << "Row1" << "Row2");
-        QCOMPARE(df.col(1), QStringList() << "7" << "A B");
-        QCOMPARE(df.col(2), QStringList() << "9" << "111");
+        QCOMPARE(df.col(0), QVector<QString>() << "Row1" << "Row2");
+        QCOMPARE(df.col(1), QVector<QString>() << "7" << "A B");
+        QCOMPARE(df.col(2), QVector<QString>() << "9" << "111");
 
         QCOMPARE(df(0,0), QString("Row1"));
         QCOMPARE(df(1,1), QString("A B"));
@@ -77,7 +77,7 @@ void TestDataFrame::testContentColumnLabelled() {
 void TestDataFrame::testContentRowLabelled() {
     DataFrame df;
     try {
-        df.read( inputFilePath("data_frame/df2.txt"), DataFrame::RowLabelled);
+        df.read( inputFilePath("data_frame/df2.txt"), Table::RowLabelled);
         QCOMPARE(df.numCol(), 2);
         QCOMPARE(df.numRow(), 3);
 
@@ -88,12 +88,12 @@ void TestDataFrame::testContentRowLabelled() {
         QCOMPARE(df.ixRow("Row1"), 1);
         QCOMPARE(df.ixRow("Row2"), 2);
 
-        QCOMPARE(df.row(0), QStringList() << "ColB" << "ColC");
-        QCOMPARE(df.row(1), QStringList() << "7" << "9");
-        QCOMPARE(df.row(2), QStringList() << "A B" << "111");
+        QCOMPARE(df.row(0), QVector<QString>() << "ColB" << "ColC");
+        QCOMPARE(df.row(1), QVector<QString>() << "7" << "9");
+        QCOMPARE(df.row(2), QVector<QString>() << "A B" << "111");
 
-        QCOMPARE(df.col(0), QStringList() << "ColB" << "7" << "A B");
-        QCOMPARE(df.col(1), QStringList() << "ColC" << "9" << "111");
+        QCOMPARE(df.col(0), QVector<QString>() << "ColB" << "7" << "A B");
+        QCOMPARE(df.col(1), QVector<QString>() << "ColC" << "9" << "111");
 
         QCOMPARE(df(0,0), QString("ColB"));
         QCOMPARE(df(1,1), QString("9"));
@@ -112,16 +112,31 @@ void TestDataFrame::testContentNoLabelling() {
 
         QVERIFY(df.colNames().isEmpty());
         QVERIFY(df.rowNames().isEmpty());
-        QCOMPARE(df.row(0), QStringList() << "ColA" << "ColB" << "ColC");
-        QCOMPARE(df.row(1), QStringList() << "Row1" << "7" << "9");
-        QCOMPARE(df.row(2), QStringList() << "Row2" << "A B" << "111");
+        QCOMPARE(df.row(0), QVector<QString>() << "ColA" << "ColB" << "ColC");
+        QCOMPARE(df.row(1), QVector<QString>() << "Row1" << "7" << "9");
+        QCOMPARE(df.row(2), QVector<QString>() << "Row2" << "A B" << "111");
 
-        QCOMPARE(df.col(0), QStringList() << "ColA" << "Row1" << "Row2");
-        QCOMPARE(df.col(1), QStringList() << "ColB" << "7" << "A B");
-        QCOMPARE(df.col(2), QStringList() << "ColC" << "9" << "111");
+        QCOMPARE(df.col(0), QVector<QString>() << "ColA" << "Row1" << "Row2");
+        QCOMPARE(df.col(1), QVector<QString>() << "ColB" << "7" << "A B");
+        QCOMPARE(df.col(2), QVector<QString>() << "ColC" << "9" << "111");
 
         QCOMPARE(df(0,0), QString("ColA"));
         QCOMPARE(df(1,1), QString("7"));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable(ex.what()));
+    }
+}
+
+void TestDataFrame::testAsInt() {
+    DataFrame df;
+    QVector<int> i;
+    try {
+        df.read( inputFilePath("data_frame/df1.txt"), Table::BothLabelled);
+        i = df.row<int>(0);
+        QCOMPARE(i, QVector<int>() << 7 << 9);
+        i = df.row<int>(1);
+        QCOMPARE(i, QVector<int>() << 88 << 111);
     }
     catch (Exception &ex) {
         QFAIL(qPrintable(ex.what()));

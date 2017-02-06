@@ -70,6 +70,7 @@ HEADERS +=  \
     save_grammar_notepad.h \
     save_graph_base.h \
     save_graph_graphviz.h \
+    table.h \
     test_num.h \
     time_with_units.h \
     timer.h \
@@ -109,7 +110,6 @@ SOURCES +=  \
     general.cpp \
     history.cpp \
     initialize.cpp \
-    matrix.cpp \
     mega_factory.cpp \
     object_pool.cpp \
     path.cpp \
@@ -126,6 +126,7 @@ SOURCES +=  \
     save_grammar_notepad.cpp \
     save_graph_base.cpp \
     save_graph_graphviz.cpp \
+    table.cpp \
     time_with_units.cpp \
     timer.cpp \
     unique_name.cpp \
