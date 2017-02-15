@@ -14,6 +14,7 @@
 
 5. In Bash:
 > git push origin master
+> git tag 2.0.n
 > push_tag.sh 2.0.n
 
 (B) Mac OS X

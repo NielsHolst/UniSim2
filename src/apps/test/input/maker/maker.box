@@ -1,0 +1,57 @@
+Simulation sim {
+	.iterations = 3
+	.steps = 20
+	demo::Migration migration {
+	}
+	Maker islands {
+		.replicates = 3
+		demo::Island island {
+			.latitude = ./random/latitude[value]
+			.longitude = ./random/longitude[value]
+			Box random {
+				RandomUniform latitude {
+					.minValue = 10
+					.maxValue = 20 
+					.drawAtUserInitialize = TRUE
+				}
+				RandomUniform longitude {
+					.minValue = -40
+					.maxValue = -30
+					.drawAtUserInitialize = TRUE
+				}
+			}
+			demo::Population fox {
+				Stage fox {
+					.initial = ./random[value]
+					.duration = 12
+					RandomUniform random {
+						.minValue = 0
+						.maxValue = 5 
+						.drawAtUserReset = TRUE
+					}
+				}
+			}
+                        demo::Population rabbit {
+				Stage rabbit {
+					.initial = ./random[value]
+					.duration = 4
+					RandomPoisson random {
+						.mean = 100
+						.drawAtUserReset = TRUE
+					}
+				}
+			}
+		}
+	}
+	OutputR {
+		PageR {
+			PlotR {
+				.ports = (*[content])
+			}
+			PlotR {
+				.hide = TRUE
+				.ports = (*[latitude] *[longitude] *[initial])
+			}
+		}
+	}
+}

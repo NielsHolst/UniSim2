@@ -10,7 +10,7 @@ moc_*
 .qmake*
 *.app
 qrc_application*
-Make*
+make.*
 object_script*
 bin/
 output/
