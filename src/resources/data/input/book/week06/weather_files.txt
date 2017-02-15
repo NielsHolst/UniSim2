@@ -1,5 +1,5 @@
 FileName
-weather/flakkebjerg 2009 Tavg.txt
-weather/braunschweig 2009 Tavg.txt
-weather/geneva 2009 Tavg.txt
-weather/ljubljana 2009 Tavg.txt
+"weather/flakkebjerg 2009 Tavg.txt"
+"weather/braunschweig 2009 Tavg.txt"
+"weather/geneva 2009 Tavg.txt"
+"weather/ljubljana 2009 Tavg.txt"

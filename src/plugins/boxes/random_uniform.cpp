@@ -8,8 +8,11 @@ namespace boxes {
 PUBLISH(RandomUniform)
 
 RandomUniform::RandomUniform(QString name, QObject *parent)
-    : RandomBase(name, parent), distribution(0), variate(0)
+    : RandomBase<double>(name, parent), distribution(0), variate(0)
 {
+    // Replace default bounds
+    port("minValue")->equals(0);
+    port("maxValue")->equals(1);
 }
 
 RandomUniform::~RandomUniform() {
@@ -18,8 +21,7 @@ RandomUniform::~RandomUniform() {
 }
 
 void RandomUniform::doInitialize() {
-    distribution = new Distribution(port("minValue")->value<double>(),
-                                    port("maxValue")->value<double>());
+    distribution = new Distribution(minValue, maxValue);
     variate = new Variate(*randomGenerator(), *distribution);
 }
 

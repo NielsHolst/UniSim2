@@ -49,6 +49,7 @@ private:
     Vector _trackBuffer;
     static unsigned _trackFlags;
     Attributes _attributes;
+    bool _isBlind;
     QStringList _warnings;
 
     void checkValueOverridden();
@@ -66,6 +67,7 @@ public:
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
+    Port& isBlind(bool on);
 
     // Attributes
     static QStringList attributes();
@@ -83,6 +85,7 @@ public:
     QStringList labelList() const;
     QString help() const;
     PortTransform transform() const;
+    bool isBlind() const;
 
     // Change
     void resolveImports();

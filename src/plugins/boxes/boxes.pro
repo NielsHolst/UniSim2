@@ -17,6 +17,7 @@ HEADERS +=  \
     distributed_delay_base.h \
     distributed_delay.h \
     layout_r.h \
+    maker.h \
     output_buffer.h \
     output_ports.h \
     output_r.h \
@@ -29,6 +30,7 @@ HEADERS +=  \
     random_normal.h \
     random_poisson.h \
     random_uniform.h \
+    random_uniform_int.h \
     records.h \
     sandy.h \
     scenarios.h \
@@ -46,6 +48,7 @@ SOURCES +=  \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
     layout_r.cpp \
+    maker.cpp \
     output_buffer.cpp \
     output_ports.cpp \
     output_r.cpp \
@@ -53,11 +56,11 @@ SOURCES +=  \
     page_r.cpp \
     plot_r.cpp \
     population.cpp \
-    random_base.cpp \
     random_lognormal.cpp \
     random_normal.cpp \
     random_poisson.cpp \
     random_uniform.cpp \
+    random_uniform_int.cpp \
     records.cpp \
     sandy.cpp \
     scenarios.cpp \

@@ -94,8 +94,6 @@ void Records::readLineItems() {
     pastLastLine = lineItems.isEmpty();
 }
 
-#define NamedOutput(X,Y) (*new Port(X, this)).data(& Y).access(PortAccess::Output).zeroAtReset()
-
 void Records::createColumnOutputs() {
     int n = columnNames.size();
     values.fill(0., n);

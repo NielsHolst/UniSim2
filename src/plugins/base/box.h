@@ -15,8 +15,9 @@
 
 #define RETURN_PLUGIN_NAME(x) #x
 
-#define Input(X) (*new Port(#X, this)).data(& X).access(PortAccess::Input)
-#define Output(X) (*new Port(#X, this)).data(& X).access(PortAccess::Output).zeroAtReset()
+#define Input(X) (*new base::Port(#X, this)).data(& X).access(base::PortAccess::Input)
+#define Output(X) (*new base::Port(#X, this)).data(& X).access(base::PortAccess::Output).zeroAtReset()
+#define NamedOutput(X,Y) (*new base::Port((X), this)).data(& (Y)).access(PortAccess::Output).zeroAtReset()
 
 namespace base {
 
@@ -48,6 +49,7 @@ public:
     static void restoreCurrentRoot();
 
     QString className() const;
+    QString name() const;
     QString fullName() const;
     int order() const;
     static int count();
@@ -63,6 +65,7 @@ public:
     virtual void update() {}
     virtual void cleanup() {}
     virtual void debrief() {}
+    virtual void import() {}
     virtual void run();
 
     void amendFamily();
@@ -74,6 +77,8 @@ public:
 
     void resolvePortImports();
     void updateImports();
+
+    void cloneFamily(QString name, QObject *parent);
 
     void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
 private:

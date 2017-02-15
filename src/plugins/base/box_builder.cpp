@@ -56,6 +56,7 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
         ThrowException("BoxBuilder: new port declaration out of context");
     }
     _currentPort = new Port(name, _currentBox);
+    _currentPort->isBlind(true);
     return *this;
 }
 

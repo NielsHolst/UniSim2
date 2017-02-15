@@ -18,6 +18,7 @@
     <file>data/input/awe/5-add-weed-life-stages(0).box</file>
     <file>data/input/awe/5-add-weed-life-stages.box</file>
     <file>data/input/book/demo/butterflies-common-k.box</file>
+    <file>data/input/book/demo/competition.box</file>
     <file>data/input/book/demo/insect.box</file>
     <file>data/input/book/demo/jump/end_jump3.R</file>
     <file>data/input/book/demo/jump/jump1.box</file>
@@ -26,6 +27,13 @@
     <file>data/input/book/demo/logistic/logistic1.box</file>
     <file>data/input/book/demo/logistic/logistic2.box</file>
     <file>data/input/book/demo/logistic/logistic3.box</file>
+    <file>data/input/book/demo/migration/islands-1.box</file>
+    <file>data/input/book/demo/migration/islands-2.box</file>
+    <file>data/input/book/demo/migration/islands-3-end.R</file>
+    <file>data/input/book/demo/migration/islands-3.box</file>
+    <file>data/input/book/demo/migration/islands-4-end.R</file>
+    <file>data/input/book/demo/migration/islands-4-setup.txt</file>
+    <file>data/input/book/demo/migration/islands-4.box</file>
     <file>data/input/book/foodweb/savanna-1.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
@@ -151,7 +159,6 @@
     <file>data/input/student/PestTox/weather/Pathumthani.txt</file>
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
-    <file>data/input/test5.4.box</file>
     <file>data/input/UA/2017-01-23/egg-1.box</file>
     <file>data/input/UA/2017-01-23/egg-2.box</file>
     <file>data/input/UA/2017-01-23/egg-3.box</file>

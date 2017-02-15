@@ -7,7 +7,7 @@
 
 namespace boxes {
 
-class RandomUniform : public RandomBase
+class RandomUniform : public RandomBase<double>
 {
 public: 
     RandomUniform(QString name, QObject *parent=0);

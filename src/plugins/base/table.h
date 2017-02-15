@@ -15,6 +15,7 @@ public:
     virtual void read(QString fileName, Labelling labelling) = 0;
     virtual int numRow() const = 0;
     virtual int numCol() const = 0;
+    void noNames();
     QStringList rowNames() const;
     QStringList colNames() const;
     int ixRow(QString rowName) const;
@@ -22,6 +23,7 @@ public:
 protected:
     // Data
     QMap<QString,int> _rowNames, _colNames;
+    bool _hasNames;
 private:
     // Methods
     int lookup(const QMap<QString,int> &names, QString name, QString direction) const;

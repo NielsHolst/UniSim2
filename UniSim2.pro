@@ -19,6 +19,10 @@ SUBDIRS += command
 command.subdir = src/plugins/command
 command.depends = base
 
+SUBDIRS += demo
+demo.subdir = src/plugins/demo
+demo.depends = base
+
 SUBDIRS += distribution
 distribution.subdir = src/plugins/distribution
 distribution.depends = base
@@ -54,6 +58,7 @@ unisim.subdir = src/apps/unisim
 unisim.depends = base
 unisim.depends = boxes
 unisim.depends = command
+unisim.depends = demo
 unisim.depends = distribution
 #unisim.depends = conductance
 unisim.depends = eq

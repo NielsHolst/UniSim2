@@ -4,6 +4,7 @@
 #include "environment.h"
 #include "exception.h"
 #include "general.h"
+#include "mega_factory.h"
 #include "path.h"
 #include "port.h"
 #include "timer.h"
@@ -110,6 +111,10 @@ QString Box::className() const {
     return base::className(this);
 }
 
+QString Box::name() const {
+    return _name;
+}
+
 QString Box::fullName() const {
     return base::fullName(this);
 }
@@ -202,9 +207,12 @@ void Box::enumerateBoxes(int &i) {
 }
 
 void Box::initializeFamily() {
-    _timer->reset();
-    if (!_amended)
+    if (!_amended) {
+        environment().computationStep(ComputationStep::Amend);
         amendFamily();
+        environment().computationStep(ComputationStep::Initialize);
+    }
+    _timer->reset();
     _timer->start("initialize");
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
@@ -314,6 +322,27 @@ void Box::trackPorts(Step step) {
         port->track(step);
 }
 
+void Box::cloneFamily(QString name, QObject *parent) {
+    Box *myClone = MegaFactory::create<Box>(className(), name, parent);
+    for (Port *port : findMany<Port>(".[*]")) {
+        QString name = port->objectName();
+        // For a blind port, create it in the clone
+        if (port->isBlind()) {
+            Port *blind = new Port(name, myClone);
+            blind->access(PortAccess::Input).isBlind(true);
+        }
+        // Copy either import path or value to clone
+        if (port->hasImport()) {
+            myClone->port(name)->imports(port->importPath());
+        }
+        else {
+            myClone->port(name)->equals(port->valueAsString());
+        }
+    }
+    for (Box *child : findMany<Box>("./*"))
+        child->cloneFamily(child->objectName(), myClone);
+}
+
 void Box::toText(QTextStream &text, ToTextOptions options, int indentation) const {
     if (options == ToTextOptions::None)
         options = ToTextOptions::Boxes | ToTextOptions::Ports | ToTextOptions::Help | ToTextOptions::Recurse;
@@ -322,9 +351,10 @@ void Box::toText(QTextStream &text, ToTextOptions options, int indentation) cons
     QString fill;
     fill.fill(' ', indentation);
 
+    QString postfix = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
+
     text << fill << className() << " " << objectName()
-         << "{ // " << convert<QString>(constructionStep())
-         << "\n";
+         << "{" << postfix << "\n";
 
     if (options && ToTextOptions::Ports) {
         for (Port *port : me->findMany<Port>(".[*]")) {

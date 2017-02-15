@@ -7,7 +7,7 @@
 
 namespace boxes {
 
-class RandomPoisson : public RandomBase
+class RandomPoisson : public RandomBase<int>
 {
 public: 
     RandomPoisson(QString name, QObject *parent);
@@ -17,7 +17,7 @@ private:
     // Inputs
     double mean;
     // Methods
-    double drawValue();
+    int drawValue();
     // Random number generation
     typedef boost::poisson_distribution<int, double> Distribution;
     typedef boost::variate_generator<base::RandomGenerator::Generator&, Distribution> Variate;

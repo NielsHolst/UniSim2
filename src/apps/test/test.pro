@@ -30,6 +30,7 @@ HEADERS +=  \
     test_eq.h \
     test_general_split.h \
     test_history.h \
+    test_maker.h \
     test_matrix.h \
     test_new_port.h \
     test_output_buffer.h \
@@ -39,6 +40,7 @@ HEADERS +=  \
     test_port_buffer.h \
     test_port_type.h \
     test_port.h \
+    test_random.h \
     test_savanna.h \
     test_scenarios.h \
     test_simulation.h \
@@ -70,6 +72,7 @@ SOURCES +=  \
     test_eq.cpp \
     test_general_split.cpp \
     test_history.cpp \
+    test_maker.cpp \
     test_matrix.cpp \
     test_new_port.cpp \
     test_output_buffer.cpp \
@@ -79,6 +82,7 @@ SOURCES +=  \
     test_port_buffer.cpp \
     test_port_type.cpp \
     test_port.cpp \
+    test_random.cpp \
     test_savanna.cpp \
     test_scenarios.cpp \
     test_simulation.cpp \

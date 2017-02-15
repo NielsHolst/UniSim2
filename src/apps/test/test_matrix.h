@@ -9,6 +9,7 @@ class TestMatrix : public QObject
 private slots:
     void testInt();
     void testString();
+    void testResize();
 };
 
 DECLARE_TEST(TestMatrix)

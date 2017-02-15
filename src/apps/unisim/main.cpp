@@ -11,7 +11,7 @@ void myMsgHandler(QtMsgType, const QMessageLogContext &, const QString &msg)
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(myMsgHandler);
+//    qInstallMessageHandler(myMsgHandler);
     QApplication app(argc, argv);
     app.setObjectName("application");
     new base::ObjectPool(&app);

@@ -1,0 +1,35 @@
+Simulation sim {
+	.iterations = 3
+	.steps = 10
+	RandomUniform atInitialize {
+            .drawAtInitialize = TRUE
+	}
+	RandomUniform atReset {
+            .drawAtInitialize = TRUE
+            .drawAtReset = TRUE
+        }
+	RandomUniform atUpdate {
+            .drawAtInitialize = TRUE
+            .drawAtUpdate = TRUE
+	}
+        RandomUniform atUserReset {
+            .drawAtInitialize = TRUE
+            .drawAtUserReset = TRUE
+        }
+        RandomUniform atUserUpdate {
+            .drawAtInitialize = TRUE
+            .drawAtUserUpdate = TRUE
+        }
+        Box client {
+            +a = atInitialize[value]
+            +b = atReset[value]
+            +c = atUpdate[value]
+            +d = atUserReset[value]
+            +e = atUserReset[value]
+            +f = atUserUpdate[value]
+            +g = atUserUpdate[value]
+        }
+	OutputText {
+            .ports = (client[*])
+	}
+}

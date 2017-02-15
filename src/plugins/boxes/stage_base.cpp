@@ -26,6 +26,7 @@ StageBase::StageBase(QString name, QObject *parent)
     Input(instantMortality).help("Mortality [0..100] applied before inflow is added");
     Input(instantLossRate).help("Works just like instantMortality except the scale is a ratio [0..1]");
     Input(phaseInflow).help("Sideways inflow of dimension k");
+
     Output(content).help("Total content inside the stage");
     Output(inflowTotal).help("Accumulated total inflow");
     Output(outflowTotal).help("Accumulated total outflow");

@@ -5,16 +5,20 @@
 namespace base {
 
 Table::Table(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), _hasNames(true)
 {
 }
 
+void Table::noNames() {
+    _hasNames = false;
+}
+
 QStringList Table::colNames() const {
-    return QStringList(_colNames.keys());
+    return _hasNames ? QStringList(_colNames.keys()) : QStringList();
 }
 
 QStringList Table::rowNames() const {
-    return QStringList(_rowNames.keys());
+    return _hasNames ? QStringList(_rowNames.keys()) : QStringList();
 }
 
 int Table::lookup(const QMap<QString,int> &names, QString name, QString direction) const {

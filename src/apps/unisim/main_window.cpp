@@ -25,20 +25,14 @@ void MainWindow::restore() {
     QSettings settings;
     QPoint position = settings.value("main_window_geometry/position", QPoint(W/3, H/3)).toPoint();
     QSize size = settings.value("main_window_geometry/size", QSize(W/3, H/3)).toSize();
-    // Use default if something is askew
-    if (position.isNull()|| size.isNull())
-        return;
-    // Use default if too big
-    if (size.width() > W || size.height() > H)
-        return;
-    // Move to corner if outside
-    if (position.x() + size.width() > W ||
-        position.y() + size.height() > H) {
-        position = QPoint(0,0);
+    // Use restore window if geometry is OK
+    bool badGeometry = position.isNull() || size.isNull(),
+         tooBig = size.width() > W || size.height() > H,
+         outside = position.x() + size.width() > W || position.y() + size.height() > H;
+    if (!(badGeometry || tooBig || outside)) {
+        move(position);
+        resize(size);
     }
-
-    move(position);
-    resize(size);
 }
 
 MainWindow::~MainWindow() {

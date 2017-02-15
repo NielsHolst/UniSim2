@@ -1,10 +1,10 @@
 // book/week06/butterfly.box
 Simulation sim {
-  .iterations = 4
 	.steps = 180
+	.stopIterations = scenario[atEnd]
+	.useStopIterations = TRUE
 	Scenarios scenario {
 		.fileName = "weather_files.txt"
-    .separator = "tab"
 	}
   Calendar calendar {
     .initialDateTime = 1/5/2009

@@ -13,7 +13,7 @@ Port::Port(QString name, QObject *parent, bool orphan)
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true),
       _access(PortAccess::Input), _reset(false), _hasTrack(false), _valueOverridden(false),
-      _trackBuffer(this)
+      _trackBuffer(this), _isBlind(false)
 {
     Class(Port);
     setObjectName(name);
@@ -120,6 +120,11 @@ Port& Port::transform(PortTransform tr) {
     return attribute("transform", convert<QString>(tr));
 }
 
+Port& Port::isBlind(bool on) {
+    _isBlind = on;
+    return *this;
+}
+
 // Get attributes
 
 #define CASE_GET_ATTRIBUTE(X) if (name == #X) return _attributes. X
@@ -140,6 +145,10 @@ QString Port::X() const { \
 GET_ATTRIBUTE(format)
 GET_ATTRIBUTE(label)
 GET_ATTRIBUTE(help)
+
+bool Port::isBlind() const {
+    return _isBlind;
+}
 
 QStringList Port::labelList() const {
     QStringList list;
@@ -265,6 +274,9 @@ void Port::assign(const QVector<Port*> &sources) {
         }
         _valuePtr = portBuffer(this).createBuffer(_valueType);
     }
+    // Notify sources' parents about imminent import
+    for (const Port *source : sources)
+        const_cast<Port*>(source)->boxParent()->import();
     // Assign as scalar or vector
     if (sources.size() == 1) {
         const Port *source = sources.at(0);
@@ -404,8 +416,8 @@ void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
     else{
         prefix = "//>";
     }
+    QString postfix = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
 
-    QString amended = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
     QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
     QString assignment = hasImport() ? _importPath : valueAsString();
     if (_valueType == Char || _valueType == String)
@@ -414,10 +426,8 @@ void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
     text << fill
          << prefix << objectName()
          << equalSign << assignment
-         << " // "
-         << convert<QString>(_mode)
-         << " " << convert<QString>(_portValueStep)
-         << amended
+         << postfix
+//         << " // " << convert<QString>(_portValueStep)
          << "\n";
 }
 

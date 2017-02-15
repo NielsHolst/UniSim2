@@ -78,7 +78,7 @@ void TestNewPort::testImportNewPortVectorTransformed() {
         builder.
             box("Simulation").name("sim").
                 port("steps").equals(30).
-                box("Population").name("pop1").
+                box("boxes::Population").name("pop1").
                     port("bufferSize").equals(5).
                 endbox().
                 box("OutputR").

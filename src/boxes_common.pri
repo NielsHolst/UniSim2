@@ -21,7 +21,7 @@ else {
 
 # What we are building
 CONFIG += c++11
-QT += core 
+QT += core widgets
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations

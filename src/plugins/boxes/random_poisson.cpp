@@ -8,7 +8,7 @@ namespace boxes {
 PUBLISH(RandomPoisson)
 
 RandomPoisson::RandomPoisson(QString name, QObject *parent)
-    : RandomBase(name, parent), distribution(0), variate(0)
+    : RandomBase<int>(name, parent), distribution(0), variate(0)
 {
     Input(mean).equals(10);
 }
@@ -23,7 +23,7 @@ void RandomPoisson::doInitialize() {
     variate = new Variate(*randomGenerator(), *distribution);
 }
 
-double RandomPoisson::drawValue() {
+int RandomPoisson::drawValue() {
     return (*variate)();
 }
 

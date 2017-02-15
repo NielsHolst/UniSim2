@@ -86,8 +86,8 @@ QStringList help_class::portsHelp(PortAccess access) {
             QString item;
             item = "." + port->objectName().leftJustified(_maxPortNameLength);
             QString value =  (access == PortAccess::Input) ? port->valueAsString() : "";
-            item += " " + value.rightJustified(_maxValueLength);
-            item += " " + port->help();
+            item += "|" + value.rightJustified(_maxValueLength);
+            item += "|" + port->help();
             list << item;
         }
     }

@@ -7,7 +7,7 @@
 
 namespace boxes {
 
-class RandomLognormal : public RandomBase
+class RandomLognormal : public RandomBase<double>
 {
 public: 
     RandomLognormal(QString name, QObject *parent);
