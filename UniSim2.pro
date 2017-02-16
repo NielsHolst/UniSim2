@@ -11,6 +11,10 @@ base.subdir = src/plugins/base
 #awe.subdir = src/plugins/awe
 #awe.depends = base
 
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+
 SUBDIRS += boxes
 boxes.subdir = src/plugins/boxes
 boxes.depends = base
@@ -55,6 +59,7 @@ SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
 #unisim.depends = apis
 #unisim.depends = awe
+unisim.depends = aphid
 unisim.depends = base
 unisim.depends = boxes
 unisim.depends = command
