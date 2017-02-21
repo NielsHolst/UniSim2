@@ -1,9 +1,9 @@
 // book/demo/migration/islands-2.box
 Simulation sim {
 	.iterations = 3
-	.steps = 30
+	.steps = 1
 	Maker islands {
-		.replicates = 3
+		.fileName = "islands-3-setup.txt"
 		demo::Island island {
 			.latitude = ./random/latitude[value]
 			.longitude = ./random/longitude[value]
@@ -42,19 +42,13 @@ Simulation sim {
 			} 
 		} // island
 	} // islands
-	Maker migration {
-		.names = ("fox" "rabbit")
-		demo::Migration  {
-		}
-	}
 	OutputR {
-		.end = "islands-3-end.R"
 		PageR {
 			PlotR {
 				.ports = (*[latitude] *[longitude])
 			}
 			PlotR {
-				.ports = ( *[initial] *[outflowTotal])
+				.ports = ( *[initial]*[outflowTotal])
 			}
 		}
 	}

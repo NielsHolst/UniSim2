@@ -91,7 +91,14 @@ void Maker::readDataFrame() {
 void Maker::copyPortValuesFromColumns(int row) {
     int col(0);
     for (QString path : _columnPaths) {
-        if (!path.isEmpty())  findOne<Port>(path)->equals(_df.at(row,col));
+        if (!path.isEmpty()) {
+            Port *port = findOne<Port>(path);
+            QString entry = _df.at(row,col);
+            if (base::isPath(entry))
+                port->imports(entry);
+            else
+                port->equals(entry);
+        }
         ++col;
     }
 }

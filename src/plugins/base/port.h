@@ -56,7 +56,7 @@ private:
 
 public:
     // Configure
-    Port(QString name="noname", QObject *parent=0, bool orphan=false);
+    Port(QString name="noname", QObject *parent=0);
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value);

@@ -33,7 +33,6 @@ public:
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     ComputationStep computationStep() const;
     void addPort(Port *port);
-    void addOrphanPort(Port *port);
     Port* peakPort(QString name);
     const Port* peakPort(QString name) const;
     Port* port(QString name);
@@ -95,7 +94,6 @@ private:
     // Methods
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
-    void postAmend();
     void enumerateBoxes(int &i);
     void allocatePortBuffers();
     void collectTrackedPorts();

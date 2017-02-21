@@ -21,6 +21,7 @@ QStringList split(const char *s, QObject *context = 0);
 bool isApostrophed(QString s);
 bool isParenthesized(QString s);
 QString deEmbrace(QString s);
+bool isPath(QString s);
 
 double accum(const QVector<double> &x);
 void increment(QVector<double> &x, const QVector<double> &toAdd);

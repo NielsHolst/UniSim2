@@ -29,8 +29,10 @@
     <file>data/input/book/demo/logistic/logistic3.box</file>
     <file>data/input/book/demo/migration/islands-1.box</file>
     <file>data/input/book/demo/migration/islands-2.box</file>
-    <file>data/input/book/demo/migration/islands-3-end.R</file>
+    <file>data/input/book/demo/migration/islands-3-setup.txt</file>
     <file>data/input/book/demo/migration/islands-3.box</file>
+    <file>data/input/book/demo/migration/islands-3a-end.R</file>
+    <file>data/input/book/demo/migration/islands-3a.box</file>
     <file>data/input/book/demo/migration/islands-4-end.R</file>
     <file>data/input/book/demo/migration/islands-4-setup.txt</file>
     <file>data/input/book/demo/migration/islands-4.box</file>
@@ -105,6 +107,10 @@
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/month_breaks.R</file>
     <file>data/input/scripts/profile.R</file>
+    <file>data/input/student/aphid/Aas_2016.txt</file>
+    <file>data/input/student/aphid/flakkebjerg_2009_modified.txt</file>
+    <file>data/input/student/aphid/test11.1.box</file>
+    <file>data/input/student/aphid/test11.2.box</file>
     <file>data/input/student/bmsb/bmsb(0).box</file>
     <file>data/input/student/bmsb/bmsb.box</file>
     <file>data/input/student/bmsb/bmsbNiels.box</file>

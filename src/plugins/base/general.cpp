@@ -118,6 +118,18 @@ QString deEmbrace(QString s) {
     return s.mid(1, n-2);
 }
 
+bool isPath(QString s) {
+    char first = (s.size()>0) ? s.at(0).toLatin1() : 0,
+         second = (s.size()>1) ? s.at(1).toLatin1() : 0;
+    return ('A'<=first && first<='Z') ||
+           ('a'<=first && first<='z') ||
+           ('*'==first) ||
+           ('/'==first) ||
+           ('.'==first && '.'==second) ||
+           ('.'==first && second<='0') ||
+           ('.'==first && second>='9');
+}
+
 double accum(const QVector<double> &x) {
     double sum = 0.;
     const double *p = x.data();

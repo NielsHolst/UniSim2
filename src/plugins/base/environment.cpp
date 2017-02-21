@@ -78,13 +78,14 @@ void Environment::current(Box *newCurrent) {
 ComputationStep Environment::computationStep() const {
     return _computationStep;
 }
-void Environment::computationStep(ComputationStep step) {
+void Environment::computationStep(ComputationStep step, bool showInDialog) {
     // Change step
     _computationStep = step;
     // Show step in dialog
     QString info = (step == ComputationStep::Start || step == ComputationStep::Ready) ?
                     QString() : (convert<QString>(step) + "...");
-    dialog().information(info);
+    if (showInDialog)
+        dialog().information(info);
     // Show step in status bar
     switch (step) {
     case ComputationStep::Start:

@@ -38,11 +38,6 @@ void Box::addPort(Port *port) {
     addPort(_ports, port);
 }
 
-void Box::addOrphanPort(Port *port) {
-    port->setParent(0);
-    addPort(_orphanPorts, port);
-}
-
 void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     QString name{port->objectName()};
     if (ports.contains(name))
@@ -141,29 +136,6 @@ void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
-void Box::postAmend() {
-    // Copy attributes from orphan ports to original ports
-    QMapIterator<QString, Port*> orphanIt(_orphanPorts);
-    while (orphanIt.hasNext()) {
-        orphanIt.next();
-        QString orphanName = orphanIt.key();
-        Port *orphanPort = orphanIt.value(),
-             *originalPort = peakPort(orphanName);
-        if (!originalPort)
-            ThrowException("Port not found").value(orphanName).context(this);
-        for (QString name : orphanPort->attributes()) {
-            // Only copy attribute if it has been set in the orphan port
-            bool attributeHasBeenSet = !orphanPort->attribute(name).isNull();
-            if (attributeHasBeenSet)
-                originalPort->attribute(name, orphanPort->attribute(name));
-        }
-    }
-    // Clear orphan list
-    for (Port *orphan : _orphanPorts)
-        delete orphan;
-    _orphanPorts.clear();
-}
-
 void Box::amendFamily() {
     try {
         if (_amended) return;
@@ -175,7 +147,6 @@ void Box::amendFamily() {
                 box->amendFamily();
         }
         amend();
-        postAmend();
         _count = 0;
         enumerateBoxes(_count);
         _amended = true;
@@ -208,9 +179,9 @@ void Box::enumerateBoxes(int &i) {
 
 void Box::initializeFamily() {
     if (!_amended) {
-        environment().computationStep(ComputationStep::Amend);
+        environment().computationStep(ComputationStep::Amend, false);
         amendFamily();
-        environment().computationStep(ComputationStep::Initialize);
+        environment().computationStep(ComputationStep::Initialize, false);
     }
     _timer->reset();
     _timer->start("initialize");

@@ -3,7 +3,7 @@
 #include "vector_op.h"
 
 #define CHECK_SIZE(X) \
-    if (X.size() != n) ThrowException("Vectors must be of equals size"). \
+    if (X.size() != n) ThrowException("Vectors must be of equal size"). \
                        value2(X.size()).value1(n).context(context_)
 
 namespace vector_op {

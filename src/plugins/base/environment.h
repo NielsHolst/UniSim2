@@ -29,7 +29,7 @@ public:
     void current(Box *newCurrent);
 
     ComputationStep computationStep() const;
-    void computationStep(ComputationStep step);
+    void computationStep(ComputationStep step, bool showInDialog = true);
 
     QString homePath() const;
 

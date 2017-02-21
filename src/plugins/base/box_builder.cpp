@@ -45,9 +45,7 @@ BoxBuilder& BoxBuilder::endbox() {
 BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
         ThrowException("BoxBuilder: port declaration outside of box context");
-    _currentPort = _currentBox->peakPort(name) ?
-                   _currentBox->port(name) :
-                   new Port(name, _currentBox, true);
+    _currentPort = _currentBox->port(name);
     return *this;
 }
 

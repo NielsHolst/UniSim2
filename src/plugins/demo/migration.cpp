@@ -31,13 +31,15 @@ void Migration::setupOutcomePorts() {
     int i = 0;
     for (Box *pop : populations) {
         // Create one output for emigration and one for immigration
-        QString id = pop->name() + QString::number(i);
-        NamedOutput("em_"+id, outcomes[i].em);
-        NamedOutput("im_"+id, outcomes[i].im);
+        QString runningNumber = QString::number(i),
+                emPortName = "em"+runningNumber,
+                imPortName = "im"+runningNumber;
+        NamedOutput(emPortName, outcomes[i].em);
+        NamedOutput(imPortName, outcomes[i].im);
         ++i;
         // Construct paths to just created ports
-        QString emPortPath = fullName() + "[em_"+id+"]",
-                imPortPath = fullName() + "[im_"+id+"]";
+        QString emPortPath = fullName() + "["+emPortName+"]",
+                imPortPath = fullName() + "["+imPortName+"]";
         // Hook emigration and immigration outputs to population stage inputs
         Box *popStage = pop->findOne<Box>("./*<Stage>");
         popStage->port("phaseOutflowProportion")->imports(emPortPath);
@@ -73,10 +75,13 @@ void Migration::update() {
 
 void Migration::updateEmigration() {
     for (int sender=0; sender<n; ++sender) {
-        double emigSlope = populations[sender]->port("emigrationSlope")->value<double>(),
+        double emigSlope = populations[sender]->
+                           port("emigrationSlope")->
+                           value<double>(),
                emigSum = 0;
         for (int receiver=0; receiver<n; ++receiver) {
-            double emig = (sender==receiver) ? 0 : computeEmigration( distances(sender,receiver), emigSlope );
+            double emig = (sender==receiver) ?
+                0 : computeEmigration( distances(sender,receiver), emigSlope );
             emRates(sender,receiver) = emig;
             emigSum += emig;
         }
@@ -103,7 +108,8 @@ void Migration::updateImmigration() {
         Cohorts emig = popStage->port("phaseOutflow")->value<Cohorts>();
         // Split emigrants among receiving populations
         for (int receiver=0; receiver<n; ++receiver) {
-            double proportionReceived = (outcomes[sender].em > 0.) ? emRates(sender,receiver)/outcomes[sender].em : 0.;
+            double proportionReceived = (outcomes[sender].em > 0.) ?
+                emRates(sender,receiver)/outcomes[sender].em : 0.;
             Cohorts emigReceived;
             vector_op::product(emigReceived, emig, proportionReceived);
             if (sender == 0)

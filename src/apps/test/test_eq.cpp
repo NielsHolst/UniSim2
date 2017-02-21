@@ -9,8 +9,6 @@ using namespace base;
 void TestEq::testGompertz() {
     BoxBuilder builder;
     Box *sim(0);
-    double a = 100,
-           b = 0.1;
     QVector<double> x, result, expected;
     x << 30 << 60 << 90;
     expected << 0.2762402 << 0.3705556 << 0.3924199;
@@ -19,11 +17,8 @@ void TestEq::testGompertz() {
             box("Simulation").name("sim").
                 port("steps").equals(2).
                 box("eq::Gompertz").name("gompertz").
-                    port("a").equals(a).
-                    port("b").equals(b).
                     port("x").equals(x).
                     port("dx").equals(10).
-                    port("yMax").equals(100).
                 endbox().
             endbox();
 

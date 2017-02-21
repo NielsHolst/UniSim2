@@ -8,7 +8,7 @@ namespace base {
 
 unsigned Port::_trackFlags = Reset | Update;
 
-Port::Port(QString name, QObject *parent, bool orphan)
+Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true),
@@ -18,12 +18,8 @@ Port::Port(QString name, QObject *parent, bool orphan)
     Class(Port);
     setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
-    if (boxParent) {
-        if (orphan)
-            boxParent->addOrphanPort(this);
-        else
-            boxParent->addPort(this);
-    }
+    if (boxParent)
+        boxParent->addPort(this);
 }
 
 // Configure
@@ -409,14 +405,19 @@ QStringList Port::warnings() const {
 void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
     QString fill;
     fill.fill(' ', indentation);
-    QString prefix;
-    if (access() == PortAccess::Input) {
-        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
+    QString prefix = (access() == PortAccess::Input) ? "." : "//>";
+//    if (access() == PortAccess::Input) {
+//        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
+//    }
+//    else{
+//        prefix = "//>";
+//    }
+    bool showAmended = false;
+    if (constructionStep() == ComputationStep::Amend) {
+        Box *myBox = dynamic_cast<Box*>(parent());
+        showAmended = (myBox && myBox->constructionStep() != ComputationStep::Amend);
     }
-    else{
-        prefix = "//>";
-    }
-    QString postfix = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
+    QString postfix = showAmended ? " //amended" : "";
 
     QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
     QString assignment = hasImport() ? _importPath : valueAsString();

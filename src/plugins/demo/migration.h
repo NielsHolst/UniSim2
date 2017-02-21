@@ -15,19 +15,29 @@ public:
     void update();
 private:
     // Data
-    QVector<Box*> populations;      // Populations connected by migration
-    int n;                          // Number of populations
-    base::Matrix<double> distances, // Distances between populations (nxn)
-                         emRates;   // Each row holds emigration rates from one pop to all other pops (nxn)
 
+    // Populations connected by migration
+    QVector<Box*> populations;
+    // Number of populations
+    int n;
+
+    // Distances between populations (nxn)
+    base::Matrix<double> distances,
+    // Each row holds emig. rates from one pop to other pops (nxn)
+                         emRates;
+
+    // Migration outcome for each population
     struct Outcome {
-        double em;                  // Proportion of population emigrating;
-                                    // goes to population's .phaseOutflowProportion
-        QVector<double> im;         // Immigrants to population
-                                    // goes to population's .phaseInflow
+        // Proportion of population emigrating;
+        // goes to population's .phaseOutflowProportion
+        double em;
+        // Immigrants to population;
+        // goes to population's .phaseInflow
+        QVector<double> im;
     };
 
-    QVector<Outcome> outcomes;      // One outcome for each population
+    // One outcome for each population
+    QVector<Outcome> outcomes;
 
     // Methods
     void setupOutcomePorts();
@@ -38,5 +48,4 @@ private:
 };
 
 }
-
 #endif
