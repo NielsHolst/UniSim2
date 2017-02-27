@@ -130,12 +130,12 @@ double Matrix<double>::colSum(int i) const {
 }
 
 template <class T>
-T Matrix<T>::rowSum(int i) const {
+T Matrix<T>::rowSum(int) const {
     ThrowException("Matrix<Y>:rowSum only allowed for Matrix<double>");
 }
 
 template <class T>
-T Matrix<T>::colSum(int i) const {
+T Matrix<T>::colSum(int) const {
     ThrowException("Matrix<Y>:colSum only allowed for Matrix<double>");
 }
 

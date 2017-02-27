@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=0
-set SUB=19
+set SUB=19a
 echo Building version %MAJOR%.%MINOR%.%SUB% release
 
 echo = Set path to Qt build environment =
