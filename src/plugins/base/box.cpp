@@ -315,9 +315,6 @@ void Box::cloneFamily(QString name, QObject *parent) {
 }
 
 void Box::toText(QTextStream &text, ToTextOptions options, int indentation) const {
-    if (options == ToTextOptions::None)
-        options = ToTextOptions::Boxes | ToTextOptions::Ports | ToTextOptions::Help | ToTextOptions::Recurse;
-
     Box *me = const_cast<Box*>(this);
     QString fill;
     fill.fill(' ', indentation);
@@ -327,21 +324,20 @@ void Box::toText(QTextStream &text, ToTextOptions options, int indentation) cons
     text << fill << className() << " " << objectName()
          << "{" << postfix << "\n";
 
-    if (options && ToTextOptions::Ports) {
-        for (Port *port : me->findMany<Port>(".[*]")) {
-            if (port->access() == PortAccess::Input)
-                port->toText(text, Port::ToTextOptions::None, indentation+2);
-        }
+    for (Port *port : me->findMany<Port>(".[*]")) {
+        if (port->access() == PortAccess::Input)
+            port->toText(text, Port::ToTextOptions::None, indentation+2);
+    }
+
+    if (options != ToTextOptions::InputsOnly) {
         for (Port *port : me->findMany<Port>(".[*]")) {
             if (port->access() == PortAccess::Output)
                 port->toText(text, Port::ToTextOptions::None, indentation+2);
         }
     }
 
-    if (options && ToTextOptions::Recurse) {
-        for (Box *box : me->findMany<Box>("./*")) {
-            box->toText(text, options, indentation+2);
-        }
+    for (Box *box : me->findMany<Box>("./*")) {
+        box->toText(text, options, indentation+2);
     }
     text << fill << "}\n";
 }

@@ -18,6 +18,7 @@ public:
     void noNames();
     QStringList rowNames() const;
     QStringList colNames() const;
+    void setNames(QStringList rowNames, QStringList colNames);
     int ixRow(QString rowName) const;
     int ixCol(QString colName) const;
 protected:

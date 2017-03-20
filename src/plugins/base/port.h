@@ -87,6 +87,9 @@ public:
     PortTransform transform() const;
     bool isBlind() const;
 
+    QString name() const;
+    QString fullName() const;
+
     // Change
     void resolveImports();
     void allocatePortBuffer();

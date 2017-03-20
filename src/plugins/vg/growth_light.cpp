@@ -74,7 +74,7 @@ void GrowthLight::reset() {
     netAttributes.shortWaveEmission = attributes.shortWaveCoef*netCapacity;
     netAttributes.parEmission = attributes.parCoef*netCapacity;
     netAttributes.energyFlux = ballastCorrection*intensity;
-    degradationRate = log(0.9)/lifeTime;
+    degradationRate = (lifeTime>0) ? log(0.9)/lifeTime : 0.;
     currentPeriod = 0.;
     totalPeriod = age;
     noLight();

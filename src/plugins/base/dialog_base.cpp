@@ -1,4 +1,6 @@
+#include<QTextEdit>
 #include "dialog_base.h"
+#include "exception.h"
 
 namespace base {
 
@@ -9,11 +11,16 @@ DialogBase& dialog() {
     return *DialogBase::_dialog;
 }
 
-DialogBase::DialogBase(QWidget *parent)
-    : QTextEdit(parent),
+DialogBase::DialogBase(QObject *parent)
+    : QObject(parent),
       _errorCount(0)
 {
     _dialog = this;
+}
+
+QTextEdit* DialogBase::textEdit() {
+    ThrowException("Dialog has no TextEdit widget");
+    return 0;
 }
 
 void DialogBase::error(QString s) {

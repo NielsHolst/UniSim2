@@ -16,5 +16,12 @@ RandomGenerator::Generator* randomGenerator() {
     }
     return &(RandomGenerator::theRandomGenerator->generator);
 }
+void seedRandomGenerator(int seed) {
+    static bool seeded = false;
+    if (!seeded) {
+        randomGenerator()->seed(seed);
+        seeded = true;
+    }
+}
 
 } // namespace

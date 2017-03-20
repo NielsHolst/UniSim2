@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double length, height, number, porosity;
+    double length, height, number, porosity, maxOpening;
     // Outputs
     double effectiveArea;
 };

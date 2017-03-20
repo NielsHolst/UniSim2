@@ -8,7 +8,7 @@ namespace base {
 class DialogStub : public DialogBase
 {
 public:
-    DialogStub(QWidget *parent);
+    DialogStub(QObject *parent);
     void progress(int current, int total);
     void finished();
     void message(QString s);

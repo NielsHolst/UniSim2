@@ -12,9 +12,15 @@
 namespace base {
 
 BoxBuilder::BoxBuilder()
-    : _content(0), _currentBox(0), _currentPort(0)
+    : _content(0), _currentBox(0), _currentPort(0), _currentDistribution(0)
 {
     environment().computationStep(ComputationStep::Construct);
+}
+
+BoxBuilder& BoxBuilder::box(Box *box) {
+    box->setParent(_currentBox);
+    _currentPort = 0;
+    return *this;
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
@@ -39,6 +45,7 @@ BoxBuilder& BoxBuilder::endbox() {
         ThrowException("BoxBuilder: box body ended twice");
     _currentBox = _stack.pop();
     _currentPort = 0;
+    _currentDistribution = 0;
     return *this;
 }
 
@@ -46,6 +53,7 @@ BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
         ThrowException("BoxBuilder: port declaration outside of box context");
     _currentPort = _currentBox->port(name);
+    _currentDistribution = 0;
     return *this;
 }
 
@@ -55,13 +63,44 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
     }
     _currentPort = new Port(name, _currentBox);
     _currentPort->isBlind(true);
+    _currentDistribution = 0;
     return *this;
 }
+
+BoxBuilder& BoxBuilder::rnd(QString value) {
+    if (!_currentPort)
+        ThrowException("BoxBuilder: rnd declaration out of context");
+    value = value.simplified();
+    QStringList items = value.split(" ", QString::SkipEmptyParts);
+    if (items.empty())
+        ThrowException("Missing distribution parameters").context(_currentPort);
+
+    QString className = items.first();
+    items.removeFirst();
+
+    _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort->boxParent());
+    _currentDistribution->arguments(items);
+
+    return *this;
+}
+
+#define BUILD_DISTRIBUTION(X) \
+BoxBuilder& BoxBuilder::X(double value) { \
+    _currentDistribution->X(value); \
+    return *this; \
+}
+BUILD_DISTRIBUTION(mean)
+BUILD_DISTRIBUTION(sd)
+BUILD_DISTRIBUTION(min)
+BUILD_DISTRIBUTION(max)
+BUILD_DISTRIBUTION(lowerQuantile)
+BUILD_DISTRIBUTION(upperQuantile)
 
 BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
         ThrowException("BoxBuilder: import out of context");
     _currentPort->imports(pathToPort);
+    _currentDistribution = 0;
     return *this;
 }
 
@@ -94,7 +133,7 @@ BoxBuilder& BoxBuilder::transform(PortTransform value) {
 
 // Set value
 
-BoxBuilder& BoxBuilder::equals(QString value) {
+BoxBuilder& BoxBuilder::equals(QString value, bool ignore) {
 //    // Handle a parenthesized string as a string vector
 //    if (isParenthesized(value))
 //        return equals( base::split(deEmbrace(value)).toVector() );
@@ -102,23 +141,8 @@ BoxBuilder& BoxBuilder::equals(QString value) {
     BOXBUILDER_EQUALS;
 }
 
-BoxBuilder& BoxBuilder::equals(const char *value) {
+BoxBuilder& BoxBuilder::equals(const char *value, bool) {
     return equals(QString(value));
-}
-
-BoxBuilder& BoxBuilder::distribution(QString value) {
-    value = value.simplified();
-    QStringList items = value.split(" ", QString::SkipEmptyParts);
-    if (items.empty())
-        ThrowException("Missing distribution parameters").context(_currentPort);
-
-    QString className = items.first();
-    items.removeFirst();
-
-    Distribution *dist= MegaFactory::create<Distribution>(className, className, _currentPort);
-    dist->arguments(items);
-
-    return *this;
 }
 
 // State

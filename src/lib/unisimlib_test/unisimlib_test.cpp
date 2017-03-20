@@ -71,7 +71,7 @@ void copyToSequence(const QVector<int> *values) {
 void runJump(Box *sim) {
     sim->run();
 
-    Port *value = sim->resolveOne<Port>("jump[value]");
+    Port *value = sim->findOne<Port>("jump[value]");
     const Vector* vector = value->trackPtr();
     Q_ASSERT(vector);
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());

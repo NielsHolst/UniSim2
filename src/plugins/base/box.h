@@ -15,8 +15,10 @@
 
 #define RETURN_PLUGIN_NAME(x) #x
 
-#define Input(X) (*new base::Port(#X, this)).data(& X).access(base::PortAccess::Input)
+#define Input(X)  (*new base::Port(#X, this)).data(& X).access(base::PortAccess::Input)
 #define Output(X) (*new base::Port(#X, this)).data(& X).access(base::PortAccess::Output).zeroAtReset()
+
+#define NamedInput(X,Y)  (*new base::Port((X), this)).data(& (Y)).access(base::PortAccess::Input)
 #define NamedOutput(X,Y) (*new base::Port((X), this)).data(& (Y)).access(PortAccess::Output).zeroAtReset()
 
 namespace base {
@@ -27,7 +29,7 @@ class Timer;
 class Box : public QObject, public ConstructionStep
 {
 public:
-    enum class ToTextOptions{None=0, Boxes=1, Ports=2, ChangedPorts=4, Help=8, Recurse=16};
+    enum class ToTextOptions{None=0, InputsOnly=1};
     Box(QString name, QObject *parent);
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }

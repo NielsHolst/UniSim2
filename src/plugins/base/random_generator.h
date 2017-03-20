@@ -17,6 +17,7 @@ private:
 };
 
 RandomGenerator::Generator* randomGenerator();
+void seedRandomGenerator(int seed);
 
 } //namespace
 #endif

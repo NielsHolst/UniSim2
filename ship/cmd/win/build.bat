@@ -2,8 +2,9 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=0
-set SUB=19a
-echo Building version %MAJOR%.%MINOR%.%SUB% release
+set SUB=20
+set VERSION=release
+echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
 echo = Set path to Qt build environment =
 set QTENV="C:\Qt\5.7\mingw53_32\bin\qtenv2.bat"
@@ -52,10 +53,10 @@ popd
 echo = Update Qt resources =
 call update-qt-resources.bat 
 if errorlevel 1 goto :end_fail
-..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% release
+..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% %VERSION%
 
 echo = Update Qt project  =
-..\bin\update-qt-project release
+..\bin\update-qt-project %VERSION%
 if errorlevel 1 goto :end_fail
 
 echo = Build Universal Simulator =

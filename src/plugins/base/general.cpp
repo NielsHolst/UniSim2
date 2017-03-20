@@ -41,7 +41,7 @@ bool hasClassName(const QObject *object) {
 
 QString fullName(const QObject *object) {
     if (!object) return "NULL";
-    QString name = object->objectName().isEmpty() ? "unnamed" : object->objectName(),
+    QString name = object->objectName().isEmpty() ? "*" : object->objectName(),
             s = (className(object) == "Port") ? ("[" + name + "]") : ("/" + name);
 
     const QObject *parent = object->parent();

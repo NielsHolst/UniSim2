@@ -2,8 +2,9 @@
 #include <QFontDatabase>
 #include <QTextCharFormat>
 #include <QTextCursor>
+#include <QTextEdit>
 #include <base/command_help.h>
-#include <base/dialog.h>
+#include <base/dialog_base.h>
 #include <base/publish.h>
 #include "clear.h"
 
@@ -20,17 +21,17 @@ clear::clear(QString name, QObject *parent)
 }
 
 void clear::doExecute() {
-    QTextCursor cursor = dialog().textCursor();
+    QTextCursor cursor = dialog().textEdit()->textCursor();
     QTextCharFormat format = cursor.charFormat();
     QFont font = format.font();
     QString family = font.family();
     int pt = font.pointSize();
 
-    dialog().clear();
+    dialog().textEdit()->clear();
 
     format.setFont(QFontDatabase().font(family, QString(), pt));
     cursor.setCharFormat(format);
-    dialog().setTextCursor(cursor);
+    dialog().textEdit()->setTextCursor(cursor);
 }
 
 }

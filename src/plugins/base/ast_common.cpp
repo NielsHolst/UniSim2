@@ -100,7 +100,7 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
     else
         builder.imports(val);
     if (!dist.isNull())
-        builder.distribution(dist);
+        builder.rnd(dist);
 }
 
 void Node::clear() {

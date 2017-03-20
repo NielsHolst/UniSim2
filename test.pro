@@ -15,6 +15,10 @@ SUBDIRS += distribution
 distribution.subdir = src/plugins/distribution
 distribution.depends = base
 
+SUBDIRS += demo
+demo.subdir = src/plugins/demo
+demo.depends = base
+
 SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
@@ -41,6 +45,7 @@ test.depends = base
 test.depends = boxes
 test.depends = command
 test.depends = distribution
+test.depends = demo
 test.depends = eq
 test.depends = savanna
 test.depends = student

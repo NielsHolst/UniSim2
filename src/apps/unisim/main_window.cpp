@@ -9,7 +9,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setCentralWidget( _dialog = new base::Dialog(this) );
+    _dialog = new base::Dialog(this);
+    setCentralWidget(_dialog->textEdit());
     setWindowTitle("Universal Simulator " + base::version());
     restore();
 }

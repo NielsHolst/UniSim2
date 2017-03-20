@@ -16,6 +16,7 @@ class Scenarios : public base::Box
 public:
     Scenarios(QString name, QObject *parent);
     void amend();
+    void initialize();
     void reset();
 
 private:

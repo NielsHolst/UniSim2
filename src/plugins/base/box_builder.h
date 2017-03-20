@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QStack>
 #include <QString>
+#include "distribution.h"
 #include "exception.h"
 #include "port.h"
 #include "port_transform.h"
@@ -17,6 +18,7 @@ class BoxBuilder
 public:
     BoxBuilder();
     // Box
+    BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
     BoxBuilder& name(QString boxName);
     BoxBuilder& endbox();
@@ -25,6 +27,14 @@ public:
     BoxBuilder& newPort(QString name);
     BoxBuilder& imports(QString pathToPort);
     BoxBuilder& track();
+    // Distribution
+    BoxBuilder& rnd(QString name);
+    BoxBuilder& mean(double value);
+    BoxBuilder& sd(double value);
+    BoxBuilder& min(double value);
+    BoxBuilder& max(double value);
+    BoxBuilder& lowerQuantile(double value);
+    BoxBuilder& upperQuantile(double value);
     // Attributes by name
     BoxBuilder& attribute(QString name, QString value);
     // Attributes direct
@@ -34,18 +44,19 @@ public:
     BoxBuilder& transform(PortTransform value);
     // Set value
     template <class T> BoxBuilder& data(T *value);
-    template <class T> BoxBuilder& equals(T value);
-    BoxBuilder& equals(QString value);
-    BoxBuilder& equals(const char *value);
-    BoxBuilder& distribution(QString value);
+    template <class T> BoxBuilder& equals(T value, bool ignore=false);
+    BoxBuilder& equals(QString value, bool ignore=false);
+    BoxBuilder& equals(const char *value, bool ignore=false);
     // State
     const Box* currentBox() const;
     const Port* currentPort() const;
+    const Distribution* currentDistribution() const;
     Box* content();
 private:
     // Data
     Box *_content, *_currentBox;
     Port *_currentPort;
+    Distribution *_currentDistribution;
     QStack<Box*> _stack;
 };
 
@@ -57,12 +68,12 @@ template <class T> BoxBuilder& BoxBuilder::data(T *valuePtr) {
 }
 
 #define BOXBUILDER_EQUALS \
-    if (!_currentPort) \
+    if (!ignore && !_currentPort) \
         ThrowException("BoxBuilder: 'equals' must follow 'port'"); \
     _currentPort->equals(value); \
     return *this
 
-template <class T> BoxBuilder& BoxBuilder::equals(T value) {
+template <class T> BoxBuilder& BoxBuilder::equals(T value, bool ignore) {
     BOXBUILDER_EQUALS;
 }
 

@@ -38,6 +38,7 @@ Vent::Vent(QString name, QObject *parent)
     Input(height).equals(0.8);
     Input(number).equals(10);
     Input(porosity).equals(1.);
+    Input(maxOpening).equals(180.).help("Max. opening degrees [0;180]");
     Output(effectiveArea);
 }
 

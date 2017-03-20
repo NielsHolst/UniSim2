@@ -48,11 +48,11 @@ void set_folder::showAllFolders() {
         "\nOutput folder:\n  " +
         environment().folderInfo(Environment::Output) +
         "\nAtom editor folder:\n  " +
-        environment().folderInfo(Environment::Atom) +
-        "\nNotepad++ editor folder:\n  " +
-        environment().folderInfo(Environment::Notepad);
-//        "\nGraphviz folder (experimental):\n  " +
-//        environment().folderInfo(Environment::Graphviz);
+        environment().folderInfo(Environment::Atom);
+        if (environment().isWindows()) {
+            "\nNotepad++ editor folder:\n  " +
+            environment().folderInfo(Environment::Notepad);
+        }
     dialog().information(info);
 }
 

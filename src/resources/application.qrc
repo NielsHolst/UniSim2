@@ -33,6 +33,7 @@
     <file>data/input/book/demo/migration/islands-4-end.R</file>
     <file>data/input/book/demo/migration/islands-4-setup.txt</file>
     <file>data/input/book/demo/migration/islands-4.box</file>
+    <file>data/input/book/demo/predation/apparancy-matrix.txt</file>
     <file>data/input/book/foodweb/savanna-1.box</file>
     <file>data/input/book/weather/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
@@ -74,6 +75,7 @@
     <file>data/input/book/week06/weather_files.txt</file>
     <file>data/input/conductance/cabbage-nightshade.box</file>
     <file>data/input/conductance/carrot-stellaria.box</file>
+    <file>data/input/eggsequence.box</file>
     <file>data/input/lunch/flakkebjerg.txt</file>
     <file>data/input/lunch/geneva.txt</file>
     <file>data/input/lunch/ipm0.box</file>

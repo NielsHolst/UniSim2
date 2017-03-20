@@ -2,19 +2,22 @@
 #define BASE_DIALOG_BASE_H
 
 #include <QFont>
-#include <QTextEdit>
+#include <QObject>
 #include <QString>
+
+class QTextEdit;
 
 namespace base {
 
-class DialogBase : public QTextEdit
+class DialogBase : public QObject
 {
 public:
-    DialogBase(QWidget *parent);
+    DialogBase(QObject *parent);
     virtual void progress(int current, int total) = 0;
     virtual void finished() = 0;
     virtual void message(QString s) = 0;
     virtual void information(QString s) = 0;
+    virtual QTextEdit* textEdit();
     virtual void setFont(QString, int) {}
     virtual QFont font() { return QFont(); }
     void error(QString s);

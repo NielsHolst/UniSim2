@@ -16,9 +16,6 @@ int main(int argc, char *argv[])
     app.setObjectName("application");
     new base::ObjectPool(&app);
 
-//    std::unique_ptr<QObject> poolOwner(new QObject);
-//    new base::ObjectPool(poolOwner.get());
-
     MainWindow window;
     window.show();
     return app.exec();

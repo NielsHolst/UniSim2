@@ -1,4 +1,5 @@
 #include <QMapIterator>
+#include <QVector>
 #include "exception.h"
 #include "table.h"
 
@@ -19,6 +20,19 @@ QStringList Table::colNames() const {
 
 QStringList Table::rowNames() const {
     return _hasNames ? QStringList(_rowNames.keys()) : QStringList();
+}
+
+void Table::setNames(QStringList rowNames, QStringList colNames) {
+    int i;
+    _rowNames.clear();
+    _colNames.clear();
+
+    i = 0;
+    for (QString name : rowNames.toVector())  _rowNames[name] = i++;
+    i = 0;
+    for (QString name : colNames.toVector())  _colNames[name] = i++;
+
+    _hasNames = true;
 }
 
 int Table::lookup(const QMap<QString,int> &names, QString name, QString direction) const {

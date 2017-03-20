@@ -31,6 +31,11 @@ Simulation::Simulation(QString name, QObject *parent)
     Output(errorMsg);
 }
 
+Simulation::~Simulation() {
+    if (environment().root() == this)
+        environment().root(0);
+}
+
 void Simulation::amend() {
 //    if (iterations > 1)
         port("iteration")->track();

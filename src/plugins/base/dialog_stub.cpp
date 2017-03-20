@@ -3,7 +3,7 @@
 
 namespace base {
 
-DialogStub::DialogStub(QWidget *parent)
+DialogStub::DialogStub(QObject *parent)
     : DialogBase(parent)
 {
 }

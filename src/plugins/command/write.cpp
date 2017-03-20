@@ -1,9 +1,10 @@
 #include <QDesktopServices>
 #include <QFile>
+#include <QUrl>
 #include <QTextStream>
-#include "base/box.h"
+#include <base/box.h>
 #include <base/command_help.h>
-#include <base/dialog.h>
+#include <base/dialog_base.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/general.h>

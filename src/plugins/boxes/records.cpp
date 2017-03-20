@@ -22,7 +22,7 @@ Records::Records(QString name, QObject *parent)
     Input(fileName).equals("records.txt");
     Input(dateColumnName).equals("Date");
     Input(timeColumnName).equals("Time");
-    Input(calendarDateTime).imports("calendar[dateTime]");
+    Input(calendarDateTime).imports("*<Calendar>[dateTime]");
 
     Output(currentDateTime);
     Output(nextDateTime);

@@ -41,7 +41,9 @@ HEADERS +=  \
     data_grid.h \
     dialog.h \
     dialog_base.h \
+    dialog_quiet.h \
     dialog_stub.h \
+    dialog_widget.h \
     distribution.h \
     enum_functions.h \
     environment.h \
@@ -103,7 +105,9 @@ SOURCES +=  \
     data_grid.cpp \
     dialog.cpp \
     dialog_base.cpp \
+    dialog_quiet.cpp \
     dialog_stub.cpp \
+    dialog_widget.cpp \
     distribution.cpp \
     environment.cpp \
     exception.cpp \

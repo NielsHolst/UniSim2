@@ -121,6 +121,15 @@ Port& Port::isBlind(bool on) {
     return *this;
 }
 
+QString Port::name() const {
+    return objectName();
+}
+
+QString Port::fullName() const {
+    QString path = parent() ? base::fullName(parent()) : QString();
+    return path + "[" + name() + "]";
+}
+
 // Get attributes
 
 #define CASE_GET_ATTRIBUTE(X) if (name == #X) return _attributes. X

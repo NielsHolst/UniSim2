@@ -23,6 +23,19 @@ void Scenarios::amend() {
     copyValues();
 }
 
+void Scenarios::initialize() {
+    // Set simulation to stop after last scenario
+    Box *sim = findMaybeOne<Box>("/*<Simulation>");
+    if (sim) {
+        Port *useStopIterations = sim->port("useStopIterations"),
+             *stopIterations = sim->port("stopIterations");
+        if (!useStopIterations->value<bool>()) {
+            useStopIterations->equals(true);
+            stopIterations->imports(fullName() + "[atEnd]");
+        }
+    }
+}
+
 void Scenarios::readDataFrame() {
     _df.read(fileName, DataFrame::ColumnLabelled);
     if (_df.numRow() == 0)

@@ -3,6 +3,7 @@
 #include <limits>
 #include <base/box.h>
 #include <base/environment.h>
+#include <base/random_generator.h>
 
 namespace boxes {
 
@@ -18,6 +19,7 @@ public:
 protected:
     // Inputs
     T minValue, maxValue;
+    int seedValue;
 private:
     int maxTries;
     bool drawAtInitialize, drawAtUserInitialize,
@@ -36,6 +38,7 @@ RandomBase<T>::RandomBase(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(RandomBase);
+    Input(seedValue).help("Seed value; if this is zero a random seed value will be used");
     Input(minValue).equals(-std::numeric_limits<T>::lowest()).help("Minimum value (included), maybe imposed on underlying distribution");
     Input(maxValue).equals(std::numeric_limits<T>::max()).help("Maximum value (excluded), maybe imposed on underlying distribution");
     Input(maxTries).equals(100).help("The maximum number of draws to fall inside lowerBund and upperBound");
@@ -50,6 +53,8 @@ RandomBase<T>::RandomBase(QString name, QObject *parent)
 
 template <class T>
 void RandomBase<T>::initialize() {
+    int value = (seedValue==0) ? (int) std::time(0) : seedValue;
+    base::seedRandomGenerator(value);
     doInitialize();
     if (drawAtInitialize) nextValue();
 }

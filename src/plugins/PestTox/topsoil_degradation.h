@@ -18,7 +18,7 @@ public:
 
 private:
     // Input
-    double inflow, DT50, ff, Q, Tsoil, Rainfall, threshold, timeSinceLastRainEvent,
+    double inflow, DT50, ff, Q, Tsoil, Rainfall, threshold, //timeSinceLastRainEvent,
     Vrsmc, rf, fw, Sp, Doseldw, ksv, frsa, frsw, fsr, fmp;
 
     // Output
