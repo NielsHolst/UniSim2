@@ -25,7 +25,7 @@
 2. In Chrome go to Github and copy clone path.
  
 3. In Terminal: 
-- go to ~/qdev
+- go to ~/dev
 - type >git clone <paste clone path>
 
 4. Edit ~/qdev/UniSim2/ship/cmd/osx/build.sh.

@@ -1,4 +1,5 @@
 #include <QTextStream>
+#include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/publish.h>
@@ -73,7 +74,7 @@ QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
     s << functionName() << " <- function(df, ...) {\n";
-    if (_popUp) {
+    if (_popUp && !environment().isMac()) {
       s << "  open_graph("
         << port("width")->value<int>()
         << ", "
