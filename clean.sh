@@ -1,10 +1,7 @@
-rm -r *.o
-rm -r object_script.*.*
-rm -r Makefile.o
-rm -r UniversalSimulator*-installer.exe
-rm -r debug
-rm -r release
-rm -r ../build-*-Desktop*
-rm -r output
+find . -name '*.o' -delete
 rm -r bin
-rm -r ship/bin
+find . -name 'object_script.*.*' -delete
+find . -name 'Makefile' -delete
+find . -name 'UniversalSimulator*-installer.exe' -delete
+find . -name ‘moc_*.*’ -delete
+find . -name ‘Makefile’ -delete

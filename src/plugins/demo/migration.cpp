@@ -52,6 +52,7 @@ void Migration::reset() {
     dialog().information("distances=\n" + distances.toString());
     updateEmigration();
     dialog().information("rates=\n" + emRates.toString());
+    updateImmigration();
 }
 
 void Migration::setupDistances() {

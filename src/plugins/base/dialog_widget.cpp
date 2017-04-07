@@ -306,9 +306,11 @@ void DialogWidget::writeWelcome() {
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
 
     QString latestFile = environment().latestLoadArg();
-    if (!latestFile.isEmpty())
-        info += "\nYour latest file was '" + latestFile + "'";
-    _history.add("load \"" + latestFile + "\"");
+    if (latestFile.contains(" "))
+        latestFile = "\"" + latestFile + "\"";
+    if (latestFile.length() > 2)
+        info += "\nYour latest file was " + latestFile;
+    _history.add("load " + latestFile);
     information(info);
 
     environment().computationStep(ComputationStep::Ready);

@@ -39,9 +39,9 @@ RandomBase<T>::RandomBase(QString name, QObject *parent)
 {
     Class(RandomBase);
     Input(seedValue).help("Seed value; if this is zero a random seed value will be used");
-    Input(minValue).equals(-std::numeric_limits<T>::lowest()).help("Minimum value (included), maybe imposed on underlying distribution");
+    Input(minValue).equals(std::numeric_limits<T>::lowest()).help("Minimum value (included), maybe imposed on underlying distribution");
     Input(maxValue).equals(std::numeric_limits<T>::max()).help("Maximum value (excluded), maybe imposed on underlying distribution");
-    Input(maxTries).equals(100).help("The maximum number of draws to fall inside lowerBund and upperBound");
+    Input(maxTries).equals(100).help("The maximum number of draws to make to fall inside lowerBund and upperBound");
     Input(drawAtInitialize).equals(false).help("Draw a value when this box is initialized?");
     Input(drawAtUserInitialize).equals(false).help("Draw a value when a user of this box is initialized?");
     Input(drawAtReset).equals(false).help("Draw a value when this box is reset?");

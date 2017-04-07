@@ -80,6 +80,7 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
 
     _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort->boxParent());
     _currentDistribution->arguments(items);
+    _currentDistribution->port(_currentPort);
 
     return *this;
 }

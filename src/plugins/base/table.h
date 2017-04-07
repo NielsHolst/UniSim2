@@ -24,7 +24,6 @@ public:
 protected:
     // Data
     QMap<QString,int> _rowNames, _colNames;
-    bool _hasNames;
 private:
     // Methods
     int lookup(const QMap<QString,int> &names, QString name, QString direction) const;

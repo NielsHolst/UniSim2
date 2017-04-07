@@ -6,20 +6,21 @@
 namespace base {
 
 Table::Table(QObject *parent)
-    : QObject(parent), _hasNames(true)
+    : QObject(parent)
 {
 }
 
 void Table::noNames() {
-    _hasNames = false;
+    _rowNames.clear();
+    _colNames.clear();
 }
 
 QStringList Table::colNames() const {
-    return _hasNames ? QStringList(_colNames.keys()) : QStringList();
+    return QStringList(_colNames.keys());
 }
 
 QStringList Table::rowNames() const {
-    return _hasNames ? QStringList(_rowNames.keys()) : QStringList();
+    return QStringList(_rowNames.keys());
 }
 
 void Table::setNames(QStringList rowNames, QStringList colNames) {
@@ -31,8 +32,6 @@ void Table::setNames(QStringList rowNames, QStringList colNames) {
     for (QString name : rowNames.toVector())  _rowNames[name] = i++;
     i = 0;
     for (QString name : colNames.toVector())  _colNames[name] = i++;
-
-    _hasNames = true;
 }
 
 int Table::lookup(const QMap<QString,int> &names, QString name, QString direction) const {
@@ -46,7 +45,7 @@ int Table::lookup(const QMap<QString,int> &names, QString name, QString directio
 int Table::ixRow(QString rowName) const {
     if (_rowNames.isEmpty())
         ThrowException("Table has no row names");
-    return lookup(_rowNames, rowName, "ow");
+    return lookup(_rowNames, rowName, "row");
 }
 
 int Table::ixCol(QString colName) const {

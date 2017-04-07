@@ -45,6 +45,14 @@ void Distribution::arguments(QStringList args) {
     parseArguments();
 }
 
+void Distribution::port(Port *port_) {
+    _port = port_;
+}
+
+Port* Distribution::port() {
+    return _port;
+}
+
 void Distribution::parseNext(double *value) {
     if (_ixNext < _args.size())
         *value = convert<double>(_args.at(_ixNext++));

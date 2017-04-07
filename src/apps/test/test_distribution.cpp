@@ -111,3 +111,15 @@ void TestDistribution::testBuilder() {
     delete sim;
 }
 
+void TestDistribution::testMonteCarlo() {
+    Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", 0);
+    Box *sa;
+    try {
+        sa = environment().root()->findOne<Box>("/sim/sa");
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable(ex.what()));
+    }
+    QCOMPARE(sa->port("inputsAnalysed")->value<int>(), 2);
+    QCOMPARE(sa->port("inputsTotal")->value<int>(), 6+4+1); // StageBase + Stage + TextOutput
+}

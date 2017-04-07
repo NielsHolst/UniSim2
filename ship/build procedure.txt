@@ -13,9 +13,8 @@
 4. Update ecolmod.org/download.html.
 
 5. In Bash:
-> git push origin master
 > git tag 2.0.n
-> push_tag.sh 2.0.n
+> git push origin master --tags
 
 (B) Mac OS X
 ============
@@ -33,6 +32,10 @@
 - Launch build.sh.
 
 5. Open InstallBuilder and build the installer.
+
+6. Optionally, test debug build i QtCreator:
+- run clean.sh
+- open UniSim2.pro in QtCreator and build.
 
 6. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb). The installer is a zip file.
 

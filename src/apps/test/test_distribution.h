@@ -8,6 +8,7 @@ class TestDistribution : public QObject
 private slots:
     void testLoad();
     void testBuilder();
+    void testMonteCarlo();
 };
 
 DECLARE_TEST(TestDistribution)

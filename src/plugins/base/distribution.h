@@ -6,6 +6,8 @@
 
 namespace base {
 
+class Port;
+
 class Distribution : public QObject
 {
 public:
@@ -19,6 +21,8 @@ public:
     virtual void lowerQuantile(double value);
     virtual void upperQuantile(double value);
     virtual double draw() = 0;
+    void port(Port *port_);
+    Port* port();
 protected:
     void parseNext(double *value);
     bool _isFirstDraw;
@@ -27,7 +31,7 @@ private:
     void unavailable(QString method, double value);
     QStringList _args;
     int _ixNext;
-//    virtual double computeLevel(int levelNumber, int noOfLevels) const = 0;
+    Port *_port;
 };
 
 }

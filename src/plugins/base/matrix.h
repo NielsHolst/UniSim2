@@ -50,13 +50,14 @@ Matrix<T>::Matrix(QObject *parent)
 template <class T>
 void Matrix<T>::read(QString fileName, Labelling labelling) {
     _df->read(fileName, labelling);
+    _nrow = _df->numRow();
+    _ncol = _df->numCol();
+
     _rowsTyped.clear();
-    for (int i=0; i<numRow(); ++i) {
+    for (int i=0; i<_nrow; ++i) {
         QStringList items = QStringList( _df->row<QString>(i).toList() );
         _rowsTyped << convert<T, QVector>(items);
     }
-    _nrow = _df->numRow();
-    _ncol = _df->numCol();
 }
 
 template <class T>
@@ -117,27 +118,27 @@ QVector<QVector<T>> Matrix<T>::rows() const {
     return _rowsTyped;
 }
 
-template <>
-double Matrix<double>::rowSum(int i) const {
-    QVector<double> v = row(i);
-    return vector_op::sum(v);
-}
-
-template <>
-double Matrix<double>::colSum(int i) const {
-    QVector<double> v = col(i);
+template <class T>
+T Matrix<T>::rowSum(int i) const {
+    QVector<T> v = row(i);
     return vector_op::sum(v);
 }
 
 template <class T>
-T Matrix<T>::rowSum(int) const {
-    ThrowException("Matrix<Y>:rowSum only allowed for Matrix<double>");
+T Matrix<T>::colSum(int i) const {
+    QVector<T> v = col(i);
+    return vector_op::sum(v);
 }
 
-template <class T>
-T Matrix<T>::colSum(int) const {
-    ThrowException("Matrix<Y>:colSum only allowed for Matrix<double>");
-}
+//template <class T>
+//T Matrix<T>::rowSum(int) const {
+//    ThrowException("Matrix<Y>:rowSum only allowed for Matrix<double>");
+//}
+
+//template <class T>
+//T Matrix<T>::colSum(int) const {
+//    ThrowException("Matrix<Y>:colSum only allowed for Matrix<double>");
+//}
 
 template <class T>
 QString Matrix<T>::toString() const {
