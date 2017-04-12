@@ -1,9 +1,6 @@
 #ifndef NORMAL_H
 #define NORMAL_H
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/variate_generator.hpp>
 #include <base/distribution.h>
-#include <base/random_generator.h>
 
 namespace distribution {
 
@@ -15,19 +12,13 @@ public:
     void sd(double value);
     void lowerQuantile(double value);
     void upperQuantile(double value);
-    double draw();
+    QPair<double,double> bounds() const;
+    double inverse(double y) const;
 private:
     // Parameters
-    double _mean, _sd, _lowerQuantile, _upperQuantile,
-        _lowerBound, _upperBound;
+    double _mean, _sd, _lowerQuantile, _upperQuantile;
     // Methods
     void parseArguments();
-    void setBounds();
-    // Random number generation
-    typedef boost::normal_distribution<double> RndDistribution;
-    typedef boost::variate_generator<base::RandomGenerator::Generator&, RndDistribution> Variate;
-    RndDistribution *_distribution;
-    Variate *_variate;
 };
 
 }

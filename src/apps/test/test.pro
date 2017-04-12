@@ -38,9 +38,10 @@ HEADERS +=  \
     test_output_text.h \
     test_path.h \
 #    test_population.h \
+    test_port.h \
     test_port_buffer.h \
     test_port_type.h \
-    test_port.h \
+    test_port_value_op.h \
     test_random.h \
     test_savanna.h \
     test_scenarios.h \
@@ -81,9 +82,10 @@ SOURCES +=  \
     test_output_text.cpp \
     test_path.cpp \
 #    test_population.cpp \
+    test_port.cpp \
     test_port_buffer.cpp \
     test_port_type.cpp \
-    test_port.cpp \
+    test_port_value_op.cpp \
     test_random.cpp \
     test_savanna.cpp \
     test_scenarios.cpp \

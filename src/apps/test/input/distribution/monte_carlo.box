@@ -1,7 +1,8 @@
 Simulation sim {
-    SensitivityAnalysis sa {
-    }
-    Stage a {
+	.iterations = 30
+	SensitivityAnalysis sa { 
+	}
+	Stage a {
     .initial = 100 @ (even 50 200)
     .inflow = 15 @ (normal 15 2)
   }

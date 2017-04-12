@@ -1,3 +1,4 @@
+#include <boost/random.hpp>
 #include "object_pool.h"
 #include "random_generator.h"
 
@@ -9,6 +10,12 @@ RandomGenerator::RandomGenerator()
 {
 }
 
+unsigned RandomGenerator::Shuffler::operator()(unsigned i) {
+    boost::uniform_int<> rng(0, i - 1);
+    return rng(*randomGenerator());
+}
+
+
 RandomGenerator::Generator* randomGenerator() {
     if (!RandomGenerator::theRandomGenerator) {
         RandomGenerator::theRandomGenerator = new RandomGenerator;
@@ -16,6 +23,7 @@ RandomGenerator::Generator* randomGenerator() {
     }
     return &(RandomGenerator::theRandomGenerator->generator);
 }
+
 void seedRandomGenerator(int seed) {
     static bool seeded = false;
     if (!seeded) {

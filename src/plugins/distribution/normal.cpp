@@ -39,29 +39,15 @@ void normal::parseArguments() {
     parseNext(&_upperQuantile);
 }
 
-double normal::draw() {
-    if (_isFirstDraw) {
-        _distribution = new RndDistribution(_mean, _sd);
-        _variate = new Variate(*randomGenerator(), *_distribution);
-        setBounds();
-        _isFirstDraw = false;
-    }
-    int i = 0;
-    double value;
-    do {
-        value = (*_variate)();
-        if (++i > 30)
-            ThrowException("Too many tries (30) finding value between quantiles")
-                    .value(_lowerQuantile).value2(_upperQuantile)
-                    .context(this);
-    } while (value < _lowerBound || value >= _upperBound);
-    return value;
+QPair<double,double> normal::bounds() const {
+    boost::math::normal ndist(_mean, _sd);
+    return qMakePair(quantile(ndist, _lowerQuantile), quantile(ndist, _upperQuantile));
 }
 
-void normal::setBounds() {
+double normal::inverse(double y) const {
+    Q_ASSERT(y>=0. && y<=1.);
     boost::math::normal ndist(_mean, _sd);
-    _lowerBound = quantile(ndist, _lowerQuantile);
-    _upperBound = quantile(ndist, _upperQuantile);
+    return quantile(ndist, y);
 }
 
 }

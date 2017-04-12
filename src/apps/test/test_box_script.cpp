@@ -33,7 +33,7 @@ void TestBoxScript::testPlotRPortsAsScalar() {
 void TestBoxScript::testPlotRPortsAsReference() {
     int errors = dialog().errorCount();
     Command::submit(QStringList() << "load" << "test_box_script_ports_as_reference.box", 0);
-    QVERIFY(errors < dialog().errorCount());
+    QCOMPARE(errors, dialog().errorCount());
 }
 
 void TestBoxScript::testStringInDoubleQuotes() {

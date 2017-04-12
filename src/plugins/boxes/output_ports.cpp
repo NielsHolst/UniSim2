@@ -10,7 +10,7 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(OutputPorts);
-    Input(ports).help("Vector of ports to include in plot");
+    Input(ports).notReferenced().help("Vector of ports to include in plot");
 }
 
 void OutputPorts::amend() {
@@ -19,8 +19,8 @@ void OutputPorts::amend() {
 }
 
 void OutputPorts::collectPorts() {
-    // Check ports value
-    checkPortsValue();
+//    // Check ports value
+//    checkPortsValue();
     // Collect only my ports
     _myPorts.clear();
     // Collect the ports
@@ -42,15 +42,15 @@ void OutputPorts::collectPorts() {
     }
 }
 
-void OutputPorts::checkPortsValue() {
-    if (port("ports")->hasImport()) {
-        ThrowException("Ports not found")
-            .value(QStringList(ports.toList()).join(" "))
-            .hint("Enclose the value in parentheses to make it a vector of paths")
-            .id("PortsIsReference")
-            .context(this);
-    }
-}
+//void OutputPorts::checkPortsValue() {
+//    if (port("ports")->hasImport()) {
+//        ThrowException("Ports not found")
+//            .value(QStringList(ports.toList()).join(" "))
+//            .hint("Enclose the value in parentheses to make it a vector of paths")
+//            .id("PortsIsReference")
+//            .context(this);
+//    }
+//}
 
 const QVector<base::Port*> & OutputPorts::myPorts() {
     return _myPorts;

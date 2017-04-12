@@ -61,9 +61,11 @@ HEADERS +=  \
     port.h \
     port_access.h \
     port_buffer.h \
+    port_filter.h \
     port_mode.h \
     port_transform.h \
     port_type.h \
+    port_value_op.h \
     product_base.h \
     product.h \
     random_generator.h \
@@ -120,9 +122,11 @@ SOURCES +=  \
     port.cpp \
     port_access.cpp \
     port_buffer.cpp \
+    port_filter.cpp \
     port_mode.cpp \
     port_transform.cpp \
     port_type.cpp \
+    port_value_op.cpp \
     product_base.cpp \
     random_generator.cpp \
     save_grammar_atom.cpp \

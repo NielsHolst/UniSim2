@@ -2,17 +2,19 @@
 #include "general.h"
 #include "path.h"
 #include "port.h"
+#include "port_value_op.h"
 #include "vectorize.h"
 
 namespace base {
 
-unsigned Port::_trackFlags = Reset | Update;
+// Configure
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
+    : QObject(parent), _valuePtr(0), _filteredValuePtr(0), _valueType(Null), _filter(PortFilter::None), _mode(PortMode::Default),
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true),
-      _access(PortAccess::Input), _reset(false), _hasTrack(false), _valueOverridden(false),
+      _access(PortAccess::Input),
+      _notReferenced(false), _reset(false), _hasTrack(false), _valueOverridden(false),
       _trackBuffer(this), _isBlind(false)
 {
     Class(Port);
@@ -22,7 +24,10 @@ Port::Port(QString name, QObject *parent)
         boxParent->addPort(this);
 }
 
-// Configure
+Port::~Port() {
+    if (_filteredValuePtr)
+        port_value_op::deallocate(_valueType, _filteredValuePtr);
+}
 
 Port& Port::equals(const char *value) {
     return equals(QString(value));
@@ -33,6 +38,8 @@ Port& Port::equals(QStringList value) {
 }
 
 Port& Port::imports(QString pathToPort) {
+    if (_notReferenced)
+        return equals(pathToPort);
     _mode = PortMode::Referenced;
     _portValueStep = environment().computationStep();
     _importPath = pathToPort;
@@ -42,6 +49,8 @@ Port& Port::imports(QString pathToPort) {
 }
 
 Port& Port::importsMaybe(QString pathToPort) {
+    if (_notReferenced)
+        return equals(pathToPort);
     _mode = PortMode::MaybeReferenced;
     _portValueStep = environment().computationStep();
     _importPath = pathToPort;
@@ -59,6 +68,11 @@ void Port::checkValueOverridden() {
 
 Port& Port::access(PortAccess acc) {
     _access = acc;
+    return *this;
+}
+
+Port& Port::notReferenced() {
+    _notReferenced = true;
     return *this;
 }
 
@@ -200,9 +214,11 @@ namespace {
 }
 
 void Port::resolveImports() {
-    // Find import ports defined by the import path
+    // No imports; nothing to do
     if (!hasImport())
         return;
+
+    // Find import ports defined by the import path
     Box *context = boxParent();
     Path path = Path(_importPath, context);
     _importPorts = path.resolveMany<Port>();
@@ -294,8 +310,49 @@ void Port::assign(const QVector<Port*> &sources) {
 }
 
 void Port::track(Step step) {
-    if (_hasTrack && (step & _trackFlags))
-        _trackBuffer.append(_valuePtr);
+    if (_hasTrack) {
+        switch (step) {
+        case Reset:
+            _filteredValueCount = 1;
+            if (_filter == PortFilter::None) {
+                _trackBuffer.append(_valuePtr);
+            }
+            else {
+                if (!_filteredValuePtr)
+                    _filteredValuePtr = port_value_op::allocate(_valueType);
+                base::assign(_valueType, _filteredValuePtr, _valueType, _valuePtr, PortTransform::Identity, this);
+            }
+            break;
+        case Update:
+            ++_filteredValueCount;
+            switch (_filter) {
+                case PortFilter::None:
+                    _trackBuffer.append(_valuePtr);
+                    break;
+                case PortFilter::Sum:
+                case PortFilter::Mean:
+                    port_value_op::accumulate(_valueType, _filteredValuePtr, _valuePtr);
+                    break;
+                case PortFilter::Min:
+                    port_value_op::min(_valueType, _filteredValuePtr, _filteredValuePtr, _valuePtr);
+                    break;
+                case PortFilter::Max:
+                    port_value_op::max(_valueType, _filteredValuePtr, _filteredValuePtr, _valuePtr);
+                case PortFilter::End:
+                    base::assign(_valueType, _filteredValuePtr, _valueType, _valuePtr, PortTransform::Identity, this);
+            }
+            break;
+        case Cleanup:
+            if (_filter == PortFilter::Mean)
+                port_value_op::divide(_valueType, _filteredValuePtr, _filteredValueCount);
+            if (_filter != PortFilter::None)
+                _trackBuffer.append(_filteredValuePtr);
+            break;
+        default:
+            ThrowException("Cannot track port in this computation step")
+                    .value(convert<QString>(step)).context(this);
+        }
+    }
 }
 
 void Port::format(PortType type) {

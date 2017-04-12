@@ -1,5 +1,6 @@
 #ifndef PAGE_R_H
 #define PAGE_R_H
+#include <QVector>
 #include <base/box.h>
 
 namespace boxes {
@@ -18,7 +19,7 @@ public:
     QString functionName();
 private:
     // Inputs
-    QString xAxis;
+    QVector<QString> xAxis;
     double width, height;
     int ncol, nrow;
     // Data

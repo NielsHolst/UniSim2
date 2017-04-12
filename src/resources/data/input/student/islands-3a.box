@@ -1,0 +1,78 @@
+// book/demo/migration/islands-2.box
+Simulation sim {
+	.iterations = 1
+	.steps = 30
+
+	Box islands {
+		demo::Island source {
+			.latitude = ./random/latitude[value]
+			.longitude = ./random/longitude[value]
+			Box random {
+				RandomUniform latitude {
+					.minValue = 10
+					.maxValue = 20
+					.drawAtInitialize = TRUE
+				}
+				RandomUniform longitude {
+					.minValue = -40
+					.maxValue = -30
+					.drawAtInitialize = TRUE
+				}
+			}
+			demo::Population fox {
+				Stage fox {
+					.initial = ./random[value]
+					.duration = 12
+					RandomPoisson random {
+						.mean = 100
+						.drawAtUserReset = TRUE
+					}
+				}
+			}
+		} // island
+	} // islands
+
+	Maker islands {
+		.replicates = 14
+		demo::Island island {
+			.latitude = ./random/latitude[value]
+			.longitude = ./random/longitude[value]
+			Box random {
+				RandomUniform latitude {
+					.minValue = 10
+					.maxValue = 20
+					.drawAtInitialize = TRUE
+				}
+				RandomUniform longitude {
+					.minValue = -40
+					.maxValue = -30
+					.drawAtInitialize = TRUE
+				}
+			}
+			demo::Population fox {
+				Stage fox {
+					.initial = 0
+					.duration = 12
+				}
+			}
+		} // island
+	} // islands
+	Maker migration {
+		.names = ("fox")
+		demo::Migration  {
+		}
+	}
+	OutputR {
+		// .end = "islands-3a-end.R"
+		PageR {
+			PlotR {
+				.ncol = 3
+				.ports = (*[content])
+			}
+			// PlotR {
+				// .ports = ( migration/fox[im0])
+				// .hide=TRUE
+			// }
+		}
+	}
+}

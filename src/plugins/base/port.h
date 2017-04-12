@@ -16,6 +16,7 @@
 #include "initialize.h"
 #include "port_access.h"
 #include "port_buffer.h"
+#include "port_filter.h"
 #include "port_mode.h"
 #include "port_transform.h"
 #include "port_type.h"
@@ -37,15 +38,17 @@ public:
         }
     };
 private:
-    void *_valuePtr;
+    void *_valuePtr, *_filteredValuePtr;
+    int _filteredValueCount;
     PortType _valueType, _importType;
+    PortFilter _filter;
     PortMode _mode;
     ComputationStep _portValueStep;
     QString _importPath;
     QVector<Port *> _importPorts;
     bool _importPortMustExist;
     PortAccess _access;
-    bool _reset, _hasTrack, _valueOverridden;
+    bool _notReferenced, _reset, _hasTrack, _valueOverridden;
     Vector _trackBuffer;
     static unsigned _trackFlags;
     Attributes _attributes;
@@ -57,6 +60,7 @@ private:
 public:
     // Configure
     Port(QString name="noname", QObject *parent=0);
+    ~Port();
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value);
@@ -64,6 +68,7 @@ public:
     Port& imports(QString pathToPort);
     Port& importsMaybe(QString pathToPort);
     Port& access(PortAccess acc);
+    Port& notReferenced();
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();

@@ -10,6 +10,9 @@ class RandomGenerator : public QObject
 public: 
     typedef boost::mt19937 Generator;
     friend RandomGenerator::Generator* randomGenerator();
+    struct Shuffler {
+        unsigned operator()(unsigned i);
+    };
 private:
     RandomGenerator();
     Generator generator;

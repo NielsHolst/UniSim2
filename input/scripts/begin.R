@@ -39,47 +39,83 @@ read_output = function(file_path) {
 	U
 }
 
+convert = function(df) {
+	ix_bool = which(sapply(df,class)=="logical")
+	df[,ix_bool] = as.numeric(df[,ix_bool])
+	df
+}
+
 melted = function(df, id_x, id_iteration, cols) {
   cols_id = c(id_x, id_iteration)
   cols_final = union(cols, cols_id)
-  M = melt(df[ ,cols_final], id.vars=cols_id, value.name="Value", variable.name="Variable")
+  M = melt(convert(df)[ ,cols_final], id.vars=cols_id, value.name="Value", variable.name="Variable")
   if (!is.null(id_iteration)) M$iter = factor(M[,id_iteration])
   M
 }
 
-convert = function(df) {
-	ix_bool = which(sapply(df,class)=="logical")
-	for (i in ix_bool) {
-		df[,i] = as.numeric(df[,i])
-	}
-	df
+meltxy = function(df, xvars, yvars) {
+	M = melt(convert(df), measure.vars=xvars, value.name="xValue", variable.name="xVariable")
+	melt(M, id.vars=c("xValue","xVariable"), measure.vars=yvars, value.name="yValue", variable.name="yVariable")
 }
 
-plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
-  M = melted(convert(df), id_x, id_iteration, cols)
-	P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
+plot_facetted_one_x = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = melted(df, id_x, id_iteration, cols)
+	hasIterations = !is.null(M$iter)
+	onlyOneVariable = (length(cols) == 1)
+
+	color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
+	P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
 		geom_line(size=1.1) +
 		theme(legend.position="none") +
 		xlab("") + ylab("")
 
-  if (is.null(M$iter))
-		P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") else
-		P + facet_grid(iter~Variable, scales="free_y") 
+  if (hasIterations)
+		P + facet_grid(iter~Variable, scales="free_y") else
+		P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") 
+}
+
+plot_merged_one_x = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = melted(df, id_x, id_iteration, cols)
+	hasIterations = !is.null(M$iter)
+	onlyOneVariable = (length(cols) == 1)
+
+	color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
+	P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
+	    geom_line(size=1.1) +
+      xlab("") + ylab("")
+	if (hasIterations & !onlyOneVariable) P = P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
+  P
+}
+
+plot_facetted_many_x = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = meltxy(df, id_x, cols)
+	ggplot(M, aes(x=xValue, y=yValue)) +
+		geom_point() +
+		geom_smooth() +
+    xlab("") + ylab("") +
+		facet_grid(yVariable~xVariable, scales="free")
+}
+
+plot_merged_many_x = function(df, id_x, id_iteration, cols, ncol, nrow) {
+  M = meltxy(df, id_x, cols)
+	ggplot(M, aes(x=xValue, y=yValue, colour=yVariable)) +
+		geom_point() +
+		geom_smooth() +
+    xlab("") + ylab("") +
+		facet_wrap(~xVariable, scales="free")
+}
+
+plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
+	if (length(id_x) == 1) 
+		plot_facetted_one_x( df, id_x, id_iteration, cols, ncol, nrow) else
+		plot_facetted_many_x(df, id_x, id_iteration, cols, ncol, nrow)
 }
 
 plot_merged = function(df, id_x, id_iteration, cols, ncol, nrow) {
-  M = melted(convert(df), id_x, id_iteration, cols)
-  if (length(cols) == 1 & !is.null(M$iter)) { # If only one y merge iterations
-    ggplot(M, aes_string(x=id_x, y="Value", color="iter")) +
-      geom_line(size=1.1) +
-      xlab("") + ylab("")
-  } else {
-    P = ggplot(M, aes_string(x=id_x, y="Value", color="Variable")) +
-      geom_line(size=1.1) +
-      xlab("") + ylab("")
-    if (is.null(M$iter))
-      P else
-      P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
-  }
+	if (length(id_x) == 1) 
+		plot_merged_one_x( df, id_x, id_iteration, cols, ncol, nrow) else
+		plot_merged_many_x(df, id_x, id_iteration, cols, ncol, nrow)
+
 }
+
 

@@ -8,9 +8,9 @@
 
 2.Execute batch file.
 
-3. Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
+(3). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
 
-4. Update ecolmod.org/download.html.
+(4). Update ecolmod.org/download.html.
 
 5. In Bash:
 > git tag 2.0.n
@@ -33,7 +33,7 @@
 
 5. Open InstallBuilder and build the installer.
 
-6. Optionally, test debug build i QtCreator:
+6. Optionally, test debug build in QtCreator:
 - run clean.sh
 - open UniSim2.pro in QtCreator and build.
 

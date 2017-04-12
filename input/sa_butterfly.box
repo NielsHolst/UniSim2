@@ -1,0 +1,47 @@
+Simulation sim {
+	.iterations = 3
+	.steps = 70
+	SensitivityAnalysis {
+		.method = "LHS"
+	}
+	Box butterfly {
+		Stage egg {
+			.initial = 100 @ (even 50 200)
+			.duration = 7 @ (even 1 30)
+			.k = 30 @ (even 1 30)
+		}
+		Stage larva {
+			.inflow = ../egg[outflow]
+			.duration = 15
+		}
+		Stage pupa {
+			.inflow = ../larva[outflow]
+			.duration = 7
+		}
+		Stage adult {
+			.inflow = ../pupa[outflow]
+			.duration = 30
+		}
+	}
+	OutputR {
+		.popUp = TRUE
+    PageR {
+      .xAxis = sim[step]
+      PlotR {
+				.layout = "merged"
+        .ports = (butterfly/*[content])
+      }
+      PlotR {
+        .ports = (egg[initial] egg[duration] adult[content]>end)
+				.hide = TRUE
+      }
+		}
+    // PageR {
+      // .xAxis = (egg[initial] egg[duration])
+      // PlotR {
+        // .ports = (butterfly/*[content]>end butterfly/adult[content]>atMax>sim[step])
+      // }
+		// }
+	}
+}
+

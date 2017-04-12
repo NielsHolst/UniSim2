@@ -1,6 +1,7 @@
 #include <base/distribution.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/port.h>
 #include <base/publish.h>
 #include "sensitivity_analysis.h"
 
@@ -13,42 +14,69 @@ PUBLISH(SensitivityAnalysis)
 SensitivityAnalysis::SensitivityAnalysis(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(iterations).equals(1);
+    Input(iterations).imports("ancestors::*[iterations]");
     Input(method).equals("MC");
     Output(inputsAnalysed);
     Output(inputsTotal);
 }
 
-void SensitivityAnalysis::amend() {
-    Box *root = findOne<Box>("/");
-    QList<Distribution*> distributions = root->findChildren<Distribution*>();
-    for (Distribution *dist : distributions) {
-        Box *parent = dist->port()->boxParent();
-        if (parent == this) {
-            ThrowException("SensitivityAnalysis cannot itself hold distributed inputs")
-                .value(dist->objectName())
-                .context(this);
-        }
-    }
-    inputsAnalysed = distributions.size();
+void SensitivityAnalysis::initialize() {
+    setMethod();
+    setInputsTotal();
+    setInputsAnalysed();
+    int numStrata = (_method == MC) ? 1 : iterations;
+    for (Distribution *dist : _saDistributions)
+        dist->initialize(numStrata);
 }
 
-void SensitivityAnalysis::reset() {
+void SensitivityAnalysis::setMethod() {
+    if (method=="MC")
+        _method = MC;
+    else if (method=="LHS")
+        _method = LHS;
+    else
+        ThrowException("SA method must be one 'MC' or 'LHS'")
+                .value(method).context(this);
+}
+
+void SensitivityAnalysis::setInputsTotal() {
     Box *root = findOne<Box>("/");
     QVector<Port*> ports = root->findMany<Port>("*[*]");
     int n = 0;
     for (Port *port : ports) {
-        bool isInput = port->access()==PortAccess::Input,
-            isInThisBox = port->boxParent()==this,
-            isRoot = port->boxParent()==environment().root();
-        if (isInput && !isInThisBox && !isRoot)
-            ++n;
+        if (canBeAnalysed(port)) ++n;
     }
     inputsTotal = n;
 }
 
-void SensitivityAnalysis::update() {
+bool SensitivityAnalysis::canBeAnalysed(Port *port) const {
+    bool isInput = port->access()==PortAccess::Input,
+        isInThisBox = port->boxParent()==this,
+        isRoot = port->boxParent()==environment().root(),
+        ok = isInput && !isInThisBox && !isRoot;
+    return ok;
 }
 
+void SensitivityAnalysis::setInputsAnalysed() {
+    _saDistributions.clear();
+    Box *root = findOne<Box>("/");
+    QVector<Distribution*> distributions = root->findMany<Distribution>("*<Distribution>");
+    for (Distribution *dist : distributions) {
+        if (!canBeAnalysed(dist->port())) {
+            ThrowException("SensitivityAnalysis not allowed for this class")
+                .value(dist->port()->boxParent()->fullName())
+                .context(this);
+        }
+        _saDistributions << dist;
+    }
+    inputsAnalysed = _saDistributions.size();
+}
+
+void SensitivityAnalysis::reset() {
+    for (Distribution *dist : _saDistributions) {
+        double value = dist->draw();
+        dist->port()->equals(value);
+    }
+}
 
 }
