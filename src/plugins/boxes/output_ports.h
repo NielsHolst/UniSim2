@@ -1,11 +1,7 @@
 #ifndef OUTPUT_PORTS_H
 #define OUTPUT_PORTS_H
 #include <base/box.h>
-#include "output_r.h"
-
-namespace base {
-    class Port;
-}
+#include <base/track.h>
 
 namespace boxes {
 
@@ -15,15 +11,15 @@ public:
     OutputPorts(QString name, QObject *parent);
     void amend() final;
     virtual void doAmend(){}
-    const QVector<base::Port*> & myPorts();
+    const QVector<base::Track*> & tracks();
 private:
     // Inputs
     QVector<QString> ports;
     // Data
-    QVector<base::Port*> _myPorts;
+    QVector<base::Track::Order> _orders;
+    QVector<base::Track*> _tracks;
     // Methods
-    void collectPorts();
-    void checkPortsValue();
+    void collectOrders();
 };
 
 }

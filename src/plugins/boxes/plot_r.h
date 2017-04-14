@@ -1,5 +1,6 @@
 #ifndef PLOT_R_H
 #define PLOT_R_H
+#include <base/track.h>
 #include "output_ports.h"
 #include "output_r.h"
 
@@ -24,7 +25,7 @@ private:
     QString layout, end, endCode, iterationId;
     int ncol, nrow, iteration;
     // Methods
-    QString xPortLabel();
+    base::Track *xAxisTrack();
     QString dim(QString portName);
 };
 

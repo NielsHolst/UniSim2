@@ -2,7 +2,6 @@ rm(list=ls(all=TRUE))
 graphics.off()
 library(ggplot2)
 library(gridExtra)
-library(reshape2)
 
 n = 10	# number of strata
 x_values = 0:30
@@ -32,7 +31,6 @@ plot_strata = function(FUN, INV) {
 		geom_point(data=L[1:(n+1),], aes(x=x,y=y), colour="red") +
 		geom_point(data=L[1:(n+1),], aes(x=xend,y=x), colour="red") +
 		geom_line(size=2, colour="blue") +
-		xlim(min(x_values), max(x_values)) +
 		ylim(0,1)
 		
 }
@@ -53,6 +51,7 @@ inv_normal = function(y) {
 	qnorm(y, 15, 5)
 }
 
+#windows(10,6)   #Windows only
 grid.arrange(
 	ncol=2
 	,

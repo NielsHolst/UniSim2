@@ -97,10 +97,7 @@ private:
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void enumerateBoxes(int &i);
-    void allocatePortBuffers();
-    void collectTrackedPorts();
     void resetPorts();
-    void trackPorts(Step step);
 };
 
 DEFINE_ENUM_FUNCTIONS(Box::ToTextOptions)

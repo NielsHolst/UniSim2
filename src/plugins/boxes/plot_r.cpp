@@ -3,6 +3,7 @@
 #include <base/path.h>
 #include <base/publish.h>
 #include "layout_r.h"
+#include "page_r.h"
 #include "plot_r.h"
 
 using namespace base;
@@ -37,8 +38,8 @@ void PlotR::reset() {
 
 QString PlotR::toString() {
     QString s = "Plot: " + objectName() + "\n";
-    for (const Port *port : myPorts())
-        s += "  Port: " + port->objectName() + "\n";
+    for (const Track *track : tracks())
+        s += "  Port: " + track->uniqueName() + "\n";
     return s;
 }
 
@@ -54,15 +55,13 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (hide || myPorts().isEmpty())
+    if (hide || tracks().isEmpty())
         return QString();
     QStringList portLabels;
-    QString xLabel = apostrophed(xPortLabel());
-    for (Port *port : myPorts()) {
-        // Avoid x-axis being plotted on y-axis too
-        if (port->label() != xLabel)
-            portLabels << apostrophed(port->labelList());
-    }
+    QString xLabel = apostrophed(xAxisTrack()->uniqueName());
+    for (Track *track : tracks())
+        portLabels << apostrophed(track->uniqueNameExpanded());
+
     // Write function call
     QString string;
     QTextStream s(&string);
@@ -83,11 +82,10 @@ QString PlotR::toScript() {
     return string;
 }
 
-QString PlotR::xPortLabel() {
-    Box *output = Path("ancestors::*<PageR>", this).resolveOne<Box>(this);
-    QString xPath = output->port("xAxis")->importPath();
-    Port *xPort = Path(xPath).resolveOne<Port>(this);
-    return xPort->label();
+Track* PlotR::xAxisTrack() {
+    PageR *page = Path("ancestors::*<PageR>", this).resolveOne<PageR>(this);
+    Track::Order order = page->xAxisOrder();
+    return Track::find(order);
 }
 
 QString PlotR::dim(QString portName) {

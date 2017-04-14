@@ -1,18 +1,29 @@
 #include <algorithm>
 #include <port.h>
+#include <track.h>
 #include "unique_name.h"
 
 namespace base {
 
-UniqueName::UniqueName(QVector<Port*> ports)
-    : _ports(ports)
+UniqueName::UniqueName(QList<Track *> tracks)
 {
-    int i{0};
-    for (Port *port : _ports) {
-        bool hasLabel = (!port->label().isEmpty());
-        QString label = hasLabel ? port->label() : port->objectName();
-        _entries << Entry{label, i++, port};
-    }
+    _nextEntry = 0;
+    for (Track *track : tracks)
+        addEntry(track->port(), track->filter());
+}
+
+UniqueName::UniqueName(QVector<Port*> ports) {
+    _nextEntry = 0;
+    for (Port *port : ports)
+        addEntry(port, PortFilter::None);
+}
+
+void UniqueName::addEntry(Port *port, PortFilter filter) {
+    bool hasLabel = (!port->label().isEmpty());
+    QString label = hasLabel ? port->label() : port->objectName();
+    if (filter != PortFilter::None)
+        label += "." + convert<QString>(filter);
+    _entries << Entry{label, _nextEntry++, port};
 }
 
 QStringList UniqueName::resolve() {

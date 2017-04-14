@@ -16,19 +16,17 @@ class OutputText : public OutputPorts
 public:
     OutputText(QString name, QObject *parent);
     void initialize();
+    void reset();
+    void update();
+    void cleanup();
     void debrief();
 private:
     // Data
     QFile _file;
     QTextStream _stream;
-    QList<base::Port*> _allTrackedPorts;
     // Methods
-    void collectAllTrackedPorts();
-    void makePortLabelsUnique();
     void writeDataFrame();
-    void removeObsoletePorts();
     void openFileStream(QString extension);
-    static bool valuesAreEqual(const base::Port *port);
 };
 
 } // boxes

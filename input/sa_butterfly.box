@@ -1,5 +1,5 @@
 Simulation sim {
-	.iterations = 3
+	.iterations = 10
 	.steps = 70
 	SensitivityAnalysis {
 		.method = "LHS"

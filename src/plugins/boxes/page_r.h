@@ -2,6 +2,7 @@
 #define PAGE_R_H
 #include <QVector>
 #include <base/box.h>
+#include <base/track.h>
 
 namespace boxes {
 
@@ -17,6 +18,7 @@ public:
     QString toString();
     QString toScript();
     QString functionName();
+    base::Track::Order xAxisOrder() const;
 private:
     // Inputs
     QVector<QString> xAxis;
@@ -27,6 +29,7 @@ private:
     QVector<PlotR*> _plots;
     static int _commonPageNumber;
     int _myPageNumber;
+    base::Track::Order _xAxisOrder;
     // Methods
     QString dim(QString portName);
 };

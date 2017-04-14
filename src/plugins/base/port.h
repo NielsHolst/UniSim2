@@ -20,7 +20,7 @@
 #include "port_mode.h"
 #include "port_transform.h"
 #include "port_type.h"
-#include "vector.h"
+#include "track.h"
 
 namespace base {
 
@@ -38,19 +38,15 @@ public:
         }
     };
 private:
-    void *_valuePtr, *_filteredValuePtr;
-    int _filteredValueCount;
+    void *_valuePtr;
     PortType _valueType, _importType;
-    PortFilter _filter;
     PortMode _mode;
     ComputationStep _portValueStep;
     QString _importPath;
     QVector<Port *> _importPorts;
     bool _importPortMustExist;
     PortAccess _access;
-    bool _notReferenced, _reset, _hasTrack, _valueOverridden;
-    Vector _trackBuffer;
-    static unsigned _trackFlags;
+    bool _notReferenced, _reset, _valueOverridden;
     Attributes _attributes;
     bool _isBlind;
     QStringList _warnings;
@@ -60,7 +56,6 @@ private:
 public:
     // Configure
     Port(QString name="noname", QObject *parent=0);
-    ~Port();
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value);
@@ -87,7 +82,6 @@ public:
     QString attribute(QString name) const;
     QString format() const;
     QString label() const;
-    QStringList labelList() const;
     QString help() const;
     PortTransform transform() const;
     bool isBlind() const;
@@ -97,13 +91,11 @@ public:
 
     // Change
     void resolveImports();
-    void allocatePortBuffer();
     void reset();
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
-    void track(Step step);
     void format(PortType type);
-    void track();
+    Track::Order track(PortFilter filter=PortFilter::None);
 
     // Access
     Box *boxParent();
@@ -112,10 +104,8 @@ public:
     QString valueAsString() const;
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
-    const Vector* trackPtr() const;
     PortType type() const;
     PortAccess access() const;
-    bool hasTrack() const;
     bool hasImport() const;
     bool isValueOverridden() const;
     QString importPath() const;
@@ -123,7 +113,6 @@ public:
     QStringList warnings() const;
     void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
     template <class T> void deducePortType(T value);
-    static QVector<Port*> trackedPorts();
     static PortType commonType(const QVector<Port *> &ports);
 };
 

@@ -1,5 +1,6 @@
 #include <base/path.h>
 #include <base/port.h>
+#include <base/port_filter.h>
 #include "output_ports.h"
 
 using namespace base;
@@ -14,46 +15,26 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
 }
 
 void OutputPorts::amend() {
-    collectPorts();
+    collectOrders();
     doAmend();
 }
 
-void OutputPorts::collectPorts() {
-//    // Check ports value
-//    checkPortsValue();
-    // Collect only my ports
-    _myPorts.clear();
-    // Collect the ports
+void OutputPorts::collectOrders() {
+    _orders.clear();
     for (QString portName : ports) {
         QVector<Port*> trackedPorts = findMany<Port>(portName);
-        // Only add ports not already captured
         for (Port *port : trackedPorts) {
-            if (_myPorts.contains(port))
-                continue;
-            // Ensure port will be tracked
-            port->track();
-            _myPorts << port;
+            _orders << port->track(PortFilter::None);
         }
-    }
-    // Check if no ports given were actually found
-    if (!ports.isEmpty() && _myPorts.isEmpty()) {
-        QString shownValue{ "(" + QStringList(ports.toList()).join(" ") + ")" };
-        ThrowException("No ports found").value(shownValue).context(this);
     }
 }
 
-//void OutputPorts::checkPortsValue() {
-//    if (port("ports")->hasImport()) {
-//        ThrowException("Ports not found")
-//            .value(QStringList(ports.toList()).join(" "))
-//            .hint("Enclose the value in parentheses to make it a vector of paths")
-//            .id("PortsIsReference")
-//            .context(this);
-//    }
-//}
-
-const QVector<base::Port*> & OutputPorts::myPorts() {
-    return _myPorts;
+const QVector<Track *> &OutputPorts::tracks() {
+    if (_tracks.isEmpty()) {
+        for (Track::Order order : _orders)
+            _tracks << Track::find(order);
+    }
+    return _tracks;
 }
 
 

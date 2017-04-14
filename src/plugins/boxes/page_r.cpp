@@ -2,6 +2,7 @@
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
+#include <base/port_filter.h>
 #include <base/publish.h>
 #include "layout_r.h"
 #include "page_r.h"
@@ -41,7 +42,7 @@ void PageR::amend() {
         QString msg{"Expected one x-axis, got '%1'"};
         ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
     }
-    importPorts[0]->track();
+    _xAxisOrder = importPorts[0]->track(PortFilter::None);
 }
 
 void PageR::initialize() {
@@ -101,6 +102,10 @@ QString PageR::functionName() {
     QString s = "page_";
     s += objectName().isEmpty() ? QString::number(_myPageNumber) : objectName();
     return s;
+}
+
+Track::Order PageR::xAxisOrder() const {
+    return _xAxisOrder;
 }
 
 }

@@ -191,8 +191,6 @@ void Box::initializeFamily() {
             box->initializeFamily();
     }
     resolvePortImports();
-    allocatePortBuffers();
-    collectTrackedPorts();
     updateImports();
     initialize();
     _timer->stop("initialize");
@@ -208,7 +206,6 @@ void Box::resetFamily() {
     resetPorts();
     updateImports();
     reset();
-    trackPorts(Reset);
     _timer->stop("reset");
 }
 
@@ -228,7 +225,6 @@ void Box::updateFamily() {
     _timer->stop("update-update");
 
     _timer->start("update-trackPorts");
-    trackPorts(Update);
     _timer->stop("update-trackPorts");
 }
 
@@ -241,7 +237,6 @@ void Box::cleanupFamily() {
     }
     updateImports();
     cleanup();
-    trackPorts(Cleanup);
     _timer->stop("cleanup");
 }
 
@@ -265,19 +260,6 @@ void Box::resolvePortImports() {
     }
 }
 
-void Box::allocatePortBuffers(){
-    for (Port *port : _ports.values())
-        port->allocatePortBuffer();
-}
-
-void Box::collectTrackedPorts() {
-    _trackedPorts.clear();
-    for (Port *port : _ports.values()) {
-        if (port->hasTrack())
-            _trackedPorts << port;
-    }
-}
-
 void Box::updateImports() {
     for (Port *port : _ports.values())
         port->copyFromImport();
@@ -286,11 +268,6 @@ void Box::updateImports() {
 void Box::resetPorts() {
     for (Port *port : _ports.values())
         port->reset();
-}
-
-void Box::trackPorts(Step step) {
-    for (Port *port : _trackedPorts)
-        port->track(step);
 }
 
 void Box::cloneFamily(QString name, QObject *parent) {

@@ -2,7 +2,7 @@
 #include "general.h"
 #include "path.h"
 #include "port.h"
-#include "port_value_op.h"
+#include "track.h"
 #include "vectorize.h"
 
 namespace base {
@@ -10,23 +10,18 @@ namespace base {
 // Configure
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _filteredValuePtr(0), _valueType(Null), _filter(PortFilter::None), _mode(PortMode::Default),
+    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true),
       _access(PortAccess::Input),
-      _notReferenced(false), _reset(false), _hasTrack(false), _valueOverridden(false),
-      _trackBuffer(this), _isBlind(false)
+      _notReferenced(false), _reset(false), _valueOverridden(false),
+      _isBlind(false)
 {
     Class(Port);
     setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
-}
-
-Port::~Port() {
-    if (_filteredValuePtr)
-        port_value_op::deallocate(_valueType, _filteredValuePtr);
 }
 
 Port& Port::equals(const char *value) {
@@ -86,7 +81,6 @@ Port& Port::noReset() {
     return *this;
 }
 
-
 QStringList Port::attributes() {
     static QStringList attr;
     if (attr.isEmpty()) {
@@ -94,7 +88,6 @@ QStringList Port::attributes() {
     }
     return attr;
 }
-
 
 // Set attributes
 
@@ -167,18 +160,6 @@ GET_ATTRIBUTE(help)
 
 bool Port::isBlind() const {
     return _isBlind;
-}
-
-QStringList Port::labelList() const {
-    QStringList list;
-    int n = valueSize();
-    if (n == 1)
-        list << _attributes.label;
-    else {
-        for (int i = 0; i < n; ++i)
-            list << (_attributes.label + "_" + QString::number(i));
-    }
-    return list;
 }
 
 PortTransform Port::transform() const {
@@ -262,17 +243,6 @@ void Port::resolveImports() {
     */
 }
 
-void Port::allocatePortBuffer() {
-    if (_hasTrack) {
-        Box *root = boxParent()->currentRoot();
-        Port *iterations = root->peakPort("iterations"),
-             *steps = root->peakPort("steps");
-        int ite = iterations ? iterations->value<int>() : 1,
-            ste = steps ? steps->value<int>() : 1;
-        _trackBuffer.reserve(ite*ste);
-    }
-}
-
 void Port::reset() {
     if (!hasImport() && _reset)
         base::initialize(_valueType, _valuePtr);
@@ -283,7 +253,6 @@ void Port::copyFromImport() {
         return;
     assign(_importPorts);
 }
-
 
 void Port::assign(const QVector<Port*> &sources) {
     // Create buffer for value if necessary
@@ -306,52 +275,6 @@ void Port::assign(const QVector<Port*> &sources) {
     else {
         const void *sourceVector = vectorize(_importType, sources);
         base::assign(_valueType, _valuePtr, asVector(_importType), sourceVector, transform(), this);
-    }
-}
-
-void Port::track(Step step) {
-    if (_hasTrack) {
-        switch (step) {
-        case Reset:
-            _filteredValueCount = 1;
-            if (_filter == PortFilter::None) {
-                _trackBuffer.append(_valuePtr);
-            }
-            else {
-                if (!_filteredValuePtr)
-                    _filteredValuePtr = port_value_op::allocate(_valueType);
-                base::assign(_valueType, _filteredValuePtr, _valueType, _valuePtr, PortTransform::Identity, this);
-            }
-            break;
-        case Update:
-            ++_filteredValueCount;
-            switch (_filter) {
-                case PortFilter::None:
-                    _trackBuffer.append(_valuePtr);
-                    break;
-                case PortFilter::Sum:
-                case PortFilter::Mean:
-                    port_value_op::accumulate(_valueType, _filteredValuePtr, _valuePtr);
-                    break;
-                case PortFilter::Min:
-                    port_value_op::min(_valueType, _filteredValuePtr, _filteredValuePtr, _valuePtr);
-                    break;
-                case PortFilter::Max:
-                    port_value_op::max(_valueType, _filteredValuePtr, _filteredValuePtr, _valuePtr);
-                case PortFilter::End:
-                    base::assign(_valueType, _filteredValuePtr, _valueType, _valuePtr, PortTransform::Identity, this);
-            }
-            break;
-        case Cleanup:
-            if (_filter == PortFilter::Mean)
-                port_value_op::divide(_valueType, _filteredValuePtr, _filteredValueCount);
-            if (_filter != PortFilter::None)
-                _trackBuffer.append(_filteredValuePtr);
-            break;
-        default:
-            ThrowException("Cannot track port in this computation step")
-                    .value(convert<QString>(step)).context(this);
-        }
     }
 }
 
@@ -428,10 +351,6 @@ template <> const void* Port::valuePtr() const {
     return _valuePtr;
 }
 
-const Vector* Port::trackPtr() const {
-    return _hasTrack ? &_trackBuffer : 0;
-}
-
 PortType Port::type() const {
     return _valueType;
 }
@@ -440,12 +359,8 @@ PortAccess Port::access() const {
     return _access;
 }
 
-void Port::track() {
-    _hasTrack = true;
-}
-
-bool Port::hasTrack() const {
-    return _hasTrack;
+Track::Order Port::track(PortFilter filter) {
+    return Track::takeOrder(this, filter);
 }
 
 bool Port::hasImport() const {
@@ -496,15 +411,6 @@ void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
          << postfix
 //         << " // " << convert<QString>(_portValueStep)
          << "\n";
-}
-
-QVector<Port*> Port::trackedPorts() {
-    QVector<base::Port*> result, all = Path("*<Port>").resolveMany<Port>();
-    for (Port *port : all) {
-        if (port->trackPtr())
-            result << port;
-    }
-    return result;
 }
 
 PortType Port::commonType(const QVector<Port*> &ports) {

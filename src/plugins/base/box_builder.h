@@ -26,7 +26,7 @@ public:
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
     BoxBuilder& imports(QString pathToPort);
-    BoxBuilder& track();
+//    BoxBuilder& track(PortFilter filter);
     // Distribution
     BoxBuilder& rnd(QString name);
     BoxBuilder& mean(double value);
