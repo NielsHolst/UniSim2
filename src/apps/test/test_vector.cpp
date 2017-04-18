@@ -38,11 +38,10 @@ void TestVector::testWithSimulation() {
         QFAIL(qPrintable(s));
     }
 
-    Box *fibonacci = Path("fibonacci").resolveOne<Box>(0);
-    const Port *port = fibonacci->port("value");
-    const Vector *track = port->trackPtr();
-    QVERIFY(track);
-    QCOMPARE(track->size(), 5);
+    Port *value = sim->findOne<Port>("fibonacci[value]");
+    Track *track = Track::find(Track::Order{value, PortFilter::None});
+    const Vector* vector = track->buffer();
+    QCOMPARE(vector->size(), 5);
 
     delete sim;
 }

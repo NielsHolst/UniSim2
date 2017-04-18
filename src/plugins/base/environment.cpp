@@ -62,11 +62,6 @@ void Environment::root(Box *newRoot) {
     _current = _root = newRoot;
 }
 
-void Environment::deleteRoot() {
-    delete _root;
-    _current = _root = 0;
-}
-
 Box* Environment::current() {
     return _current;
 }
@@ -88,6 +83,10 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
         dialog().information(info);
     // Show step in status bar
     switch (step) {
+    case ComputationStep::Construct:
+        if (_root) delete _root;
+        _root = _current = 0;
+        break;
     case ComputationStep::Start:
         dialog().message("Starting...");
         break;

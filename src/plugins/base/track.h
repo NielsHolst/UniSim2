@@ -22,8 +22,9 @@ public:
     };
     Track(Order order);
     ~Track();
+    static void clearOrders();
     static Order takeOrder(Port *port, PortFilter filter=PortFilter::None);
-    static void initializeAll();
+    static void effectuateOrders();
     static void resetAll();
     static void updateAll();
     static void cleanupAll();
@@ -33,11 +34,11 @@ public:
     void cleanup();
     Port* port();
     PortFilter filter() const;
+    const Vector* buffer() const;
     void uniqueName(QString name);
     QString uniqueName() const;
     QStringList uniqueNameExpanded();
     static QList<Track*> all();
-    static int bufferSize();
     static Track* find(Order order);
     QString toString(int row);
 private:

@@ -17,22 +17,6 @@ OutputText::OutputText(QString name, QObject *parent)
     help("creates an output text file");
 }
 
-void OutputText::initialize() {
-    Track::initializeAll();
-}
-
-void OutputText::reset() {
-    Track::resetAll();
-}
-
-void OutputText::update() {
-    Track::updateAll();
-}
-
-void OutputText::cleanup() {
-    Track::cleanupAll();
-}
-
 void OutputText::debrief() {
     openFileStream(".txt");
     writeDataFrame();
@@ -66,7 +50,13 @@ void OutputText::writeDataFrame() {
 
     // Write column values as text
     Track *last = Track::all().last();
-    int nrow = Track::bufferSize();
+    int nrow = last->buffer()->size();
+    for (Track *track : Track::all()) {
+        int nrow2 = track->buffer()->size();
+        if (nrow2 != nrow)
+            ThrowException("Unexpected error. Uneven buffer sizes")
+                    .value(nrow).value2(nrow2).context(this);
+    }
     for (int row = 0; row < nrow; ++row) {
         for (Track *track : Track::all()) {
             _stream << track->toString(row);

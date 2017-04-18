@@ -1,6 +1,7 @@
 #include <iostream>
 #include <base/box.h>
 #include <base/box_builder.h>
+#include <base/track.h>
 #include "test_output_buffer.h"
 
 using namespace base;
@@ -27,7 +28,8 @@ void TestOutputBuffer::testOk() {
     }
 
     Port *value = sim->findOne<Port>("fibo[value]");
-    const Vector* vector = value->trackPtr();
+    Track *track = Track::find(Track::Order{value, PortFilter::None});
+    const Vector* vector = track->buffer();
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
 
     QCOMPARE(vector->size(), 6);

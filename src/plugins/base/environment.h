@@ -23,7 +23,6 @@ public:
 
     Box* root();
     void root(Box *newRoot);
-    void deleteRoot();
 
     Box* current();
     void current(Box *newCurrent);

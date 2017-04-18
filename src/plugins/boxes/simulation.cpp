@@ -6,6 +6,7 @@
 #include <base/port_type.h>
 #include <base/publish.h>
 #include <base/timer.h>
+#include <base/track.h>
 #include "simulation.h"
 
 using namespace base;
@@ -47,6 +48,7 @@ void Simulation::run() {
     QTime time;
     try {
         time.start();
+        Track::effectuateOrders();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
 
@@ -58,6 +60,7 @@ void Simulation::run() {
         {
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
+            Track::resetAll();
             environment().computationStep(ComputationStep::Update);
 
             for (step = 1;
@@ -68,9 +71,11 @@ void Simulation::run() {
             {
                 show(time);
                 updateFamily();
+                Track::updateAll();
             }
             environment().computationStep(ComputationStep::Cleanup);
             cleanupFamily();
+            Track::cleanupAll();
         }
         environment().computationStep(ComputationStep::Debrief);
         debriefFamily();

@@ -54,6 +54,7 @@ void* allocate(base::PortType type) {
 case Tport: delete reinterpret_cast<Tcpp*>(v); v=0; break
 
 void deallocate(base::PortType type, void *v) {
+    if (!v) return;
     switch (type) {
     CASE_PORT_VALUE_DEALLOCATE(bool, Bool);
     CASE_PORT_VALUE_DEALLOCATE(char, Char);

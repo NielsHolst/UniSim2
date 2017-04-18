@@ -7,6 +7,8 @@
 #include "track.h"
 #include "unique_name.h"
 
+#include <iostream>
+
 namespace base {
 
 //
@@ -43,9 +45,10 @@ Track::Track(Order order)
 
 void Track::allocateBuffer() {
     if (_allocated) return;
-    Box *root = environment().root();
-    Port *iterations = root->peakPort("iterations"),
-         *steps = root->peakPort("steps");
+    Box *parent = _port->boxParent();
+    Q_ASSERT(parent);
+    Port *iterations = parent->findMaybeOne<Port>("/*[iterations]"),
+         *steps = parent->findMaybeOne<Port>("/*[steps]");
     int numIterations = iterations ? iterations->value<int>() : 1,
         numSteps = steps ? steps->value<int>() : 1,
         numTotal = (_filter == PortFilter::None) ? numIterations*numSteps : numIterations;
@@ -58,6 +61,8 @@ Track::~Track() {
 }
 
 Track::Order Track::takeOrder(Port *port, PortFilter filter) {
+    QString s = QString::number(_orders.size()) + " " + port->fullName();
+    std::cout << qPrintable(s) << "\n";
     Order order = Order{port, filter};
     _orders += order;
     return order;
@@ -70,8 +75,13 @@ void Track::reset() {
     _count = 1;
     _type = _port->type();
     _valuePtr = _port->valuePtr<void>();
-    if (!_filteredValuePtr)
-        _filteredValuePtr = port_value_op::allocate(_type);
+    if (isFiltered()){
+        if (isVector(_type))
+            ThrowException("You cannot apply a filter to a vector port output")
+                    .value(convert<QString>(_filter)).context(_port);
+        if (!_filteredValuePtr)
+            _filteredValuePtr = port_value_op::allocate(_type);
+    }
 
     allocateBuffer();
 
@@ -122,10 +132,10 @@ void Track::checkBufferSizes() {
     }
 }
 
-int Track::bufferSize() {
-    bool hasTracks = !_tracks.isEmpty();
-    return hasTracks ? _tracks.values().at(0)->_buffer.size() : 0;
-}
+//int Track::bufferSize() {
+//    bool hasTracks = !_tracks.isEmpty();
+//    return hasTracks ? _tracks.values().at(0)->_buffer.size() : 0;
+//}
 
 Port* Track::port() {
     return _port;
@@ -133,6 +143,10 @@ Port* Track::port() {
 
 PortFilter Track::filter() const {
     return _filter;
+}
+
+const Vector* Track::buffer() const {
+    return &_buffer;
 }
 
 void Track::uniqueName(QString name) {
@@ -164,11 +178,16 @@ QList<Track *> Track::all() {
     return _tracks.values();
 }
 
-void Track::initializeAll() {
+void Track::clearOrders() {
+    _orders.clear();
+}
+
+void Track::effectuateOrders() {
+    // Turn orders into tracks
     _tracks.clear();
     for (Order order : _orders)
         _tracks[order] = new Track(order);
-    _orders.clear();
+    // Set unique name of each track
     setUniqueNames();
 }
 

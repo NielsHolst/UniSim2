@@ -3,6 +3,7 @@
 #include <base/command.h>
 #include <base/dialog.h>
 #include <base/environment.h>
+#include <base/track.h>
 #include "test_random.h"
 
 using namespace base;
@@ -12,7 +13,6 @@ void TestRandom::testDrawAt() {
     Command::submit(QStringList() << "load" << "random/draw_at.box", 0);
     QCOMPARE(errors, dialog().errorCount());
 
-    environment().computationStep(ComputationStep::Construct);
     Box *sim = environment().root(),
         *client = sim->findOne<Box>("client");
     Port *a = client->port("a"),
@@ -23,7 +23,8 @@ void TestRandom::testDrawAt() {
          *f = client->port("f"),
          *g = client->port("g");
 
-    // They must all be different, except (d,e) and (f,g) which draw from common boxs
+    // They must all be different, except (d,e) and (f,g) which draw from common boxes
+    Track::effectuateOrders();
     environment().computationStep(ComputationStep::Initialize);
     sim->initializeFamily();
     double a1 = a->value<double>(),
@@ -42,6 +43,7 @@ void TestRandom::testDrawAt() {
     // The atReset and atUserReset must have changed
     environment().computationStep(ComputationStep::Reset);
     sim->resetFamily();
+    Track::resetAll();
     double a2 = a->value<double>(),
            b2 = b->value<double>(),
            c2 = c->value<double>(),
@@ -61,6 +63,7 @@ void TestRandom::testDrawAt() {
     // The atUpdate and atUserUpdate must have changed
     environment().computationStep(ComputationStep::Update);
     sim->updateFamily();
+    Track::updateAll();
     double a3 = a->value<double>(),
            b3 = b->value<double>(),
            c3 = c->value<double>(),

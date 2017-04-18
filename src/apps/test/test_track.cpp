@@ -12,8 +12,10 @@ using namespace base;
 using std::cout;
 
 void TestTrack::testScalar() {
+    Box *sim;
     try {
-        run(TestBoxCases::case3a());
+        sim = TestBoxCases::case3a();
+        sim->run();
     }
     catch(Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
@@ -25,12 +27,14 @@ void TestTrack::testScalar() {
              << "input2" << "input3" << "input4"
              << "output1" << "output2" << "output3";
     checkColumnNames(expected);
-    environment().deleteRoot();
+    delete sim;
 }
 
 void TestTrack::testVector() {
+    Box *sim;
     try {
-        run(TestBoxCases::case4());
+        sim = TestBoxCases::case4();
+        sim->run();
     }
     catch(Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
@@ -44,27 +48,21 @@ void TestTrack::testVector() {
     checkColumnNames(expected);
     checkColumnFormat(expected.size());
     checkColumnData(expected.size());
-    environment().deleteRoot();
+    delete sim;
 }
 
-void TestTrack::run(Box *simulation) {
-    Environment &env(environment());
+void TestTrack::testTrackPtr() {
+    QVector<int>
+        output1, output2,
+        expected1, expected2;
     try {
-        env.root(simulation);
-        env.root()->run();
+        output1 = runJump( buildJump(17, 8) );
+        output2 = runJump( buildJump(32, 8) );
     }
     catch (Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
         QFAIL(qPrintable(s));
     }
-}
-
-void TestTrack::testTrackPtr() {
-    QVector<int>
-        output1 = runJump( buildJump(17, 8) ),
-        output2 = runJump( buildJump(32, 8) ),
-        expected1,
-        expected2;
     expected1 << 17 << 52 << 26 << 13 << 40 << 20 << 10 << 5;
     expected2 << 32 << 16 <<  8 <<  4 <<  2 <<  1 <<  4 << 2;
     QCOMPARE(output1, expected1);
@@ -100,7 +98,8 @@ QVector<int> TestTrack::runJump(base::Box *sim) {
     sim->run();
 
     Port *value = sim->findOne<Port>("jump[value]");
-    const Vector* vector = value->trackPtr();
+    Track *track = Track::find(Track::Order{value, PortFilter::None});
+    const Vector* vector = track->buffer();
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
     return *values;
 }
@@ -126,7 +125,6 @@ void TestTrack::checkColumnNames(QSet<QString> expected) {
     file.close();
     if (columnNames != expected) {
         QString s{"Sets differ got(%1) != expected(%2)"};
-        std::cout << "HALLO\n";
         QFAIL(qPrintable(s.arg(toString(columnNames)).arg(toString(expected))));
     }
 }
