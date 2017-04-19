@@ -3,7 +3,7 @@
 #define PLANT_H
 #include <base/box.h>
 
-namespace student {
+namespace pollnet {
 
 class Plant : public base::Box
 {
@@ -18,21 +18,16 @@ private:
     double initial_V;
 
     //    for F, Functional Response
-    double preference; // preference of pollinator for eating floral rewards
-    double B0; // half-saturation density
-    double h; // Hill coefficient
-    double cr;
+    double CR; // consumption rate
 
     // for Allometry
     double m; // body mass of plant
-    bool is_vertebrate; // 1 if vertebrate
+
     //    calculated in Allometry
-    double x; // metabolic rate of pollinator
-    double y; // maximum consumption rate of pollinator eating floral rewards
-    double r; // intrinsic growth rate of plants
+    double x; // metabolic rate of plant
+    double r; // intrinsic growth rate of plant
 
     //    for dRdt, Rate of Floral Rewards Change
-    double B; // pollinator biomass
     double s; // self-limitation rate of floral rewards
     double beta; // production rate of floral rewards
 

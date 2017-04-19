@@ -26,6 +26,7 @@ HEADERS +=  \
     plot_r.h \
     population.h \
     random_base.h \
+    random_binomial.h \
     random_lognormal.h \
     random_normal.h \
     random_poisson.h \
@@ -57,6 +58,7 @@ SOURCES +=  \
     page_r.cpp \
     plot_r.cpp \
     population.cpp \
+    random_binomial.cpp \
     random_lognormal.cpp \
     random_normal.cpp \
     random_poisson.cpp \

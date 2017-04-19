@@ -65,7 +65,7 @@ void Simulation::run() {
 
             for (step = 1;
                  (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
-                 (useStopSteps && !stopSteps && step<=steps) || // apply both lag and count
+                 (useStopSteps && !stopSteps && step<=steps) || // apply both flag and count
                  (!useStopSteps && step<=steps);                // apply count only
                  ++step)
             {

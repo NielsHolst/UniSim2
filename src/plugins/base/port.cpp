@@ -245,7 +245,7 @@ void Port::resolveImports() {
 
 void Port::reset() {
     if (!hasImport() && _reset)
-        base::initialize(_valueType, _valuePtr);
+        base::initialize(_valueType, _valuePtr, this);
 }
 
 void Port::copyFromImport() {

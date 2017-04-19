@@ -258,23 +258,23 @@ Track* Track::find(Order order) {
 }
 
 Track::ParseResult Track::parseTrackPaths(QVector<QString> paths_, QObject *context) {
-    // Break ">" loose as separate strings
+    // Break "@" loose as separate strings
     QVector<QString> paths;
     for (QString s : paths_) {
-        if (s == ">")
-            paths.append(">");
-        else if (s.startsWith(">")) {
-            paths.append(">");
+        if (s == "@")
+            paths.append("@");
+        else if (s.startsWith("@")) {
+            paths.append("@");
             paths.append(s.remove(0, 1));
         }
-        else if (s.endsWith(">")) {
+        else if (s.endsWith("@")) {
             paths.append(s.remove(s.size()-1, 1));
-            paths.append(">");
+            paths.append("@");
         }
-        else if (s.contains(">")) {
-            int ix = s.indexOf(">");
+        else if (s.contains("@")) {
+            int ix = s.indexOf("@");
             paths.append(s.mid(0, ix));
-            paths.append(">");
+            paths.append("@");
             paths.append(s.mid(ix+1));
         }
         else
@@ -288,12 +288,12 @@ Track::ParseResult Track::parseTrackPaths(QVector<QString> paths_, QObject *cont
     while (i < n) {
         port = paths.at(i);
         filter = PortFilter::None;
-        bool hasFilter = (i+1<n && paths.at(i+1)==">");
-        if (port == ">")
-            ThrowException("Leading '>' in ports").value(port).context(context);
+        bool hasFilter = (i+1<n && paths.at(i+1)=="@");
+        if (port == "@")
+            ThrowException("Leading '@' in ports").value(port).context(context);
         if (hasFilter) {
             if (i+2==n)
-                ThrowException("Trailing '>' in ports").value(port).context(context);
+                ThrowException("Trailing '@' in ports").value(port).context(context);
             filter = convert<PortFilter>(paths.at(i+2));
         }
         parsed << qMakePair(port, filter);

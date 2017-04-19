@@ -39,9 +39,13 @@ SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
 
-SUBDIRS += PestTox
-PestTox.subdir = src/plugins/PestTox
-PestTox.depends = base
+#SUBDIRS += PestTox
+#PestTox.subdir = src/plugins/PestTox
+#PestTox.depends = base
+
+SUBDIRS += pollnet
+pollnet.subdir = src/plugins/pollnet
+pollnet.depends = base
 
 SUBDIRS += student
 student.subdir = src/plugins/student
@@ -67,6 +71,7 @@ unisim.depends = demo
 unisim.depends = distribution
 #unisim.depends = conductance
 unisim.depends = eq
+unisim.depends = pollnet
 #unisim.depends = PestTox
 unisim.depends = student
 #unisim.depends = tuta_absoluta

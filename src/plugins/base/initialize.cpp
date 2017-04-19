@@ -32,7 +32,7 @@ namespace {
 
 namespace base {
 
-void initialize(PortType destT, void *destPtr) {
+void initialize(PortType destT, void *destPtr, QObject *context) {
     switch(destT) {
     CASE_INIT(Bool, bool);
     CASE_INIT(Char, char);
@@ -47,7 +47,7 @@ void initialize(PortType destT, void *destPtr) {
     CASE_INIT(Time, QTime);
     CASE_INIT(DateTime, QDateTime);
     case Null:
-        ThrowException("Cannot initialize Null");
+        ThrowException("Cannot initialize Null").context(context);
         break;
     }
 }

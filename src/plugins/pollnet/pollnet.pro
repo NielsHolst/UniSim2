@@ -4,21 +4,20 @@
 #
 #-------------------------------------------------
 
-BOXES_PLUGIN_NAME = student
+BOXES_PLUGIN_NAME = pollnet
 
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
+    big_bang.h \
     mediator.h \
-    pollinator.h \
     plant.h \
-    fibonacci.h \
-    jump.h
+    pollinator.h \
+
 	
 SOURCES +=  \
+    big_bang.cpp \
     mediator.cpp \
-    pollinator.cpp \
     plant.cpp \
-    fibonacci.cpp \
-    jump.cpp
+    pollinator.cpp \
 

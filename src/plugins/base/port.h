@@ -121,8 +121,10 @@ DEFINE_ENUM_FUNCTIONS(Port::ToTextOptions)
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
     _valueType = typeOf<T>();
+    if (_valueType == Null)
+        ThrowException("Ports not supported for this type").context(this);
     format(_valueType);
-    base::initialize(_valueType, _valuePtr);
+    base::initialize(_valueType, _valuePtr, this);
     return *this;
 }
 

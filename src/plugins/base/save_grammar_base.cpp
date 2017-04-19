@@ -70,7 +70,12 @@ QStringList SaveGrammarBase::portNames() {
         if (factory->id() != "command") {
             for (QString className : factory->inventory()) {
                 QString qualifiedClassName = factory->id()+ "::" + className;
-                MegaFactory::create<Box>(qualifiedClassName, className.toLower(), root);
+                try {
+                    MegaFactory::create<Box>(qualifiedClassName, className.toLower(), root);
+                }
+                catch (Exception &ex) {
+                    dialog().information("Class not included in grammar (error in its constructor): " + qualifiedClassName);
+                }
             }
         }
     }
@@ -101,7 +106,7 @@ QStringList SaveGrammarBase::attributeNames() {
 }
 
 QStringList SaveGrammarBase::transformNames() {
-    return portTransformNames();
+    return portTransformNames() << "@";
 }
 
 QStringList SaveGrammarBase::constantNames() {

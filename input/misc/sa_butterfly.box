@@ -32,7 +32,7 @@ Simulation sim {
         .ports = (butterfly/*[content])
       }
       PlotR {
-        .ports = (egg[initial] egg[duration] adult[content]>end)
+        .ports = (egg[initial] egg[duration] adult[content]@end)
 				.hide = TRUE
       }
 		}

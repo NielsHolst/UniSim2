@@ -80,7 +80,7 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
     QString val = QString::fromStdString(value),
             dist;
-    if (val.contains("@") && !isApostrophed(val)) {
+    if (val.contains("@") && !isApostrophed(val) && !isParenthesized(val)) {
         int pos = val.indexOf("@");
         dist = deEmbrace(val.mid(pos+1));
         val = val.left(pos);

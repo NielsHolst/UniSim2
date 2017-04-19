@@ -86,6 +86,8 @@
     <file>data/input/lunch/ipm6.box</file>
     <file>data/input/lunch/ipm7.box</file>
     <file>data/input/misc/day-degrees.box</file>
+    <file>data/input/misc/sa.R</file>
+    <file>data/input/misc/sa_butterfly.box</file>
     <file>data/input/sandy/sandy.box</file>
     <file>data/input/sandy/sandy1.box</file>
     <file>data/input/sandy/sandy2a.box</file>
@@ -128,6 +130,8 @@
     <file>data/input/student/PestTox/weather/Loei.txt</file>
     <file>data/input/student/PestTox/weather/Pathumthani.txt</file>
     <file>data/input/student/pollination_network-2.box</file>
+    <file>data/input/student/pollnet/big_bang_pollinators.box</file>
+    <file>data/input/student/pollnet/big_bang_pollinators.txt</file>
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
     <file>data/input/UA/2017-01-23/egg-1.box</file>

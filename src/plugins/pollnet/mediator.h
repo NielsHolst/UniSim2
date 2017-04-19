@@ -4,12 +4,13 @@
 #include <base/box.h>
 #include <base/matrix.h>
 
-namespace student {
+namespace pollnet {
 
 class Mediator : public base::Box
 {
 public:
     Mediator(QString name, QObject *parent);
+    void amend();
     void initialize();
     void reset();
     void update();
@@ -17,20 +18,29 @@ private:
     // Data
     QVector<base::Box*> plants, pollinators;
     int numPlants, numPollinators;
+    double B0_h;
     // From plant
     QVector<double>
-        R,
+        R, V,
     // From pollinator
-        x, y, B;
+        x, y, B,
     // Interactions
-    base::Matrix<double> cr;
+        Gain_Pollinator, Loss_Plant;
+
+    base::Matrix<double> CR;
 
     // Inputs
-    double
-        preference, B0, h;
+    double B0, h;
+    QString connectivityFile;
+    base::Matrix<double> preference;
+
+    // Output
+    double Vsum;
 
     // Methods
-    double compute_F();
+    double compute_F(int i, int j);
+    double compute_Vsum();
+    void setup_Consumption_Ports();
 };
 
 }
