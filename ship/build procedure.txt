@@ -15,6 +15,7 @@
 5. In Bash:
 > git tag 2.0.n
 > git push origin master --tags
+- Note this pushes both source code changes and tags
 
 (B) Mac OS X
 ============

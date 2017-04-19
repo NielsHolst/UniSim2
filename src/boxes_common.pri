@@ -29,7 +29,7 @@ QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-dec
 # Compiler options to silence warnings when compiling under Mac OS X
 MY_HASH = $$LITERAL_HASH
 NO_PRAGMA_MESSAGES = $$join(MY_HASH, , -Wno-\\, pragma-messages)
-macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
+macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override -Wunused-parameter -Wunused-private-field
 
 # Compiler options to silence warnings when compiling under Win
 win32:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
