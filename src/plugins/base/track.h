@@ -16,6 +16,8 @@ class Port;
 class Track : public QObject
 {
 public:
+    typedef QVector<QPair<QString, PortFilter>> ParseResult;
+
     struct Order {
         Port *port;
         PortFilter filter;
@@ -38,9 +40,14 @@ public:
     void uniqueName(QString name);
     QString uniqueName() const;
     QStringList uniqueNameExpanded();
+    QString toString(int row);
+
     static QList<Track*> all();
     static Track* find(Order order);
-    QString toString(int row);
+    static QString dumpOrders();
+    static QString dumpTracks();
+    static ParseResult parseTrackPaths(QVector<QString> paths, QObject *context = 0);
+    static QVector<Order> placeOrders(QVector<QString> paths, Box *context);
 private:
     // Static data
     typedef QMap<Order, Track*> Tracks;
@@ -59,7 +66,6 @@ private:
     // Methods
     bool isFiltered() const;
     void allocateBuffer();
-    static void checkBufferSizes();
     static void setUniqueNames();
 
 };

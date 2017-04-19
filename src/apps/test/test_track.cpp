@@ -2,9 +2,11 @@
 #include <base/box.h>
 #include <base/box_builder.h>
 #include <base/command.h>
+#include <base/dialog.h>
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/port.h>
+#include "exception_expectation.h"
 #include "test_box_cases.h"
 #include "test_track.h"
 
@@ -17,10 +19,7 @@ void TestTrack::testScalar() {
         sim = TestBoxCases::case3a();
         sim->run();
     }
-    catch(Exception &ex) {
-        QString s = "Unexpected exception: " + ex.what();
-        QFAIL(qPrintable(s));
-    }
+    UNEXPECTED
 
     QSet<QString> expected;
     expected << "step" << "iteration"
@@ -36,10 +35,7 @@ void TestTrack::testVector() {
         sim = TestBoxCases::case4();
         sim->run();
     }
-    catch(Exception &ex) {
-        QString s = "Unexpected exception: " + ex.what();
-        QFAIL(qPrintable(s));
-    }
+    UNEXPECTED
 
     QSet<QString> expected;
     expected << "step" << "iteration"
@@ -59,10 +55,8 @@ void TestTrack::testTrackPtr() {
         output1 = runJump( buildJump(17, 8) );
         output2 = runJump( buildJump(32, 8) );
     }
-    catch (Exception &ex) {
-        QString s = "Unexpected exception: " + ex.what();
-        QFAIL(qPrintable(s));
-    }
+    UNEXPECTED
+
     expected1 << 17 << 52 << 26 << 13 << 40 << 20 << 10 << 5;
     expected2 << 32 << 16 <<  8 <<  4 <<  2 <<  1 <<  4 << 2;
     QCOMPARE(output1, expected1);
@@ -148,4 +142,88 @@ void TestTrack::checkColumnData(int expected) {
     QString empty = file.readLine().trimmed();
     file.close();
     QVERIFY(empty.isEmpty());
+}
+
+
+void TestTrack::testParseOk() {
+    QVector<QString> s;
+    Track::ParseResult res, expected;
+
+    s << "a[x]" << "b[y]";
+    expected.append( qMakePair(QString("a[x]"), PortFilter::None) );
+    expected.append( qMakePair(QString("b[y]"), PortFilter::None) );
+    res = Track::parseTrackPaths(s);
+    QCOMPARE(res, expected);
+
+    s << "c[z]>end";
+    expected.append( qMakePair(QString("c[z]"), PortFilter::End) );
+    res = Track::parseTrackPaths(s);
+    QCOMPARE(res, expected);
+
+    s << "A" << ">mean";
+    expected.append( qMakePair(QString("A"), PortFilter::Mean) );
+    res = Track::parseTrackPaths(s);
+    QCOMPARE(res, expected);
+
+    s << "B>" << "min";
+    expected.append( qMakePair(QString("B"), PortFilter::Min) );
+    res = Track::parseTrackPaths(s);
+    QCOMPARE(res, expected);
+
+    s << "C"<< ">" << "max";
+    expected.append( qMakePair(QString("C"), PortFilter::Max) );
+    res = Track::parseTrackPaths(s);
+    QCOMPARE(res, expected);
+}
+
+void TestTrack::testParseError() {
+    QVector<QString> s;
+    bool excepted;
+
+    s.clear();
+    excepted = false;
+    try {
+        s << ">a[x]" << "b[y]";
+        Track::parseTrackPaths(s);
+    }
+    EXPECTED
+
+    s.clear();
+    excepted = false;
+    try {
+        s << "a[x]" << "b[y]>";
+        Track::parseTrackPaths(s);
+    }
+    EXPECTED
+
+    s.clear();
+    excepted = false;
+    try {
+        s << "a[x]" << ">>" << "b[y]";
+        Track::parseTrackPaths(s);
+    }
+    EXPECTED
+}
+
+
+void TestTrack::testNoFilter() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "run" << "track/no_filter.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+
+    QList<Track *> tracks = Track::all();
+    std::cout << qPrintable(Track::dumpOrders());
+    std::cout << qPrintable(Track::dumpTracks());
+    QCOMPARE(tracks.size(), 2+4+1); // step + iteration + 4*content + initial
+}
+
+void TestTrack::testFilter() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "run" << "track/filter.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+
+    QList<Track *> tracks = Track::all();
+    std::cout << qPrintable(Track::dumpOrders());
+    std::cout << qPrintable(Track::dumpTracks());
+    QCOMPARE(tracks.size(), 2+4+3); // step + iteration + 4*content + 3*initial
 }

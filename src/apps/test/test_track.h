@@ -16,6 +16,10 @@ private slots:
     void testScalar();
     void testVector();
     void testTrackPtr();
+    void testParseOk();
+    void testParseError();
+    void testNoFilter();
+    void testFilter();
 private:
     QFile file;
     void run(base::Box *simulation);

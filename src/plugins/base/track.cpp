@@ -68,6 +68,57 @@ Track::Order Track::takeOrder(Port *port, PortFilter filter) {
     return order;
 }
 
+
+void Track::effectuateOrders() {
+    // If any order was filtered then all tracks must be filtered
+    bool first = true,
+         noFilter,
+         mustFilter = false;
+    for (Order order : _orders) {
+        _tracks[order] = new Track(Order{order.port, order.filter});
+        if (first) {
+            noFilter = (order.filter==PortFilter::None);
+            first = false;
+        }
+        else if (noFilter != (order.filter==PortFilter::None)) {
+            mustFilter = true;
+            break;
+        }
+    }
+    // Set missing files to End
+    if (mustFilter) {
+        QSet<Order> oldOrders = _orders;
+        _orders.clear();
+        for (Order order : oldOrders) {
+            if (order.filter==PortFilter::None)
+                _orders << Order{order.port, PortFilter::End};
+            else
+                _orders << order;
+        }
+    }
+
+    // Turn orders into tracks
+    _tracks.clear();
+    bool hasFilter = false;
+    for (Order order : _orders) {
+        _tracks[order] = new Track(Order{order.port, order.filter});
+        hasFilter = hasFilter || order.filter!=PortFilter::None;
+    }
+    // If any order was filtered then all tracks must be filtered;
+    // the orders are not changed in any case
+    if (hasFilter) {
+        QMapIterator<Order, Track*> it(_tracks);
+        while (it.hasNext()) {
+            it.next();
+            Track *track = it.value();
+            if (track->_filter == PortFilter::None)
+                track->_filter = PortFilter::End;
+        }
+    }
+    // Set unique name of each track
+    setUniqueNames();
+}
+
 void Track::initialize() {
 }
 
@@ -116,26 +167,7 @@ void Track::cleanup() {
         port_value_op::divide(_type, _filteredValuePtr, _count);
     if (_filter != PortFilter::None)
         _buffer.append(_filteredValuePtr);
-    checkBufferSizes();
 }
-
-void Track::checkBufferSizes() {
-    bool hasTracks = !_tracks.isEmpty();
-    if (hasTracks) {
-        int n = _tracks.values().at(0)->_buffer.size();
-        for (Track *track : _tracks.values()) {
-            int m = track->_buffer.size();
-            if (m != n)
-                ThrowException("Unexpected error: buffer sizes do not match")
-                        .value(n).value2(m).context(track);
-        }
-    }
-}
-
-//int Track::bufferSize() {
-//    bool hasTracks = !_tracks.isEmpty();
-//    return hasTracks ? _tracks.values().at(0)->_buffer.size() : 0;
-//}
 
 Port* Track::port() {
     return _port;
@@ -182,15 +214,6 @@ void Track::clearOrders() {
     _orders.clear();
 }
 
-void Track::effectuateOrders() {
-    // Turn orders into tracks
-    _tracks.clear();
-    for (Order order : _orders)
-        _tracks[order] = new Track(order);
-    // Set unique name of each track
-    setUniqueNames();
-}
-
 void Track::setUniqueNames() {
     UniqueName unique(all());
     QStringList uniqueNames = unique.resolve();
@@ -223,12 +246,106 @@ bool Track::isFiltered() const {
 }
 
 Track* Track::find(Order order) {
+    // If not found then ttry with None filter replaced by End
     Tracks::iterator it = _tracks.find(order);
+    if (it == _tracks.end() && order.filter==PortFilter::None)
+        it = _tracks.find(Order{order.port, PortFilter::End});
     if (it == _tracks.end())
         ThrowException("No track found matching order").
                 value("Filter=" + convert<QString>(order.filter)).
                 context(order.port);
     return it.value();
+}
+
+Track::ParseResult Track::parseTrackPaths(QVector<QString> paths_, QObject *context) {
+    // Break ">" loose as separate strings
+    QVector<QString> paths;
+    for (QString s : paths_) {
+        if (s == ">")
+            paths.append(">");
+        else if (s.startsWith(">")) {
+            paths.append(">");
+            paths.append(s.remove(0, 1));
+        }
+        else if (s.endsWith(">")) {
+            paths.append(s.remove(s.size()-1, 1));
+            paths.append(">");
+        }
+        else if (s.contains(">")) {
+            int ix = s.indexOf(">");
+            paths.append(s.mid(0, ix));
+            paths.append(">");
+            paths.append(s.mid(ix+1));
+        }
+        else
+            paths.append(s);
+    }
+    // Parse
+    Track::ParseResult parsed;
+    int i=0, n=paths.size();
+    QString port;
+    PortFilter filter;
+    while (i < n) {
+        port = paths.at(i);
+        filter = PortFilter::None;
+        bool hasFilter = (i+1<n && paths.at(i+1)==">");
+        if (port == ">")
+            ThrowException("Leading '>' in ports").value(port).context(context);
+        if (hasFilter) {
+            if (i+2==n)
+                ThrowException("Trailing '>' in ports").value(port).context(context);
+            filter = convert<PortFilter>(paths.at(i+2));
+        }
+        parsed << qMakePair(port, filter);
+        i = hasFilter ? i+3 :i+1;
+    }
+    return parsed;
+}
+
+QVector<Track::Order> Track::placeOrders(QVector<QString> paths, Box *context) {
+    // Parse paths into ports and filters
+    Track::ParseResult pathAndFilter = Track::parseTrackPaths(paths, context);
+
+    // Place orders specified by ports
+    QVector<Order> orders;
+    for (QPair<QString, base::PortFilter> pf : pathAndFilter) {
+        // For each path find the matching ports
+        QVector<Port*> trackedPorts = context->findMany<Port>(pf.first);
+        // Register a track order for each port and keep own list of orders
+        for (Port *port : trackedPorts) {
+            orders << port->track(pf.second);
+        }
+    }
+
+    // Return orders placed
+    return orders;
+}
+
+QString Track::dumpOrders() {
+    QStringList list;
+    int i=0;
+    for (Order order : _orders) {
+        QString s = QString::number(i++) +
+                "set[" + order.port->fullName() + " " + convert<QString>(order.filter) + "]";
+        list << s;
+    }
+    return list.join("\n") + "\n";
+}
+
+QString Track::dumpTracks() {
+    QStringList list;
+    QMapIterator<Order, Track*> it(_tracks);
+    int i=0;
+    while (it.hasNext()) {
+        it.next();
+        Order order = it.key();
+        Track *track = it.value();
+        QString s = QString::number(i++) +
+                " map[" + order.port->fullName() + " " + convert<QString>(order.filter) + "] = " +
+                track->uniqueName();
+        list << s;
+    }
+    return list.join("\n") + "\n";
 }
 
 

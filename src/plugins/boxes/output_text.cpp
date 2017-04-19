@@ -1,3 +1,4 @@
+#include <iostream>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/port.h>
@@ -33,6 +34,17 @@ void OutputText::writeDataFrame() {
     // Check ports
     if (Track::all().isEmpty())
         ThrowException("No ports are being tracked");
+    int n = Track::all().at(0)->buffer()->size();
+    for (Track *track : Track::all()) {
+        int m = track->buffer()->size();
+        if (m != n) {
+            std::cout << "OutputText::writeDataFrame:\n";
+            std::cout << qPrintable(Track::dumpOrders());
+            std::cout << qPrintable(Track::dumpTracks());
+            ThrowException("Unexpected error: buffer sizes do not match")
+                    .value(n).value2(m).context(this);
+        }
+    }
 
     // Write column labels
     QStringList list;

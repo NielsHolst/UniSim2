@@ -20,7 +20,7 @@ PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("produces a page of plots for R");
-    Input(xAxis).imports("/*[step]");
+    Input(xAxis).equals("/*[step]").notReferenced();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
     Input(width).imports("ancestors::*<OutputR>[width]");
@@ -31,18 +31,23 @@ void PageR::amend() {
     // Create a plot if none are present
     _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
     if (_plots.empty()) {
-        Box *plot = MegaFactory::create<Box>("PlotR", "", this);
+        Box *plot = MegaFactory::create<>("PlotR", "", this);
         plot->amend();
     }
     // Make certain xAxis port is tracked
-    Port *xPort = port("xAxis");
-    xPort->resolveImports();
-    QVector<Port*> importPorts = xPort->importPorts();
-    if (importPorts.size() != 1) {
-        QString msg{"Expected one x-axis, got '%1'"};
-        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
-    }
-    _xAxisOrder = importPorts[0]->track(PortFilter::None);
+//    Port *xPort = port("xAxis");
+//    xPort->resolveImports();
+//    QVector<Port*> importPorts = xPort->importPorts();
+//    if (importPorts.size() != 1) {
+//        QString msg{"Expected one x-axis, got '%1'"};
+//        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
+//    }
+    QVector<Track::Order> orders = Track::placeOrders(xAxis, this);
+    if (orders.isEmpty())
+        ThrowException("Cannot find any matching ports for xAxis").context(this);
+    if (orders.size() > 1)
+        ThrowException("Not implemented").context(this);
+    _xAxisOrder = orders.at(0);
 }
 
 void PageR::initialize() {

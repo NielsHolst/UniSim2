@@ -9,6 +9,7 @@
 
 namespace base {
 	
+class Box;
 class FactoryPlugIn;
 
 class MegaFactory : public QObject
@@ -16,7 +17,7 @@ class MegaFactory : public QObject
 public:
     static void loadPlugins();
 
-    template <class T>
+    template <class T=Box>
     static T* create(QString className, QString objectName, QObject *parent);
 
     static const QList<base::FactoryPlugIn*> &factories();
