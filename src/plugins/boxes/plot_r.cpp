@@ -18,12 +18,12 @@ PlotR::PlotR(QString name, QObject *parent)
     help("produces an R plot");
     Input(hide).equals(false);
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
-    Input(end).help("Name of R script code that will be added to the ggplot");
-    Input(endCode).help("R code that will be added to the ggplot");
+    Input(ggplot).equals("geom_line(size=1.1)").help("R code that will be added to the ggplot");
+    Input(end).help("Deprecated");
+    Input(endCode).help("Deprecated");
     Input(ncol).equals(-1);
     Input(nrow).equals(-1);
     Input(iteration).imports("/*[iteration]");
-    Input(iterationId).equals("iteration");
 }
 
 void PlotR::initialize() {
@@ -57,23 +57,37 @@ inline QStringList apostrophed(QStringList list) {
 QString PlotR::toScript() {
     if (hide || tracks().isEmpty())
         return QString();
+
+    QStringList xLabels;
+    for (Track *track : xAxisTracks())
+        xLabels << apostrophed(track->uniqueNameExpanded());
+
     QStringList portLabels;
-    QString xLabel = apostrophed(xAxisTrack()->uniqueName());
     for (Track *track : tracks())
         portLabels << apostrophed(track->uniqueNameExpanded());
+
+    // Set iteration label according to filter
+    bool isFiltered = (xAxisTracks().at(0)->filter() != PortFilter::None);
+    QString iterationLabel = "iteration";
+    if (isFiltered) iterationLabel += ".end";
 
     // Write function call
     QString string;
     QTextStream s(&string);
     s << "    "
       << "plot_" << layout << "(df, "
-      << xLabel << ", "
-      << (iteration > 2 ? ("\""+iterationId+"\"") : "NULL") << ", "
+      << "c(" << xLabels.join(", ") << ")"
+      << ", "
+      << (iteration > 2 ? ("\""+iterationLabel+"\"") : "NULL")
+      << ", "
       << "c(" << portLabels.join(", ") << ")"
       << ", "
-      << "ncol=" << dim("ncol") << ", "
+      << "ncol=" << dim("ncol")
+      << ", "
       << "nrow=" << dim("nrow")
       << ")";
+    if (!ggplot.isEmpty())
+        s << "+" << ggplot;
     if (!end.isEmpty())
         s << "+" << environment().inputFileContent(end).trimmed();
     if (!endCode.isEmpty())
@@ -82,10 +96,13 @@ QString PlotR::toScript() {
     return string;
 }
 
-Track* PlotR::xAxisTrack() {
+QVector<Track*> PlotR::xAxisTracks() {
+    QVector<Track*> tracks;
     PageR *page = Path("ancestors::*<PageR>", this).resolveOne<PageR>(this);
-    Track::Order order = page->xAxisOrder();
-    return Track::find(order);
+    QVector<Track::Order> orders = page->xAxisOrders();
+    for (Track::Order order : orders)
+        tracks << Track::find(order);
+    return tracks;
 }
 
 QString PlotR::dim(QString portName) {

@@ -25,7 +25,7 @@ public:
 private:
     // Input
     QString begin, end, outputFileNameVariable;
-    bool popUp;
+    bool popUp, keepPlots, keepVariables;
     double width, height;
 
     // Data

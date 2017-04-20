@@ -1,13 +1,15 @@
-#include <port.h>
 #include "assign.h"
 #include "box.h"
 #include "environment.h"
 #include "exception.h"
+#include "port.h"
 #include "port_value_op.h"
 #include "track.h"
 #include "unique_name.h"
 
+#include <QTextStream>
 #include <iostream>
+#include "dialog.h"
 
 namespace base {
 
@@ -85,7 +87,7 @@ void Track::effectuateOrders() {
             break;
         }
     }
-    // Set missing files to End
+    // Set missing filters to End
     if (mustFilter) {
         QSet<Order> oldOrders = _orders;
         _orders.clear();
@@ -99,22 +101,22 @@ void Track::effectuateOrders() {
 
     // Turn orders into tracks
     _tracks.clear();
-    bool hasFilter = false;
+//    bool hasFilter = false;
     for (Order order : _orders) {
         _tracks[order] = new Track(Order{order.port, order.filter});
-        hasFilter = hasFilter || order.filter!=PortFilter::None;
+//        hasFilter = hasFilter || order.filter!=PortFilter::None;
     }
-    // If any order was filtered then all tracks must be filtered;
-    // the orders are not changed in any case
-    if (hasFilter) {
-        QMapIterator<Order, Track*> it(_tracks);
-        while (it.hasNext()) {
-            it.next();
-            Track *track = it.value();
-            if (track->_filter == PortFilter::None)
-                track->_filter = PortFilter::End;
-        }
-    }
+//    // If any order was filtered then all tracks must be filtered;
+//    // the orders are not changed in any case
+//    if (hasFilter) {
+//        QMapIterator<Order, Track*> it(_tracks);
+//        while (it.hasNext()) {
+//            it.next();
+//            Track *track = it.value();
+//            if (track->_filter == PortFilter::None)
+//                track->_filter = PortFilter::End;
+//        }
+//    }
     // Set unique name of each track
     setUniqueNames();
 }
@@ -246,14 +248,25 @@ bool Track::isFiltered() const {
 }
 
 Track* Track::find(Order order) {
-    // If not found then ttry with None filter replaced by End
+    // If not found then try with None filter replaced by End
     Tracks::iterator it = _tracks.find(order);
     if (it == _tracks.end() && order.filter==PortFilter::None)
         it = _tracks.find(Order{order.port, PortFilter::End});
-    if (it == _tracks.end())
+    if (it == _tracks.end()) {
+//        std::cout << qPrintable(dumpOrders() + dumpTracks());
+        int id = order.port->id();
+        Port *port = Port::find(id);
+        QString s;
+        QTextStream t(&s);
+        t << "\n"
+                  << "Order.port->id = " << id << "\n"
+                  << "Port pointers match = " << (port==order.port) << "\n"
+                  << "\n";
+        dialog().information(s);
         ThrowException("No track found matching order").
                 value("Filter=" + convert<QString>(order.filter)).
                 context(order.port);
+    }
     return it.value();
 }
 

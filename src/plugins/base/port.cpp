@@ -7,6 +7,9 @@
 
 namespace base {
 
+int Port::_id;
+QVector<Port*> Port::_index;
+
 // Configure
 
 Port::Port(QString name, QObject *parent)
@@ -22,6 +25,8 @@ Port::Port(QString name, QObject *parent)
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
+    _id = _index.size();
+    _index << this;
 }
 
 Port& Port::equals(const char *value) {
@@ -135,6 +140,10 @@ QString Port::name() const {
 QString Port::fullName() const {
     QString path = parent() ? base::fullName(parent()) : QString();
     return path + "[" + name() + "]";
+}
+
+int Port::id() const {
+    return _id;
 }
 
 // Get attributes
@@ -422,6 +431,17 @@ PortType Port::commonType(const QVector<Port*> &ports) {
         }
     }
     return commonType;
+}
+
+void Port::clearIndex() {
+    _index.clear();
+}
+
+Port* Port::find(int id) {
+    if (id > _index.size())
+        ThrowException("Unexpected error: Index out of bounds").
+                value(id).value2(_index.size());
+    return _index[id];
 }
 
 }

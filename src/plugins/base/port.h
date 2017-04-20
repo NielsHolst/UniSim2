@@ -88,6 +88,7 @@ public:
 
     QString name() const;
     QString fullName() const;
+    int id() const;
 
     // Change
     void resolveImports();
@@ -114,6 +115,10 @@ public:
     void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
     template <class T> void deducePortType(T value);
     static PortType commonType(const QVector<Port *> &ports);
+    static void clearIndex();
+    static Port* find(int id);
+    static int _id;
+    static QVector<Port*> _index;
 };
 
 DEFINE_ENUM_FUNCTIONS(Port::ToTextOptions)

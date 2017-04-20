@@ -10,6 +10,7 @@
 #include "environment.h"
 #include "general.h"
 #include "object_pool.h"
+#include "port.h"
 #include "save_grammar_atom.h"
 #include "save_grammar_notepad.h"
 #include "version.h"
@@ -84,6 +85,7 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
     // Show step in status bar
     switch (step) {
     case ComputationStep::Construct:
+        Port::clearIndex();
         if (_root) delete _root;
         _root = _current = 0;
         break;

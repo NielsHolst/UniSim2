@@ -34,20 +34,10 @@ void PageR::amend() {
         Box *plot = MegaFactory::create<>("PlotR", "", this);
         plot->amend();
     }
-    // Make certain xAxis port is tracked
-//    Port *xPort = port("xAxis");
-//    xPort->resolveImports();
-//    QVector<Port*> importPorts = xPort->importPorts();
-//    if (importPorts.size() != 1) {
-//        QString msg{"Expected one x-axis, got '%1'"};
-//        ThrowException(msg.arg(importPorts.size())).value(xPort->importPath()).context(this);
-//    }
-    QVector<Track::Order> orders = Track::placeOrders(xAxis, this);
-    if (orders.isEmpty())
+    // Place order(s) for x-axis
+    _xAxisOrders = Track::placeOrders(xAxis, this);
+    if (_xAxisOrders.isEmpty())
         ThrowException("Cannot find any matching ports for xAxis").context(this);
-    if (orders.size() > 1)
-        ThrowException("Not implemented").context(this);
-    _xAxisOrder = orders.at(0);
 }
 
 void PageR::initialize() {
@@ -109,8 +99,8 @@ QString PageR::functionName() {
     return s;
 }
 
-Track::Order PageR::xAxisOrder() const {
-    return _xAxisOrder;
+QVector<Track::Order> PageR::xAxisOrders() const {
+    return _xAxisOrders;
 }
 
 }

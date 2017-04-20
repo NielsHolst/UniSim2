@@ -22,10 +22,10 @@ private:
     // Inputs
     bool hide;
     QVector<QString> ports;
-    QString layout, end, endCode, iterationId;
+    QString layout, end, endCode, ggplot;
     int ncol, nrow, iteration;
     // Methods
-    base::Track *xAxisTrack();
+    QVector<base::Track*> xAxisTracks();
     QString dim(QString portName);
 };
 

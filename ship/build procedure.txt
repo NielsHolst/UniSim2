@@ -20,7 +20,7 @@
 (B) Mac OS X
 ============
 
-1. In Finder go to nielsholst/qdev and delete UniSim2 folder.
+1. In Finder go to nielsholst/dev and delete UniSim2 folder.
 
 2. In Chrome go to Github and copy clone path.
  

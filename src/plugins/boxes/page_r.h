@@ -18,7 +18,7 @@ public:
     QString toString();
     QString toScript();
     QString functionName();
-    base::Track::Order xAxisOrder() const;
+    QVector<base::Track::Order> xAxisOrders() const;
 private:
     // Inputs
     QVector<QString> xAxis;
@@ -29,7 +29,7 @@ private:
     QVector<PlotR*> _plots;
     static int _commonPageNumber;
     int _myPageNumber;
-    base::Track::Order _xAxisOrder;
+    QVector<base::Track::Order> _xAxisOrders;
     // Methods
     QString dim(QString portName);
 };
