@@ -7,7 +7,6 @@
 
 namespace base {
 
-int Port::_id;
 QVector<Port*> Port::_index;
 
 // Configure
@@ -444,4 +443,13 @@ Port* Port::find(int id) {
     return _index[id];
 }
 
+QString Port::dump() {
+    QString s;
+    for (Port *port : _index) {
+        s += QString::number(port->id()) + ": " + port->fullName() + "\n";
+    }
+    return s;
 }
+
+}
+

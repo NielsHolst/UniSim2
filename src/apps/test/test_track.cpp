@@ -92,7 +92,7 @@ QVector<int> TestTrack::runJump(base::Box *sim) {
     sim->run();
 
     Port *value = sim->findOne<Port>("jump[value]");
-    Track *track = Track::find(Track::Order{value, PortFilter::None});
+    Track *track = Track::find(Track::Order{value->id(), PortFilter::None});
     const Vector* vector = track->buffer();
     const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
     return *values;

@@ -29,10 +29,7 @@ private:
     bool hasError;
     QString errorMsg;
     // Data
-    double nextShowProgress;
-//    QList<base::Port*> _trackedPorts;
-//    QFile _file;
-//    QTextStream _stream;
+    double _nextShowProgress;
     // Methods
     void collectTrackedPorts();
     void removeObsoletePorts();

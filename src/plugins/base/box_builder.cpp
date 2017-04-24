@@ -18,6 +18,7 @@ BoxBuilder::BoxBuilder()
 {
     environment().computationStep(ComputationStep::Construct);
     Track::clearOrders();
+    Port::clearIndex();
 }
 
 BoxBuilder& BoxBuilder::box(Box *box) {

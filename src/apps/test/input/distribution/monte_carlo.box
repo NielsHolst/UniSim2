@@ -3,7 +3,7 @@ Simulation sim {
 	SensitivityAnalysis sa { 
 	}
 	Stage a {
-    .initial = 100 @ (even 50 200)
+    .initial = 100 @ (uniform 50 200)
     .inflow = 15 @ (normal 15 2)
   }
 }

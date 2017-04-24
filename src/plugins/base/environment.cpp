@@ -85,7 +85,6 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
     // Show step in status bar
     switch (step) {
     case ComputationStep::Construct:
-        Port::clearIndex();
         if (_root) delete _root;
         _root = _current = 0;
         break;

@@ -39,7 +39,7 @@ void TestVector::testWithSimulation() {
     }
 
     Port *value = sim->findOne<Port>("fibonacci[value]");
-    Track *track = Track::find(Track::Order{value, PortFilter::None});
+    Track *track = Track::find(Track::Order{value ->id(), PortFilter::None});
     const Vector* vector = track->buffer();
     QCOMPARE(vector->size(), 5);
 

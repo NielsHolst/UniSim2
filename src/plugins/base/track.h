@@ -19,18 +19,13 @@ public:
     typedef QVector<QPair<QString, PortFilter>> ParseResult;
 
     struct Order {
-        Port *port;
+        int portId;
         PortFilter filter;
+        int key() const { return 100*portId + int(filter); }
     };
-    Track(Order order);
+
+    Track(Port *port, PortFilter filter);
     ~Track();
-    static void clearOrders();
-    static Order takeOrder(Port *port, PortFilter filter=PortFilter::None);
-    static void effectuateOrders();
-    static void resetAll();
-    static void updateAll();
-    static void cleanupAll();
-    void initialize();
     void reset();
     void update();
     void cleanup();
@@ -41,6 +36,13 @@ public:
     QString uniqueName() const;
     QStringList uniqueNameExpanded();
     QString toString(int row);
+
+    static void clearOrders();
+    static Order takeOrder(Port *port, PortFilter filter=PortFilter::None);
+    static void effectuateOrders();
+    static void resetAll();
+    static void updateAll();
+    static void cleanupAll();
 
     static QList<Track*> all();
     static Track* find(Order order);
@@ -66,6 +68,8 @@ private:
     // Methods
     bool isFiltered() const;
     void allocateBuffer();
+    static bool areAnyOrdersFiltered();
+    static void replaceUnfilteredOrders();
     static void setUniqueNames();
 
 };

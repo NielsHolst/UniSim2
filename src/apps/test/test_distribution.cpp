@@ -25,7 +25,7 @@ void TestDistribution::testLoad() {
     Distribution *even(0), *normal(0);
     try {
         Box *a = sim->findOne<Box>("/sim/a");
-        even = a->findChild<Distribution*>("even", Qt::FindDirectChildrenOnly);
+        even = a->findChild<Distribution*>("uniform", Qt::FindDirectChildrenOnly);
         normal = a->findChild<Distribution*>("normal", Qt::FindDirectChildrenOnly);
     }
     catch (Exception &ex) {
@@ -72,7 +72,7 @@ void TestDistribution::testBuilder() {
             box("Simulation").name("sim").
                 box("SensitivityAnalysis").endbox().
                 box("Stage").name("a").
-                    port("initial").equals(100).rnd("even").min(50).max(200).
+                    port("initial").equals(100).rnd("uniform").min(50).max(200).
                     port("inflow").equals(15).rnd("normal").mean(15).sd(2).
                 endbox().
             endbox();
@@ -86,7 +86,7 @@ void TestDistribution::testBuilder() {
     try {
         sim->initializeFamily();
         Box *a = sim->findOne<Box>("/sim/a");
-        even = a->findChild<Distribution*>("even", Qt::FindDirectChildrenOnly);
+        even = a->findChild<Distribution*>("uniform", Qt::FindDirectChildrenOnly);
         normal = a->findChild<Distribution*>("normal", Qt::FindDirectChildrenOnly);
     }
     catch (Exception &ex) {

@@ -1,7 +1,7 @@
 Simulation sim {
   .steps = 2
   ModelA a {
-    .input1 = 20@(even 1 8)
+    .input1 = 20@(uniform 1 8)
     .input2 = 25 @ (normal 3.1 0.8)
   }
 }

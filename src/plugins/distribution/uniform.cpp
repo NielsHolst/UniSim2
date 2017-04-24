@@ -1,35 +1,35 @@
 #include <base/publish.h>
-#include "even.h"
+#include "uniform.h"
 
 using namespace base;
 
 namespace distribution {
 
-PUBLISH(even)
+PUBLISH(uniform)
 
-even::even(QString name, QObject *parent)
+uniform::uniform(QString name, QObject *parent)
     : Distribution(name, parent), _min(0), _max(1)
 {
 }
 
-void even::min(double value) {
+void uniform::min(double value) {
     _min = value;
 }
 
-void even::max(double value) {
+void uniform::max(double value) {
     _max = value;
 }
 
-void even::parseArguments() {
+void uniform::parseArguments() {
     parseNext(&_min);
     parseNext(&_max);
 }
 
-QPair<double,double> even::bounds() const {
+QPair<double,double> uniform::bounds() const {
     return qMakePair(_min, _max);
 }
 
-double even::inverse(double y) const {
+double uniform::inverse(double y) const {
     Q_ASSERT(y>=0. && y<=1.);
     return _min + (_max - _min)*y;
 }

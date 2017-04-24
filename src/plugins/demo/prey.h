@@ -9,12 +9,13 @@ class Prey : public base::Box
 {
 public:
     Prey(QString name, QObject *parent);
-    void initialize();
+    void reset();
+    void update();
 private:
     // Inputs
-    double r, K, totalPrey, loss;
+    double initial, r, K, totalPrey, timeStep, loss;
     // Outputs
-    double rActual;
+    double density, rActual;
 };
 
 }

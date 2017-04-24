@@ -10,11 +10,11 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 
 HEADERS +=  \
-    even.h \
+    uniform.h \
     normal.h
 	
 SOURCES +=  \
-    even.cpp \
+    uniform.cpp \
     normal.cpp
 
 

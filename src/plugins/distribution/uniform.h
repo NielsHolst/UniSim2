@@ -1,13 +1,13 @@
-#ifndef EVEN_H
-#define EVEN_H
+#ifndef UNIFORM_H
+#define UNIFORM_H
 #include <base/distribution.h>
 
 namespace distribution {
 
-class even : public base::Distribution
+class uniform : public base::Distribution
 {
 public:
-    even(QString name, QObject *parent);
+    uniform(QString name, QObject *parent);
     void min(double value);
     void max(double value);
     QPair<double,double> bounds() const;

@@ -38,6 +38,7 @@ public:
         }
     };
 private:
+    int _id;
     void *_valuePtr;
     PortType _valueType, _importType;
     PortMode _mode;
@@ -117,8 +118,8 @@ public:
     static PortType commonType(const QVector<Port *> &ports);
     static void clearIndex();
     static Port* find(int id);
-    static int _id;
     static QVector<Port*> _index;
+    static QString dump();
 };
 
 DEFINE_ENUM_FUNCTIONS(Port::ToTextOptions)

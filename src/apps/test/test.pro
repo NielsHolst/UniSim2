@@ -44,6 +44,7 @@ HEADERS +=  \
     test_port_value_op.h \
     test_random.h \
     test_savanna.h \
+    test_save_grammar.h \
     test_scenarios.h \
     test_simulation.h \
     test_track.h \
@@ -88,6 +89,7 @@ SOURCES +=  \
     test_port_value_op.cpp \
     test_random.cpp \
     test_savanna.cpp \
+    test_save_grammar.cpp \
     test_scenarios.cpp \
     test_simulation.cpp \
     test_track.cpp \

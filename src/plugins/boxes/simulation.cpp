@@ -43,7 +43,7 @@ void Simulation::amend() {
 }
 
 void Simulation::run() {
-    nextShowProgress = 0.01;
+    _nextShowProgress = 0.01;
     hasError = false;
     QTime time;
     try {
@@ -90,11 +90,11 @@ void Simulation::run() {
 }
 
 void Simulation::show(QTime time) {
-    double progress = double(step)/steps/iterations;
-    if (progress > nextShowProgress) {
+    double progress = double(step + iteration*steps)/steps/iterations;
+    if (progress > _nextShowProgress) {
         double total = time.elapsed()/progress;
         dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
-        nextShowProgress += 0.01;
+        _nextShowProgress += 0.01;
     }
 }
 
