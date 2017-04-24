@@ -30,22 +30,17 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::vector<ast::CompositeNode>, children)
 )
 
-BOOST_FUSION_ADAPT_STRUCT(
-    ast::NameValuePair,
-    (std::string, name)
-    (std::string, value)
-)
 
 BOOST_FUSION_ADAPT_STRUCT(
-    ast::ParameterWithAttributes,
+    ast::ParameterWithAttribute,
     (std::string, type)
     (std::string, name)
-    (std::vector<ast::NameValuePair>, attributes)
+    (std::string, attribute)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::Parameter,
-    (ast::ParameterWithAttributes, attributedName)
+    (ast::ParameterWithAttribute, attributedName)
     (std::string, value)
 )
 
@@ -73,10 +68,8 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
 {
     qi::rule<Iterator, Skipper, Node()> node;
     qi::rule<Iterator, Skipper, std::string()>
-            class_name, object_name, name, value, unquoted_value, quoted_value, list_value;
-    qi::rule<Iterator, Skipper, NameValuePair()> name_value_pair;
-    qi::rule<Iterator, Skipper, std::vector<NameValuePair>()> attributes;
-    qi::rule<Iterator, Skipper, ParameterWithAttributes()> attributed_name;
+            class_name, object_name, name, joker, value, transform, unquoted_value, unquoted_value_item, quoted_value, list_value;
+    qi::rule<Iterator, Skipper, ParameterWithAttribute()> attributed_name;
     qi::rule<Iterator, Skipper, Parameter()> parameter;
 
     std::stringstream _error;
@@ -84,6 +77,8 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
     node_grammar() : node_grammar::base_type(node) {
         // A name has C++ identifier style
         name %= lexeme[char_("a-zA-Z_") >> *char_("a-zA-Z0-9_")];
+        // A joker is just a star
+        joker %= lexeme[char_("*")];
         // classes and objects have a name;
         // a class name may be qualified by a namespace name
         class_name %= name >> -(char_(':') > char_(':') > name);
@@ -93,32 +88,32 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // A quoted value is a string of any characters, except apostrophes;
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
-        // An unquoted value is for numbers, dates, times, booleans and path expressions
-        unquoted_value %= lexeme[+(char_ - char_(" \t\n\"{}()[]@"))]
-                >> -(char_('[') > name > char_(']'))
+        // An unquoted value item is for numbers, dates, times, booleans and path expressions
+        unquoted_value_item = lexeme[+(char_ - char_(" \t\n\"{}()[]@"))]
+                >> -(char_('[') > (joker|name) > char_(']'));
+        // An unquoted value is one or more items maybe followed by a list
+        unquoted_value %= unquoted_value_item >> *(char_("|") > unquoted_value_item)
                 >> -(char_('@') > list_value);
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
-        // A name-value pair
-        name_value_pair %= name >> '=' > value;
-        // Attributes as a list of name-value pairs
-        attributes %= '(' >> *name_value_pair > ')';
-        // A name with optional attributes
-        attributed_name %= char_("\\.+") >> name >> -attributes;
+        // A name with optional attribute
+        transform = name;
+        attributed_name %= char_("\\.+") >> name >> -('|' > transform);
         // A parameter has a name, maybe with attributes, and a value and maybe a distribution
         parameter %= attributed_name > '=' >> value;
         // A node has a class name, maybe an object name, maybe some parameters, and maybe some nodes
         node %= class_name >> -object_name >> '{' >> *parameter >> *node > '}';
         // Rule names
         RULE_NAME(name);
+        RULE_NAME(joker);
         RULE_NAME(class_name);
         RULE_NAME(object_name);
         RULE_NAME(value);
         RULE_NAME(quoted_value);
         RULE_NAME(unquoted_value);
+        RULE_NAME(unquoted_value_item);
         RULE_NAME(list_value);
-        RULE_NAME(name_value_pair);
-        RULE_NAME(attributes);
+        RULE_NAME(transform);
         RULE_NAME(attributed_name);
         RULE_NAME(parameter);
         node.name("box");

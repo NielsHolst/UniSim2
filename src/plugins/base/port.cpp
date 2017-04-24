@@ -187,7 +187,7 @@ namespace {
                 type = importType;
                 break;
             case Sum:
-            case Average:
+            case Mean:
             case Min:
             case Max:
             case All:

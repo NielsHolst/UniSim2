@@ -10,7 +10,7 @@ Simulation sim {
 			.k = 30 @ (uniform 1 30)
 		}
 		Stage larva {
-			.inflow = ../egg[outflow]
+			.inflow|sum = ../egg[outflow]
 			.duration = 15
 		}
 		Stage pupa {
@@ -26,10 +26,10 @@ Simulation sim {
 		.keepPlots = FALSE
 		.popUp = TRUE
     PageR {
-      .xAxis = (egg[duration]@end egg[k]@end)
+      .xAxis = (egg[duration]|end egg[k]|end)
       PlotR {
 				// .layout = "merged"
-        .ports = (pupa[content]@end pupa[content]@sum)
+        .ports = (pupa[content]|end pupa[content]|sum)
 				.ggplot = "geom_point() + geom_smooth()"
       }
 		}

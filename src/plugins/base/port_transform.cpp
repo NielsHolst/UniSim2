@@ -6,11 +6,11 @@ namespace base {
 
 #define TRANSFORM_CASE(X) \
     case X: \
-        s = #X; \
+        s = QString(#X).toLower(); \
         break
 
 #define TRANSFORM_ENTRY(X) \
-    _map[#X] = X
+    _map[QString(#X).toLower()] = X
 
 namespace {
     const QMap<QString, PortTransform>& portTransformMap() {
@@ -18,7 +18,7 @@ namespace {
         if (_map.isEmpty()) {
             TRANSFORM_ENTRY(Identity);
             TRANSFORM_ENTRY(Sum);
-            TRANSFORM_ENTRY(Average);
+            TRANSFORM_ENTRY(Mean);
             TRANSFORM_ENTRY(Min);
             TRANSFORM_ENTRY(Max);
             TRANSFORM_ENTRY(Copy);
@@ -35,7 +35,7 @@ template<> QString convert(PortTransform transform) {
     switch (transform) {
         TRANSFORM_CASE(Identity);
         TRANSFORM_CASE(Sum);
-        TRANSFORM_CASE(Average);
+        TRANSFORM_CASE(Mean);
         TRANSFORM_CASE(Min);
         TRANSFORM_CASE(Max);
         TRANSFORM_CASE(Copy);
@@ -51,7 +51,7 @@ template<> PortTransform convert(QString s) {
         return Identity;
     if (portTransformMap().contains(s))
         return portTransformMap().value(s);
-    QString msg{"Unknown transform.Must be one of '%1'"};
+    QString msg{"Unknown transform. Must be one of '%1'"};
     ThrowException(msg.arg(portTransformNames().join(","))).value(s);
 }
 

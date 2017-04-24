@@ -3,12 +3,14 @@
 #include <base/box_builder.h>
 #include <base/box_output.h>
 #include <base/box_reader_boxes.h>
+#include <base/command.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/port.h>
-#include "test_ast_boxes.h"
+#include "exception_expectation.h"
 #include "input_file_path.h"
+#include "test_ast_boxes.h"
 
 using namespace base;
 
@@ -28,9 +30,7 @@ void TestAstBoxes::testSimple() {
         reader->parse(inputFilePath("ast_simple.box"));
         root = builder->content();
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable("Unexpected: " + ex.what()));
-    }
+    UNEXPECTED
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
@@ -41,9 +41,7 @@ void TestAstBoxes::testComments() {
         reader->parse(inputFilePath("ast_comments.box"));
         root = builder->content();
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable("Unexpected: " + ex.what()));
-    }
+    UNEXPECTED
     BoxOutput output(root, BoxOutput::Indented);
     dialog().information(output.asText());
 }
@@ -54,9 +52,7 @@ void TestAstBoxes::testWhitespaceInVector() {
         reader->parse(inputFilePath("ast_whitespace_in_vector.box"));
         root = builder->content();
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable("Unexpected: " + ex.what()));
-    }
+    UNEXPECTED
 
     typedef QVector<int> VecInt;
     QCOMPARE(root->findOne<Port>("a[numbers1]")->value<VecInt>(),
@@ -82,24 +78,41 @@ void TestAstBoxes::testWhitespaceInPath() {
         y = root->findOne<Port>("a[input1]");
         z = root->findOne<Port>("a [ input2 ]");
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable("Unexpected: " + ex.what()));
-    }
+    UNEXPECTED
 
     QCOMPARE(x->value<int>(), 7);
     QCOMPARE(y->value<int>(), 3);
     QCOMPARE(z->value<int>(), 7);
 }
 
-void TestAstBoxes::testBadTransform() {
-    bool excepted{false};
+void TestAstBoxes::testTransform() {
+    Box *root;
+    Port *input1, *input2,
+         *total, *mean, *min, *max, *any, *all, *all2;
     try {
         reader->parse(inputFilePath("ast_transform.box"));
+        root = builder->content();
+        root->run();
+        input1 = root->findOne<Port>("a[input1]");
+        input2 = root->findOne<Port>("a[input2]");
+        total = root->findOne<Port>("a[total]");
+        mean = root->findOne<Port>("a[mean]");
+        min = root->findOne<Port>("a[min]");
+        max = root->findOne<Port>("a[max]");
+        any = root->findOne<Port>("a[any]");
+        all = root->findOne<Port>("a[all]");
+        all2 = root->findOne<Port>("a[all2]");
     }
-    catch (Exception &ex) {
-        excepted = true;
-    }
-    QVERIFY(excepted);
+    UNEXPECTED
+    QCOMPARE(input1->value<int>(), 14);
+    QCOMPARE(input2->value<int>(), 20);
+    QCOMPARE(total->value<int>(), 31);
+    QCOMPARE(mean->value<int>(), 7);
+    QCOMPARE(min->value<int>(), 3);
+    QCOMPARE(max->value<int>(), 17);
+    QCOMPARE(any->value<bool>(), true);
+    QCOMPARE(all->value<bool>(), false);
+    QCOMPARE(all2->value<bool>(), true);
 }
 
 void TestAstBoxes::testDistribution() {
@@ -112,9 +125,7 @@ void TestAstBoxes::testDistribution() {
         input1 = root->findOne<Port>("a[input1]");
         input2 = root->findOne<Port>("a[input2]");
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable("Unexpected: " + ex.what()));
-    }
+    UNEXPECTED
     QCOMPARE(input1->value<int>(), 20);
     QCOMPARE(input2->value<int>(), 25);
 }

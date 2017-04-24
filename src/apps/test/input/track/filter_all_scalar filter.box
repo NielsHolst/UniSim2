@@ -22,16 +22,16 @@ Simulation sim {
 	}
 	OutputR {
     PageR {
-      .xAxis = (sim[step]>end)
+      .xAxis = (sim[step]|end)
       PlotR {
-        .ports = (butterfly/*[content]>min)
+        .ports = (butterfly/*[content]|min)
       }
       PlotR {
-        .ports = (egg[initial]>max egg[initial]>min adult[content]>end)
+        .ports = (egg[initial]|max egg[initial]|min adult[content]|end)
 				.hide = TRUE
       }
       PlotR {
-        .ports = (egg[initial]>max egg[initial]>mean)
+        .ports = (egg[initial]|max egg[initial]|mean)
 				.hide = TRUE
       }
 		}

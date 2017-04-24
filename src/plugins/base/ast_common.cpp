@@ -37,21 +37,14 @@ namespace {
 
 namespace ast {
 
-QString NameValuePair::toString() const {
-    return QString::fromStdString(name + "~" + value);
-}
-
-QString ParameterWithAttributes::toString() const {
+QString ParameterWithAttribute::toString() const {
     QString s = QString::fromStdString(type) + QString::fromStdString(name);
-    if (attributes.size() > 0) {
-        s += " with";
-        for (auto attr : attributes)
-            s += " " + attr.toString();
-    }
+    if (attribute.size() > 0)
+        s += "|" + QString::fromStdString(attribute);
     return s;
 }
 
-void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
+void ParameterWithAttribute::addToBuilder(base::BoxBuilder &builder) {
     QString nam = QString::fromStdString(name);
     if (type==".")
         builder.port(nam);
@@ -59,14 +52,8 @@ void ParameterWithAttributes::addToBuilder(base::BoxBuilder &builder) {
         Q_ASSERT(type=="+");
         builder.newPort(nam);
     }
-
-    for (NameValuePair pair : attributes) {
-        QString name = QString::fromStdString(pair.name),
-                value = QString::fromStdString(pair.value);
-        if (isApostrophed(value))
-            value = deEmbrace(value);
-        builder.attribute(name, value);
-    }
+    QString transform = QString::fromStdString(attribute);
+    builder.attribute("transform", transform);
 
 }
 

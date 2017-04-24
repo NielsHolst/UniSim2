@@ -10,23 +10,15 @@
 namespace ast {
 
 typedef std::string::const_iterator Iterator;
-//typedef boost::optional<std::string> OptionalValue;
 
-struct NameValuePair {
-    std::string name, value;
-    QString toString() const;
-    void addToBuilder(base::BoxBuilder &builder);
-};
-
-struct ParameterWithAttributes {
-    std::string type, name;
-    std::vector<NameValuePair> attributes;
+struct ParameterWithAttribute {
+    std::string type, name, attribute;
     QString toString() const;
     void addToBuilder(base::BoxBuilder &builder);
 };
 
 struct Parameter {
-    ParameterWithAttributes attributedName;
+    ParameterWithAttribute attributedName;
     std::string value;
     QString toString() const;
     void addToBuilder(base::BoxBuilder &builder);

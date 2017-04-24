@@ -17,7 +17,7 @@ private slots:
     void testComments();
     void testWhitespaceInVector();
     void testWhitespaceInPath();
-    void testBadTransform();
+    void testTransform();
     void testDistribution();
 private:
     base::BoxBuilder *builder;

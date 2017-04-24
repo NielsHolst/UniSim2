@@ -155,29 +155,29 @@ void TestTrack::testParseOk() {
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
 
-    s << "c[z]@end";
+    s << "c[z]|end";
     expected.append( qMakePair(QString("c[z]"), PortFilter::End) );
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
 
-    s << "A" << "@mean";
+    s << "A" << "|mean";
     expected.append( qMakePair(QString("A"), PortFilter::Mean) );
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
 
-    s << "B@" << "min";
+    s << "B|" << "min";
     expected.append( qMakePair(QString("B"), PortFilter::Min) );
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
 
-    s << "C"<< "@" << "max";
+    s << "C"<< "|" << "max";
     expected.append( qMakePair(QString("C"), PortFilter::Max) );
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
 
     s.clear();
     expected.clear();
-    s << "butterfly/*[content]@end";
+    s << "butterfly/*[content]|end";
     expected.append( qMakePair(QString("butterfly/*[content]"), PortFilter::End) );
     res = Track::parseTrackPaths(s);
     QCOMPARE(res, expected);
@@ -190,7 +190,7 @@ void TestTrack::testParseError() {
     s.clear();
     excepted = false;
     try {
-        s << "@a[x]" << "b[y]";
+        s << "|a[x]" << "b[y]";
         Track::parseTrackPaths(s);
     }
     EXPECTED
@@ -198,7 +198,7 @@ void TestTrack::testParseError() {
     s.clear();
     excepted = false;
     try {
-        s << "a[x]" << "b[y]@";
+        s << "a[x]" << "b[y]|";
         Track::parseTrackPaths(s);
     }
     EXPECTED
@@ -206,7 +206,7 @@ void TestTrack::testParseError() {
     s.clear();
     excepted = false;
     try {
-        s << "a[x]" << "@@" << "b[y]";
+        s << "a[x]" << "||" << "b[y]";
         Track::parseTrackPaths(s);
     }
     EXPECTED

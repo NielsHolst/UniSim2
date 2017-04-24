@@ -24,14 +24,14 @@ Simulation sim {
     PageR {
       .xAxis = (sim[step])
       PlotR {
-        .ports = (butterfly/*[content]@end)
+        .ports = (butterfly/*[content]|end)
       }
       PlotR {
-        .ports = (egg[initial]@min egg[initial]@max adult[content])
+        .ports = (egg[initial]|min egg[initial]|max adult[content])
 				.hide = TRUE
       }                             
       PlotR {
-        .ports = (egg[initial]@max egg[initial]@mean)
+        .ports = (egg[initial]|max egg[initial]|mean)
 				.hide = TRUE
       }
 		}
