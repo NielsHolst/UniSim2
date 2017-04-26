@@ -1,4 +1,8 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include <boost/random.hpp>
+#pragma GCC diagnostic pop
+
 #include "object_pool.h"
 #include "random_generator.h"
 

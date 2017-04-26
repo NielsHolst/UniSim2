@@ -36,7 +36,7 @@ void Starfish::update() {
     double growthrate = 0.848*((supply) - respiration); /*this function calculates the growth rate as a conversion factor of the food available after covering
                                                         maintenance costs. Growth rate can be negative if supply doesn't cover maintenance costs, in that case
                                                         starfish population shrink in biomass not in numbers*/
-    if (growthrate<0 && abs(growthrate)>stBiomass) {  /*growth rate can be negative, although respiration costs tend to zero as biomass decrease, to ensure*/
+    if (growthrate<0 && fabs(growthrate)>stBiomass) {  /*growth rate can be negative, although respiration costs tend to zero as biomass decrease, to ensure*/
         stBiomass = 0;                          /*apropiate model behavior, this function avoid negative densities.*/
     }
     else {

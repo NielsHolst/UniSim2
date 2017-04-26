@@ -21,11 +21,9 @@ private:
     // Inputs
     double smean;
 
-
     // Outputs
     double value;
     QVector<double> salinities;
-    int index;
 };
 
 } //namespace
