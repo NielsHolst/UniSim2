@@ -128,7 +128,6 @@
     <file>data/input/student/eab/weather/ClimDataV3.txt</file>
     <file>data/input/student/islands-3a.box</file>
     <file>data/input/student/MusselBed/apparencycalibration.xml</file>
-    <file>data/input/student/MusselBed/input/.DS_Store</file>
     <file>data/input/student/MusselBed/input/AD1.txt</file>
     <file>data/input/student/MusselBed/input/ADw.txt</file>
     <file>data/input/student/MusselBed/input/apparencycal.txt</file>
@@ -171,7 +170,7 @@
     <file>data/input/student/MusselBed/input/ZWo.txt</file>
     <file>data/input/student/MusselBed/input/ZWw.txt</file>
     <file>data/input/student/MusselBed/input/ZW_.txt</file>
-    <file>data/input/student/MusselBed/starfish+mussel.xml</file>
+    <file>data/input/student/MusselBed/starfish-mussel.xml</file>
     <file>data/input/student/PestTox/fate_LC50_684_wbz0_2012.box</file>
     <file>data/input/student/PestTox/verification/pesticide.box</file>
     <file>data/input/student/PestTox/verification/pesticide_end.R</file>
