@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<simulation name="Mussel bed">
+	<integrator name="steps" type="Steps">
+		<parameter name="maxSteps" value="100"/>
+		
+		<model name="iterator" type="UniSim::Scenarios">
+			<parameter name="fileName" value="apparencycal.txt"/>				
+		</model>
+		
+	</integrator>
+	
+	<model name="funcresp" type="UniSim::FunctionalResponseGB">
+		<parameter name="apparency" value="0.875"/>
+		<parameter name="resourceDensity" value="5000"/>
+		<parameter name="demand" ref="demand[netDemand]"/>
+		<parameter name="egestionRatio" value="0.853"/>
+		<parameter name="respiration" ref="demand[Respiration]"/>
+	</model>
+	
+	<model name="starfish" type="mussel_bed::Starfish">
+		<parameter name="stinBiomass" value="0"/>
+		<parameter name="stinAbundance" value="0"/>
+		<parameter name="supply" ref="funcresp[netSupply]"/>
+		<parameter name="respiration" ref="demand[Respiration]"/>
+		
+		<model name="demand" type="mussel_bed::StarfishDemand">
+			<parameter name="stBiomass" ref="starfish[stBiomass]"/>	
+			<parameter name="stSize" ref="starfish[stSize]"/>	
+			<parameter name="temperature" value="13"/>				
+		</model>
+<!-- 		<model name="search" type="mussel_bed::StarfishSearchRate">
+			<parameter name="s" value="0.9"/>
+			<model name="stscale" type="mussel_bed::StarfishTempScale">
+				<parameter name="temperature" value="18"/> 
+			</model>
+ 			<model name="stscale" type="mussel_bed::StarfishSalScale">
+				<parameter name="smean" value="30"/>
+			</model>
+ 			<model name="stscale" type="mussel_bed::StarfishHdScale">
+				<parameter name="vmax" value="0"/>
+			</model>
+		</model>	 -->
+
+	</model>
+	
+	
+
+	<output type="plot">
+	<parameter name="title" value ="Validation starfish size"/>
+		<trace label="Observed" ref="iterator[Size.2]"/>
+		<trace label="1/1" ref="iterator[Size.2]"/>
+		<trace label="Simulated" ref="starfish[stSize]" summary="Final"/>
+	</output>
+
+	<output type="plot">
+		<parameter name="title" value ="Validation Starfish Biomass"/>
+		<trace label="Observed" ref="iterator[St.Bm.2]"/>
+		<trace label="1/1" ref="iterator[St.Bm.2]"/>
+		<trace label="Simulated" ref="starfish[stBiomass]" summary="Final"/>
+	</output>
+	
+
+	<output type="table">
+		<parameter name="fileName" value ="calibrationstarfishgrowth.txt"/>
+		<trace label="Scenario" ref="iterator[scenario]"/>
+		<trace label="Final starfish density" ref="starfish[stBiomass]" summary="Final"/>
+		<trace label="st.size" ref="starfish[stSize]" summary="Final"/>
+		<trace label="avg.supply" ref="funcresp[netSupply]" summary="avg"/>
+	</output>
+	
+</simulation>

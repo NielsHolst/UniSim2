@@ -1,0 +1,38 @@
+// book/demo/butterfly-sa-2.box
+Simulation sim {
+	.iterations = 5
+	.steps = 35
+	SensitivityAnalysis {
+		.method = "LHS"
+	}
+	Box butterfly {
+		Stage egg {
+			.initial = 100 
+			.duration = 7 @(uniform 5 30)
+			.k = 30 @(uniform 1 30)
+		}
+		Stage larva {
+			.inflow = ../egg[outflow]
+			.duration = 15
+		}
+		Stage pupa {
+			.inflow = ../larva[outflow]
+			.duration = 7
+		}
+		Stage adult {
+			.inflow = ../pupa[outflow]
+			.duration = 30
+		}
+	}
+	OutputR {
+    PageR {
+			.xAxis = larva[content]
+      PlotR {
+				.layout = "merged"
+        .ports = pupa[content]
+				.ggplot = "geom_point() + geom_path()"
+      }
+		}
+	}
+}
+

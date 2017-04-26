@@ -18,6 +18,10 @@
     <file>data/input/awe/5-add-weed-life-stages(0).box</file>
     <file>data/input/awe/5-add-weed-life-stages.box</file>
     <file>data/input/book/demo/butterflies-common-k.box</file>
+    <file>data/input/book/demo/butterfly-sa-1.box</file>
+    <file>data/input/book/demo/butterfly-sa-2.box</file>
+    <file>data/input/book/demo/butterfly-sa-3.box</file>
+    <file>data/input/book/demo/butterfly-sa-4.box</file>
     <file>data/input/book/demo/competition.box</file>
     <file>data/input/book/demo/insect.box</file>
     <file>data/input/book/demo/jump/end_jump3.R</file>
@@ -123,6 +127,51 @@
     <file>data/input/student/eab/emeraldAshV5.box</file>
     <file>data/input/student/eab/weather/ClimDataV3.txt</file>
     <file>data/input/student/islands-3a.box</file>
+    <file>data/input/student/MusselBed/apparencycalibration.xml</file>
+    <file>data/input/student/MusselBed/input/.DS_Store</file>
+    <file>data/input/student/MusselBed/input/AD1.txt</file>
+    <file>data/input/student/MusselBed/input/ADw.txt</file>
+    <file>data/input/student/MusselBed/input/apparencycal.txt</file>
+    <file>data/input/student/MusselBed/input/BRw.txt</file>
+    <file>data/input/student/MusselBed/input/BRz.txt</file>
+    <file>data/input/student/MusselBed/input/BR_.txt</file>
+    <file>data/input/student/MusselBed/input/BSn.txt</file>
+    <file>data/input/student/MusselBed/input/Bso.txt</file>
+    <file>data/input/student/MusselBed/input/BSp.txt</file>
+    <file>data/input/student/MusselBed/input/BSw.txt</file>
+    <file>data/input/student/MusselBed/input/BZn.txt</file>
+    <file>data/input/student/MusselBed/input/BZ_.txt</file>
+    <file>data/input/student/MusselBed/input/Dbo.txt</file>
+    <file>data/input/student/MusselBed/input/DB_.txt</file>
+    <file>data/input/student/MusselBed/input/GSn.txt</file>
+    <file>data/input/student/MusselBed/input/GS_.txt</file>
+    <file>data/input/student/MusselBed/input/IN_.txt</file>
+    <file>data/input/student/MusselBed/input/KW_.txt</file>
+    <file>data/input/student/MusselBed/input/LW_.txt</file>
+    <file>data/input/student/MusselBed/input/MRo.txt</file>
+    <file>data/input/student/MusselBed/input/MRw.txt</file>
+    <file>data/input/student/MusselBed/input/scenarios.txt</file>
+    <file>data/input/student/MusselBed/input/SO2.txt</file>
+    <file>data/input/student/MusselBed/input/SOK.txt</file>
+    <file>data/input/student/MusselBed/input/SO_.txt</file>
+    <file>data/input/student/MusselBed/input/STp.txt</file>
+    <file>data/input/student/MusselBed/input/ST_.txt</file>
+    <file>data/input/student/MusselBed/input/Tim.txt</file>
+    <file>data/input/student/MusselBed/input/TS_.txt</file>
+    <file>data/input/student/MusselBed/input/TX2.txt</file>
+    <file>data/input/student/MusselBed/input/TXw.txt</file>
+    <file>data/input/student/MusselBed/input/VJG.txt</file>
+    <file>data/input/student/MusselBed/input/VLn.txt</file>
+    <file>data/input/student/MusselBed/input/VLz.txt</file>
+    <file>data/input/student/MusselBed/input/VVG.txt</file>
+    <file>data/input/student/MusselBed/input/Waa.txt</file>
+    <file>data/input/student/MusselBed/input/WK_.txt</file>
+    <file>data/input/student/MusselBed/input/WM_.txt</file>
+    <file>data/input/student/MusselBed/input/ZOR.txt</file>
+    <file>data/input/student/MusselBed/input/ZWo.txt</file>
+    <file>data/input/student/MusselBed/input/ZWw.txt</file>
+    <file>data/input/student/MusselBed/input/ZW_.txt</file>
+    <file>data/input/student/MusselBed/starfish+mussel.xml</file>
     <file>data/input/student/PestTox/fate_LC50_684_wbz0_2012.box</file>
     <file>data/input/student/PestTox/verification/pesticide.box</file>
     <file>data/input/student/PestTox/verification/pesticide_end.R</file>

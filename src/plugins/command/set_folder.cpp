@@ -64,8 +64,10 @@ void set_folder::setFolder(QString folderType, QString folderPath) {
     Environment::Folder folder = convert<Environment::Folder>(folderType);
     if (folderPath == "HOME")
         folderPath = reconfigure::destination().absolutePath();
-    else if (folderPath == "DEV")
-        folderPath = QApplication::applicationDirPath() + "/..";
+    else if (folderPath == "DEV") {
+        QString relativePath = environment().isMac() ? "/../../../.." : "/..";
+        folderPath = QApplication::applicationDirPath() + relativePath;
+    }
     environment().dir(folder, folderPath);
     showFolder(folderType);
 }
