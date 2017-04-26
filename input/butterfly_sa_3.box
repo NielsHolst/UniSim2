@@ -23,12 +23,9 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.keepPlots = FALSE
-		.popUp = TRUE
     PageR {
-      .xAxis = (egg[duration]|end egg[k]|end)
+      .xAxis = *<Distribution>/..<Port>
       PlotR {
-				// .layout = "merged"
         .ports = (pupa[content]|end pupa[content]|sum)
 				.ggplot = "geom_point() + geom_smooth()"
       }

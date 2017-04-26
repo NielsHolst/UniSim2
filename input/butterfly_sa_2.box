@@ -2,6 +2,7 @@ Simulation sim {
 	.iterations = 5
 	.steps = 35
 	SensitivityAnalysis {
+		.method = "LHS"
 	}
 	Box butterfly {
 		Stage egg {
@@ -23,14 +24,12 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.keepPlots = FALSE
-		.popUp = TRUE
     PageR {
-      .xAxis = (egg[duration]|end egg[k]|end)
+      .xAxis = larva[content]
       PlotR {
-				// .layout = "merged"
-        .ports = (pupa[content]|end pupa[content]|sum)
-				.ggplot = "geom_point() + geom_smooth()"
+				.layout = "merged"
+        .ports = pupa[content]
+				.ggplot = "geom_point() + geom_path()"
       }
 		}
 	}

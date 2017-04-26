@@ -28,6 +28,7 @@ Path::Path(const QObject *context)
 Path::Path(QString path, const QObject *context)
     : Path(context)
 {
+//    cout << "Path ctor: " << qPrintable(path) << "\n";
     _originalPaths << path.split("|", QString::SkipEmptyParts);
 }
 
@@ -121,6 +122,7 @@ QString Path::normalise(int ix) {
     if (!port.isEmpty())
         result += "/" + port;
 
+//    cout << "  normalisedPath: " << qPrintable(result) << "\n";
     return _current.normalisedPath = result;
 }
 
@@ -336,8 +338,9 @@ void Path::addCandidates(QString path, QObjects &candidates) {
             box = parts.at(1),
             type = parts.at(2);
 
-    if (type=="Port" && !tail.isEmpty())
-        ThrowException("Illegal path; nothing can follow the port").value(_current.originalPath).context(_caller);
+// Changed since a Distribuation can follow a Port
+//    if (type=="Port" && !tail.isEmpty())
+//        ThrowException("Illegal path; nothing can follow the port").value(_current.originalPath).context(_caller);
 
     QObjects newCandidates;
     for (const QObject *candidate : candidates) {

@@ -30,6 +30,7 @@ private slots:
     void testSelf();
     void testChildren();
     void testParent();
+    void testParentInPath();
     void testNearest();
     void testDescendants();
     void testAncestors();
@@ -47,6 +48,9 @@ private slots:
     void testEmpty();
     void testResolveInvalid();
     void testIndirections();
+
+    void testDistribution();
+    void testDistributionFromScript();
 };
 
 DECLARE_TEST(TestPath)

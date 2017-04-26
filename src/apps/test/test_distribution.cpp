@@ -5,6 +5,7 @@
 #include <base/dialog.h>
 #include <base/distribution.h>
 #include <base/exception.h>
+#include "exception_expectation.h"
 #include "test_distribution.h"
 
 using namespace base;
@@ -17,32 +18,23 @@ void TestDistribution::testLoad() {
         sim = environment().root();
         sim->initializeFamily();
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
+    UNEXPECTED
     QCOMPARE(errors, dialog().errorCount());
 
-    Distribution *even(0), *normal(0);
+    Distribution *uniform(0), *normal(0);
     try {
-        Box *a = sim->findOne<Box>("/sim/a");
-        even = a->findChild<Distribution*>("uniform", Qt::FindDirectChildrenOnly);
-        normal = a->findChild<Distribution*>("normal", Qt::FindDirectChildrenOnly);
+        uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
+        normal  = sim->findOne<Distribution>("/sim/a/inflow<Port>/*<Distribution>");
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
-    QVERIFY(even);
-    QVERIFY(normal);
+    UNEXPECTED
 
     double sample;
     QSet<double> samples;
     for (int i=0; i<30; ++i) {
         try {
-            sample = even->draw();
+            sample = uniform->draw();
         }
-        catch(Exception &ex) {
-            QFAIL(qPrintable(ex.what()));
-        }
+        UNEXPECTED
         samples << sample;
         QVERIFY(sample>=50 && sample<200);
     }
@@ -77,27 +69,22 @@ void TestDistribution::testBuilder() {
                 endbox().
             endbox();
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
+    UNEXPECTED
     Box *sim = builder.content();
 
-    Distribution *even(0), *normal(0);
+    Distribution *uniform(0), *normal(0);
     try {
         sim->initializeFamily();
-        Box *a = sim->findOne<Box>("/sim/a");
-        even = a->findChild<Distribution*>("uniform", Qt::FindDirectChildrenOnly);
-        normal = a->findChild<Distribution*>("normal", Qt::FindDirectChildrenOnly);
+        uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
+        normal  = sim->findOne<Distribution>("/sim/a/inflow<Port>/*<Distribution>");
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
-    QVERIFY(even);
+    UNEXPECTED
+    QVERIFY(uniform);
     QVERIFY(normal);
 
     QSet<double> samples;
     for (int i=0; i<30; ++i) {
-        double sample = even->draw();
+        double sample = uniform->draw();
         samples << sample;
         QVERIFY(sample>=50 && sample<200);
     }
@@ -123,9 +110,8 @@ void TestDistribution::testMonteCarlo() {
         sim->initializeFamily();
         sa = environment().root()->findOne<Box>("/sim/sa");
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
+    UNEXPECTED
+
     QCOMPARE(sa->port("inputsAnalysed")->value<int>(), 2);
     QCOMPARE(sa->port("inputsTotal")->value<int>(), 6+4); // StageBase + Stage
     delete sim;

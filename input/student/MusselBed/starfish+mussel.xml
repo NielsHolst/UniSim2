@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<simulation name="Mussel bed">
+	<integrator name="steps" type="Steps">
+		<parameter name="maxSteps" value="100"/>
+		
+		<model name="iterator" type="UniSim::Scenarios">
+			<parameter name="fileName" value="scenarios.txt"/>				
+		</model>
+		
+	</integrator>
+	<model name="calendar" type="Calendar">
+		<parameter name="initialDate" value="01/01/2009"/>
+	</model>
+	
+	<model name="ocean" type="UniSim::Records">
+		<parameter name="fileName" value="BR_.txt"/>
+		<parameter name="imposeInitialDateTime" value="false"/>
+	</model>
+	
+	<model name="funcresp" type="UniSim::FunctionalResponseGB">
+		<parameter name="apparency" ref="search[value]"/>
+		<parameter name="resourceDensity" ref="mussel[mBiomass]"/>
+		<parameter name="demand" ref="demand[netDemand]"/>
+		<parameter name="egestionRatio" value="0.853"/>
+		<parameter name="respiration" ref="demand[Respiration]"/>
+	</model>
+	
+	
+	<model name="starfish" type="mussel_bed::Starfish">
+		<parameter name="stinBiomass" value="0"/>
+		<parameter name="stinAbundance" value="0"/>
+		<parameter name="supply" ref="funcresp[netSupply]"/>
+		<parameter name="respiration" ref="demand[Respiration]"/>
+		
+		<model name="demand" type="mussel_bed::StarfishDemand">
+			<parameter name="stBiomass" ref="starfish[stBiomass]"/>	
+			<parameter name="stSize" ref="starfish[stSize]"/>	
+			<parameter name="temperature" ref="ocean[tmean]"/>				
+		</model>
+		<model name="search" type="mussel_bed::StarfishSearchRate"> 
+			<parameter name="s" value="1"/>
+ 			<model name="stscale" type="mussel_bed::StarfishTempScale">
+				<parameter name="temperature" ref="ocean[tmean]"/> 
+			</model> 
+			<model name="stscale" type="mussel_bed::StarfishSalScale">
+				<parameter name="smean" ref="ocean[smean]"/>
+			</model>
+   			<model name="stscale" type="mussel_bed::StarfishHdScale">
+				<parameter name="mBiomass" ref="mussel[mBiomass]"/>
+				<parameter name="vmax" value="0"/>
+			</model>
+		</model>	
+
+	</model>
+	
+	<model name="mussel" type="mussel_bed::Mussel">
+		<parameter name="minBiomass" value="1000"/>
+		<parameter name="minAbundance" value="1300"/>
+		<parameter name="mGrowth" ref="growth[mGrowth]"/>
+		<parameter name="lsBiomass" ref="thinning[LsBiomass]"/>
+		<parameter name="lsAbundance" ref="thinning[LsAbundance]"/>
+		<parameter name="day" ref="steps[stepNumber]"/>
+		
+		<model name="thinning" type="mussel_bed::MusselThinning">
+			<parameter name="mBiomass" ref="mussel[mBiomass]"/>
+			<parameter name="mAbundance" ref="mussel[mAbundance]"/>
+			<parameter name="mSize" ref="mussel[mSize]"/>
+			<parameter name="supply" ref="funcresp[totalSupply]"/>
+		</model>
+
+		<model name="growth" type="mussel_bed::MusselGrowthRate">
+			<parameter name="mBiomass" ref="mussel[mBiomass]"/>
+			<parameter name="mSize" ref="mussel[mSize]"/>
+			<parameter name="carryingCapacity" value="15000"/>
+						
+			<model name="scale" type="mussel_bed::MusselTempScale">
+				<parameter name="temperature" ref="ocean[tmean]"/>
+			</model>
+			<model name="scale" type="mussel_bed::MusselSalScale">
+				<parameter name="smean" ref="ocean[smean]"/>
+			</model>
+		</model>
+	</model>
+	
+	<output type="plot">
+		<parameter name="title" value="Starfish Feeding rate"/>
+		<trace ref="steps[stepNumber]" label="Steps"/>
+		<trace ref="funcresp[supply]" label="supply"/>
+	</output>
+	<output type="plot">
+		<parameter name="title" value="Starfish Feeding rate"/>
+		<trace ref="steps[stepNumber]" label="Steps"/>
+		<trace ref="demand[netDemand]" label="foodDemand"/>
+	</output>
+	
+	<output type="plot">
+		<parameter name="title" value="Temp+Sal"/>
+		<trace ref="steps[stepNumber]" label="Steps"/>
+		<trace ref="ocean[tmean]" label="Temperature"/>
+		<trace ref="ocean[smean]" label="Salinity"/>
+	</output>
+	
+	<output type="plot">
+	<parameter name="title" value ="Validation starfish size"/>
+		<trace label="Observed" ref="iterator[size.s2]"/>
+		<trace label="1/1" ref="iterator[size.s2]"/>
+		<trace label="Simulated" ref="starfish[stSize]" summary="Final"/>
+	</output>
+
+	<output type="plot">
+		<parameter name="title" value ="Validation Starfish Biomass"/>
+		<trace label="Observed" ref="iterator[st.B2]"/>
+		<trace label="1/1" ref="iterator[st.B2]"/>
+		<trace label="Simulated" ref="starfish[stBiomass]" summary="Final"/>
+	</output>
+	
+	<output type="plot">
+		<parameter name="title" value ="Validation Starfish Numbers"/>
+		<trace label="Observed" ref="iterator[st.N2]"/>
+		<trace label="1/1" ref="iterator[st.N2]"/>
+		<trace label="Simulated" ref="starfish[stAbundance]" summary="Final"/>
+	</output>
+	
+	<output type="plot">
+		<parameter name="title" value ="Validation Mussel Biomass"/>
+		<trace label="Observed" ref="iterator[m.B2]"/>
+		<trace label="1/1" ref="iterator[m.B2]"/>
+		<trace label="Simulated" ref="mussel[mBiomass]" summary="Final"/>
+	</output>
+	
+	<output type="plot">
+		<parameter name="title" value ="Validation Mussel Numbers"/>
+		<trace label="Observed" ref="iterator[m.N2]"/>
+		<trace label="1/1" ref="iterator[m.N2]"/>
+		<trace label="Simulated" ref="mussel[mAbundance]" summary="Final"/>
+	</output>
+	
+	<output type="plot">
+		<parameter name="title" value ="Validation Mussel size"/>
+		<trace label="Observed" ref="iterator[size.m2]"/>
+		<trace label="1/1" ref="iterator[size.m2]"/>
+		<trace label="Simulated" ref="mussel[mSize]" summary="Final"/>
+	</output>
+	<output type="table">
+		<parameter name="fileName" value ="mussel_bed_summary.txt"/>
+		<trace label="Scenario" ref="iterator[scenario]"/>
+		<trace label="M.Biomass" ref="mussel[mBiomass]" summary="Final"/>
+		<trace label="M.Abundance" ref="mussel[mAbundance]" summary="Final"/>
+		<trace label="m.Size" ref="mussel[mSize]" summary="Final"/>
+		<trace label="St.Biomass" ref="starfish[stBiomass]" summary="Final"/>
+		<trace label="st.Size" ref="starfish[stSize]" summary="Final"/>
+		<trace label="avg.supply" ref="funcresp[totalSupply]" summary="avg"/>
+		<trace label="min.sal" ref="ocean[smean]" summary="min"/>
+		<trace label="max.sal" ref="ocean[smean]" summary="max"/>
+		<trace label="avg.sal" ref="ocean[smean]" summary="avg"/>
+		<trace label="avg.sal" ref="ocean[tmean]" summary="avg"/>
+		<trace label="LD50" ref="mussel[LD50]" summary="Final"/>
+		<trace label="LD" ref="mussel[LD]" summary="Final"/>
+
+	</output>
+	
+</simulation>

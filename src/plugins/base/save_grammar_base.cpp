@@ -5,6 +5,7 @@
 #include "factory_plug_in.h"
 #include "mega_factory.h"
 #include "port.h"
+#include "port_filter.h"
 #include "port_transform.h"
 #include "save_grammar_base.h"
 
@@ -106,7 +107,10 @@ QStringList SaveGrammarBase::attributeNames() {
 }
 
 QStringList SaveGrammarBase::transformNames() {
-    return portTransformNames() << "@";
+    QSet<QString> names;
+    names.unite(portTransformNames().toSet());
+    names.unite(portFilterNames().toSet());
+    return QStringList(names.toList());
 }
 
 QStringList SaveGrammarBase::constantNames() {

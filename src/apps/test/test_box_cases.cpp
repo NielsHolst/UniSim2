@@ -24,7 +24,7 @@ namespace TestBoxCases {
                         newPort("v1").
                     endbox().
                     box().name("c").
-                        newPort("v2").
+                        newPort("v2").rnd("normal 10 2").
                     endbox().
                 endbox().
                 box().name("A2").

@@ -82,7 +82,7 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
     QString className = items.first();
     items.removeFirst();
 
-    _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort->boxParent());
+    _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort); //->boxParent());
     _currentDistribution->arguments(items);
     _currentDistribution->port(_currentPort);
 

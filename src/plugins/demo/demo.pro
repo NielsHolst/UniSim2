@@ -12,17 +12,17 @@ HEADERS +=  \
     big_bang.h \
     island.h \
     migration.h \
-    population.h \
-    predation.h \
-    predator.h \
-    prey.h
+    population.h
+#    predation.h \
+#    predator.h \
+#    prey.h
 
 SOURCES +=  \
     big_bang.cpp \
     island.cpp \
     migration.cpp \
-    population.cpp \
-    predation.cpp \
-    predator.cpp \
-    prey.cpp
+    population.cpp
+#    predation.cpp \
+#    predator.cpp \
+#    prey.cpp
 

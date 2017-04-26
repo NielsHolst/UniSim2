@@ -74,8 +74,13 @@ plot_merged_one_x = function(df, id_x, id_iteration, cols, ncol, nrow) {
 	onlyOneVariable = (length(cols) == 1)
 
 	color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
-	P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
-      xlab("") + ylab("")
+	P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) 
+	if (onlyOneVariable) {
+		P = P + xlab(id_x) + ylab(cols)
+	} else {
+		P = P + xlab("") + ylab("")
+	}
+	
 	if (hasIterations & !onlyOneVariable) P = P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
   P
 }
