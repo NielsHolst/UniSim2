@@ -17,14 +17,15 @@ Application::Application(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Input(date).imports("calendar[date]");
-    Input(applicationDate).equals("1/5/*").help("Date of application");
+    Input(applicationDate).equals("1/3/*").help("Date of application");
     Input(concentration).equals(480.).help("Concentration (g a.i/L)");
-    Input(rate).equals(6.25).help("Application rate (L/ha)");
+    Input(rate).equals(3.125).help("Application rate (L/ha)");
 
     Output(dose).help("Dose applied today (g a.i. per ha");
 }
 
 void Application::update() {
+
     dose = equals(date, applicationDate) ? concentration*rate : 0.;
 }
 

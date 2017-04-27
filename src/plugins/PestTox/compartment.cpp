@@ -20,10 +20,12 @@ Compartment::Compartment(QString name, QObject *parent)
 {
     Input(gain).help("Daily gain (g a.i. per ha)");
     Input(loss).help("Daily loss (g a.i. per ha)");
+
     Output(load).help("Current pesticide load (g a.i. per ha)");
 }
 
 void Compartment::update() {
+
     load += gain - loss;
     TestNum::snapToZero(load, 1e-18);
     if (load < 0.)

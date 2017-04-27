@@ -1,0 +1,5 @@
+Province	Latitude
+Pathumthani	14.02
+KamphaengPhet	16.48
+Loei	17.49
+Phichit	16.27

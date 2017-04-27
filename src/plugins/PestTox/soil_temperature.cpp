@@ -18,15 +18,18 @@ SoilTemperature::SoilTemperature(QString name, QObject *parent)
     Input(Tmin).imports("weather[Tmin]");
     Input(Tmax).imports("weather[Tmax]");
     Input(dayLength).imports("calendar[dayLength]");
+
     Output(value);
 }
 
 void SoilTemperature::reset() {
+
     update();
 }
 
 void SoilTemperature::update() {
-    value = dayLength*Tmax + (1.-dayLength)*Tmin;
+
+    value = dayLength/24.*Tmax + (1.- dayLength/24.)*Tmin;
 }
 
 } //namespace

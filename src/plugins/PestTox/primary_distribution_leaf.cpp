@@ -17,7 +17,8 @@ PrimaryDistributionLeaf::PrimaryDistributionLeaf(QString name, QObject *parent)
     : PrimaryDistributionBase(name, parent)
 {
     Input(fractionTakenAir).imports("../surroundings[fractionTaken]");
-    Input(stageContent).imports("crop/*{Stage}[content]");
+    Input(stageContent).imports("crop/*<Stage>[content]");
+//Niels    Input(stageContent).imports("crop/*{Stage}[content]");
     Input(fractionsByCropStage);
 }
 

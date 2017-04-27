@@ -131,7 +131,7 @@ plot_merged_filtered = function(df, id_x, cols, ncol, nrow) {
 }
 
 plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
-	if (id_iteration == "iteration.end")
+	if (!is.null(id_iteration) && id_iteration == "iteration.end")
 		plot_facetted_filtered(df, id_x, cols, ncol, nrow) else
 		if (length(id_x) == 1) 
 			plot_facetted_one_x( df, id_x, id_iteration, cols, ncol, nrow) else
@@ -139,7 +139,7 @@ plot_facetted = function(df, id_x, id_iteration, cols, ncol, nrow) {
 }
 
 plot_merged = function(df, id_x, id_iteration, cols, ncol, nrow) {
-	if (id_iteration == "iteration.end")
+	if (!is.null(id_iteration) && id_iteration == "iteration.end")
 		plot_merged_filtered(df, id_x, cols, ncol, nrow) else
 		if (length(id_x) == 1) 
 			plot_merged_one_x( df, id_x, id_iteration, cols, ncol, nrow) else

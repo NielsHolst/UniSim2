@@ -26,6 +26,7 @@ LossRateTotal::LossRateTotal(QString name, QObject *parent)
 void LossRateTotal::amend() {
     // Find input ports
     QVector<Port*> ports = findMany<Port>(path);
+//Niels    QVector<Port*> ports = resolveMany<Port>(path);
 
     // Collect pointers to port values;
     _inputs.clear();
@@ -39,8 +40,12 @@ void LossRateTotal::amend() {
            *outputAmount = _outputAmounts.data();
     for (Port *port : ports) {
         QString name = port->parent()->objectName();
-        (*new Port(name+"Rate", this)).data(outputRate++).access(PortAccess::Output).zeroAtReset();
-        (*new Port(name+"Amount", this)).data(outputAmount++).access(PortAccess::Output).zeroAtReset();
+        NamedOutput(name+"Rate", *outputRate);
+        NamedOutput(name+"Amount", *outputAmount);
+        ++outputRate;
+        ++outputAmount;
+//Niels        (*new Port(name+"Rate", this)).data(outputRate++).access(Port::Output).zeroAtReset();
+//Niels        (*new Port(name+"Amount", this)).data(outputAmount++).access(Port::Output).zeroAtReset();
     }
 }
 

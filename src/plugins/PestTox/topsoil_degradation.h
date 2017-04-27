@@ -18,12 +18,13 @@ public:
 
 private:
     // Input
-    double inflow, DT50, ff, Q, Tsoil, Rainfall, threshold, //timeSinceLastRainEvent,
-    Vrsmc, rf, fw, Sp, Doseldw, ksv, frsa, frsw, fsr, fmp;
+    double inflow, DT50, Tsoil, Rainfall,
+    Vrsmc, rf, fw, Sp, leafWashOff, ksv, frsa,
+    frsw, fsr, fmp;
 
     // Output
     double concentration, outflow, degradation, volatilization,
-    ksd, fsdT, Vsmc, fsm, Dosesr, sdDoseaflrm, Dmacropore;
+    ksd, fsdT, Vsmc, fsm, runoff, macroporeFlow;
 
 };
 

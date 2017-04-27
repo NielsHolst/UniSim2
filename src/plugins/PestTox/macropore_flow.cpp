@@ -31,7 +31,6 @@ MacroporeFlow::MacroporeFlow(QString name, QObject *parent)
     Input(P).equals(1.);              //average  daily rainfall per rainfall event in a given month (mm)
     Input(frsw).equals(0.);           //fraction of pesticide in soil water
     Input(Tf).equals(0.);            //tillage factor
-    Input(Doseaflm).equals(0.);
 
     Output(fporemobile);       //mobile pore fraction in topsoil
     Output(Vporeimmobile);     //immobile pore volume in topsoil

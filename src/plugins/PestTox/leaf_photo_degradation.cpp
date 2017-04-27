@@ -24,10 +24,12 @@ LeafPhotoDegradation::LeafPhotoDegradation(QString name, QObject *parent)
     Input(latitude).imports("calendar[latitude]");
     Input(fileName).help("File with table of (Julian day,latitude)-indexed free radicals concentration");
     Input(kOH).help("Degradation rate (cm3/molecules/h)");
+
     Output(OHconcentration).help("Free OH radical concentration (molecules/cm3)");
 }
 
 void LeafPhotoDegradation::initialize() {
+
     delete _freeRadicalsTable;
     QString filePath = environment().inputFileNamePath(fileName);
     _freeRadicalsTable = new DataGrid(filePath, this);
@@ -35,6 +37,7 @@ void LeafPhotoDegradation::initialize() {
 }
 
 double LeafPhotoDegradation::computeInstantaneous() {
+
     OHconcentration = interpolate(*_freeRadicalsTable, latitude, dayOfYear)*1e5; // molecules/cm3
     return kOH*OHconcentration/3600.; // s-1 = cm3/molecules/h * molecules/cm3 / (s/h)
 }

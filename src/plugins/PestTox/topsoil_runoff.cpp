@@ -19,9 +19,7 @@ TopSoilRunoff::TopSoilRunoff(QString name, QObject *parent)
 {
 
     Input(S).equals(0.01);
-    Input(wbz).equals(3.3);
-    Input(Doseaflrm).equals(0.);      //kg a.i/ha
-    Input(Doseldw).equals(0.);        //dose leaft on the leaf on beginning rainfall will be washed to the soil
+    Input(wbz).equals(1.);
     Input(P).equals(1.);              //average  daily rainfall per rainfall event in a given month (mm)
     Input(KocpH).equals(5.678e-6);
     Input(fom).equals(0.09);          //organice matter content in the soil
@@ -47,7 +45,7 @@ void TopSoilRunoff::update() {
     Fbuffer = pow(0.83, wbz);
     F = Fbuffer * Fslope;
     Kd = KocpH * fom;
-    fsr = (P > 0) ? (Q/P) * F * (100./ 1. + Kd) : 0;
+    fsr = (P > 0) ? (Q/P) * F * (1./ (1. + Kd)) : 0;
 
 }
 

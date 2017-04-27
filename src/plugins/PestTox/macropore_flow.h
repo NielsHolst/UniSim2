@@ -18,8 +18,8 @@ public:
 
 private:
     // Input
-    double fsand, fsilt, fclay, fw, fa, fmacropore, Flowrate, frr,
-    tpevent, P, frsw, Tf, Doseaflm;
+    double fsand, fsilt, fclay, fw, fa, fmacropore, Flowrate,
+    frr, tpevent, P, frsw, Tf;
 
     // Output
     double fporemobile, Vporeimmobile, C, Cused, Cfree,

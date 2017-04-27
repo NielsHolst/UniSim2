@@ -17,17 +17,22 @@ eggslaid::eggslaid(QString name, QObject *parent)
 {
 
     Input(eggsPerFemale).equals(100.);
-    Input(population).equals(100.);
-    Input(sexRatio).equals(0.6);     //per cent of eggs, tadpoles, ....adult frogs die per day
-    Output(totaleggs);
+    Input(population).equals(0.);
+    Input(sexRatio).equals(0.5);     //fraction of females in the population
+
+    Output(totalEggs);
 }
 
 void eggslaid::reset() {
-    totaleggs = 0.;
+
+    totalEggs = 0.;
 }
 
 void eggslaid::update() {
-    totaleggs = (population >2) ? sexRatio*eggsPerFemale*population : 0;
+
+    //totalEggs = (population >2) ? sexRatio*eggsPerFemale : 0;
+
+    totalEggs = sexRatio*eggsPerFemale;
 }
 
 } //namespace

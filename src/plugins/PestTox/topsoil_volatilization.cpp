@@ -18,7 +18,7 @@ TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
-    Input(Tsa).equals(25.);           // degrees celsius
+    Input(Tair).imports("weather[Tavg]");           // degrees celsius
     Input(MV).equals(140.83);         //molar volume; density 1.704 g/cm3, molar mass 169.07 g/mol
     Input(BLair).equals(0.00475);     // m or 4.75 mm as per Mackay (2001)
     Input(Pd).equals(0.01);           //penetration depth of 1 cm = 0.01 m
@@ -47,7 +47,7 @@ TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 
 void TopsoilVolatilization::update() {
 
-    Ba = 1./10000. * 1./1000. * (pow((Tsa + 273.15), 1.75)*sqrt(((1./MWair) + (1./MW))) / (Pair*pow((pow(MVair, 1./3.) + pow(MV, 1./3.)), 2)));
+    Ba = 1./10000. * 1./1000. * (pow((Tair + 273.15), 1.75)*sqrt(((1./MWair) + (1./MW))) / (Pair*pow((pow(MVair, 1./3.) + pow(MV, 1./3.)), 2)));
     ke = Ba / BLair;
     Dbl = 3600. * 24. * ke * farea * Za;
     Bea = Ba*pow(fa, 10./3.)/pow((fa+fw), 2);

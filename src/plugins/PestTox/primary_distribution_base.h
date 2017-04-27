@@ -17,6 +17,7 @@ public:
 protected:
     // Input
     double fieldArea, doseApplied;
+
     // Output
     double doseTaken, fractionTaken;
 };

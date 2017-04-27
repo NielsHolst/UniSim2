@@ -11,7 +11,8 @@ const double
     T0 = 273.15,                //!< Absolute zero offset (oC)
     MWair = 28.966,              //! Molar weight of air (g/mol)
     MVair = 20.1,               //! Molar volume of air (cm3/mol)
-    R = 8.314;                  //!< Gas constant (J/mol/K)
+    R = 8.314,                  //!< Gas constant (J/mol/K)
+    Q10 = 2.58;                 //!< Increase in biodegradation rate per 10 °C
 //    g = 9.81,                   //!< Gravity (m/s2)
 //    Sigma = 5.6704e-8,          //!< Stefan-Boltzmann constant (W/m2/K4)
 //    Mwater = 18.016e-3,         //!< Molar mass of water (kg/mol)

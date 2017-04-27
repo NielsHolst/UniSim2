@@ -18,7 +18,7 @@ public:
 
 private:
     // Input
-    double Tsa, Pd,
+    double Tair, Pd,
     MV, BLair, fa, fw, farea, Pair,
     Za, Zw, VZ, MW, viscosity;
 

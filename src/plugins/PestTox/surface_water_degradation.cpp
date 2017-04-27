@@ -6,6 +6,7 @@
 #include "surface_water_degradation.h"
 #include <cmath>
 #include <base/publish.h>
+#include "general.h"
 
 using namespace base;
 using namespace std;
@@ -18,26 +19,39 @@ SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent
 	: Box(name, parent)
 {
 
-    Input(inflow).equals(0.);
-    Input(DT50).equals(4.5); //biodegradation half-life (days)
-    Input(ff).equals(0.995);      //fractionformation of a metabolite
-    Input(Q).equals(2.1);         //value to calculate the temperature correction factor for soil biodegradation rate (this value ranges from 2-3, in this model the value of 2.1 is adopted)
-    Input(Tw);             //actual water temp in deg C
+    Input(inflow).equals(0.).help("Runoff from the field (g/ha)");
+    Input(inflow2).equals(0.).help("Spray drift off-field edge (g/ha)");
+    Input(DT50).equals(4.5).help("Biodegradation half-life (days)");
+    Input(Tw).imports("soilTemperature[value]").help("Actual water temperature (°C). Same as soil temperature");
+    Input(pondWidth).equals(1.).help("Width of the pond or channel (m)");
+    Input(pondHeight).equals(1.).help("Height of the pond or channel (m)");
+    Input(pondLength).equals(1.).help("Length of the pond or channel (m)");
+    Input(fieldArea).imports("field[area]").help("Area of whole field (m2)");
+    Input(RunoffAmount).equals(0.).help("Runoff amount (mm)");
 
-    Output(concentration);
+    Output(concentration).help("Concetration of the pesticide in the pond or channel(mg/L)");
     Output(outflow);
-    Output(fsdT);           //temperature correction factor    
-    Output(kwd);            //temperature corrected biodegradation rate constant (day-1)
+    Output(fwdT).help("Temperature correction factor");
+    Output(kwd).help("Temperature corrected biodegradation rate constant (per day)");
+    Output(pondVolume).help("Volume of the pond or channel (L)");
+    Output(fieldWater).help("Volume of water runoff from  the field (L)");
+    Output(runoff).help("Pesticide concentration in the runoff: from  the field (mg/L)");
+    Output(sprayDrift).help("Pesticide concentration: from spray drift (mg/L)");
 
 }
 
 void SurfaceWaterDegradation ::update() {
+
     const double Tref = 25.;
     double k = log(2)/DT50;
-    fsdT = pow(Q, (Tw - Tref)/10.);
-    kwd = k*fsdT;
-    outflow = concentration*ff*kwd;
-    concentration += inflow - outflow;
+    fwdT = (Tw > 0) ? pow(Q10,(Tw - Tref)/10.) : 0;
+    kwd = k*fwdT;
+    fieldWater = (RunoffAmount > 0) ? fieldArea*(RunoffAmount*1e-3)*1000. : 0;
+    runoff = (fieldWater > 0) ? inflow*1000.*fieldArea*1e-4/fieldWater : 0;
+    pondVolume = pondWidth*pondHeight*pondLength*1000.;
+    sprayDrift = inflow2*1000.*fieldArea*1e-4/pondVolume;
+    outflow = concentration*kwd;
+    concentration += (fieldWater > 0) ? runoff + sprayDrift - concentration: runoff + sprayDrift - outflow;
 
 }
 

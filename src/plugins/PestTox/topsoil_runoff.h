@@ -18,7 +18,7 @@ public:
 
 private:
     // Input
-    double S, wbz, Doseaflrm, Doseldw, P, KocpH, fom, Q;
+    double S, wbz, P, KocpH, fom, Q;
 
     // Output
     double Fslope, Fbuffer, F, fsr, Kd;

@@ -24,6 +24,7 @@ LeafUptake::LeafUptake(QString name, QObject *parent)
 }
 
 double LeafUptake::computeInstantaneous() {
+
     double V = 0.945*MV + 2.772,
            B = R*2.303*(Tair + T0),
            log_klu;

@@ -147,6 +147,7 @@ void Track::update() {
             break;
         case PortFilter::Max:
             port_value_op::max(_type, _filteredValuePtr, _filteredValuePtr, _valuePtr);
+            break;
         case PortFilter::End:
             base::assign(_type, _filteredValuePtr, _type, _valuePtr, PortTransform::Identity, this);
     }

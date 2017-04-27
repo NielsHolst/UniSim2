@@ -20,7 +20,7 @@ private:
     // Input
     double MW, Pd,
     Psol, VP, foc, pb, fa, fw, fs, farea,
-    KocpH, Tsa, R, Sp;
+    KocpH, Tair, R, Sp;
 
     // Output
     double Za, Zw, Zs, VPTadap, Vs, Vw, Va, VZ;

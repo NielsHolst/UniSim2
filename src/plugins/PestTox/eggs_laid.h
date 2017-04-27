@@ -22,7 +22,7 @@ private:
     double eggsPerFemale, sexRatio, population;
 
     // Output
-    double totaleggs;
+    double totalEggs;
 
 };
 

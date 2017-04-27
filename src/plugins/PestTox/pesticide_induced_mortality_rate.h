@@ -19,10 +19,10 @@ public:
 
 private:
     // Input
-    double LC50, concentration, slope, ar;
+    double LC50, concentration, slope;
 
     // Output
-    double C, mortalityRate, survivalRate;
+    double mortalityRate, survivalRate;
 };
 
 } //namespace

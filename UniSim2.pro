@@ -43,9 +43,9 @@ SUBDIRS += MusselBed
 MusselBed.subdir = src/plugins/MusselBed
 MusselBed.depends = base
 
-#SUBDIRS += PestTox
-#PestTox.subdir = src/plugins/PestTox
-#PestTox.depends = base
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
 
 SUBDIRS += pollnet
 pollnet.subdir = src/plugins/pollnet
@@ -73,7 +73,7 @@ unisim.depends = distribution
 unisim.depends = eq
 unisim.depends = MusselBed
 unisim.depends = pollnet
-#unisim.depends = PestTox
+unisim.depends = PestTox
 unisim.depends = student
 #unisim.depends = tuta_absoluta
 unisim.depends = vg

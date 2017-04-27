@@ -18,19 +18,16 @@ pesticideinducedmortalityrate::pesticideinducedmortalityrate(QString name, QObje
 {
 
     Input(LC50).equals(0.);               //constant LC50 (mg a.i/L)
-    Input(concentration).equals(1.);      //predicted concentration in the soil at time t (kg a.i/ha)
+    Input(concentration).equals(0.);      //concentration in the water (mg a.i/L)
     Input(slope).equals(1.);              //scale the specific toxicity of the simulated pesticide or sigmoidal function (volume/amount)
-    Input(ar).equals(1.);                  //application rate, L/ha
 
-    Output(mortalityRate);         //per cent of eggs, tadpole, ....adult frog dies per day
-    Output(C);                     //predicted soil concentration at time t (mg a.i/L)
-    Output(survivalRate);          //fraction of eggs, tadpoles, ...adults frogs survived
+    Output(mortalityRate);         //fraction of eggs, tadpole, ....adult frog dies per day
+    Output(survivalRate);          //fraction of eggs, tadpoles, ...adults frogs survived per day
 
 }
 
 void pesticideinducedmortalityrate::reset() {
 
-    C = 0.;
     mortalityRate = 0.;
     survivalRate = 0.;
 
@@ -38,8 +35,7 @@ void pesticideinducedmortalityrate::reset() {
 
 void pesticideinducedmortalityrate::update() {
 
-    C = (concentration > 0) ? (concentration * 1000000.)/ar : 0;
-    mortalityRate = (1./(1. + exp(-slope*(log(C) - log(LC50)))));
+    mortalityRate = (1./(1. + exp(-slope*(log(concentration) - log(LC50)))));
     survivalRate = (survivalRate < 0) ? 0 : (1.- mortalityRate);
 
 }

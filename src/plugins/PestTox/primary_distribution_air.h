@@ -19,7 +19,7 @@ public:
 private:
     // Input
     double boomWidth, exposureZoneWidth,
-        a1, b1, a2, b2;
+        a1, b1, a2, b2, x;
 };
 
 } //namespace
