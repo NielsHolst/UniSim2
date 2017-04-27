@@ -39,7 +39,7 @@ Simulation sim {
 		}
 	}
 	Box applications { // Create Applications class to provide help at origin
-		+dose|sum = ./*[dose]		
+		+dose|sum = ./*[dose]		//Niels: changed to new syntax
 		+vapourPressure = 2.45e-5 // vapour pressure at Tref (Pa)
 		+Tref = 25
 		+activationEnergyVolatilization = 95 		// (kJ/mol) 
