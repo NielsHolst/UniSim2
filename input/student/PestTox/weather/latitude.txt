@@ -1,5 +1,5 @@
-Province	Latitude
-Pathumthani	14.02
-KamphaengPhet	16.48
-Loei	17.49
-Phichit	16.27
+Province	Latitude	FileName
+Pathumthani	14.02	Pathumthani.txt
+KamphaengPhet	16.48	KamphaengPhet
+Loei	17.49	Loei.txt
+Phichit	16.27	Phichit.txt

@@ -44,10 +44,10 @@ void Scenarios::readDataFrame() {
 
 void Scenarios::createColumnOutputs() {
     values.fill(QString(), _df.numCol());
-    int i(0);
     for (QString colname : _df.colNames().toVector()) {
         Port *port = new Port(colname, this);
-        port->data(&values[i++]);
+        int ixCol = _df.ixCol(colname);
+        port->data(&values[ixCol]);
     }
 }
 

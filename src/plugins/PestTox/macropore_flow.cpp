@@ -57,7 +57,7 @@ void MacroporeFlow::update() {
     Pcapacitymm = 1000. * Cfree;
     Preqh = Pcapacitymm /(1. - frr);
     Preqday = Preqh * 24.;
-    Pi = 1.-(1.- exp((-tpevent /(24.*P)*Preqday)));
+    Pi = (P == 0) ? 0 : exp(-tpevent /(24.*P)*Preqday);
     fmp = Pi*frsw*(Tf/7.5);
 }
 

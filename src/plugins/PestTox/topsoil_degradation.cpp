@@ -47,7 +47,6 @@ TopsoilDegradation::TopsoilDegradation(QString name, QObject *parent)
 }
 
 void TopsoilDegradation::update() {
-
     const double Tref = 25.;
     double k = log(2)/DT50;
     fsdT = (Tsoil > 0) ? pow(Q10,(Tsoil - Tref)/10.) : 0;

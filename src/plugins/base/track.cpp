@@ -7,10 +7,6 @@
 #include "track.h"
 #include "unique_name.h"
 
-#include <QTextStream>
-#include <iostream>
-#include "dialog.h"
-
 namespace base {
 
 //
@@ -133,6 +129,9 @@ void Track::reset() {
 }
 
 void Track::update() {
+    QString s;
+
+
     ++_count;
     switch (_filter) {
         case PortFilter::None:

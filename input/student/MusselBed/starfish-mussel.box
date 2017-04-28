@@ -1,0 +1,113 @@
+Simulation musselBed {
+	.steps = 100
+	
+	Calendar calendar {
+		.initialDateTime = 1/1/2009
+	}
+	
+	Records ocean {
+		.fileName = "BR_.txt"
+	}
+	
+	FunctionalResponseGB funcresp {
+		.apparency = search[value]
+		.resourceDensity mussel[mBiomass]
+		.demand = demand[netDemand]
+		.egestionRatio = 0.853
+		.respiration =demand[Respiration]
+	}
+
+	Starfish starfish {
+		StarfishDemand demand {
+			.stBiomass = ..[stBiomass]
+			.stSize = ..[stSize]
+			.temperature = ocean[tmean]
+		}
+		StarfishSearchRate search{
+			.s = 1
+			StarfishTempScale stscale {
+				.temperature = ocean[tmean]
+			}
+			StarfishSalScale stscale {
+				.smean = ocean[smean]
+			}
+			StarfishHdScale stscale {
+				.smean = ocean[smean]
+				.mBiomass = mussel[mBiomass]
+				.vmax = 0
+			}
+		}
+	}
+	
+	Mussel mussel {
+		.minBiomass = 1000
+		.minAbundance = 1300
+		.mGrowth = growth[mGrowth]
+		.lsBiomass = thinning[LsBiomass]
+		.lsAbundance = thinning[LsAbundance]
+		.day = steps[stepNumber]
+		MusselThinning thinning {
+			.mBiomass = ..[mBiomass]
+			.mAbundance =..[mAbundance]
+			.mSize = ..[mSize]
+			.supply =  funcresp[totalSupply]
+		}
+		MusselGrowthRate growth {
+			.mBiomass =..[mBiomass]
+			.mSize = ..[mSize]
+			.carryingCapacity =15000
+			MusselTempScale scale {
+				.temperature = ocean[tmean]
+			}
+			MusselSalScale scale {
+				.smean = ocean[smean]
+			}
+		}
+	}
+	
+	OutputR {
+		PageR {
+			.xAxis = calendar[date]
+			PlotR {
+				.ports = (funcresp[supply] demand[netDemand])
+				.ggplot = "labs(title='Starfish Feeding rate'"
+			}
+			PlotR {
+				.ports = (ocean[tmean] ocean[smean])
+				.ggplot = "labs(title='Ocean variables'"
+			}
+			
+			PlotR {
+				.ports = starfish[stSize]
+				.ggplot = "labs(title='Starfish size validation'"
+				// add obs
+			}
+			PlotR {
+				.ports = starfish[stBiomass]
+				.ggplot = "labs(title='Starfish biomass validation'"
+				// add obs
+			}
+			PlotR {
+				.ports = starfish[stAbundance]
+				.ggplot = "labs(title='Starfish abundance validation'"
+				// add obs
+			}
+
+			PlotR {
+				.ports = mussel[mSize]
+				.ggplot = "labs(title='Mussel size validation'"
+				// add obs
+			}
+			PlotR {
+				.ports = mussel[mBiomass]
+				.ggplot = "labs(title='Mussel biomass validation'"
+				// add obs
+			}
+			PlotR {
+				.ports = mussel[mAbundance]
+				.ggplot = "labs(title='Mussel abundance validation'"
+				// add obs
+			}
+		}
+	}
+}
