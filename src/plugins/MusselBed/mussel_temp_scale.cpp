@@ -7,12 +7,16 @@
 /* MUSSEL GROWTH SCALING: Scale maximum growth rate by current step temperature,
    this scaling function is based in the data from Almeda-Villela et al., 1982, Fig 2. */
 
-#include "mussel_temp_scale.h"
 #include <math.h>
+#include <base/publish.h>
+#include "mussel_temp_scale.h"
+
 using namespace base;
 
 namespace MusselBed {
-	
+
+PUBLISH(MusselTempScale)
+
 MusselTempScale::MusselTempScale(QString name, QObject *parent)
 	: Box(name, parent)
 {

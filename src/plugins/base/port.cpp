@@ -187,6 +187,7 @@ namespace {
                 type = importType;
                 break;
             case Sum:
+            case Prod:
             case Mean:
             case Min:
             case Max:
@@ -294,11 +295,11 @@ void Port::format(PortType type) {
             break;
         case Time:
         case TimeVector:
-            format("hms");
+            format("HMS");
             break;
         case DateTime:
         case DateTimeVector:
-            format("ymdhms");
+            format("ymdHMS");
             break;
         default:
             format("NA");

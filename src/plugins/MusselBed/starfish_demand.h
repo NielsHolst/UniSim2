@@ -19,9 +19,9 @@ public:
 
 private:
     // Inputs
-    double stSize;
+    double size;
     double temperature;
-    double stBiomass;
+    double biomass;
 
     // Outputs
     double netDemand;

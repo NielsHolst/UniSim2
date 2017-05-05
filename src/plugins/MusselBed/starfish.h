@@ -19,10 +19,10 @@ public:
 
 private:
     // Inputs
-    double stinBiomass, stinAbundance, supply, respiration;
+    double initBiomass, initAbundance, supply, respiration;
 
     // Outputs
-    double stBiomass, stAbundance, stSize;
+    double biomass, abundance, size;
 };
 
 } //namespace

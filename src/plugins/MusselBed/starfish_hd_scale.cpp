@@ -8,11 +8,14 @@
 ** Function yielded from Antonio Agüera, et al. 2014
 */
 
+#include <base/publish.h>
 #include "starfish_hd_scale.h"
-#include <math.h>
+
 using namespace base;
 
 namespace MusselBed {
+
+PUBLISH(StarfishHdScale)
 
 StarfishHdScale::StarfishHdScale(QString name, QObject *parent)
     : Box(name, parent)

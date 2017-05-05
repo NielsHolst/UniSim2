@@ -20,17 +20,17 @@ protected:
     // Inputs
     T minValue, maxValue;
     int seedValue;
+    // Outputs
+    T value;
 private:
     int maxTries;
     bool drawAtInitialize, drawAtUserInitialize,
         drawAtReset, drawAtUserReset,
         drawAtUpdate, drawAtUserUpdate;
-    // Outputs
-    T value;
     // Methods
     virtual void doInitialize() = 0;
     virtual T drawValue() = 0;
-    void nextValue();
+    virtual void nextValue();
 };
 
 template <class T>
@@ -91,7 +91,6 @@ void RandomBase<T>::nextValue() {
         found = (minValue <= value && value < maxValue);
     } while (!found);
 }
-
 
 } //namespace
 #endif

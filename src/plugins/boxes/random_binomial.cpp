@@ -19,12 +19,16 @@ RandomBinomial::~RandomBinomial() {
 }
 
 void RandomBinomial::doInitialize() {
-    distribution = new Distribution(minValue, maxValue);
+    distribution = new Distribution(0, 1);
     variate = new Variate(*randomGenerator(), *distribution);
 }
 
 bool RandomBinomial::drawValue() {
     return (*variate)() > P;
+}
+
+void RandomBinomial::nextValue() {
+    value = drawValue();
 }
 
 } //namespace

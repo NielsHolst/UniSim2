@@ -16,7 +16,7 @@ Plant::Plant(QString name, QObject *parent)
 
     Input(s).equals(2).help("Self-limitation rate of floral rewards production.");
     Input(beta).equals(1).help("Producton rate of floral rewards.");
-    Input(kappa).equals(1).help("Cost of producing floral rewards in terms of vegetative biomass.");
+    Input(kappa).imports("random/plant[kappa]").help("Cost of producing floral rewards in terms of vegetative biomass.");
     Input(K).equals(5).help("Plant community-wide carrying capcity.");
 
     Input(Vsum).help("Total plant biomass");

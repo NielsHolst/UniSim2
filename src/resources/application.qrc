@@ -17,6 +17,17 @@
     <file>data/input/awe/4-add-weed-emergence.box</file>
     <file>data/input/awe/5-add-weed-life-stages(0).box</file>
     <file>data/input/awe/5-add-weed-life-stages.box</file>
+    <file>data/input/book/cmbp/fig-10-pop-dyn.box</file>
+    <file>data/input/book/cmbp/fig-10-pop-dyn0.box</file>
+    <file>data/input/book/cmbp/fig-2-dev-rate.box</file>
+    <file>data/input/book/cmbp/fig-3-gmc.box</file>
+    <file>data/input/book/cmbp/fig-6-survival.box</file>
+    <file>data/input/book/cmbp/fig-7-emigration.box</file>
+    <file>data/input/book/cmbp/fig-8-fecundity.box</file>
+    <file>data/input/book/cmbp/figs-4-5-larva-gmc.box</file>
+    <file>data/input/book/cmbp/Iita9495.txt</file>
+    <file>data/input/book/cmbp/Mono9394.txt</file>
+    <file>data/input/book/cmbp/scenarios.txt</file>
     <file>data/input/book/demo/butterflies-common-k.box</file>
     <file>data/input/book/demo/butterfly-sa-1.box</file>
     <file>data/input/book/demo/butterfly-sa-2.box</file>
@@ -128,52 +139,55 @@
     <file>data/input/student/eab/weather/ClimDataV3.txt</file>
     <file>data/input/student/islands-3a.box</file>
     <file>data/input/student/MusselBed/apparencycalibration.xml</file>
-    <file>data/input/student/MusselBed/input/AD1.txt</file>
-    <file>data/input/student/MusselBed/input/ADw.txt</file>
-    <file>data/input/student/MusselBed/input/apparencycal.txt</file>
-    <file>data/input/student/MusselBed/input/BRw.txt</file>
-    <file>data/input/student/MusselBed/input/BRz.txt</file>
-    <file>data/input/student/MusselBed/input/BR_.txt</file>
-    <file>data/input/student/MusselBed/input/BSn.txt</file>
-    <file>data/input/student/MusselBed/input/Bso.txt</file>
-    <file>data/input/student/MusselBed/input/BSp.txt</file>
-    <file>data/input/student/MusselBed/input/BSw.txt</file>
-    <file>data/input/student/MusselBed/input/BZn.txt</file>
-    <file>data/input/student/MusselBed/input/BZ_.txt</file>
-    <file>data/input/student/MusselBed/input/Dbo.txt</file>
-    <file>data/input/student/MusselBed/input/DB_.txt</file>
-    <file>data/input/student/MusselBed/input/GSn.txt</file>
-    <file>data/input/student/MusselBed/input/GS_.txt</file>
-    <file>data/input/student/MusselBed/input/IN_.txt</file>
-    <file>data/input/student/MusselBed/input/KW_.txt</file>
-    <file>data/input/student/MusselBed/input/LW_.txt</file>
-    <file>data/input/student/MusselBed/input/MRo.txt</file>
-    <file>data/input/student/MusselBed/input/MRw.txt</file>
-    <file>data/input/student/MusselBed/input/scenarios.txt</file>
-    <file>data/input/student/MusselBed/input/SO2.txt</file>
-    <file>data/input/student/MusselBed/input/SOK.txt</file>
-    <file>data/input/student/MusselBed/input/SO_.txt</file>
-    <file>data/input/student/MusselBed/input/STp.txt</file>
-    <file>data/input/student/MusselBed/input/ST_.txt</file>
-    <file>data/input/student/MusselBed/input/Tim.txt</file>
-    <file>data/input/student/MusselBed/input/TS_.txt</file>
-    <file>data/input/student/MusselBed/input/TX2.txt</file>
-    <file>data/input/student/MusselBed/input/TXw.txt</file>
-    <file>data/input/student/MusselBed/input/VJG.txt</file>
-    <file>data/input/student/MusselBed/input/VLn.txt</file>
-    <file>data/input/student/MusselBed/input/VLz.txt</file>
-    <file>data/input/student/MusselBed/input/VVG.txt</file>
-    <file>data/input/student/MusselBed/input/Waa.txt</file>
-    <file>data/input/student/MusselBed/input/WK_.txt</file>
-    <file>data/input/student/MusselBed/input/WM_.txt</file>
-    <file>data/input/student/MusselBed/input/ZOR.txt</file>
-    <file>data/input/student/MusselBed/input/ZWo.txt</file>
-    <file>data/input/student/MusselBed/input/ZWw.txt</file>
-    <file>data/input/student/MusselBed/input/ZW_.txt</file>
+    <file>data/input/student/MusselBed/data/AD1.txt</file>
+    <file>data/input/student/MusselBed/data/ADw.txt</file>
+    <file>data/input/student/MusselBed/data/apparencycal.txt</file>
+    <file>data/input/student/MusselBed/data/BRw.txt</file>
+    <file>data/input/student/MusselBed/data/BRz.txt</file>
+    <file>data/input/student/MusselBed/data/BR_.txt</file>
+    <file>data/input/student/MusselBed/data/BSn.txt</file>
+    <file>data/input/student/MusselBed/data/Bso.txt</file>
+    <file>data/input/student/MusselBed/data/BSp.txt</file>
+    <file>data/input/student/MusselBed/data/BSw.txt</file>
+    <file>data/input/student/MusselBed/data/BZn.txt</file>
+    <file>data/input/student/MusselBed/data/BZ_.txt</file>
+    <file>data/input/student/MusselBed/data/Dbo.txt</file>
+    <file>data/input/student/MusselBed/data/DB_.txt</file>
+    <file>data/input/student/MusselBed/data/GSn.txt</file>
+    <file>data/input/student/MusselBed/data/GS_.txt</file>
+    <file>data/input/student/MusselBed/data/IN_.txt</file>
+    <file>data/input/student/MusselBed/data/KW_.txt</file>
+    <file>data/input/student/MusselBed/data/LW_.txt</file>
+    <file>data/input/student/MusselBed/data/MRo.txt</file>
+    <file>data/input/student/MusselBed/data/MRw.txt</file>
+    <file>data/input/student/MusselBed/data/SO2.txt</file>
+    <file>data/input/student/MusselBed/data/SOK.txt</file>
+    <file>data/input/student/MusselBed/data/SO_.txt</file>
+    <file>data/input/student/MusselBed/data/STp.txt</file>
+    <file>data/input/student/MusselBed/data/ST_.txt</file>
+    <file>data/input/student/MusselBed/data/Tim.txt</file>
+    <file>data/input/student/MusselBed/data/TS_.txt</file>
+    <file>data/input/student/MusselBed/data/TX2.txt</file>
+    <file>data/input/student/MusselBed/data/TXw.txt</file>
+    <file>data/input/student/MusselBed/data/VJG.txt</file>
+    <file>data/input/student/MusselBed/data/VLn.txt</file>
+    <file>data/input/student/MusselBed/data/VLz.txt</file>
+    <file>data/input/student/MusselBed/data/VVG.txt</file>
+    <file>data/input/student/MusselBed/data/Waa.txt</file>
+    <file>data/input/student/MusselBed/data/WK_.txt</file>
+    <file>data/input/student/MusselBed/data/WM_.txt</file>
+    <file>data/input/student/MusselBed/data/ZOR.txt</file>
+    <file>data/input/student/MusselBed/data/ZWo.txt</file>
+    <file>data/input/student/MusselBed/data/ZWw.txt</file>
+    <file>data/input/student/MusselBed/data/ZW_.txt</file>
+    <file>data/input/student/MusselBed/scenarios.txt</file>
+    <file>data/input/student/MusselBed/starfish-mussel.box</file>
     <file>data/input/student/MusselBed/starfish-mussel.xml</file>
     <file>data/input/student/PestTox/pesticide-sa.box</file>
+    <file>data/input/student/PestTox/pesticide-scenarios.box</file>
     <file>data/input/student/PestTox/pesticide.box</file>
     <file>data/input/student/PestTox/pesticide_end.R</file>
+    <file>data/input/student/PestTox/scenarios.txt</file>
     <file>data/input/student/PestTox/weather/free_radicals_table.txt</file>
     <file>data/input/student/PestTox/weather/KamphaengPhet.txt</file>
     <file>data/input/student/PestTox/weather/latitude.txt</file>
@@ -183,6 +197,7 @@
     <file>data/input/student/pollination_network-2.box</file>
     <file>data/input/student/pollnet/big_bang_pollinators.box</file>
     <file>data/input/student/pollnet/big_bang_pollinators.txt</file>
+    <file>data/input/student/pollnet/big_bang_pollinators_sa.box</file>
     <file>data/input/student/tuta/leafminer.box</file>
     <file>data/input/student/tuta/weather/PathumthaniAgromet.txt</file>
     <file>data/input/UA/2017-01-23/egg-1.box</file>
@@ -195,6 +210,8 @@
     <file>data/input/UA/2017-01-23/egg.box</file>
     <file>data/input/UA/2017-01-23/pop-scenarios-1.txt</file>
     <file>data/input/UA/2017-01-23/population-1.box</file>
+    <file>data/input/vg/air-flux-infiltration.box</file>
+    <file>data/input/vg/crack-ventilation.box</file>
     <file>data/input/vg/crops.xml</file>
     <file>data/input/vg/ig2.box</file>
     <file>data/input/vg/input/direct_transmission_single.txt</file>

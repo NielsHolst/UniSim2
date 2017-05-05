@@ -19,11 +19,11 @@ public:
 
 private:
     // Inputs
-    double minBiomass, minAbundance, lsBiomass, lsAbundance, mGrowth;
+    double initBiomass, initAbundance, lossBiomass, lossAbundance, growth;
     int day;
 
     // Outputs
-    double mAbundance, mBiomass, mSize, LD, LD50;
+    double abundance, biomass, size, LD, LD50;
 };
 
 } //namespace

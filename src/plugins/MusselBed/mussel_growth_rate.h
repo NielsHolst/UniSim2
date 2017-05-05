@@ -20,10 +20,10 @@ public:
 
 private:
     // Inputs
-    double carryingCapacity, mSize, mBiomass;
+    double carryingCapacity, size, biomass;
 
     // Outputs
-    double mGrowth;
+    double value;
 
     // Links
     QVector<base::Box*> scales;

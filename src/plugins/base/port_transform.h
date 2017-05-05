@@ -10,6 +10,7 @@ namespace base {
 enum PortTransform {
     Identity,
     Sum,
+    Prod,
     Mean,
     Min,
     Max,

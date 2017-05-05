@@ -13,7 +13,7 @@ read_output = function(file_path) {
 	column_info = function(file_path) {
 		sip = read.table(file_path, header=TRUE, sep="\t", stringsAsFactors=FALSE, nrows=1)
 		Rformat = unlist(sip[1,])
-		ix_date = (Rformat == "ymd") | (Rformat == "hms") | (Rformat == "ymdhms")
+		ix_date = (Rformat == "ymd") | (Rformat == "HMS") | (Rformat == "ymdHMS")
 		read_format = Rformat
 		read_format[ix_date]  = "character"
 		names(read_format) = NULL
@@ -41,7 +41,7 @@ read_output = function(file_path) {
 
 convert = function(df) {
 	ix_bool = which(sapply(df,class)=="logical")
-	df[,ix_bool] = as.numeric(df[,ix_bool])
+	df[,ix_bool] = colwise(as.numeric)(df[,ix_bool])
 	df
 }
 

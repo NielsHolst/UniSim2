@@ -7,11 +7,14 @@
 /* ##STARFISH SEARCH RATE MODEL: determines the apparency or search rate for starfish to be considered in the functional response. The empirical value of 0.17
 ** from Barbeau and Wong is evaluated against field current environmental conditions that difficult starfish activity and movement*/
 
+#include <base/publish.h>
 #include "starfish_search_rate.h"
 
 using namespace base;
 
 namespace MusselBed {
+
+PUBLISH(StarfishSearchRate)
 
 StarfishSearchRate::StarfishSearchRate(QString name, QObject *parent)
     : Box(name, parent)

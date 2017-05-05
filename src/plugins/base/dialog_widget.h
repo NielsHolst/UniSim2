@@ -60,6 +60,7 @@ private:
     void submitCommand();
     void handleCtrlKey(QKeyEvent *event);
     void handleNormalKey(QKeyEvent *event);
+    QString selectFile();
 };
 
 }

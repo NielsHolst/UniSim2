@@ -9,11 +9,14 @@
    The role of temperature and shading, Journal of Sea Research, Volume 72, August 2012, Pages 106-112,
    (http://www.sciencedirect.com/science/article/pii/S1385110112000159)*/
 
+#include <base/publish.h>
 #include "starfish_temp_scale.h"
-#include <math.h>
+
 using namespace base;
 
 namespace MusselBed {
+
+PUBLISH(StarfishTempScale)
 
 StarfishTempScale::StarfishTempScale(QString name, QObject *parent)
     : Box(name, parent)
@@ -27,7 +30,9 @@ void StarfishTempScale::reset() {
 }
 
 void StarfishTempScale::update() {
-    value =(exp(0.52777*temperature - 3.96623)/(1+exp(0.52777*temperature - 3.96623)));
+    const double a = 0.52777,
+                 b = 3.96623;
+    value =(exp(a*temperature - b)/(1 + exp(a*temperature - b)));
 }
 
 } //namespace

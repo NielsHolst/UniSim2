@@ -56,6 +56,11 @@ void assignToScalarFromVector(void *destPtr, const void *sourcePtr, PortTransfor
         while (i++<n)
             value += (*sourceData++);
         break;
+    case Prod:
+        value = 1;
+        while (i++<n)
+            value *= (*sourceData++);
+        break;
     case Mean:
         value = 0;
         while (i++<n)

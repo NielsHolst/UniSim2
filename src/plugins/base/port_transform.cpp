@@ -18,6 +18,7 @@ namespace {
         if (_map.isEmpty()) {
             TRANSFORM_ENTRY(Identity);
             TRANSFORM_ENTRY(Sum);
+            TRANSFORM_ENTRY(Prod);
             TRANSFORM_ENTRY(Mean);
             TRANSFORM_ENTRY(Min);
             TRANSFORM_ENTRY(Max);
@@ -35,6 +36,7 @@ template<> QString convert(PortTransform transform) {
     switch (transform) {
         TRANSFORM_CASE(Identity);
         TRANSFORM_CASE(Sum);
+        TRANSFORM_CASE(Prod);
         TRANSFORM_CASE(Mean);
         TRANSFORM_CASE(Min);
         TRANSFORM_CASE(Max);

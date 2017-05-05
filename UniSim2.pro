@@ -11,13 +11,17 @@ base.subdir = src/plugins/base
 #awe.subdir = src/plugins/awe
 #awe.depends = base
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
+#SUBDIRS += aphid
+#aphid.subdir = src/plugins/aphid
+#aphid.depends = base
 
 SUBDIRS += boxes
 boxes.subdir = src/plugins/boxes
 boxes.depends = base
+
+SUBDIRS += cmbp
+cmbp.subdir = src/plugins/cmbp
+cmbp.depends = base
 
 SUBDIRS += command
 command.subdir = src/plugins/command
@@ -39,13 +43,13 @@ SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
 
-SUBDIRS += MusselBed
-MusselBed.subdir = src/plugins/MusselBed
-MusselBed.depends = base
+#SUBDIRS += MusselBed
+#MusselBed.subdir = src/plugins/MusselBed
+#MusselBed.depends = base
 
-SUBDIRS += PestTox
-PestTox.subdir = src/plugins/PestTox
-PestTox.depends = base
+#SUBDIRS += PestTox
+#PestTox.subdir = src/plugins/PestTox
+#PestTox.depends = base
 
 SUBDIRS += pollnet
 pollnet.subdir = src/plugins/pollnet
@@ -55,25 +59,26 @@ SUBDIRS += student
 student.subdir = src/plugins/student
 student.depends = base
 
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
 
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
 #unisim.depends = apis
 #unisim.depends = awe
-unisim.depends = aphid
+#unisim.depends = aphid
 unisim.depends = base
 unisim.depends = boxes
+unisim.depends = cmbp
 unisim.depends = command
 unisim.depends = demo
 unisim.depends = distribution
 #unisim.depends = conductance
 unisim.depends = eq
-unisim.depends = MusselBed
+#unisim.depends = MusselBed
 unisim.depends = pollnet
-unisim.depends = PestTox
+#unisim.depends = PestTox
 unisim.depends = student
 #unisim.depends = tuta_absoluta
-unisim.depends = vg
+#unisim.depends = vg

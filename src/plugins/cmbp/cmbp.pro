@@ -4,34 +4,28 @@
 #
 #-------------------------------------------------
 
-BOXES_PLUGIN_NAME = MusselBed
+BOXES_PLUGIN_NAME = cmbp
 
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS += \
-    mussel.h \
-    mussel_growth_rate.h \
-    starfish.h \
-    starfish_search_rate.h \
-    starfish_demand.h \
-    mussel_sal_scale.h \
-    mussel_temp_scale.h \
-    starfish_hd_scale.h \
-    starfish_sal_scale.h \
-    starfish_temp_scale.h \
-    mussel_thinning.h
-
+    dev_rate.h \
+    emigration.h \
+    exponential_peak.h \
+    fecundity.h \
+    grain_moisture_content.h \
+    grain_store.h \
+    immigration.h \
+    survival_by_density.h
+		
 SOURCES += \
-    mussel.cpp \
-    mussel_growth_rate.cpp \
-    starfish.cpp \
-    starfish_search_rate.cpp \
-    starfish_demand.cpp \
-    mussel_sal_scale.cpp \
-    mussel_temp_scale.cpp \
-    starfish_hd_scale.cpp \
-    starfish_sal_scale.cpp \
-    starfish_temp_scale.cpp \
-    mussel_thinning.cpp
+    dev_rate.cpp \
+    emigration.cpp \
+    exponential_peak.cpp \
+    fecundity.cpp \
+    grain_moisture_content.cpp \
+    grain_store.cpp \
+    immigration.cpp \
+    survival_by_density.cpp
 
 

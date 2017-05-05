@@ -156,15 +156,20 @@ void Records::extractValues() {
         ThrowException("Number of items in records file does not match number of column names").
                         value(lineItems.join(" ")).context(this);
 
-    for (int i = 0; i < lineItems.size(); ++i) {
-        if (i == dateColumn)
-            nextDate = convert<QDate>(lineItems[dateColumn]);
-        else if (i == timeColumn)
-            nextTime = convert<QTime>(lineItems[timeColumn]);
-        else
-            (*nextColumnValues)[i] = convert<double>(lineItems[i]);
+    try {
+        for (int i = 0; i < lineItems.size(); ++i) {
+            if (i == dateColumn)
+                nextDate = convert<QDate>(lineItems[dateColumn]);
+            else if (i == timeColumn)
+                nextTime = convert<QTime>(lineItems[timeColumn]);
+            else
+                (*nextColumnValues)[i] = convert<double>(lineItems[i]);
+        }
+        nextDateTime = QDateTime(nextDate, nextTime, Qt::UTC);
     }
-    nextDateTime = QDateTime(nextDate, nextTime, Qt::UTC);
+    catch (Exception &ex) {
+        ThrowException(ex.what()).context(this);
+    }
 }
 
 void Records::advanceLine() {

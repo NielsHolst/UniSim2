@@ -7,11 +7,14 @@
 /* ##STARFISH FEEDING SALINITY SCALING: this function scales starfish mussel biomass demand to the current
    salinity at step. This expression is based in field observations in mesocosm experiment at the laboratory*/
 
+#include <base/publish.h>
 #include "starfish_sal_scale.h"
-#include <math.h>
+
 using namespace base;
 
 namespace MusselBed {
+
+PUBLISH(StarfishSalScale)
 
 StarfishSalScale::StarfishSalScale(QString name, QObject *parent)
     : Box(name, parent)

@@ -7,11 +7,14 @@
 /* ##SALINITY SCALE FOR MUSSEL GROWTH: scale mussel growth with the effect of the current step daily average salinity.
    Results are yielded from Almada-Villela, 1984*/
 
+#include <base/publish.h>
 #include "mussel_sal_scale.h"
 
 using namespace base;
 
 namespace MusselBed {
+
+PUBLISH(MusselSalScale)
 
 MusselSalScale::MusselSalScale(QString name, QObject *parent)
     : Box(name, parent)

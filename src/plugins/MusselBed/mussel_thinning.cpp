@@ -12,6 +12,8 @@
    However as starfish predation can have a thinning effect, this thinning value is compared with starfish
    predation for the current date and the bigger one is used to determine the density loss for the mussel bed*/
 
+#include <math.h>
+#include <base/publish.h>
 #include "mussel_thinning.h"
 
 
@@ -19,36 +21,33 @@ using namespace base;
 
 namespace MusselBed {
 
+PUBLISH(MusselThinning)
+
 MusselThinning::MusselThinning(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(mBiomass).equals(1).help("current mussel density biomass g/m2");
-    Input(mAbundance).equals(1).help("current mussel density numbers n/m2");
+    Input(biomass).equals(1).help("current mussel density biomass g/m2");
+    Input(abundance).equals(1).help("current mussel density numbers n/m2");
+    Input(size).equals(1).help("current mussel size at step in g");
     Input(supply).help("biomass of mussesl consumed by starfish g/m2");
-    Input(mSize).equals(1).help("current mussel size at step in g");
-    Output(lsAbundance).help("mussel loss as numbers n/m2");
-    Output(lsBiomass).help("mussel loss as biomass g/m2");
-}
-
-void MusselThinning::reset() {
-    lsAbundance = 0.;
-    lsBiomass = 0.;
+    Output(lossAbundance).help("mussel loss as numbers n/m2");
+    Output(lossBiomass).help("mussel loss as biomass g/m2");
 }
 
 void MusselThinning::update() {
 
-        double maxAbundance =(3300*pow(mSize,-0.87)); /* this function calculate the maximum number of mussels per m2 for the current mussel size*/
-        double thinning = (maxAbundance - mAbundance)* mSize; /*this compare the max number with the current abundance and calculate the amount of mussels
+        double maxAbundance =(3300*pow(size,-0.87)); /* this function calculate the maximum number of mussels per m2 for the current mussel size*/
+        double thinning = (maxAbundance - abundance)* size; /*this compare the max number with the current abundance and calculate the amount of mussels
                                                             that died in this step due to intraspecific competition */
 
         if (thinning<0 && (-thinning)>=supply){ /* Thinning is then evaluated against the amount of mussels consumed by starfish, if thinning is larger, then
                                                     thinning will determine the decrease of mussel biomass and numbers in the step instead of starfish consumed mussels*/
-            lsBiomass = - thinning;
-            lsAbundance = - thinning/mSize;
+            lossBiomass = - thinning;
+            lossAbundance = - thinning/size;
         }
         else {
-            lsBiomass = supply;
-            lsAbundance = supply/mSize;
+            lossBiomass = supply;
+            lossAbundance = supply/size;
         }
 }
 } //namespace

@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFileDialog>
 #include <QFont>
 #include <QFontDatabase>
 #include <QKeyEvent>
@@ -174,10 +175,20 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
         Command::submit(QStringList() << "clear", this);
         insertText("\n" + _prompt);
         break;
+    case Qt::Key_Space:
+        insertText(selectFile());
+        break;
     default:
         QTextEdit::keyPressEvent(event);
         break;
     }
+}
+
+QString DialogWidget::selectFile() {
+    QString folder = environment().currentBoxScriptFolder().absolutePath();
+    QString filePath = QFileDialog::getOpenFileName(this,
+            "Select a file", folder, "Scripts (*.box *.xml)");
+    return QFileInfo(filePath).fileName();
 }
 
 void DialogWidget::handleNormalKey(QKeyEvent *event) {

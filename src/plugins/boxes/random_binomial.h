@@ -18,6 +18,7 @@ private:
     double P;
     // Methods
     bool drawValue();
+    void nextValue();
     // Random number generation
     typedef boost::uniform_real<double> Distribution;
     typedef boost::variate_generator<base::RandomGenerator::Generator&, Distribution> Variate;
