@@ -3,12 +3,7 @@
 #include <QMap>
 #include <QObject>
 #include <QTextStream>
-#include <QVariant>
 #include <QVector>
-#include "box_step.h"
-#include "construction_step.h"
-#include "enum_functions.h"
-#include "general.h"
 #include "path.h"
 #include "port.h"
 #include "port_access.h"
@@ -29,11 +24,9 @@ class Timer;
 class Box : public QObject, public ConstructionStep
 {
 public:
-    enum class ToTextOptions{None=0, InputsOnly=1};
     Box(QString name, QObject *parent);
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
-    ComputationStep computationStep() const;
     void addPort(Port *port);
     Port* peakPort(QString name);
     const Port* peakPort(QString name) const;
@@ -81,11 +74,10 @@ public:
 
     void cloneFamily(QString name, QObject *parent);
 
-    void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
+    void toText(QTextStream &text, int indentation = 0) const;
 private:
     // Data
     QString _name, _help, _sideEffects;
-    ComputationStep _computationStep;
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;
@@ -99,8 +91,6 @@ private:
     void enumerateBoxes(int &i);
     void resetPorts();
 };
-
-DEFINE_ENUM_FUNCTIONS(Box::ToTextOptions)
 
 template<class T> T* Box::findOne(QString path) {
     return Path(path, this).resolveOne<T>(this);

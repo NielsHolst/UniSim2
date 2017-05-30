@@ -16,12 +16,14 @@ class Screen : public base::Box
 public:
     Screen(QString name, QObject *parent);
     void reset();
+    void initialize();
     void update();
+    enum Orientation{Cover, Horizontal};
 private:
     friend class Screens;
 
     // Inputs
-    QString position, layer;
+    QString orientation;
     double shelterArea,
            transmissivityLight,
            emissivityInner, emissivityOuter,
@@ -29,12 +31,15 @@ private:
            energyLossReduction, U, haze,
            transmissivityAir, transmissivityAirExponent, state;
     // Outputs
+    int layer;
     double
         transmissivityLightNet,
         absorptivityLwInnerNet, absorptivityLwOuterNet,
         unhazed, transmissivityAirNet, effectiveArea,
         resistance, heatCapacity;
     bool isHorizontal;
+    // Data
+    Orientation _orientation;
     // Methods
     void updateByState(double state);
 };

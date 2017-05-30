@@ -58,6 +58,8 @@ private:
     bool bounceCursor(bool sticky);
     void clearLine();
     void submitCommand();
+    QString line();
+    QStringList lineItems();
     void handleCtrlKey(QKeyEvent *event);
     void handleNormalKey(QKeyEvent *event);
     QString selectFile();

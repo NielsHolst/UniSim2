@@ -4,6 +4,8 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
+#include <math.h>
+#include <base/box_builder.h>
 #include <base/publish.h>
 #include "air_flux_given.h"
 
@@ -13,39 +15,60 @@ namespace vg {
 
 PUBLISH(AirFluxGiven)
 
-/*! \class AirFluxGiven
- * \brief  The air flux given, irrespective of temperature-regulated ventilation
-
- *
- * Inputs
- * ------
- * - _infiltration_ is the infiltration air exchange rate [h<SUP>-1</SUP>]
- * - _crackVentilation_ is the air flux through the humidity-controlled ventilation crack [h<SUP>-1</SUP>]
- *
- * Output
- * ------
- * - _value_ is the relative rate of air exchanged [h<SUP>-1</SUP>]
- */
-
 AirFluxGiven::AirFluxGiven(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(AirFluxGiven);
-    Input(infiltration).imports("./infiltration[value]");
-    Input(crackVentilation).imports("./crackVentilation[value]");
-    Input(gravitation).imports("./gravitation[value]");
-    Input(transmissivity).imports("construction/shelters[airTransmissivity]");
+    help("sums up total given air flux");
+    Input(airFluxes).imports("./*[value]");
     Output(value);
 }
 
-void AirFluxGiven::reset() {
-    value = 0.;
+void AirFluxGiven::amend() {
+    BoxBuilder builder(this);
+    if (!findMaybeOne<Box>("./infiltration"))
+        builder.
+        box("AirFluxInfiltration").name("infiltration").
+        endbox();
+
+    if (!findMaybeOne<Box>("./gravitation"))
+        builder.
+        box("AirFluxGravitation").name("gravitation").
+        endbox();
+
+    if (!findMaybeOne<Box>("./crackVentilation"))
+        builder.
+        box("Accumulator").name("crackVentilation").
+            port("change").imports("./controller[controlVariable]").
+            box("PidController").name("controller").
+                port("desiredValue").imports("./desiredVentilation[signal]").
+                port("sensedValue").imports("..[value]").
+                port("Kprop").equals(0.02).
+                box("ProportionalSignal").name("desiredVentilation").
+                    port("input").imports("indoors/humidity[rh]").
+                    port("threshold").imports("setpoints/humidity/maximumRh[signal]").
+                    port("thresholdBand").equals(10).
+                    port("increasingSignal").equals(true).
+                    port("maxSignal").imports("./maxVentilation[signal]").
+                    port("minSignal").equals(0).
+                    box("ProportionalSignal").name("maxVentilation").
+                        port("input").imports("outdoors[temperature]").
+                        port("threshold").equals(-5).
+                        port("thresholdBand").equals(1).
+                        port("increasingSignal").equals(true).
+                        port("maxSignal").equals(0.5).
+                        port("minSignal").equals(0).
+                    endbox().
+                endbox().
+            endbox().
+        endbox();
 }
 
 void AirFluxGiven::update() {
-    value = infiltration + transmissivity*crackVentilation + gravitation;
+    value = 0;
+    for (double airFlux : airFluxes)
+        value += airFlux*airFlux;
+    value = std::sqrt(value);
 }
-
 
 } //namespace
 

@@ -28,7 +28,6 @@ class Box;
 
 class Port : public QObject, public ConstructionStep {
 public:
-    enum class ToTextOptions{None=0};
     struct Attributes {
         QString format, label, transform, help;
         PortTransform portTransform;
@@ -44,8 +43,8 @@ private:
     PortMode _mode;
     ComputationStep _portValueStep;
     QString _importPath;
-    QVector<Port *> _importPorts;
-    bool _importPortMustExist;
+    QVector<Port *> _importPorts, _exportPorts;
+    bool _importPortMustExist, _importsResolved;
     PortAccess _access;
     bool _notReferenced, _reset, _valueOverridden;
     Attributes _attributes;
@@ -93,6 +92,7 @@ public:
 
     // Change
     void resolveImports();
+    void addExportPort(Port *port);
     void reset();
     void copyFromImport();
     void assign(const QVector<Port *> &sources);
@@ -109,11 +109,13 @@ public:
     PortType type() const;
     PortAccess access() const;
     bool hasImport() const;
+    bool hasDistribution() const;
     bool isValueOverridden() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
+    QVector<Port*> exportPorts() const;
     QStringList warnings() const;
-    void toText(QTextStream &text, ToTextOptions options, int indentation = 0) const;
+    void toText(QTextStream &text, int indentation = 0) const;
     template <class T> void deducePortType(T value);
     static PortType commonType(const QVector<Port *> &ports);
     static void clearIndex();
@@ -121,8 +123,6 @@ public:
     static QVector<Port*> _index;
     static QString dump();
 };
-
-DEFINE_ENUM_FUNCTIONS(Port::ToTextOptions)
 
 template <class T> Port& Port::data(T *valuePtr) {
     _valuePtr = valuePtr;
@@ -134,13 +134,18 @@ template <class T> Port& Port::data(T *valuePtr) {
     return *this;
 }
 
-// It the value type is unknown then it must be deduced from the value,
-// either from its value as such (if it is a string), or else from its type
+// It the value type is unknown then it must be deduced from its value or C++ type
 template <class T> void Port::deducePortType(T value) {
     if (_valueType == Null) {
-        _valueType = (typeOf<T>() == String) ?
-                     base::deducePortType(convert<QString>(value)) : // Superflous conversion to QString to avoid compilation type conflict
-                     typeOf<T>();
+        if (hasDistribution())
+            // If port has a distribution attached, it must be a double
+            _valueType = Double;
+        else if (typeOf<T>() == String)
+            // Superflous conversion to QString to avoid compilation type conflict
+            _valueType = base::deducePortType(convert<QString>(value));
+        else
+            // Just use its C++ type
+            _valueType = typeOf<T>();
     }
 }
 

@@ -205,7 +205,7 @@
 					<port name="value" label="givenAirFluxInfiltration"/>
 					<port name="leakage" value="1"/>
 				</box>
-				<box name="crackVentilation" class="vg::PidControlElement">
+				<box name="crackVentilation" class="vg::PidController">
 					<port name="value" label="givenAirFluxCrack"/>
 					<port name="signal" ref="./target[signal]"/>
 					<port name="Kprop" value="0.1"/>
@@ -257,7 +257,7 @@
 				<box name="airFlux" class="vg::EnergyFluxAir">
 					<port name="airFlux" ref="given/airFlux[value]"/>
 				</box>
-				<box name="growthLights" class="vg::PidControlElement">
+				<box name="growthLights" class="vg::PidController">
 					<port name="Kprop" value="0.5"/>
 					<port name="signal" ref="./growthLights[value]"/>
 					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
@@ -283,7 +283,7 @@
 						<port name="inputs" value="(actuators/heating/pipes/*[nextEnergyFluxMax])"/>
 					</box>
 					<box name="demand" class="vg::EnergyFluxHeatingDemand"/>
-					<box name="supply" class="vg::PidControlElement">
+					<box name="supply" class="vg::PidController">
 						<port name="value" label="heatingSupply"/>
 						<port name="Kprop" value="0.6"/>
 						<port name="Kint" value="0.01"/>
@@ -314,7 +314,7 @@
 							<port name="dischargeCoefficient" value="0.3"/>
 						</box>
 					</box>
-					<box name="supply" class="vg::PidControlElement">
+					<box name="supply" class="vg::PidController">
 						<port name="value" label="energyFluxCoolingSupply"/>
 						<port name="slope" label="energyFluxCoolingSupplySlope"/>
 						<port name="Kprop" value="0.5"/>
@@ -396,7 +396,7 @@
 			</box>
 		</box>
 		<box name="temperature">
-			<box name="ventilation" class="vg::PidControlElement">
+			<box name="ventilation" class="vg::PidController">
 				<port name="value" label="setpointVentilation"/>
 				<port name="initState" ref="./target[signalReset]"/>
 				<port name="signal" ref="./target[signal]"/>
@@ -442,7 +442,7 @@
 					</box>
 				</box>
 			</box>
-			<box name="heating" class="vg::PidControlElement">
+			<box name="heating" class="vg::PidController">
 				<port name="value" label="setpointHeating"/>
 				<port name="initState" ref="./target[signalReset]"/>
 				<port name="signal" ref="./target[signal]"/>
@@ -532,7 +532,7 @@
 	</box>
 	<box name="controllers">
 		<box name="screens">
-			<box name="maxDrawn" class="vg::PidControlElement">
+			<box name="maxDrawn" class="vg::PidController">
 				<port name="initState" value="1"/>
 				<port name="signal" ref="./target[signal]"/>
 				<port name="Kprop" value="0.1"/>
@@ -700,19 +700,19 @@
 	<box name="actuators">
 		<box name="screens">
 			<box name="energy">
-				<box name="control" class="vg::PidControlElement">
+				<box name="control" class="vg::PidController">
 					<port name="signal" ref="controllers/screens/energy/control[signal]"/>
 					<port name="Kprop" value="0.3"/>
 				</box>
 			</box>
 			<box name="shade">
-				<box name="control" class="vg::PidControlElement">
+				<box name="control" class="vg::PidController">
 					<port name="signal" ref="controllers/screens/shade/control[signal]"/>
 					<port name="Kprop" value="0.3"/>
 				</box>
 			</box>
 			<box name="blackout">
-				<box name="control" class="vg::PidControlElement">
+				<box name="control" class="vg::PidController">
 					<port name="signal" ref="controllers/screens/blackout/control[signal]"/>
 					<port name="Kprop" value="0.3"/>
 				</box>

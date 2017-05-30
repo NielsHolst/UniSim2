@@ -40,8 +40,7 @@ void normal::parseArguments() {
 }
 
 QPair<double,double> normal::bounds() const {
-    boost::math::normal ndist(_mean, _sd);
-    return qMakePair(quantile(ndist, _lowerQuantile), quantile(ndist, _upperQuantile));
+    return qMakePair(_lowerQuantile, _upperQuantile);
 }
 
 double normal::inverse(double y) const {

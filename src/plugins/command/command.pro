@@ -20,6 +20,8 @@ HEADERS +=  \
     help.h \
     help_class.h \
     list.h \
+    list_options.h \
+    list_output.h \
     load.h \
     profile.h \
     reconfigure.h \
@@ -44,6 +46,8 @@ SOURCES +=  \
     help.cpp \
     help_class.cpp \
     list.cpp \
+    list_options.cpp \
+    list_output.cpp \
     load.cpp \
     profile.cpp \
     reconfigure.cpp \

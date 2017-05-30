@@ -13,18 +13,20 @@ public:
     void update(); // compute_new_R
 
 private:
-    // Inputs
+    // Inputs Drawn from Random Distribution
     double initial_R;
     double initial_V;
 
-    //    for F, Functional Response
-    double CR; // consumption rate
-
-    // for Allometry
+    //    for Allometry
     double m; // body mass of plant
 
+    //    from Mediator
+    double loss_floral; // total loss of floral rewards from consumption by pollinators
+    double reproductive_services;
+    double Vsum; // sum of plant vegetative biomass in the community
+
     //    calculated in Allometry
-    double x; // metabolic rate of plant
+    double x; // metabolic rate of plant ----- do these need to be here!?
     double r; // intrinsic growth rate of plant
 
     //    for dRdt, Rate of Floral Rewards Change
@@ -32,10 +34,9 @@ private:
     double beta; // production rate of floral rewards
 
     //    for dVdt, Rate of Vegetative Biomass Change
+    double benefit_coefficient; // determines steep-ness of saturating benefit accrual functional response
     double K; // plant community-wide carrying capacity
     double kappa; // cost of producing floral rewards
-
-    double Vsum;
 
     // Outputs
     double R; // floral rewards biomass

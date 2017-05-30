@@ -23,6 +23,7 @@ PageR::PageR(QString name, QObject *parent)
     Input(xAxis).equals("/*[step]").notReferenced();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
+    Input(title);
     Input(width).imports("ancestors::*<OutputR>[width]");
     Input(height).imports("ancestors::*<OutputR>[height]");
 }
@@ -84,6 +85,8 @@ QString PageR::toScript() {
             continue;
         s << plot->toScript();
     }
+    if (!title.isEmpty())
+        s << "    top = \"" << title << "\",\n";
     s << "    ...,\n"
       << "    nrow = " << dim("nrow") << ",\n"
       << "    ncol = " << dim("ncol") << "\n  )\n}\n";

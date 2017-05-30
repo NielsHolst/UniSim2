@@ -13,19 +13,32 @@
 
 namespace base {
 
-BoxBuilder::BoxBuilder()
-    : _content(0), _currentBox(0), _currentPort(0), _currentDistribution(0)
+BoxBuilder::BoxBuilder(Box *parent)
+    : _hasParent(parent!=0),
+      _content(0), _currentBox(0), _currentPort(0), _currentDistribution(0)
 {
+    if (_hasParent) {
+        _content = _currentBox = parent;
+        _stack.push(_currentBox);
+    }
+}
+
+BoxBuilder::~BoxBuilder() {
+    if (_content && _hasParent)
+        content(BoxBuilder::AmendDescendants);
+}
+
+void BoxBuilder::clear() {
     environment().computationStep(ComputationStep::Construct);
     Track::clearOrders();
     Port::clearIndex();
 }
 
-BoxBuilder& BoxBuilder::box(Box *box) {
-    box->setParent(_currentBox);
-    _currentPort = 0;
-    return *this;
-}
+//BoxBuilder& BoxBuilder::box(Box *box) {
+//    box->setParent(_currentBox);
+//    _currentPort = 0;
+//    return *this;
+//}
 
 BoxBuilder& BoxBuilder::box(QString className) {
     if (_content && _stack.isEmpty()) {
@@ -160,14 +173,29 @@ const Port* BoxBuilder::currentPort() const {
     return _currentPort;
 }
 
-Box* BoxBuilder::content() {
-    environment().computationStep(ComputationStep::Amend);
-    if (_content)
-        _content->amendFamily();
+Box* BoxBuilder::content(AmendOption amendOption) {
+    if (_hasParent) {
+        endbox();
+        if (!_stack.isEmpty())
+            ThrowException("BoxBuilder: unclosed box(es) at end")
+                    .hint("Possibly missing endbox() call").value(_stack.size());
+    }
+    if (_content) {
+        switch (amendOption) {
+        case AmendFamily:
+            _content->amendFamily();
+            break;
+        case AmendDescendants:
+            for (Box *child : _content->findMany<Box>("./*"))
+                child->amendFamily();
+            break;
+        case AmendNone:
+            break;
+        }
+
+    }
     else
         ThrowException("Construction failed");
-    QString info("%1 boxes created");
-    dialog().information(info.arg(_content->count()));
     return _content;
 }
 

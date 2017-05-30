@@ -210,7 +210,7 @@ template<> QTime convert(QDate)             { ThrowException("Cannot convert Dat
 
 template<> bool convert(QDateTime)              { ThrowException("Cannot convert DateTime to Bool"); }
 template<> char convert(QDateTime)              { ThrowException("Cannot convert DateTime to Char"); }
-template<> QString convert(QDateTime source)    { return source.toString("yyyy/M/d hh:mm:ss"); }
+template<> QString convert(QDateTime source)    { return source.toString("yyyy/M/d hh:mm:ss");}
 template<> QDate convert(QDateTime source)      { return source.date(); }
 template<> QDateTime convert(QDateTime source)  { return source; }
 template<> QTime convert(QDateTime source)      { return source.time(); }

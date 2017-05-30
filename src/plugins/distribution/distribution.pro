@@ -10,11 +10,17 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 
 HEADERS +=  \
-    uniform.h \
-    normal.h
+    lognormal.h \
+    log_parameter.h \
+    loguniform.h \
+    normal.h \
+    uniform.h
 	
 SOURCES +=  \
-    uniform.cpp \
-    normal.cpp
+    lognormal.cpp \
+    log_parameter.cpp \
+    loguniform.cpp \
+    normal.cpp \
+    uniform.cpp
 
 

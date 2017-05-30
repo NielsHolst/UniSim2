@@ -27,11 +27,10 @@ private:
     // Inputs
     QString directTransmissionFile;
     double
-        greenhouseShade, chalk,
+        greenhouseReflection, chalk,
         latitude, azimuth, area,
         U4, windSpeed, emissivity, absorptivity, transmissivity,
         specificHeatCapacity, haze;
-    bool antiReflection;
 
     // Outputs
     double U, heatCapacity;

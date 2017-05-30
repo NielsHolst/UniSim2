@@ -40,7 +40,7 @@ void write::writeFile() {
         environment().openOutputFile(file, ".box");
         QTextStream text(&file);
 
-        root->toText(text, Box::ToTextOptions::None);
+        root->toText(text);
         _filePath = environment().outputFilePath(".box");
 
         QString info("Box script written to '%1'");

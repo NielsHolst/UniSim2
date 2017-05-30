@@ -21,8 +21,9 @@ public:
 
     // Inputs
 protected:
-    double initState, signal, timeStep;
+    double initial, target, timeStep;
 private:
+
     double minimum, maximum, minSlope, maxSlope;
 
     // Outputs

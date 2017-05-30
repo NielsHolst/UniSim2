@@ -20,56 +20,26 @@ namespace vg {
 
 PUBLISH(Cover)
 
-
-/*! \class Cover
- * \brief Characterises the light and energy transmission of a cover part
- *
- * A greenhouse has seven surfaces, each represented by one ConstructionCover object. The name of the object
- * identifies which surface it represents: "Roof1", "Roof2", "Side1", "Side2", "End1", "End2", "Floor".
- *
- * Inputs
- * ------
- * - _greenhouseShade_ is the fraction of light caught by the greenhouse construction [0;1]
- * - _chalk_ is the chalk efficacy [0;1]
- * - _directTransmissionFile_ is the name of a file with coefficients correcting the transmissivity for direct light,
- * according to latitude (rows) and sun azimuth (columns)
- * - _latitude_ is geographical latitude of the greenhouse [-180;180]
- * - _azimuth_ is the azimuth of the sun relative to north [-180;180]
- * - _area_ is the area of the cover [m<SUP>2</SUP>]
- * - _windSpeed_ is the outdoors wind speed [m/s]
- * - _U4_ is the heat transfer coefficient of the material at a wind speed of 4 m/s [W/m<SUP>2</SUP>/K]
- * - _emissivity_ is the effectiveness in emitting energy as thermal radiation [0;1].
- * - _absorptivity_ is the proportion of light absorbed [0;1]
- * - _transmissivity_ is the proportion of diffuse light transmitted through the material [0;1]
- * - _haze_ is the proportion of direct light becoming dispersed on passage through the material [0;1]
- * - _specificHeatCapacity_ is the area-specific heat capacity [J/m<SUP>2</SUP> cover/K]
-
- * Output
- * ------
- * - _U_ is the wind-corrected heat transfer coefficient of the material [W/m<SUP>2</SUP>/K]
- * - _heatCapacity_ is the heat capacity of the whole cover [J/K]
- */
-
 Cover::Cover(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
-    Input(greenhouseShade).imports("geometry[shade]");
-    Input(chalk).imports("controllers/chalk[signal]");
-    Input(directTransmissionFile).equals("input/direct_transmission_single.txt");
+    Input(greenhouseReflection).imports("geometry[reflection]");
+    Input(chalk).imports("controllers/chalk[value]");
     Input(latitude).imports("calendar[latitude]");
     Input(azimuth).imports("calendar[azimuth]");
     Input(area).imports("..[area]");
     Input(windSpeed).imports("outdoors[windSpeed]");
-    Input(U4).equals(7.5);
-    Input(emissivity).equals(0.84);
-    Input(absorptivity).equals(0.04);
-    Input(transmissivity).equals(1.);
-    Input(haze).equals(0.);
-    Input(antiReflection).equals(false);
-    Input(specificHeatCapacity).equals(840.);
+    Input(directTransmissionFile).equals("input/direct_transmission_single.txt")
+            .help("Table of direct light transmittance depending on latitude and sun azimuth");
+    Input(emissivity).equals(0.84).help("Emissivity of long-wave radiation [0;1]");
+    Input(absorptivity).equals(0.04).help("Absorptivity of long-wave radiation [0;1]");
+    Input(transmissivity).equals(1.).help("Transmissivity to short-wave radiation [0;1]");
+    Input(haze).equals(0.).help("Proportion of direct light transmitted as diffuse light [0;1]");
+    Input(U4).equals(7.5).help("Heat transfer coefficient at a wind speed of 4 m/s (W/m2/K)");
+    Input(specificHeatCapacity).equals(700.).help("Area-specific heat capacity (J/m2 cover/K)");
 
-    Output(U);
-    Output(heatCapacity);
+    Output(U).help("Heat transfer coefficient, corrected for wind speed (W/m2/K)");
+    Output(heatCapacity).help("Whole-cover heat capacity (J/K)");
 }
 
 void Cover::initialize() {
@@ -78,13 +48,14 @@ void Cover::initialize() {
 }
 
 void Cover::reset() {
-    resetRadiationOutputs();
-    U = U4;
+    update();
+//    resetRadiationOutputs();
+//    U = U4;
 }
 
 void Cover::update() {
     double directLightfactor = interpolate(*dirTransTable, latitude, azimuth),
-           tr = (1-greenhouseShade)*(1-chalk);
+           tr = (1-greenhouseReflection)*(1-chalk);
     set( SurfaceRadiation().asCover(tr*transmissivity, tr*transmissivity*directLightfactor,
                                     absorptivity, emissivity) );
     double k = (windSpeed <= 4) ? (2.8 + 1.2*windSpeed)/7.6 : pow(windSpeed,0.8)/pow(4.,0.8);

@@ -9,13 +9,13 @@ BOXES_PLUGIN_NAME = vg
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
+    accumulator.h \
     air_flux_cooling_supply.h \
     air_flux_cooling_supply_max.h \
     air_flux_given.h \
     air_flux_gravitation.h \
     air_flux_infiltration.h \
     average.h \
-    base_control_element.h \
     base_signal.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
@@ -24,7 +24,6 @@ HEADERS +=  \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
     co2_controller.h \
-    construction_geometry.h \
     cover.h \
     crop.h \
     crop_mass.h \
@@ -51,10 +50,12 @@ HEADERS +=  \
     fruit_crop_mass.h \
     fruit_factor.h \
     general.h \
+    geometry.h \
     growth_light_base.h \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
+    hump.h \
     indoors_co2.h \
     indoors_humidity.h \
     indoors_light.h \
@@ -68,7 +69,7 @@ HEADERS +=  \
     leaf_transpiration.h \
     leaf_wind_speed.h \
     outdoors.h \
-    pid_control_element.h \
+    pid_controller.h \
     pipe.h \
     proportional_signal.h \
     running_average.h \
@@ -76,7 +77,7 @@ HEADERS +=  \
     screens.h \
     shelter.h \
     shelter_base.h \
-    shelters.h \
+    shelter_face.h \
     signal_collection.h \
     simulation_time_interval.h \
     sliding_signal.h \
@@ -95,19 +96,19 @@ HEADERS +=  \
     vapour_flux_sum_base.h \
     vapour_flux_transpiration.h \
     ventilated_latent_heat_converter.h \
-    ventilation_by_temp.h \
-    ventilation_by_wind.h \
-    vent.h \
-    vents.h
+    ventilation.h \
+    ventilation_max_by_temp.h \
+    ventilation_max_by_wind.h \
+    windows.h
 
 SOURCES += \
+    accumulator.cpp \
     air_flux_cooling_supply.cpp \
     air_flux_cooling_supply_max.cpp \
     air_flux_given.cpp \
     air_flux_gravitation.cpp \
     air_flux_infiltration.cpp \
     average.cpp \
-    base_control_element.cpp \
     base_signal.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
@@ -116,7 +117,6 @@ SOURCES += \
     boundary_layer_resistance_monteith_unsworth.cpp \
     budget.cpp \
     co2_controller.cpp \
-    construction_geometry.cpp \
     cover.cpp \
     crop.cpp \
     crop_mass.cpp \
@@ -143,10 +143,12 @@ SOURCES += \
     fruit_crop_mass.cpp \
     fruit_factor.cpp \
     general.cpp \
+    geometry.cpp \
     growth_light_base.cpp \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
+    hump.cpp \
     indoors_co2.cpp \
     indoors_humidity.cpp \
     indoors_light.cpp \
@@ -160,7 +162,7 @@ SOURCES += \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
     outdoors.cpp \
-    pid_control_element.cpp \
+    pid_controller.cpp \
     pipe.cpp \
     proportional_signal.cpp \
     running_average.cpp \
@@ -168,7 +170,7 @@ SOURCES += \
     screens.cpp \
     shelter.cpp \
     shelter_base.cpp \
-    shelters.cpp \
+    shelter_face.cpp \
     simulation_time_interval.cpp \
     signal_collection.cpp \
     sliding_signal.cpp \
@@ -187,8 +189,8 @@ SOURCES += \
     vapour_flux_sum_base.cpp \
     vapour_flux_transpiration.cpp \
     ventilated_latent_heat_converter.cpp \
-    ventilation_by_temp.cpp \
-    ventilation_by_wind.cpp \
-    vent.cpp \
-    vents.cpp
+    ventilation.cpp \
+    ventilation_max_by_temp.cpp \
+    ventilation_max_by_wind.cpp \
+    windows.cpp
 

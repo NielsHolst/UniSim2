@@ -18,8 +18,6 @@ Mediator::Mediator(QString name, QObject *parent)
     Input(B).help("Biomass of pollinator population.");
     Input(x).help("Metabolic rate of pollinator.");
     Input(y).help("Max. consumption rate");
-
-    Output(Vsum);
 }
 
 void Mediator::amend() {
@@ -37,7 +35,8 @@ void Mediator::amend() {
     B.resize(numPollinators);
     CR.resize(numPollinators, numPlants);
     Gain_Pollinator.resize(numPollinators);
-    Loss_Plant.resize(numPlants);
+    Loss_Floral.resize(numPlants);
+    Poll_Benefit.resize(numPlants);
 
     // Create and connect outports ports
     setup_Consumption_Ports();
@@ -54,14 +53,27 @@ void Mediator::setup_Consumption_Ports() {
         pollinators[i]->port("CR")->imports(gain_port_path);
     }
 
-    // plant j, loss from being eaten
+    // plant j, loss from being eaten & competition & gain from pollination
     for (int j = 0; j < numPlants; ++j) {
-        // Name Ports for Gain from Eating
+        // Name Ports for Loss from Being Eaten
         QString runningNumber = QString::number(j),
                 loss_port_name = "loss"+runningNumber;
-        NamedOutput(loss_port_name, Loss_Plant[j]);
+        NamedOutput(loss_port_name, Loss_Floral[j]);
         QString loss_port_path = fullName() + "[" + loss_port_name + "]";
-        plants[j]->port("CR")->imports(loss_port_path);
+        plants[j]->port("loss_floral")->imports(loss_port_path);
+
+        // Name Ports for Total Vegetative Biomass (Vsum, Effect of Competition)
+        QString vsum_port_name = "vsum" + runningNumber;
+        NamedOutput(vsum_port_name, Vsum);
+        QString vsum_port_path = fullName() + "[" + vsum_port_name + "]";
+        plants[j]->port("Vsum")->imports(vsum_port_path);
+
+        // Name Ports for Benefit from Pollination
+        QString benefit_port_name = "benefit"+runningNumber;
+        NamedOutput(benefit_port_name, Poll_Benefit[j]);
+        QString benefit_port_path = fullName() + "[" + benefit_port_name + "]";
+        plants[j]->port("reproductive_services")->imports(benefit_port_path);
+
     }
 
 }
@@ -86,15 +98,59 @@ void Mediator::reset() {
 }
 
 void Mediator::update() {
-    // NB! Compute Loss_Plant and Gain_Pollinator
+    // Compute consumption rate matrix CR
     for (int i = 0; i < numPollinators; ++i) {
         double Byx = B[i] * y[i] * x[i];
         for (int j = 0; j < numPlants; ++j) {
-            double F = compute_F( i, j);
+            double F = compute_F(i,j);
             CR(i,j) = F * Byx;
         }
     }
+
+    // Compute Gain_Pollinator (sum consumption for across all plants for each pollinator)
+    for (int i = 0; i < numPollinators; ++i) {
+        double gainTemp = 0;
+        for (int j = 0; j < numPlants; ++j) {
+            gainTemp = gainTemp + CR(i,j);
+        }
+        Gain_Pollinator[i] = gainTemp;
+    }
+
+    // Compute Loss_Floral (sum consumption across all pollinators for each plant)
+    for (int i = 0; i < numPlants; ++i) {
+        double lossTemp = 0;
+        for (int j = 0; j < numPollinators; ++j) {
+            lossTemp = lossTemp + CR(j,i);
+        }
+        Loss_Floral[i] = lossTemp;
+    }
+
+    // Vsum (for competition calculation)
     Vsum = compute_Vsum();
+
+    // Compute Quality Matrix
+    base::Matrix<double> Quality;
+    Quality.resize(numPollinators, numPlants);
+    for (int i = 0; i < numPollinators; ++i) {
+        for (int j = 0; j < numPlants; ++j) {
+            if (Gain_Pollinator[i] > 0) {
+                Quality(i,j) = CR(i,j)/Gain_Pollinator[i];
+            }
+            else {
+                Quality(i,j) = 0;
+            }
+
+        }
+    }
+
+    // Compute Poll_Benefit (sum...)
+   for (int j = 0; j < numPlants; ++j) {
+       double benefitTemp = 0;
+       for (int i = 0; i < numPollinators; ++i) {
+           benefitTemp = benefitTemp + CR(i,j)*Quality(i,j);
+       }
+       Poll_Benefit[j] = benefitTemp;
+   }
 }
 
 double Mediator::compute_F(int i, int j) {

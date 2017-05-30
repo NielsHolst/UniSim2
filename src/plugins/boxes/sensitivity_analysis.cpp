@@ -15,7 +15,7 @@ SensitivityAnalysis::SensitivityAnalysis(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(iterations).imports("ancestors::*[iterations]");
-    Input(method).equals("MC");
+    Input(method).equals("LHS");
     Output(inputsAnalysed);
     Output(inputsTotal);
 }

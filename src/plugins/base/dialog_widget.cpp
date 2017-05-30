@@ -166,6 +166,7 @@ void DialogWidget::keyPressEvent(QKeyEvent *event) {
 
 void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     QTextCursor cursor;
+    QString s;
     switch (event->key()) {
     case Qt::Key_L:
         event->accept();
@@ -174,9 +175,24 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
         setTextCursor(cursor);
         Command::submit(QStringList() << "clear", this);
         insertText("\n" + _prompt);
+        submitCommand();
         break;
     case Qt::Key_Space:
-        insertText(selectFile());
+        s = selectFile();
+        if (!s.isEmpty()) {
+            QStringList items = lineItems();
+            if (items.size() > 1) {
+                clearLine();
+                items.removeLast();
+                items << s;
+                s = items.join(" ");
+            }
+            else {
+                s.prepend(" ");
+            }
+            insertText(s);
+            submitCommand();
+        }
         break;
     default:
         QTextEdit::keyPressEvent(event);
@@ -185,10 +201,21 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
 }
 
 QString DialogWidget::selectFile() {
-    QString folder = environment().currentBoxScriptFolder().absolutePath();
+    QStringList items = lineItems();
+    QString writtenPath = (items.size() > 1) ? items.last() : "",
+            inputPath = environment().resolveDir(Environment::Input).absolutePath(),
+            latestFile = environment().latestLoadArg(),
+            latestPath = QFileInfo(latestFile).path(),
+            usePath = writtenPath.isEmpty() ? latestPath : writtenPath,
+            combinedPath = QDir::isAbsolutePath(usePath) ? usePath : inputPath + "/" + usePath,
+            path = QDir(combinedPath).exists() ? combinedPath : inputPath;
     QString filePath = QFileDialog::getOpenFileName(this,
-            "Select a file", folder, "Scripts (*.box *.xml)");
-    return QFileInfo(filePath).fileName();
+            "Select a file", path, "Scripts (*.box *.xml)");
+    if (filePath.startsWith(inputPath))
+        filePath = filePath.mid(inputPath.size() + 1);
+    if (filePath.contains(" "))
+        filePath = "\"" + filePath + "\"";
+    return filePath;
 }
 
 void DialogWidget::handleNormalKey(QKeyEvent *event) {
@@ -212,11 +239,7 @@ void DialogWidget::handleNormalKey(QKeyEvent *event) {
     case Qt::Key_Return:
     case Qt::Key_Enter:
         event->accept();
-        cursor = getCursor();
-        cursor.movePosition(QTextCursor::EndOfLine);
-        setTextCursor(cursor);
         submitCommand();
-        insertText("\n" + _prompt);
         break;
     case Qt::Key_Insert:
     case Qt::Key_Pause:
@@ -381,13 +404,27 @@ void DialogWidget::clearLine() {
 }
 
 void DialogWidget::submitCommand() {
-    QTextBlock block = _textDocument->findBlock(cursorPosition());
-    QString line = block.text().mid(_prompt.size()).simplified();
-    QStringList items = base::split(line);
+    QTextCursor cursor = getCursor();
+    cursor.movePosition(QTextCursor::EndOfLine);
+    setTextCursor(cursor);
+
+    QString line = DialogWidget::line();
+    QStringList items = lineItems();
     if (!items.isEmpty())
         Command::submit(items, this);
     if (!line.isEmpty())
         _history.add(line);
+
+    insertText("\n" + _prompt);
+}
+
+QString DialogWidget::line() {
+    QTextBlock block = _textDocument->findBlock(cursorPosition());
+    return block.text().mid(_prompt.size()).simplified();
+}
+
+QStringList DialogWidget::lineItems() {
+    return base::split(line());
 }
 
 }

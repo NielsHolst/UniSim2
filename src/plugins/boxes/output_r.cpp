@@ -30,7 +30,7 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
     Input(end).equals("scripts/end.R").help("Name of R script run after auto-generated R script");
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
-    Input(keepPlots).equals(false).help("Keep previous in R?");
+    Input(keepPlots).equals(false).help("Keep previous plots in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(14).help("Width of pop-up windows (only used if popUp is set)");

@@ -76,7 +76,8 @@ double Distribution::draw() {
     int stratum = _strata.at(_ixNext);
     if (_strata.size() > 1)
         ++_ixNext;
-    return _y0 + _dy*(stratum + (*variate)());
+    double y = _y0 + _dy*(stratum + (*variate)());
+    return inverse(y);
 }
 
 void Distribution::port(Port *port_) {

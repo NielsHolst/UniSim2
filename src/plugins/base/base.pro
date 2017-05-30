@@ -29,7 +29,7 @@ HEADERS +=  \
     box_reader_boxes.h \
     box_reader_xml.h \
     box_output.h \
-    box_step.h \
+#    box_step.h \
     circular_buffer.h \
     command.h  \
     command_help.h  \
@@ -97,7 +97,7 @@ SOURCES +=  \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \
-    box_step.cpp \
+#    box_step.cpp \
     command.cpp \
     command_help.cpp  \
     computation_step.cpp \

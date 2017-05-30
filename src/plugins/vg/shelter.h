@@ -4,56 +4,53 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#ifndef VG_SHELTER_H
-#define VG_SHELTER_H
+#ifndef SHELTER_H
+#define SHELTER_H
 
 #include "shelter_base.h"
 
+namespace base {
+class Box;
+class BoxBuilder;
+}
+
 namespace vg {
+
+struct SurfaceRadiation;
 
 class Shelter : public ShelterBase
 {
 public:
     Shelter(QString name, QObject *parent);
+    void amend();
     void initialize();
-    void reset();
     void update();
 
 private:
     // Inputs
-    double
-        roofArea, sideWallsArea, endWallsArea, gablesArea, groundArea,
-        outdoorsDirectRadiation, outdoorsDiffuseRadiation;
-
-    // Inputs = Outputs
-    double screensMaxState;
-
+    double groundArea;
     // Outputs
-    double area, relativeArea, areaPerGround;
-
+    double heatCapacityCoversPerGround, heatCapacityScreensPerGround,
+        screensEffectiveArea, screensPerGroundArea,
+        screensMaxState, horizontalScreenState;
+    bool hasHorizontalScreen;
     // Data
-    const double
-        *pCoverU, *pCoverHaze,
-        *pScreensU,
-        *pScreensHaze,
-        *pScreensAirTransmission;
-
-    struct Light {
-        struct {
-            const double *tra, *abs;
-        } diffuse, direct;
-        void fetch(base::Box *model);
+    struct FaceInfo {
+        const SurfaceRadiation *sr;
+        const double *diffuseLightTransmitted, *directLightTransmitted, *totalLightTransmitted,
+            *lightAbsorbedCover, *lightAbsorbedScreens,
+            *haze, *U,
+            *airTransmissivity,
+            *area, *relativeArea, *screensEffectiveArea,
+            *heatCapacityCover, *heatCapacityScreens,
+            *screensMaxState;
     };
-    Light shelter, cover, screens;
+    QVector<Box*> _horizontalScreens;
 
-    const SurfaceRadiation *pCoverSurfaceRadiation, *pScreensSurfaceRadiation;
-
+    QVector<FaceInfo> infos;
     // Methods
-    void updateU();
-    void updateHaze();
-    void updateAirTransmission();
-    void updateLightTransmission();
-
+    void amendShelter(base::BoxBuilder &builder, QString shelterName);
+    void initHorizontalScreens();
 };
 } //namespace
 

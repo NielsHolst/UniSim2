@@ -11,32 +11,15 @@ using namespace base;
 
 namespace vg {
 
-/*! \class BaseSignal
- * \brief Base class for models that set a signal
- *
- * The _signal_ function in the derived class defines the behaviour.
- *
- * Inputs
- * ------
- * - _signalReset_ is the value that _signal_ is set to at reset [R]
- *
- * Output
- * ------
- * - _signal_ is the value of the signal [R]
- * - _flag_ is true is _signal_ is different from zero [true,false]
- * - _flagUp_ is true if _flag_ just went from false to true [true,false]
- * - _flagDown_ is true if _flag_ just went from true to false [true,false]
- */
-
 BaseSignal::BaseSignal(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(BaseSignal);
-    Input(signalReset);
-    Output(signal);
-    Output(flag);
-    Output(flagUp);
-    Output(flagDown);
+    Input(signalReset).help("The value that signal is set to at reset");
+    Output(signal).help("Value of the signal");
+    Output(flag).help("Is the signal is different from zero?");
+    Output(flagUp).help("Did the signal change from false to true during the latest update?");
+    Output(flagDown).help("Did the signal change from true to false during the latest update?");
 }
 
 void BaseSignal::reset() {

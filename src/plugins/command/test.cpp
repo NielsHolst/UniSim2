@@ -20,6 +20,7 @@ test::test(QString name, QObject *parent)
 
 void test::doExecute() {
     BoxBuilder builder;
+    builder.clear();
     builder.
         box("Simulation").name("FibSim").
             port("steps").equals(4).

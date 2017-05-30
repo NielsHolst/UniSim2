@@ -16,9 +16,10 @@ class Box;
 class BoxBuilder
 {
 public:
-    BoxBuilder();
+    BoxBuilder(Box *parent=0);
+    ~BoxBuilder();
+    void clear();
     // Box
-    BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
     BoxBuilder& name(QString boxName);
     BoxBuilder& endbox();
@@ -51,9 +52,11 @@ public:
     const Box* currentBox() const;
     const Port* currentPort() const;
     const Distribution* currentDistribution() const;
-    Box* content();
+    enum AmendOption{AmendFamily, AmendDescendants, AmendNone};
+    Box* content(AmendOption amendOption=AmendFamily);
 private:
     // Data
+    bool _hasParent;
     Box *_content, *_currentBox;
     Port *_currentPort;
     Distribution *_currentDistribution;

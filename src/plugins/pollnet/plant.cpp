@@ -12,18 +12,23 @@ Plant::Plant(QString name, QObject *parent)
 {
     Input(initial_R).imports("random/plant/initial_R[value]").help("Initial biomass of floral rewards.");
     Input(initial_V).imports("random/plant/initial_V[value]").help("Initial biomass of vegetative portion of plant population.");
-    Input(m).imports("random/plant/m[value]").help("body mass of plant");
 
+    Input(m).imports("random/plant/m[value]").help("body mass of plant");
+    Input(x).help("Metabolic rate of plant");
+
+    Input(loss_floral).help("Sum consumption rate of pollinators on floral rewards; computed by mediator");
+    Input(reproductive_services);
+
+    Input(Vsum).help("Total plant vegetative biomass; computed by mediator");
+
+    Input(benefit_coefficient).equals(100).help("Sets steep-ness of saturating benefit accrual functional response.");
     Input(s).equals(2).help("Self-limitation rate of floral rewards production.");
     Input(beta).equals(1).help("Producton rate of floral rewards.");
-    Input(kappa).imports("random/plant[kappa]").help("Cost of producing floral rewards in terms of vegetative biomass.");
     Input(K).equals(5).help("Plant community-wide carrying capcity.");
+    Input(kappa).imports("random/plant[kappa]").help("Cost of producing floral rewards in terms of vegetative biomass.");
 
-    Input(Vsum).help("Total plant biomass");
-    Input(CR).help("Consumption rate; computed by mediator");
-
-    Output(V).help("Biomass of vegetative portion of plant population.");
     Output(R).help("Biomass of floral rewards of plant population.");
+    Output(V).help("Biomass of vegetative portion of plant population.");
 }
 
 void Plant::reset() {
@@ -37,15 +42,13 @@ void Plant::reset() {
 
 double Plant::compute_floral_growth() {
     double floral_growth = beta*V - s*R;
-    return floral_growth;
+    return floral_growth; // change to just "return beta*V - s*R"
 }
 
 
 double Plant::compute_benefit_accrual() {
-    double pollinator_consumption = CR;
-
-    double benefit_accrual = pollinator_consumption/(1+pollinator_consumption);
-    return benefit_accrual;
+    double benefit_accrual = reproductive_services/(benefit_coefficient+reproductive_services);
+    return benefit_accrual; // change to just "return reproductive_service/(benefit_coefficient+reproductive_service)"
 }
 
 double Plant::compute_K_effect() {
@@ -54,8 +57,7 @@ double Plant::compute_K_effect() {
 }
 
 double Plant::compute_dRdt() {
-
-    return compute_floral_growth() - CR;
+    return compute_floral_growth() - loss_floral;
 }
 
 double Plant::compute_dVdt() {

@@ -41,20 +41,19 @@ BaseControlElement::BaseControlElement(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(BaseControlElement);
-    Input(initState);
-    Input(minimum).equals(-std::numeric_limits<double>::max());
-    Input(maximum).equals(std::numeric_limits<double>::max());
-    Input(minSlope).equals(-std::numeric_limits<double>::max());
-    Input(maxSlope).equals(std::numeric_limits<double>::max());
+    Input(initial).help("The initial value at reset");
+    Input(minimum).equals(-std::numeric_limits<double>::max()).help("Minimum possible value");
+    Input(maximum).equals(std::numeric_limits<double>::max()).help("Maximum possible value");
+    Input(minSlope).equals(-std::numeric_limits<double>::max()).help("Minimum possible rate of change in value (per min)");
+    Input(maxSlope).equals(std::numeric_limits<double>::max()).help("Maximum possible rate of change in value (per min)");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Input(signal).imports("..[signal]");
-    Output(state);
+    Input(target).help("Target value");
     Output(value);
     Output(slope);
 }
 
 void BaseControlElement::reset() {
-    state = value = state0 = state1 = state2 = initState;
+    state = value = state0 = state1 = state2 = initial;
     slope = 0;
     tick = 0;
     localReset();
@@ -64,7 +63,7 @@ void BaseControlElement::update() {
     state0 = state1;
     state1 = state2;
     state2 = state;
-    state += change(signal - state);
+    state += change(target - state);
     double dt = timeStep/60.;
     slope = fitSlopePPP(state1, state2, state)/dt;
     if (tick++>10) {

@@ -26,7 +26,7 @@ void uniform::parseArguments() {
 }
 
 QPair<double,double> uniform::bounds() const {
-    return qMakePair(_min, _max);
+    return qMakePair(0., 1.);
 }
 
 double uniform::inverse(double y) const {

@@ -21,27 +21,18 @@ namespace vg {
 *
 * The exact course of the _signal_ in response to _input_ must be defined in a derived class, e.g. linear inside the thresholdBand for a
 * ProportionalSignal.
-*
-* Inputs
-* ------
-* - _input_ is the value determining the signal [-]
-* - _threshold_ is the inout threshold at which the signal begins changing [-]
-* - _thresholdBand_ is the interval of the input during which the signal is changing [-]
-* - _minSignal_ is the minimum possible signal [-]
-* - _maxSignal_ is the maximum possible signal [-]
-* - _increasingSignal_ tells whether the signal is increasing inside the threshold band [-]
 */
 
 SlidingSignal::SlidingSignal(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
     Class(SlidingSignal);
-    Input(input).equals(25.);
-    Input(threshold).equals(25.);
-    Input(thresholdBand).equals(5.);
-    Input(minSignal).equals(0.);
-    Input(maxSignal).equals(100.);
-    Input(increasingSignal).equals(true);
+    Input(input).equals(25.).help("Value determining the signal");
+    Input(threshold).equals(25.).help("Input threshold at which the signal begins changing");
+    Input(thresholdBand).equals(5.).help("Interval of the input over which the signal is changing");
+    Input(minSignal).equals(0.).help("Minimum possible signal");
+    Input(maxSignal).equals(100.).help("Maximum possible signal");
+    Input(increasingSignal).equals(true).help("Is the signal increasing inside the threshold band?");
 }
 
 double SlidingSignal::computeSignal() {

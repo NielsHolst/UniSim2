@@ -24,6 +24,7 @@ private:
     QVector<QString> xAxis;
     double width, height;
     int ncol, nrow;
+    QString title;
     // Data
     bool _popUp;
     QVector<PlotR*> _plots;

@@ -1,6 +1,6 @@
 Simulation {
-	.steps=125
-	.iterations=10
+	.steps=5
+	.iterations=3
   SensitivityAnalysis {
   }
 	Box random {
@@ -67,10 +67,10 @@ Simulation {
 		PageR {
 			PlotR {
         .ports =  *<Plant>[kappa]
+      }
 			PlotR {
         .hide = TRUE
-        .ports =  *[is_vertebrate]
-      }
+        .ports =  (*[is_vertebrate] *[initial_V])
       }
 		}
 	}

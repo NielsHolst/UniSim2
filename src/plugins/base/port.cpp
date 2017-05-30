@@ -14,7 +14,7 @@ QVector<Port*> Port::_index;
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
       _portValueStep(ComputationStep::Start),
-      _importPath(""), _importPortMustExist(true),
+      _importPath(""), _importPortMustExist(true), _importsResolved(false),
       _access(PortAccess::Input),
       _notReferenced(false), _reset(false), _valueOverridden(false),
       _isBlind(false)
@@ -204,6 +204,11 @@ namespace {
 }
 
 void Port::resolveImports() {
+    // Only resolve one
+    if (_importsResolved)
+        ThrowException("Unexpected: Imports already resolved").context(this);
+    _importsResolved = true;
+
     // No imports; nothing to do
     if (!hasImport())
         return;
@@ -212,6 +217,10 @@ void Port::resolveImports() {
     Box *context = boxParent();
     Path path = Path(_importPath, context);
     _importPorts = path.resolveMany<Port>();
+
+    // Notify exporters
+    for (Port *exporter : _importPorts)
+        exporter->addExportPort(this);
 
     // Missing import ports may be an error, otherwise accept and clear the import path
     if (_importPorts.isEmpty()) {
@@ -233,23 +242,12 @@ void Port::resolveImports() {
         _valueType = deduceTypeFromImportType(_importType, transform());
         if (_valueType == Null)
             ThrowException("Unexpected error: Type of imported value is Null");
-//        if (_importPorts.size() > 1 && transform() != Identity)
-//            _valueType = asVector(_valueType);
     }
+}
 
-    // Check update order relative to import
-    /*
-    for (Port *port : _importPorts) {
-        int myOrder = context->order(),
-            importOrder = port->boxParent()->order();
-        QString s = "%1(#%2) imports %3(#%4)";
-        QString msg = s.arg(fullName(this)).arg(myOrder).arg(fullName(port)).arg(importOrder);
-        if (myOrder == importOrder)
-            _warnings << "Warning: Port imports sibling port but the update order of siblings is undefined\n" + msg;
-        else if (myOrder < importOrder)
-            _warnings << "Warning: Port imports a port that will be updated after this port\n" + msg;
-    }
-    */
+void Port::addExportPort(Port *port) {
+    if (!_exportPorts.contains(port))
+        _exportPorts << port;
 }
 
 void Port::reset() {
@@ -376,6 +374,10 @@ bool Port::hasImport() const {
     return _mode!=PortMode::Fixed && !_importPath.isEmpty();
 }
 
+bool Port::hasDistribution() const {
+    return Path("children::*<Distribution>", this).resolveMaybeOne<>(this);
+}
+
 bool Port::isValueOverridden() const {
     return _valueOverridden;
 }
@@ -388,11 +390,15 @@ QVector<Port*> Port::importPorts() const {
     return _importPorts;
 }
 
+QVector<Port*> Port::exportPorts() const {
+    return _exportPorts;
+}
+
 QStringList Port::warnings() const {
     return _warnings;
 }
 
-void Port::toText(QTextStream &text, ToTextOptions, int indentation) const {
+void Port::toText(QTextStream &text, int indentation) const {
     QString fill;
     fill.fill(' ', indentation);
     QString prefix = (access() == PortAccess::Input) ? "." : "//>";

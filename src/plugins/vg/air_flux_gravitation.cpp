@@ -36,8 +36,8 @@ PUBLISH(AirFluxGravitation)
 AirFluxGravitation::AirFluxGravitation(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(AirFluxGravitation);
-    Input(screensState).imports("construction/shelters[screensMaxState]");
+    help("computes gravitational air flux from top to bottom compartment");
+    Input(screensState).imports("construction/shelter[horizontalScreenState]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(indoorsVolume).imports("geometry[indoorsVolume]");

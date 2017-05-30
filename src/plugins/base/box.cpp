@@ -19,19 +19,15 @@ Box::Box(QString name, QObject *parent)
     : QObject(parent), _name(name), _order(0), _amended(false)
 {
     Class(Box);
+    help("is a generic box with no behaviour");
     setObjectName(name);
     _currentRoot = this;
-//    _computationStep = environment().computationStep();
     _timer = new Timer(this);
 }
 
 Box::~Box() {
     if (this == _currentRoot)
         _currentRoot = 0;
-}
-
-ComputationStep Box::computationStep() const {
-    return _computationStep;
 }
 
 void Box::addPort(Port *port) {
@@ -54,17 +50,17 @@ const Port* Box::peakPort(QString name) const {
 }
 
 Port* Box::port(QString name) {
-    Port *port = peakPort(name); \
-    if (!port) \
-        ThrowException("No port of that name in this box").value(name).context(this); \
-    return port; \
+    Port *port = peakPort(name);
+    if (!port)
+        ThrowException("No port of that name in this box").value(name).context(this);
+    return port;
 }
 
 const Port* Box::port(QString name) const {
     const Port *port = peakPort(name); \
-    if (!port) \
-        ThrowException("No port of that name in this box").value(name).context(this); \
-    return port; \
+    if (!port)
+        ThrowException("No port of that name in this box").value(name).context(this);
+    return port;
 }
 
 void Box::help(QString s) {
@@ -291,7 +287,7 @@ void Box::cloneFamily(QString name, QObject *parent) {
         child->cloneFamily(child->objectName(), myClone);
 }
 
-void Box::toText(QTextStream &text, ToTextOptions options, int indentation) const {
+void Box::toText(QTextStream &text, int indentation) const {
     Box *me = const_cast<Box*>(this);
     QString fill;
     fill.fill(' ', indentation);
@@ -303,18 +299,16 @@ void Box::toText(QTextStream &text, ToTextOptions options, int indentation) cons
 
     for (Port *port : me->findMany<Port>(".[*]")) {
         if (port->access() == PortAccess::Input)
-            port->toText(text, Port::ToTextOptions::None, indentation+2);
+            port->toText(text, indentation+2);
     }
 
-    if (options != ToTextOptions::InputsOnly) {
-        for (Port *port : me->findMany<Port>(".[*]")) {
-            if (port->access() == PortAccess::Output)
-                port->toText(text, Port::ToTextOptions::None, indentation+2);
-        }
+    for (Port *port : me->findMany<Port>(".[*]")) {
+        if (port->access() == PortAccess::Output)
+            port->toText(text, indentation+2);
     }
 
     for (Box *box : me->findMany<Box>("./*")) {
-        box->toText(text, options, indentation+2);
+        box->toText(text, indentation+2);
     }
     text << fill << "}\n";
 }

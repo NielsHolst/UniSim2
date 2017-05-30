@@ -25,7 +25,7 @@ private:
     // From pollinator
         x, y, B,
     // Interactions
-        Gain_Pollinator, Loss_Plant;
+        Gain_Pollinator, Loss_Floral, Poll_Benefit;
 
     base::Matrix<double> CR;
 

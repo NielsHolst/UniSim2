@@ -31,7 +31,7 @@ Environment& environment() {
 }
 
 Environment::Environment()
-    : _root(0), _current(0)
+    : _root(0), _current(0), _isSilent(false)
 {
     QSettings settings;
     _isFirstInstallation = !QDir(homePath()).exists();
@@ -80,7 +80,7 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
     // Show step in dialog
     QString info = (step == ComputationStep::Start || step == ComputationStep::Ready) ?
                     QString() : (convert<QString>(step) + "...");
-    if (showInDialog)
+    if (showInDialog & !_isSilent)
         dialog().information(info);
     // Show step in status bar
     switch (step) {
@@ -203,6 +203,14 @@ void Environment::currentLoadArg(QString arg) {
 
 QString Environment::currentLoadArg() const {
     return _currentLoadArg;
+}
+
+void Environment::isSilent(bool silent) {
+    _isSilent = silent;
+}
+
+bool Environment::isSilent() const {
+    return _isSilent;
 }
 
 void Environment::latestLoadArg(QString arg) {

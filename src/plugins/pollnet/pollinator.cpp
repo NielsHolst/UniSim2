@@ -16,7 +16,7 @@ Pollinator::Pollinator(QString name, QObject *parent)
 
     Input(CR).help("Consumption rate; computed by mediator");
 
-    Output(x).help("Metabolic rate of pollinator.");
+    Output(x).help("Metabolic rate of pollinator");
     Output(y).help("Max. consumption rate");
     Output(B).help("Biomass of pollinator population.");
 
@@ -24,7 +24,7 @@ Pollinator::Pollinator(QString name, QObject *parent)
 
 void Pollinator::reset() {
     // Allometry
-    x = pow(m, 0.75);
+    x = is_vertebrate ? 0.88*pow(m, 0.75) : 0.314*pow(m, 0.75);
 
     y = is_vertebrate ? 4 : 8;
 
@@ -33,7 +33,6 @@ void Pollinator::reset() {
 
 
 double Pollinator::compute_dBdt() {
-//    double F = compute_F();
     return CR-x*B;
 }
 

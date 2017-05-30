@@ -15,13 +15,11 @@ class AirFluxGiven : public base::Box
 {
 public:
     AirFluxGiven(QString name, QObject *parent);
-    void reset();
+    void amend();
     void update();
-
 private:
     // Inputs
-    double infiltration, crackVentilation, gravitation, transmissivity;
-
+    QVector<double> airFluxes;
     // Outputs
     double value;
 };

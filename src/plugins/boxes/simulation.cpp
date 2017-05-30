@@ -18,18 +18,20 @@ PUBLISH(Simulation)
 Simulation::Simulation(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(iterations).equals(1);
-    Input(steps).equals(1);
-    Input(stopIterations).equals(false);
-    Input(stopSteps).equals(false);
-    Input(useStopIterations).equals(false);
-    Input(useStopSteps).equals(false);
-    Output(iteration).noReset();
-    Output(step);
-    Output(finalStep);
-    Output(executionTime);
-    Output(hasError);
-    Output(errorMsg);
+    help("runs a simulation");
+    Input(iterations).equals(1).help("Number of iterations to run");
+    Input(steps).equals(1).help("Number of steps in one iteration");
+    Input(stopIterations).equals(false).help("Stop running after this iteration?");
+    Input(stopSteps).equals(false).help("Stop running after this step?");
+    Input(useStopIterations).equals(false).help("Use the stopIterations flag?");
+    Input(useStopSteps).equals(false).help("Use the stopSteps flag?");
+    Input(silent).equals(false).help("Run without scrolling progress messages?");
+    Output(iteration).noReset().help("Iteration number (1,2,...)");
+    Output(step).help("Step number (0,1,2,...)");
+    Output(finalStep).help("Last completed step in simulation");
+    Output(executionTime).help("Duration of simulation run (ms)");
+    Output(hasError).help("Did an error occur during simulation run?");
+    Output(errorMsg).help("Error message");
 }
 
 Simulation::~Simulation() {
@@ -43,6 +45,9 @@ void Simulation::amend() {
 }
 
 void Simulation::run() {
+    environment().isSilent(silent);
+    if (silent)
+        dialog().information("Running silently...");
     _nextShowProgress = 0.01;
     hasError = false;
     QTime time;
