@@ -26,7 +26,7 @@ private:
     double controlVariable, controlVariableSlope,
         error, errorIntegral, errorDerivative;
     // Data
-    double dt, prevError, cv0, cv1, cv2;
+    double dt, prevError, cv0, cv1;
     int tick;
     // Methods
     void updateControlVariable();

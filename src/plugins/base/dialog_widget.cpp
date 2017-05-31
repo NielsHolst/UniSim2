@@ -333,10 +333,11 @@ void DialogWidget::writeWelcome() {
         environment().updateInstallation();
     }
 
-//    if (environment().isFirstInstallation())
-//        Command::submit(QStringList() << "save" << "grammar", this);
 
-    QString info = "Work folder:\n  " + environment().folderInfo(Environment::Work) +
+    information("Saving box script grammar...");
+    Command::submit(QStringList() << "save" << "grammar", this);
+
+    QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
 
     QString latestFile = environment().latestLoadArg();

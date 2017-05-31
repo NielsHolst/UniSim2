@@ -59,7 +59,6 @@ Simulation {
 			ShelterFace roof1 {
 				Screens screens {
 					Screen energy {
-						.U = 4
 						.state = actuators/screens/energy/control[state]
 					}
 				}
@@ -67,7 +66,6 @@ Simulation {
 			ShelterFace roof2 {
 				Screens screens {
 					Screen energy {
-						.U = 4
 						.state = actuators/screens/energy/control[state]
 					}
 				}
