@@ -23,8 +23,7 @@ StageBase::StageBase(QString name, QObject *parent)
     Input(duration).equals(100).help("Average delay between inflow and outflow");
     Input(growthFactor).equals(1).help("Factor by which outflow will be scaled relative to inflow");
 //    Input(sdRatio).equals(1);
-    Input(instantMortality).help("Mortality [0..100] applied before inflow is added");
-    Input(instantLossRate).help("Works just like instantMortality except the scale is a ratio [0..1]");
+    Input(instantLossRate).help("Mortality applied before inflow is added [0..1]");
     Input(phaseInflow).help("Sideways inflow of dimension k");
 
     Output(content).help("Total content inside the stage");
@@ -53,17 +52,13 @@ void StageBase::reset()
 }
 
 void StageBase::applyInstantMortality() {
-    if (instantMortality > 0. && instantLossRate > 0.) {
-        QString msg = "Parameters instantMortality and instantLossRate cannot both be > 0 (they are '%1' and '%2')";
-        ThrowException(msg.arg(instantMortality).arg(instantLossRate)).context(this);
-    }
-    double survival = 1. - instantMortality/100. - instantLossRate;
+    double survival = 1. - instantLossRate;
     TestNum::snapToZero(survival);
     TestNum::snapTo(survival, 1.);
     if (survival < 0 || survival > 1.)
        ThrowException("Survival must be in the range [0;1]").value(survival).context(this);
     ddBase->scale(survival);
-    instantMortality = instantLossRate = 0;
+    instantLossRate = 0;
 }
 
 

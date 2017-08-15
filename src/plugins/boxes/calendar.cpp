@@ -70,6 +70,7 @@ void Calendar::reset() {
     timeStepSecs = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Seconds);
     timeStepDays = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Days);
     dateTime = initialDateTime;
+    dateTime.setTimeSpec(Qt::UTC);
     totalTimeSteps = 0;
     updateDerived();
 }

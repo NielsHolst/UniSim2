@@ -11,10 +11,10 @@ PUBLISH(Maker)
 Maker::Maker(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("clones all boxes inside it");
-    Input(replicates).equals(1).help("Number of clones to replicate from child boxes");
-    Input(names).help("Names of clones; number of replicates set to number of names");
-    Input(fileName).help("For every line in file, replicates will be cloned; column headings label inputs");
+    help("clones all boxes inside it according to one of three methods");
+    Input(replicates).equals(1).help("Supply either, (1) then number of clones to replicate from child boxes;");
+    Input(names).help("or (2) the names of clones;");
+    Input(fileName).help("or (3) a file; each line specifies a clone; column headings label inputs to each clone.");
 }
 
 void Maker::amend() {

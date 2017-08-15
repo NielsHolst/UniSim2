@@ -1,5 +1,6 @@
 #ifndef PLOT_R_H
 #define PLOT_R_H
+#include <QTextStream>
 #include <base/track.h>
 #include "output_ports.h"
 #include "output_r.h"
@@ -22,11 +23,12 @@ private:
     // Inputs
     bool hide;
     QVector<QString> ports;
-    QString layout, end, endCode, ggplot;
-    int ncol, nrow, iteration;
+    QString layout, end, endCode, ggplot, transform;
+    int ncol, nrow, iteration, fontSize;
     // Methods
     QVector<base::Track*> xAxisTracks();
     QString dim(QString portName);
+    void appendGgplot(QTextStream &s);
 };
 
 }

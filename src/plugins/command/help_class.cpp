@@ -34,7 +34,7 @@ void help_class::doExecute() {
         QString className = _args.at(1);
         createBox(className);
         if (_box) {
-            setNameLengths();
+            setColWidths();
             writeHelp();
             _box->deleteLater();
         }
@@ -56,16 +56,24 @@ void help_class::createBox(QString className) {
     }
 }
 
-void help_class::setNameLengths() {
-    _maxPortNameLength = _maxValueLength = 0;
-    for (const Port *port : _box->findMany<Port>(".[*]")) {
-        _maxPortNameLength = std::max(_maxPortNameLength, port->objectName().size());
-        _maxValueLength = std::max(_maxValueLength, port->valueAsString().size());
+namespace {
+
+    bool showValue(const Port *port) {
+        return port->access() == PortAccess::Input && !port->hasImport();
     }
+
+//    QString value(const Port *port) {
+//        return port->hasImport() ? port->importPath() : port->valueAsString();
+//    }
 }
 
-inline QString value(const Port *port) {
-    return port->hasImport() ? port->importPath() : port->valueAsString();
+void help_class::setColWidths() {
+    _colWidthName = _colWidthValue = 0;
+    for (const Port *port : _box->findMany<Port>(".[*]")) {
+        _colWidthName = std::max(_colWidthName, port->objectName().size());
+        if (showValue(port))
+            _colWidthValue = std::max(_colWidthValue, port->valueAsString().size());
+    }
 }
 
 void help_class::writeHelp() {
@@ -84,9 +92,9 @@ QStringList help_class::portsHelp(PortAccess access) {
     for (const Port *port : _box->findMany<Port>(".[*]")) {
         if (port->access() == access) {
             QString item;
-            item = "." + port->objectName().leftJustified(_maxPortNameLength);
-            QString value =  (access == PortAccess::Input) ? port->valueAsString() : "";
-            item += "|" + value.rightJustified(_maxValueLength);
+            item = "." + port->objectName().leftJustified(_colWidthName);
+            QString value =  showValue(port) ? port->valueAsString() : "";
+            item += "|" + value.rightJustified(_colWidthValue);
             item += "|" + port->help();
             list << item;
         }

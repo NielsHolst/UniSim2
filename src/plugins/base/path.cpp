@@ -68,6 +68,7 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
         _candidates << nextCandidates;
     }
     removeEmptyCandidates();
+    removeDuplicateCandidates();
     if (number > -1 && _candidates.size() != number) {
         QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
         ThrowException(msg.arg(_candidates.size()).arg(number)).value(_current.originalPath).context(_caller);
@@ -407,6 +408,19 @@ void Path::removeEmptyCandidates() {
     for (const QObject *candidate : _candidates) {
         if (candidate)
             filtered << candidate;
+    }
+    _candidates = filtered;
+}
+
+void Path::removeDuplicateCandidates() {
+    // For duplicate entries keep only the first candidate in the list
+    QObjects filtered;
+    QSet<const QObject*> unique;
+    for (const QObject *candidate : _candidates) {
+        if (!unique.contains(candidate)) {
+            filtered << candidate;
+            unique << candidate;
+        }
     }
     _candidates = filtered;
 }

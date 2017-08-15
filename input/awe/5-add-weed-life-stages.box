@@ -1,5 +1,5 @@
 Simulation sim {
-	.steps = 730
+  .steps = 730
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
@@ -38,64 +38,64 @@ Simulation sim {
       }
     }
   }
-	Box weed {
-		DayDegrees time {
-		.T = weather[T]
-		.T0 = 0
-		}
-		awe::SeedBank seedBank {
-			.initial = 1000
-			.yearlyMortality = 0.1
-			.yearlyEmergence = 0.2
-			.emergenceByMonth = (0 5 30 60 70 50 10 0 0 0 0 0)
-		}
-		Box seedling {
-			+duration = 50
-			Stage density {
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-			Stage densityEqs {
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-		}
-		Box juvenile {
-			+duration = 600
-			Stage density {
-				.inflow = seedling/density[outflow]
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-			Stage densityEqs {
-				.inflow = seedling/densityEqs[outflow]
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-		}
-		Box mature {
-			+duration = 300
-			Stage density {
-				.inflow = juvenile/density[outflow]
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-			Stage densityEqs {
-				.inflow = juvenile/densityEqs[outflow]
-				.timeStep = ../../time[step]
-				.duration = ..[duration] 
-			}
-		}
-		Stage seedsOnPlant {
-			.timeStep = ../time[step]
-			.duration = 150 
-		}
-	}
-	
-	OutputR {
+  Box weed {
+    DayDegrees time {
+    .T = weather[T]
+    .T0 = 0
+    }
+    awe::SeedBank seedBank {
+      .initial = 1000
+      .yearlyMortality = 0.1
+      .yearlyEmergence = 0.2
+      .emergenceByMonth = (0 5 30 60 70 50 10 0 0 0 0 0)
+    }
+    Box seedling {
+      +duration = 50
+      Stage density {
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+      Stage densityEqs {
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+    }
+    Box juvenile {
+      +duration = 600
+      Stage density {
+        .inflow = seedling/density[outflow]
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+      Stage densityEqs {
+        .inflow = seedling/densityEqs[outflow]
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+    }
+    Box mature {
+      +duration = 300
+      Stage density {
+        .inflow = juvenile/density[outflow]
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+      Stage densityEqs {
+        .inflow = juvenile/densityEqs[outflow]
+        .timeStep = ../../time[step]
+        .duration = ..[duration] 
+      }
+    }
+    Stage seedsOnPlant {
+      .timeStep = ../time[step]
+      .duration = 150 
+    }
+  }
+  
+  OutputR {
     PageR {
       .xAxis = calendar[date]
-			.ncol = 2
+      .ncol = 2
       PlotR {
         .ports = (weather[T])
       }
@@ -106,10 +106,10 @@ Simulation sim {
         .ports = (seedBank[total])
       }
       PlotR {
-				.layout = "merged"
+        .layout = "merged"
         .ports = (seedBank[dailyEmergenceRatio] seedBank[dailyEmergenceRatioPotential])
       }
-		}
-	}
+    }
+  }
 }
 

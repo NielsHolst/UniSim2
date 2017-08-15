@@ -6,84 +6,84 @@
 //</summary>
 
 Simulation sim {
-	.steps = 365
-	Calendar calendar {
-		.timeStep = 1
-		.timeUnit = "d"
-		.initialDateTime = 1/6/2015
-		}
-	Records weather {	
-		.fileName = "weather/ClimDataV3.txt"
-	}	
-	//EAB box
-	Box eab{
-			Stage egg {
-				.timeStep = ./time[step]
-				.initial = 100
-				// .inflow = eab/adult/oviposition[outflow]
-				.duration = 10
-				DayDegrees time {		  
-					.Topt = 12
-					.T = weather[Tavg]
-				}
-			}
-			
-			Stage larvae {
-				.timeStep = ./time[step]
-				.inflow = egg[outflow]
-				.duration = 315
-				DayDegrees time {		  
-					.Topt = 25	
-					.T = weather[Tavg]					
-				}
-			}
-				
-			Stage pupae {
-				.timeStep = ./time[step]
-				.inflow = larvae[outflow]
-				.duration = 28
-				DayDegrees time {		  
-					.Topt = 10	
-					.T = weather[Tavg]					
-				}
-			}
-			
-			Stage adult {
-					.timeStep = 1
-					.inflow = pupae[outflow]
-					.duration = 28
-						DayDegrees time {		  
-							 .Topt = 25	
-							 .T = weather[Tavg]
-						}					
-						Stage oviposition {			
-							.timeStep = 1
-							.inflow = adult[outflow]
-							.duration = 18
-							.growthFactor = ./fecundity[perCapita]		
+  .steps = 365
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "d"
+    .initialDateTime = 1/6/2015
+    }
+  Records weather {  
+    .fileName = "weather/ClimDataV3.txt"
+  }  
+  //EAB box
+  Box eab{
+      Stage egg {
+        .timeStep = ./time[step]
+        .initial = 100
+        // .inflow = eab/adult/oviposition[outflow]
+        .duration = 10
+        DayDegrees time {      
+          .Topt = 12
+          .T = weather[Tavg]
+        }
+      }
+      
+      Stage larvae {
+        .timeStep = ./time[step]
+        .inflow = egg[outflow]
+        .duration = 315
+        DayDegrees time {      
+          .Topt = 25  
+          .T = weather[Tavg]          
+        }
+      }
+        
+      Stage pupae {
+        .timeStep = ./time[step]
+        .inflow = larvae[outflow]
+        .duration = 28
+        DayDegrees time {      
+          .Topt = 10  
+          .T = weather[Tavg]          
+        }
+      }
+      
+      Stage adult {
+          .timeStep = 1
+          .inflow = pupae[outflow]
+          .duration = 28
+            DayDegrees time {      
+               .Topt = 25  
+               .T = weather[Tavg]
+            }          
+            Stage oviposition {      
+              .timeStep = 1
+              .inflow = adult[outflow]
+              .duration = 18
+              .growthFactor = ./fecundity[perCapita]    
               EabFecundity fecundity {
                 .ashState = 2
               }  
                
-						}
-				}
-		}	//End EAB box
-	OutputR {
-		 PageR {	
-			 .xAxis=calendar[date]		  
-		// PlotR {
-			 // .ports = (egg/time[step] larvae/time[step] pupae/time[step] adult/time[step])
-		   // }
-		PlotR {
-			 .ports = (eab/*[outflow])
-		   }   		   
-		PlotR{
-			.ports=(eab/*[content])
-		   }							    
-		PlotR{
-			.ports=(oviposition[outflowTotal])
-		   }							    
-		 }
-	 }	
+            }
+        }
+    }  //End EAB box
+  OutputR {
+     PageR {  
+       .xAxis=calendar[date]      
+    // PlotR {
+       // .ports = (egg/time[step] larvae/time[step] pupae/time[step] adult/time[step])
+       // }
+    PlotR {
+       .ports = (eab/*[outflow])
+       }          
+    PlotR{
+      .ports=(eab/*[content])
+       }                  
+    PlotR{
+      .ports=(oviposition[outflowTotal])
+       }                  
+     }
+   }  
 }
 

@@ -1,0 +1,152 @@
+Simulation {
+  .iterations = 5
+  .steps = 1825  // 5 years
+  SensitivityAnalysis {
+  }
+  Calendar calendar {
+  }
+  Records weather {
+    .fileName = "../weather/flakkebjerg 2005.txt"
+    .cycle = TRUE
+  }
+ Box butterfly {
+    Stage springAdult {
+      .inflow = ../winterAdult[outflow]
+      .duration = 7
+    }
+    Stage eggLoad {
+      .inflow = ../springAdult[outflow]
+      .duration = 21
+      .growthFactor = 100 @ (normal 100 40)
+    }
+    Stage egg {
+      .inflow = ../eggLoad[outflow]
+      .duration = 140
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      .instantLossRate = wasp/oviposition[resourceMortality]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Stage fallAdult {
+      .inflow = ../pupa[outflow]
+      .duration = 60
+    }
+    Stage winterAdult {
+      .initial = 2
+      .inflow = ../fallAdult[outflow]
+      .duration = 50
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+        .isTicking = ./ticking[isOn]
+        OnOff ticking {
+          .x = calendar[dayOfYear]
+          .xOn = 90
+          .xOff = 150
+        }
+      }
+    }
+  }
+  Box wasp {
+    Stage springAdult {
+      .inflow = ../winterAdult[outflow]
+      .duration = 3
+    }
+    Stage eggLoad {
+      .inflow = ../springAdult[outflow]
+      .duration = 28
+      .growthFactor = 100 @ (normal 100 20)
+      .k = 5
+    }
+    FunctionalResponse oviposition {
+      .demand = ../eggLoad[outflow]
+      .apparency = 0.2 @ (uniform 0.1 0.8)
+      .resource = butterfly/larva[content]
+    }
+    Stage egg {
+      .inflow = ../oviposition[supply]
+      .duration = 140
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Stage fallAdult {
+      .inflow = ../pupa[outflow]
+      .duration = 60
+    }
+    Stage winterAdult {
+      .initial = 2
+      .inflow = ../fallAdult[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      .k = 5
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+        .isTicking = ./ticking[isOn]
+        OnOff ticking {
+          .x = calendar[dayOfYear]
+          .xOn = 130
+          .xOff = 250
+        }
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      PlotR {
+        .ports = butterfly/*[content]
+        .transform = "log10"
+        .ggplot = "scale_y_continuous(limits=c(-1,NA))"
+      }
+      PlotR {
+        .ports = wasp/*[content]
+        .transform = "log10"
+        .ggplot = "scale_y_continuous(limits=c(-1,NA))"
+      }
+    }
+  }
+}

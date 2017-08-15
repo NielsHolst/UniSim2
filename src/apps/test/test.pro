@@ -53,7 +53,6 @@ HEADERS +=  \
     test_vector_op.h \
     test_vector_sum.h \
     test_vectorization.h \
-    test_weather.h \
     input_file_path.h
 
 SOURCES +=  \
@@ -97,5 +96,4 @@ SOURCES +=  \
     test_vector.cpp \
     test_vector_op.cpp \
     test_vector_sum.cpp \
-    test_vectorization.cpp \
-    test_weather.cpp
+    test_vectorization.cpp

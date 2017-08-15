@@ -1,0 +1,29 @@
+Simulation {
+  .steps = 180
+  Calendar calendar {
+    .initialDateTime = 1/1/2005
+  }
+  Records weather {
+    .fileName = "../weather/flakkebjerg 2005.txt"
+  }
+  Box butterfly {
+    Stage egg {
+      .initial = 100
+      .duration = 140
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (egg[content] time[total])
+        .ggplot = "scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b'))"
+      }
+    }
+  }
+}

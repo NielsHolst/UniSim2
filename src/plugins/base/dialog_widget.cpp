@@ -158,7 +158,8 @@ void DialogWidget::errorImpl(QString s) {
 }
 
 void DialogWidget::keyPressEvent(QKeyEvent *event) {
-    if (event->modifiers() & Qt::ControlModifier)
+    auto controlModifier = environment().isMac() ? Qt::MetaModifier : Qt::ControlModifier;
+    if (event->modifiers() & controlModifier)
         handleCtrlKey(event);
     else
         handleNormalKey(event);

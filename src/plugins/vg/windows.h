@@ -16,12 +16,20 @@ class Windows : public base::Box
 public:
     Windows(QString name, QObject *parent);
     void reset();
-
+    void update();
 private:
     // Inputs
-    double groundArea, relativeArea, length, height, porosity;
+    QString orientation;
+    double groundArea, roofPitch, state,
+        windSpeed, indoorsTemperature, outdoorsTemperature,
+        relativeArea, length, width, transmissivity;
     // Outputs
-    double number, effectiveArea;
+    double verticalOpening, number; //, effectiveArea;
+    // Data
+    double _maxVerticalOpening,
+        _windVentilationMax, _windVentilationSlope;
+    // Methods
+    void setWindVentilationParameters();
 };
 
 } //namespace

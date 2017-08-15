@@ -1,78 +1,78 @@
 Simulation {
-	.steps=5
-	.iterations=3
+  .steps=5
+  .iterations=3
   SensitivityAnalysis {
   }
-	Box random {
-		Box pollinator {
-			RandomUniform initial_B {
-				.drawAtUserReset = TRUE
-				.minValue = 0.1
-				.maxValue = 2
-			}
-			RandomNormal m {
-				.drawAtUserReset = TRUE
-				.mean = 5
-				.sd = 1
-				.minValue = 0.1
-			}
-			RandomBinomial is_vertebrate {
-				.drawAtUserReset = TRUE
-				.P = 0.5
-			}
-		}
-		Box plant {
+  Box random {
+    Box pollinator {
+      RandomUniform initial_B {
+        .drawAtUserReset = TRUE
+        .minValue = 0.1
+        .maxValue = 2
+      }
+      RandomNormal m {
+        .drawAtUserReset = TRUE
+        .mean = 5
+        .sd = 1
+        .minValue = 0.1
+      }
+      RandomBinomial is_vertebrate {
+        .drawAtUserReset = TRUE
+        .P = 0.5
+      }
+    }
+    Box plant {
       +kappa = 0.5 @(uniform 0 1)
-			RandomUniform initial_R {
-				.drawAtUserReset = TRUE
-				.minValue = 0.5
-				.maxValue = 1
-			}
-			RandomUniform initial_V {
-				.drawAtUserReset = TRUE
-				.minValue = 2
-				.maxValue = 7
-			}
-			RandomNormal m {
-				.drawAtUserReset = TRUE
-				.mean = 100
-				.sd = 5
-				.minValue = 0.1
-			}
-		}
-	}
+      RandomUniform initial_R {
+        .drawAtUserReset = TRUE
+        .minValue = 0.5
+        .maxValue = 1
+      }
+      RandomUniform initial_V {
+        .drawAtUserReset = TRUE
+        .minValue = 2
+        .maxValue = 7
+      }
+      RandomNormal m {
+        .drawAtUserReset = TRUE
+        .mean = 100
+        .sd = 5
+        .minValue = 0.1
+      }
+    }
+  }
 
-	pollnet::BigBang network {
-		.connectivityFile = "big_bang_pollinators.txt"
-	}
+  pollnet::BigBang network {
+    .connectivityFile = "big_bang_pollinators.txt"
+  }
 
-	pollnet::Mediator mediator {
-		.connectivityFile = network[connectivityFile]
-		.R = *<Plant>[R]
-		.V = *<Plant>[V]
-		.B = *<Pollinator>[B]
-		.x = *<Pollinator>[x]
-		.y = *<Pollinator>[y]
-	}
-	
-	OutputR {
+  pollnet::Mediator mediator {
+    .connectivityFile = network[connectivityFile]
+    .R = *<Plant>[R]
+    .V = *<Plant>[V]
+    .B = *<Pollinator>[B]
+    .x = *<Pollinator>[x]
+    .y = *<Pollinator>[y]
+  }
+  
+  OutputR {
     .popUp = TRUE
     PageR {
-			PlotR {
-				.ncol = 2
-				.layout = "merged"
-				.ports = (*<Pollinator>[B] *<Plant>[V])
-			}
-		}
-		PageR {
-			PlotR {
+      PlotR {
+        .ncol = 2
+        .layout = "merged"
+        .ports = (*<Pollinator>[B] *<Plant>[V])
+      }
+    }
+    PageR {
+      PlotR {
         .ports =  *<Plant>[kappa]
       }
-			PlotR {
+      PlotR {
         .hide = TRUE
         .ports =  (*[is_vertebrate] *[initial_V])
       }
-		}
-	}
+    }
+  }
 
 }

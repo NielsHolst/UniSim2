@@ -7,6 +7,7 @@
 #include <math.h>
 #include <base/exception.h>
 #include <base/publish.h>
+#include "general.h"
 #include "windows.h"
 
 using namespace base;
@@ -15,37 +16,50 @@ namespace vg {
 	
 PUBLISH(Windows)
 
-/*! \class Vent
- * \brief Represents a number of similar vents
- *
- * Inputs
- * ------
- * - _length_ is the length of a vent [m]
- * - _height_ is the height of a vent [m]
- * - _number_ is the number of vents [1,2,3,...]
- * - _porosity_ is the efficacy of ventilation (can be reduced, for example, by an insect net) [0;1]
- *
- * Outputs
- * ------
- * - _effectiveArea_ is the total area of the vents, corrected for porosity [m<SUP>2</SUP>]
-
- */
-
 Windows::Windows(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    Input(roofPitch).imports("geometry[roofPitch]");
     Input(groundArea).imports("geometry[groundArea]");
-    Input(relativeArea).equals(0.1);
-    Input(length).equals(3.5);
-    Input(height).equals(0.8);
-    Input(porosity).equals(1.);
-    Output(number);
-    Output(effectiveArea);
+    Input(windSpeed).imports("outdoors[windSpeed]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
+    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(state).help("Relative opening [0;1]");
+
+    Input(orientation).equals("leeward").help("Either leeward or windward");
+    Input(relativeArea).equals(0.1).help("Area of windows in proportion to ground area [0;1]");
+    Input(length).equals(3.5).help("Length of one window (m)");
+    Input(width).equals(0.8).help("Width of one window (m)");
+    Input(transmissivity).equals(1.).help("Transmissivity across windows area [0;1]");
+    Output(number).help("Number of windows");
+    Output(verticalOpening).help("Vertical opening according to state (m)");
 }
 
 void Windows::reset() {
-    number = relativeArea*groundArea/length/height;
-    effectiveArea = relativeArea*groundArea*porosity;
+    number = relativeArea*groundArea/length/width;
+    _maxVerticalOpening = sin(roofPitch*2/PI)*width;
+    setWindVentilationParameters();
+}
+void Windows::setWindVentilationParameters() {
+    // After De Jong (1990, page 46 and 58)
+    double aspectRatio = length/width;
+    if (aspectRatio < 0.47)
+        aspectRatio = 0.47;
+    else if (aspectRatio > 1.825)
+        aspectRatio = 1.825;
+    if (orientation == "leeward") {
+        _windVentilationMax = 0.0203 + 0.002212*aspectRatio;
+        _windVentilationSlope = 1.006 + 11.47*aspectRatio;
+    }
+    else if (orientation == "windward") {
+        _windVentilationMax = 0.0203 + 0.002212*aspectRatio;
+        _windVentilationSlope = 1.006 + 11.47*aspectRatio;
+
+    }
+}
+
+void Windows::update() {
+    verticalOpening = state*_maxVerticalOpening;
 }
 
 } //namespace

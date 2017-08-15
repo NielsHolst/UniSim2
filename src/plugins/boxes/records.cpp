@@ -19,22 +19,24 @@ PUBLISH(Records)
 Records::Records(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(fileName).equals("records.txt");
-    Input(dateColumnName).equals("Date");
-    Input(timeColumnName).equals("Time");
+    help("reads inputs from records in a text file");
+    Input(fileName).help("Name of file with records; columns separated by white space").equals("records.txt");
+    Input(dateColumnName).help("Name of column with date").equals("Date");
+    Input(timeColumnName).help("Name of column with time").equals("Time");
+    Input(cycle).equals(false).help("Cycle back to start at end of file? File must begin on 1 January and end on 31 December");
     Input(calendarDateTime).imports("*<Calendar>[dateTime]");
 
-    Output(currentDateTime);
-    Output(nextDateTime);
-    Output(firstDateTime);
-    Output(lastDateTime);
-    Output(currentDate);
-    Output(nextDate);
-    Output(currentTime);
-    Output(nextTime);
+    Output(currentDateTime).help("Date-time stamp of the current outputs");
+    Output(nextDateTime).help("Date-time stamp of the next outputs");
+    Output(firstDateTime).help("Date-time stamp of the first line in the file");
+    Output(lastDateTime).help("Date-time stamp of the last line in the file");
+    Output(currentDate).help("Date stamp of the current outputs");
+    Output(nextDate).help("Date stamp of the next outputs");
+    Output(currentTime).help("Time stamp of the current outputs");
+    Output(nextTime).help("Time stamp of the next outputs");;
 
-    currentColumnValues = new QVector<double>;
-    nextColumnValues = new QVector<double>;
+    _currentColumnValues = new QVector<double>;
+    _nextColumnValues = new QVector<double>;
 }
 
 void Records::amend() {
@@ -47,38 +49,38 @@ void Records::amend() {
 }
 
 Records::~Records() {
-    delete currentColumnValues;
-    delete nextColumnValues;
+    delete _currentColumnValues;
+    delete _nextColumnValues;
 }
 
 void Records::readColumnNames() {
     openFile();
     readLineItems();
-    if (pastLastLine)
+    if (_pastLastLine)
         ThrowException("Records file is empty").value(fileNamePath()).context(this);
 
-    dateColumn = -1;
-    timeColumn = -1;
-    columnNames.clear();
-    for (int i = 0; i < lineItems.size(); ++i) {
-        QString id = lineItems[i];
-        columnNames.append(id);
+    _dateColumn = -1;
+    _timeColumn = -1;
+    _columnNames.clear();
+    for (int i = 0; i < _lineItems.size(); ++i) {
+        QString id = _lineItems[i];
+        _columnNames.append(id);
         if (id == dateColumnName)
-            dateColumn = i;
+            _dateColumn = i;
         else if (id == timeColumnName)
-            timeColumn = i;
+            _timeColumn = i;
     }
-    file.close();
+    _file.close();
 }
 
 void Records::openFile() {
-    if (file.isOpen())
-        file.close();
-    file.setFileName(fileNamePath());
-    bool fileOk = file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (_file.isOpen())
+        _file.close();
+    _file.setFileName(fileNamePath());
+    bool fileOk = _file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!fileOk)
         ThrowException("Cannot open records file").value(fileNamePath()).context(this);
-    pastLastLine = false;
+    _pastLastLine = false;
 }
 
 QString Records::fileNamePath() {
@@ -87,39 +89,44 @@ QString Records::fileNamePath() {
 
 void Records::readLineItems() {
     QString line;
-    while (!file.atEnd() && line.isEmpty()) {
-        line = QString(file.readLine().simplified());
+    while (!_file.atEnd() && line.isEmpty()) {
+        line = QString(_file.readLine().simplified());
     }
-    lineItems = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-    pastLastLine = lineItems.isEmpty();
+    _lineItems = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+    _pastLastLine = _lineItems.isEmpty();
 }
 
 void Records::createColumnOutputs() {
-    int n = columnNames.size();
+    int n = _columnNames.size();
     values.fill(0., n);
-    currentColumnValues->fill(0., n);
-    nextColumnValues->fill(0., n);
+    _currentColumnValues->fill(0., n);
+    _nextColumnValues->fill(0., n);
     for (int i = 0; i < n; ++i) {
-        QString name = columnNames[i];
-        if (i != dateColumn && i != timeColumn)
+        QString name = _columnNames[i];
+        if (i != _dateColumn && i != _timeColumn)
             NamedOutput(name, values[i]);
     }
 }
 
-void Records::readFromFirstToLastLine() {
+void Records::initialize() {
+    // Set lastDateTime
+    bool saveCycle = cycle;
+    cycle = false;
     openFile();
     readLineItems(); // skip labels
     advanceFirstLine();
     firstDateTime = currentDateTime;
-    while (!pastLastLine)
+    while (!_pastLastLine)
         advanceLine();
     lastDateTime = currentDateTime;
-    file.close();
+    _file.close();
+    cycle = saveCycle;
 }
 
 void Records::reset() {
-    readFromFirstToLastLine();
     readToFirstLine();
+    _yearOffset = calendarDateTime.date().year() - currentDate.year();
+    _extraYearOffset = 0;
     update();
 }
 
@@ -135,12 +142,12 @@ void Records::readToFirstLine() {
 
 void Records::advanceFirstLine() {
     readLineItems();
-    if (pastLastLine)
+    if (_pastLastLine)
         ThrowException("Records file is empty").value(fileNamePath()).context(this);
     extractValues();
     advanceTime();
-    for (int i = 0; i < nextColumnValues->size(); ++i)
-        (*currentColumnValues)[i] = nextColumnValues->at(i);
+    for (int i = 0; i < _nextColumnValues->size(); ++i)
+        (*_currentColumnValues)[i] = _nextColumnValues->at(i);
 
 }
 
@@ -148,22 +155,21 @@ void Records::advanceTime() {
     currentDate = nextDate;
     currentTime = nextTime;
     currentDateTime = nextDateTime;
-
 }
 
 void Records::extractValues() {
-    if (!pastLastLine && lineItems.size() != columnNames.size())
+    if (!_pastLastLine && _lineItems.size() != _columnNames.size())
         ThrowException("Number of items in records file does not match number of column names").
-                        value(lineItems.join(" ")).context(this);
+                        value(_lineItems.join(" ")).context(this);
 
     try {
-        for (int i = 0; i < lineItems.size(); ++i) {
-            if (i == dateColumn)
-                nextDate = convert<QDate>(lineItems[dateColumn]);
-            else if (i == timeColumn)
-                nextTime = convert<QTime>(lineItems[timeColumn]);
+        for (int i = 0; i < _lineItems.size(); ++i) {
+            if (i == _dateColumn)
+                nextDate = convert<QDate>(_lineItems[_dateColumn]);
+            else if (i == _timeColumn)
+                nextTime = convert<QTime>(_lineItems[_timeColumn]);
             else
-                (*nextColumnValues)[i] = convert<double>(lineItems[i]);
+                (*_nextColumnValues)[i] = convert<double>(_lineItems[i]);
         }
         nextDateTime = QDateTime(nextDate, nextTime, Qt::UTC);
     }
@@ -172,35 +178,66 @@ void Records::extractValues() {
     }
 }
 
-void Records::advanceLine() {
-    advanceTime();
-    qSwap(currentColumnValues, nextColumnValues);
-    readLineItems();
-
-    if (!pastLastLine) {
-        extractValues();
-    }
-    else {
-        for (int i = 0; i < nextColumnValues->size(); ++i)
-            (*nextColumnValues)[i] = currentColumnValues->at(i);
-    }
+void Records::extrapolateValues() {
+    for (int i = 0; i < _nextColumnValues->size(); ++i)
+        (*_nextColumnValues)[i] = _currentColumnValues->at(i);
 }
 
 void Records::update() {
-    while (calendarDateTime > nextDateTime && !pastLastLine)
+    QDateTime currentT, nextT;
+    while (true) {
+        currentT = alignDateTime(currentDateTime, _yearOffset);
+        nextT = alignDateTime(nextDateTime, _yearOffset + _extraYearOffset);
+        if (nextT >= calendarDateTime || _pastLastLine)
+            break;
         advanceLine();
+    }
 
     for (int i = 0; i < values.size(); ++i) {
-        if (i == dateColumn || i == timeColumn) continue;
-        double dx = currentDateTime.secsTo(nextDateTime);
-        double dy = nextColumnValues->at(i) - currentColumnValues->at(i);
-        double x = currentDateTime.secsTo(calendarDateTime);
-        values[i] = ((dx > 0) ? x*dy/dx : 0.) + currentColumnValues->at(i);
+        if (i == _dateColumn || i == _timeColumn) continue;
+        double dx = currentT.secsTo(nextT);
+        double dy = _nextColumnValues->at(i) - _currentColumnValues->at(i);
+        double x = currentT.secsTo(calendarDateTime);
+        values[i] = ((dx > 0) ? x*dy/dx : 0.) + _currentColumnValues->at(i);
+    }
+}
+
+QDateTime Records::alignDateTime(QDateTime dt, int yearOffset) const {
+    if (!cycle)
+        return dt;
+    QDate date = QDate(dt.date().year() + yearOffset, dt.date().month(), dt.date().day());
+    return QDateTime(date, dt.time(), Qt::UTC);
+}
+
+void Records::advanceLine() {
+    advanceTime();
+    qSwap(_currentColumnValues, _nextColumnValues);
+    readLineItems();
+
+    if (_pastLastLine) {
+        _extraYearOffset = 1;
+        if (cycle) {
+            _file.close();
+            openFile();
+            readLineItems();
+            readLineItems();
+            extractValues();
+        }
+        else {
+            extrapolateValues();
+        }
+    }
+    else {
+        if (_extraYearOffset == 1) {
+            _extraYearOffset = 0;
+            ++_yearOffset;
+        }
+        extractValues();
     }
 }
 
 void Records::cleanup() {
-    file.close();
+    _file.close();
 }
 
 

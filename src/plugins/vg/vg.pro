@@ -97,8 +97,8 @@ HEADERS +=  \
     vapour_flux_transpiration.h \
     ventilated_latent_heat_converter.h \
     ventilation.h \
-    ventilation_max_by_temp.h \
-    ventilation_max_by_wind.h \
+    ventilation_by_temp.h \
+    ventilation_by_wind.h \
     windows.h
 
 SOURCES += \
@@ -190,7 +190,7 @@ SOURCES += \
     vapour_flux_transpiration.cpp \
     ventilated_latent_heat_converter.cpp \
     ventilation.cpp \
-    ventilation_max_by_temp.cpp \
-    ventilation_max_by_wind.cpp \
+    ventilation_by_temp.cpp \
+    ventilation_by_wind.cpp \
     windows.cpp
 

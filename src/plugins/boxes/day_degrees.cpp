@@ -14,7 +14,7 @@ DayDegrees::DayDegrees(QString name, QObject *parent)
     Input(Topt).equals(100).help("Optimum temperate; linear decline from here to Tmax");
     Input(Tmax).equals(100).help("Upper temperature threshold");
     Input(T).imports("weather[Tavg]");
-    Input(timeStepDays).equals(1).help("Length of a time steps (days)");
+    Input(timeStepDays).equals(1).help("Length of a time steps in days");
     Input(resetTotal).equals(false).help("Reset total to zero?");
     Input(isTicking).equals(true).help("Are day-degrees being computed? Else step will be zero");
     Output(step).help("Increment in day-degrees");
@@ -43,10 +43,10 @@ void DayDegrees::update() {
         step = 0;
     else
         step = (Topt - T0)*(Tmax - T)/(Tmax - Topt);
+    step *= timeStepDays;
     if (resetTotal)
         total = 0;
-    else
-        total += step*timeStepDays;
+    total += step;
 }
 
 } //namespace

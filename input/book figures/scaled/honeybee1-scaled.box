@@ -1,0 +1,36 @@
+// honeybee1.box
+Simulation {
+  .steps = 13
+  Sequence dayLength {
+    +dayLength = .[value]
+    .min = 5
+    .max = 18
+  }
+  ProportionalSignal fecundity {
+    +eggsPerDay = .[signal]
+    .input = dayLength[value]
+    .minSignal = 0
+    .maxSignal = 1500
+    .threshold = 8
+    .thresholdBand = 4
+  }
+  OutputR {
+    .width = 4
+    .height = 3.6
+    +dottedLine = "geom_line(size=1.1) + geom_point(size=3.5)"
+    PageR {
+      .xAxis = dayLength[value]
+      PlotR {
+        .ports = fecundity[signal]
+        .ggplot = ../..[dottedLine]
+      }
+    }
+    PageR {
+      .xAxis = dayLength[dayLength]
+      PlotR {
+        .ports = fecundity[eggsPerDay]
+        .ggplot = ../..[dottedLine]
+      }
+    }
+  }
+}

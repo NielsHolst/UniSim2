@@ -1,17 +1,17 @@
 Simulation sim {
-	.steps = 730
+  .steps = 730
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
   awe::Weather weather {
   }
-	OutputR {
+  OutputR {
     PageR {
       .xAxis = calendar[date]
       PlotR {
         .ports = (weather[T])
       }
-		}
-	}
+    }
+  }
 }
 

@@ -15,6 +15,7 @@ PUBLISH(OutputText)
 OutputText::OutputText(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
+    Class(OutputText);
     help("creates an output text file");
 }
 
@@ -75,8 +76,7 @@ void OutputText::writeDataFrame() {
             if (track != last)
                 _stream << "\t";
         }
-        if (row < nrow-1)
-            _stream << "\n";
+        _stream << "\n";
     }
 }
 

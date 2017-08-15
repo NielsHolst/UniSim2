@@ -71,6 +71,7 @@ public:
 
     void resolvePortImports();
     void updateImports();
+    void updateSelfImports();
 
     void cloneFamily(QString name, QObject *parent);
 

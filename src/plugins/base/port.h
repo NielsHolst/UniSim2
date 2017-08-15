@@ -95,6 +95,7 @@ public:
     void addExportPort(Port *port);
     void reset();
     void copyFromImport();
+    void copyFromSelfImport(const Box *self);
     void assign(const QVector<Port *> &sources);
     void format(PortType type);
     Track::Order track(PortFilter filter=PortFilter::None);

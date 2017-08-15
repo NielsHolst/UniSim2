@@ -18,11 +18,11 @@ public:
 private:
     // data
     base::Box *_box;
-    int _maxPortNameLength, _maxValueLength;
+    int _colWidthName, _colWidthValue;
     // methods
     void doExecute();
     void createBox(QString className);
-    void setNameLengths();
+    void setColWidths();
     void writeHelp();
     QStringList portsHelp(base::PortAccess access);
     QString sideEffects();

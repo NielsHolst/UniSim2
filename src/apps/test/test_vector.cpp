@@ -15,6 +15,7 @@ using namespace base;
 
 void TestVector::testWithSimulation() {
     BoxBuilder builder;
+//    builder.clear();
     Box *sim;
     try {
         builder.

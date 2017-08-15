@@ -36,7 +36,8 @@ void TestPath::setContext(QString path) {
     int n = objects.length();
     QString msg{"Wrong number of box matches in '%1'. Expected 1 but found %2"};
     msg = msg.arg(path).arg(n);
-    QVERIFY2(n==1, msg.toLocal8Bit());
+    if (n!=1)
+        QVERIFY2(n==1, msg.toLocal8Bit());
     _context = objects.at(0);
 }
 
@@ -59,8 +60,8 @@ void TestPath::compareVectors(QVector<QObject*> v1, QVector<QObject*> v2, int si
     QString s2 = msgSize.arg(size).arg(set1.size()).arg(set2.size());
 
     QVERIFY2(set1==set2, msgNames.arg(names(set1)).arg(names(set2)).toLocal8Bit());
-
-    QVERIFY2(set1.size()==size, msgSize.arg(size).arg(set1.size()).arg(set2.size()).arg(names(set2)).toLocal8Bit());
+    if (set1.size()!=size)
+        QVERIFY2(set1.size()==size, msgSize.arg(size).arg(set1.size()).arg(set2.size()).arg(names(set2)).toLocal8Bit());
 }
 
 void TestPath::testValidateName() {
@@ -475,6 +476,15 @@ void TestPath::testIndirections() {
 
 }
 
+namespace {
+    QVector<QString> names(QVector<Box*> boxes) {
+        QVector<QString> v;
+        for (Box *box : boxes)
+            v << box->fullName();
+        return v;
+    }
+}
+
 void TestPath::testDistribution() {
     setContext("A2");
     QVector<QObject*> relative, absolute;
@@ -490,6 +500,10 @@ void TestPath::testDistribution() {
     }
     UNEXPECTED
 }
+
+//
+// These methods must be run last because they load their own box scripts
+//
 
 void TestPath::testDistributionFromScript() {
     int errors = dialog().errorCount();
@@ -511,3 +525,18 @@ void TestPath::testDistributionFromScript() {
     QCOMPARE(distPorts.at(0), k);
     QCOMPARE(distPorts.at(1), duration);
 }
+
+void TestPath::testCombination() {
+    int errors = dialog().errorCount();
+    Command::submit(QStringList() << "load" << "path/butterflies.box", 0);
+    QCOMPARE(errors, dialog().errorCount());
+
+    Box *sim = environment().root();
+
+    QVector<QString> expected;
+    expected << "/sim/io/egg" << "/sim/io/larva" << "/sim/io/pupa" << "/sim/io/adult";
+
+    QCOMPARE(expected, names( sim->findMany<Box>("io/*") ));
+    QCOMPARE(expected, names( sim->findMany<Box>("io/* | io/egg") ));
+}
+

@@ -1,5 +1,5 @@
 Simulation sim {
-	.steps = 365
+  .steps = 365
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
@@ -43,11 +43,11 @@ Simulation sim {
     .yearlyMortality = 0.1
     .yearlyEmergence = 0
   }
-	
-	OutputR {
+  
+  OutputR {
     PageR {
       .xAxis = calendar[date]
-			.ncol = 2
+      .ncol = 2
       PlotR {
         .ports = (weather[T])
       }
@@ -57,7 +57,7 @@ Simulation sim {
       PlotR {
         .ports = (seedBank[total]])
       }
-		}
-	}
+    }
+  }
 }
 

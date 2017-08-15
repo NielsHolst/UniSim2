@@ -1,0 +1,54 @@
+// book/demo/migration/islands-4.box
+Simulation sim {
+  .iterations = 3
+  .steps = 30
+  
+  Maker islands {
+    .fileName = "islands-4-setup.txt"
+    demo::Island island {
+
+      demo::Population fox {
+        .emigrationSlope = 4
+        Stage fox {
+          .initial = ./random[value]
+          .duration = 12
+          RandomUniform random {
+            .minValue = 1
+            .maxValue = 100 
+            .drawAtUserReset = TRUE
+          }
+        }
+      }
+      
+      demo::Population rabbit {
+        .emigrationSlope = 8
+        Stage rabbit {
+          .initial = ./random[value]
+          .duration = 4
+          RandomPoisson random {
+            .mean = 100
+            .drawAtUserReset = TRUE
+          }
+        }
+      }
+    } // island
+  } // islands
+
+  Maker migration {
+    .names = (fox rabbit)
+    demo::Migration  {
+    }
+  }
+    
+  OutputR {
+    .end = "islands-4-end.R"
+    PageR {
+      PlotR {
+        .ports = (*[latitude] *[longitude] *[initial])
+      }
+      PlotR {
+        .ports = (*[outflowTotal])
+      }
+    }
+  }
+}

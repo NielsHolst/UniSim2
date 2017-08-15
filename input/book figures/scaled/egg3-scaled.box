@@ -1,0 +1,25 @@
+Simulation sim {
+  .steps = 14
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "d"
+    .initialDateTime = 1/5/2009
+  }
+  Stage egg {
+    .timeStep = 1
+    .initial = 100 
+    .duration = 7
+  }
+  OutputR {
+    .popUp = TRUE
+    .width = 8
+    .height = 3.6
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (egg[content] egg[outflowTotal])   
+        .ncol = 2
+      }
+    }
+  }
+}

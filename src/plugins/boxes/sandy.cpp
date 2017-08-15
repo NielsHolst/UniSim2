@@ -13,6 +13,7 @@ PUBLISH(Sandy)
 Sandy::Sandy(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("the Sandy equation (experimental)");
     Input(xMin).equals(0);
     Input(xMax).equals(1);
     Input(yMax).equals(1);

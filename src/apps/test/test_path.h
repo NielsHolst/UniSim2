@@ -50,7 +50,10 @@ private slots:
     void testIndirections();
 
     void testDistribution();
+
+    // Test from box scripts
     void testDistributionFromScript();
+    void testCombination();
 };
 
 DECLARE_TEST(TestPath)

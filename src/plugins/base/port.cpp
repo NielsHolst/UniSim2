@@ -206,7 +206,8 @@ namespace {
 void Port::resolveImports() {
     // Only resolve one
     if (_importsResolved)
-        ThrowException("Unexpected: Imports already resolved").context(this);
+        return;
+//        ThrowException("Unexpected: Imports already resolved").context(this);
     _importsResolved = true;
 
     // No imports; nothing to do
@@ -256,9 +257,13 @@ void Port::reset() {
 }
 
 void Port::copyFromImport() {
-    if (!hasImport())
-        return;
-    assign(_importPorts);
+    if (hasImport())
+        assign(_importPorts);
+}
+
+void Port::copyFromSelfImport(const Box *self) {
+    if (hasImport() && boxParent()==self)
+        assign(_importPorts);
 }
 
 void Port::assign(const QVector<Port*> &sources) {

@@ -14,10 +14,11 @@ PUBLISH(SensitivityAnalysis)
 SensitivityAnalysis::SensitivityAnalysis(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("runs a sensitivity analysis");
     Input(iterations).imports("ancestors::*[iterations]");
-    Input(method).equals("LHS");
-    Output(inputsAnalysed);
-    Output(inputsTotal);
+    Input(method).help("Use either Latin hypercube sampling ('LHS') or Monte Carlo ('MC')").equals("LHS");
+    Output(inputsAnalysed).help("Total number of input ports");
+    Output(inputsTotal).help("Number of input ports included in analysis");
 }
 
 void SensitivityAnalysis::initialize() {

@@ -1,4 +1,3 @@
-#include <QTextStream>
 #include <base/environment.h>
 #include <base/path.h>
 #include <base/publish.h>
@@ -12,23 +11,30 @@ namespace boxes {
 
 PUBLISH(PlotR)
 
+const QString defaultGgplot = "geom_line(size=1.1)";
+
 PlotR::PlotR(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
     help("produces an R plot");
-    Input(hide).equals(false);
+    Input(hide).equals(false).help("If hidden will still figure in output file");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
-    Input(ggplot).equals("geom_line(size=1.1)").help("R code that will be added to the ggplot");
+    Input(fontSize).help("Used for axes and panels; zero yields default font size");
+    Input(ggplot).equals(defaultGgplot).help("R code that will be added to the ggplot");
+    Input(transform).help("Transformation of y-axis; only 'log10' available");
     Input(end).help("Deprecated");
     Input(endCode).help("Deprecated");
-    Input(ncol).equals(-1);
-    Input(nrow).equals(-1);
+    Input(ncol).equals(-1).help("Number of columns in arrangement of plots; -1 keeps default");
+    Input(nrow).equals(-1).help("Number of rows in arrangement of plots; -1 keeps default");
     Input(iteration).imports("/*[iteration]");
 }
 
 void PlotR::initialize() {
     // Validate
     convert<LayoutR>(layout);
+    if (transform!="" && transform!="log10")
+        ThrowException("Only valid value for 'transform' is 'log10'")
+                .value(transform).context(this);
 }
 
 void PlotR::reset() {
@@ -82,16 +88,19 @@ QString PlotR::toScript() {
       << ", "
       << "c(" << portLabels.join(", ") << ")"
       << ", "
+      << "ytrans=" << apostrophed(transform)
+      << ", "
       << "ncol=" << dim("ncol")
       << ", "
       << "nrow=" << dim("nrow")
       << ")";
-    if (!ggplot.isEmpty())
-        s << "+" << ggplot;
+    appendGgplot(s);
     if (!end.isEmpty())
         s << "+" << environment().inputFileContent(end).trimmed();
     if (!endCode.isEmpty())
         s << "+" << endCode;
+    if (fontSize > 0)
+        s << "+ggplot_theme(" << fontSize << ")";
     s << ",\n";
     return string;
 }
@@ -110,5 +119,12 @@ QString PlotR::dim(QString portName) {
     return (value == -1) ? QString("NULL") : QString::number(value);
 }
 
+void PlotR::appendGgplot(QTextStream &s) {
+    if (!ggplot.simplified().startsWith("+"))
+        ggplot.prepend("+");
+    if (!ggplot.contains("geom_"))
+        ggplot.prepend("+" + defaultGgplot);
+    s << ggplot;
+}
 
 }

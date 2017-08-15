@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=1
-set SUB=3a
+set SUB=5
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
@@ -29,6 +29,7 @@ echo Could not find %INSTALL_BUILDER_PATH%
 echo .
 goto :end_fail
 :ok_builder
+goto :TEST
 
 :ok
 rem Call Qt batch file 
@@ -75,6 +76,7 @@ echo = Set installer version number =
 ..\bin\update-installer-project %MAJOR% %MINOR% %SUB%
 if errorlevel 1 goto :end_fail
 
+:TEST
 echo = Build installer =
 pushd %INSTALL_BUILDER_PATH%
 builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml

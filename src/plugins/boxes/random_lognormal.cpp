@@ -10,6 +10,7 @@ PUBLISH(RandomLognormal)
 RandomLognormal::RandomLognormal(QString name, QObject *parent)
     : RandomBase<double>(name, parent), distribution(0), variate(0)
 {
+    help("produces random numbers from the log-normal distribution");
     Input(mean).equals(10);
     Input(sd).equals(2);
 }

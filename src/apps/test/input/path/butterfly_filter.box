@@ -23,7 +23,7 @@ Simulation sim {
 		}
 	}
 	OutputR {
-		.keepPlots = FALSE
+                .keepPages = FALSE
 		.popUp = TRUE
     PageR { 
       .xAxis = *<Distribution>/..<Port>

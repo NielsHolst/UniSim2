@@ -50,9 +50,9 @@ Simulation sim {
         .conversionRatio = 1.5  # Harbo (JAR, 1993)
         .workerDemand = 7       # Harbo (JAR, 1993); for nurse bee or pollen-foraging bee
       }
-	  NectarDemandTotal demandTotal {
-		.numberForagers(transform=Sum) = worker[number]
-	  }
+    NectarDemandTotal demandTotal {
+    .numberForagers(transform=Sum) = worker[number]
+    }
     }
     apis::LifeStage worker {
       .bufferSize = 75 #1800

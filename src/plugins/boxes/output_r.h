@@ -25,8 +25,11 @@ public:
 private:
     // Input
     QString begin, end, outputFileNameVariable;
-    bool popUp, keepPlots, keepVariables;
+    bool popUp, keepPages, keepVariables;
     double width, height;
+
+    // Output
+    int numPages;
 
     // Data
     QVector<PageR*> _pages;

@@ -10,6 +10,7 @@ PUBLISH(RandomBinomial)
 RandomBinomial::RandomBinomial(QString name, QObject *parent)
     : RandomBase<bool>(name, parent), distribution(0), variate(0)
 {
+    help("produces random numbers from the binomial distribution");
     Input(P).equals(0.5).help("Probability of event");
 }
 

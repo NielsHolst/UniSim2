@@ -13,10 +13,10 @@ public:
     void update();
 private:
     // Inputs
-    int counter, counterMax, offset;
     double min, max;
     QString by;
     // Outputs
+    int counter, counterMax, offset;
     double value;
     // Methods
     void updateValue();

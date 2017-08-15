@@ -189,6 +189,7 @@ void Box::initializeFamily() {
     resolvePortImports();
     updateImports();
     initialize();
+    updateSelfImports();
     _timer->stop("initialize");
 }
 
@@ -202,6 +203,7 @@ void Box::resetFamily() {
     resetPorts();
     updateImports();
     reset();
+    updateSelfImports();
     _timer->stop("reset");
 }
 
@@ -218,6 +220,7 @@ void Box::updateFamily() {
 
     _timer->start("update-update");
     update();
+    updateSelfImports();
     _timer->stop("update-update");
 
     _timer->start("update-trackPorts");
@@ -233,6 +236,7 @@ void Box::cleanupFamily() {
     }
     updateImports();
     cleanup();
+    updateSelfImports();
     _timer->stop("cleanup");
 }
 
@@ -245,6 +249,7 @@ void Box::debriefFamily() {
     }
     updateImports();
     debrief();
+    updateSelfImports();
     _timer->stop("debrief");
 }
 
@@ -259,6 +264,11 @@ void Box::resolvePortImports() {
 void Box::updateImports() {
     for (Port *port : _ports.values())
         port->copyFromImport();
+}
+
+void Box::updateSelfImports() {
+    for (Port *port : _ports.values())
+        port->copyFromSelfImport(this);
 }
 
 void Box::resetPorts() {

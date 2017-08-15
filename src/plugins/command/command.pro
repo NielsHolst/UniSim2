@@ -16,7 +16,7 @@ HEADERS +=  \
     find.h \
     general.h \
     go.h \
-    graph.h \
+#    graph.h \
     help.h \
     help_class.h \
     list.h \
@@ -31,8 +31,8 @@ HEADERS +=  \
     set.h \
     set_font.h \
     set_folder.h \
-    test.h \
-    update.h \
+#    test.h \
+#    update.h \
     write.h \
     quit.h
 	
@@ -42,7 +42,7 @@ SOURCES +=  \
     find.cpp \
     general.cpp \
     go.cpp \
-    graph.cpp \
+#    graph.cpp \
     help.cpp \
     help_class.cpp \
     list.cpp \
@@ -57,8 +57,8 @@ SOURCES +=  \
     set.cpp \
     set_font.cpp \
     set_folder.cpp \
-    test.cpp \
-    update.cpp \
+#    test.cpp \
+#    update.cpp \
     write.cpp \
     quit.cpp
 

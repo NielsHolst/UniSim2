@@ -11,8 +11,9 @@ PUBLISH(Scenarios)
 Scenarios::Scenarios(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(fileName).equals("scenarios.txt");
-    Output(atEnd);
+    help("runs scenarios from a text file");
+    Input(fileName).help("Text file with columns, one for each output produced. One iteration is run for each line").equals("scenarios.txt");
+    Output(atEnd).help("Has last iteration run?");
 }
 
 void Scenarios::amend() {

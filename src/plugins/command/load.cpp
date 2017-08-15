@@ -51,7 +51,7 @@ void load::doExecute() {
 void load::readFile(QString fileName) {
     BoxReaderBase *reader{0};
     BoxBuilder builder;
-    builder.clear();
+//    builder.clear();
     try {
         switch(fileType(fileName)) {
         case Boxes:
@@ -64,14 +64,12 @@ void load::readFile(QString fileName) {
         reader->parse(environment().filePath(Environment::Input, fileName));
         environment().computationStep(ComputationStep::Amend);
         environment().root(builder.content());
+        dialog().information(QString("%1 boxes created").arg(environment().root()->count()));
     }
     catch (Exception &ex) {
         dialog().error(QString("Load failed\n") + ex.what());
     }
     delete reader;
-    environment().computationStep(ComputationStep::Amend);
-    QString info("%1 boxes created");
-    dialog().information(info.arg(environment().root()->count()));
 }
 
 load::FileType load::fileType(QString fileName) {

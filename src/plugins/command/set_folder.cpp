@@ -46,12 +46,16 @@ void set_folder::showAllFolders() {
         "\nInput folder:\n  " +
         environment().folderInfo(Environment::Input) +
         "\nOutput folder:\n  " +
-        environment().folderInfo(Environment::Output) +
-        "\nAtom editor folder:\n  " +
-        environment().folderInfo(Environment::Atom);
+        environment().folderInfo(Environment::Output);
         if (environment().isWindows()) {
-            "\nNotepad++ editor folder:\n  " +
-            environment().folderInfo(Environment::Notepad);
+            info +=
+                "\nNotepad++ editor folder:\n  " +
+                environment().folderInfo(Environment::Notepad);
+        }
+        else {
+            info +=
+                "\nAtom editor folder:\n  " +
+                environment().folderInfo(Environment::Atom);
         }
     dialog().information(info);
 }

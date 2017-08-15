@@ -21,6 +21,8 @@ BoxBuilder::BoxBuilder(Box *parent)
         _content = _currentBox = parent;
         _stack.push(_currentBox);
     }
+    else
+        clear();
 }
 
 BoxBuilder::~BoxBuilder() {

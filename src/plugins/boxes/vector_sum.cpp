@@ -13,8 +13,9 @@ PUBLISH(VectorSum)
 VectorSum::VectorSum(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(input);
-    Output(value);
+    help("computes the sum of many vectors");
+    Input(input).help("Path to vectors (must have same length)");
+    Output(value).help("Sum; a vector of same length as the inputs");
 }
 
 void VectorSum::initialize() {

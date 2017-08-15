@@ -15,10 +15,10 @@ Sequence::Sequence(QString name, QObject *parent)
     Input(by).equals("update").help("The sequence value can either be updated at 'reset' or 'update'");
     Input(min).equals(0).help("Minimum value in sequence");
     Input(max).equals(1).help("Maximum value in sequence");
-    Input(counter).imports("/*[step]").help("To keep track of how far in the sequence we have come");
-    Input(counterMax).imports("/*[steps]").help("Number of values in sequence");;
-    Input(offset).equals(0).help("First value of counter, e.g. 0 or 1");
-    Output(value);
+    Output(counter).help("Current counter in sequence");
+    Output(counterMax).help("Number of values in sequence");;
+    Output(offset).help("First value of counter, e.g. 0 or 1");
+    Output(value).help("Current value in sequence");
 }
 
 void Sequence::amend() {
@@ -28,7 +28,12 @@ void Sequence::amend() {
         port("value")->noReset();
         offset = 1;
     }
-    else if (by != "update")
+    else if (by == "update") {
+        port("counter")->imports("/*[step]");
+        port("counterMax")->imports("/*[steps]");
+        offset = 0;
+    }
+    else
         ThrowException("'by' must be either 'reset' or 'update'").value(by);
 }
 

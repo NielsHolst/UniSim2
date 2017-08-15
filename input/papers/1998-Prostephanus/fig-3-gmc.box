@@ -1,0 +1,19 @@
+Simulation sim {
+  .steps = 100
+  Sequence rh {
+    .min = 0
+    .max = 100
+  }
+  GrainMoistureContent gmc {
+    .rh = rh[value]
+  }
+  OutputR {
+    PageR {
+      .xAxis = rh[value]
+      PlotR {
+        .ports = gmc[value]
+      }
+    }
+  }
+}
+

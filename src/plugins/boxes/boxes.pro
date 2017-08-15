@@ -16,8 +16,10 @@ HEADERS +=  \
     day_degrees.h \
     distributed_delay_base.h \
     distributed_delay.h \
+    functional_response.h \
     layout_r.h \
     maker.h \
+    on_off.h \
     output_buffer.h \
     output_ports.h \
     output_r.h \
@@ -40,8 +42,7 @@ HEADERS +=  \
     simulation.h \
     stage_base.h \
     stage.h \
-    vector_sum.h \
-    weather.h
+    vector_sum.h
 	
 SOURCES +=  \
     buffer.cpp \
@@ -49,8 +50,10 @@ SOURCES +=  \
     day_degrees.cpp \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
+    functional_response.cpp \
     layout_r.cpp \
     maker.cpp \
+    on_off.cpp \
     output_buffer.cpp \
     output_ports.cpp \
     output_r.cpp \
@@ -72,7 +75,6 @@ SOURCES +=  \
     simulation.cpp \
     stage_base.cpp \
     stage.cpp \
-    vector_sum.cpp \
-    weather.cpp
+    vector_sum.cpp
 
 

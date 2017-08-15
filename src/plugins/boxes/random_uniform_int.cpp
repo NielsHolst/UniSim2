@@ -10,6 +10,7 @@ PUBLISH(RandomUniformInt)
 RandomUniformInt::RandomUniformInt(QString name, QObject *parent)
     : RandomBase<int>(name, parent), distribution(0), variate(0)
 {
+    help("produces random integer numbers from the uniform distribution");
     // Replace default bounds
     port("minValue")->equals(0);
     port("maxValue")->equals(1);

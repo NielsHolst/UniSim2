@@ -17,7 +17,7 @@ BaseSignal::BaseSignal(QString name, QObject *parent)
     Class(BaseSignal);
     Input(signalReset).help("The value that signal is set to at reset");
     Output(signal).help("Value of the signal");
-    Output(flag).help("Is the signal is different from zero?");
+    Output(flag).help("Is the signal different from zero?");
     Output(flagUp).help("Did the signal change from false to true during the latest update?");
     Output(flagDown).help("Did the signal change from true to false during the latest update?");
 }

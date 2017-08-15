@@ -15,6 +15,7 @@ private:
     ListOptionSet _options;
     // Methods
     void doExecute();
+    void showHelp();
 };
 
 }

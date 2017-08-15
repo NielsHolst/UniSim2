@@ -59,6 +59,7 @@ private:
     QObject* findContext();
     void addCandidates(QString path, QObjects &candidates);
     void removeEmptyCandidates();
+    void removeDuplicateCandidates();
     Directive parseDirective(QString s);
     bool isAbsolute();
 };

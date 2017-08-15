@@ -1,0 +1,86 @@
+Simulation {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2005
+  }
+  Records weather {
+    .fileName = "../weather/flakkebjerg 2005.txt"
+  }
+ Box butterfly {
+    Stage springAdult {
+      .inflow = ../winterAdult[outflow]
+      .duration = 7
+    }
+    Stage eggLoad {
+      .inflow = ../springAdult[outflow]
+      .duration = 21
+      .growthFactor = 100
+    }
+    Stage egg {
+      .inflow = ../eggLoad[outflow]
+      .duration = 140
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Stage fallAdult {
+      .inflow = ../pupa[outflow]
+      .duration = 60
+    }
+    Stage winterAdult {
+      .initial = 2
+      .inflow = ../fallAdult[outflow]
+      .duration = 50
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 5
+        .T = weather[Tavg]
+        .isTicking = ./ticking[isOn]
+        OnOff ticking {
+          .x = calendar[dayOfYear]
+          .xOn = 90
+          .xOff = 150
+        }
+      }
+    }
+  }
+  OutputR {
+    .popUp = TRUE
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = *[content]
+        .transform = "log10"
+         .ggplot = "scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b')) + 
+                    scale_y_continuous(limits=c(-1,NA))"
+      }
+    }
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = *[content]
+         .ggplot = "scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b'))"
+      }
+    }
+  }
+}

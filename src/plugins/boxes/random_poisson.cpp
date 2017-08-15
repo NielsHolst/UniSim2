@@ -10,6 +10,7 @@ PUBLISH(RandomPoisson)
 RandomPoisson::RandomPoisson(QString name, QObject *parent)
     : RandomBase<int>(name, parent), distribution(0), variate(0)
 {
+    help("produces random numbers from the Poisson distribution");
     Input(mean).equals(10);
 }
 

@@ -1,93 +1,93 @@
 Simulation sim {
-	.steps = 365
-	Calendar calendar {
-		.timeStep = 1
-		.timeUnit = "d"
-		.initialDateTime = 01/01/2015
-	}
-	Records weather {
-		.fileName = "weather/2015MSP14922Stn.txt"
-	}
-	Box pest {
-		Stage egg {
-			.timeStep = ./time[step]
-			.initial = 28
-			.inflow = ../adult/oviposition[outflow]
-			.duration = 11.50
-			DayDegrees time {		  
-				.T0 = 14.17
-				.Topt = 25
-				.Tmax = 35
-				.T = weather[Tavg]
+  .steps = 365
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "d"
+    .initialDateTime = 01/01/2015
+  }
+  Records weather {
+    .fileName = "weather/2015MSP14922Stn.txt"
+  }
+  Box pest {
+    Stage egg {
+      .timeStep = ./time[step]
+      .initial = 28
+      .inflow = ../adult/oviposition[outflow]
+      .duration = 11.50
+      DayDegrees time {      
+        .T0 = 14.17
+        .Topt = 25
+        .Tmax = 35
+        .T = weather[Tavg]
         .isTicking = ./development[on]
         EggDevelopment development {
           .currentDate = calendar[date]
           .fromDate = /2/1/*
           .toDate = /6/1/*
         }
-			}
-		}
-		Stage larva {
-			.timeStep = ./time[step]
-			.inflow = ../egg[outflow]
-			.duration = 71.19
-			DayDegrees time {		  
-				.T0 = 14.17
-				.Topt = 25
-				.Tmax = 35
-				.T = weather[Tavg]				
-			}
-		}
+      }
+    }
+    Stage larva {
+      .timeStep = ./time[step]
+      .inflow = ../egg[outflow]
+      .duration = 71.19
+      DayDegrees time {      
+        .T0 = 14.17
+        .Topt = 25
+        .Tmax = 35
+        .T = weather[Tavg]        
+      }
+    }
 
-		Box adult {
-			Stage adult {
-				.inflow = ../../larva[outflow]
-				.duration = 100
-				.timeStep = 1
-			}
-			Stage preOviposition {
-				.inflow = ../../larva[outflow]
-				.duration = 13.35
-				.timeStep = 1
-			}
-			Stage oviposition {
-				.inflow = ../preOviposition[outflow]
-				.duration = 77
-				.timeStep = 1
-				.growthFactor = 106
-			}			
-		}
-	}
-		OutputR {
-		PageR {
-		  .xAxis = calendar[date]
-		.ncol = 1		  
+    Box adult {
+      Stage adult {
+        .inflow = ../../larva[outflow]
+        .duration = 100
+        .timeStep = 1
+      }
+      Stage preOviposition {
+        .inflow = ../../larva[outflow]
+        .duration = 13.35
+        .timeStep = 1
+      }
+      Stage oviposition {
+        .inflow = ../preOviposition[outflow]
+        .duration = 77
+        .timeStep = 1
+        .growthFactor = 106
+      }      
+    }
+  }
+    OutputR {
+    PageR {
+      .xAxis = calendar[date]
+    .ncol = 1      
 
-		  PlotR {
-			.layout = "merged"
-			.ports = (pest/*[content] pest/adult/adult[content])
-			.end = "scripts/month_breaks.R"
+      PlotR {
+      .layout = "merged"
+      .ports = (pest/*[content] pest/adult/adult[content])
+      .end = "scripts/month_breaks.R"
       .endCode = "scale_y_log10(limits = c(0.1, NA))" 
-		  }
-		  PlotR {
-			.layout = "merged"
-			.ports = (pest/adult/preOviposition[content] pest/adult/oviposition[content])
-			.end = "scripts/month_breaks.R"
+      }
+      PlotR {
+      .layout = "merged"
+      .ports = (pest/adult/preOviposition[content] pest/adult/oviposition[content])
+      .end = "scripts/month_breaks.R"
       .endCode = "scale_y_log10(limits = c(0.1, NA))" 
-		  }		  
+      }      
   
-		  PlotR {
-				.ports = (weather[Tavg])
+      PlotR {
+        .ports = (weather[Tavg])
         .end = "scripts/month_breaks.R"
-		  }
-		  PlotR {
-				.ports = (egg/time[isTicking])
+      }
+      PlotR {
+        .ports = (egg/time[isTicking])
         .end = "scripts/month_breaks.R"
-		  }
-		  PlotR {
-				.ports = (egg/time[step])
+      }
+      PlotR {
+        .ports = (egg/time[step])
         .end = "scripts/month_breaks.R"
-		  }
-		}
-	}
+      }
+    }
+  }
 }

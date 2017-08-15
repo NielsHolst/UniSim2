@@ -14,7 +14,7 @@ goto :end_fail
 set QT_BIN=%QT_ROOT%\bin
 set QT_PLUGINS=%QT_ROOT%\plugins
 
-echo = Clean target bin and  =
+echo = Clean target bin  =
 rd /Q /S %UNISIM_BIN%
 md %UNISIM_BIN%
 md %UNISIM_BIN%\plugins
@@ -27,6 +27,9 @@ copy mfc42u.dll %UNISIM_BIN%
 copy msvcrt.dll %UNISIM_BIN%
 copy oleaut32.dll %UNISIM_BIN%
 popd
+
+echo = Copy icon file =
+copy %UNISIM_SHIP%\..\builder-input\*.ico %UNISIM_BIN%
 
 echo = Copy exe and DLL files =
 copy %UNISIM_SHIP%\..\bin\unisim.exe %UNISIM_BIN%

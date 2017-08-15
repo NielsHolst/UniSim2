@@ -1,5 +1,5 @@
 Simulation sim {
-	.steps = 730
+  .steps = 730
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
@@ -44,11 +44,11 @@ Simulation sim {
     .yearlyEmergence = 0.2
     .emergenceByMonth = (0 5 30 60 70 50 10 0 0 0 0 0)
   }
-	
-	OutputR {
+  
+  OutputR {
     PageR {
       .xAxis = calendar[date]
-			.ncol = 2
+      .ncol = 2
       PlotR {
         .ports = (weather[T])
       }
@@ -59,10 +59,10 @@ Simulation sim {
         .ports = (seedBank[total])
       }
       PlotR {
-				.layout = "merged"
+        .layout = "merged"
         .ports = (seedBank[dailyEmergenceRatio] seedBank[dailyEmergenceRatioPotential])
       }
-		}
-	}
+    }
+  }
 }
 

@@ -20,6 +20,7 @@ public:
     // standard methods
     void amend();
     void reset();
+    void initialize();
     void update();
     void cleanup();
 
@@ -27,6 +28,7 @@ private:
     // inputs
     QString fileName, dateColumnName, timeColumnName;
     QDateTime calendarDateTime;
+    bool cycle;
 
     // outputs
     QDateTime currentDateTime, nextDateTime, firstDateTime, lastDateTime;
@@ -40,19 +42,21 @@ private:
     void readLineItems();
     void readColumnNames();
     void createColumnOutputs();
-    void readFromFirstToLastLine();
     void readToFirstLine();
     void advanceFirstLine();
     void advanceLine();
     void extractValues();
+    void extrapolateValues();
     void advanceTime();
+    QDateTime alignDateTime(QDateTime dt, int yearOffset) const;
 
     // data
-	QFile file;
-    QStringList lineItems, columnNames;
-    bool pastLastLine;
-    int dateColumn, timeColumn;
-    QVector<double> *currentColumnValues, *nextColumnValues;
+    QFile _file;
+    QStringList _lineItems, _columnNames;
+    bool _pastLastLine;
+    int _dateColumn, _timeColumn,
+        _yearOffset, _extraYearOffset;
+    QVector<double> *_currentColumnValues, *_nextColumnValues;
 };
 
 }

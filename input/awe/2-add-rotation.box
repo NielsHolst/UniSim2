@@ -1,5 +1,5 @@
 Simulation sim {
-	.steps = 1825
+  .steps = 1825
   Calendar calendar {
     .initialDateTime = 1/1/2010
   }
@@ -38,10 +38,10 @@ Simulation sim {
       }
     }
   }
-	OutputR {
+  OutputR {
     PageR {
       .xAxis = calendar[date]
-			.ncol = 2
+      .ncol = 2
       PlotR {
         .ports = (weather[T])
       }
@@ -58,7 +58,7 @@ Simulation sim {
         .hide = TRUE
         .ports = (field[currentCrop] field[currentCropIndex])
       }
-		}
-	}
+    }
+  }
 }
 

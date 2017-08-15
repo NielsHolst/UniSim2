@@ -17,7 +17,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(write)
-HELP(write, "writes", "writes box script")
+HELP(write, "write", "writes box script")
 
 write::write(QString name, QObject *parent)
     : Command(name, parent)

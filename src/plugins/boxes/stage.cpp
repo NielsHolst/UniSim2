@@ -23,6 +23,7 @@ PUBLISH(Stage)
 Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent), dd(0)
 {
+    Class(Stage);
     help("delays inflow to emerge as a time-distributed outflow");
     Input(timeStep).equals(1).help("Time step");
     Input(inflow).help("Amount of inflow");

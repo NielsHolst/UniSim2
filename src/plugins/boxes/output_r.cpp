@@ -25,35 +25,36 @@ OutputR::OutputR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("creates output and scripts for R");
-    sideEffects("writes an R script to the output folder\n"
-                "copies another R script to the clipboard");
+    sideEffects("writes an R script to the output folder\ncopies an R script to the clipboard");
     Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
     Input(end).equals("scripts/end.R").help("Name of R script run after auto-generated R script");
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
-    Input(keepPlots).equals(false).help("Keep previous plots in R?");
+    Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
-    Input(width).equals(14).help("Width of pop-up windows (only used if popUp is set)");
-    Input(height).equals(10).help("Height of pop-up windows (only used if popUp  is set)");
+    Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
+    Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
+    Output(numPages).help("Number of pages in this output");
 }
 
 void OutputR::amend() {
     // Create a page if none are present
     _pages = Path("./*<PageR>", this).resolveMany<PageR>();
     if (_pages.empty()) {
-        Box *page = MegaFactory::create<Box>("PageR", "", this);
+        Box *page = MegaFactory::create<>("PageR", "", this);
         page->amend();
     }
     // Create text output if not present
     if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
-        Box *textOutput = MegaFactory::create<Box>("OutputText", "", this);
+        Box *textOutput = MegaFactory::create<>("OutputText", "", this);
         textOutput->amend();
     }
 }
 
 void OutputR::initialize() {
     // Find pages in this output
-    _pages = Path("./*<PageR>", this).resolveMany<PageR>();
+    _pages = findMany<PageR>("./*<PageR>");
+    numPages = _pages.size();
 }
 
 QString OutputR::toString() {
@@ -65,8 +66,6 @@ QString OutputR::toString() {
 
 QString OutputR::toScript() {
     QString s;
-    if (popUp && !environment().isMac())
-        s += popUpCode();
     for (PageR *page : _pages)
         s += page->toScript();
     s += "plot_all <- function(df) {\n";
@@ -78,16 +77,6 @@ QString OutputR::toScript() {
     }
     s += "}\n";
     return s;
-}
-
-QString OutputR::popUpCode() {
-    return  "open_graph = function(width=7, height=7, ...) {\n"
-              "if (.Platform$OS.type != \"windows\") {\n"
-                "X11(width=width, height=height, type=\"cairo\", ...)\n"
-              "} else {\n"
-                "windows(width=width, height=height, ...)\n"
-              "}\n"
-            "}\n";
 }
 
 //
@@ -118,7 +107,7 @@ void OutputR::openFile() {
 
 void OutputR::copyToClipboard() {
     QString s;
-    s += "keepPlots = " + convert<QString>(keepPlots) + "; ";
+    s += "keepPages = " + convert<QString>(keepPages) + "; ";
     s += "keepVariables = " + convert<QString>(keepVariables) + "\n";
     s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
     s += "source(\""+_filePathR+"\")\n";

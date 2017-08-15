@@ -8,3 +8,4 @@ for /f %%i in ('dir /S /B ..\build-*-Desktop*') do rmdir /S /Q "%%i"
 rmdir /S /Q output
 rmdir /S /Q bin
 rmdir /S /Q ship\bin
+rmdir /S /Q ship\cmd\ig\bin

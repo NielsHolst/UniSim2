@@ -1,0 +1,24 @@
+Simulation sim {
+  .steps = 370
+  Calendar calendar {
+    .initialDateTime = 1/1/2001
+  }
+  Records weather {
+    .fileName = "../weather/flakkebjerg 2005.txt"
+    .cycle = TRUE
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+        PlotR {
+        .ports = (weather[Tmin] weather[Tmax])
+        .ggplot = "scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b'))"
+      }
+        PlotR {
+          .hide = TRUE
+          .ports = calendar[dateTime]
+        }
+    }
+  }
+}
+

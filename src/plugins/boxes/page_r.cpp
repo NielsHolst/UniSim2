@@ -23,7 +23,7 @@ PageR::PageR(QString name, QObject *parent)
     Input(xAxis).equals("/*[step]").notReferenced();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
-    Input(title);
+    Input(title).help("Title shown on page");
     Input(width).imports("ancestors::*<OutputR>[width]");
     Input(height).imports("ancestors::*<OutputR>[height]");
 }
@@ -43,11 +43,17 @@ void PageR::amend() {
 
 void PageR::initialize() {
     // See if pop-up is in effect
-    Port *popUpPort = findOne<Port>("ancestors::*<OutputR>[popUp]");
-    _popUp = popUpPort->value<bool>();
+    Box *outputR = findOne<Box>("ancestors::*<OutputR>)");
+    _popUp = outputR->port("popUp")->value<bool>();
+    int numPages = outputR->findMany<Box>("./*<PageR>").size();
+    bool keepPages = outputR->port("keepPages")->value<bool>();
+
+    // Raise pop-up anyway?
+    if (!_popUp)
+        _popUp = !environment().isMac() && (numPages>1 || keepPages);
 
     // Find plots on this page
-    _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
+    _plots = findMany<PlotR>("./*<PlotR>");
 }
 
 void PageR::reset() {
@@ -71,8 +77,8 @@ QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
     s << functionName() << " <- function(df, ...) {\n";
-    if (_popUp && !environment().isMac()) {
-      s << "  open_graph("
+    if (_popUp) {
+      s << "  open_plot_window("
         << port("width")->value<int>()
         << ", "
         << port("height")->value<int>()
