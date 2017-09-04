@@ -63,10 +63,10 @@ cmbp.subdir = src/plugins/cmbp
 cmbp.depends = base
 unisim.depends = cmbp
 
-#SUBDIRS += conductance
-#conductance.subdir = src/plugins/conductance
-#conductance.depends = base
-#unisim.depends = conductance
+SUBDIRS += conductance
+conductance.subdir = src/plugins/conductance
+conductance.depends = base
+unisim.depends = conductance
 
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed
@@ -78,25 +78,25 @@ unisim.depends = cmbp
 #PestTox.depends = base
 #unisim.depends = PestTox
 
-#SUBDIRS += pinacate
-#pinacate.subdir = src/plugins/pinacate
-#pinacate.depends = base
-#unisim.depends = pinacate
+SUBDIRS += pinacate
+pinacate.subdir = src/plugins/pinacate
+pinacate.depends = base
+unisim.depends = pinacate
 
-#SUBDIRS += pollnet
-#pollnet.subdir = src/plugins/pollnet
-#pollnet.depends = base
-#unisim.depends = pollnet
+SUBDIRS += pollnet
+pollnet.subdir = src/plugins/pollnet
+pollnet.depends = base
+unisim.depends = pollnet
 
 #SUBDIRS += student
 #student.subdir = src/plugins/student
 #student.depends = base
 #unisim.depends = student
 
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
-#unisim.depends = vg
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg
 
 
 

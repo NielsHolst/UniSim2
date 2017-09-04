@@ -14,11 +14,16 @@
     <file>data/input/book/butterfly3a.box</file>
     <file>data/input/book/butterfly3b.box</file>
     <file>data/input/book/butterfly4.box</file>
+    <file>data/input/book/dist-delay-scenarios.txt</file>
+    <file>data/input/book/dist-delay1.box</file>
+    <file>data/input/book/dist-delay2.box</file>
     <file>data/input/book/egg1.box</file>
     <file>data/input/book/egg2.box</file>
     <file>data/input/book/egg3.box</file>
     <file>data/input/book/egg4.box</file>
     <file>data/input/book/egg5.box</file>
+    <file>data/input/book/end-dist-delay1.R</file>
+    <file>data/input/book/end-dist-delay2.R</file>
     <file>data/input/book/honeybee1.box</file>
     <file>data/input/book/honeybee2.box</file>
     <file>data/input/book/insect.box</file>
@@ -62,9 +67,12 @@
     <file>data/input/papers/2012-photosynthesis-pending/reference.txt</file>
     <file>data/input/papers/2013-Inachis-pending/reference.txt</file>
     <file>data/input/papers/2014-Rift-Valley-fever-pending/reference.txt</file>
+    <file>data/input/projects/conductance/cabbage-nightshade.box</file>
+    <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
+    <file>data/input/teaching/cabbage-nightshade.box</file>
   </qresource>
 </RCC>

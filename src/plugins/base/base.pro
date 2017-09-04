@@ -55,6 +55,7 @@ HEADERS +=  \
     interpolate.h \
     matrix.h \
     mega_factory.h \
+    minimise.h \
     object_pool.h \
     organisation.h \
     path.h \

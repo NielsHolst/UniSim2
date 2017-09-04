@@ -11,6 +11,7 @@
 
 namespace base {
 
+class Box;
 class Port;
 
 class Track : public QObject

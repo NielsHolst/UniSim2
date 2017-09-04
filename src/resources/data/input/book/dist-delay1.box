@@ -1,0 +1,25 @@
+// dist-delay1.box
+Simulation sim {
+	.steps = 500
+	Scenarios scenarios {
+		.fileName = "dist-delay-scenarios-25.txt"
+	}
+	Stage delay {
+		.initial = 1
+		.duration = 100
+		.k = scenarios[k]
+	}
+  OutputR {
+		.end = "end-dist-delay1.R"
+    PageR {
+      PlotR {
+				.layout = "merged"
+        .ports = delay[outflow]
+      }
+    }
+		OutputText {
+			.ports = delay[k]
+		}
+  }
+}
+

@@ -3,7 +3,7 @@
 
 namespace conductance {
 
-enum Phase {Unlimited, UnderCompression, Proportional};
+enum Phase {Unlimited, UnderCompression, WeightProportional};
 
 } //namespace
 #endif

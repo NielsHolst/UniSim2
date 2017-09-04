@@ -406,7 +406,7 @@ QStringList Port::warnings() const {
 void Port::toText(QTextStream &text, int indentation) const {
     QString fill;
     fill.fill(' ', indentation);
-    QString prefix = (access() == PortAccess::Input) ? "." : "//>";
+    QString prefix = (access() == PortAccess::Input) ? "." : "//~";
 //    if (access() == PortAccess::Input) {
 //        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
 //    }

@@ -29,7 +29,7 @@ copy oleaut32.dll %UNISIM_BIN%
 popd
 
 echo = Copy icon file =
-copy %UNISIM_SHIP%\..\builder-input\*.ico %UNISIM_BIN%
+copy %UNISIM_SHIP%\builder-input\*.ico %UNISIM_BIN%
 
 echo = Copy exe and DLL files =
 copy %UNISIM_SHIP%\..\bin\unisim.exe %UNISIM_BIN%

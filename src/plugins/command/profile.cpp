@@ -28,6 +28,7 @@ void profile::doExecute() {
         QFile file;
         environment().openOutputFile(file, ".txt");
         file.write(qPrintable(root->profileReport()));
+        dialog().information("Profile information written to '" + environment().latestOutputFilePath("txt") + "'");
         file.close();
         environment().incrementFileCounter();
     }

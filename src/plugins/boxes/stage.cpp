@@ -47,6 +47,7 @@ void Stage::reset() {
     inflowPending = latestInflow = outflow = 0.;
     content = initial;
     firstUpdate = true;
+    update();   // Otherwise, outflow will be one simulation step late
 }
 
 void Stage::update() {

@@ -33,6 +33,7 @@ HEADERS +=  \
     test_history.h \
     test_maker.h \
     test_matrix.h \
+    test_minimise.h \
     test_new_port.h \
     test_output_buffer.h \
     test_output_text.h \
@@ -77,6 +78,7 @@ SOURCES +=  \
     test_history.cpp \
     test_maker.cpp \
     test_matrix.cpp \
+    test_minimise.cpp \
     test_new_port.cpp \
     test_output_buffer.cpp \
     test_output_text.cpp \

@@ -1,0 +1,31 @@
+// dist-delay1.box
+Simulation sim {
+	.iterations = 50
+	.steps = 1000
+	.silent = TRUE
+	Sequence k {
+		.min = 1
+		.max = 50
+		.by = "reset"
+	}
+	Stage delay {
+		.initial = 1
+		.duration = 200
+		.k = k[value]
+	}
+  OutputR {
+		.keepPages = TRUE
+		.keepVariables = TRUE
+		.end = "end-dist-delay2.R"
+    PageR {
+      PlotR {
+				.layout = "merged"
+        .ports = delay[outflow]
+      }
+    }
+		OutputText {
+			.ports = delay[k]
+		}
+  }
+}
+

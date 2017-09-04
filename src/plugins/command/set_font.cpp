@@ -42,7 +42,7 @@ void set_font::doExecute() {
 
     switch(a.size()) {
     case 2:
-        showFont();
+        showFontUnchanged();
         break;
     case 3:
         pt = a[2].toInt(&ok);
@@ -62,6 +62,14 @@ void set_font::doExecute() {
         QString s{"Too many arguments (%1): %2"};
         ThrowException(s.arg(a.size()).arg(a.join(" "))).hint(hint);
     }
+}
+
+void set_font::showFontUnchanged() {
+    QString s0{"Font set to %1 %2pt"};
+    QString s = s0
+                .arg(currentFamily())
+                .arg(currentPointSize());
+    dialog().information(s);
 }
 
 void set_font::showFont() {

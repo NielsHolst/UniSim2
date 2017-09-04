@@ -6,13 +6,22 @@
 - Note that the batch file will switch UniSim2.pro to release mode before building and then restore it to debug mode at the end.
 - Note that C:\data\QDev\UniSim2\input will be copied to C:\data\QDev\UniSim2\src\resources\data\input. Subsquently, the resource file in C:\data\QDev\UniSim2\src\resources\application.qrc will be updated accordingly.
 
-2.Execute batch file.
+2. Check that the input folder contains the correct files in
+- book
+- papers
+- projects
+- scripts
+- teaching
 
-(3). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
+3. Check that UniSim2.pro contains the intended plug-ins.
 
-(4). Update ecolmod.org/download.html.
+4.Execute batch file.
 
-5. In Bash:
+(5). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
+
+(6). Update ecolmod.org/download.html.
+
+7. In Bash:
 > git tag 2.1.n
 > git push origin master --tags
 - Note this pushes both source code changes and tags

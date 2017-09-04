@@ -17,6 +17,7 @@ private:
     QString currentFamily();
     int currentPointSize();
     void showFont();
+    void showFontUnchanged();
     void setFont(int pt);
     void setFont(QString family);
     void setFont(QString family, int pt);

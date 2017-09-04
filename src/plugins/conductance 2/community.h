@@ -16,28 +16,22 @@ public:
 	void reset();
 	void update();
 
-    QVector<Plant*> plants;
-
 private:
     // methods
-    double sumZoneArea();
-    void phaseUnlimitedChanged();
+    void adjustTimeStep();
+    bool phaseChanged();
+    void updateTotalCrownZoneArea();
+    bool phaseUnlimitedChanged();
     void sortPlants();
     bool phaseUnderCompressionChanged();
-    void updatePlants(double timeStep);
-    void undoUpdatePlants();
+    void reUpdatePlants();
 
     // state
     Phase phase;
-    double _nextTimeStep;
-
-    // inputs
-    QVector<double> n, LA;
-
-    // outputs
-    double time, ZoneAreaTotal;
+    double ZoneAreaTotal;
 
     // links
+    QVector<Plant*> plants;
     Plant *smaller, *larger;
 
 };

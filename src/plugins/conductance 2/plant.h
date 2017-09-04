@@ -12,23 +12,22 @@ public:
     Plant(QString name, QObject *parent);
     void initialize();
     void reset();
+    void update();
 
-    void controlledUpdate(double timeStep);
-    void undoUpdate();
+    // special methods
     void changePhase(Phase newPhase);
-    void updateByRelativeLA(double relLA);
 
 private:
     // methods
     void updateCrownZoneArea();
     void updateLightInterception();
-    void updateWeight(double timeStep);
+    void updateWeight();
 
     // inputs
-    double initWeight, A, phi, F, theta, k, eps, n, irradiation;
+    double initWeight, A, phi, F, theta, k, eps, n, irradiation, timeStepDays;
 
     // outputs
-    double WeightPlant, WeightIncrement, WeightTotal, ZoneAreaPlant, ZoneAreaTotal, LAI, fz, LAPlant;
+    double ZoneAreaDemandTotal, WeightPlant, WeightIncrement, WeightTotal, ZoneAreaPlant, ZoneAreaTotal, LAIInZone, fz, LAPlant, LAITotal;
     int phase;
 
     // data
