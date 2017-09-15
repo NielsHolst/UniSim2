@@ -69,10 +69,24 @@
     <file>data/input/papers/2014-Rift-Valley-fever-pending/reference.txt</file>
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
+    <file>data/input/projects/resist/resist-1.box</file>
+    <file>data/input/projects/resist/resist-2.box</file>
+    <file>data/input/projects/resist/resist-3.box</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
+    <file>data/input/teaching/amanda.box</file>
     <file>data/input/teaching/cabbage-nightshade.box</file>
+    <file>data/input/teaching/NesidiocorisTenuis.box</file>
+    <file>data/input/teaching/RabiesContact.box</file>
+    <file>data/input/teaching/Tehran 2010 (0).txt</file>
+    <file>data/input/teaching/Tehran 2010.txt</file>
+    <file>data/input/teaching/weather/alpine 2016.txt</file>
+    <file>data/input/teaching/weather/braunschweig 2009.txt</file>
+    <file>data/input/teaching/weather/flakkebjerg 2005.txt</file>
+    <file>data/input/teaching/weather/flakkebjerg 2009.txt</file>
+    <file>data/input/teaching/weather/geneva 2009.txt</file>
+    <file>data/input/teaching/weather/ljubljana 2009.txt</file>
   </qresource>
 </RCC>

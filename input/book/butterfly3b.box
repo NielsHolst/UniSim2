@@ -1,4 +1,4 @@
-// butterfly3a.box
+// butterfly3b.box
 Simulation sim {
   .steps = 365
   Calendar calendar {
@@ -10,7 +10,7 @@ Simulation sim {
   Box butterfly {
     Stage egg {
       .initial = 100 
-      .inflow = ../adult/adult/oviposition[outflow]  
+      .inflow = ../adult/oviposition[outflow]  
       .duration = 140
       .timeStep = ./time[value] 
       OnOff time { 

@@ -2,11 +2,15 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=1
-set SUB=6
+set SUB=7
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
 echo = Set path to Qt build environment =
+
+set QTENV="C:\Qt\5.9.1\mingw53_32\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
+
 set QTENV="C:\Qt\5.7\mingw53_32\bin\qtenv2.bat"
 if exist %QTENV% goto :ok_qt
 

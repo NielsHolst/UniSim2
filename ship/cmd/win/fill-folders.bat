@@ -1,16 +1,18 @@
 set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
+set QTENV="C:\Qt\5.9.1\mingw53_32\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
 set QT_ROOT=C:\Qt\5.7\mingw53_32
-if exist %QT_ROOT% goto :qt_root_ok
+if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\5.4\mingw491_32
-if exist %QT_ROOT% goto :qt_root_ok
+if exist %QT_ROOT% goto :ok_qt
 echo .
 echo Could not find %QT_ROOT%
 echo .
 goto :end_fail
 
-:qt_root_ok
+:ok_qt
 set QT_BIN=%QT_ROOT%\bin
 set QT_PLUGINS=%QT_ROOT%\plugins
 

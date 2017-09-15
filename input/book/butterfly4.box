@@ -11,7 +11,7 @@ Simulation sim {
   Box butterfly {
     Stage egg {
       .initial = 100 
-      .inflow = ../adult/adult/oviposition[outflow] 
+      .inflow = ../adult/oviposition[outflow] 
       .duration = 140
       .timeStep = ./time[value]
       OnOff time { 

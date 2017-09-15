@@ -1,0 +1,58 @@
+// NesidiocorisTenuis.box
+Simulation sim {
+  .steps = 180
+  Calendar calendar {
+    .initialDateTime = 1/5/2010
+  }
+  Records weather {
+    .fileName = "Tehran 2010 (0).txt"
+  }
+  Box NesidiocorisTenuis {
+    Stage egg {
+      .initial = 100 
+      .duration = 140.7
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 9.8
+        .T = weather[Tavg]
+      }
+    }
+    Stage nymph {
+      .inflow = ../egg[outflow]
+      .duration = 175
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 11.7
+        .T = weather[Tavg]
+      }
+    }
+      Stage adult {
+      .inflow = ../nymph[outflow]
+      .duration = 35
+      .timeStep = 1
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      PlotR {
+        .ports = *[content]
+        .ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('months'), 
+                      labels = date_format('%b')
+                    )" 
+      }
+      PlotR {
+        .ports = *[outflowTotal]
+        .ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('months'), 
+                      labels = date_format('%b')
+                    )" 
+      }
+    }
+  }
+}
+

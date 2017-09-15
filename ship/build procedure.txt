@@ -13,7 +13,7 @@
 - scripts
 - teaching
 
-3. Check that UniSim2.pro contains the intended plug-ins.
+3. Check that UniSim2.pro contains the intended plug-ins (student and vg always included).
 
 4.Execute batch file.
 

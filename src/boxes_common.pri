@@ -43,7 +43,7 @@ QMAKE_CXXFLAGS += -ffast-math
 # Additional folders with header files
 BOOST_PATH = $$(BOOST_ROOT)
 isEmpty(BOOST_PATH) {
-    BOOST_PATH = $$_PRO_FILE_PWD_/../../../../boost_library
+    BOOST_PATH = $$_PRO_FILE_PWD_/../../../../boost
 }
 INCLUDEPATH += $${BOOST_PATH}
 
