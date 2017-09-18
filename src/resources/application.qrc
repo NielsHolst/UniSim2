@@ -27,6 +27,13 @@
     <file>data/input/book/honeybee1.box</file>
     <file>data/input/book/honeybee2.box</file>
     <file>data/input/book/insect.box</file>
+    <file>data/input/book/photo-thermal1.box</file>
+    <file>data/input/book/photo-thermal2.box</file>
+    <file>data/input/book/photo-thermal3.box</file>
+    <file>data/input/book/photo-thermal4.box</file>
+    <file>data/input/book/photo-thermal5.box</file>
+    <file>data/input/book/photo-thermal6.box</file>
+    <file>data/input/book/photo-thermal7.box</file>
     <file>data/input/book/scenarios/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/scenarios/end-analysis.R</file>
     <file>data/input/book/scenarios/end-locations.R</file>
@@ -43,6 +50,7 @@
     <file>data/input/book/sensitivity4.box</file>
     <file>data/input/book/sensitivity5.box</file>
     <file>data/input/book/sensitivity5.R</file>
+    <file>data/input/book/student-weather.box</file>
     <file>data/input/book/syntax-error.box</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2005.txt</file>

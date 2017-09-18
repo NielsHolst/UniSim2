@@ -1,0 +1,13 @@
+// book/photo-thermal1.box
+Simulation sim {
+  .steps = 10
+  DayLengthScale light {
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = light[value]
+      }
+    }
+  }
+}

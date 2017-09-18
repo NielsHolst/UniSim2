@@ -1,0 +1,19 @@
+// book/photo-thermal2.box
+Simulation sim {
+  .steps = 24
+  Sequence dayLength {
+    .min = 0
+    .max = 24
+  }
+  DayLengthScale light {
+    .dayLength = dayLength[value]
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = light[value]
+        .ggplot = "geom_line() + geom_point()"
+      }
+    }
+  }
+}

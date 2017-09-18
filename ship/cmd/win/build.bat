@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=1
-set SUB=7
+set SUB=8
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
