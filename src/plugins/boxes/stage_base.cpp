@@ -17,7 +17,7 @@ using namespace base;
 namespace boxes {
 
 StageBase::StageBase(QString name, QObject *parent)
-    : Box(name, parent), ddBase(0)
+    : Box(name, parent), _ddBase(0)
 {
     Input(k).equals(30).help("Distribution parameter; use small k for larger dispersion in output");
     Input(duration).equals(100).help("Average delay between inflow and outflow");
@@ -36,7 +36,7 @@ StageBase::StageBase(QString name, QObject *parent)
 }
 
 StageBase::~StageBase() {
-    delete ddBase;
+    delete _ddBase;
 }
 
 void StageBase::reset()
@@ -45,8 +45,8 @@ void StageBase::reset()
         ThrowException("k must be > 0").value(k).context(this);
     if (duration <= 0)
         ThrowException("Duration must be > 0").value(duration).context(this);
-    ddBase = createDistributedDelay();
-    ddBase->scale(0);
+    delete _ddBase;
+    createDistributedDelay();
     content = inflowTotal = outflowTotal = phaseInflowTotal = phaseOutflowTotal = growth = 0.;
     phaseOutflow.resize(k);
 }
@@ -57,13 +57,12 @@ void StageBase::applyInstantMortality() {
     TestNum::snapTo(survival, 1.);
     if (survival < 0 || survival > 1.)
        ThrowException("Survival must be in the range [0;1]").value(survival).context(this);
-    ddBase->scale(survival);
-    instantLossRate = 0;
+    _ddBase->scale(survival);
 }
 
 
 const double* StageBase::data() {
-    return ddBase->data();
+    return _ddBase->data();
 }
 
 } // namespace

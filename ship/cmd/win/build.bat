@@ -2,7 +2,7 @@ echo on
 rem Set up version
 set MAJOR=2
 set MINOR=1
-set SUB=8
+set SUB=9
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
@@ -31,7 +31,7 @@ if exist %INSTALL_BUILDER_PATH% goto :ok_builder
 echo .
 echo Could not find %INSTALL_BUILDER_PATH%
 echo .
-goto :end_fail
+REM goto :end_fail until InstallBuilder is installed!!!!
 :ok_builder
 
 rem Call Qt batch file 

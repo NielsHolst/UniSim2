@@ -1,0 +1,165 @@
+Simulation seir {
+  .steps = 365
+  Calendar calendar {
+  }
+  Records weather {
+    .fileName = "book/weather/flakkebjerg 2005.txt"
+    .cycle = TRUE
+  }
+  Box host {
+    +adultDuration = 730
+    Box S {
+      Stage juvenile {
+        .initial = 80
+        // .inflow = ../adult/offspring[outflow]
+        .duration = 365
+      }
+      Stage adult {
+        .initial = 50
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseOutflowProportion = 0.01
+        Stage offspring {
+          .inflow = ../../juvenile[outflow]
+          .duration = host[adultDuration]
+          .growthFactor = 2.5
+        }
+      }
+    }
+    Box E {
+      StageAndPhase adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/S/adult[phaseOutflow]
+        .phaseDuration = 10
+      }
+    }
+    Box I {
+      StageAndPhase adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/E/adult[phaseOutflow]
+        .phaseDuration = 20
+      }
+    }
+    Box R {
+      Stage adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/I/adult[phaseOutflow]
+      }
+    }
+  }
+  Box vector {
+    +eggDuration = 50
+    +larvaDuration = 250
+    +pupaDuration = 80
+    +adultDuration = 100
+    +fecundity = 5
+    DayDegrees time {
+      .T0 = 8
+    }
+    Box S {
+      Stage egg {
+        .initial = 100
+        // .inflow|sum = vector/S/adult/fecundity[outflow] | 
+                       // vector/E/adult/fecundity[outflowScalar]
+        .duration = vector[eggDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = vector[larvaDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = vector[pupaDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .duration = vector[adultDuration]
+        .timeStep = vector/time[step]
+        .phaseOutflowProportion = 0.04
+        Stage fecundity {
+          .inflow = ../../pupa[outflow]
+          .duration = vector[adultDuration]
+          .timeStep = vector/time[step]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+    Box E {
+      StageAndPhase adult {
+        .phaseInflow = vector/S/adult[phaseOutflow]
+        .phaseDuration = 20
+        .duration = vector[adultDuration]
+        .timeStep = vector/time[step]
+        .phaseTimeStep = vector/time[step]
+      StageAndPhase fecundity {
+          .phaseInflow = vector/S/adult/fecundity[phaseOutflow]
+          .duration = vector[adultDuration]
+          .timeStep = vector/time[step]
+          .phaseTimeStep = vector/time[step]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+    Box I {
+      Stage egg {
+        // .inflow = ../adult/fecundity[outflow]
+        .duration = vector[eggDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = vector[larvaDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = vector[pupaDuration]
+        .timeStep = vector/time[step]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .phaseInflow = vector/E/adult[phaseOutflow]
+        .duration = vector[adultDuration]
+        .timeStep = vector/time[step]
+        Stage fecundity {
+          .inflow = ../../pupa[outflow]
+          .phaseInflow = vector/E/adult/fecundity[phaseInflow]
+          .duration = vector[adultDuration]
+          .timeStep = vector/time[step]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .ncol = 2
+      PlotR {
+        .ports = host/descendants::adult[content]
+      }
+      PlotR {
+        .ports = vector/descendants::adult[content]
+        .ggplot = "geom_line(size=1.1) + ylim(0,NA)"
+        .transform = "log10"
+      }
+    }
+    PageR {
+      .title = "Check flows"
+      PlotR {
+        .ports = ./flows[*]
+        Box flows {
+          +a = vector/S/egg[inflowTotal]
+          +b = vector/S/adult[outflowTotal]
+          +c = vector/S/adult[phaseOutflowTotal]
+          +d = vector/E/adult[outflowTotal]
+          +e = vector/E/adult[phaseOutflowTotal]
+          +f = vector/I/adult[outflowTotal]
+          +g = vector/I/adult[phaseOutflowTotal]
+        }
+      }
+    }
+  }
+}

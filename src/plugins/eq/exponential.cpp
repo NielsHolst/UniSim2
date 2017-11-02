@@ -35,5 +35,4 @@ double Exponential::fdy(double y) {
 void Exponential::update() {
     std::transform(y.constBegin(), y.constEnd(), dy.begin(), [this](const double &y){return this->fdy(y);});
 }
-// line break in ports: ( \n  )
 }

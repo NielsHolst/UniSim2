@@ -19,7 +19,9 @@ RandomBinomial::~RandomBinomial() {
     delete variate;
 }
 
-void RandomBinomial::doInitialize() {
+void RandomBinomial::createGenerator() {
+    delete distribution;
+    delete variate;
     distribution = new Distribution(0, 1);
     variate = new Variate(*randomGenerator(), *distribution);
 }

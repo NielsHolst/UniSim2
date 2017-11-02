@@ -15,7 +15,6 @@ private:
     double immigration;
     int step;
     QVector<double> genotypeFrequency, reproduction, survival;
-    double survivalSS, survivalSR, survivalRR;
     // Outputs
     double value;
     // Data

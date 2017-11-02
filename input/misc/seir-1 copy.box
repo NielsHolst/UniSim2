@@ -1,0 +1,114 @@
+Simulation seir {
+  .steps = 365
+  Calendar calendar {
+  }
+  Records weather {
+    .fileName = "flakkebjerg.txt"
+  }
+  Box host {
+    +adultDuration = 730
+    Box S {
+      Stage juvenile {
+        .initial = 80
+        .inflow = ../offspring[outflow]
+        .duration = 365
+      }
+      Stage adult {
+        .initial = 50
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseOutflowProportion = 0.01
+      }
+      Stage offspring {
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .growthFactor = 2.5
+      }
+    }
+    Box E {
+      StageAndPhase adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/S/adult[phaseOutflow]
+        .phaseDuration = 10
+      }
+    }
+    Box I {
+      StageAndPhase adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/E/adult[phaseOutflow]
+        .phaseDuration = 20
+      }
+    }
+    Box R {
+      StageAndPhase adult {
+        .duration = host[adultDuration]
+        .phaseInflow = host/I/adult[phaseOutflow]
+        .phaseDuration = 20 // original used default value
+      }
+    }
+  }
+  Box vector {
+    +eggDuration = 50
+    +larvaDuration = 250
+    +pupaDuration = 80
+    +adultDuration = 100
+    +fecundity = 50
+    Box S {
+      Stage egg {
+        .initial = 100
+        .inflow|sum = vector/*/adult/fecundity[outflow]
+        .duration = vector[eggDuration]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = vector[larvaDuration]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = vector[pupaDuration]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .duration = vector[adultDuration]
+        Stage fecundity {
+          .inflow = ../pupa[outflow]
+          .duration = vector[adultDuration]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+    Box E {
+        StageAndPhase adult {
+          .duration = vector[adultDuration]
+          .phaseInflow = vector/S/adult[phaseOutflow]
+          .phaseDuration = 20
+          Stage fecundity {
+            .inflow = vector/S/adult/fecundity[phaseOutflow]
+            .duration = vector[adultDuration]
+            .growthFactor = vector[fecundity]
+        }
+    }
+    Box I {
+      Stage egg {
+        .duration = vector[eggDuration]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = vector[larvaDuration]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = vector[pupaDuration]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .duration = vector[adultDuration]
+        Stage fecundity {
+          .inflow = ../pupa[outflow]
+          .duration = vector[adultDuration]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+  }
+}

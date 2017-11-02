@@ -10,7 +10,7 @@ PUBLISH(Immigration)
 Immigration::Immigration(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(q).help("Frequency of resistance allele");
+    Input(q).help("Frequency of resistance allele [0;1]");
     Input(proportion).help("Proportion of carrying capacity [0;1]");
     Input(K).help("Carrying capacity");
     Output(ss).help("Number of SS immigrants");
@@ -19,6 +19,10 @@ Immigration::Immigration(QString name, QObject *parent)
 }
 
 void Immigration::reset() {
+    if (q<0 || q>1)
+        Exception("'q' must be inside [0;1]").value(q).context(this);
+    if (proportion<0 || proportion>1)
+        Exception("'proportion' must be inside [0;1]").value(proportion).context(this);
     update();
 }
 

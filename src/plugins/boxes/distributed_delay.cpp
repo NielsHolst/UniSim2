@@ -35,38 +35,46 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
     // To compute net change
     double totalBefore = xSum + inflow;
 
-    // Set del and attrition according to Vansickle
-    double  del = p.L*pow(fgr, -1./p.k),
-            atr = p.k*(1./p.L - 1./del);		// atr <= 0 always
-
-    // Calculate attrition factor
-    double b = 1. + atr*del/p.k;
-
-    // Divide time step to increase precision
-    int idt = (int) floor(1.5 + 2.*b*dt*p.k/del);
-    if (idt < p.minIter) idt = p.minIter;
-
-    // Correct inflow for divided time step
-    double dividedInflow = inflow/idt;
-
-    // Calculate flow coefficient
-    double a = p.k/del*dt/idt;
-    if (!(0.<a && a<=1.)) {
-        QString msg = "Illegal value for flow coefficient in DistributedDelay (a==%1). "
-                "Should be within ]0;1]. Other parameters: k=%2, del=%3, dt=%4, idt=%5, fgr=%6, L=%7";
-        ThrowException(msg.arg(a).arg(p.k).arg(del).arg(dt).arg(idt).arg(fgr).arg(p.L));
-    }
-
-    // Integrate
+    // To collect outflow
     s.outflowRate = 0;
-    for (int j = 0; j < idt; j++){
-        // Collect outflow
-        s.outflowRate += a*x.at(p.k-1);
-        // Step backwards through age classes
-        for (int i = p.k-1; i > 0; i--)
-            x[i] += a*(x.at(i-1) - b*x.at(i));
-        // Finish with first age class; enter inflow into that
-        x[0] += dividedInflow - a*b*x.at(0);
+
+    // When time is stopped just add the inflow
+    if (dt==0.) {
+        x[0] += inflow;
+    }
+    else {
+        // Set del and attrition according to Vansickle
+        double  del = p.L*pow(fgr, -1./p.k),
+                atr = p.k*(1./p.L - 1./del);		// atr <= 0 always
+
+        // Calculate attrition factor
+        double b = 1. + atr*del/p.k;
+
+        // Divide time step to increase precision
+        int idt = (int) floor(1.5 + 2.*b*dt*p.k/del);
+        if (idt < p.minIter) idt = p.minIter;
+
+        // Correct inflow for divided time step
+        double dividedInflow = inflow/idt;
+
+        // Calculate flow coefficient
+        double a = p.k/del*dt/idt;
+        if (!(0.<a && a<=1.)) {
+            QString msg = "Illegal value for flow coefficient in DistributedDelay (a==%1). "
+                    "Should be within ]0;1]. Other parameters: k=%2, del=%3, dt=%4, idt=%5, fgr=%6, L=%7";
+            ThrowException(msg.arg(a).arg(p.k).arg(del).arg(dt).arg(idt).arg(fgr).arg(p.L));
+        }
+
+        // Integrate
+        for (int j = 0; j < idt; j++){
+            // Collect outflow
+            s.outflowRate += a*x.at(p.k-1);
+            // Step backwards through age classes
+            for (int i = p.k-1; i > 0; i--)
+                x[i] += a*(x.at(i-1) - b*x.at(i));
+            // Finish with first age class; enter inflow into that
+            x[0] += dividedInflow - a*b*x.at(0);
+        }
     }
     xSum = accum(x);
     s.growthRate = xSum + s.outflowRate - totalBefore;

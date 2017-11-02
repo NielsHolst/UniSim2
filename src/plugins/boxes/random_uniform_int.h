@@ -12,7 +12,7 @@ class RandomUniformInt : public RandomBase<int>
 public: 
     RandomUniformInt(QString name, QObject *parent=0);
     ~RandomUniformInt();
-    void doInitialize();
+    void createGenerator();
 private:
     // Methods
     int drawValue();

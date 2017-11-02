@@ -12,7 +12,7 @@ class RandomUniform : public RandomBase<double>
 public: 
     RandomUniform(QString name, QObject *parent=0);
     ~RandomUniform();
-    void doInitialize();
+    void createGenerator();
 private:
     // Methods
     double drawValue();

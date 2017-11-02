@@ -12,7 +12,7 @@ class RandomBinomial : public RandomBase<bool>
 public: 
     RandomBinomial(QString name, QObject *parent=0);
     ~RandomBinomial();
-    void doInitialize();
+    void createGenerator();
 private:
     // Inputs
     double P;

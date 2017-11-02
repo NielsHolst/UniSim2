@@ -40,6 +40,10 @@ win32:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math
 
+# Compiler flags for gcc / gdb version incompatibility
+# https://stackoverflow.com/questions/16611678/how-to-make-the-locals-and-expressions-debugging-window-operational-with-gcc-4
+QMAKE_CXXFLAGS += -gdwarf-3
+
 # Additional folders with header files
 BOOST_PATH = $$(BOOST_ROOT)
 isEmpty(BOOST_PATH) {

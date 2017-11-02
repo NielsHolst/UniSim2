@@ -14,6 +14,7 @@
 #include "distributed_delay.h"
 #include "stage.h"
 
+//#include <QMessageBox>
 using namespace base;
 
 namespace boxes {
@@ -21,7 +22,7 @@ namespace boxes {
 PUBLISH(Stage)
 
 Stage::Stage(QString name, QObject *parent)
-    : StageBase(name, parent), dd(0)
+    : StageBase(name, parent)
 {
     Class(Stage);
     help("delays inflow to emerge as a time-distributed outflow");
@@ -33,13 +34,12 @@ Stage::Stage(QString name, QObject *parent)
     Output(outflow).help("Outflow emerging from the stage");
 }
 
-DistributedDelayBase* Stage::createDistributedDelay() {
+void Stage::createDistributedDelay() {
     DistributedDelay::Parameters p;
     p.L = duration;
     p.k = k;
     p.minIter = 1;
-    delete dd;
-    return dd = new DistributedDelay(p, this);
+    _ddBase = _dd = new DistributedDelay(p, this);
 }
 
 void Stage::reset() {
@@ -51,7 +51,9 @@ void Stage::reset() {
 }
 
 void Stage::update() {
+//    QMessageBox::information(0, "A Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
     applyInstantMortality();
+//    QMessageBox::information(0, "B Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
 
     latestInflow = 0.;
     if (firstUpdate) {
@@ -75,11 +77,11 @@ void Stage::update() {
         phaseInflowTotal += accum(phaseInflow);
     }
 
-    if (TestNum::eqZero(timeStep)) {
-        content = dd->content() + inflowPending;
-        outflow = growth = 0.;
-        return;
-    }
+//    if (TestNum::eqZero(timeStep)) {
+//        content = _dd->content() + inflowPending;
+//        outflow = growth = 0.;
+//        return;
+//    }
 
     if (growthFactor <= 0)
         ThrowException("Growth rate must be > 0").value(growthFactor).context(this);
@@ -87,7 +89,9 @@ void Stage::update() {
         ThrowException("Input must be >= 0").value(inflowPending).context(this);
     }
 
-    dd->update(inflowPending, timeStep, growthFactor);
+//    QMessageBox::information(0, "C Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
+    _dd->update(inflowPending, timeStep, growthFactor);
+//    QMessageBox::information(0, "D Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
     inflowPending = 0;
 
     if (phaseOutflowProportion == 0.) {
@@ -99,13 +103,16 @@ void Stage::update() {
             QString msg = "phaseOutflowProportion must not be > 1";
             ThrowException(msg).value(phaseOutflowProportion).context(this);
         }
-        phaseOutflow = dd->take(phaseOutflowProportion);
+        phaseOutflow = _dd->take(phaseOutflowProportion);
         phaseOutflowTotal += accum(phaseOutflow);
     }
 
-    content = dd->content();
-    outflowTotal += outflow = dd->state().outflowRate;
-    growth = dd->state().growthRate;
+    content = _dd->content();
+    outflowTotal += outflow = _dd->state().outflowRate;
+    growth = _dd->state().growthRate;
+//    if (instantLossRate>0.01) {
+//        QMessageBox::information(0, "D", QString::number(instantLossRate) + " " + QString::number(dd->content()));
+//    }
 }
 
 } // namespace

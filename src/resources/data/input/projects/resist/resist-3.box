@@ -1,6 +1,6 @@
 Simulation sim {
   .iterations = 12
-  .steps = 100
+  .steps = 500
   Box random {
     RandomUniform K {
       .minValue = 5000
@@ -8,26 +8,46 @@ Simulation sim {
       .drawAtReset = TRUE
       .drawAtUpdate = TRUE
     }
-    Box immigration {
-      RandomUniform proportion {
-        .minValue = 0
-        .maxValue = 0.015
+    Box survival {
+      RandomUniform ss {
+        .minValue = 0.1
+        .maxValue = 0.3
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
       }
-      RandomUniform q {
-        .minValue = 0
-        .maxValue = 0.001
+      RandomUniform sr {
+        .minValue = 0.7
+        .maxValue = 0.9
+        .drawAtReset = TRUE
+        .drawAtUpdate = TRUE
+      }
+      RandomUniform rr {
+        .minValue = 0.7
+        .maxValue = 0.9
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
       }
     }
-    Box spray {
-      RandomUniform coverage {
-        .minValue = 0
-        .maxValue = 0.40
+    Box immigration {
+      RandomUniform proportion {
+        .minValue = ./bounds[Pmin]
+        .maxValue = ./bounds[Pmax]
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
+        ProportionBounds bounds {
+          .logP = -2
+          .logWidth = 1
+        }
+      }
+      RandomUniform q {
+        .minValue = ./bounds[Pmin]
+        .maxValue = ./bounds[Pmax]
+        .drawAtReset = TRUE
+        .drawAtUpdate = TRUE
+        ProportionBounds bounds {
+          .logP = -2
+          .logWidth = 1
+        }
       }
     }
   }
@@ -35,39 +55,29 @@ Simulation sim {
     resist::Immigration immigration {
       .K = K[value]
       .proportion = immigration/proportion[value]
-      .q = 0.01 //immigration/q[value]
-    }
-    SprayResponse survival {
-      .a = 0.95
-      .b = -6
-      .c = 0.1
-      .S = 0.2
-      .coverage = coverage[value]
+      .q = immigration/q[value]
     }
     Box density {
       Density ss {
         .immigration = immigration[ss]
         .genotypeFrequency = genotypeFrequency/*[value]
         .reproduction = reproduction/*[value]
-        .survivalSS = survival[ss]
-        .survivalSR = survival[sr]
-        .survivalRR = survival[rr]
+        .survival = survival/*[value]
+        .survivalSS = survival/ss[value]
       }
       Density sr {
         .immigration = immigration[sr]
         .genotypeFrequency = genotypeFrequency/*[value]
         .reproduction = reproduction/*[value]
-        .survivalSS = survival[ss]
-        .survivalSR = survival[sr]
-        .survivalRR = survival[rr]
+        .survival = survival/*[value]
+        .survivalSR = survival/sr[value]
       }
       Density rr {
         .immigration = immigration[rr]
         .genotypeFrequency = genotypeFrequency/*[value]
         .reproduction = reproduction/*[value]
-        .survivalSS = survival[ss]
-        .survivalSR = survival[sr]
-        .survivalRR = survival[rr]
+        .survival = survival/*[value]
+        .survivalRR = survival/rr[value]
       }
     }
     Box total {
@@ -89,7 +99,7 @@ Simulation sim {
     }
     ReproductiveRate reproductiveRate {
       .R = 5
-      .fitnessCost = 0
+      .fitnessCost = 0.20
       .Ntotal = pest/total[density]
       .K = K[value]
     }
@@ -97,17 +107,17 @@ Simulation sim {
       Reproduction ss {
         .R = reproductiveRate[ss]
         .N = density/ss[value]
-        .survival = survival[ss]
+        .survival = survival/ss[value]
       }
       Reproduction sr {
         .R = reproductiveRate[sr]
         .N = density/sr[value]
-        .survival = survival[sr]
+        .survival = survival/sr[value]
       }
       Reproduction rr {
         .R = reproductiveRate[rr]
         .N = density/rr[value]
-        .survival = survival[rr]
+        .survival = survival/rr[value]
       }
     }
   }
@@ -115,7 +125,7 @@ Simulation sim {
     .keepPages = TRUE
     PageR {
       .xAxis = sim[step]
-      .ncol = 3
+      .ncol = 2
       +ggplot = "geom_line() + 
                  geom_smooth() +
                  labs(x='Generation') +
@@ -123,34 +133,22 @@ Simulation sim {
       PlotR {
         .layout = "merged"
         .ncol = 3
-        .ports = density/*[value]
+        .ports = (density/*[value] total[density])
         .transform = "log10"
         .ggplot = ..[ggplot]
       }
       PlotR {
         .layout = "merged"
         .ncol = 3
-        .ports = genotypeFrequency/*[value]
+        .ports = (genotypeFrequency/*[value] ./frequency[q])
         .ggplot = ..[ggplot]
-      }
-      PlotR {
-        .layout = "merged"
-        .ncol = 3
-        .ports = (pest/survival[ss] pest/survival[sr] pest/survival[rr])
-        .ggplot = ..[ggplot]
-      }
-      PlotR {
-        .layout = "merged"
-        .ncol = 3
-        .ports = reproduction/*[value]
-        .ggplot = ..[ggplot]
-      }
-      PlotR {
-        .layout = "merged"
-        .ncol = 3
-        .ports = (reproductiveRate[ss] reproductiveRate[sr] reproductiveRate[rr])
-        .ggplot = ..[ggplot]
+        AlleleFrequency frequency {
+          .genotypeFrequency = genotypeFrequency/*[value]
+        }
       }
     }
+    // OutputText {
+      // .ports()
+    // }
   }
 }

@@ -34,7 +34,7 @@ Calendar::Calendar(QString name, QObject *parent)
     Input(timeZone).equals(1).help("Time zone (h)");
     Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts");
     Input(timeStep).equals(1).help("Time step in units of timeUnit");
-    Input(timeUnit).equals('d').help("Unit of time step (y,d,h,m,s");
+    Input(timeUnit).equals('d').help("Unit of time step (y,d,h,m,s)");
     Input(sample).equals(1).help("The frequency at which output is sampled");
     Output(date).help("Current date");
     Output(time).help("Current time of the day");

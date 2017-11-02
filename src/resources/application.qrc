@@ -24,6 +24,12 @@
     <file>data/input/book/egg5.box</file>
     <file>data/input/book/end-dist-delay1.R</file>
     <file>data/input/book/end-dist-delay2.R</file>
+    <file>data/input/book/func-resp/func-resp-1-end.R</file>
+    <file>data/input/book/func-resp/func-resp-1.box</file>
+    <file>data/input/book/func-resp/func-resp-2.box</file>
+    <file>data/input/book/func-resp/func-resp-3.box</file>
+    <file>data/input/book/func-resp/func-resp-4.box</file>
+    <file>data/input/book/func-resp/func-resp-scenarios.txt</file>
     <file>data/input/book/honeybee1.box</file>
     <file>data/input/book/honeybee2.box</file>
     <file>data/input/book/insect.box</file>
@@ -79,7 +85,12 @@
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/resist/resist-1.box</file>
     <file>data/input/projects/resist/resist-2.box</file>
+    <file>data/input/projects/resist/resist-3(0).box</file>
     <file>data/input/projects/resist/resist-3.box</file>
+    <file>data/input/projects/resist/resist-4.box</file>
+    <file>data/input/projects/resist/resist-5.box</file>
+    <file>data/input/projects/resist/resist-5b.box</file>
+    <file>data/input/projects/resist/resist-end.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>

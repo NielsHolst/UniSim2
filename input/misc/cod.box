@@ -1,0 +1,100 @@
+Simulation cod {
+  .steps = 7300
+  Calendar {
+    .initialDateTime = 1/1/2001
+    .timeStep = 1
+    .timeUnit = "d"
+  }
+  Box cod {
+    Box number {
+      Box duration {
+        +egg = 14
+        +fry = 180
+        +size1 = 360
+        +size2 = 540
+        +size3 = 720
+        +size3 = 1440
+      }
+      Stage egg {
+        .inflow|sum = mass/*/fecundity[outflow]
+        .duration = duration[egg]
+        .growthFactor = 1e-5
+      }
+      Stage fry {
+        .inflow = ..egg[outflow]
+        .duration = duration[fry]
+        .growthFactor = 0.5
+      }
+      Stage size1 {
+        .inflow = fry[outflow]
+        .duration = duration[size1]
+        .growthFactor = 0.8
+      }
+      Stage size2 {
+        .inflow = ../size1[outflow]
+        .duration = duration[size2]
+        .growthFactor = 0.2
+      }
+      Stage size3 {
+        .inflow = ../size2[outflow]
+        .duration = duration[size3]
+        .growthFactor = 0.2
+      }
+      Stage size4 {
+        .inflow = ../size3[outflow]
+        .duration = duration[size4]
+        .growthFactor = 0.2
+      }
+    }
+    Box mass {
+      Stage fry {
+        .inflow = number/egg[outflow]
+        .duration = duration[fry]
+        .growthFactor = 50
+      }
+      Stage size1 {
+        .inflow = fry[outflow]
+        .duration = duration[size1]
+        .growthFactor = 20
+      }
+      Stage size2 {
+        .inflow = ../size1[outflow]
+        .duration = duration[size2]
+        .growthFactor = 2
+        Stage Fecundity {
+          .inflow = ../size1[outflow]
+          .growthFactor = 100
+        }
+      }
+      Stage size3 {
+        .inflow = ../size2[outflow]
+        .duration = duration[size3]
+        .growthFactor = 1.5
+        Stage Fecundity {
+          .inflow = ../size2[outflow]
+          .growthFactor = 1000
+        }
+      }
+      Stage size4 {
+        .inflow = ../size3[outflow]
+        .duration = duration[size4]
+        .growthFactor = 1.2
+        Stage Fecundity {
+          .inflow = ../size3[outflow]
+          .growthFactor = 1000
+        }
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = cod/number/*[content]
+      }
+      PlotR {
+        .ports = cod/mass/*[content]
+      }
+    }
+  }
+}

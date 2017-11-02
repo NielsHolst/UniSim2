@@ -15,9 +15,6 @@ Density::Density(QString name, QObject *parent)
     Input(genotypeFrequency).help("Genotype frequency (ss,sr,rr");
     Input(reproduction).help("Reproduction by genotype (ss,sr,rr");
     Input(survival).help("Survival of genotype (ss,sr,rr");
-    Input(survivalSS).help("Survival of SS genotype");
-    Input(survivalSR).help("Survival of SR genotype");
-    Input(survivalRR).help("Survival of RR genotype");
     Input(step).imports("/*[step]");
     Output(value).help("Density of this genotype");
 }

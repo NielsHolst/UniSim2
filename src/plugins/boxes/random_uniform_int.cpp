@@ -21,7 +21,9 @@ RandomUniformInt::~RandomUniformInt() {
     delete variate;
 }
 
-void RandomUniformInt::doInitialize() {
+void RandomUniformInt::createGenerator() {
+    delete distribution;
+    delete variate;
     distribution = new Distribution(minValue, maxValue);
     variate = new Variate(*randomGenerator(), *distribution);
 }

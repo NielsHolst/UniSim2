@@ -12,7 +12,7 @@ class RandomLognormal : public RandomBase<double>
 public: 
     RandomLognormal(QString name, QObject *parent);
     ~RandomLognormal();
-    void doInitialize();
+    void createGenerator();
 private:
     // Inputs
     double mean, sd;

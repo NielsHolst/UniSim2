@@ -57,7 +57,7 @@ void Distribution::arguments(QStringList args) {
 
 void Distribution::initialize(int numSamples) {
     if (numSamples <= 0)
-        ThrowException("Number of samples must be > 1").value(numSamples).context(this);
+        ThrowException("Number of samples must be > 0").value(numSamples).context(this);
     QPair<double,double> b = bounds();
     _y0 = b.first;
     _dy = (b.second - _y0)/numSamples;
@@ -72,12 +72,18 @@ void Distribution::initialize(int numSamples) {
 }
 
 double Distribution::draw() {
-    Q_ASSERT(_ixNext < _strata.size());
+    int n = _strata.size();
+    if (!canDraw())
+        Exception("Draw past size of distribution").value1(_ixNext).value2(n).context(this);
     int stratum = _strata.at(_ixNext);
-    if (_strata.size() > 1)
+    if (n > 1)
         ++_ixNext;
     double y = _y0 + _dy*(stratum + (*variate)());
     return inverse(y);
+}
+
+bool Distribution::canDraw() const {
+    return (_ixNext < _strata.size());
 }
 
 void Distribution::port(Port *port_) {

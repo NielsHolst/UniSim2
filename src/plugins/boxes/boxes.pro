@@ -14,8 +14,10 @@ HEADERS +=  \
     buffer.h \
     calendar.h \
     day_degrees.h \
+    demand_budget.h \
     distributed_delay_base.h \
     distributed_delay.h \
+    distributed_delay_2d.h \
     functional_response.h \
     layout_r.h \
     maker.h \
@@ -42,14 +44,18 @@ HEADERS +=  \
     simulation.h \
     stage_base.h \
     stage.h \
+    stage_and_phase.h \
+    supply_budget.h \
     vector_sum.h
 	
 SOURCES +=  \
     buffer.cpp \
     calendar.cpp \
     day_degrees.cpp \
+    demand_budget.cpp \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
+    distributed_delay_2d.cpp \
     functional_response.cpp \
     layout_r.cpp \
     maker.cpp \
@@ -75,6 +81,8 @@ SOURCES +=  \
     simulation.cpp \
     stage_base.cpp \
     stage.cpp \
+    stage_and_phase.cpp \
+    supply_budget.cpp \
     vector_sum.cpp
 
 

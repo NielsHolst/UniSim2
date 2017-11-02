@@ -25,6 +25,7 @@ public:
     virtual void lowerQuantile(double value);
     virtual void upperQuantile(double value);
     double draw();
+    bool canDraw() const;
     virtual QPair<double,double> bounds() const = 0;
     virtual double inverse(double y) const = 0;
 

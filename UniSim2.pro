@@ -93,15 +93,15 @@ unisim.depends = eq
 #resist.depends = base
 #unisim.depends = resist
 
-SUBDIRS += student
-student.subdir = src/plugins/student
-student.depends = base
-unisim.depends = student
+#SUBDIRS += student
+#student.subdir = src/plugins/student
+#student.depends = base
+#unisim.depends = student
 
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
-unisim.depends = vg
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
+#unisim.depends = vg
 
 
 

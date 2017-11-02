@@ -11,9 +11,9 @@ public:
     void update();
 private:
     // Inputs
-    double demand, resource, apparency;
+    double demand, attacker, resource, attackRate, timeStep;
     // Outputs
-    double supply, resourceMortality;
+    double searchRate, resourceAcquired, resourceMortality;
 };
 
 } //namespace

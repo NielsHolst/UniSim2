@@ -20,7 +20,9 @@ RandomNormal::~RandomNormal() {
     delete variate;
 }
 
-void RandomNormal::doInitialize() {
+void RandomNormal::createGenerator() {
+    delete distribution;
+    delete variate;
     distribution = new Distribution(mean, sd);
     variate = new Variate(*randomGenerator(), *distribution);
 }

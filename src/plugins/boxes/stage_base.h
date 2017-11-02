@@ -15,7 +15,7 @@ public:
     void reset();
 
     const double *data();
-    virtual DistributedDelayBase* createDistributedDelay() = 0;
+    virtual void createDistributedDelay() = 0;
 
 protected:
     // inputs
@@ -30,8 +30,8 @@ protected:
     // methods
     void applyInstantMortality();
 
-private:
-    DistributedDelayBase *ddBase;
+    // data
+    DistributedDelayBase *_ddBase;
 };
 
 }

@@ -1,0 +1,47 @@
+// func-resp-2.box
+Simulation {
+  .steps = 100
+  Scenarios predators {
+    .fileName = "func-resp-scenarios.txt"
+  }
+  Sequence resource {
+    .min = 0
+    .max = 100
+  }
+  Box budget {
+    +respirationDemand = 1
+    +conversionCost = 0.15
+    +egested = 0.2
+  }
+  DemandBudget demandBudget {
+    .netDemand = 10
+    .respirationDemand = ../budget[respirationDemand]
+    .conversionCost = ../budget[conversionCost]
+    .egested = ../budget[egested]
+  }
+  FunctionalResponse funcResp {
+    .attacker = predators[Predator]
+    .resource = resource[value]
+    .demand = ../demandBudget[demand]
+    .attackRate = 0.8
+  }
+  SupplyBudget supplyBudget {
+    .resourceAcquired = ../funcResp[resourceAcquired]
+    .respirationDemand = ../budget[respirationDemand]
+    .conversionCost = ../budget[conversionCost]
+    .egested = ../budget[egested]
+  }
+  OutputR {
+    PageR {
+      .xAxis = resource[value]
+      .title = "Functional response at predator density = 0.5, 1 and 20"
+      PlotR {
+        .layout = "merged"
+        .ports = (funcResp[demand] funcResp[resourceAcquired]
+                   supplyBudget[supply] supplyBudget[egestedAmount] 
+                   supplyBudget[conversionCostAmount])
+        .ggplot = "geom_line(size=1.1) + labs(x='Prey density', y='Budget component')"
+      }
+    }
+  }
+ }

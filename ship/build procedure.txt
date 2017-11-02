@@ -22,6 +22,7 @@
 (6). Update ecolmod.org/download.html.
 
 7. In Bash:
+> git commit
 > git tag 2.1.n
 > git push origin master --tags
 - Note this pushes both source code changes and tags

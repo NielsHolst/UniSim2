@@ -1,0 +1,31 @@
+// func-resp-1.box
+Simulation {
+  .steps = 100
+  Scenarios scenarios {
+    .fileName = "func-resp-scenarios.txt"
+  }
+  Sequence resource {
+    .min = 0
+    .max = 100
+  }
+  FunctionalResponse kill {
+    .attacker = scenarios[Predator]
+    .resource = resource[value]
+    .demand = 10
+    .attackRate = 0.8
+  }
+  OutputR {
+    PageR {
+      .xAxis = resource[value]
+      .title = "Functional response at predator density = 0.5, 1 and 20"
+      PlotR {
+        .layout = "merged"
+        .ports = (kill[demand] kill[resourceAcquired])
+        .ggplot = "geom_line(size=1.1) + labs(x='Prey density', y='Prey killed')"
+      }
+    }
+  }
+  OutputText { // Add output (not shown in plot)
+    .ports = kill[searchRate]
+  }
+ }

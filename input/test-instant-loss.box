@@ -1,0 +1,19 @@
+Simulation sim {
+  .steps = 30
+  Box butterfly {
+    Stage egg {
+      .initial = 100 
+      .duration = 80
+      .timeStep = 0
+      .instantLossRate = 0.1
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (egg[content] egg[outflowTotal])
+      }
+    }
+  }
+}
+

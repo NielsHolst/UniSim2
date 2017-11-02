@@ -20,7 +20,9 @@ RandomLognormal::~RandomLognormal() {
     delete variate;
 }
 
-void RandomLognormal::doInitialize() {
+void RandomLognormal::createGenerator() {
+    delete distribution;
+    delete variate;
     distribution = new Distribution(mean, sd);
     variate = new Variate(*randomGenerator(), *distribution);
 }
