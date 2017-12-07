@@ -1,0 +1,34 @@
+// phys-dev-6.box
+Simulation sim {
+  .steps = 60
+  Stage distDelay {
+    .initial = 100 
+    .duration = 30
+    .growthFactor = 2
+    .k = 25
+    .timeStep = 1
+  }
+  OutputR {
+    PageR {
+      .ncol = 1
+      +ggplot = "geom_vline(xintercept=30, linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=10*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(6)[3])"
+      PlotR {
+        .ports = distDelay[outflow]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .ports = distDelay[content]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .ports = distDelay[outflowTotal]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .ports = distDelay[growth]
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}
+

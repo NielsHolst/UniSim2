@@ -4,30 +4,14 @@ Simulation sim {
   .silent = TRUE
   SensitivityAnalysis {
   }
-  Box K {
-    +value = 10000
-  }
   Box random {
-    // Box survival {
-      // RandomUniform ss {
-        // .minValue = 0.1
-        // .maxValue = 0.3
-        // .drawAtReset = TRUE
-        // .drawAtUpdate = TRUE
-      // }
-      // RandomUniform sr {
-        // .minValue = 0.7
-        // .maxValue = 0.9
-        // .drawAtReset = TRUE
-        // .drawAtUpdate = TRUE
-      // }
-      // RandomUniform rr {
-        // .minValue = 0.7
-        // .maxValue = 0.9
-        // .drawAtReset = TRUE
-        // .drawAtUpdate = TRUE
-      // }
-    // }
+    RandomUniform K {
+      .restartAtReset = TRUE
+      .minValue = 5000
+      .maxValue = 15000 @ (uniform 10000 20000)
+      .drawAtReset = TRUE
+      .drawAtUpdate = TRUE
+    }
     Box immigration {
       RandomUniform proportion {
         .restartAtReset = TRUE
@@ -36,8 +20,8 @@ Simulation sim {
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
         ProportionBounds bounds {
-          .logP = -2 @ (uniform -4 -1)
-          .logWidth = 1
+          .logP = -4 @ (uniform -6 -2)
+          .logWidth = 2
         }
       }
       RandomUniform q {
@@ -47,17 +31,17 @@ Simulation sim {
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
         ProportionBounds bounds {
-          .logP = -2 @ (uniform -8 -2)
-          .logWidth = 1
+          .logP = -5 @ (uniform -6 -4)
+          .logWidth = 2
         }
       }
     }
   }
   Box pest {
     resist::Immigration immigration {
-      .K = K[value]
-      .proportion = immigration/proportion[value]
-      .q = immigration/q[value]
+      .K = random/K[value]
+      .proportion = random/immigration/proportion[value]
+      .q = random/immigration/q[value]
     }
     SprayResponse survival {
       .a = 1

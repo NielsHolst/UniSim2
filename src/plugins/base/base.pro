@@ -59,6 +59,7 @@ HEADERS +=  \
     object_pool.h \
     organisation.h \
     path.h \
+    physiological_time.h \
     port.h \
     port_access.h \
     port_buffer.h \
@@ -121,6 +122,7 @@ SOURCES +=  \
     mega_factory.cpp \
     object_pool.cpp \
     path.cpp \
+    physiological_time.cpp \
     port.cpp \
     port_access.cpp \
     port_buffer.cpp \

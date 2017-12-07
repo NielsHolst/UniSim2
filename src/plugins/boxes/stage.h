@@ -17,14 +17,14 @@
         void createDistributedDelay();
     private:
         // inputs
-        double timeStep, inflow, initial, phaseOutflowProportion;
+        double timeStep, inflow, phaseOutflowProportion;
 
         // outputs
         double latestInflow, outflow;
 
         // data
-        bool firstUpdate;
-        double inflowPending;
+        bool _firstUpdate;
+        double _inflowPending;
         DistributedDelay *_dd;
     };
 

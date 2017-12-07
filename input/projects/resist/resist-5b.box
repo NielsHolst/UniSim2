@@ -1,4 +1,4 @@
-Simulation sim {
+Simulation sim {
   .iterations = 12
   .steps = 500
   .silent = TRUE

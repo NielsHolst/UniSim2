@@ -1,0 +1,39 @@
+// phys-dev-1.box
+Simulation sim {
+  .steps = 60
+  .iterations = 5
+  Sequence k {
+    .by = "reset"
+    .values = (1 2 3 10 25)
+  }
+  Stage distDelay {
+    .initial = 100 
+    .duration = 30
+    .k = k[value]
+    .timeStep = 1
+  }
+  OutputR {
+    PageR {
+      .ncol = 1
+      +ggplot = "geom_vline(xintercept=30, linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=10*(0:6)) +  scale_color_manual(labels=c(1,2,3,10,25),values=brewer_pal('qual',6)(5)) +
+      guides(colour=guide_legend(title='growthFactor')) +
+      theme(legend.position = 'bottom')"
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[outflow]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[content]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[outflowTotal]
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}
+

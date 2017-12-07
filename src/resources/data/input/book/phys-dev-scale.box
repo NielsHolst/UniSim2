@@ -1,0 +1,31 @@
+// phys-dev-6.box
+Simulation sim {
+  .steps = 125
+  Sequence temperature {
+    .min = 12
+    .max = 37   
+  }
+  DayDegrees dayDegrees {
+    .T0 = 14.2
+    .Topt = 29
+    .Tmax = 35
+    .T = temperature[value]
+  }
+  Briere briere {
+    .T0 = 14.2
+    .Tmax = 35
+    .a = 2.836e-5
+    .T = temperature[value]
+  }
+  
+  OutputR {
+    .end = "phys-dev-scale-end.R"
+    PageR {
+      .xAxis = temperature[value]
+      PlotR {
+        .ports = (dayDegrees[step] briere[step])
+      }
+    }
+  }
+}
+

@@ -1,4 +1,4 @@
-// func-resp-3.box
+// func-resp-4.box
 Simulation sim {
   .steps = 365
   Calendar calendar {
@@ -101,8 +101,8 @@ Simulation sim {
       .timeStep = ./timeStep[value]
       OnOff timeStep { 
         .x = calendar[dayOfYear]
-        .xOn = 0   
-        .xOff = 150
+        .xOn = 0 
+        .xOff = 180
         .valueOn = 1
         .valueOff = 0
       }
@@ -130,8 +130,6 @@ Simulation sim {
     }
   }
   OutputR {
-    .keepPages = TRUE
-    .keepVariables = TRUE
     PageR {
       .xAxis = calendar[date]
       .ncol = 3

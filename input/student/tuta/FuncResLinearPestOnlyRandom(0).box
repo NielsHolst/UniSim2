@@ -1,0 +1,248 @@
+//Functional responce (Nesidiocoris and Tuta) with linear degree day model
+
+Simulation sim {
+  .steps = 30
+  
+  .iterations = 5
+  
+  Calendar calendar {
+    .initialDateTime = 30/5/2016  //24/5/2016 
+  }
+  // Box weather {
+     
+     // + Tavg = 34
+     // }
+     
+  Records weather {
+    .fileName = "CageWeather1.txt"
+    .cycle = TRUE //!
+  }
+
+  Box random {
+    RandomUniform Tinitial {
+      .minValue = 4
+      .maxValue = 8
+      .drawAtReset = TRUE
+    }
+  }
+  
+  //Tuta Box
+  
+  Box Tabsoluta {
+    Stage egg {
+        .inflow = ../oviposition[outflow] 
+        .duration = 58.5
+        .timeStep = ./time[step]
+        .growthFactor = ./survival[survival]// 0.897
+        // .instantLossRate = predation/funcResp[resourceMortality]
+      
+    TutaSurvival survival {
+        .T = weather[Tavg]
+        .a0 = 0
+        .a1 = -0.000691
+        .a2 = 0.0615
+        .a3 = -2.0329
+        .a4 = 29.213
+        .a5 = -75.5
+        .A = 0.72
+        }
+        
+    DayDegrees time {
+	  .T0 = 9.6
+	  .T = weather[Tavg]
+	}
+    }
+  
+    Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = 227.3
+        .timeStep = ./time[step]
+        .growthFactor = ./survival[survival] //0.9506
+    
+    TutaSurvival survival {
+        .T = weather[Tavg]
+        .a0 = -0.000245
+        .a1 = 0.0235
+        .a2 = -0.8579
+        .a3 = 14.717
+        .a4 = -115.94
+        .a5 = 397.13
+        .A = 0.7
+        }
+        
+    DayDegrees time {
+        .T0 = 6.7
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = 131.6
+        .timeStep = ./time[step]
+        .growthFactor = ./survival[survival] //0.8767
+    
+    TutaSurvival survival {
+        .T = weather[Tavg]
+        .a0 = 0.0000519
+        .a1 = -0.0069
+        .a2 = 0.327
+        .a3 = -7.176
+        .a4 = 74.615
+        .a5 = 208.35
+        .A = 0.72
+       }
+       
+      DayDegrees time {
+        .T0 = 7.3
+        .T = weather[Tavg]
+      }
+    }
+	    Stage adult {
+	      .initial = random/Tinitial[value]
+        .inflow = ../pupa[outflow]
+        .duration = 25
+        .timeStep = 1
+      }
+      
+      Stage oviposition {
+	      .initial = ../adult[initial]
+        .inflow = ../pupa[outflow]
+        .duration = 23.5
+        .timeStep = 1
+        .growthFactor =  ./fecundity[fecundity]
+        
+        TutaFecundity fecundity {
+        .T = weather[Tavg]
+        .a0 = -0.00105  //-0.00124 
+        .a1 = 0.03244 //0.032448
+        .a2 = 0.1592
+        .a3 = -6.7658
+        .a4 = 47.55
+        .scaling = 0.095
+      }
+		      }
+    
+    }
+    
+    //Nesidiocoris Box
+    
+  Box Ntenuis {
+      Stage egg {
+        .inflow = ../predation/supplyBudget[supply]
+        //.inflow = ../predation/demandBudget[netDemand]
+        .duration = 140.7
+        .timeStep = ./time[step]
+              
+      DayDegrees time {
+        .T0 = 9.8
+        .T = weather[Tavg]
+		}
+    }
+      Stage nymph {
+        .inflow = ../egg[outflow]
+        .duration = 175
+        .timeStep = ./time[step]
+        .growthFactor = ./survival[survival] //0.89
+      
+      NesidiocorisSurvival survival {
+        .T = weather[Tavg]
+        .a0 = -0.0072
+        .a1 = 0.7287
+        .a2 = -27.471
+        .a3 = 457.03
+        .a4 = -2752.5
+        }
+        
+      DayDegrees time {
+        .T0 = 11.7
+        .T = weather[Tavg]
+      }
+    }
+      Stage adult {
+        .initial=2
+        .inflow = ../nymph[outflow]
+        .duration = 19
+        .timeStep = 1
+      }
+      
+      Stage ovipositionDemand {
+        .initial=2
+        .inflow = ../nymph[outflow]
+        .duration = 14
+        .timeStep = 1
+        .growthFactor = ./fecundity[fecundity]
+        
+      NesidiocorisFecundity fecundity {
+        .T = weather[Tavg]
+        .a0 = -0.00111
+        .a1 = 0.12225
+        .a2 = -4.9751
+        .a3 = 88.655
+        .a4 = -566.75
+      }
+      }
+
+  Box predation {
+  
+      +conversionCost = 0.25
+      
+      DemandBudget demandBudget {
+        .netDemand = ../../ovipositionDemand[outflow]
+        .conversionCost = ..[conversionCost]
+      }
+      FunctionalResponse funcResp {
+        .attacker = ../../adult[content]
+        .resource = Tabsoluta/egg[content]
+        .demand = ../demandBudget[demand]
+        .attackRate = 0.8
+      }
+      SupplyBudget supplyBudget {
+        .resourceAcquired = ../funcResp[resourceAcquired]
+        .conversionCost = ..[conversionCost]
+      }
+    }
+    }
+    
+    OutputR {
+      PlotR {
+        .ports = Tabsoluta/descendants::*[content]
+        .ggplot = ..[monthBreaks]
+      }
+      PlotR {
+        .ports = Ntenuis/*[content]
+        .ggplot = ..[monthBreaks]
+      }
+    }
+    // .keepVariables = TRUE
+    // PageR {
+      // .xAxis = calendar[date]
+      // .ncol = 3
+      // +monthBreaks = "geom_line(size=1.1) + 
+                      // scale_x_datetime(
+                        // breaks = date_breaks('1 months'), 
+                        // labels = date_format('%b')
+                      // )" 
+      // PlotR {
+        // .ports = Tabsoluta/descendants::*[content]
+        // .ggplot = ..[monthBreaks]
+      // }
+      // PlotR {
+        // .ports = Ntenuis/*[content]
+        // .ggplot = ..[monthBreaks]
+      // }
+      // PlotR {
+        // .ports = (funcResp[attacker] funcResp[resource] 
+                  // demandBudget[netDemand] supplyBudget[supply] 
+                  // funcResp[resourceMortality])
+        // .ggplot = ..[monthBreaks]
+      // }
+    // }
+    
+    // .end = "MyPlotArandom.R" 
+      // OutputText {
+      // .ports = (calendar[date] *[content])
+     // }    
+  }
+}
+    
+    

@@ -11,84 +11,29 @@ PUBLISH(Density)
 Density::Density(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(immigration).help("Number of immigrants of this genotype (ss,sr,rr)");
-    Input(genotypeFrequency).help("Genotype frequency (ss,sr,rr");
-    Input(reproduction).help("Reproduction by genotype (ss,sr,rr");
-    Input(survival).help("Survival of genotype (ss,sr,rr");
-    Input(step).imports("/*[step]");
-    Output(value).help("Density of this genotype");
+    Input(immigration).help("Immigrants vector (ss,sr,rr)");
+    Input(reproduction).help("Reproduction vector (ss,sr,rr)");
+    Input(survival).help("Survival vector by genotype (ss,sr,rr)");
+    Output(ss).help("Density of ss genotype");
+    Output(sr).help("Density of sr genotype");
+    Output(rr).help("Density of rr genotype");
+    Output(values).help("Density vector (ss, sr, rr)");
+    values.resize(3);
 }
 
 void Density::reset() {
-    value = immigration;
+    ss = immigration[0];
+    sr = immigration[1];
+    rr = immigration[2];
 }
 
 void Density::update() {
-    if (step<2) return;
-    CHECK_VECTOR_3(genotypeFrequency);
+    CHECK_VECTOR_3(immigration);
     CHECK_VECTOR_3(reproduction);
     CHECK_VECTOR_3(survival);
-
-    const double
-        &Rss(reproduction.at(0)),
-        &Rsr(reproduction.at(1)),
-        &Rrr(reproduction.at(2)),
-
-        &Sss(survival.at(0)),
-        &Ssr(survival.at(1)),
-        &Srr(survival.at(2));
-
-    Fss = Sss*Rss;
-    Fsr = Ssr*Rsr;
-    Frr = Srr*Rrr;
-
-    if (objectName() == "ss")
-        updateSS();
-    else if (objectName() == "sr")
-        updateSR();
-    else if (objectName() == "rr")
-        updateRR();
-    else
-        ThrowException("Object name ss, sr or rr expected").value(objectName());
-
-    value += immigration;
-}
-
-void Density::updateSS() {
-    const double
-        &Pss(genotypeFrequency.at(0)),
-        &Psr(genotypeFrequency.at(1));
-    value =
-        Fss*Pss +
-        Fss*Psr/2 +
-        Fsr*Pss/2 +
-        Fsr*Psr/4;
-}
-
-void Density::updateSR() {
-    const double
-        &Pss(genotypeFrequency.at(0)),
-        &Psr(genotypeFrequency.at(1)),
-        &Prr(genotypeFrequency.at(2));
-    value =
-        Fss*Prr   +
-        Frr*Pss   +
-        Fss*Psr/2 +
-        Frr*Psr/2 +
-        Fsr*Pss/2 +
-        Fsr*Psr/2 +
-        Fsr*Prr/2;
-}
-
-void Density::updateRR() {
-    const double
-        &Psr(genotypeFrequency.at(1)),
-        &Prr(genotypeFrequency.at(2));
-    value =
-        Frr*Prr   +
-        Frr*Psr/2 +
-        Fsr*Prr/2 +
-        Fsr*Psr/4;
+    values[0] = ss = immigration[0] + survival[0]*reproduction[0];
+    values[1] = sr = immigration[1] + survival[1]*reproduction[1];
+    values[2] = rr = immigration[2] + survival[2]*reproduction[2];
 }
 
 }

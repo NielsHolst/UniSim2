@@ -15,6 +15,7 @@ private:
     double q, N, K, proportion;
     // Outputs
     double ss, sr, rr;
+    QVector<double> values;
 };
 
 }

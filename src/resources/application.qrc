@@ -40,6 +40,14 @@
     <file>data/input/book/photo-thermal5.box</file>
     <file>data/input/book/photo-thermal6.box</file>
     <file>data/input/book/photo-thermal7.box</file>
+    <file>data/input/book/phys-dev-1.box</file>
+    <file>data/input/book/phys-dev-2.box</file>
+    <file>data/input/book/phys-dev-3.box</file>
+    <file>data/input/book/phys-dev-4.box</file>
+    <file>data/input/book/phys-dev-5.box</file>
+    <file>data/input/book/phys-dev-6.box</file>
+    <file>data/input/book/phys-dev-scale-end.R</file>
+    <file>data/input/book/phys-dev-scale.box</file>
     <file>data/input/book/scenarios/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/scenarios/end-analysis.R</file>
     <file>data/input/book/scenarios/end-locations.R</file>
@@ -90,7 +98,10 @@
     <file>data/input/projects/resist/resist-4.box</file>
     <file>data/input/projects/resist/resist-5.box</file>
     <file>data/input/projects/resist/resist-5b.box</file>
+    <file>data/input/projects/resist/resist-6-sa.box</file>
+    <file>data/input/projects/resist/resist-6.box</file>
     <file>data/input/projects/resist/resist-end.R</file>
+    <file>data/input/projects/resist/resist-sa-end.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>

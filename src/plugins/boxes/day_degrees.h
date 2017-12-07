@@ -1,21 +1,18 @@
 #ifndef DAY_DEGREES
 #define DAY_DEGREES
-#include <base/box.h>
+#include <base/physiological_time.h>
 
 namespace boxes {
 
-class DayDegrees : public base::Box
+class DayDegrees : public base::PhysiologicalTime
 {
 public: 
     DayDegrees(QString name, QObject *parent);
     void reset();
-    void update();
+    void updateStep();
 private:
     // Inputs
-    double T0, Topt, Tmax, T, timeStepDays;
-    bool resetTotal, isTicking;
-    // Outputs
-    double step, total;
+    double T0, Topt, Tmax;
 };
 
 } //namespace

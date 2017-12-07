@@ -15,6 +15,7 @@ Sequence::Sequence(QString name, QObject *parent)
     Input(by).equals("update").help("The sequence value can either be updated at 'reset' or 'update'");
     Input(min).equals(0).help("Minimum value in sequence");
     Input(max).equals(1).help("Maximum value in sequence");
+    Input(values).help("Vector of values; overrides min and max");
     Output(counter).help("Current counter in sequence");
     Output(counterMax).help("Number of values in sequence");;
     Output(offset).help("First value of counter, e.g. 0 or 1");
@@ -38,6 +39,7 @@ void Sequence::amend() {
 }
 
 void Sequence::reset() {
+    _useValues = !values.isEmpty();
     updateValue();
 }
 
@@ -48,7 +50,10 @@ void Sequence::update() {
 void Sequence::updateValue() {
     if (counterMax < 1)
         ThrowException("'counterMax' must be > 0").value(counterMax).context(this);
-    value = (counter == counterMax) ? max : min + (max - min + offset)*(counter - offset)/counterMax;
+    if (_useValues)
+        value = values.at(counter-offset-1);
+    else
+        value = (counter == counterMax) ? max : min + (max - min + offset)*(counter - offset)/counterMax;
 }
 
 

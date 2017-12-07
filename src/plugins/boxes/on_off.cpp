@@ -24,8 +24,6 @@ OnOff::OnOff(QString name, QObject *parent)
 
 
 void OnOff::reset() {
-    if (xOn>=xOff) ThrowException("xOn < xOff must be true").
-            value(xOn).value2(xOff).context(this);
     isOn = onAtReset;
     setValue();
 }

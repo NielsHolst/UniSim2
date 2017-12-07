@@ -11,9 +11,10 @@ public:
     void update();
 private:
     // Inputs
-    double R, fitnessCost, Ntotal, K;
+    double R, fitnessPenalty, Ntotal, K;
     // Outputs
     double ss, sr, rr;
+    QVector<double> values;
 };
 
 }

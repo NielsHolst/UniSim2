@@ -15,13 +15,15 @@
 
 3. Check that UniSim2.pro contains the intended plug-ins (student and vg always included).
 
-4.Execute batch file.
+4. If the Qt installation has been updated, check that QTENV is set correctly both in build.bat and fill-folders.bat.
 
-(5). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
+5.Execute batch file.
 
-(6). Update ecolmod.org/download.html.
+(6). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
 
-7. In Bash:
+(7). Update ecolmod.org/download.html.
+
+8. In Bash:
 > git commit
 > git tag 2.1.n
 > git push origin master --tags

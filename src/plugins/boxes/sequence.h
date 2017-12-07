@@ -1,5 +1,6 @@
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
+#include <QVector>
 #include <base/box.h>
 
 namespace boxes {
@@ -15,9 +16,12 @@ private:
     // Inputs
     double min, max;
     QString by;
+    QVector<double> values;
     // Outputs
     int counter, counterMax, offset;
     double value;
+    // Data
+    bool _useValues;
     // Methods
     void updateValue();
 };

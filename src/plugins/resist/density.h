@@ -12,17 +12,10 @@ public:
     void update();
 private:
     // Inputs
-    double immigration;
-    int step;
-    QVector<double> genotypeFrequency, reproduction, survival;
+    QVector<double> immigration, reproduction, survival;
     // Outputs
-    double value;
-    // Data
-    double Fss, Fsr, Frr;
-    // Methods
-    void updateSS();
-    void updateSR();
-    void updateRR();
+    double ss, sr, rr;
+    QVector<double> values;
 };
 
 }

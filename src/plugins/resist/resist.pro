@@ -13,26 +13,24 @@ HEADERS +=  \
     carrying_capacity.h \
     check_vector.h \
     density.h \
-    genotype_frequency.h \
+    gene_frequencies.h \
     immigration.h \
     population.h \
-    proportion_bounds.h \
     reproduction.h \
+    proportion_bounds.h \
     reproductive_rate.h \
-    spray_response.h \
-    survival.h
+    spray_survival.h
 	
 SOURCES +=  \
     allele_frequency.cpp \
     carrying_capacity.cpp \
     density.cpp \
-    genotype_frequency.cpp \
+    gene_frequencies.cpp \
     immigration.cpp \
     population.cpp \
-    proportion_bounds.cpp \
     reproduction.cpp \
+    proportion_bounds.cpp \
     reproductive_rate.cpp \
-    spray_response.cpp \
-    survival.cpp
+    spray_survival.cpp
 
 

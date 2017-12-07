@@ -39,6 +39,16 @@ eq.subdir = src/plugins/eq
 eq.depends = base
 unisim.depends = eq
 
+SUBDIRS += student
+student.subdir = src/plugins/student
+student.depends = base
+unisim.depends = student
+
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg
+
 #
 # Optional plug-ins
 #
@@ -93,15 +103,6 @@ unisim.depends = eq
 #resist.depends = base
 #unisim.depends = resist
 
-#SUBDIRS += student
-#student.subdir = src/plugins/student
-#student.depends = base
-#unisim.depends = student
-
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
-#unisim.depends = vg
 
 
 

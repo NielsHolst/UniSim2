@@ -28,7 +28,6 @@ Stage::Stage(QString name, QObject *parent)
     help("delays inflow to emerge as a time-distributed outflow");
     Input(timeStep).equals(1).help("Time step");
     Input(inflow).help("Amount of inflow");
-    Input(initial).help("Initial amount of inflow");
     Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
     Output(latestInflow).help("Amount that just flowed in");
     Output(outflow).help("Outflow emerging from the stage");
@@ -44,26 +43,24 @@ void Stage::createDistributedDelay() {
 
 void Stage::reset() {
     StageBase::reset();
-    inflowPending = latestInflow = outflow = 0.;
+    _inflowPending = latestInflow = outflow = 0.;
     content = initial;
-    firstUpdate = true;
+    _firstUpdate = true;
     update();   // Otherwise, outflow will be one simulation step late
 }
 
 void Stage::update() {
-//    QMessageBox::information(0, "A Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
     applyInstantMortality();
-//    QMessageBox::information(0, "B Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
 
     latestInflow = 0.;
-    if (firstUpdate) {
-        inflowPending += initial;
+    if (_firstUpdate) {
+        _inflowPending += initial;
         inflowTotal += initial;
         latestInflow += initial;
-        firstUpdate = false;
+        _firstUpdate = false;
     }
 
-    inflowPending += inflow;
+    _inflowPending += inflow;
     inflowTotal += inflow;
     latestInflow += inflow;
 
@@ -77,22 +74,20 @@ void Stage::update() {
         phaseInflowTotal += accum(phaseInflow);
     }
 
-//    if (TestNum::eqZero(timeStep)) {
-//        content = _dd->content() + inflowPending;
-//        outflow = growth = 0.;
-//        return;
-//    }
+    // Replace zero time step with neglible time step
+    if (timeStep == 0)
+        timeStep = 1e-12;
 
-    if (growthFactor <= 0)
+    // Replace zero growth with neglible growth
+    if (growthFactor == 0)
+        growthFactor = 1e-12;
+    else if (growthFactor < 0)
         ThrowException("Growth rate must be > 0").value(growthFactor).context(this);
-    if (inflowPending < 0) {
-        ThrowException("Input must be >= 0").value(inflowPending).context(this);
-    }
+    if (_inflowPending < 0)
+        ThrowException("Input must be >= 0").value(_inflowPending).context(this);
 
-//    QMessageBox::information(0, "C Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
-    _dd->update(inflowPending, timeStep, growthFactor);
-//    QMessageBox::information(0, "D Stage::update()", QString::number(instantLossRate) + " " + QString::number(content) + " " + QString::number(_dd->content()));
-    inflowPending = 0;
+    _dd->update(_inflowPending, timeStep, growthFactor);
+    _inflowPending = 0;
 
     if (phaseOutflowProportion == 0.) {
         phaseOutflow.fill(0.);

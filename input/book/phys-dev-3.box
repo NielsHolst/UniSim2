@@ -1,0 +1,55 @@
+// phys-dev-3.box
+Simulation sim {
+  .steps = 60
+  .iterations = 3
+  Sequence growthFactor {
+    .by = "reset"
+    .values = (0.2 1 2)
+  }
+  Stage distDelay {
+    .initial = 100 
+    .duration = 30
+    .growthFactor = growthFactor[value]
+    .k = 25
+    .timeStep = 1
+    .instantLossRate|sum = ./loss[value]
+    OnOff loss {
+      .x = sim[step]
+      .xOn = 25
+      .xOff = 25
+      .valueOn = 0.3
+      .valueOff = 0
+    }
+    OnOff loss {
+      .x = sim[step]
+      .xOn = 32
+      .xOff = 32
+      .valueOn = 0.5
+      .valueOff = 0
+    }
+  }
+  OutputR {
+    PageR {
+      .ncol = 1
+      +ggplot = "geom_vline(xintercept=30, linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=10*(0:6)) +  scale_color_manual(labels=c(0.2, 1.0, 2.0),values=brewer_pal('qual',6)(5)) +
+      guides(colour=guide_legend(title='growthFactor')) +
+      theme(legend.position = 'bottom')"
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[outflow]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[content]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[outflowTotal]
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}
+

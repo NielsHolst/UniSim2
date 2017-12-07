@@ -16,6 +16,8 @@ Immigration::Immigration(QString name, QObject *parent)
     Output(ss).help("Number of SS immigrants");
     Output(sr).help("Number of SR immigrants");
     Output(rr).help("Number of RR immigrants");
+    Output(values).help("Immigration vector (ss, sr, rr)");
+    values.resize(3);
 }
 
 void Immigration::reset() {
@@ -28,9 +30,9 @@ void Immigration::reset() {
 
 void Immigration::update() {
     double p = 1. - q;
-    ss = p*p*K*proportion;
-    sr = p*q*K*proportion;
-    rr = q*q*K*proportion;
+    values[0] = ss = p*p*K*proportion;
+    values[1] = sr = p*q*K*proportion;
+    values[2] = rr = q*q*K*proportion;
 }
 
 }

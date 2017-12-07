@@ -54,8 +54,8 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
         int idt = (int) floor(1.5 + 2.*b*dt*p.k/del);
         if (idt < p.minIter) idt = p.minIter;
 
-        // Correct inflow for divided time step
-        double dividedInflow = inflow/idt;
+//         Correct inflow for divided time step
+//        double dividedInflow = inflow/idt;
 
         // Calculate flow coefficient
         double a = p.k/del*dt/idt;
@@ -73,7 +73,10 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
             for (int i = p.k-1; i > 0; i--)
                 x[i] += a*(x.at(i-1) - b*x.at(i));
             // Finish with first age class; enter inflow into that
-            x[0] += dividedInflow - a*b*x.at(0);
+//            x[0] += dividedInflow - a*b*x.at(0);
+            x[0] -= a*b*x.at(0);
+            if (j==0)
+                x[0] += inflow;
         }
     }
     xSum = accum(x);

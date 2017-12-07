@@ -1,0 +1,34 @@
+// phys-dev-4.box
+Simulation sim {
+  .steps = 30
+  StageAndPhase distDelay {
+    .initial = 100 
+    .duration = 13
+    .k = 10
+    .timeStep = 1
+    .phaseDuration = 10
+    .phaseK = 5
+    .phaseTimeStep = 1
+  }
+  OutputR {
+    PageR {
+      .ncol = 1
+      +ggplot = "geom_vline(xintercept=c(13,10), colour=brewer_pal('qual',6)(2), linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(5))"
+      PlotR {
+        .layout = "merged"
+        .ports = (distDelay[stageOutflowSum] distDelay[phaseOutflowSum])
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .ports = distDelay[content]
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = (distDelay[outflowTotal] distDelay[phaseOutflowTotal])
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}
+

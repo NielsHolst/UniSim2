@@ -1,5 +1,6 @@
 #ifndef REPRODUCTION_H
 #define REPRODUCTION_H
+
 #include <base/box.h>
 
 namespace resist {
@@ -11,9 +12,10 @@ public:
     void update();
 private:
     // Inputs
-    double N, R, survival;
+    QVector<double> N, R;
     // Outputs
-    double value;
+    double ss, sr, rr;
+    QVector<double> values;
 };
 
 }

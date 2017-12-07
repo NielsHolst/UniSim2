@@ -18,7 +18,6 @@ public:
 
     // special methods
     void createDistributedDelay();
-    double growthDemand();
 
 private:
     // inputs
@@ -27,11 +26,12 @@ private:
     QVector<double> inflow;
 
     // outputs
-    QVector<double> outflowCohorts, latestInflow, latestPhaseInflow;
-    double outflowScalar;
+    QVector<double> stageOutflow, latestInflow, latestPhaseInflow;
+    double stageOutflowSum, phaseOutflowSum;
 
     // data
-    QVector<double> inflowPending, phaseInflowPending;
+    bool _firstUpdate;
+    QVector<double> _inflowPending, _phaseInflowPending;
     DistributedDelay2D *_dd;
 };
 

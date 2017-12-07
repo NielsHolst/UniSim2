@@ -93,6 +93,17 @@ ggplot_theme = function(fontSize) {
   }
 }
 
+# facet_labels = c (
+  # "values_0" = "SS",
+  # "values_1" = "SR",
+  # "values_2" = "RR",
+  # "1" = "Iter 1",
+  # "2" = "Iter 2",
+  # "3" = "Iter 3",
+  # "4" = "Iter 4",
+  # "5" = "Iter 5"
+# )
+
 plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
   M = melted(df, id_x, id_iteration, cols)
   if (ytrans=="log10") M$Value = Log10(M$Value)
@@ -107,7 +118,7 @@ plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
   }
   
   if (hasIterations) {
-    P + facet_grid(iter~Variable, scales="free_y")
+    P + facet_grid(iter~Variable, scales="free_y") #, labeller = as_labeller(facet_labels))
   } else if (!onlyOneVariable) { 
     P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
   } else {

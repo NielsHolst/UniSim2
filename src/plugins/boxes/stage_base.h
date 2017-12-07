@@ -20,7 +20,7 @@ public:
 protected:
     // inputs
     int k;
-    double duration, growthFactor, sdRatio, instantLossRate;
+    double initial, duration, growthFactor, sdRatio, instantLossRate;
     QVector<double> phaseInflow;
 
     // outputs
