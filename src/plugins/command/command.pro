@@ -33,6 +33,7 @@ HEADERS +=  \
     set_folder.h \
 #    test.h \
 #    update.h \
+    what.h \
     write.h \
     quit.h
 	
@@ -59,6 +60,7 @@ SOURCES +=  \
     set_folder.cpp \
 #    test.cpp \
 #    update.cpp \
+    what.cpp \
     write.cpp \
     quit.cpp
 

@@ -29,14 +29,23 @@ Port::Port(QString name, QObject *parent)
 }
 
 Port& Port::equals(const char *value) {
+//  Check with vg::GrowthLights
+//    if (access() == PortAccess::Output)
+//        ThrowException("Cannot set value of output port").context(this);
     return equals(QString(value));
 }
 
 Port& Port::equals(QStringList value) {
+//  Check with vg::GrowthLights
+//    if (access() == PortAccess::Output)
+//        ThrowException("Cannot set value of output port").context(this);
     return equals(value.toVector());
 }
 
 Port& Port::imports(QString pathToPort) {
+//  Check with vg::GrowthLights
+//    if (access() == PortAccess::Output)
+//        ThrowException("Cannot set value of output port").context(this);
     if (_notReferenced)
         return equals(pathToPort);
     _mode = PortMode::Referenced;
@@ -48,6 +57,9 @@ Port& Port::imports(QString pathToPort) {
 }
 
 Port& Port::importsMaybe(QString pathToPort) {
+//  Check with vg::GrowthLights
+//    if (access() == PortAccess::Output)
+//        ThrowException("Cannot set value of output port").context(this);
     if (_notReferenced)
         return equals(pathToPort);
     _mode = PortMode::MaybeReferenced;

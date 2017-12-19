@@ -1,6 +1,5 @@
-set UNISIM_SHIP=C:\data\QDev\UniSim2\ship
-set UNISIM_BIN=%UNISIM_SHIP%\bin
-
+set UNISIM_SHIP=C:\Users\au152367\Documents\QDev\UniSim2\ship
+C:\Users\au152367\Documents\QDev\UniSim2
 set QTENV="C:\Qt\5.9.2\mingw53_32\bin\qtenv2.bat"
 if exist %QTENV% goto :ok_qt
 set QTENV="C:\Qt\5.9.1\mingw53_32\bin\qtenv2.bat"

@@ -24,6 +24,13 @@
     <file>data/input/book/egg5.box</file>
     <file>data/input/book/end-dist-delay1.R</file>
     <file>data/input/book/end-dist-delay2.R</file>
+    <file>data/input/book/food-web/attack-matrix.txt</file>
+    <file>data/input/book/food-web/food-web-1.box</file>
+    <file>data/input/book/food-web/food-web-2-attack-matrix.txt</file>
+    <file>data/input/book/food-web/food-web-2-gain-matrix.txt</file>
+    <file>data/input/book/food-web/food-web-2.box</file>
+    <file>data/input/book/food-web/food-web.R</file>
+    <file>data/input/book/food-web/gain-matrix.txt</file>
     <file>data/input/book/func-resp/func-resp-1-end.R</file>
     <file>data/input/book/func-resp/func-resp-1.box</file>
     <file>data/input/book/func-resp/func-resp-2.box</file>

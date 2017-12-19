@@ -19,6 +19,8 @@ HEADERS +=  \
     distributed_delay_base.h \
     distributed_delay.h \
     distributed_delay_2d.h \
+    food_web.h \
+    food_web_box.h \
     functional_response.h \
     layout_r.h \
     maker.h \
@@ -58,6 +60,8 @@ SOURCES +=  \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
     distributed_delay_2d.cpp \
+    food_web.cpp \
+    food_web_box.cpp \
     functional_response.cpp \
     layout_r.cpp \
     maker.cpp \

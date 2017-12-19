@@ -23,7 +23,8 @@ public:
     int ixCol(QString colName) const;
 protected:
     // Data
-    QMap<QString,int> _rowNames, _colNames;
+    QMap<QString,int> _rowNamesLookup, _colNamesLookup;
+    QStringList _rowNames, _colNames;
 private:
     // Methods
     int lookup(const QMap<QString,int> &names, QString name, QString direction) const;

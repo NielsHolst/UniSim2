@@ -8,6 +8,8 @@ Simulation sim {
     .fileName = "weather/flakkebjerg 2009.txt"
     .cycle = TRUE //!
   }
+  
+  // Prey / Host
   Box butterfly {
     Stage egg {
       .initial = 100 
@@ -63,6 +65,64 @@ Simulation sim {
       }
     }
   }
+  
+  // Parasitoid
+  Box praon {
+    Stage egg {
+      .initial = 100 
+      .inflow = ../adult/oviposition[outflow] 
+      .duration = 140
+      .timeStep = ./time[value]
+      OnOff time { 
+        .x = calendar[dayOfYear]
+        .xOn = 107    // 1 May
+        .xOff = 152   // 15 June
+        .valueOn = ./dayDegrees[step]
+        .valueOff = 0
+        DayDegrees dayDegrees {
+          .T0 = 5
+          .T = weather[Tavg]
+        }
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Box adult {
+      Stage adult {
+        .inflow = ../../pupa[outflow]
+        .duration = 28
+        .timeStep = 1
+      }
+      Stage preOviposition {
+        .inflow = ../../pupa[outflow]
+        .duration = 5
+        .timeStep = 1
+      }
+      Stage oviposition {
+        .inflow = ../preOviposition[outflow]
+        .duration = 10
+        .timeStep = 1
+        .growthFactor = 40
+      }
+    }
+  }
+
   OutputR {
     PageR {
       .xAxis = calendar[date]

@@ -108,7 +108,8 @@ void OutputR::openFile() {
 void OutputR::copyToClipboard() {
     QString s;
     s += "keepPages = " + convert<QString>(keepPages) + "; ";
-    s += "keepVariables = " + convert<QString>(keepVariables) + "\n";
+    s += "keepVariables = " + convert<QString>(keepVariables) + "; ";
+    s += "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() +  "\"\n";
     s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
     s += "source(\""+_filePathR+"\")\n";
     s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";

@@ -25,6 +25,7 @@ StageBase::StageBase(QString name, QObject *parent)
     Input(growthFactor).equals(1).help("Factor by which outflow will be scaled relative to inflow");
     Input(instantLossRate).help("Mortality applied before inflow is added [0..1]");
     Input(phaseInflow).help("Phase inflow cohorts (vector)");
+    Input(zeroLimit).equals(1e-12).help("Cut contents to zero when total is less than this");
 
     Output(content).help("Total content inside the stage");
     Output(inflowTotal).help("Accumulated total stage inflow (scalar)");
@@ -51,8 +52,8 @@ void StageBase::reset()
     phaseOutflow.resize(k);
 }
 
-void StageBase::applyInstantMortality() {
-    double survival = 1. - instantLossRate;
+void StageBase::applyInstantMortality(double mortality) {
+    double survival = 1. - mortality;
     TestNum::snapToZero(survival);
     TestNum::snapTo(survival, 1.);
     if (survival < 0 || survival > 1.)

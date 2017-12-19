@@ -49,6 +49,7 @@ HEADERS +=  \
     environment.h \
     exception.h \
     factory_plug_in.h \
+    food_web_box_base.h \
     general.h \
     history.h \
     initialize.h \
@@ -116,6 +117,7 @@ SOURCES +=  \
     distribution.cpp \
     environment.cpp \
     exception.cpp \
+    food_web_box_base.cpp \
     general.cpp \
     history.cpp \
     initialize.cpp \

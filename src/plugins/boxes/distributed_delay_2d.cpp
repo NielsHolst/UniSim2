@@ -58,7 +58,7 @@ void DistributedDelay2D::update(const UpdateParameters &up) {
     flowParameters[1] = computeFlowParameters(p.L2, p.k2, up.dt2, up.fgr2);
     s.idt = std::max(flowParameters[0].idt, flowParameters[1].idt);
     adjust_a();
-    // Adjust inflow for idt (Refactor this to avoid copying whe idt==1)
+    // Adjust inflow for idt (Refactor this to avoid copying when idt==1)
     flowParameters[0].inflow = *up.inflow1;
     flowParameters[1].inflow = *up.inflow2;
     vector_op::multiply(flowParameters[0].inflow, 1./s.idt);
@@ -123,8 +123,12 @@ DistributedDelay2D::FlowParameters DistributedDelay2D::computeFlowParameters(dou
 
 void DistributedDelay2D::adjust_a() {
     FlowParameters *p(flowParameters);
-    p[0].a /= s.idt;
-    p[1].a /= s.idt;
+    do {
+        p[0].a /= s.idt;
+        p[1].a /= s.idt;
+        if ((p[0].a<=1. && p[1].a<=1.) || s.idt > 1000) break;
+        s.idt *= 2;
+    } while (true);
     if (!(0.<p[0].a && p[0].a<=1.) && !(0.<p[1].a && p[1].a<=1.)) {
         QString msg = "Illegal value for flow coefficient a in DistributedDelay (a1==%1, a2=%2). "
                 "Should be within ]0;1], idt=%3";

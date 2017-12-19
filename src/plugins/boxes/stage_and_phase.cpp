@@ -72,7 +72,7 @@ void StageAndPhase::update() {
         ThrowException(msg.arg(phaseInflow.size()).arg(k)).context( this);
     }
 
-    applyInstantMortality();
+    applyInstantMortality(instantLossRate);
 
     if (_firstUpdate) {
         _inflowPending[0] += initial;

@@ -103,6 +103,10 @@ unisim.depends = vg
 #resist.depends = base
 #unisim.depends = resist
 
+#SUBDIRS += tuta
+#tuta.subdir = src/plugins/tuta
+#tuta.depends = base
+#unisim.depends = tuta
 
 
 

@@ -19,6 +19,7 @@ public:
     void resize(int rows, int cols);
     int numRow() const;
     int numCol() const;
+    void fill(T value);
     QVector<T> row(int i) const;
     QVector<T> col(int i) const;
     T at(int row, int col) const;
@@ -79,6 +80,12 @@ int Matrix<T>::numRow() const {
 template <class T>
 int Matrix<T>::numCol() const {
     return _ncol;
+}
+
+template <class T>
+void Matrix<T>::fill(T value) {
+    for (QVector<T> &row : _rowsTyped)
+        row.fill(value);
 }
 
 template <class T>

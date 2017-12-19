@@ -58,7 +58,12 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
 //        double dividedInflow = inflow/idt;
 
         // Calculate flow coefficient
-        double a = p.k/del*dt/idt;
+        double a;
+        do {
+            a = p.k/del*dt/idt;
+            if (a<=1. || idt > 1000) break;
+            idt *= 2;
+        } while (true);
         if (!(0.<a && a<=1.)) {
             QString msg = "Illegal value for flow coefficient in DistributedDelay (a==%1). "
                     "Should be within ]0;1]. Other parameters: k=%2, del=%3, dt=%4, idt=%5, fgr=%6, L=%7";

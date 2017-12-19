@@ -50,7 +50,10 @@ void Stage::reset() {
 }
 
 void Stage::update() {
-    applyInstantMortality();
+    if (content < zeroLimit)
+        applyInstantMortality(1.);
+    else
+        applyInstantMortality(instantLossRate);
 
     latestInflow = 0.;
     if (_firstUpdate) {

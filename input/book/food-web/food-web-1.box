@@ -1,0 +1,43 @@
+// food-web-1.box
+Simulation {
+  .steps = 5
+  Box populations {
+    FoodWebPopulation Y1 {
+      .initial = 5
+      .demandPerCap = 0.6
+    }
+    FoodWebPopulation Y2 {
+      .initial = 10
+      .demandPerCap = 5.8
+    }
+    FoodWebPopulation Y3 {
+      .initial = 2
+      .demandPerCap = 2.4
+    }
+    FoodWebPopulation X1 {
+      .initial = 15
+    }
+    FoodWebPopulation X2 {
+      .initial = 20
+    }
+  }
+  FoodWeb web {
+    .attackFile = "attack-matrix.txt"
+    .gainFile = "gain-matrix.txt"
+    .showMatrices = TRUE
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .layout = "merged"
+        .ports = populations/*[loss]
+        .ggplot = "geom_line() + geom_point()"
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = populations/*[supply]
+        .ggplot = "geom_line() + geom_point()"
+      }
+    }
+  }
+}

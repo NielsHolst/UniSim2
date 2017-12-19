@@ -20,7 +20,7 @@ public:
 protected:
     // inputs
     int k;
-    double initial, duration, growthFactor, sdRatio, instantLossRate;
+    double initial, duration, growthFactor, sdRatio, instantLossRate, zeroLimit;
     QVector<double> phaseInflow;
 
     // outputs
@@ -28,7 +28,7 @@ protected:
     QVector<double> phaseOutflow;
 
     // methods
-    void applyInstantMortality();
+    void applyInstantMortality(double mortality);
 
     // data
     DistributedDelayBase *_ddBase;
