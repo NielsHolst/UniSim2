@@ -6,47 +6,78 @@ Simulation seir {
     .fileName = "book/weather/flakkebjerg 2005.txt"
     .cycle = TRUE
   }
+  //
+  // Host
+  //
   Box host {
     +adultDuration = 730
+    +reproduction = 2.5
+    +reproductionDuration = 180
+    +infectionRate = 0.01 // Should be dynamic
     Box S {
       Stage juvenile {
         .initial = 80
-        // .inflow = ../adult/offspring[outflow]
-        .duration = 365
+        .inflow|sum = host/*/adult/reproduction[outflow] |
+                       host/*/adult/reproduction[stageOutflowSum]
+        .duration = 180
       }
-      Stage adult {
-        .initial = 50
-        .inflow = ../juvenile[outflow]
-        .duration = host[adultDuration]
-        .phaseOutflowProportion = 0.01
-        Stage offspring {
+      Box adult {
+        Stage individuals {
+          .initial = 50
           .inflow = ../../juvenile[outflow]
           .duration = host[adultDuration]
-          .growthFactor = 2.5
+          .phaseOutflowProportion = host[infectionRate]
+        }
+        Stage reproduction {
+          .inflow = ../../juvenile[outflow]
+          .duration = host[reproductionDuration]
+          .growthFactor = host[reproduction]
+          .phaseOutflowProportion = host[infectionRate]
         }
       }
     }
     Box E {
-      StageAndPhase adult {
-        .duration = host[adultDuration]
-        .phaseInflow = host/S/adult[phaseOutflow]
-        .phaseDuration = 10
+      +phaseDuration = 10
+      Box adult {
+        StageAndPhase individuals {
+          .duration = host[adultDuration]
+          .phaseInflow = host/S/adult/individuals[phaseOutflow]
+          .phaseDuration = E[phaseDuration]
+        }
+        StageAndPhase reproduction {
+          .duration = host[reproductionDuration]
+          .growthFactor = host[reproduction]
+          .phaseInflow = host/S/adult/reproduction[phaseOutflow]
+          .phaseDuration = E[phaseDuration]
+        }
       }
     }
     Box I {
-      StageAndPhase adult {
-        .duration = host[adultDuration]
-        .phaseInflow = host/E/adult[phaseOutflow]
-        .phaseDuration = 20
+      +phaseDuration = 20
+      Box adult {
+        StageAndPhase individuals {
+          .duration = host[adultDuration]
+          .phaseInflow = host/S/adult/individuals[phaseOutflow]
+          .phaseDuration = E[phaseDuration]
+        }
+        StageAndPhase reproduction {
+          .duration = host[reproductionDuration]
+          .growthFactor = host[reproduction]
+          .phaseInflow = host/S/adult/reproduction[phaseOutflow]
+          .phaseDuration = E[phaseDuration]
+        }
       }
     }
     Box R {
       Stage adult {
         .duration = host[adultDuration]
-        .phaseInflow = host/I/adult[phaseOutflow]
+        .phaseInflow = host/I/adult/individuals[phaseOutflow]
       }
     }
   }
+  //
+  // Host
+  //
   Box vector {
     +eggDuration = 50
     +larvaDuration = 250

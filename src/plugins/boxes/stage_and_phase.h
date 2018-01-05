@@ -13,7 +13,7 @@ class StageAndPhase : public StageBase
 public:
     StageAndPhase(QString name, QObject *parent);
     // standard methods
-    void reset();
+    void myReset();
     void update();
 
     // special methods
@@ -22,16 +22,14 @@ public:
 private:
     // inputs
     int phaseK;
-    double phaseDuration, timeStep, phaseTimeStep;
+    double phaseDuration, phaseTimeStep;
     QVector<double> inflow;
 
     // outputs
-    QVector<double> stageOutflow, latestInflow, latestPhaseInflow;
-    double stageOutflowSum, phaseOutflowSum;
+    QVector<double> outflow;
 
     // data
     bool _firstUpdate;
-    QVector<double> _inflowPending, _phaseInflowPending;
     DistributedDelay2D *_dd;
 };
 

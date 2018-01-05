@@ -1,0 +1,54 @@
+// phys-dev-appl-5.box
+Simulation sim {
+  .steps = 30
+  +k = 25
+  +duration = 13
+  +growthFactor = 30
+  Stage S {
+    .initial = 10
+    .k = sim[k]
+    .duration = sim[duration]
+    .growthFactor = sim[growthFactor]
+    .phaseOutflowProportion = 0.05
+  }
+  StageAndPhase E {
+    .k = sim[k]
+    .duration = sim[duration]
+    .growthFactor = sim[growthFactor]
+    .phaseInflow = S[phaseOutflow]
+    .phaseDuration = 10
+    .phaseK = 5
+  }
+  StageAndPhase I {
+    .k = sim[k]
+    .duration = sim[duration]
+    .growthFactor = sim[growthFactor]
+    .phaseInflow = E[phaseOutflow]
+    .phaseDuration = 6
+    .phaseK = 15
+  }
+  Stage R {
+    .k = sim[k]
+    .duration = sim[duration]
+    .growthFactor = sim[growthFactor]
+    .phaseInflow = I[phaseOutflow]
+  }
+  OutputR {
+    .end = "phys-dev-appl-5-end.R"
+    PageR {
+      .ncol = 1
+      +ggplot = "geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(5))"
+      PlotR {
+        .layout = "merged"
+        .ports = (S[outflow] E[outflowSum] I[outflowSum] R[outflow])
+        .ggplot = ..[ggplot]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = *[outflowTotal]
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}
+

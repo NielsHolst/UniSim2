@@ -12,7 +12,8 @@ class StageBase : public base::Box
 public:
     StageBase(QString name, QObject *parent);
     ~StageBase();
-    void reset();
+    void reset() final;
+    virtual void myReset() = 0;
 
     const double *data();
     virtual void createDistributedDelay() = 0;
@@ -20,14 +21,19 @@ public:
 protected:
     // inputs
     int k;
-    double initial, duration, growthFactor, sdRatio, instantLossRate, zeroLimit;
+    double initial, duration, timeStep, growthFactor, sdRatio, instantLossRate, zeroLimit;
     QVector<double> phaseInflow;
 
     // outputs
-    double content, inflowTotal, outflowTotal, phaseInflowTotal, phaseOutflowTotal, growth;
+    double content, growth,
+        inflowSum, inflowTotal,
+        phaseInflowSum, phaseInflowTotal,
+        outflowSum, outflowTotal,
+        phaseOutflowSum, phaseOutflowTotal;
     QVector<double> phaseOutflow;
 
     // methods
+    void resetOutputsToZero();
     void applyInstantMortality(double mortality);
 
     // data

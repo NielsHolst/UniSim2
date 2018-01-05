@@ -15,7 +15,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(run)
-HELP(run, "run", "runs the root box")
+HELP(run, "run", "runs simulation")
 
 run::run(QString name, QObject *parent)
     : Command(name, parent)

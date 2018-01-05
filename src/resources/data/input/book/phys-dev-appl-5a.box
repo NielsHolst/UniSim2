@@ -1,0 +1,44 @@
+// phys-dev-appl-5a.box
+Simulation sim {
+  .steps = 100
+  +growthFactor = 30
+  StageAndPhase pop {
+    .initial = 10
+    .k = 25
+    .duration = 13
+    .phaseDuration = 10
+    .phaseK = 5
+  }
+  Stage pop2 {
+    .k = 25
+    .duration = 8
+    .phaseInflow = pop[phaseOutflow]
+  }
+  StageAndPhase qop {
+    .inflow = pop[outflow]
+    .k = 15
+    .duration = 11
+    .growthFactor = sim[growthFactor]
+    .phaseDuration = 10
+    .phaseK = 5
+  }
+  Stage qop2 {
+    .k = 15
+    .duration = 14
+    .growthFactor = sim[growthFactor]
+    .phaseInflow = qop[phaseOutflow]
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .layout = "merged"
+        .ports = (*[outflowSum] *[phaseOutflowSum])
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = (*[outflowTotal] *[phaseOutflowTotal])
+      }
+    }
+  }
+}
+

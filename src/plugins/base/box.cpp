@@ -14,6 +14,7 @@ namespace base {
 Box *Box::_currentRoot = 0;
 Box *Box::_savedCurrentRoot = 0;
 int Box::_count = 0;
+bool Box::_debugOn = false;
 
 Box::Box(QString name, QObject *parent)
     : QObject(parent), _name(name), _order(0), _amended(false)
@@ -142,6 +143,8 @@ void Box::amendFamily() {
             if (box)
                 box->amendFamily();
         }
+        if (_debugOn)
+            dialog().information("reset " + fullName());
         amend();
         _count = 0;
         enumerateBoxes(_count);
@@ -188,6 +191,8 @@ void Box::initializeFamily() {
     }
     resolvePortImports();
     updateImports();
+    if (_debugOn)
+        dialog().information("initialize " + fullName());
     initialize();
     updateSelfImports();
     _timer->stop("initialize");
@@ -202,6 +207,8 @@ void Box::resetFamily() {
     }
     resetPorts();
     updateImports();
+    if (_debugOn)
+        dialog().information("reset " + fullName());
     reset();
     updateSelfImports();
     _timer->stop("reset");
@@ -219,6 +226,8 @@ void Box::updateFamily() {
     _timer->stop("update-updateImports");
 
     _timer->start("update-update");
+    if (_debugOn)
+        dialog().information("update " + fullName());
     update();
     updateSelfImports();
     _timer->stop("update-update");
@@ -235,6 +244,8 @@ void Box::cleanupFamily() {
             box->cleanupFamily();
     }
     updateImports();
+    if (_debugOn)
+        dialog().information("cleanup " + fullName());
     cleanup();
     updateSelfImports();
     _timer->stop("cleanup");
@@ -248,6 +259,8 @@ void Box::debriefFamily() {
             box->debriefFamily();
     }
     updateImports();
+    if (_debugOn)
+        dialog().information("debrief " + fullName());
     debrief();
     updateSelfImports();
     _timer->stop("debrief");
@@ -295,6 +308,10 @@ void Box::cloneFamily(QString name, QObject *parent) {
     }
     for (Box *child : findMany<Box>("./*"))
         child->cloneFamily(child->objectName(), myClone);
+}
+
+void Box::debug(bool on) {
+    _debugOn = on;
 }
 
 void Box::toText(QTextStream &text, int indentation) const {

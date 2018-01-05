@@ -10,21 +10,20 @@
     {
     public:
         Stage(QString name, QObject *parent);
-        void reset();
+        void myReset();
         void update();
 
         // special methods
         void createDistributedDelay();
     private:
         // inputs
-        double timeStep, inflow, phaseOutflowProportion;
+        double inflow, phaseOutflowProportion;
 
         // outputs
-        double latestInflow, outflow;
+        double outflow;
 
         // data
         bool _firstUpdate;
-        double _inflowPending;
         DistributedDelay *_dd;
     };
 

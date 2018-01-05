@@ -75,6 +75,8 @@ public:
 
     void cloneFamily(QString name, QObject *parent);
 
+    static void debug(bool on);
+
     void toText(QTextStream &text, int indentation = 0) const;
 private:
     // Data
@@ -86,6 +88,7 @@ private:
     Timer *_timer;
     static Box *_currentRoot, *_savedCurrentRoot;
     static int _count;
+    static bool _debugOn;
     // Methods
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);

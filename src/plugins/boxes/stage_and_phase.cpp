@@ -20,15 +20,10 @@ StageAndPhase::StageAndPhase(QString name, QObject *parent)
     : StageBase(name, parent), _firstUpdate(true)
 {
     Input(inflow).help("Amount of inflow (vector)");
-    Input(timeStep).equals(1).help("Time step for stage development");
     Input(phaseK).equals(30).help("Phase distribution parameter");
     Input(phaseDuration).equals(100.).help("Average delay between inflow and outflow through phase");
     Input(phaseTimeStep).equals(1).help("Time step for phase development");
-
-    Output(latestInflow).help("Amount that just flowed in (vector)");
-    Output(stageOutflow).help("Stage outflow cohorts (vector)");
-    Output(stageOutflowSum).help("Stage outflow cohorts summed (scalar)");
-    Output(phaseOutflowSum).help("Phase outflow cohorts summed (scalar)");
+    Output(outflow).help("Stage outflow cohorts (vector)");
 }
 
 void StageAndPhase::createDistributedDelay() {
@@ -41,24 +36,13 @@ void StageAndPhase::createDistributedDelay() {
     _ddBase = _dd = new DistributedDelay2D(p, this);
 }
 
-void StageAndPhase::reset() {
-    StageBase::reset();
-    if (inflow.isEmpty()) {
+void StageAndPhase::myReset() {
+    content = initial;
+    if (inflow.isEmpty())
         inflow.resize(phaseK);
-        latestInflow.resize(phaseK);
-    }
-    else {
-        inflow.fill(0.);
-        latestInflow.fill(0.);
-    }
-    stageOutflow.resize(phaseK);
-
-    if (phaseInflow.isEmpty())
-        phaseInflow.resize(k);
-    phaseOutflow.resize(k);
-
-    _inflowPending.resize(phaseK);
-    _phaseInflowPending.resize(k);
+    outflow.resize(phaseK);
+    outflow.fill(0.);
+    _firstUpdate = true;
     update();   // Otherwise, outflow will be one simulation step late
 }
 
@@ -72,21 +56,17 @@ void StageAndPhase::update() {
         ThrowException(msg.arg(phaseInflow.size()).arg(k)).context( this);
     }
 
-    applyInstantMortality(instantLossRate);
+    if (content < zeroLimit)
+        applyInstantMortality(1.);
+    else
+        applyInstantMortality(instantLossRate);
 
-    if (_firstUpdate) {
-        _inflowPending[0] += initial;
-        inflowTotal += initial;
-        latestInflow[0] += initial;
-        _firstUpdate = false;
-    }
-    increment(_inflowPending, inflow);
-    latestInflow = inflow;
-    inflowTotal += accum(inflow);
-
-    increment(_phaseInflowPending, phaseInflow);
-    latestPhaseInflow = phaseInflow;
-    phaseInflowTotal += accum(phaseInflow);
+    inflowSum = accum(inflow);
+    inflowTotal += inflowSum;
+    phaseInflowSum = accum(phaseInflow);
+    phaseInflowTotal += phaseInflowSum;
+    if (_firstUpdate)
+        inflow[0] += initial;
 
     // Replace zero time step with neglible time step
     if (timeStep == 0)
@@ -94,38 +74,31 @@ void StageAndPhase::update() {
     if (phaseTimeStep == 0)
         phaseTimeStep = 1e-12;
 
-//    // It remains to consider cases, when only one time step is zero
-//    if (TestNum::eqZero(timeStep) || TestNum::eqZero(phaseTimeStep)) {
-//        content = _dd->content() + accum(_inflowPending) + accum(_phaseInflowPending);
-//        stageOutflow.fill(0.);
-//        stageOutflowSum = 0.;
-//        phaseOutflowSum = 0.;
-//        phaseOutflow.fill(0.);
-//        growth = 0.;
-//        return;
-//    }
+    // Replace zero growth with neglible growth
+    if (growthFactor == 0)
+        growthFactor = 1e-12;
 
     DistributedDelay2D::UpdateParameters p;
     p.dt1 = timeStep;
     p.dt2 = phaseTimeStep;
-    p.inflow1 = &_inflowPending;
-    p.inflow2 = &_phaseInflowPending;
+    p.inflow1 = &inflow;
+    p.inflow2 = &phaseInflow;
     p.fgr1 = growthFactor;
     p.fgr2 = 1.;
     _dd->update(p);
 
-    _inflowPending.fill(0.);
-    _phaseInflowPending.fill(0.);
-
     content = _dd->content();
-    stageOutflow = _dd->state().outflow1;
-    stageOutflowSum = accum(stageOutflow);
+    outflow = _dd->state().outflow1;
+    outflowSum = accum(outflow);
+    outflowTotal += outflowSum;
     phaseOutflow = _dd->state().outflow2;
     phaseOutflowSum = accum(phaseOutflow);
-
-    outflowTotal += stageOutflowSum;
     phaseOutflowTotal += phaseOutflowSum;
     growth = _dd->state().growthRate;
+    if (_firstUpdate) {
+        inflow[0] -= initial;
+        _firstUpdate = false;
+    }
 }
 
 } // namespace

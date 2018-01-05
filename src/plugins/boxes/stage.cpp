@@ -26,10 +26,8 @@ Stage::Stage(QString name, QObject *parent)
 {
     Class(Stage);
     help("delays inflow to emerge as a time-distributed outflow");
-    Input(timeStep).equals(1).help("Time step");
     Input(inflow).help("Amount of inflow");
     Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
-    Output(latestInflow).help("Amount that just flowed in");
     Output(outflow).help("Outflow emerging from the stage");
 }
 
@@ -41,10 +39,9 @@ void Stage::createDistributedDelay() {
     _ddBase = _dd = new DistributedDelay(p, this);
 }
 
-void Stage::reset() {
-    StageBase::reset();
-    _inflowPending = latestInflow = outflow = 0.;
+void Stage::myReset() {
     content = initial;
+    outflow = 0.;
     _firstUpdate = true;
     update();   // Otherwise, outflow will be one simulation step late
 }
@@ -55,17 +52,10 @@ void Stage::update() {
     else
         applyInstantMortality(instantLossRate);
 
-    latestInflow = 0.;
-    if (_firstUpdate) {
-        _inflowPending += initial;
-        inflowTotal += initial;
-        latestInflow += initial;
-        _firstUpdate = false;
-    }
-
-    _inflowPending += inflow;
+    inflowSum = inflow;
     inflowTotal += inflow;
-    latestInflow += inflow;
+    if (_firstUpdate)
+        inflow += initial;
 
     if (!phaseInflow.isEmpty()) {
         if (phaseInflow.size() != k) {
@@ -74,7 +64,8 @@ void Stage::update() {
         }
         double *contents = const_cast<double*>(data());
         increment(contents, phaseInflow.data(), k);
-        phaseInflowTotal += accum(phaseInflow);
+        phaseInflowSum = accum(phaseInflow);
+        phaseInflowTotal += phaseInflowSum;
     }
 
     // Replace zero time step with neglible time step
@@ -86,11 +77,10 @@ void Stage::update() {
         growthFactor = 1e-12;
     else if (growthFactor < 0)
         ThrowException("Growth rate must be > 0").value(growthFactor).context(this);
-    if (_inflowPending < 0)
-        ThrowException("Input must be >= 0").value(_inflowPending).context(this);
+    if (inflow < 0)
+        ThrowException("Inflow must be >= 0").value(inflow).context(this);
 
-    _dd->update(_inflowPending, timeStep, growthFactor);
-    _inflowPending = 0;
+    _dd->update(inflow, timeStep, growthFactor);
 
     if (phaseOutflowProportion == 0.) {
         phaseOutflow.fill(0.);
@@ -102,15 +92,19 @@ void Stage::update() {
             ThrowException(msg).value(phaseOutflowProportion).context(this);
         }
         phaseOutflow = _dd->take(phaseOutflowProportion);
+        phaseOutflowSum = accum(phaseOutflow);
         phaseOutflowTotal += accum(phaseOutflow);
     }
 
     content = _dd->content();
-    outflowTotal += outflow = _dd->state().outflowRate;
+    outflow = _dd->state().outflowRate;
+    outflowSum = outflow;
+    outflowTotal += outflow;
     growth = _dd->state().growthRate;
-//    if (instantLossRate>0.01) {
-//        QMessageBox::information(0, "D", QString::number(instantLossRate) + " " + QString::number(dd->content()));
-//    }
+    if (_firstUpdate) {
+        inflow -= initial;
+        _firstUpdate = false;
+    }
 }
 
 } // namespace
