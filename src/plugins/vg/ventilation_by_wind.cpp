@@ -4,7 +4,6 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
-#include <stdlib.h>
 #include "ventilation_by_wind.h"
 #include "general.h"
 #include <base/publish.h>
@@ -16,34 +15,30 @@ namespace vg {
 
 PUBLISH(VentilationByWind)
 
-/*! \class VentilationByWind
- * \brief Maximum ventilation possible due to outdoors wind
- * Inputs
- * ------
- * - _baseRate_ is the linear increase in ventilation rate with increasing wind speed [h<SUP>-1</SUP> s/m]
- * - _windspeed_ is outdoors wind speed [m/s]
- * - _ventsPoportionalEffectiveArea_ is the total effective ventilation area per ground area [m<SUP>2</SUP> ventilation/m<SUP>2</SUP> ground]
- *
- * Output
- * ------
- * - _value_ is the maximum ventilation possible due to outdoors wind [h<SUP>-1</SUP>]
- */
-
 VentilationByWind::VentilationByWind(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(baseRate).equals(30.);
+    Input(coefficient).equals(0.1).help("Linear increase in ventilation rate with increasing wind speed and vent area [unitless]");
     Input(windSpeed).imports("outdoors[windSpeed]");
-    Input(ventsProportionalEffectiveArea).imports("construction/vents[proportionalEffectiveArea]");
-    Output(value);
+    Input(ventsEffectiveArea).imports("construction/shelter[ventsEffectiveArea]");
+    Input(ventsMaxEffectiveArea).imports("construction/shelter[ventsMaxEffectiveArea]");
+    Input(indoorsVolume).imports("construction/geometry[indoorsVolume]");
+    Output(current).help("Current ventilation caused by outdoors wind [m3/m3/h]");
+    Output(max).help("Max. possible ventilation given screens state, caused by outdoors wind [m3/m3/h]");
 }
 
 void VentilationByWind::reset() {
-    value = baseRate;
+    updateOutputs(4.);
 }
 
 void VentilationByWind::update() {
-    value = baseRate*windSpeed*ventsProportionalEffectiveArea;
+    updateOutputs(windSpeed);
+}
+
+void VentilationByWind::updateOutputs(double windSpeed) {
+    double perGroundArea = coefficient*windSpeed*3600./indoorsVolume; // m-2*h-1 = 1*m/s*s/h/m3
+    max = ventsMaxEffectiveArea*perGroundArea;                        // h-1 = m2*m-2*h-1
+    current = ventsEffectiveArea*perGroundArea;
 }
 
 } //namespace

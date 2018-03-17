@@ -36,7 +36,7 @@ Geometry::Geometry(QString name, QObject *parent)
     Output(coverArea).help("Total area of greenhouse cover (m2)");
     Output(coverPerGroundArea).help("Area to ground cover ratio (m2/m2)");
     Output(indoorsVolume).help("Total greenhouse volume;"
-                               "roof volume include in proportion to horizontal screen state (m3)");
+                               "roof volume included in proportion to horizontal screen state (m3)");
     Output(indoorsAverageHeight).help("Aveage height computed from indoorsVolume/groundArea");
 }
 

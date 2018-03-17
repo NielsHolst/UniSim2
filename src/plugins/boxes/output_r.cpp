@@ -87,7 +87,6 @@ void OutputR::debrief() {
     writeScript();
     dialog().information("R script written to '" + environment().latestOutputFilePath("R") + "'");
     copyToClipboard();
-    dialog().information("Executable R script copied to clipboard");
 }
 
 void OutputR::writeScript() {
@@ -106,6 +105,11 @@ void OutputR::openFile() {
 }
 
 void OutputR::copyToClipboard() {
+    QString output = makeClipboardOutput();
+    environment().copyToClipboard(output);
+}
+
+QString OutputR::makeClipboardOutput() {
     QString s;
     s += "keepPages = " + convert<QString>(keepPages) + "; ";
     s += "keepVariables = " + convert<QString>(keepVariables) + "; ";
@@ -114,7 +118,7 @@ void OutputR::copyToClipboard() {
     s += "source(\""+_filePathR+"\")\n";
     s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";
     s += "source(\"" + environment().inputFileNamePath(end) + "\")\n";
-    environment().copyToClipboard(s);
+    return s;
 }
 
 }

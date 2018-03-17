@@ -7,6 +7,9 @@ BOXES_APP_NAME = igclient
 
 include("$$_PRO_FILE_PWD_/../../boxes_app.pri")
 
+# Replace file resource
+RESOURCES = "$$_PRO_FILE_PWD_/../../resources/igclient.qrc"
+
 # Qt libraries that we use
 QT       -= gui
 CONFIG   += console

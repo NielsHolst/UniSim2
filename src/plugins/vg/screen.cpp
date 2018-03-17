@@ -51,7 +51,7 @@ Screen::Screen(QString name, QObject *parent)
 {
     help("models the impact on light and air fluxes of a screen");
     Input(shelterArea).imports("../..[area]");
-    Input(orientation).equals("cover").help("Either 'cover' (i.e. along cover) or 'horizontal'");
+    Input(orientation).equals("horizontal").help("Either 'cover' (i.e. along cover) or 'horizontal'");
     Input(transmissivityLight).equals(0.41).help("Transmissivity to short-wave radiation [0;1]");
     Input(emissivityInner).equals(0.62).help("Inner emissivity(=absorptivity) of long-wave radiation [0;1]");
     Input(emissivityOuter).equals(0.06).help("Outer emissivity(=absorptivity) of long-wave radiation [0;1]");

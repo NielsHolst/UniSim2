@@ -54,13 +54,13 @@ PUBLISH(EnergyFluxShelters)
 EnergyFluxShelters::EnergyFluxShelters(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(U).imports("construction/shelters[U]");
-    Input(incomingLwAbsorptivity).imports("construction/shelters[incomingLwAbsorptivity]");
-    Input(outgoingLwAbsorptivity).imports("construction/shelters[outgoingLwAbsorptivity]");
-    Input(lightAbsorbedCover).imports("construction/shelters[lightAbsorbedCover]");
-    Input(lightAbsorbedScreens).imports("construction/shelters[lightAbsorbedScreens]");
-    Input(heatCapacityCover).imports("construction/shelters[heatCapacityCoversPerGround]");
-    Input(heatCapacityScreens).imports("construction/shelters[heatCapacityScreensPerGround]");
+    Input(U).imports("construction/shelter[U]");
+    Input(incomingLwAbsorptivity).imports("construction/shelter[incomingLwAbsorptivity]");
+    Input(outgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]");
+    Input(lightAbsorbedCover).imports("construction/shelter[lightAbsorbedCover]");
+    Input(lightAbsorbedScreens).imports("construction/shelter[lightAbsorbedScreens]");
+    Input(heatCapacityCover).imports("construction/shelter[heatCapacityCoversPerGround]");
+    Input(heatCapacityScreens).imports("construction/shelter[heatCapacityScreensPerGround]");
 
     Input(timeStep).imports("calendar[timeStepSecs]");
     Input(height).imports("geometry[indoorsAverageHeight]");

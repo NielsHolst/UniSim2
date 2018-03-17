@@ -273,11 +273,7 @@ void Environment::dir(Folder folder, QDir specificDir) {
 QDir Environment::resolveDir(Folder folder, Folder work) const {
     if (folder == Work)
         return dir(work);
-
     QDir workDir = dir(work);
-//    if (!work.isAbsolute())
-//        ThrowException("Work folder must be an absolute path").value(work.path());
-
     QDir specificDir = dir(folder);
     QString path = (specificDir.isAbsolute()) ?
                 specificDir.absolutePath() :
@@ -309,7 +305,27 @@ QString Environment::fileCounterKey() {
 }
 
 void Environment::copyToClipboard(QString text) {
+    // Write text to file
+    QString fileNamePath = resolveDir(Output).absoluteFilePath("clip.txt");
+    QFile file(fileNamePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream str(&file);
+        str << text;
+        file.close();
+    }
+    // Write text to clipboard
     QApplication::clipboard()->setText(text);
+    dialog().information("Executable R script copied to clipboard");
+}
+
+void Environment::recreateClipboard() {
+    QString fileNamePath = resolveDir(Output).absoluteFilePath("clip.txt");
+    QFile file(fileNamePath);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString text = QTextStream(&file).readAll();
+        QApplication::clipboard()->setText(text);
+        dialog().information("Executable R script copied to clipboard");
+    }
 }
 
 bool Environment::isFirstInstallation() const {

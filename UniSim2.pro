@@ -68,6 +68,11 @@ unisim.depends = vg
 #ave.depends = base
 #unisim.depends = ave
 
+SUBDIRS += bph
+bph.subdir = src/plugins/bph
+bph.depends = base
+unisim.depends = bph
+
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp
 #cmbp.depends = base
@@ -98,10 +103,10 @@ unisim.depends = vg
 #pollnet.depends = base
 #unisim.depends = pollnet
 
-#SUBDIRS += resist
-#resist.subdir = src/plugins/resist
-#resist.depends = base
-#unisim.depends = resist
+SUBDIRS += resist
+resist.subdir = src/plugins/resist
+resist.depends = base
+unisim.depends = resist
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

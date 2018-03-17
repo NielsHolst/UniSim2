@@ -41,8 +41,8 @@ PUBLISH(IndoorsLight)
 IndoorsLight::IndoorsLight(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(sunlightDiffuse).imports("construction/shelters[diffuseLightTransmitted]");
-    Input(sunlightDirect).imports("construction/shelters[directLightTransmitted]");
+    Input(sunlightDiffuse).imports("construction/shelter[diffuseLightTransmitted]");
+    Input(sunlightDirect).imports("construction/shelter[directLightTransmitted]");
     Input(sunlightPropPar).imports("outdoors[propParRadiation]");
     Input(growthLigthtsDirect).imports("growthLights[shortWaveEmission]");
     Input(growthLigthtsPar).imports("growthLights[parEmission]");

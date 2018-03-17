@@ -20,7 +20,7 @@ public:
 
 private:
     // Inputs
-    double byWind, byTemp, givenAirflux;
+    double byWind, byTemperature, givenAirflux;
     // Output
     double value;
 };

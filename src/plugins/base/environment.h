@@ -60,6 +60,7 @@ public:
 
     void incrementFileCounter();
     void copyToClipboard(QString text);
+    void recreateClipboard();
 
     bool isFirstInstallation() const;
     bool isNewInstallation() const;

@@ -41,6 +41,7 @@ private:
     void openFile();
     void writeScript();
     void copyToClipboard();
+    QString makeClipboardOutput();
 };
 
 } // boxes

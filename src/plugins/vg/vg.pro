@@ -95,11 +95,11 @@ HEADERS +=  \
     vapour_flux_sum.h \
     vapour_flux_sum_base.h \
     vapour_flux_transpiration.h \
+    vent.h \
     ventilated_latent_heat_converter.h \
     ventilation.h \
-    ventilation_by_temp.h \
-    ventilation_by_wind.h \
-    windows.h
+    ventilation_by_temperature.h \
+    ventilation_by_wind.h
 
 SOURCES += \
     accumulator.cpp \
@@ -188,9 +188,8 @@ SOURCES += \
     vapour_flux_sum.cpp \
     vapour_flux_sum_base.cpp \
     vapour_flux_transpiration.cpp \
+    vent.cpp \
     ventilated_latent_heat_converter.cpp \
     ventilation.cpp \
-    ventilation_by_temp.cpp \
-    ventilation_by_wind.cpp \
-    windows.cpp
-
+    ventilation_by_temperature.cpp \
+    ventilation_by_wind.cpp

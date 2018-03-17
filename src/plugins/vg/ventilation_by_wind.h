@@ -20,12 +20,13 @@ public:
 
 private:
     // Inputs
-    QString orientation;
-    double baseRate, windSpeed, ventsProportionalEffectiveArea;
+    double coefficient, windSpeed, ventsEffectiveArea, ventsMaxEffectiveArea, indoorsVolume;
     // Output
-    double value;
+    double current, max;
     // Data
     double _maxValue, _slope;
+    // Method
+    void updateOutputs(double windSpeed);
 };
 } //namespace
 

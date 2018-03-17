@@ -4,6 +4,7 @@
 ** Released under the terms of the GNU General Public License version 3.0 or later.
 ** See www.gnu.org/copyleft/gpl.html.
 */
+#include <base/dialog.h>
 #include <base/box_builder.h>
 #include <base/path.h>
 #include <base/publish.h>
@@ -60,8 +61,9 @@ void ShelterFace::amend() {
     BoxBuilder builder(this);
     if (!findMaybeOne<Box>("./cover"))
         builder.box("Cover").name("cover").endbox();
-//    if (!findMaybeOne<Box>("./screens"))
-//        builder.box("Screens").name("screens").endbox();
+    dialog().message("amend "+objectName());
+    if (objectName().contains("roof") && !findMaybeOne<Box>("./vent"))
+        builder.box("Vent").name("vent").endbox();
 }
 
 void ShelterFace::initialize() {

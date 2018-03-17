@@ -24,6 +24,7 @@ HEADERS +=  \
     functional_response.h \
     layout_r.h \
     maker.h \
+    numbered_file.h \
     on_off.h \
     output_buffer.h \
     output_ports.h \
@@ -65,6 +66,7 @@ SOURCES +=  \
     functional_response.cpp \
     layout_r.cpp \
     maker.cpp \
+    numbered_file.cpp \
     on_off.cpp \
     output_buffer.cpp \
     output_ports.cpp \

@@ -13,11 +13,18 @@ GeneFrequencies::GeneFrequencies(QString name, QObject *parent)
     : Box(name, parent)
 {
     Input(N).help("Population size vector (ss, sr, rr)");
+    Input(step).imports("/*[step]");
+    Input(rThreshold).help("Threshold at which to register r frequenyc");
     Output(ss).help("Frequency ss genotype [0;1]");
     Output(sr).help("Frequency ss genotype [0;1]");
     Output(rr).help("Frequency ss genotype [0;1]");
     Output(s).help("Frequency s allele [0;1]");
     Output(r).help("Frequency r allele [0;1]");
+    Output(thresholdGen).help("Generation in which threshold was reached or zero");
+}
+
+void GeneFrequencies::reset() {
+    thresholdGen = 0;
 }
 
 void GeneFrequencies::update() {
@@ -31,6 +38,9 @@ void GeneFrequencies::update() {
         rr = N[2]/sum;
         s = ss + sr/2;
         r = rr + sr/2;
+    }
+    if (r>rThreshold && thresholdGen==0) {
+        thresholdGen = step;
     }
 }
 

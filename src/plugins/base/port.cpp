@@ -418,7 +418,9 @@ QStringList Port::warnings() const {
 void Port::toText(QTextStream &text, int indentation) const {
     QString fill;
     fill.fill(' ', indentation);
-    QString prefix = (access() == PortAccess::Input) ? "." : "//~";
+    QString prefix =
+            (access() == PortAccess::Input) ?
+                (isBlind() ? "+" : "." ) : "//~";
 //    if (access() == PortAccess::Input) {
 //        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
 //    }
@@ -434,7 +436,7 @@ void Port::toText(QTextStream &text, int indentation) const {
 
     QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
     QString assignment = hasImport() ? _importPath : valueAsString();
-    if (_valueType == Char || _valueType == String)
+    if (_valueType == Char || _valueType == String || _valueType == DateTime)
         assignment = "\"" + assignment + "\"";
 
     text << fill

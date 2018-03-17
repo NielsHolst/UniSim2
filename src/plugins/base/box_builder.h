@@ -20,6 +20,7 @@ public:
     ~BoxBuilder();
     void clear();
     // Box
+    BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
     BoxBuilder& name(QString boxName);
     BoxBuilder& endbox();

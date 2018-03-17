@@ -32,7 +32,8 @@ private:
     // Outputs
     double heatCapacityCoversPerGround, heatCapacityScreensPerGround,
         screensEffectiveArea, screensPerGroundArea,
-        screensMaxState, horizontalScreenState;
+        screensMaxState, horizontalScreenState,
+        ventsEffectiveArea, ventsMaxEffectiveArea;
     bool hasHorizontalScreen;
     // Data
     struct FaceInfo {

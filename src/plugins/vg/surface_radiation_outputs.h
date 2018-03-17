@@ -24,7 +24,7 @@ private:
     // Outputs
     double lightTransmissivity, directLightTransmissivity, lwTransmissivity,
            incomingLightAbsorptivity, incomingLightReflectivity,
-           incomingDirectLightAbsorptivity, incomingDirectLightReflectivity,
+            incomingDirectLightAbsorptivity, incomingDirectLightReflectivity,
            incomingLwAbsorptivity, incomingLwReflectivity,
            outgoingLightAbsorptivity, outgoingLightReflectivity,
            outgoingDirectLightAbsorptivity, outgoingDirectLightReflectivity,

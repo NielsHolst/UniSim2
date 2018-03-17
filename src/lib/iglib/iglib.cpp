@@ -2,7 +2,7 @@
 #include <iostream>
 #include <math.h>
 #include <string>
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDateTime>
 #include <QString>
 #include <QTextStream>
@@ -40,15 +40,21 @@ void init() {
         ThrowException("iglib has been released; library functions cannot be called");
     if (!_initialized) {
         _app = new QCoreApplication(argc, &argv);
-        new ObjectPool(_app);
         _dialog = new DialogQuiet(_app);
+        new ObjectPool(_dialog);
 
-        _rnd = MegaFactory::create<Box>("RandomUniform", "rnd", _app);
+        _rnd = MegaFactory::create<Box>("RandomUniform", "rnd", _dialog);
         _rnd->port("drawAtUpdate")->equals(true);
         _rnd->initialize();
 
         _initialized = true;
     }
+}
+
+void release() {
+    _released = true;
+    _dialog->deleteLater();
+    _app->deleteLater();
 }
 
 double rnd(double floor, double ceiling) {
@@ -236,16 +242,15 @@ Query randomQuery() {
 
 #define VAR(X) X.value, X.origin!=NotAvailable
 
-#define SHELTER(X, Y) \
-box("vg::Shelter").name(#X). \
+#define SHELTERFACE(X, Y) \
+box("vg::ShelterFace").name(#X). \
     box("vg::Cover").name("cover"). \
-        port("directTransmissionFile").equals("input/direct_transmission_single.txt"). \
+        port("directTransmissionFile").equals(":/igclient/direct_transmission_single.txt"). \
         port("U4").equals(q.construction.X.U). \
         port("emissivity").equals(q.construction.X.emissivity). \
         port("absorptivity").equals(q.construction.X.absorptivity). \
         port("transmissivity").equals(q.construction.X.transmissivity). \
         port("haze").equals(q.construction.X.haze). \
-        port("antiReflection").equals(false). \
         port("specificHeatCapacity").equals(q.construction.X.heatCapacity). \
     endbox(). \
     box(buildScreens(q.screens, Y)). \
@@ -286,8 +291,8 @@ Box* buildScreen(const Screen *s) {
     BoxBuilder builder;
     builder.
         box("vg::Screen").name("screen").
-            port("position").equals(toString(s->position)).
-            port("layer").equals(toString(s->layer)).
+//            port("position").equals(toString(s->position)).
+//            port("layer").equals(toString(s->layer)).
             port("transmissivityLight").equals(s->material.transmissivityLight).
             port("emissivityInner").equals(s->material.emmisivityInner).
             port("emissivityOuter").equals(s->material.emmisivityOuter).
@@ -323,25 +328,234 @@ Box* buildScreens(Screens screens, ScreenPosition position) {
 Box* buildVent(const Vent *v) {
     BoxBuilder builder;
     builder.
-        box("vg::Vent").name("vent").
+        box("vg::Windows").name("windows").
             port("length").equals(v->length).
-            port("height").equals(v->height).
-            port("number").equals(v->numberOfVents).
-            port("porosity").equals(v->porosity).
-            port("maxOpening").equals(v->maxOpening).
+            port("width").equals(v->height).
+//            port("number").equals(v->numberOfVents).
+            port("transmissivity").equals(v->porosity).
+//            port("maxOpening").equals(v->maxOpening).
         endbox();
     return builder.content();
 }
 
 Box* buildVents(Vents vents) {
+//    BoxBuilder builder;
+//    builder.box("vg::Vents").name("vents");
+    // todo:: Update windows interface (UI and struct)
+    if (vents.size == 0)
+        ThrowException("Missing vents");
+    // Hack: Only use first vent
+//    for (int i=0; i<vents.size; ++i) {
+//        builder.box(buildVent(&vents.array[i]));
+//    }
+//    builder.endbox();
+//    return builder.content();
+    return buildVent(&vents.array[0]);
+}
+
+Box* buildOutdoors(const Query &q) {
+    Variable diffuseIrradiation =
+        Variable{q.outdoors.irradiation.value/2,
+                 q.outdoors.irradiation.origin};
     BoxBuilder builder;
-    builder.box("vg::Vents").name("vents");
-    for (int i=0; i < vents.size; ++i) {
-        builder.box(buildVent(&vents.array[i]));
-    }
-    builder.endbox();
+    builder.
+        box("vg::Outdoors").name("outdoors").
+            port("propParRadiation").equals(0.47).
+            port("co2").equals(VAR(q.outdoors.co2)).
+            port("soilTemperature").equals(10).
+            port("temperature").equals(VAR(q.outdoors.temperature)).
+            port("rh").equals(VAR(q.outdoors.rh)).
+            port("radiation").equals(VAR(q.outdoors.irradiation)).
+            port("diffuseRadiation").equals(VAR(diffuseIrradiation)).
+            port("windSpeed").equals(VAR(q.outdoors.windspeed)).
+            port("skyTemperature").equals(VAR(q.outdoors.temperature)).
+        endbox();
     return builder.content();
 }
+
+Box* buildControllers(const Query &) {
+    BoxBuilder builder;
+    builder.
+        box().name("controllers").
+            box().name("chalk").
+                newPort("value").equals(0).
+            endbox().
+            box().name("co2").
+                newPort("signal").equals(0).
+            endbox().
+        endbox();
+    return builder.content();
+}
+
+Box* buildConstruction(const Query &q) {
+    BoxBuilder builder;
+    builder.
+        box().name("construction").
+            box("vg::Geometry").name("geometry").
+                port("numSpans").equals(q.construction.spanCount).
+                port("spanWidth").equals(q.construction.spanWidth).
+                port("length").equals(q.construction.length).
+                port("height").equals(q.construction.wallHeight).
+//                port("margin").equals(0.15).
+                port("roofPitch").equals(q.construction.roofInclination).
+                port("reflection").equals(q.construction.internalShading).
+            endbox().
+            box("vg::Shelter").name("shelter").
+                SHELTERFACE(roof1, Roof1).
+                SHELTERFACE(roof2, Roof2).
+                SHELTERFACE(side1, Side1).
+                SHELTERFACE(side2, Side2).
+                SHELTERFACE(end1, End1).
+                SHELTERFACE(end2, End2).
+            endbox().
+            box(buildVents(q.vents)).
+        endbox();
+    return builder.content();
+}
+
+Box* buildControlled() {
+    BoxBuilder builder;
+    builder.
+        box().name("controlled").
+            box().name("energyFlux").
+                box().name("heating").
+                    box("Sum").name("minSupply").
+                        port("inputs").imports("actuators/heating/pipes/*[nextEnergyFluxMin]").
+                    endbox().
+                    box("Sum").name("maxSupply").
+                        port("inputs").imports("actuators/heating/pipes/*[nextEnergyFluxMax]").
+                    endbox().
+                    box("EnergyFluxHeatingDemand").name("demand").
+                    endbox().
+                    box("PidController").name("supply").
+                        port("Kprop").equals(0.6).
+                        port("Kint").equals(0.01).
+                        port("minimum").imports("../minSupply[value]").
+                        port("maximum").imports("../maxSupply[value]").
+                        port("desiredValue").imports("../demand[value]").
+                        port("sensedValue").imports("actuators/heating/pipes/*<Pipe>[energyFlux]").transform(Sum).
+                    endbox().
+                endbox().
+                box("IndoorsTemperature").name("temperature").
+                    port("energyFlux").imports("./energyFlux[value]").
+                    port("baseTemperature").imports("indoors/temperature[value]").
+                    box("Sum").name("energyFlux").
+                        port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value])"). // check Sum inputs type!!
+                    endbox().
+                endbox().
+                box().name("cooling").
+                endbox().
+            endbox().
+            box().name("cooling").
+            endbox().
+        endbox();
+    return builder.content();
+}
+
+Box* buildIndoors(const Query &q) {
+    BoxBuilder builder;
+    builder.
+        box().name("indoors").
+            box().name("given").
+                box("vg::AirFluxGiven").name("airFlux").
+                    box("vg::AirFluxInfiltration").name("infiltration").
+                        port("leakage").equals(q.construction.infiltration).
+                    endbox().
+                    box().name("crackVentilation").
+                        newPort("value").equals(1e-9).
+                        newPort("state").equals(0).
+                    endbox().
+                    box("vg::AirFluxGravitation").name("gravitation").
+                    endbox().
+                endbox().
+                box("vg::VapourFluxSum").name("vapourFlux").
+                    box("vg::VapourFluxTranspiration").name("transpiration").
+                    endbox().
+                    box("vg::VapourFluxCondensation").name("condensationCover").
+                        port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
+                        port("surfaceTemperature").imports("energyFlux/shelter[coverTemperature]").
+                    endbox().
+                    box("vg::VapourFluxCondensation").name("condensationScreens").
+                        port("surfaceAreaPerGroundArea").imports("construction/shelter[screensPerGroundArea]").
+                        port("surfaceTemperature").imports("energyFlux/shelter[screensTemperature]").
+                    endbox().
+                    box("vg::VapourFluxAir").name("airFluxOutdoors").
+                        port("airFlux").imports("given/airFlux[value]").
+                    endbox().
+                endbox().
+                box("vg::EnergyFluxSum").name("energyFlux").
+                    box().name("light").
+                        newPort("value").imports("indoors/light[total]").
+                    endbox().
+                    box("vg::EnergyFluxCondensation").name("condensationCover").
+                        port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
+                    endbox().
+                    box("vg::EnergyFluxCondensation").name("condensationScreens").
+                        port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
+                    endbox().
+                    box("vg::EnergyFluxAir").name("airFlux").
+                        port("airFlux").imports("given/airFlux[value]").
+                    endbox().
+                    box("vg::EnergyFluxGrowthLights").name("growthLights").
+                    endbox().
+                    box("vg::EnergyFluxShelters").name("shelter").
+                    endbox().
+                    box("vg::EnergyFluxFloor").name("floor").
+                        port("Uindoors").equals(q.construction.floor.Uindoors).
+                        port("Usoil").equals(q.construction.floor.Usoil).
+                        port("heatCapacity").equals(q.construction.floor.heatCapacity).
+                        port("emissivity").equals(q.construction.floor.emissivity).
+                        box("vg::FloorRadiationAbsorbed").name("radiationAbsorbed").
+                        endbox().
+                    endbox().
+                    box("vg::EnergyFluxTranspiration").name("transpiration").
+                    endbox().
+                endbox().
+            endbox().
+            box(buildControlled()).
+            box().name("total").
+                box("Sum").name("airflux").
+                    port("inputs").equals("(given/airFlux[value] cooling/airFlux[value])").
+                endbox().
+                box("VapourFluxSum").name("vapourFlux").
+                    port("toAdd").equals("(given/vapourFlux cooling/vapourFlux)").
+                endbox().
+                box("Sum").name("energyFlux").
+                    port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])").
+                endbox().
+            endbox().
+            box("vg::IndoorsLight").name("light").
+            endbox().
+            box("vg::IndoorsTemperature").name("temperature").
+                port("resetValue").equals(18).
+                port("energyFlux").imports("total/energyFlux[value]").
+            endbox().
+            box("vg::IndoorsHumidity").name("humidity").
+            endbox().
+            box("vg::IndoorsCo2").name("co2").
+            endbox().
+            box("vg::IndoorsWindSpeed").name("windSpeed").
+            endbox().
+        endbox();
+    return builder.content();
+}
+
+//Box* buildScreen(Screen screen) {
+//    BoxBuilder builder;
+//    builder.box().name("screen");
+//    builder.endbox();
+//    return builder.content();
+//}
+
+//Box* buildScreens(Screens screens) {
+//    BoxBuilder builder;
+//    builder.box().name("screens");
+//    for (int i=0; i < screens.size; ++i) {
+//        builder.box(buildScreen(&screens.array[i]));
+//    }
+//    builder.endbox();
+//    return builder.content();
+//}
 
 Box* buildGrowthLight(const GrowthLight *g) {
     double age(0), lifeTime(0);
@@ -376,137 +590,114 @@ Box* buildGrowthLights(GrowthLights lights) {
     return builder.content();
 }
 
-Box* buildOutdoors(const Query &q) {
-    Variable diffuseIrradiation =
-        Variable{q.outdoors.irradiation.value/2,
-                 q.outdoors.irradiation.origin};
-    BoxBuilder builder;
-    builder.
-        box("vg::Outdoors").name("outdors").
-            port("propParRadiation").equals(0.47).
-            port("co2").equals(VAR(q.outdoors.co2)).
-            port("soilTemperature").equals(10).
-            port("temperature").equals(VAR(q.outdoors.temperature)).
-            port("rh").equals(VAR(q.outdoors.rh)).
-            port("radiation").equals(VAR(q.outdoors.irradiation)).
-            port("diffuseRadiation").equals(VAR(diffuseIrradiation)).
-            port("windSpeed").equals(VAR(q.outdoors.windspeed)).
-            port("skyTemperature").equals(VAR(q.outdoors.temperature)).
-        endbox();
-    return builder.content();
-}
-
-Box* buildConstruction(const Query &q) {
-    BoxBuilder builder;
-    builder.
-        box().name("construction").
-            box("vg::ConstructionGeometry").name("geometry").
-                port("numSpans").equals(q.construction.spanCount).
-                port("spanWidth").equals(q.construction.spanWidth).
-                port("length").equals(q.construction.length).
-                port("height").equals(q.construction.wallHeight).
-                port("margin").equals(0.15).
-                port("roofPitch").equals(q.construction.roofInclination).
-                port("shade").equals(q.construction.internalShading).
-            endbox().
-            box("vg::Shelters").name("shelters").
-                SHELTER(roof1, Roof1).
-                SHELTER(roof2, Roof2).
-                SHELTER(side1, Side1).
-                SHELTER(side2, Side2).
-                SHELTER(end1, End1).
-                SHELTER(end2, End2).
-            endbox().
-            box(buildVents(q.vents)).
-        endbox();
-    return builder.content();
-}
-
-Box* buildIndoors(const Query &q) {
-    BoxBuilder builder;
-    builder.
-        box().name("indoors").
-            box().name("given").
-                box("vg::AirFluxGiven").name("airFlux").
-                    box("vg::AirFluxInfiltration").name("infiltration").
-                        port("leakage").equals(q.construction.infiltration).
-                    endbox().
-                    box().name("crackVentilation").
-                        newPort("value").equals(0).
-                        newPort("state").equals(0).
-                    endbox().
-                    box("vg::AirFluxGravitation").name("gravitation").
-                    endbox().
-                endbox().
-                box("vg::VapourFluxSum").name("vapourFlux").
-                    box("vg::VapourFluxTranspiration").name("transpiration").
-                    endbox().
-                    box("vg::VapourFluxCondensation").name("condensationCover").
-                        port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
-                        port("surfaceTemperature").imports("energyFlux/shelter[coverTemperature]").
-                    endbox().
-                    box("vg::VapourFluxCondensation").name("condensationScreens").
-                        port("surfaceAreaPerGroundArea").imports("construction/shelters[screensPerGroundArea]").
-                        port("surfaceTemperature").imports("energyFlux/shelter[screensTemperature]").
-                    endbox().
-                    box("vg::VapourFluxAir").name("airFluxOutdoors").
-                        port("airFlux").imports("given/airFlux[value]").
-                    endbox().
-                endbox().
-                box("vg::EnergyFluxSum").name("energyFlux").
-                    box().name("light").
-                        newPort("value").imports("indoors/light[total]").
-                    endbox().
-                    box("vg::EnergyFluxCondensation").name("condensationCover").
-                        port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
-                    endbox().
-                    box("vg::EnergyFluxCondensation").name("condensationScreens").
-                        port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
-                    endbox().
-                    box("vg::EnergyFluxAir").name("airFlux").
-                        port("airFlux").imports("given/airFlux[value]").
-                    endbox().
-                    box("vg::EnergyFluxGrowthLights").name("growthLights").
-                    endbox().
-                    box("vg::EnergyFluxShelters").name("shelter").
-                    endbox().
-                    box("vg::EnergyFluxFloor").name("floor").
-                        port("Uindoors").equals(q.construction.floor.Uindoors).
-                        port("Usoil").equals(q.construction.floor.Usoil).
-                        port("heatCapacity").equals(q.construction.floor.heatCapacity).
-                        port("emissivity").equals(q.construction.floor.emissivity).
-                        box("vg::FloorRadiationAbsorbed").name("radiationAbsorbed").
-                        endbox().
-                        box("vg::EnergyFluxTranspiration").name("transpiration").
-                        endbox().
-                    endbox().
-                endbox().
-            endbox().
-            box().name("controlled").
-            endbox().
-            box().name("total").
-            endbox().
-            box("vg::IndoorsLight").name("light").
-            endbox().
-            box("vg::IndoorsTemperature").name("temperature").
-                port("resetValue").equals(18).
-                port("energyFlux").imports("total/energyFlux[value]").
-            endbox().
-            box("vg::IndoorsHumidity").name("humidity").
-            endbox().
-            box("vg::IndoorsCo2").name("co2").
-            endbox().
-            box("vg::IndoorsWindSpeed").name("windSpeed").
-            endbox().
-        endbox();
-    return builder.content();
-}
+//Box* buildPipes(HeatPipes pipes) {
+//    BoxBuilder builder;
+//    builder.box().name("pipes");
+//    for (int i=0; i < pipes.size; ++i) {
+////        builder.box(buildGrowthLight(&lights.array[i]));
+//    }
+//    builder.endbox();
+//    return builder.content();
+//}
 
 Box* buildActuators(const Query &q) {
     BoxBuilder builder;
     builder.
         box().name("actuators").
             box(buildGrowthLights(q.growthLights)).
+//            box(buildPipes(q.heatPipes)).
+        endbox();
+    return builder.content();
+}
+
+struct Gauss {
+    double
+      xGaussUpperside,
+      wGaussUpperside,
+      xGaussLowerside,
+      wGaussLowerside;
+};
+
+const Gauss    topGauss = Gauss{0.1127, 0.2778, 0.8873, 0.2778};
+const Gauss middleGauss = Gauss{0.5000, 0.4444, 0.5000, 0.4444};
+const Gauss  lowerGauss = Gauss{0.8873, 0.2778, 0.1127, 0.2778};
+
+Box* buildLayer(QString name, Gauss g) {
+    BoxBuilder builder;
+    builder.
+        box("LeafLayer").name(name).
+            port("xGaussUpperside").equals(g.xGaussUpperside).
+            port("wGaussUpperside").equals(g.wGaussUpperside).
+            port("xGaussLowerside").equals(g.xGaussLowerside).
+            port("wGaussLowerside").equals(g.wGaussLowerside).
+            box("LeafWindSpeed").name("windSpeed").
+                port("k").equals(0.6).
+            endbox().
+            box("StomatalResistanceRose").name("rs").
+            endbox().
+            box("BoundaryLayerResistanceStanghellini").name("rb").
+            endbox().
+            box("LeafRadiationAbsorbed").name("radiationAbsorbed").
+            endbox().
+            box("LeafTranspiration").name("transpiration").
+            endbox().
+            box("LeafTemperature").name("temperature").
+            endbox().
+            box("LeafPhotosynthesis").name("photosynthesis").
+                box("LeafLightResponse").name("lightResponse").
+                endbox().
+            endbox().
+        endbox();
+    return builder.content();
+}
+
+Box* buildLayers() {
+    BoxBuilder builder;
+    builder.
+        box().name("layers").
+            box(buildLayer("top", topGauss)).
+            box(buildLayer("middle", middleGauss)).
+            box(buildLayer("bottom", lowerGauss)).
+        endbox();
+    return builder.content();
+}
+
+Box* buildCrop(const Query &) {
+    BoxBuilder builder;
+    builder.
+        box().name("crop").
+            box(buildLayers()).
+            box("CropRadiation").name("radiation").
+            endbox().
+            box("Average").name("temperature").
+                port("inputs").imports("../layers/*/temperature[value]").
+            endbox().
+            box("Sum").name("lightAbsorbed").
+                port("inputs").imports("../layers/*/radiationAbsorbed[lightAbsorbed]").
+            endbox().
+            box("Sum").name("heatingAbsorbed").
+                port("inputs").imports("../layers/*/radiationAbsorbed[heatingAbsorbed]").
+            endbox().
+            box("Sum").name("growthLightLwAbsorbed").
+                port("inputs").imports("layers/*/radiationAbsorbed[growthLightLwAbsorbed]").
+            endbox().
+            box("Sum").name("radiationAbsorbed").
+                port("inputs").imports(" layers/*/radiationAbsorbed[lightAbsorbed]").
+            endbox().
+            box("Average").name("conductance").
+                port("inputs").imports("layers/*/transpiration[conductance]").
+            endbox().
+            box("Average").name("vapourFlux").
+                port("inputs").imports("layers/*/transpiration[vapourFlux]").
+            endbox().
+            box("Average").name("gain").
+                port("inputs").imports("layers/*/transpiration[gain]").
+            endbox().
+            box("CropGrowth").name("growth").
+                box("Sum").name("Pg"). // assimilation rate
+                    port("inputs").imports("layers/*/photosynthesis[Pg]").
+                endbox().
+            endbox().
         endbox();
     return builder.content();
 }
@@ -517,13 +708,16 @@ Box* build(const Query &q) {
     builder.
         box("Simulation").name("sim").
             port("steps").equals(1).
+            box("Calendar").name("calendar").endbox().
             box(buildOutdoors(q)).
+            box(buildControllers(q)).
             box(buildConstruction(q)).
             box(buildIndoors(q)).
             box(buildActuators(q)).
+            box(buildCrop(q)).
             box("OutputBuffer").
                 port("ports").equals("(sim[step])").
-                endbox().
+            endbox().
         endbox();
     return builder.content();
 }
@@ -544,6 +738,7 @@ Response compute(const Query &q) {
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
+        std::cout << "\n" << _errorString << "\n";
         r.hasError = true;
     }
     r.error = _errorString.c_str();
@@ -571,7 +766,7 @@ const char * queryToString(const Query &q) {
 
     QString s;
     QTextStream text(&s);
-    sim->toText(text, Box::ToTextOptions::InputsOnly);
+    sim->toText(text);
 
     delete sim;
     _queryString = text.string()->toStdString();
@@ -598,13 +793,6 @@ const char * responseToString(const Response &r) {
         text << "No errors\n";
     _responseString = text.string()->toStdString();
     return _responseString.c_str();
-}
-
-void release() {
-    _released = true;
-    _dialog->deleteLater();
-    _app->deleteLater();
-    _dialog->deleteLater();
 }
 
 } // namespace

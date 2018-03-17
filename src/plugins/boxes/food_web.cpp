@@ -1,4 +1,3 @@
-#include <base/data_frame.h>
 #include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>
@@ -10,34 +9,34 @@ namespace boxes {
 PUBLISH(FoodWeb)
 
 FoodWeb::FoodWeb(QString name, QObject *parent)
-    : Box(name, parent) {
+    : Box(name, parent), _attackDf(this), _outputsCreated(false) {
     help("resolves food web acquisitions among FoodWebBox objects");
     Input(attackFile).help("Name of file with attack rates matrix");
     Input(gainFile).help("Name of file with gain rates matrix");
+    Input(attackFileFirst).help("Only needed if attackFile is changed with every iteration; will then be used for first iteration");
     Input(timeStep).equals(1).help("Time step used to compute search rate");
     Input(showMatrices).equals(false).help("Show attack matrix in console?");
 }
 
 void FoodWeb::amend() {
-    // Open file
-    QString fileNamePath = environment().inputFileNamePath(attackFile);
-    DataFrame df(this);
-    df.read(fileNamePath, DataFrame::ColumnLabelled);
-    _n = df.numCol();
+    // Read attack file
+    readAttackDataFrame();
+    _n = _attackDf.numCol();
+
     // Food web boxes
-    QStringList boxPaths = df.colNames();
-    QVector<int> dfColumns;
+    QStringList boxPaths = _attackDf.colNames();
+    _dfColumns.clear();
     _boxes.clear();
     int index = 0;
     for (QString boxPath : boxPaths.toVector()) {
         QVector<Box*> boxes = findMany<Box>(boxPath);
         for (Box *box : boxes) {
-            dfColumns.append(index);
+            _dfColumns.append(index);
             _boxes.append(box);
         }
         ++index;
     }
-    // Create matrices and vectors
+    // Resize matrices and vectors
     _a.resize(_n,_n);
     _g.resize(_n,_n);
     _sApprox.resize(_n,_n);
@@ -50,13 +49,7 @@ void FoodWeb::amend() {
     _acqPooled.resize(_n);
     _outcomes.resize(_n);
 
-    // Fill attack matrix
-    int aColumn(0);
-    for (int dfColumn : dfColumns) {
-        for (int row=0; row<_n; ++row)
-            _a(row, aColumn) = df.at<double>(row, dfColumn);
-        ++aColumn;
-    }
+    fillAttackMatrix();
 
     // Fill gain matrix
     _g.fill(1.);
@@ -64,13 +57,13 @@ void FoodWeb::amend() {
         DataFrame df2(this);
         QString fileNamePath = environment().inputFileNamePath(gainFile);
         df2.read(fileNamePath, DataFrame::ColumnLabelled);
-        if (df.colNames() != df2.colNames()) {
+        if (_attackDf.colNames() != df2.colNames()) {
             ThrowException("Column names in attack and gain file do not match")
-                    .value(df.colNames().join(" ")).value2(df.colNames().join(" ")).context(this);
+                    .value(_attackDf.colNames().join(" ")).value2(df2.colNames().join(" ")).context(this);
         }
         // Fill matrix
         int aColumn(0);
-        for (int dfColumn : dfColumns) {
+        for (int dfColumn : _dfColumns) {
             for (int row=0; row<_n; ++row)
                 _g(row, aColumn) = df2.at<double>(row, dfColumn);
             ++aColumn;
@@ -83,7 +76,7 @@ void FoodWeb::amend() {
         _demands[i] = _boxes.at(i)->port("demand")->valuePtr<double>();
     }
     // Create output ports
-    setupOutputs();
+    createOutputs();
     // Show
     if (showMatrices) {
         QString s =
@@ -98,7 +91,24 @@ void FoodWeb::amend() {
     }
 }
 
-void FoodWeb::setupOutputs() {
+void FoodWeb::readAttackDataFrame() {
+    QString fileName = attackFile.isEmpty() ? attackFileFirst : attackFile;
+    QString fileNamePath = environment().inputFileNamePath(fileName);
+    _attackDf.read(fileNamePath, DataFrame::ColumnLabelled);
+}
+
+void FoodWeb::fillAttackMatrix() {
+    int aColumn(0);
+    for (int dfColumn : _dfColumns) {
+        for (int row=0; row<_n; ++row)
+            _a(row, aColumn) = _attackDf.at<double>(row, dfColumn);
+        ++aColumn;
+    }
+}
+
+void FoodWeb::createOutputs() {
+    if (_outputsCreated) return;
+    _outputsCreated = true;
     for (int i = 0; i < _n; ++i) {
         QString lossName   = QString("loss_%1").arg(i),
                 supplyName = QString("supply_%1").arg(i),
@@ -120,6 +130,18 @@ void FoodWeb::setupOutputs() {
 //        QString s = "[%1] %2 => %3";
 //        dialog().information(s.arg(i).arg(lossName).arg(_boxes[i]->fullName()));
 //        dialog().information(s.arg(i).arg(supplyName).arg(_boxes[i]->fullName()));
+    }
+}
+
+void FoodWeb::reset() {
+    if (attackFile != _currentAttackFile) {
+        readAttackDataFrame();
+        int n = _attackDf.numCol();
+        if (n!=_n)
+            ThrowException("Attack files must have the same number of columns")
+                    .value(attackFile).value2(_currentAttackFile).context(this);
+        fillAttackMatrix();
+        _currentAttackFile = attackFile;
     }
 }
 

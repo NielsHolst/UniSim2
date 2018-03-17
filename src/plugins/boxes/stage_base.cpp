@@ -53,7 +53,7 @@ void StageBase::reset()
         ThrowException("Duration must be > 0").value(duration).context(this);
     delete _ddBase;
     createDistributedDelay();
-    if (phaseInflow.isEmpty())
+//    if (phaseInflow.isEmpty())
         phaseInflow.resize(k);
     resetOutputsToZero();
     myReset();

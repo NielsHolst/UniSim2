@@ -16,6 +16,9 @@ DataFrame::DataFrame(QObject *parent)
 }
 
 void DataFrame::read(QString fileName, Labelling labelling) {
+    if (fileName.isEmpty())
+        ThrowException("File name is empty").context(this);
+
     QFile file;
     QString fileNamePath = QFileInfo(fileName).isAbsolute() ?
                 fileName :

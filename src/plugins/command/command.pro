@@ -12,6 +12,7 @@ QT += widgets
 
 HEADERS +=  \
     clear.h \
+    clip.h \
     debug.h \
     edit.h \
     find.h \
@@ -40,6 +41,7 @@ HEADERS +=  \
 	
 SOURCES +=  \
     clear.cpp \
+    clip.cpp \
     debug.cpp \
     edit.cpp \
     find.cpp \

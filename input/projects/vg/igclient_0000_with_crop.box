@@ -1,0 +1,1302 @@
+Simulation sim{
+  .iterations = 1
+  .steps = 1
+  .stopIterations = FALSE
+  .stopSteps = FALSE
+  .useStopIterations = FALSE
+  .useStopSteps = FALSE
+  .silent = FALSE
+  //~iteration == 0
+  //~step == 0
+  //~finalStep == 0
+  //~executionTime == 0
+  //~hasError == FALSE
+  //~errorMsg == ""
+  Calendar calendar{
+    .latitude = 52
+    .longitude = 11
+    .timeZone = 1
+    .initialDateTime = "2000/1/1 00:00:00"
+    .timeStep = 1
+    .timeUnit = "d"
+    .sample = 1
+    //~date == 2001/1/1
+    //~time == 00:00:00
+    //~trueSolarTime == 00:00:00
+    //~dateTime == "2001/1/1 00:00:00"
+    //~timeStepSecs == 0
+    //~timeStepDays == 0
+    //~totalTimeSteps == 0
+    //~totalTime == 0
+    //~totalDays == 0
+    //~dayOfYear == 0
+    //~dayLength == 0
+    //~sinb == 0
+    //~azimuth == 0
+    //~sunrise == 00:00:00
+    //~sunset == 00:00:00
+    //~solarConstant == 0
+    //~angot == 0
+    //~irradiationCorrection == 0
+  }
+  vg::Outdoors outdoors{
+    .propParRadiation = 0.47
+    .co2 = 383.99
+    .soilTemperature = 10
+    .temperature = 14.1516
+    .rh = 82.2919
+    .radiation = 0
+    .diffuseRadiation = 0
+    .windSpeed = 13.1935
+    .skyTemperature = 14.1516
+    //~parRadiation == 0
+    //~directRadiation == 0
+    //~propDirectRadiation == 0
+    //~ah == 0
+    //~sh == 0
+  }
+  Box controllers{
+    Box chalk{
+      +value = 0
+    }
+    Box co2{
+      +signal = 0
+    }
+  }
+  Box construction{
+    vg::Geometry geometry{
+      .numSpans = 1
+      .spanWidth = 25
+      .length = 120
+      .height = 3.13481
+      .roofPitch = 36.9201
+      .reflection = 0.0910595
+      .horizontalScreenState = construction/shelter[horizontalScreenState]
+      //~width == 0
+      //~groundArea == 0
+      //~roofArea == 0
+      //~sideWallsArea == 0
+      //~endWallsArea == 0
+      //~gablesArea == 0
+      //~coverArea == 0
+      //~coverPerGroundArea == 0
+      //~indoorsVolume == 0
+      //~indoorsAverageHeight == 0
+    }
+    vg::Shelter shelter{
+      .groundArea = geometry[groundArea]
+      //~lightTransmissivity == 0
+      //~directLightTransmissivity == 0
+      //~lwTransmissivity == 0
+      //~incomingLightAbsorptivity == 0
+      //~incomingLightReflectivity == 0
+      //~incomingDirectLightAbsorptivity == 0
+      //~incomingDirectLightReflectivity == 0
+      //~incomingLwAbsorptivity == 0
+      //~incomingLwReflectivity == 0
+      //~outgoingLightAbsorptivity == 0
+      //~outgoingLightReflectivity == 0
+      //~outgoingDirectLightAbsorptivity == 0
+      //~outgoingDirectLightReflectivity == 0
+      //~outgoingLwAbsorptivity == 0
+      //~outgoingLwReflectivity == 0
+      //~diffuseLightTransmitted == 0
+      //~directLightTransmitted == 0
+      //~totalLightTransmitted == 0
+      //~lightAbsorbedCover == 0
+      //~lightAbsorbedScreens == 0
+      //~haze == 0
+      //~U == 0
+      //~airTransmissivity == 0
+      //~heatCapacityCoversPerGround == 0
+      //~heatCapacityScreensPerGround == 0
+      //~screensEffectiveArea == 0
+      //~screensPerGroundArea == 0
+      //~horizontalScreenState == 0
+      //~hasHorizontalScreen == FALSE
+      vg::ShelterFace roof1{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.863495
+          .absorptivity = 0.021309
+          .transmissivity = 0.884213
+          .haze = 0.0843483
+          .U4 = 5.93891
+          .specificHeatCapacity = 714
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.348066
+            .emissivityInner = 0.574157
+            .emissivityOuter = 0.517291
+            .U = 4.78383
+            .energyLossReduction = 0.354976
+            .haze = 0.0160603
+            .specificHeatCapacity = 611.488
+            .transmissivityAir = 0.841941
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.502559
+            .emissivityInner = 0.654044
+            .emissivityOuter = 0.54307
+            .U = 6.40796
+            .energyLossReduction = 0.430774
+            .haze = 0.0620187
+            .specificHeatCapacity = 654.727
+            .transmissivityAir = 0.746236
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.318323
+            .emissivityInner = 0.571262
+            .emissivityOuter = 0.241912
+            .U = 4.18282
+            .energyLossReduction = 0.384312
+            .haze = 0.0333823
+            .specificHeatCapacity = 357.735
+            .transmissivityAir = 0.766086
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.50255
+            .emissivityInner = 0.64401
+            .emissivityOuter = 0.524271
+            .U = 4.48189
+            .energyLossReduction = 0.47651
+            .haze = 0.0938141
+            .specificHeatCapacity = 424.758
+            .transmissivityAir = 0.887728
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace roof2{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.887182
+          .absorptivity = 0.0505336
+          .transmissivity = 0.896154
+          .haze = 0.109314
+          .U4 = 7.64144
+          .specificHeatCapacity = 870
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.348066
+            .emissivityInner = 0.574157
+            .emissivityOuter = 0.517291
+            .U = 4.78383
+            .energyLossReduction = 0.354976
+            .haze = 0.0160603
+            .specificHeatCapacity = 611.488
+            .transmissivityAir = 0.841941
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.318323
+            .emissivityInner = 0.571262
+            .emissivityOuter = 0.241912
+            .U = 4.18282
+            .energyLossReduction = 0.384312
+            .haze = 0.0333823
+            .specificHeatCapacity = 357.735
+            .transmissivityAir = 0.766086
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.50255
+            .emissivityInner = 0.64401
+            .emissivityOuter = 0.524271
+            .U = 4.48189
+            .energyLossReduction = 0.47651
+            .haze = 0.0938141
+            .specificHeatCapacity = 424.758
+            .transmissivityAir = 0.887728
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace side1{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.888475
+          .absorptivity = 0.0400548
+          .transmissivity = 0.863394
+          .haze = 0.203697
+          .U4 = 6.07313
+          .specificHeatCapacity = 836
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+        }
+      }
+      vg::ShelterFace side2{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.821798
+          .absorptivity = 0.0588953
+          .transmissivity = 0.867588
+          .haze = 0.263211
+          .U4 = 6.13088
+          .specificHeatCapacity = 760
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.472685
+            .emissivityInner = 0.473329
+            .emissivityOuter = 0.224525
+            .U = 6.29761
+            .energyLossReduction = 0.378115
+            .haze = 0.0784608
+            .specificHeatCapacity = 368.223
+            .transmissivityAir = 0.760092
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace end1{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.83483
+          .absorptivity = 0.0273236
+          .transmissivity = 0.872899
+          .haze = 0.288943
+          .U4 = 5.50547
+          .specificHeatCapacity = 781
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.482327
+            .emissivityInner = 0.571966
+            .emissivityOuter = 0.482295
+            .U = 6.13898
+            .energyLossReduction = 0.330741
+            .haze = 0.0900272
+            .specificHeatCapacity = 409.466
+            .transmissivityAir = 0.802476
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+          vg::Screen screen{
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.356096
+            .emissivityInner = 0.534789
+            .emissivityOuter = 0.226383
+            .U = 7.41128
+            .energyLossReduction = 0.447922
+            .haze = 0.0953229
+            .specificHeatCapacity = 533.817
+            .transmissivityAir = 0.8045
+            .transmissivityAirExponent = 4
+            .state = 0
+            //~layer == 0
+            //~transmissivityLightNet == 0
+            //~absorptivityLwInnerNet == 0
+            //~absorptivityLwOuterNet == 0
+            //~unhazed == 0
+            //~resistance == 0
+            //~heatCapacity == 0
+            //~transmissivityAirNet == 0
+            //~effectiveArea == 0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace end2{
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0
+        //~directLightTransmissivity == 0
+        //~lwTransmissivity == 0
+        //~incomingLightAbsorptivity == 0
+        //~incomingLightReflectivity == 0
+        //~incomingDirectLightAbsorptivity == 0
+        //~incomingDirectLightReflectivity == 0
+        //~incomingLwAbsorptivity == 0
+        //~incomingLwReflectivity == 0
+        //~outgoingLightAbsorptivity == 0
+        //~outgoingLightReflectivity == 0
+        //~outgoingDirectLightAbsorptivity == 0
+        //~outgoingDirectLightReflectivity == 0
+        //~outgoingLwAbsorptivity == 0
+        //~outgoingLwReflectivity == 0
+        //~diffuseLightTransmitted == 0
+        //~directLightTransmitted == 0
+        //~totalLightTransmitted == 0
+        //~lightAbsorbedCover == 0
+        //~lightAbsorbedScreens == 0
+        //~haze == 0
+        //~U == 0
+        //~airTransmissivity == 0
+        //~area == 0
+        //~relativeArea == 0
+        //~areaPerGround == 0
+        //~screensMaxState == 0
+        vg::Cover cover{
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers/chalk[value]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/igclient/direct_transmission_single.txt"
+          .emissivity = 0.839074
+          .absorptivity = 0.0311822
+          .transmissivity = 0.889148
+          .haze = 0.113328
+          .U4 = 6.57335
+          .specificHeatCapacity = 850
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~U == 0
+          //~heatCapacity == 0
+        }
+        vg::Screens screens{
+          //~lightTransmissivity == 0
+          //~directLightTransmissivity == 0
+          //~lwTransmissivity == 0
+          //~incomingLightAbsorptivity == 0
+          //~incomingLightReflectivity == 0
+          //~incomingDirectLightAbsorptivity == 0
+          //~incomingDirectLightReflectivity == 0
+          //~incomingLwAbsorptivity == 0
+          //~incomingLwReflectivity == 0
+          //~outgoingLightAbsorptivity == 0
+          //~outgoingLightReflectivity == 0
+          //~outgoingDirectLightAbsorptivity == 0
+          //~outgoingDirectLightReflectivity == 0
+          //~outgoingLwAbsorptivity == 0
+          //~outgoingLwReflectivity == 0
+          //~areHorizontal == FALSE
+          //~maxState == 0
+          //~airTransmissivity == 0
+          //~haze == 0
+          //~U == 0
+          //~heatCapacity == 0
+          //~effectiveArea == 0
+        }
+      }
+    }
+    vg::Windows windows{
+      .roofPitch = geometry[roofPitch]
+      .groundArea = geometry[groundArea]
+      .windSpeed = outdoors[windSpeed]
+      .indoorsTemperature = indoors/temperature[value]
+      .outdoorsTemperature = outdoors[temperature]
+      .state = 0
+      .orientation = "leeward"
+      .relativeArea = 0.1
+      .length = 2.75196
+      .width = 0.982909
+      .transmissivity = 0
+      //~number == 0
+      //~verticalOpening == 0
+    }
+  }
+  Box indoors{
+    Box given{
+      vg::AirFluxGiven airFlux{
+        .airFluxes = ./*[value]
+        //~value == 0
+        vg::AirFluxInfiltration infiltration{
+          .leakage = 1.80733
+          .windSpeed = outdoors[windSpeed]
+          //~value == 0
+        }
+        Box crackVentilation{
+          +value = 1e-9
+          +state = 0
+        }
+        vg::AirFluxGravitation gravitation{
+          .screensState = construction/shelter[horizontalScreenState]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .indoorsVolume = geometry[indoorsVolume]
+          .groundArea = geometry[groundArea]
+          //~value == 0
+        }
+      }
+      vg::VapourFluxSum vapourFlux{
+        .toAdd = ()
+        //~conductance == 0
+        //~gain == 0
+        //~vapourFlux == 0
+        vg::VapourFluxTranspiration transpiration{
+          .conductanceIn = crop/conductance[value]
+          .vapourFluxIn = crop/vapourFlux[value]
+          .gainIn = crop/gain[value]
+          //~conductance == 0
+          //~gain == 0
+          //~vapourFlux == 0
+        }
+        vg::VapourFluxCondensation condensationCover{
+          .surfaceAreaPerGroundArea = geometry[coverPerGroundArea]
+          .surfaceTemperature = energyFlux/shelter[coverTemperature]
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsAh = indoors/humidity[ah]
+          //~conductance == 0
+          //~gain == 0
+          //~vapourFlux == 0
+        }
+        vg::VapourFluxCondensation condensationScreens{
+          .surfaceAreaPerGroundArea = construction/shelter[screensPerGroundArea]
+          .surfaceTemperature = energyFlux/shelter[screensTemperature]
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsAh = indoors/humidity[ah]
+          //~conductance == 0
+          //~gain == 0
+          //~vapourFlux == 0
+        }
+        vg::VapourFluxAir airFluxOutdoors{
+          .airFlux = given/airFlux[value]
+          .indoorsAh = indoors/humidity[ah]
+          .outdoorsAh = outdoors[ah]
+          .height = geometry[indoorsAverageHeight]
+          //~conductance == 0
+          //~gain == 0
+          //~vapourFlux == 0
+        }
+      }
+      vg::EnergyFluxSum energyFlux{
+        //~value == 0
+        Box light{
+          +value = indoors/light[total]
+        }
+        vg::EnergyFluxCondensation condensationCover{
+          .vapourFlux = ../../vapourFlux/condensationCover[vapourFlux]
+          //~value == 0
+        }
+        vg::EnergyFluxCondensation condensationScreens{
+          .vapourFlux = ../../vapourFlux/condensationScreens[vapourFlux]
+          //~value == 0
+        }
+        vg::EnergyFluxAir airFlux{
+          .airFlux = given/airFlux[value]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .height = geometry[indoorsAverageHeight]
+          .timeStep = calendar[timeStepSecs]
+          //~value == 0
+        }
+        vg::EnergyFluxGrowthLights growthLights{
+          .energyFlux = actuators/growthLights[energyFlux]
+          //~value == 0
+        }
+        vg::EnergyFluxShelters shelter{
+          .U = construction/shelter[U]
+          .incomingLwAbsorptivity = construction/shelter[incomingLwAbsorptivity]
+          .outgoingLwAbsorptivity = construction/shelter[outgoingLwAbsorptivity]
+          .lightAbsorbedCover = construction/shelter[lightAbsorbedCover]
+          .lightAbsorbedScreens = construction/shelter[lightAbsorbedScreens]
+          .heatCapacityCover = construction/shelter[heatCapacityCoversPerGround]
+          .heatCapacityScreens = construction/shelter[heatCapacityScreensPerGround]
+          .timeStep = calendar[timeStepSecs]
+          .height = geometry[indoorsAverageHeight]
+          .coverPerGroundArea = geometry[coverPerGroundArea]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .skyTemperature = outdoors[skyTemperature]
+          .radiationFluxCropTop = crop/layers/top/radiationAbsorbed[shelterLoss]
+          .radiationFluxCropMiddle = crop/layers/middle/radiationAbsorbed[shelterLoss]
+          .radiationFluxCropBottom = crop/layers/bottom/radiationAbsorbed[shelterLoss]
+          //~value == 0
+          //~heatFluxOutsideToCover == 0
+          //~heatFluxInsideToCover == 0
+          //~radiationFluxSkyToCover == 0
+          //~radiationFluxSunToCover == 0
+          //~radiationFluxSunToScreens == 0
+          //~coverTemperature == 0
+          //~screensTemperature == 0
+        }
+        vg::EnergyFluxFloor floor{
+          .Uindoors = 6.36045
+          .Usoil = 8.73406
+          .heatCapacity = 32028.4
+          .emissivity = 0.830363
+          .indoorsTemperature = indoors/temperature[value]
+          .soilTemperature = outdoors[soilTemperature]
+          .height = geometry[indoorsAverageHeight]
+          .timeStep = calendar[timeStepSecs]
+          //~value == 0
+          //~temperature == 0
+          vg::FloorRadiationAbsorbed radiationAbsorbed{
+            .indoorsLight = indoors/light[total]
+            .growthLightLight = actuators/growthLights[shortWaveEmission]
+            .lightAbsorbedByCrop = crop/lightAbsorbed[value]
+            .growthLightLwAbsorbedByCrop = crop/growthLightLwAbsorbed[value]
+            //~value == 0
+          }
+        }
+        vg::EnergyFluxTranspiration transpiration{
+          .transpiration = ../../vapourFlux/transpiration[vapourFlux]
+          //~value == 0
+        }
+      }
+    }
+    Box controlled{
+    }
+    Box total{
+      Sum airflux { 
+        .inputs = (given/airFlux[value] cooling/airFlux[value])
+      }
+      VapourFluxSum  vapourFlux {
+        .toAdd = (given/vapourFlux cooling/vapourFlux)
+      }
+      Sum energyFlux {
+        .inputs = (given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])
+      }
+    }
+    vg::IndoorsLight light{
+      .sunlightDiffuse = construction/shelter[diffuseLightTransmitted]
+      .sunlightDirect = construction/shelter[directLightTransmitted]
+      .sunlightPropPar = outdoors[propParRadiation]
+      .growthLigthtsDirect = growthLights[shortWaveEmission]
+      .growthLigthtsPar = growthLights[parEmission]
+      //~direct == 0
+      //~diffuse == 0
+      //~total == 0
+      //~parDirect == 0
+      //~parDiffuse == 0
+      //~parTotal == 0
+    }
+    vg::IndoorsTemperature temperature{
+      .resetValue = 18
+      .energyFlux = total/energyFlux[value]
+      .baseTemperature = .[value]
+      .height = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~value == 0
+    }
+    vg::IndoorsHumidity humidity{
+      .conductance = indoors/total/vapourFlux[conductance]
+      .vapourFlux = indoors/total/vapourFlux[vapourFlux]
+      .gain = indoors/total/vapourFlux[gain]
+      .temperature = indoors/temperature[value]
+      .height = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~rh == 0
+      //~ah == 0
+      //~ahEq == 0
+      //~timeConstant == 0
+      //~surplusAh == 0
+      //~netVapourFlux == 0
+    }
+    vg::IndoorsCo2 co2{
+      .outdoorsCo2 = outdoors[co2]
+      .airFlux = total/airFlux[value]
+      .injectionRate = controllers/co2[signal]
+      .assimilation = crop/growth/Pg[value]
+      .averageHeight = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~value == 0
+    }
+    vg::IndoorsWindSpeed windSpeed{
+      .ventilation = indoors/total/airFlux[value]
+      .constructionWidth = geometry[width]
+      //~value == 0
+    }
+  }
+  Box actuators{
+    vg::GrowthLights growthLights{
+      //~heatEmission == ./*<GrowthLight>[heatEmission]
+      //~longWaveEmission == ./*<GrowthLight>[longWaveEmission]
+      //~shortWaveEmission == ./*<GrowthLight>[shortWaveEmission]
+      //~totalEmission == ./*<GrowthLight>[totalEmission]
+      //~parEmission == ./*<GrowthLight>[parEmission]
+      //~energyFlux == ./*<GrowthLight>[energyFlux]
+      //~currentlyOn == FALSE
+      vg::GrowthLight growthLight{
+        .type = "LED"
+        .intensity = 48
+        .ballastCorrection = 1.05
+        .age = 1094.71
+        .lifeTime = 6067.63
+        .on = FALSE
+        .timeStep = calendar[timeStepSecs]
+        //~heatEmission == 0
+        //~longWaveEmission == 0
+        //~shortWaveEmission == 0
+        //~totalEmission == 0
+        //~parEmission == 0
+        //~energyFlux == 0
+        //~currentlyOn == FALSE
+        //~currentPeriod == 0
+        //~totalPeriod == 0
+      }
+      vg::GrowthLight growthLight{
+        .type = "HPSL"
+        .intensity = 27
+        .ballastCorrection = 1
+        .age = 7234.78
+        .lifeTime = 65362.3
+        .on = FALSE
+        .timeStep = calendar[timeStepSecs]
+        //~heatEmission == 0
+        //~longWaveEmission == 0
+        //~shortWaveEmission == 0
+        //~totalEmission == 0
+        //~parEmission == 0
+        //~energyFlux == 0
+        //~currentlyOn == FALSE
+        //~currentPeriod == 0
+        //~totalPeriod == 0
+      }
+      vg::GrowthLight growthLight{
+        .type = "HPSL"
+        .intensity = 35
+        .ballastCorrection = 1.1
+        .age = 1421.1
+        .lifeTime = 9896.82
+        .on = TRUE
+        .timeStep = calendar[timeStepSecs]
+        //~heatEmission == 0
+        //~longWaveEmission == 0
+        //~shortWaveEmission == 0
+        //~totalEmission == 0
+        //~parEmission == 0
+        //~energyFlux == 0
+        //~currentlyOn == FALSE
+        //~currentPeriod == 0
+        //~totalPeriod == 0
+      }
+    }
+  }
+  Box crop {
+    Box layers {
+      LeafLayer top {
+        .xGaussUpperside = 0.1127
+        .wGaussUpperside = 0.2778
+        .xGaussLowerside = 0.8873
+        .wGaussLowerside = 0.2778
+        LeafWindSpeed windSpeed {
+          .k = 0.6
+        }
+        StomatalResistanceRose {
+        }
+        BoundaryLayerResistanceStanghellini {
+        }
+        LeafRadiationAbsorbed radiationAbsorbed {
+        }
+        LeafTranspiration transpiration {
+        }
+        LeafTemperature temperature {
+        }
+        LeafPhotosynthesis photosynthesis {
+          LeafLightResponse lightResponse {
+          }
+        }
+      }
+      LeafLayer middle {
+        .xGaussUpperside = 0.5
+        .wGaussUpperside = 0.4444
+        .xGaussLowerside = 0.5
+        .wGaussLowerside = 0.4444
+        LeafWindSpeed windSpeed {
+          .k = 0.6
+        }
+        StomatalResistanceRose {
+        }
+        BoundaryLayerResistanceStanghellini {
+        }
+        LeafRadiationAbsorbed radiationAbsorbed {
+        }
+        LeafTranspiration transpiration {
+        }
+        LeafTemperature temperature {
+        }
+        LeafPhotosynthesis photosynthesis {
+          LeafLightResponse lightResponse {
+          }
+        }
+      }
+      LeafLayer bottom {
+        .xGaussUpperside = 0.8873
+        .wGaussUpperside = 0.2778
+        .xGaussLowerside = 0.1127
+        .wGaussLowerside = 0.2778
+        LeafWindSpeed windSpeed {
+          .k = 0.6
+        }
+        StomatalResistanceRose {
+        }
+        BoundaryLayerResistanceStanghellini {
+        }
+        LeafRadiationAbsorbed radiationAbsorbed {
+        }
+        LeafTranspiration transpiration {
+        }
+        LeafTemperature temperature {
+        }
+        LeafPhotosynthesis photosynthesis {
+          LeafLightResponse lightResponse {
+          }
+        }
+      }
+    }
+		CropRadiation radiation {
+    }
+    Average temperature {
+      .inputs = ../layers/*/temperature[value]
+    }
+    Sum lightAbsorbed {
+      .inputs = ../layers/*/radiationAbsorbed[lightAbsorbed]
+    }
+    Sum heatingAbsorbed {
+      .inputs = ../layers/*/radiationAbsorbed[heatingAbsorbed]
+    }
+    Sum growthLightLwAbsorbed {
+      .inputs = layers/*/radiationAbsorbed[growthLightLwAbsorbed]
+    }
+    Sum radiationAbsorbed { 
+      .inputs = layers/*/radiationAbsorbed[lightAbsorbed]
+    }
+    Average conductance {
+      .inputs = layers/*/transpiration[conductance] 
+    }
+    Average vapourFlux {
+      .inputs = layers/*/transpiration[vapourFlux]
+    }
+    Average gain {
+      .inputs = layers/*/transpiration[gain]
+    }
+    CropGrowth growth {
+      Sum Pg {  // assimilation rate
+        .inputs = layers/*/photosynthesis[Pg]
+      }
+    }
+  }
+  
+  OutputBuffer {
+    .ports = (sim[step])
+  }
+}

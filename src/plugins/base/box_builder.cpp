@@ -1,4 +1,3 @@
-#include <iostream>
 #include "box.h"
 #include "box_builder.h"
 #include "box_step.h"
@@ -36,11 +35,11 @@ void BoxBuilder::clear() {
     Port::clearIndex();
 }
 
-//BoxBuilder& BoxBuilder::box(Box *box) {
-//    box->setParent(_currentBox);
-//    _currentPort = 0;
-//    return *this;
-//}
+BoxBuilder& BoxBuilder::box(Box *box) {
+    box->setParent(_currentBox);
+    _currentPort = 0;
+    return *this;
+}
 
 BoxBuilder& BoxBuilder::box(QString className) {
     if (_content && _stack.isEmpty()) {

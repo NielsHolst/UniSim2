@@ -1,12 +1,20 @@
 Simulation sim {
-  .iterations = 1000
-  .steps = 10000
-  .silent = TRUE
-  .stopSteps = ./stop[isOn]
-  .useStopSteps = TRUE
-  OnOff stop {
-    .x = frequencies[r]
-    .xOn = 0.5
+  .iterations = 10
+  .steps = 0
+  // .silent = TRUE
+  // .stopSteps|all = ./stop/*[isOn]
+  // .useStopSteps = TRUE
+  Box stop {
+    OnOff onR {
+      .x = frequencies[thresholdGen]
+      .xOn = 1
+      .xOff = 1e6
+    }
+    OnOff onDensity {
+      .x = density[thresholdGen]
+      .xOn = 1
+      .xOff = 1e6
+    }
   }
   SensitivityAnalysis {
   }
@@ -66,6 +74,7 @@ Simulation sim {
       .immigration = immigration[values]
       .reproduction = reproduction[values]
       .survival = survival[values]
+      .densityThreshold = 30000
     }
     ReproductiveRate reproductiveRate {
       .R = 5 @ (uniform 2 50)
@@ -79,34 +88,35 @@ Simulation sim {
     }
     GeneFrequencies frequencies {
       .N = density[values]
+      .rThreshold = 0.5
     }
   }
-  OutputR {
-    PageR {
-      .xAxis = *<Distribution>/..<Port>
-      PlotR {
-        .ports = sim[step]|end
-        .ggplot = "geom_point() + geom_smooth(se=FALSE)"
-        .transform = "log10"
-      }
-    }
-    // PageR {
-      // .title = "ReproductiveRate"
-      // PlotR {
-        // .ports = reproductiveRate[values]
-      // }
-    // }
-    // PageR {
-      // .title = "Reproduction"
-      // PlotR {
-        // .ports = reproduction[values]
-      // }
-    // }
-    // PageR {
-      // .title = "Survival"
-      // PlotR {
-        // .ports = survival[values]
-      // }
-    // }
+  OutputText {
+    .ports = *<Distribution>/..<Port>
   }
+  // OutputR output {
+    // +ggplot = "geom_point(colour='forestgreen', alpha=0.4)  +
+          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.25, colour='brown') +
+          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.50, size=1, colour='brown') +
+          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.75, colour='brown')"
+    // .end = "resist-6-sa-end.R"
+    // PageR {
+      // .xAxis = *<Distribution>/..<Port>
+      // .title = "Resistance threshold"
+      // PlotR {
+        // .ports = frequencies[thresholdGen]|end
+        // .transform = "log10"
+        // .ggplot = output[ggplot]
+      // }
+    // }
+    // PageR {
+      // .xAxis = *<Distribution>/..<Port>
+      // .title = "Density threshold"
+      // PlotR {
+        // .ports = density[thresholdGen]|end
+        // .transform = "log10"
+        // .ggplot = output[ggplot]
+      // }
+    // }
+  // }
 }

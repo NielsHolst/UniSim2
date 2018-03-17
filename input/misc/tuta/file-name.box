@@ -1,0 +1,21 @@
+Simulation sim {
+  .steps = 3
+  Box tests {
+    NumberedFile fileName1 {
+      .fileName = "attack.txt"
+      .number = 7
+    }
+    NumberedFile fileName2 {
+      .fileName = "files/attack.txt"
+      .number = 11
+    }
+    NumberedFile fileName3 {
+      .fileName = "attack.txt"
+      .number = 56
+      .numberWidth = 4
+    }
+  }
+  OutputText {
+    .ports = tests/*[value]
+  }
+}

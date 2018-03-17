@@ -9,13 +9,16 @@ class GeneFrequencies : public base::Box
 {
 public:
     GeneFrequencies(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // Inputs
     QVector<double> N;
+    double rThreshold;
+    int step;
     // Outputs
     double ss, sr, rr, s, r;
-
+    int thresholdGen;
 };
 
 }

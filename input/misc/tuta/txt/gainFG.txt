@@ -1,0 +1,6 @@
+web/adultP	web/nymphP	web/parasitoid	web/tutaEgg	web/parasitizedEgg
+0	0.6883	0	0.6883	0.6883
+0	1	0	1	1
+0	0	0	1	0
+0	0	0	0	0
+0	0	0	0	0

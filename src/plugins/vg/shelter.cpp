@@ -44,6 +44,8 @@ Shelter::Shelter(QString name, QObject *parent)
     Output(screensPerGroundArea);
     Output(horizontalScreenState);
     Output(hasHorizontalScreen);
+    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum).help("Effective area of vents (m2)");
+    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum).help("Effective area of vents when max. open (m2)");
 }
 
 void Shelter::amend() {

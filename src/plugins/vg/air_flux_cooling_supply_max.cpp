@@ -35,8 +35,8 @@ AirFluxCoolingSupplyMax::AirFluxCoolingSupplyMax(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(AirFluxCoolingSupplyMax);
-    Input(byWind).imports("./byWind[value]");
-    Input(byTemp).imports("./byTemp[value]");
+    Input(byWind).imports("./byWind[max]");
+    Input(byTemperature).imports("./byTemperature[max]");
     Input(givenAirflux).imports("given/airFlux[value]");
     Output(value);
 }
@@ -46,7 +46,7 @@ void AirFluxCoolingSupplyMax::reset() {
 }
 
 void AirFluxCoolingSupplyMax::update() {
-    value = max(sqrt(sqr(byWind) + sqr(byTemp)) - givenAirflux, 0.);
+    value = max(sqrt(sqr(byWind) + sqr(byTemperature)) - givenAirflux, 0.);
 }
 
 } //namespace

@@ -1,6 +1,7 @@
 #ifndef FOOD_WEB
 #define FOOD_WEB
 #include <base/box.h>
+#include <base/data_frame.h>
 #include <base/matrix.h>
 
 namespace boxes {
@@ -10,18 +11,23 @@ class FoodWeb : public base::Box
 public: 
     FoodWeb(QString name, QObject *parent);
     void amend();
+    void reset();
     void update();
 private:
     // Inputs
-    QString attackFile, gainFile;
+    QString attackFileFirst, attackFile, gainFile;
     bool showMatrices;
     double timeStep;
     // Data
+    QString _currentAttackFile;
+    base::DataFrame _attackDf;
+    QVector<int> _dfColumns;
     int _n;
     QVector<base::Box*> _boxes;
     QVector<const double *> _densities, _demands;
     base::Matrix<double> _a, _g, _sApprox, _s, _acqApprox, _acq;
     QVector<double> _sPooled, _acqPooled;
+    bool _outputsCreated;
     struct Outcome {
         double supply, loss,
             sdRatio, lossRatio;
@@ -29,7 +35,9 @@ private:
     QVector<Outcome> _outcomes;
 
     // Methods
-    void setupOutputs();
+    void readAttackDataFrame();
+    void fillAttackMatrix();
+    void createOutputs();
     double N(int i) const { return *_densities.at(i); }
     double D(int i) const { return *_demands.at(i); }
     void update_sPooled();
@@ -40,7 +48,6 @@ private:
     void update_acq();
     void update_losses();
     void update_supplies();
-
 };
 
 } //namespace

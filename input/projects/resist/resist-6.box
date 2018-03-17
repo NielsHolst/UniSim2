@@ -69,7 +69,7 @@ Simulation sim {
     }
     ReproductiveRate reproductiveRate {
       .R = 5 @ (uniform 2 50)
-      .fitnessPenalty = 0 // 0.20 // @ (uniform 0 0.40)
+      .fitnessPenalty = 0.20 @ (uniform 0 0.40)
       .Ntotal|sum = density[values]
       .K = random/K[value]
     }
@@ -82,11 +82,15 @@ Simulation sim {
     }
   }
   OutputR {
-    .keepPages = FALSE
     PageR {
-      .title = "Density"
+      .title = "Genotype numbers and R allele frequency"
+      .ncol = 2
+      .width = 12
       PlotR {
-        .ports = density[values]
+        .ports = (density[ss] density[sr] density[rr])
+      }
+      PlotR {
+        .ports = (frequencies[r])
       }
     }
     // PageR {
