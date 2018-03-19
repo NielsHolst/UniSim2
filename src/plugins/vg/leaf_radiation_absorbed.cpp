@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include <base/path.h>
@@ -17,50 +17,12 @@ using namespace base;
 namespace vg {
 
 PUBLISH(LeafRadiationAbsorbed)
-
-
-/*! \class LeafRadiationAbsorbed
- * \brief Calculates absorption of short- and long-waved radiation
- *
- * The model automatically looks up heating pipes.
- *
- * Inputs
- * ------
- * - _kLw_ is the extinction coefficent for long-waved radiation [0;1]
- * - _emissivity_ is the emissivity of leaves for long-waved radiation [0;1]
- * - _xGaussLowerside_ is the coefficient for Gaussian integration from the lower side of the canopy [0;1]
- * - _wGaussLowerside_ is the weihgt for Gaussian integration from the lower side of the canopy [0;1]
- * - _xGaussUpperside_ is the coefficient for Gaussian integration from the upper side of the canopy [0;1]
- * - _wGaussUpperside_ is the weihgt for Gaussian integration from the upper side of the canopy [0;1]
- * - _lai_ is the crop leaf area index [-]
- * - _indoorsLight_ is total the intensity of light indoors [W/m<SUP>2</SUP>]
- * - _lightAbsorptivity_ is the proportion of indoors light captured by this leaf layer [0;1]
- * - _growthLightLw_ is the long wave emission from growth lights [W/m<SUP>2</SUP>]
- * - _growthLightViewFactor_ is the view factor of growth lights as seen from this leaf layer [0;1]
- * - _floorTemperature_ is the floor temperature [<SUP>o</SUP>C]
- * - _floorEmissivity_ is floor emissivity [0;1]
- * - _leafTemperature_ is the leaf temperature [<SUP>o</SUP>C]
- * - _coverTemperature_ is the cover temperature [<SUP>o</SUP>C]
- * - _screensTemperature_ is the temperature of screens [<SUP>o</SUP>C]
- * - _screensMaxState_ is the maximum screen state [0;1]
- * - _shelterOutgoingLwAbsorptivity_ is the absorptivity for long-waved radiation of the greenhouse shelter [0;1]
- * - _coverPerGroundArea_ is the total cover area per ground area [m<SUP>2</SUP> cover/m<SUP>2</SUP> ground]
- *
- * Outputs
- * ------
- *  - _lightAbsorbed_ is the flux of light absorbed by this leaf layer [W/m<SUP>2</SUP>]
- *  - _heatingAbsorbed_ is the flux of heating absorbed by this leaf layer [W/m<SUP>2</SUP>]
- *  - _growthLightLwAbsorbed_ is the flux of long-waved radiation absorbed by this leaf layer from the growth lights [W/m<SUP>2</SUP>]
- *  - _floorLwAbsorbed_ is the flux of long-waved radiation absorbed by this leaf layer from the floor [W/m<SUP>2</SUP>]
- *  - _shelterLoss_ is the flux of long-waved radiation lost from this leaf layer to the shelter [W/m<SUP>2</SUP>]
- *  - _value_ is the energy flux absorbed by this leaf layer [W/m<SUP>2</SUP>]
- */
-
 LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(kLw).equals(0.8);
-    Input(emissivity).equals(0.8);
+    help("computes leaf absorption of short and long waved radiation");
+    Input(kLw).equals(0.8).help("Extinction coefficent for long-waved radiation [0;1]");
+    Input(emissivity).equals(0.8).help("Leaf emissivity for long-waved radiation [0;1]");
     Input(xGaussLowerside).imports("..[xGaussLowerside]");
     Input(wGaussLowerside).imports("..[wGaussLowerside]");
     Input(xGaussUpperside).imports("..[xGaussUpperside]");
@@ -79,12 +41,12 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     Input(shelterOutgoingLwAbsorptivity).imports("construction/shelters[outgoingLwAbsorptivity]");
     Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
 
-    Output(lightAbsorbed);
-    Output(heatingAbsorbed);
-    Output(growthLightLwAbsorbed);
-    Output(floorLwAbsorbed);
-    Output(shelterLoss);
-    Output(value);
+    Output(lightAbsorbed).help("Light flux absorbed by this leaf layer [W/m2]");
+    Output(heatingAbsorbed).help("Heating radiation flux absorbed by this leaf layer [W/m2]");
+    Output(growthLightLwAbsorbed).help("Lamp thermal radiation flux absorbed by this leaf layer [W/m2]");
+    Output(floorLwAbsorbed).help("Floor thermal radiation flux absorbed by this leaf layer [W/m2]");
+    Output(shelterLoss).help("Thermal radiation lost to the shelter from this leaf layer [W/m2]");
+    Output(value).help("Net energy flux absorbed by this leaf layer [W/m2]");
 }
 
 void LeafRadiationAbsorbed::initialize() {

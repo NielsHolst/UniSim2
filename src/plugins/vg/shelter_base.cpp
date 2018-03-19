@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "cover.h"
 #include "general.h"
@@ -14,36 +14,20 @@ using namespace base;
 
 namespace vg {
 
-
-/*! \class ShelterBase
- * \brief Common outputs for Shelter and Shelters
- *
- * Outputs
- * ------
- * - _diffuseLightTransmitted_ is the intensity of sunlight transmitted as diffuse light [W/m<SUP>2</SUP> ground]
- * - _directLightTransmitted_ is the intensity of sunlight transmitted as direct light [W/m<SUP>2</SUP> ground]
- * - _totalLightTransmitted_ is the total intensity of sunlight transmitted (diffuse+direct) [W/m<SUP>2</SUP> ground]
- * - _lightAbsorbedCover_ is the intensity of sunlight absorbed by the cover [W/m<SUP>2</SUP> ground]
- * - _lightAbsorbedScreens_ is the intensity of sunlight absorbed by the screens [W/m<SUP>2</SUP> ground]
- * - _haze_ is the proportion of direct light becoming dispersed on passage through the cover and screens [0;1]
- * - _U_ is the combined U-value of cover and screens [W/m<SUP>2</SUP>/K]
- * - _airTransmissivity_ is the proportion of air transmitted through the cover and screens [0;1]
- */
-
 ShelterBase::ShelterBase(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
     Class(ShelterBase);
-    Output(diffuseLightTransmitted);
-    Output(directLightTransmitted);
-    Output(totalLightTransmitted);
-    Output(lightAbsorbedCover);
-    Output(lightAbsorbedScreens);
-    Output(haze);
-    Output(U);
-    Output(airTransmissivity);
+    help("is a base class for the ShelterFace's and the whole Shelter");
+    Output(diffuseLightTransmitted).help("Intensity of sunlight transmitted as diffuse light [W/ground m2]");
+    Output(directLightTransmitted).help("Intensity of sunlight transmitted as direct light [W/ground m2]");
+    Output(totalLightTransmitted).help("Intensity of sunlight transmitted in total (diffuse+direct) [W/ground m2]");
+    Output(lightAbsorbedCover).help("Intensity of sunlight absorbed by cover [W/ground m2]");
+    Output(lightAbsorbedScreens).help("Intensity of sunlight absorbed by screens [W/ground m2]");
+    Output(haze).help("Proportion of direct light becoming dispersed on passage through cover and screens [0;1]");
+    Output(U).help("Combined U-value of cover and screens [W/m2/K]");
+    Output(airTransmissivity).help("Proportion of air transmitted through cover and screens [0;1]");
 }
-
 
 void ShelterBase::reset() {
     resetRadiationOutputs();

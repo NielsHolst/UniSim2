@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include "indoors_co2.h"
@@ -14,34 +14,17 @@ namespace vg {
 
 PUBLISH(IndoorsCo2)
 
-/*! \class IndoorsCo2
- * \brief Keeps track of indoors CO2 concentraion
- *
- * Inputs
- * ------
- * - _outdoorsCo2_ is the CO<SUB>2</SUB> concentration outside the greenhouse [ppm]
- * - _airFlux_ is the ventilation rate [h<SUP>-1</SUP>]
- * - _injectionRate_ is the rate of CO<SUB>2</SUB> injection [g/m<SUP>2</SUP>/h]
- * - _assimilation_ is the rate of CO<SUB>2</SUB> uptake by the plants [g/m<SUP>2</SUP>/h]
- * - _averageHeight_ is the average height of the greenhouse [m]
- * - _timeStep_ is the duration of one integration time step [2]
- *
- * Output
- * ------
- * - _value_ is the CO<SUB>2</SUB> concentration inside the greenhouse [ppm]
- *
- */
-
 IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("models indoors CO2 concentration");
     Input(outdoorsCo2).imports("outdoors[co2]");
     Input(airFlux).imports("total/airFlux[value]");
     Input(injectionRate).imports("controllers/co2[signal]");
     Input(assimilation).imports("crop/growth/Pg[value]");
     Input(averageHeight).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(value);
+    Output(value).help("Indoors CO2 concentration [ppm]");
 }
 
 void IndoorsCo2::reset() {

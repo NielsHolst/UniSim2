@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "general.h"
@@ -16,21 +16,10 @@ namespace vg {
 
 PUBLISH(StomatalResistanceRose)
 
-/*! \class StomatalResistanceRose
- * \brief Stomatal resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB> for pot roses
- *
- * Inputs
- * ------
- * - _co2_ is the ambient CO<SUB>2</SUB> concentration [ppm]
- * - _rh_ is indoors relative humidity [0;100]
- * - _Pn_ is net assimilation rate [g CO<SUB>2</SUB>/m<SUP>2</SUP> leaf/h]
- * - _rbCO2_ is the boundary layer resistance against CO<SUB>2</SUB> [s/m]
- * - _lai_ is the crop leaf area index [-]
- */
-
 StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     : StomatalResistanceBase(name, parent)
 {
+    help("computes stomatal resistance of rose");
     Input(co2).imports("indoors/co2[value]");
     Input(rh).imports("indoors/humidity[rh]");
     Input(Pn).imports("../photosynthesis[Pn]");

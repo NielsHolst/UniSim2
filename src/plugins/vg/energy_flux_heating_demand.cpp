@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "energy_flux_heating_demand.h"
 #include "general.h"
@@ -15,24 +15,10 @@ namespace vg {
 
 PUBLISH(EnergyFluxHeatingDemand)
 
-/*! \class EnergyFluxHeatingDemand
- * \brief Flux of energy needed to warm the greenhouse up to heating setpoint
- * Inputs
- * ------
- * - _givenEnergyFlux_ is the energy flux without any heating [W/m<SUP>2</SUP>]
- * - _heatingSetpoint_ is the heating setpoint [<SUP>oC</SUP>C]
- * - _indoorsTemperature_ is the indoors temperature [<SUP>o</SUP>C]
- * - _height_ is the average height of the greenhouse [m]
- * - _timeStep_ is the integration time step [s]
- *
- * Output
- * ------
- * - _value_ is the energy flux needed to heat the greenhouse to the heating setpoint [W/m<SUP>2</SUP>]
- */
-
 EnergyFluxHeatingDemand::EnergyFluxHeatingDemand(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
+    help("computes the energy flux demanded to heat the greenhouse to the heating setpoint");
     Input(givenEnergyFlux).imports("given/energyFlux[value]");
     Input(heatingSetpoint).imports("setpoints/temperature/heating[value]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");

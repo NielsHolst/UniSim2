@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include <base/publish.h>
@@ -15,35 +15,16 @@ namespace vg {
 
 PUBLISH(Co2Controller)
 
-/*! \class Co2Controller
- * \brief Sets the rate of CO<SUB>2</SUB> enrichment
- * CO<SUB>2</SUB> injection begins, when the level falls below the minimum setpoint,
- * and lasts until the level reaches the maximum setpoint.
- *
- * Inputs
- * ------
- * - _minCo2_ is the minimum setpoint for CO<SUB>2</SUB> in the greenhouse [ppm]
- * - _maxCo2_ is the maximum setpoint for CO<SUB>2</SUB> in the greenhouse [ppm]
- * - _indoorsCo2_ is the indoors CO<SUB>2</SUB> level [ppm]
- * - _timeStep_ is the integration time step [s]
- * - _injectionRate_ is the rate at which CO<SUB>2</SUB> can be injected [g/m<SUP>2</SUP>/h]
- *
- * Output
- * -----
- * - _signal_ is the set rate of CO<SUB>2</SUB> enrichment [g/m<SUP>2</SUP>/h]
- *
- */
-
 Co2Controller::Co2Controller(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Class(Co2Controller);
+    help("Computes the rate of CO2 enrichment");
     Input(minCo2).imports("setpoints/co2/minimum[signal]");
     Input(maxCo2).imports("setpoints/co2/maximum[signal]");
     Input(indoorsCo2).imports("indoors/co2[value]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Input(injectionRate).equals(4.5);
-    Output(signal);
+    Input(injectionRate).equals(4.5).help("Rate of CO2 injection [g/m2/h]");
+    Output(signal).help("Rate of CO2 enrichment [g/m2/h]");
 }
 
 void Co2Controller::reset() {

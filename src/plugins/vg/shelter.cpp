@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/box_builder.h>
@@ -18,34 +18,21 @@ namespace vg {
 
 PUBLISH(Shelter)
 
-/*! \class Shelter
- * \brief Collection of all greenhouse shelter faces
- *
- * Inputs
- * ------
- * - _groundArea_ is the area covered by the greenhouse [m<SUP>2</SUP>]
- *
- * Outputs
- * ------
- * - _heatCapacityCoversPerGround_ is the total heat capacity of all covers [J/kg/m<SUP>2</SUP> ground]
- * - _heatCapacityScreensPerGround_ is the total heat capacity of all screens [J/kg/m<SUP>2</SUP> ground]
- * - _screensEffectiveArea_ is the total drawn of screens [m<SUP>2</SUP>]
- * - _screensPerGroundArea_ is the _screensEffectiveArea_ per _ground area [m<SUP>2</SUP> screen/m<SUP>2</SUP> ground]
- * - _screensMaxState_ is maximum state of all screens [0;1]
- */
-
 Shelter::Shelter(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
+    help("models the greenhouse sjeler");
     Input(groundArea).imports("geometry[groundArea]");
-    Output(heatCapacityCoversPerGround);
-    Output(heatCapacityScreensPerGround);
-    Output(screensEffectiveArea);
-    Output(screensPerGroundArea);
-    Output(horizontalScreenState);
-    Output(hasHorizontalScreen);
-    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum).help("Effective area of vents (m2)");
-    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum).help("Effective area of vents when max. open (m2)");
+    Output(heatCapacityCoversPerGround).help("Capacity of all covers [J/kg/ground m2]");
+    Output(heatCapacityScreensPerGround).help("Capacity of all screens [J/kg/ground m2]");
+    Output(screensEffectiveArea).help("Effective (i.e., drawn) area of screens [m2]");
+    Output(screensPerGroundArea).help("Effective screen area per ground area [m2/m2]");
+    Output(horizontalScreenState).help("State of any horizontal screens [0;1]");
+    Output(hasHorizontalScreen).help("Has the greenhouse got horizontal screens?");
+    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum)
+            .help("Effective area of vents [m2]");
+    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum)
+            .help("Effective area of vents when max. open [m2]");
 }
 
 void Shelter::amend() {

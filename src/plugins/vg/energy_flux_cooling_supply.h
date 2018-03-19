@@ -1,17 +1,17 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #ifndef VG_ENERGY_FLUX_COOLING_SUPPLY_H
 #define VG_ENERGY_FLUX_COOLING_SUPPLY_H
 
-#include <base/box.h>
+#include "energy_flux_base.h"
 
 namespace vg {
 
-class EnergyFluxCoolingSupply : public base::Box
+class EnergyFluxCoolingSupply : public EnergyFluxBase
 {
 public:
     EnergyFluxCoolingSupply(QString name, QObject *parent);
@@ -21,8 +21,6 @@ private:
     // Inputs
     double airSupplyMax, energyDemand,
         indoorsTemperature, outdoorsTemperature, height, airTransmissivity;
-    // Output
-    double value;
 };
 } //namespace
 

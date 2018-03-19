@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include "indoors_temperature.h"
@@ -14,32 +14,17 @@ namespace vg {
 	
 PUBLISH(IndoorsTemperature)
 
-/*! \class IndoorsTemperature
- * \brief Indoors ambient temperature
- *
- * Inputs
- * ------
- * - _resetValue_ is the temperature at time zero [<SUP>o</SUP>C]
- * - _energyFlux_ is the energy flux dissipated into greenhouse air [W/m<SUP>2</SUP>]
- * - _height_ is the average height of the greenhouse [m]
- * - _timeStep_ is the integration time step [s]
- *
- * Output
- * ------
- * - _value_ is the indoors tempeature [<SUP>o</SUP>C]
- */
-
 IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(resetValue).equals(20.);
-    Input(energyFlux).equals(0.);
+    help("models indoors temperature");
+    Input(resetValue).equals(20.).help("Indoors temperture when model is reset [oC]");
+    Input(energyFlux).help("Energy flux dissipated into greenhouse air [W/m2]");
     Input(baseTemperature).imports(".[value]");
     Input(height).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(value);
+    Output(value).help("Indoors temperature [oC]");
 }
-
 
 void IndoorsTemperature::reset() {
     value = resetValue;

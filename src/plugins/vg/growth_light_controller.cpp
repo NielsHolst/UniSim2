@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/path.h>
 #include <base/publish.h>
@@ -15,20 +15,10 @@ namespace vg {
 	
 PUBLISH(GrowthLightController)
 
-/*! \class GrowthLightController
- * \brief Controls growth lights on/off
- *
- * The control is based on the signals set by three child models named "period", "on" and "off".
- *
- * Outputs
- * ------
- * - _signal_ is the on/off signal to lamps [true,false]
- */
-
 GrowthLightController::GrowthLightController(QString name, QObject *parent)
-	: Box(name, parent)
+    : BaseSignal(name, parent)
 {
-    Output(signal);
+    help("compounds signal from boxes: periods, on and off ");
 }
 
 void GrowthLightController::amend() {
@@ -43,12 +33,9 @@ const bool * GrowthLightController::getFlag(QString name) {
     return port->valuePtr<bool>();
 }
 
-void GrowthLightController::reset() {
-    signal = false;
-}
-
-void GrowthLightController::update() {
-    signal = *periodFlag && *onFlag && !(*offFlag);
+double GrowthLightController::computeSignal() {
+    bool isOn = *periodFlag && *onFlag && !(*offFlag);
+    return isOn ? 1 : 0;
 }
 
 } //namespace

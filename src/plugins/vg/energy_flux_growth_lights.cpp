@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "energy_flux_growth_lights.h"
 #include <base/publish.h>
@@ -13,16 +13,10 @@ namespace vg {
 
 PUBLISH(EnergyFluxGrowthLights)
 
-/*! \class EnergyFluxGrowthLights
- * \brief Flux of energy from growth lights
- * Inputs
- * ------
- * - _energyFlux_ is the total energy emitted by the growth lights [W/m<SUP>2</SUP>]
- */
-
 EnergyFluxGrowthLights::EnergyFluxGrowthLights(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
+    help("models energy flux caused by growth lights");
     Input(energyFlux).imports("actuators/growthLights[energyFlux]");
 }
 

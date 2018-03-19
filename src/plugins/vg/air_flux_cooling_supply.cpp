@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/exception.h>
@@ -17,34 +17,16 @@ namespace vg {
 
 PUBLISH(AirFluxCoolingSupply)
 
-/*! \class AirFluxCoolingSupply
- * \brief Flux of air from the outdoors supplied for greenhouse ventilation
- * Computed from the corresponding supplied cooling energy obtained by ventilation.
- *
- * Inputs
- * ------
- * - _energyFlux_ is the supplied cooling energy [W/m<SUP>2</SUP>]
- * - _airSupplyMax_ is the maximum possible air flux [h<SUP>-1</SUP>]
- * - _indoorsHeight_ is the average height of the greenhouse (volume divided by ground area) [m]
- * - _indoorsTemperature_ is the indoors tempeature [<SUP>o</SUP>C]
- * - _outdoorsTemperature_ is ambient temperature outdoors [<SUP>o</SUP>C]
- *
- * Outputs
- * ------
- * - _value_ is the relative rate of air exchanged [h<SUP>-1</SUP>]
- *
- */
-
 AirFluxCoolingSupply::AirFluxCoolingSupply(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(AirFluxCoolingSupply);
+    help("computes supply of air flux to cool greenhouse");
     Input(energyFlux).imports("energyFlux/cooling/supply[value]");
     Input(airSupplyMax).imports("cooling/airSupplyMax[value]");
     Input(indoorsHeight).imports("geometry[indoorsAverageHeight]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Output(value);
+    Output(value).help("Relative rate of air exchange [m3/m3/h]");
 }
 
 void AirFluxCoolingSupply::reset() {

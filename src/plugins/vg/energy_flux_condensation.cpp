@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "energy_flux_condensation.h"
 #include "general.h"
@@ -14,18 +14,11 @@ namespace vg {
 
 PUBLISH(EnergyFluxCondensation)
 
-/*! \class EnergyFluxCondensation
- * \brief Flux of energy produced by condensation
- *
- * Input
- * ------
- * - _vapourFlux_ is the condensation rate per greenhouse ground area [kg/m<SUP>2</SUP>/s]
- */
-
 EnergyFluxCondensation::EnergyFluxCondensation(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(vapourFlux).equals(0);
+    help("models energy flux caused by condensation");
+    Input(vapourFlux).equals(0).help("Condensation rate per greenhouse ground area [kg/m2/s]");
 }
 
 void EnergyFluxCondensation::update() {

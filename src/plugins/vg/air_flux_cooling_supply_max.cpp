@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/publish.h>
@@ -17,28 +17,14 @@ namespace vg {
 
 PUBLISH(AirFluxCoolingSupplyMax)
 
-/*! \class AirFluxCoolingSupplyMax
- * \brief Maximum possible air flux from outdoors to greenhouse indoors.
- * This is the maximum air flux that can be effectuated by ventilation.
- * Inputs
- * ------
- * - _byWind_ is the maximum possible air flux that can be caused by outdoors wind alone [h<SUP>-1</SUP>]
- * - _byTemp_ is the maximum possible air flux that can be caused by the outdoors-indoors temperature difference alone [h<SUP>-1</SUP>]
- * - _givenAirFlux_ is the air flux given, irrespective of temperature-regulated ventilation [h<SUP>-1</SUP>]
- *
- * Output
- * ------
- * - _value_ is the maximum possible air flux from outdoors to indoors [h<SUP>-1</SUP>]
- */
-
 AirFluxCoolingSupplyMax::AirFluxCoolingSupplyMax(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(AirFluxCoolingSupplyMax);
+    help("computes max. supply of air flux");
     Input(byWind).imports("./byWind[max]");
     Input(byTemperature).imports("./byTemperature[max]");
     Input(givenAirflux).imports("given/airFlux[value]");
-    Output(value);
+    Output(value).help("Max. relative rate of air exchange [m3/m3/h]");
 }
 
 void AirFluxCoolingSupplyMax::reset() {

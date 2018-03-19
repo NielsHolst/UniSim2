@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/exception.h>
@@ -21,31 +21,17 @@ namespace vg {
 
 PUBLISH(Screens)
 
-
-/*! \class Screens
- * \brief A collection of Screen objects
- *
- * Outputs
- * ------
- * - _areHorizontal_ tells if these screens are horizontal [true/false]
- * - _maxState_ is the maximum screen state [0;1]
- * - _airTransmissivity_ is the proportion of air transmitted through the screens [0;1]
- * - _haze_ is the proportion of direct light becoming dispersed on passage through the screens [0;1]
- * - _U_ is the combined U-value of all screens [W/m<SUP>2</SUP>/K]
- * - _heatCapacity_ is the heat capacity [J/K]
- * - _effectiveArea_ is the draw area of the screens
- */
-
 Screens::Screens(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
-    Output(areHorizontal);
-    Output(maxState);
-    Output(airTransmissivity);
-    Output(haze);
-    Output(U);
-    Output(heatCapacity);
-    Output(effectiveArea);
+    help("summarizes a colletion of Screen models");
+    Output(areHorizontal).help("Are these screens horizontal?");
+    Output(maxState).help("Maximum screen state [0;1]");
+    Output(airTransmissivity).help("Proportion of air transmitted through the screens [0;1]");
+    Output(haze).help("Proportion of direct light becoming dispersed on passage through the screens [0;1]");
+    Output(U).help("Combined U-value of all screens [W/m2/K]");
+    Output(heatCapacity).help("Combined heat capacity of all screens [J/K]");
+    Output(effectiveArea).help("The draw area of the screens [m2]");
 }
 
 void Screens::initialize() {

@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/publish.h>
@@ -17,16 +17,11 @@ namespace vg {
 
 PUBLISH(BoundaryLayerResistanceJonesB)
 
-/*! \class BoundaryLayerResistanceJonesB
- * \brief Boundary layer resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB>
- *
- * According to Jones (1992, eq. A.8.1)
- */
-
 BoundaryLayerResistanceJonesB::BoundaryLayerResistanceJonesB(QString name, QObject *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
     Class(BoundaryLayerResistanceJonesB);
+    help("computes boundary layer resistance from Jones (1992, eq. A.8.1)");
     Input(evaporation).imports("../transpiration[vapourFlux]");
     Input(leafTemperature).imports("../temperature[value]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");

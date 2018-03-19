@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "growth_light.h"
 #include <base/exception.h>
@@ -14,42 +14,23 @@ namespace vg {
 
 PUBLISH(GrowthLight)
 
-/*! \class GrowthLight
- * \brief Growth light
- *
- * The characteristics of the lamps are set by the _type_.
- * Inputs
- * ------
- * - _type_ is the type of growth light [HPSL, LED]
- * - _intensity_ is the power of installed lamps per greenhouse area [W/m<SUP>2</SUP>]
- * - _ballastCorrection_ is set to >1 (e.g, 1.15) if capacity includes ballast (>=1)
- * - _age_ is the age of the lamps at simulation start [h]
- * - _lifeTime_ is the age at which light output is reduced to 90% [h]
- * - _on_ tells whether the light should be on [true/false]
- * - _timeStep_ is the integration time step [s]
- *
- * Outputs
- * ------
- * - _currentPeriod_ duration of the current period with light on [min]
- * - _totalPeriod_ total period with light on [h]
- */
-
 GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
-    Input(type).equals("HPSL");
-    Input(intensity).equals(40.);
-    Input(ballastCorrection).equals(1.);
-    Input(age).equals(0);
-    Input(lifeTime).equals(12000.);
+    Input(type).equals("HPSL").help("Type of growth light [HPSL, LED]");
+    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area [W/m2]");
+    Input(ballastCorrection).equals(1.).help("Set to >1 if intensity includes ballast");
+    Input(age).help("Age of the lamps at simulation start [h]");
+    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 90% [h]");
     Input(on).imports("controllers/growthLight[signal]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(currentPeriod);
-    Output(totalPeriod);
+    Output(currentPeriod).help("Time since last time light went on [m]");
+    Output(totalPeriod).help("Total period when light has been on [h]");
 }
 
 void GrowthLight::reset() {
     // Set parameters according to type
+    // These hidden parameters should be accessible in box script
     QString key = type.toLower();
     if (key == "hpsl") {
         attributes.heatCoef = 0.23;

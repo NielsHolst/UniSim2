@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "leaf_wind_speed.h"
@@ -15,31 +15,16 @@ namespace vg {
 
 PUBLISH(LeafWindSpeed)
 
-/*! \class LeafWindSpeed
- * \brief Boundary layer resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB>
- *
- * Inputs
- * ------
- * - _k_ is the extinction coefficient for wind down throught the canopy [-]
- * - _indoorsWindSpeedMinimum_ is the assumed minimum limit to wind speed indoors [m/s]
- * - _indoorsWindSpeed_ is the wind speed indoors [m/s]
- * - _xGauss_ is the coefficient for Gaussian integration from the upper side of the canopy [0;1]
- * - _lai_ is the crop leaf area index [m<SUP>2</SUP>/m<SUP>2</SUP>]
- *
- * Outputs
- * ------
- * - _value_ is the wind speed at leaf level [m/s]
- */
-
 LeafWindSpeed::LeafWindSpeed(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(k).equals(0.);
-    Input(indoorsWindSpeedMinimum).equals(0.025);
+    help("computes leaf wind speed");
+    Input(k).help("Extinction coefficient for wind down throught the canopy");
+    Input(indoorsWindSpeedMinimum).equals(0.025).help("Minimum indoors wind speed [m/s]");
     Input(indoorsWindSpeed).imports("indoors/windSpeed[value]");
     Input(xGauss).imports("..[xGaussUpperside]");
     Input(lai).imports("crop/lai[value]");
-    Output(value);
+    Output(value).help("Wind speed at leaf level [m/s]");
 }
 
 void LeafWindSpeed::reset() {

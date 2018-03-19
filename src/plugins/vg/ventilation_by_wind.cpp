@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "ventilation_by_wind.h"
 #include "general.h"
@@ -18,6 +18,7 @@ PUBLISH(VentilationByWind)
 VentilationByWind::VentilationByWind(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("computes ventilation through vents due to wind");
     Input(coefficient).equals(0.1).help("Linear increase in ventilation rate with increasing wind speed and vent area [unitless]");
     Input(windSpeed).imports("outdoors[windSpeed]");
     Input(ventsEffectiveArea).imports("construction/shelter[ventsEffectiveArea]");

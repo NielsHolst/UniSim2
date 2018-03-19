@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/publish.h>
@@ -17,24 +17,11 @@ namespace vg {
 
 PUBLISH(StomatalResistanceTomato)
 
-/*! \class StomatalResistanceTomato
- * \brief Stomatal resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB> for tomato
- *
- * Inputs
- * ------
- * - _riH2Omin_ is the minimum resistance against H<SUB>2</SUB>O
- * - _lai_ is the crop leaf area index [-]
- * - _temperature_ is leaf temperature [<SUP>o</SUP>C]
- * - _indoorsTemperature_ is indoors temperature [<SUP>o</SUP>C]
- * - _rh_ is indoors relative humidity [0;100]
- * - _radiationAbsorbed_ is the flux of radiation absorbed by the leaves [W/m<SUP>2</SUP> ground]
- * - _co2_ is indoors CO<SUB>2</SUB> concentration [ppm]
- */
-
 StomatalResistanceTomato::StomatalResistanceTomato(QString name, QObject *parent)
     : StomatalResistanceBase(name, parent)
 {
-    Input(riH2Omin).equals(82.);
+    help("computes stomatal resistance of tomato");
+    Input(riH2Omin).equals(82.).help("Minimum resistance against H2O");
     Input(lai).imports("crop/lai[value]");
     Input(temperature).imports("../temperature[value]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");

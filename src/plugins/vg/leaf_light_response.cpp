@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "general.h"
@@ -16,48 +16,25 @@ namespace vg {
 	
 PUBLISH(LeafLightResponse)
 
-/*! \class LeafLightResponse
- * \brief Calculates the parameters of the light response curve
- *
- * Inputs
- * ------
- * - _rsCO2_ is the stomatal resistance against CO<SUB>2</SUB> [s/m]
- * - _rbCO2_ is the boundary layer resistance against CO<SUB>2</SUB> [s/m]
- * - _Tleaf_ is the leaf temperature [<SUP>o</SUP>C]
- * - _co2Air_ is ambient CO<SUB>2</SUB> concentration [ppm]
- * - _rhoChl_ is the density of chlorophyll [?]
- * - _theta_ is a shape parameter for the light response curve [-]
- * - _frPARabs_ is the fraction of PAR absorbed [0;1]
- * - _concEnzyme_ is the enzyme concentration [?]
- *
- * Output
- * ------
- * - _LUE_ is the light use efficiency [mg CO<SUB>2</SUB>/J]
- * - _Pnmax_ is the net assimilation rate [mg CO<SUB>2</SUB>/m<SUP>2</SUP> leaf/s]
- * - _Pgmax_ is the gross assimilation rate [mg CO<SUB>2</SUB>/m<SUP>2</SUP> leaf/s]
- * - _Rd_ is the dark respiration rate [mg CO<SUB>2</SUB>/m<SUP>2</SUP> leaf/s]
- * - _rtCO2_ is the total resistance against CO<SUB>2</SUB> [s/m]
- *
- */
-
 const double O2i = 210;     // [G94, p.80] O2 partial pressure inside stomata [ppm], [mbar], [ml/l]
 
 LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("computes the light response curve");
     Input(rsCO2).imports("../../rs[rsCo2]");
     Input(rbCO2).imports("../../rb[rbCo2]");
     Input(Tleaf).imports("../../temperature[value]");
     Input(co2Air).imports("indoors/co2[value]");
-    Input(rhoChl).equals(0.45);
-    Input(theta).equals(0.7);
-    Input(frParAbs).equals(0.3);
-    Input(concEnzyme).equals(87);
-    Output(LUE);
-    Output(Pnmax);
-    Output(Pgmax);
-    Output(Rd);
-    Output(rtCO2);
+    Input(rhoChl).equals(0.45).help("Chlorophyll density [units?]");
+    Input(theta).equals(0.7).help("Shape parameter for the light response curve ");
+    Input(frParAbs).equals(0.3).help("Fraction of PAR absorbed [0;1]");
+    Input(concEnzyme).equals(87).help("Enzyme concentration [units?]");
+    Output(LUE).help("Light use efficiency [mg CO2/J]");
+    Output(Pnmax).help("Net assimilation rate [mg CO2/leaf m2/s]");
+    Output(Pgmax).help("Gross assimilation rate [mg CO2/leaf m2/s]");
+    Output(Rd).help("Dark respiration rate [mg CO2/leaf m2/s]");
+    Output(rtCO2).help("Total CO2 resistance against [s/m]");
 }
 
 void LeafLightResponse::reset() {

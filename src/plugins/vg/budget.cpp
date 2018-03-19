@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "budget.h"
 #include <base/publish.h>
@@ -13,35 +13,18 @@ namespace vg {
 
 PUBLISH(Budget)
 
-/*! \class Budget
- * \brief Greenhouse economy
- *
- * Inputs
- * ------
- * - _heatingEnergyFlux_ is the heating intensity [W/m<SUP>2</SUP>]
- * - _growthLightsEnergyFlux_ is the rate if energy spent on growthLights [W/m<SUP>2</SUP>]
- * - _co2Flux_ is the CO<SUB>2</SUB> enrichment rate [g/m<SUP>2</SUP>/h]
- * - _timeStep_ is the integration time step [s]
- * - _energyUnit_ is the unit use in the output for energy totals ["GJ", "kWh"]
- *
- * Output
- * ------
- * - _heatingEnergyTotal_ is the accumulated energy spent on heating [GJ/m<SUP>2</SUP> or kWh/m<SUP>2</SUP>]
- * - _growthLightsEnergyTotal_ is the accumulated energy spent on heating [GJ/m<SUP>2</SUP> or kWh/m<SUP>2</SUP>]
- * - _co2Total_ is the accumulated CO<SUB>2</SUB> spent [kg/m<SUP>2</SUP>]
- */
-
 Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("computes greenhouse energy and CO2 budgets");
     Input(heatingEnergyFlux).imports("heating/supply[value]");
     Input(growthLightsEnergyFlux).imports("actuators/growthLights[energyFlux]");
     Input(co2Flux).imports("controllers/co2[signal]");
     Input(dt).imports("calendar[timeStepSecs]");
-    Input(energyUnit).equals("GJ");
-    Output(heatingEnergyTotal);
-    Output(growthLightsEnergyTotal);
-    Output(co2Total);
+    Input(energyUnit).equals("GJ").help("Energy units for outpurs, 'GJ' or 'kWh'");
+    Output(heatingEnergyTotal).help("Accumulated energy spent on heating [GJ/m2 or kWh/m2]");
+    Output(growthLightsEnergyTotal).help("Accumulated energy spent on growth lights [GJ/m2 or kWh/m2]");
+    Output(co2Total).help("Accumulated CO2 spent [kg/m2]");
 }
 
 void Budget::reset() {

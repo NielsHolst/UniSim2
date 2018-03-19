@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "indoors_wind_speed.h"
@@ -15,25 +15,13 @@ namespace vg {
 
 PUBLISH(IndoorsWindSpeed)
 
-/*! \class IndoorsWindSpeed
- * \brief Wind speed inside greenhouse
- *
- * Inputs
- * ------
- * - _ventilation_ is the rate of air exchange through ventilation [h<SUP>-1</SUP>]
- * - _width_ is the width of the greenhouse [m]
- * *
- * Outputs
- * ------
- * - _value_ is the wind speed indoors [m/s]
- */
-
 IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("models indoors wind speed");
     Input(ventilation).imports("indoors/total/airFlux[value]");
     Input(constructionWidth).imports("geometry[width]");
-    Output(value);
+    Output(value).help("Indoors wind speed [m/s]");
 }
 
 void IndoorsWindSpeed::reset() {

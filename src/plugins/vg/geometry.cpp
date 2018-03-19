@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include <base/publish.h>
@@ -18,7 +18,7 @@ PUBLISH(Geometry)
 Geometry::Geometry(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    help("defines the measures of the greenhouse");
+    help("defines the greenhouse geometry");
     Input(numSpans).equals(1).help("Number of spans");
     Input(spanWidth).equals(20.).help("Width of a span (m)");
     Input(length).equals(50.).help("Length of side wall(m)");

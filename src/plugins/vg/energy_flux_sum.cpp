@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "energy_flux_sum.h"
 #include "general.h"
@@ -16,21 +16,10 @@ namespace vg {
 
 PUBLISH(EnergyFluxSum)
 
-/*! \class EnergyFluxSum
- * \brief Sum of child model energy fluxes
- *
- * Output
- * ------
- * - _value_ is the sum of all children's _value_s [W/m<SUP>2</SUP>]
- *
- * Inputs
- * ------
- * - all EnergyFluxBase child models
- */
-
 EnergyFluxSum::EnergyFluxSum(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
+    help("computes the sum of all children's value port");
 }
 
 void EnergyFluxSum::initialize() {

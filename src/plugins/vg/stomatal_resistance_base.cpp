@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include "stomatal_resistance_base.h"
@@ -11,22 +11,13 @@ using namespace base;
 
 namespace vg {
 
-
-/*! \class StomatalResistanceBase
- * \brief Base class for stomatal resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB>
- *
- * Outputs
- * ------
- * - _rbH2O_ is the stomatal resistance against water vapour [s/m]
- * - _rbCO2_ is the stomatal resistance against CO<SUB>2</SUB> [s/m]
- */
-
 StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Class(StomatalResistanceBase);
-    Output(rsH2O);
-    Output(rsCo2);
+    help("base class for computing stomatal resistance");
+    Output(rsH2O).help("Stomatal resistance against water vapour [s/m]");
+    Output(rsCo2).help("Stomatal resistance against CO2 [s/m]");
 }
 
 void StomatalResistanceBase::reset() {

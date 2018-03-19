@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include "general.h"
@@ -15,17 +15,10 @@ namespace vg {
 	
 PUBLISH(ProportionalSignal)
 
-/*! \class ProportionalSignal
- * \brief Provides proportional control towards a signal
- *
- * For further details, see SlidingSignal
- *
- */
-
 ProportionalSignal::ProportionalSignal(QString name, QObject *parent)
     : SlidingSignal(name, parent)
 {
-    help("produces a signal value that responds proportionally to an input value");
+    help("produces a signal value that responds proportionally to the input value");
 }
 
 double ProportionalSignal::slide(double proportion) {

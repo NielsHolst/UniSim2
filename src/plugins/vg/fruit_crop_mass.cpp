@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include <base/test_num.h>
@@ -16,50 +16,21 @@ namespace vg {
 
 PUBLISH(FruitCropMass)
 
-/*! \class FruitCropMass
- * \brief Mass and allocation of fruit crops, such as cucumber, tomato and sweet pepper
- *
- * Inputs
- * ------
- * - _tempSumReproductive_ is the temperature sum when the reproductive stage is reached [d <SUP>o</SUP>C]
- * - _tempMaxReproductive_ is the upper threshold for reproduction; above this value the plant only grows vegetatively [<SUP>o</SUP>C]
- * - _fruitFactor_ is a factor by which _propFruit_ is multiplied [R<SUB>+</SUB>]
- * - _indoorsTemperature_ is the temperature indoors [<SUP>o</SUP>C]
- * - _tempSum_ is the temperature sum determining crop development [d <SUP>o</SUP>C]
- * - _lai_ is the crop LAI [m<SUP>2</SUP>/m<SUP>2</SUP>]
- * - _maxLaiReached_ tells whether the crop has reached its max. LAI [true,false]
- *
- * These inputs apply to the vegetative stage:
- * - _vegPropRoot_ is proportion of growth allocated to roots [0;1]
- * - _vegPropStem_ is proportion of growth allocated to stems [0;1]
- * - _vegPropLeaf_ is proportion of growth allocated to leaves [0;1]
- * - _vegPropFruit_ is proportion of growth allocated to roots [0;1]
- *
- * These inputs apply to the reproductive stage stage:
- * - _vegPropRoot_ is proportion of growth allocated to roots [0;1]
- * - _vegPropStem_ is proportion of growth allocated to stems [0;1]
- * - _vegPropLeaf_ is proportion of growth allocated to leaves [0;1]
- * - _vegPropFruit_ is proportion of growth allocated to roots [0;1]
- *
- * Output
- * ------
- * See CropMass.
- */
-
 FruitCropMass::FruitCropMass(QString name, QObject *parent)
     : CropMass(name, parent)
 {
-    Input(vegPropRoot).equals(0.);
-    Input(vegPropStem).equals(0.5);
-    Input(vegPropLeaf).equals(0.5);
-    Input(vegPropFruit).equals(0.);
-    Input(reproPropRoot).equals(0.);
-    Input(reproPropStem).equals(0.);
-    Input(reproPropLeaf).equals(0.);
-    Input(reproPropFruit).equals(1.);
-    Input(tempSumReproductive).equals(975.);
-    Input(tempMaxReproductive).equals(30.);
-    Input(fruitFactor).equals(1.);
+    help("models growth and dry mass for a fruit crop");
+    Input(vegPropRoot).equals(0.) .help("Proportion of growth in vegetative stage [0;1]");
+    Input(vegPropStem).equals(0.5).help("Proportion of growth in vegetative stage [0;1]");
+    Input(vegPropLeaf).equals(0.5).help("Proportion of growth in vegetative stage [0;1]");
+    Input(vegPropFruit).equals(0.).help("Proportion of growth in vegetative stage  [0;1]");
+    Input(reproPropRoot).equals(0.).help("Proportion of growth in reproductive stage [0;1]");
+    Input(reproPropStem).equals(0.).help("Proportion of growth in reproductive stage [0;1]");;
+    Input(reproPropLeaf).equals(0.).help("Proportion of growth in reproductive stage [0;1]");;
+    Input(reproPropFruit).equals(1.).help("Proportion of growth in reproductive stage [0;1]");;
+    Input(tempSumReproductive).equals(975.).help("Temperature sum when the reproductive stage is reached [DD]");
+    Input(tempMaxReproductive).equals(30.).help("Max. temperature for plant producing fruits");
+    Input(fruitFactor).equals(1.).help("Factor multiplied on propFruit");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(tempSum).imports("../physTime[total]");
     Input(lai).imports("../lai[value]");

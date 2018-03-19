@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "energy_flux_transpiration.h"
 #include "general.h"
@@ -14,24 +14,10 @@ namespace vg {
 
 PUBLISH(EnergyFluxTranspiration)
 
-/*! \class EnergyFluxTranspiration
- * \brief Flux of energy lost to transpiration
- * Inputs
- * ------
- * - _transpiration_ is the plant transpiration rate [kg/m<SUP>2</SUP>/s]
- *
- * Output
- * ------
- * - _flux_ is the flux of energy lost to transpiration [W/m<SUP>2</SUP>]
- *
- * Default dependencies
- * ------------
- * - *pending*
- */
-
 EnergyFluxTranspiration::EnergyFluxTranspiration(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
+    help("models energy flux caused by transpiration");
     Input(transpiration).imports("../../vapourFlux/transpiration[vapourFlux]");
 }
 

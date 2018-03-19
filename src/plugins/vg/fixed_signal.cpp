@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/publish.h>
 #include "fixed_signal.h"
@@ -13,15 +13,10 @@ namespace vg {
 
 PUBLISH(FixedSignal)
 
-/*! \class FixedSignal
- * \brief A signal equal to the input
- *
- *
- */
-
 FixedSignal::FixedSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    Input(input).equals(0);
+    help("simply sets the signal to the input");
+    Input(input).equals(0).help("Value used for signal");
 }
 
 double FixedSignal::computeSignal() {

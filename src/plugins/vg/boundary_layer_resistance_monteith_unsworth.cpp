@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "boundary_layer_resistance_monteith_unsworth.h"
@@ -15,19 +15,15 @@ namespace vg {
 
 PUBLISH(BoundaryLayerResistanceMonteithUnsworth)
 
-/*! \class BoundaryLayerResistance
- * \brief Boundary layer resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB>
- *
- * According to Monteith and Unsworth (1990).
- */
-
 BoundaryLayerResistanceMonteithUnsworth::BoundaryLayerResistanceMonteithUnsworth(QString name, QObject *parent)
         : BoundaryLayerResistanceBase(name, parent)
 {
+    Class(BoundaryLayerResistanceMonteithUnsworth);
+    help("computes boundary layer resistance from Monteith and Unsworth (1990)");
     Input(leafTemperature).imports("../temperature[value]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Output(gbH2Oforced);
-    Output(gbH2Ofree);
+    Output(gbH2Oforced).help("Resistance depending on leaf wind speed [s/m]");
+    Output(gbH2Ofree).help("Resistance depending on leaf temperature [s/m]");
 }
 
 void BoundaryLayerResistanceMonteithUnsworth::reset() {

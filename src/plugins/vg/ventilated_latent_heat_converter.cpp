@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "ventilated_latent_heat_converter.h"
@@ -16,22 +16,13 @@ namespace vg {
 
 PUBLISH(VentilatedLatentHeatConverter)
 
-/*! \class VentilatedLatentHeatConverter
- * \brief A ventilated latent heat converter to control greenhouse huimidity
- *
- * Inputs
- * ------
- * - _groundArea_ is the area covered by the greenhouse [m<SUP>2</SUP>]
- * - _indoorsAh_ is the indoors absolute humidity [kg/m<SUP>3</SUP>]
- * - _volumeFlowRate_ is the rate of air flow through the converter [m<SUP>3</SUP>/s]
- */
-
 VentilatedLatentHeatConverter::VentilatedLatentHeatConverter(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
+    help("models a latent heat converter used for humidity reduction");
     Input(groundArea).imports("geometry[groundArea]");
     Input(indoorsAh).imports("indoors/humidity[ah]");
-    Input(volumeFlowRate).equals(2.5);
+    Input(volumeFlowRate).equals(2.5).help("Rate of air flow through the converter [m3/s]");
     // Additional outputs are needed to specify the flux of latent heat gain [W/m2]
 }
 

@@ -40,7 +40,7 @@ HEADERS +=  \
     energy_flux_floor.h \
     energy_flux_growth_lights.h \
     energy_flux_heating_demand.h \
-    energy_flux_shelters.h \
+    energy_flux_shelter.h \
     energy_flux_sum.h \
     energy_flux_transpiration.h \
     energy_screen_balance_signal.h \
@@ -78,7 +78,6 @@ HEADERS +=  \
     shelter.h \
     shelter_base.h \
     shelter_face.h \
-    signal_collection.h \
     simulation_time_interval.h \
     sliding_signal.h \
     stomatal_resistance_base.h \
@@ -97,7 +96,6 @@ HEADERS +=  \
     vapour_flux_transpiration.h \
     vent.h \
     ventilated_latent_heat_converter.h \
-    ventilation.h \
     ventilation_by_temperature.h \
     ventilation_by_wind.h
 
@@ -133,7 +131,7 @@ SOURCES += \
     energy_flux_floor.cpp \
     energy_flux_growth_lights.cpp \
     energy_flux_heating_demand.cpp \
-    energy_flux_shelters.cpp \
+    energy_flux_shelter.cpp \
     energy_flux_sum.cpp \
     energy_flux_transpiration.cpp \
     energy_screen_balance_signal.cpp \
@@ -172,7 +170,6 @@ SOURCES += \
     shelter_base.cpp \
     shelter_face.cpp \
     simulation_time_interval.cpp \
-    signal_collection.cpp \
     sliding_signal.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
@@ -190,6 +187,5 @@ SOURCES += \
     vapour_flux_transpiration.cpp \
     vent.cpp \
     ventilated_latent_heat_converter.cpp \
-    ventilation.cpp \
     ventilation_by_temperature.cpp \
     ventilation_by_wind.cpp

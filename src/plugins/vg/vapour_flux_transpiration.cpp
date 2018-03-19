@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include "general.h"
@@ -15,19 +15,10 @@ namespace vg {
 
 PUBLISH(VapourFluxTranspiration)
 
-/*! \class VapourFluxTranspiration
- * \brief Vapour flux transpiring from crop
- *
- * Inputs
- * ------
- * - _conductanceIn_ is the transpiration conductance [m/s]
- * - _vapourFluxIn_ is the transpiration rate [kg/m<SUP>2</SUP>/s]
- * - _gainIn_ is used to integrate over all water vapour fluxes (GCC, p. 148) [kg/m<SUP>2</SUP>/s]
-*/
-
 VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
+    help("computes vapour flux from transpiration");
     Input(conductanceIn).imports("crop/conductance[value]");
     Input(vapourFluxIn).imports("crop/vapourFlux[value]");
     Input(gainIn).imports("crop/gain[value]");

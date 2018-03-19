@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include "pid_controller.h"
@@ -14,9 +14,12 @@ namespace vg {
 	
 PUBLISH(PidController)
 
+const double doubleMax = std::numeric_limits<double>::max();
+
 PidController::PidController(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("delivers PID control of a control variable");
     Input(sensedValue).help("The sensed value");
     Input(desiredValue).help("The desired value (setpoint)");
     Input(controlVariableReset).help("The initial value of the control variable at reset");
@@ -24,10 +27,10 @@ PidController::PidController(QString name, QObject *parent)
     Input(Kint).equals(0.).help("The integral gain (per min)");
     Input(Kderiv).equals(0.).help("The derivative gain (per min)");
 
-    Input(minimum).equals(-std::numeric_limits<double>::max()).help("Minimum allowed value of control variable");
-    Input(maximum).equals(std::numeric_limits<double>::max()).help("Maximum allowed value of control variable");
-    Input(minSlope).equals(-std::numeric_limits<double>::max()).help("Minimum allowed rate if change in control variable (per min)");
-    Input(maxSlope).equals(std::numeric_limits<double>::max()).help("Maximum allowed rate if change in control variable (per min)");
+    Input(minimum).equals(-doubleMax).help("Minimum allowed value of control variable");
+    Input(maximum).equals(doubleMax).help("Maximum allowed value of control variable");
+    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate if change in control variable (per min)");
+    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate if change in control variable (per min)");
     Input(timeStep).imports("calendar[timeStepSecs]");
 
     Output(controlVariable).help("The control variable; tends to zero when all three error terms summed tend to zero");
@@ -71,7 +74,7 @@ void PidController::adjustControlVariable() {
             slope = maxSlope;
         }
     }
-    qBound(controlVariable, minimum, maximum);
+    controlVariable = qBound(minimum, controlVariable, maximum);
     controlVariableSlope = slope;
 }
 

@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "fruit_factor.h"
 #include <base/publish.h>
@@ -13,32 +13,14 @@ namespace vg {
 
 PUBLISH(FruitFactor)
 
-/*! \class FruitFactor
- * \brief Factor for allocation to fruits
- *
- * Inputs
- * ------
- * - _minDensity_ is the crop density when the factor is 1 (no effect) [m<SUP>-2</SUP>]
- * - _maxValue_ is the maximum value of the factor [R<SUB>+</SUB>]
- * - _plantDensity_ is the crop density  [m<SUP>-2</SUP>]
- *
- * Output
- * ------
- * - _value_ is the value of the factor [>=1]
- *
- * Default dependencies
- * ------------
- * - a grandparent model with a _density_port [m<SUP>-2</SUP>]
- *
- */
-
 FruitFactor::FruitFactor(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(minDensity).equals(1.);
-    Input(maxValue).equals(1.);
+    help("models density-dependent fruit set");
+    Input(minDensity).equals(1.).help("Crop density at which factor is 1 [m-2]");
+    Input(maxValue).equals(1.).help("Max. value of factor");
     Input(plantDensity).imports("../..[density]");
-    Output(value);
+    Output(value).help("Density-dependent fruit set factor");
 }
 
 void FruitFactor::reset() {

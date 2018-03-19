@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include "indoors_humidity.h"
@@ -16,31 +16,10 @@ namespace vg {
 	
 PUBLISH(IndoorsHumidity)
 
-/*! \class IndoorsHumidity
- * \brief Computes indoors humidity
- *
- * Inputs
- * ------
- * - _conductance_ is the vapour flux conductance [m/s]
- * - _vapourFlux_ is the vapour flux rate [kg/m<SUP>2</SUP>/s]
- * - _gain_ is used to integrate over all vapour fluxes (GCC, p. 148) [kg/m<SUP>2</SUP>/s]
- * - _temperature_ is the ambient temperature indoors [<SUP>o</SUP>C]
- * - _height_ is the average height of the greenhouse [m]
- * - _timeStep_ is the integration time step[s]
- *
- * Outputs
- * ------
- * - _rh_ is the indoors relative humidity [0;100]
- * - _ah_ is the indoors absolute humidity [kg/m<SUP>3</SUP>]
- * - _ahEq_ is the asymptotic (with time) equilibrium absolute humidity [kg/m<SUP>3</SUP>]
- * - _timeConstant_ is the time constant used to integrate _netVapourFlux_ [s<SUP>-1</SUP>]
- * - _surplusAh_ is an integration inaccuracy that was rounded off [kg/m<SUP>3</SUP>]
- * - _netVapourFlux_ is the total flux of water vapour in/out (+/-) of the greenhouse [kg/m<SUP>2</SUP>/s]
- */
-
 IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("models indoors humidity");
     Input(conductance).imports("indoors/total/vapourFlux[conductance]");
     Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]");
     Input(gain).imports("indoors/total/vapourFlux[gain]");
@@ -48,12 +27,12 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
     Input(height).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
 
-    Output(rh);
-    Output(ah);
-    Output(ahEq);
-    Output(timeConstant);
-    Output(surplusAh);
-    Output(netVapourFlux);
+    Output(rh).help("Indoors relative humidity [0;100]");
+    Output(ah).help("Indoors absolute humidity [kg/m3]");
+    Output(ahEq).help("Asymptotic (with time) equilibrium absolute humidity [kg/m3]");
+    Output(timeConstant).help("Time constant for integrating netVapourFlux [s-1]");
+    Output(surplusAh).help("Integration inaccuracy that was rounded off [kg/m3]");
+    Output(netVapourFlux).help("Total water vapour flux in/out (+/-) of the greenhouse [kg/m2/s]");
 }
 
 void IndoorsHumidity::reset() {

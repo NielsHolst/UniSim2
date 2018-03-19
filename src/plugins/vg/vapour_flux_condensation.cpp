@@ -1,3 +1,9 @@
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 
 /* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
 ** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
@@ -16,21 +22,11 @@ namespace vg {
 
 PUBLISH(VapourFluxCondensation)
 
-/*! \class VapourFluxCondensation
- * \brief Condensation on a surface inside the greenhouse
- *
- * Inputs
- * ------
- * - _surfaceAreaPerGroundArea_ is the area of the surface per greenhouse area [m<SUP>2</SUP>/m<SUP>2</SUP>]
- * - _surfaceTemperature_ is the temperature of the surface [<SUP>o</SUP>C]
- * - _indoorsTemperature_ is the ambient temperature indoors [<SUP>o</SUP>C]
- * - _indoorsAh_ is the indoors absolute humidity [kg/m<SUP>3</SUP>]
- */
-
 VapourFluxCondensation::VapourFluxCondensation(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(surfaceAreaPerGroundArea).equals(0);
+    help("models vapour flux through condensation on inside greenhouse surface");
+    Input(surfaceAreaPerGroundArea).help("Surface area per ground area [m2/m2]");
     Input(surfaceTemperature).imports("indoors/temperature[value]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(indoorsAh).imports("indoors/humidity[ah]");

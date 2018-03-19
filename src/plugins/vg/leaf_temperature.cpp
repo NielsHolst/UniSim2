@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "general.h"
 #include <base/publish.h>
@@ -14,31 +14,16 @@ namespace vg {
 
 PUBLISH(LeafTemperature)
 
-/*! \class LeafTemperature
- * \brief Temperature of canopy layer
- *
- * Inputs
- * ------
- * - _indoorsTemperature_ is the ambient indoors temperature [<SUP>o</SUP>C]
- * - _indoorsRh_ is the ambient indoors relative humidity [0;100]
- * - _rsH2O_ is the stomatal resistance against water vapour [s/m]
- * - _rbH2O_ is the boundary layer resistance against water vapour [s/m]
- * - _radiationAbsorbed_ is the absorbed radiation [W/m<SUP>2</SUP>]
- *
- * Output
- * ------
- * - _value_ is the leaf temperature [<SUP>o</SUP>C]
- */
-
 LeafTemperature::LeafTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("models leaf temperature");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(indoorsRh).imports("indoors/humidity[rh]");
     Input(rsH2O).imports("../rs[rsH2O]");
     Input(rbH2O).imports("../rb[rbH2O]");
     Input(radiationAbsorbed).imports("../radiationAbsorbed[value]");
-    Output(value);
+    Output(value).help("Leaf temperature [oC]");
 }
 
 void LeafTemperature::reset() {

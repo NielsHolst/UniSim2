@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "indoors_light.h"
 #include <base/publish.h>
@@ -14,44 +14,21 @@ namespace vg {
 	
 PUBLISH(IndoorsLight)
 
-/*! \class IndoorsLight
- * \brief Indoors diffuse and direct, light and PAR
- *
- * Indoors light is the combination of incoming sunlight and growth lights
- *
- * Inputs
- * ------
- * - _sunlightDiffuse_ is the intensity of diffuse light resulting from transmitted sunlight [W/m<SUP>2</SUP>]
- * - _sunlightDirect_ is the intensity of direct light resulting from transmitted sunlight [W/m<SUP>2</SUP>]
- * - _sunlightPropPar_ is the proportion of PAR in sunlight irradiation [0;1]
- * - _growthLigthtsDirect_ is the intensity of direct light supplied by growth lights [W/m<SUP>2</SUP>]
- * - _growthLigthtsPar_ is the intensity of PAR supplied by growth lights [W/m<SUP>2</SUP>]
- *
- * Outputs
- * ------
- * - _direct_ is the intensity of direct light indoors [W/m<SUP>2</SUP>]
- * - _diffuse_ is the intensity of diffuse light indoors [W/m<SUP>2</SUP>]
- * - _total_ is total the intensity of light indoors [W/m<SUP>2</SUP>]
- * - _parDirect_ is the intensity of direct PAR indoors [W/m<SUP>2</SUP>]
- * - _parDiffuse_ is the intensity of diffuse PAR indoors [W/m<SUP>2</SUP>]
- * - _parTotal_ is the total intensity of PAR indoors [W/m<SUP>2</SUP>]
- *
- */
-
 IndoorsLight::IndoorsLight(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("computes indoors diffuse and direct light and PAR");
     Input(sunlightDiffuse).imports("construction/shelter[diffuseLightTransmitted]");
     Input(sunlightDirect).imports("construction/shelter[directLightTransmitted]");
     Input(sunlightPropPar).imports("outdoors[propParRadiation]");
     Input(growthLigthtsDirect).imports("growthLights[shortWaveEmission]");
     Input(growthLigthtsPar).imports("growthLights[parEmission]");
-    Output(direct);
-    Output(diffuse);
-    Output(total);
-    Output(parDirect);
-    Output(parDiffuse);
-    Output(parTotal);
+    Output(direct).help("Intensity of indoors direct light [W/m2]");
+    Output(diffuse).help("Intensity of indoors diffuse light [W/m2]");
+    Output(total).help("Intensity of indoors direct+diffuse light [W/m2]");
+    Output(parDirect).help("Intensity of indoors direct PAR [W/m2]");
+    Output(parDiffuse).help("Intensity of indoors diffuse PAR [W/m2]");
+    Output(parTotal).help("Intensity of indoors direct+diffuse PAR [W/m2]");
 }
 
 void IndoorsLight::reset() {
@@ -67,9 +44,6 @@ void IndoorsLight::update() {
     parDiffuse = sunlightPropPar*diffuse;
     parDirect = sunlightPropPar*direct + growthLigthtsPar;
     parTotal = parDiffuse + parDirect;
-
 }
 
-
 } //namespace
-

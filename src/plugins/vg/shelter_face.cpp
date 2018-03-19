@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/dialog.h>
 #include <base/box_builder.h>
@@ -19,29 +19,10 @@ namespace vg {
 
 PUBLISH(ShelterFace)
 
-/*! \class ShelterFace
- * \brief A shelter face consists of the cover and any screens
- *
- * Inputs
- * ------
- * - _roofArea_ is the total area of the roof (the two sloping surfaces on top of each span) [m<SUP>2</SUP>]
- * - _sideWallsArea_ is the total area of the two greenhouse side walls (facing the outside) [m<SUP>2</SUP>]
- * - _endWallsArea_ is the total area of the two greenhouse end walls (excluding the triangular gables) [m<SUP>2</SUP>]
- * - _gablesArea_ is the total area of the two triangular gables at the ends of each span [m<SUP>2</SUP>]
- * - _groundArea_ is the area covered by the greenhouse [m<SUP>2</SUP>]
- * - _outdoorsDirectRadiation_ is the direct component of sunlight irradiation [W/m<SUP>2</SUP>]
- * - _outdoorsDiffuseRadiation_ is the diffuse component of sunlight irradiation [W/m<SUP>2</SUP>]
- *
- * Outputs
- * -------
- * - _area_ is the surface area [m<SUP>2</SUP>]
- * - _relativeArea_ is the proportion of this surface out of the total surface area [0;1]
- * - _areaPerGround_ is the surface area relative to the ground area [m<SUP>2</SUP> shelter/m<SUP>2</SUP> ground]
- */
-
 ShelterFace::ShelterFace(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
+    help("models a shelter face");
     Input(roofArea).imports("geometry[roofArea]");
     Input(sideWallsArea).imports("geometry[sideWallsArea]");
     Input(endWallsArea).imports("geometry[endWallsArea]");
@@ -51,10 +32,10 @@ ShelterFace::ShelterFace(QString name, QObject *parent)
     Input(outdoorsDirectRadiation).imports("outdoors[directRadiation]");
     Input(outdoorsDiffuseRadiation).imports("outdoors[diffuseRadiation]");
 
-    Output(area);
-    Output(relativeArea);
-    Output(areaPerGround);
-    Output(screensMaxState);
+    Output(area).help("Surface area [m2]");
+    Output(relativeArea).help("Proportion of this surface area out of the total surface area [0;1]");
+    Output(areaPerGround).help("Surface area relative to the ground area [m2/m2]");
+    Output(screensMaxState).help("Max. state of screens on this surface");
 }
 
 void ShelterFace::amend() {

@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include "general.h"
@@ -15,21 +15,11 @@ namespace vg {
 
 PUBLISH(VapourFluxAir)
 
-/*! \class VapourFluxAir
- * \brief Vapour flux through air exchange
- *
- * Inputs
- * ------
- * - _airFlux_ is the rate of air exchange [<SUP>h</SUP>]
- * - _outdoorsAh_ is the outdoors absolute humidity [kg/m<SUP>3</SUP>]
- * - _indoorsAh_ is the indoors absolute humidity [kg/m<SUP>3</SUP>]
- * - _height_ is the average height of the greenhouse [m]
- */
-
 VapourFluxAir::VapourFluxAir(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    Input(airFlux).equals(0.);
+    help("models vapour flux through air exchange");
+    Input(airFlux).help("Rate of air exchange with outdoors [h-1]");
     Input(indoorsAh).imports("indoors/humidity[ah]");
     Input(outdoorsAh).imports("outdoors[ah]");
     Input(height).imports("geometry[indoorsAverageHeight]");

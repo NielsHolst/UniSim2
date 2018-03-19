@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include <base/publish.h>
@@ -17,35 +17,12 @@ namespace vg {
 
 PUBLISH(CropRadiation)
 
-
-/*! \class CropRadiation
- * \brief Basic parameters for radiation in crop canopy
- *
- * Inputs
- * ------
- * - _kDiffuse_ is the extinction coefficient for diffuse light [0;1]
- * - _scattering_ is the scattering coefficent for direct light [0;1]
- * - _sinb_ is the sine of sun elevation [-1;1]
- * - _lightDiffuse_ is the intensity of diffuse light indoors [W/m<SUP>2</SUP>]
- * - _lightDirect_ is the intensity of direct light indoors [W/m<SUP>2</SUP>]
- * - _absorptivityTop_ is the proportion of indoors light captured by the top leaf layer [0;1]
- * - _absorptivityMiddel_ is the proportion of indoors light captured by the middle leaf layer [0;1]
- * - _absorptivityBottom_ is the proportion of indoors light captured by the bottom leaf layer [0;1]
- *
- * Output
- * ------
- * - _kDirect_ is the extinction coefficient for direct light [0;1]
- * - _kDirectDirect_ is the extinction coefficient for the direct component of direct light [0;1]
- * - _diffuseReflectivity_ is the reflectivity of diffuse light [0;1]
- * - _directReflectivity_ is the reflectivity of direct light [0;1]
- * - _reflectivity_ is the reflectivity of diffuse and direct light combined [0;1]
- */
-
 CropRadiation::CropRadiation(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(kDiffuse).equals(0.8);
-    Input(scattering).equals(0.2);
+    help("computes crop light budget");
+    Input(kDiffuse).equals(0.8).help("Extinction coefficient for diffuse light [0;1]");
+    Input(scattering).equals(0.2).help("Scattering coefficent for direct light [0;1]");
     Input(sinb).imports("calendar[sinb]");
     Input(lightDiffuse).imports("indoors/light[diffuse]");
     Input(lightDirect).imports("indoors/light[direct]");
@@ -53,11 +30,11 @@ CropRadiation::CropRadiation(QString name, QObject *parent)
     Input(absorptivityMiddle).imports("layers/middle/photosynthesis[absorptivity]");
     Input(absorptivityBottom).imports("layers/bottom/photosynthesis[absorptivity]");
 
-    Output(kDirect);
-    Output(kDirectDirect);
-    Output(diffuseReflectivity);
-    Output(directReflectivity);
-    Output(reflectivity);
+    Output(kDirect).help("Extinction coefficient for direct light [0;1]");
+    Output(kDirectDirect).help("Extinction coefficient for the direct component of direct light [0;1]");
+    Output(diffuseReflectivity).help("Reflectivity of diffuse light [0;1]");
+    Output(directReflectivity).help("Reflectivity of direct light [0;1]");
+    Output(reflectivity).help("Net reflectivity [0;1]");
 }
 
 void CropRadiation::reset() {

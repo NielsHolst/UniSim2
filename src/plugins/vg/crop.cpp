@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "crop.h"
 #include <base/publish.h>
@@ -13,21 +13,10 @@ namespace vg {
 
 PUBLISH(Crop)
 
-/*! \class Crop
- * \brief Crop growth, development and microclimate
- *
- * Inputs
- * ------
- * - _density_ is the number of plants per ground area [m<SUP>-2</SUP>]
- *
- * Outputs
- * -------
- * - none
- */
-
 Crop::Crop(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("holds crop parameters");
     Input(density).equals(1);
 }
 

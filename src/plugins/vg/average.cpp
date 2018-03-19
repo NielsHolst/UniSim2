@@ -1,7 +1,8 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
 #include <base/general.h>
@@ -19,8 +20,9 @@ PUBLISH(Average)
 Average::Average(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(inputs);
-    Output(value);
+    help("computes average of inputs");
+    Input(inputs).help("Input values");
+    Output(value).help("Average of inputs");
 }
 
 void Average::initialize() {

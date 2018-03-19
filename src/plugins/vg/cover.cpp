@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QMap>
 #include <base/data_grid.h>
@@ -13,7 +13,6 @@
 #include <base/publish.h>
 #include "cover.h"
 
-using std::min;
 using namespace base;
 
 namespace vg {
@@ -23,6 +22,7 @@ PUBLISH(Cover)
 Cover::Cover(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
+    help("computes cover light and heat characteristics");
     Input(greenhouseReflection).imports("geometry[reflection]");
     Input(chalk).imports("controllers/chalk[value]");
     Input(latitude).imports("calendar[latitude]");

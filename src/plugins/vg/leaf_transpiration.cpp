@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
 #include <base/publish.h>
@@ -40,6 +40,7 @@ PUBLISH(LeafTranspiration)
 LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
+    help("models leaf transpiration");
     Input(lai).imports("crop/lai[value]");
     Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]");
     Input(indoorsAh).imports("indoors/humidity[ah]");
@@ -47,7 +48,7 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     Input(leafTemperature).imports("../temperature[value]");
     Input(rbH2O).imports("../rb[rbH2O]");
     Input(rsH2O).imports("../rs[rsH2O]");
-    Output(leafAh);
+    Output(leafAh).help("Leaf absolute humidity [kg/m3]");
 }
 
 void LeafTranspiration::reset() {

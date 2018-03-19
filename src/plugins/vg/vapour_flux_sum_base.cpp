@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "vapour_flux_base.h"
 #include "vapour_flux_sum_base.h"
@@ -11,21 +11,10 @@ using namespace base;
 
 namespace vg {
 
-/*! \class VapourFluxSumBase
- * \brief Base class for summed vapour fluxes
- *
- * Outputs
- * ------
- * - _conductance_ is the vapour flux conductance, summed over given models [m/s]
- * - _vapourFlux_ is the condensation rate, summed over given models [kg/m<SUP>2</SUP>/s]
- * - _gain_ is used to integrate over all water vapour fluxes (GCC, p. 148), summed over given models [kg/m<SUP>2</SUP>/s]
- *
- * Models are given by the the virtual method fluxes().
- */
-
 VapourFluxSumBase::VapourFluxSumBase(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
+    help("base class for summing vapour fluxes");
 }
 
 void VapourFluxSumBase::initialize() {

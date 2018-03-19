@@ -1,7 +1,8 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/time_with_units.h>
 #include <base/publish.h>
@@ -16,14 +17,15 @@ PUBLISH(SimulationTimeInterval)
 SimulationTimeInterval::SimulationTimeInterval(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(beginDate);
-    Input(endDate);
-    Input(beginTime);
-    Input(endTime);
-    Input(timeStep).equals(1);
-    Input(timeUnit).equals('d');
-    Output(steps);
-    Output(beginDateTime);
+    help("help defining a time interval for the simulation");
+    Input(beginDate).help("Simulation start date");
+    Input(endDate).help("Simulation end date");
+    Input(beginTime).equals(QTime(0,0,0)).help("Simulation start time");
+    Input(endTime).equals(QTime(0,0,0)).help("Simulation end time");
+    Input(timeStep).equals(5).help("Time step length");
+    Input(timeUnit).equals('m').help("Time step unit");
+    Output(steps).help("Number of steps in simulation");
+    Output(beginDateTime).help("Date and time to begin simulation");
 }
 
 void SimulationTimeInterval::reset() {

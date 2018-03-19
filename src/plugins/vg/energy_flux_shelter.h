@@ -1,20 +1,20 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_ENERGY_FLUX_SHELTERS_H
-#define VG_ENERGY_FLUX_SHELTERS_H
+#ifndef VG_ENERGY_FLUX_SHELTER_H
+#define VG_ENERGY_FLUX_SHELTER_H
 
 #include "energy_flux_base.h"
 
 namespace vg {
 
-class EnergyFluxShelters : public EnergyFluxBase
+class EnergyFluxShelter : public EnergyFluxBase
 {
 public:
-    EnergyFluxShelters(QString name, QObject *parent);
+    EnergyFluxShelter(QString name, QObject *parent);
     void reset();
     void update();
 private:

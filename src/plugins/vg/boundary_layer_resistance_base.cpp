@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 
 #include "boundary_layer_resistance_base.h"
@@ -12,28 +12,15 @@ using namespace base;
 
 namespace vg {
 
-/*! \class BoundaryLayerResistanceBase
- * \brief Boundary layer resistance against H<SUB>2</SUB>O and CO<SUB>2</SUB>
- *
- * Inputs
- * ------
- * - _leafDimension_ describes leaf geometry [mm]
- * - _indoorsWindSpeed_ is the wind speed indoors [m/s]
- *
- * Outputs
- * ------
- * - _rbH2O_ is the boundary layer resistance against water vapour [s/m]
- * - _rbCO2_ is the boundary layer resistance against CO<SUB>2</SUB> [s/m]
- */
-
 BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(BoundaryLayerResistanceBase);
-    Input(leafDimension).equals(25./1000.);
+    help("base class to compute bounday layer resistance");
+    Input(leafDimension).equals(25./1000.).help("Description of leaf geometry [mm]");
     Input(leafWindSpeed).imports("../windSpeed[value]");
-    Output(rbH2O);
-    Output(rbCo2);
+    Output(rbH2O).help("The boundary layer resistance against water vapour [s/m]");
+    Output(rbCo2).help("The boundary layer resistance against CO2 [s/m]");
 }
 
 void BoundaryLayerResistanceBase::reset() {
@@ -45,6 +32,4 @@ void BoundaryLayerResistanceBase::update() {
     rbCo2 = rbH2O*1.37;
 }
 
-
 } //namespace
-

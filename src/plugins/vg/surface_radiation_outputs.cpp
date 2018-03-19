@@ -1,8 +1,8 @@
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2018 by
+** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "surface_radiation.h"
 #include "surface_radiation_outputs.h"
@@ -11,32 +11,11 @@ using namespace base;
 
 namespace vg {
 
-/*! \class SurfaceRadiationOutputs
- * \brief Common surface radiation outputs
- *
- * Outputs
- * ------
- * - _lightTransmissivity_ is the transmissivity for diffuse light [0;1]
- * - _directLightTransmissivity_ is the transmissivity for direct light [0;1]
- * - _lwTransmissivity_ is the transmissivity for long-waved radiation [0;1]
- * - _incomingLightAbsorptivity_ is the absorptivity for diffuse light coming from the outdoors direction [0;1]
- * - _incomingLightReflectivity_ is the reflectivity for diffuse light coming from the outdoors direction [0;1]
- * - _incomingDirectLightAbsorptivity_ is the absorptivity for direct light coming from the outdoors direction [0;1]
- * - _incomingDirectLightReflectivity_ is the reflectivity for direct light coming from the outdoors direction [0;1]
- * - _incomingLwAbsorptivity_ is the absorptivity for long-waved radiation coming from the outdoors direction [0;1]
- * - _incomingLwReflectivity_ is the reflectivity for long-waved radiation coming from the outdoors direction [0;1]
- * - _outgoingLightAbsorptivity_ is the absorptivity for diffuse light going in the outdoors direction [0;1]
- * - _outgoingLightReflectivity_ is the reflectivity for diffuse light going in the outdoors direction [0;1]
- * - _outgoingDirectLightAbsorptivity_ is the absorptivity for direct light going in the outdoors direction [0;1]
- * - _outgoingDirectLightReflectivity_ is the reflectivity for direct light going in the outdoors direction [0;1]
- * - _outgoingLwAbsorptivity_ is the absorptivity for long-waved radiation going in the outdoors direction [0;1]
- * - _outgoingLwReflectivity_ is the reflectivity for long-waved radiation going in the outdoors direction [0;1]
- */
-
 SurfaceRadiationOutputs::SurfaceRadiationOutputs(QString name, QObject *parent)
 	: Box(name, parent)
 {
     Class(SurfaceRadiationOutputs);
+    help("base class for surface radiation models");
     Output(lightTransmissivity).help("Transmissivity for diffuse light [0;1]");
     Output(directLightTransmissivity).help("Transmissivity for direct light [0;1]");
     Output(lwTransmissivity).help("Transmissivity for long-wave radiation [0;1]");
