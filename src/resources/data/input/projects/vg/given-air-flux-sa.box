@@ -1,0 +1,82 @@
+// vg/given-air-flux-sa.box
+Simulation {
+  .iterations = 300
+  .steps = 60
+  .silent = TRUE
+  SensitivityAnalysis {
+  }
+  Calendar calendar {
+    .timeStep = 5
+    .timeUnit = "m"
+  }
+  Box drivingVariables {
+    Box outdoors {
+      +temperature = 15 @(uniform -10 30)
+      +windSpeed = 4 @ (uniform 0 15)
+    }
+    Box indoors {
+      +rh = 90 @(uniform 70 95)
+    }
+    Box setpoints {
+      +maximumRh = 80
+    }
+  }
+  AirFluxGiven givenAirFlux {
+    AirFluxInfiltration infiltration {
+      .leakage = 1
+      .windSpeed = outdoors[windSpeed]
+    }
+    Accumulator crackVentilation {
+      .change = ./controller[controlVariable]
+      PidController controller {
+        .desiredValue = ./desiredVentilation[signal]
+        .sensedValue = ..[value]
+        .Kprop = 0.02 
+        ProportionalSignal desiredVentilation {
+          .input = indoors[rh]
+          .threshold = setpoints[maximumRh]
+          .thresholdBand = 10
+          .increasingSignal = TRUE
+          .maxSignal = ./maxVentilation[signal]
+          .minSignal = 0
+          ProportionalSignal maxVentilation {
+            .input = outdoors[temperature]
+            .threshold = -5
+            .thresholdBand = 1
+            .increasingSignal = TRUE
+            .maxSignal = 0.5
+            .minSignal = 0
+          }
+        }
+      }
+    }
+    AirFluxGravitation gravitation {
+      .screensState = actuators/screens[value]
+      .indoorsTemperature = 22
+      .outdoorsTemperature = outdoors[temperature]
+      .indoorsVolume = 6400
+      .groundArea = 1000
+    }
+  }
+    Box actuators {
+      Accumulator screens {
+      .change = ./controller[controlVariable]
+      .initial = 1
+      PidController controller {
+        .desiredValue = 0
+        .sensedValue = ..[value]
+        .Kprop = 0.05 
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = (outdoors[*] indoors[*])
+      PlotR {
+        .ports = (givenAirFlux[value]|end infiltration[value]|end
+                   crackVentilation[value]|end gravitation[value]|max)
+        .ggplot = "geom_point()"
+      }
+    }
+  }
+}

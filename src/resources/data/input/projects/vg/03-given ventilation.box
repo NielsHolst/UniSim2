@@ -1,0 +1,147 @@
+// vg/03-ventilation.box
+Simulation greenhouse {
+  .steps = 288
+  Calendar calendar {
+    .timeStep = 5
+    .timeUnit = "m"
+  }
+  Box outdoors {
+    +directRadiation = ./directRadiation[value]
+    +diffuseRadiation = ./diffuseRadiation[value]
+    +windSpeed = ./windSpeed[value]
+    +temperature = 5.0
+    Hump directRadiation {
+      .x = calendar[time]
+      .x0 = calendar[sunrise]
+      .x1 = calendar[sunset]
+      .ymin = 0
+      .ymax = 15
+    }
+    Hump diffuseRadiation {
+      .x = calendar[time]
+      .x0 = calendar[sunrise]
+      .x1 = calendar[sunset]
+      .ymin = 0
+      .ymax = 10
+    }
+    Hump windSpeed {
+      .x = calendar[time]
+      .x0 = 14
+      .x1 = 34
+      .ymin = 2
+      .ymax = 15
+    }
+  }
+  Box controllers {
+    Box chalk {
+      +value = 0
+    }
+  }
+  Box actuators {
+    Box screens {
+      Box energy {
+        Box control {
+          +state = ./state[value]
+          Hump state {
+            .x = calendar[time]
+            .x0 = 0
+            .x1 = 12
+            .ymin = 0
+            .ymax = 1
+          }
+        }
+      }
+    }
+  }
+  Box construction {
+    Geometry geometry {
+    }
+    Shelter shelter {
+      ShelterFace roof1 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy/control[state]
+          }
+        }
+      }
+      ShelterFace roof2 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy/control[state]
+          }
+        }
+      }
+    }
+  }
+  Box indoors {
+    Hump temperature {
+      .x = calendar[time]
+      .x0 = 6
+      .x1 = 18
+      .ymin = 20
+      .ymax = 35
+    }
+    Box humidity {
+      +rh = ./rh[value]
+      Hump rh {
+        .x = calendar[time]
+        .x0 = 5
+        .x1 = 7
+        .ymin = 75
+        .ymax = 95
+      }
+    }
+    Box given {
+      AirFluxGiven airFlux {
+      }
+    }
+  }
+  Box setpoints {
+    Box humidity {
+      Box maximumRh {
+        +signal = 80.0
+      }
+    }
+  }
+  OutputR {
+    .popUp = TRUE
+    +ggplot = "geom_line(size=1.1) + scale_x_datetime(breaks = date_breaks('4 hours'), labels = date_format('%H'))"
+    PageR {
+      .title = "Outdoors and Shelter"
+      .xAxis = calendar[dateTime]
+      .ncol = 2
+      PlotR { 
+        .ports = (outdoors[diffuseRadiation] outdoors[directRadiation] 
+                   shelter[diffuseLightTransmitted] shelter[directLightTransmitted] 
+                   shelter[lightAbsorbedCover] shelter[lightAbsorbedScreens])
+        .ncol = 2
+        .ggplot = ../..[ggplot]
+      }
+      PlotR {
+        +screenState = actuators/screens/energy/control[state]
+        .ports = (.[screenState] outdoors[windSpeed] shelter[U])
+        .ncol = 1
+        .ggplot = ../..[ggplot]
+      }
+    }
+    PageR {
+      .title = "Ventilation"
+      .xAxis = calendar[dateTime]
+      .ncol = 2
+      PlotR {
+        +indoorsTemperature = indoors/temperature[value]
+        +indoorsRh = indoors/humidity[rh]
+        +outdoorsTemperature = outdoors[temperature]
+        
+        .ports = (.[indoorsTemperature] .[indoorsRh] .[outdoorsTemperature] outdoors[windSpeed]  given/airFlux[value])
+        .ncol = 1
+        .ggplot = ../..[ggplot]
+      }
+      PlotR {
+        .ports = given/airFlux/*[value]
+        .ncol = 1
+        .ggplot = ../..[ggplot]
+      }
+    }
+  }
+}

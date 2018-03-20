@@ -1,0 +1,24 @@
+// vg/proportional-signal.box
+Simulation {
+  .steps = 40
+  Sequence rh {
+    .min = 60
+    .max = 100
+  }
+  ProportionalSignal ventilationDemand {
+    .input = rh[value]
+    .threshold = 80 
+    .thresholdBand = 10
+    .increasingSignal = TRUE
+    .maxSignal = 5
+    .minSignal = 0
+  }
+  OutputR {
+    PageR {
+      .xAxis = ventilationDemand[input]
+      PlotR {
+        .ports = ventilationDemand[signal]
+      }
+    }
+  }
+}

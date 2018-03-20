@@ -1,0 +1,176 @@
+// phys-dev-appl-8.box
+Simulation sim {
+  .steps = 100
+  Calendar calendar {
+  }
+  //
+  // Host
+  //
+  Box host {
+    +juvenileDuration = 10
+    +adultDuration = 30
+    +juvenileInfectionRate = 0.04 // Should be dynamic
+    +adultInfectionRate    = 0.01 // Should be dynamic
+    Box S {
+      Stage juvenile {
+        .initial = 80
+        .inflow = ../reproduction[outflow]
+        .duration = host[juvenileDuration]
+        .phaseOutflowProportion = host[juvenileInfectionRate]
+      }
+      Stage adult {
+        .initial = 50
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseOutflowProportion = host[adultInfectionRate]
+      }
+      Stage reproduction {
+        .initial = ../adult[initial]
+        .inflow|sum = host/*/juvenile[outflowSum]
+        .duration = 20
+        .growthFactor = 2.5
+      }
+    }
+    Box E {
+      StageAndPhase juvenile {
+        .duration = host[juvenileDuration]
+        .phaseInflow = host/S/juvenile[phaseOutflow]
+        .phaseDuration = 10
+      }      
+      StageAndPhase adult {
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseInflow = host/S/adult[phaseOutflow]
+        .phaseDuration = 10
+      }
+    }
+    Box I {
+      StageAndPhase juvenile {
+        .duration = host[juvenileDuration]
+        .phaseInflow = host/E/juvenile[phaseOutflow]
+        .phaseDuration = 20
+      }      
+      StageAndPhase adult {
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseInflow = host/E/adult[phaseOutflow]
+        .phaseDuration = 20
+      }
+    }
+    Box R {
+      Stage juvenile {
+        .duration = host[juvenileDuration]
+        .phaseInflow = host/I/juvenile[phaseOutflow]
+      }
+      Stage adult {
+        .inflow = ../juvenile[outflow]
+        .duration = host[adultDuration]
+        .phaseInflow = host/I/adult[phaseOutflow]
+      }
+    }
+  }
+  //
+  // Vector
+  //
+  Box vector {
+    +offspringDuration = 7
+    +juvenileDuration = 14
+    +adultDuration = 14
+    +fecundity = 5
+    +infectionRate = 0.04
+    Box S {
+      Stage offspring {
+        .initial = 100
+        .inflow|sum = vector/S/adult/reproduction[outflow] | 
+                      vector/E/adult/reproduction[outflowSum]
+        .duration = vector[offspringDuration]
+      }
+      Stage juvenile {
+        .inflow = ../offspring[outflow]
+        .duration = vector[juvenileDuration]
+      }
+      Box adult {
+        Stage individuals {
+          .inflow = ../../juvenile[outflow]
+          .duration = vector[adultDuration]
+          .phaseOutflowProportion = vector[infectionRate]
+        }
+        Stage reproduction {
+          .inflow = ../../juvenile[outflow]
+          .duration = vector[adultDuration]
+          .phaseOutflowProportion = vector[infectionRate]
+          .growthFactor = vector[fecundity]
+        }
+      }
+    }
+    Box E {
+      +phaseDuration = 3
+      Box adult {
+        StageAndPhase individuals {
+          .duration = vector[adultDuration]
+          .phaseInflow = vector/S/adult/individuals[phaseOutflow]
+          .phaseDuration = vector/E[phaseDuration]
+        }
+        StageAndPhase reproduction {
+          .duration = vector[adultDuration]
+          .growthFactor = vector[fecundity]
+          .phaseInflow = vector/S/adult/reproduction[phaseOutflow]
+          .phaseDuration = vector/E[phaseDuration]
+        }
+      }
+    }
+    Box I {
+      Stage offspring {
+        .inflow = ../adult/reproduction[outflow]
+        .duration = vector[offspringDuration]
+      }
+      Stage juvenile {
+        .inflow = ../offspring[outflow]
+        .duration = vector[juvenileDuration]
+      }
+      Box adult {
+        Stage individuals {
+          .inflow = ../../juvenile[outflow]
+          .duration = vector[adultDuration]
+          .phaseInflow = vector/E/adult/individuals[phaseOutflow]
+        }
+        Stage reproduction {
+          .inflow = ../../juvenile[outflow]
+          .duration = vector[adultDuration]
+          .growthFactor = vector[fecundity]
+          .phaseInflow = vector/E/adult/reproduction[phaseOutflow]
+        }
+      }
+    }
+  }
+  OutputR output {
+    PageR {
+      .title = "Host"
+      .ncol = 1
+      PlotR {
+        .layout = "merged"
+        .ports = host/*/juvenile[content]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = host/*/adult[content]
+      }
+    }
+    PageR {
+      .title = "Vector"
+      .ncol = 1
+      PlotR {
+        .layout = "merged"
+        .ports = vector/*/offspring[content]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = vector/*/juvenile[content]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = vector/*/adult/individuals[content]
+      }
+    }
+  }
+}

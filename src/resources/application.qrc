@@ -59,6 +59,7 @@
     <file>data/input/book/phys-dev-appl-6-end.R</file>
     <file>data/input/book/phys-dev-appl-6.box</file>
     <file>data/input/book/phys-dev-appl-7.box</file>
+    <file>data/input/book/phys-dev-appl-8.box</file>
     <file>data/input/book/phys-dev-scale-end.R</file>
     <file>data/input/book/phys-dev-scale.box</file>
     <file>data/input/book/scenarios/braunschweig 2009 Tavg.txt</file>
@@ -102,8 +103,19 @@
     <file>data/input/papers/2012-photosynthesis-pending/reference.txt</file>
     <file>data/input/papers/2013-Inachis-pending/reference.txt</file>
     <file>data/input/papers/2014-Rift-Valley-fever-pending/reference.txt</file>
+    <file>data/input/projects/bph/bph-rice-1.box</file>
+    <file>data/input/projects/bph/bph-rice-2.box</file>
+    <file>data/input/projects/bph/bph-rice-end.R</file>
+    <file>data/input/projects/bph/bph1-end-calibration.R</file>
+    <file>data/input/projects/bph/bph1-end-sa.R</file>
+    <file>data/input/projects/bph/bph1-end-time-series.R</file>
+    <file>data/input/projects/bph/bph1-scenarios.R</file>
+    <file>data/input/projects/bph/bph1-scenarios.txt</file>
+    <file>data/input/projects/bph/bph1.box</file>
+    <file>data/input/projects/bph/env-AnGiang.txt</file>
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
+    <file>data/input/projects/resist/quantile-2D.R</file>
     <file>data/input/projects/resist/resist-1.box</file>
     <file>data/input/projects/resist/resist-2.box</file>
     <file>data/input/projects/resist/resist-3(0).box</file>
@@ -111,10 +123,35 @@
     <file>data/input/projects/resist/resist-4.box</file>
     <file>data/input/projects/resist/resist-5.box</file>
     <file>data/input/projects/resist/resist-5b.box</file>
+    <file>data/input/projects/resist/resist-6-sa-end(0).R</file>
+    <file>data/input/projects/resist/resist-6-sa-end.R</file>
     <file>data/input/projects/resist/resist-6-sa.box</file>
     <file>data/input/projects/resist/resist-6.box</file>
     <file>data/input/projects/resist/resist-end.R</file>
     <file>data/input/projects/resist/resist-sa-end.R</file>
+    <file>data/input/projects/vg/01-construction.box</file>
+    <file>data/input/projects/vg/02-screen-U.box</file>
+    <file>data/input/projects/vg/03-given ventilation.box</file>
+    <file>data/input/projects/vg/04-controlled ventilation.box</file>
+    <file>data/input/projects/vg/crops.xml</file>
+    <file>data/input/projects/vg/given-air-flux-auto.box</file>
+    <file>data/input/projects/vg/given-air-flux-fixed.box</file>
+    <file>data/input/projects/vg/given-air-flux-sa.box</file>
+    <file>data/input/projects/vg/ig2.box</file>
+    <file>data/input/projects/vg/igclient_0000_with_crop.box</file>
+    <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
+    <file>data/input/projects/vg/input/sel_dk.txt</file>
+    <file>data/input/projects/vg/pid-controller-plot.R</file>
+    <file>data/input/projects/vg/pid-controller.box</file>
+    <file>data/input/projects/vg/proportional-signal.box</file>
+    <file>data/input/projects/vg/sel_dk.txt</file>
+    <file>data/input/projects/vg/test.box</file>
+    <file>data/input/projects/vg/TestOKO1.xml</file>
+    <file>data/input/projects/vg/TestOKO1_tr.xml</file>
+    <file>data/input/projects/vg/transform1.bat</file>
+    <file>data/input/projects/vg/transform_all.bat</file>
+    <file>data/input/projects/vg/transform_OKO1.bat</file>
+    <file>data/input/projects/vg/vv_to_unisim.xsl</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>
@@ -131,6 +168,5 @@
     <file>data/input/teaching/weather/flakkebjerg 2009.txt</file>
     <file>data/input/teaching/weather/geneva 2009.txt</file>
     <file>data/input/teaching/weather/ljubljana 2009.txt</file>
-    <file>igclient/direct_transmission_single.txt</file>
   </qresource>
 </RCC>

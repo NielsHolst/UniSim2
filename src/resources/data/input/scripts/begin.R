@@ -6,7 +6,11 @@ library(reshape2)
 library(scales)
 
 if (!keepPages) graphics.off ()
-if (!keepVariables) rm(list=ls(all=TRUE))
+if (!keepVariables) {
+  del = ls(all=TRUE) 
+  del = del[del!="box_script_folder"]
+  rm(list=del)
+}
 
 is_rstudio = function() !is.na(Sys.getenv("RSTUDIO", unset = NA))
 

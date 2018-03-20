@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<box class="Simulation" name="VirtualGreenhouse">
+	<box name="simulationTimeInterval" class="vg::SimulationTimeInterval">
+		<port name="beginDate" value="2001-01-01"/>
+		<port name="endDate" value="2001-03-01"/>
+		<port name="beginTime" value="00:00"/>
+		<port name="endTime" value="00:00"/>
+		<port name="timeStep" value="5"/>
+		<port name="timeUnit" value="m"/>
+	</box>
+	<port name="steps" ref="simulationTimeInterval[steps]"/>
+	<box name="calendar" class="boxes::Calendar">
+		<port name="initialDateTime" ref="simulationTimeInterval[beginDateTime]"/>
+		<port name="timeStep" ref="simulationTimeInterval[timeStep]"/>
+		<port name="timeUnit" ref="simulationTimeInterval[timeUnit]"/>
+		<port name="sample" value="12"/>
+		<port name="latitude" value="55.5"/>
+		<port name="longitude" value="10.5"/>
+		<port name="timeZone" value="01"/>
+	</box>
+	<box name="outdoors" class="vg::Outdoors">
+		<port name="co2" value="400"/>
+		<port name="windSpeed" label="outdoorsWindSpeed"/>
+		<port name="rh" label="outdoorsRh"/>
+		<port name="ah" label="outdoorsAh"/>
+		<box name="records" class="boxes::Records">
+			<port name="fileName" value="input/sel_dk.txt"/>
+		</box>
+	</box>
+	<box name="construction">
+		<box name="geometry" class="vg::ConstructionGeometry">
+			<port name="spanWidth" value="12"/>
+			<port name="numSpans" value="1"/>
+			<port name="height" value="2.5"/>
+			<port name="length" value="50"/>
+			<port name="roofPitch" value="26"/>
+			<port name="shade" value="0.2"/>
+		</box>
+		<box name="shelters" class="vg::Shelters">
+			<box name="roof1" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="roof1_roof2_horizontal"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.34"/>
+						<port name="transmissivityAir" value="0.37"/>
+						<port name="energyLossReduction" value="0.6"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+			<box name="roof2" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="roof1_roof2_horizontal"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.34"/>
+						<port name="transmissivityAir" value="0.37"/>
+						<port name="energyLossReduction" value="0.6"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+			<box name="side1" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="side1"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.41"/>
+						<port name="transmissivityAir" value="0.45"/>
+						<port name="energyLossReduction" value="0.55"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+			<box name="side2" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="side2"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.41"/>
+						<port name="transmissivityAir" value="0.45"/>
+						<port name="energyLossReduction" value="0.55"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+			<box name="end1" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="end1"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.41"/>
+						<port name="transmissivityAir" value="0.45"/>
+						<port name="energyLossReduction" value="0.55"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+			<box name="end2" class="vg::Shelter">
+				<box name="cover" class="vg::Cover">
+					<port name="U4" value="7.5"/>
+					<port name="transmissivity" value="0.83"/>
+					<port name="emissivity" value="0.93"/>
+					<port name="absorptivity" value="0.04"/>
+					<port name="specificHeatCapacity" value="8736"/>
+					<port name="haze" value="0"/>
+				</box>
+				<box name="screens" class="vg::Screens">
+					<box name="energy" class="vg::Screen">
+						<port name="position" value="end2"/>
+						<port name="layer" value="outer"/>
+						<port name="emissivityInner" value="0.62"/>
+						<port name="emissivityOuter" value="0.06"/>
+						<port name="transmissivityLight" value="0.41"/>
+						<port name="transmissivityAir" value="0.45"/>
+						<port name="energyLossReduction" value="0.55"/>
+						<port name="U" value="2"/>
+						<port name="haze" value="0.8"/>
+						<port name="state" ref="actuators/screens/energy/control[state]"/>
+					</box>
+				</box>
+			</box>
+		</box>
+		<box name="vents" class="vg::Vents">
+			<box class="vg::Vent" name="vent1">
+				<port name="length" value="48"/>
+				<port name="height" value="1"/>
+				<port name="number" value="1"/>
+				<port name="porosity" value="1"/>
+			</box>
+			<box class="vg::Vent" name="vent2">
+				<port name="length" value="48"/>
+				<port name="height" value="1"/>
+				<port name="number" value="1"/>
+				<port name="porosity" value="1"/>
+			</box>
+		</box>
+	</box>
+	<box name="indoors">
+		<box name="given">
+			<box name="airFlux" class="AirFluxGiven">
+				<port name="value" label="givenAirFluxTotal"/>
+				<box name="infiltration" class="vg::AirFluxInfiltration">
+					<port name="value" label="givenAirFluxInfiltration"/>
+					<port name="leakage" value="1"/>
+				</box>
+				<box name="crackVentilation" class="vg::PidControlElement">
+					<port name="value" label="givenAirFluxCrack"/>
+					<port name="signal" ref="./target[signal]"/>
+					<port name="Kprop" value="0.1"/>
+					<box name="target" class="vg::ProportionalSignal">
+						<box name="coldFactor" class="vg::ProportionalSignal">
+							<port name="input" ref="outdoors[temperature]"/>
+							<port name="threshold" value="-5"/>
+							<port name="thresholdBand" value="1"/>
+							<port name="increasingSignal" value="TRUE"/>
+							<port name="maxSignal" value="4"/>
+							<port name="minSignal" value="0"/>
+						</box>
+						<port name="input" ref="indoors/humidity[rh]"/>
+						<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+						<port name="thresholdBand" value="10"/>
+						<port name="increasingSignal" value="TRUE"/>
+						<port name="maxSignal" ref="./coldFactor[signal]"/>
+						<port name="minSignal" value="0"/>
+					</box>
+				</box>
+				<box name="gravitation" class="AirFluxGravitation">
+					<port name="value" label="givenAirFluxGravitation"/>
+				</box>
+			</box>
+			<box name="vapourFlux" class="vg::VapourFluxSum">
+				<box name="transpiration" class="vg::VapourFluxTranspiration"/>
+				<box name="condensationCover" class="vg::VapourFluxCondensation">
+					<port name="surfaceAreaPerGroundArea" ref="geometry[coverPerGroundArea]"/>
+					<port name="surfaceTemperature" ref="energyFlux/shelter[coverTemperature]"/>
+				</box>
+				<box name="condensationScreens" class="vg::VapourFluxCondensation">
+					<port name="surfaceAreaPerGroundArea" ref="construction/shelters[screensPerGroundArea]"/>
+					<port name="surfaceTemperature" ref="energyFlux/shelter[screensTemperature]"/>
+				</box>
+				<box name="airFluxOutdoors" class="vg::VapourFluxAir">
+					<port name="airFlux" ref="given/airFlux[value]"/>
+				</box>
+			</box>
+			<box name="energyFlux" class="vg::EnergyFluxSum">
+				<box name="light" class="vg::Sum">
+					<port name="inputs" value="(indoors/light[total])"/>
+				</box>
+				<box name="condensationCover" class="vg::EnergyFluxCondensation">
+					<port name="vapourFlux" ref="../../vapourFlux/condensationCover[vapourFlux]"/>
+				</box>
+				<box name="condensationScreens" class="vg::EnergyFluxCondensation">
+					<port name="vapourFlux" ref="../../vapourFlux/condensationScreens[vapourFlux]"/>
+				</box>
+				<box name="airFlux" class="vg::EnergyFluxAir">
+					<port name="airFlux" ref="given/airFlux[value]"/>
+				</box>
+				<box name="growthLights" class="vg::PidControlElement">
+					<port name="Kprop" value="0.5"/>
+					<port name="signal" ref="./growthLights[value]"/>
+					<box name="growthLights" class="vg::EnergyFluxGrowthLights"/>
+				</box>
+				<box name="shelter" class="vg::EnergyFluxShelters"/>
+				<box name="floor" class="vg::EnergyFluxFloor">
+					<box name="radiationAbsorbed" class="vg::FloorRadiationAbsorbed"/>
+					<port name="Uindoors" value="7.5"/>
+					<port name="Usoil" value="4"/>
+					<port name="heatCapacity" value="42000"/>
+					<port name="temperature" label="floorTemperature"/>
+				</box>
+				<box name="transpiration" class="vg::EnergyFluxTranspiration"/>
+			</box>
+		</box>
+		<box name="controlled">
+			<box name="energyFlux">
+				<box name="heating">
+					<box name="minSupply" class="vg::Sum">
+						<port name="inputs" value="(actuators/heating/pipes/*[nextEnergyFluxMin])"/>
+					</box>
+					<box name="maxSupply" class="vg::Sum">
+						<port name="inputs" value="(actuators/heating/pipes/*[nextEnergyFluxMax])"/>
+					</box>
+					<box name="demand" class="vg::EnergyFluxHeatingDemand"/>
+					<box name="supply" class="vg::PidControlElement">
+						<port name="value" label="heatingSupply"/>
+						<port name="Kprop" value="0.6"/>
+						<port name="Kint" value="0.01"/>
+						<port name="minimum" ref="../minSupply[value]"/>
+						<port name="maximum" ref="../maxSupply[value]"/>
+						<port name="signal" ref="../demand[value]"/>
+					</box>
+				</box>
+				<box name="temperature" class="vg::IndoorsTemperature">
+					<box name="energyFlux" class="vg::Sum">
+						<port name="inputs" value="(given/energyFlux[value] energyFlux/heating/supply[value])"/>
+					</box>
+					<port name="energyFlux" ref="./energyFlux[value]"/>
+					<port name="baseTemperature" ref="indoors/temperature[value]"/>
+				</box>
+				<box name="cooling">
+					<box name="demand" class="vg::EnergyFluxCoolingDemand">
+						<port name="value" label="energyFluxCoolingDemand"/>
+					</box>
+					<box name="airSupplyMax" class="vg::AirFluxCoolingSupplyMax">
+						<port name="value" label="airFluxSupplyMaxTotal"/>
+						<box name="byWind" class="vg::VentilationByWind">
+							<port name="value" label="airFluxSupplyMaxWind"/>
+							<port name="baseRate" value="10"/>
+						</box>
+						<box name="byTemp" class="vg::VentilationByTemp">
+							<port name="value" label="airFluxSupplyMaxThermal"/>
+							<port name="dischargeCoefficient" value="0.3"/>
+						</box>
+					</box>
+					<box name="supply" class="vg::PidControlElement">
+						<port name="value" label="energyFluxCoolingSupply"/>
+						<port name="slope" label="energyFluxCoolingSupplySlope"/>
+						<port name="Kprop" value="0.5"/>
+						<port name="maximum" value="0"/>
+						<port name="maxSlope" value="1"/>
+						<port name="minSlope" value="-1"/>
+						<port name="signal" ref="./target[value]"/>
+						<box name="target" class="vg::EnergyFluxCoolingSupply">
+							<port name="airSupplyMax" ref="cooling/airSupplyMax[value]"/>
+						</box>
+					</box>
+				</box>
+			</box>
+			<box name="cooling">
+				<box name="airFlux" class="vg::AirFluxCoolingSupply">
+					<port name="value" label="airFluxSupply"/>
+				</box>
+				<box name="vapourFlux" class="vg::VapourFluxAir">
+					<port name="airFlux" ref="cooling/airFlux[value]"/>
+				</box>
+				<box name="energyFlux" class="vg::EnergyFluxAir">
+					<port name="airFlux" ref="cooling/airFlux[value]"/>
+				</box>
+			</box>
+		</box>
+		<box name="total">
+			<box name="airFlux" class="vg::Sum">
+				<port name="value" label="airFluxTotal"/>
+				<port name="inputs" value="(given/airFlux[value] cooling/airFlux[value])"/>
+			</box>
+			<box name="vapourFlux" class="vg::VapourFluxSum">
+				<port name="toAdd" value="(given/vapourFlux cooling/vapourFlux)"/>
+			</box>
+			<box name="energyFlux" class="vg::Sum">
+				<port name="inputs" value="(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])"/>
+			</box>
+		</box>
+		<box name="light" class="vg::IndoorsLight"/>
+		<box name="temperature" class="vg::IndoorsTemperature">
+			<port name="resetValue" value="18"/>
+			<port name="energyFlux" ref="total/energyFlux[value]"/>
+			<port name="value" label="indoorsTemperature"/>
+		</box>
+		<box name="humidity" class="vg::IndoorsHumidity">
+			<port name="rh" label="indoorsRh"/>
+			<port name="ah" label="indoorsAh"/>
+		</box>
+		<box name="co2" class="vg::IndoorsCo2">
+			<port name="value" label="indoorsCo2"/>
+		</box>
+		<box name="windSpeed" class="vg::IndoorsWindSpeed">
+			<port name="value" label="indoorsWindSpeed"/>
+		</box>
+	</box>
+	<box name="setpoints">
+		<box name="isDay" class="vg::ProportionalSignal">
+			<port name="threshold" value="10"/>
+			<port name="input" ref="outdoors/records[GlobRad]"/>
+			<port name="thresholdBand" value="0"/>
+			<port name="increasingSignal" value="TRUE"/>
+			<port name="minSignal" value="0"/>
+			<port name="maxSignal" value="1"/>
+		</box>
+		<box name="humidity">
+			<box name="maximumRh" class="vg::SignalCollection">
+				<port name="signal" label="setpointMaxRh"/>
+				<port name="rule" value="min"/>
+				<port name="signalReset" value="100"/>
+				<box class="vg::DateTimeSignal">
+					<port name="signalOutside" value="100"/>
+					<port name="signalOutsideTimeOnly" value="100"/>
+					<port name="signalInside" value="80"/>
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="0:0"/>
+					<port name="endTime" value="23:59"/>
+					<port name="circadian" value="TRUE"/>
+				</box>
+			</box>
+		</box>
+		<box name="temperature">
+			<box name="ventilation" class="vg::PidControlElement">
+				<port name="value" label="setpointVentilation"/>
+				<port name="initState" ref="./target[signalReset]"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::SignalCollection">
+					<port name="rule" value="sum"/>
+					<port name="signalReset" value="20"/>
+					<box name="setpoints" class="vg::SignalCollection">
+						<port name="rule" value="min"/>
+						<port name="signalReset" ref="..[signalReset]"/>
+						<box name="setpoint" class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="0:0"/>
+							<port name="endTime" value="23:59"/>
+							<port name="circadian" value="TRUE"/>
+							<port name="signalOutside" value="100"/>
+							<port name="signalOutsideTimeOnly" value="100"/>
+							<port name="signalInside" value="20"/>
+						</box>
+					</box>
+					<box name="adjustments" class="vg::SignalCollection">
+						<port name="rule" value="min"/>
+						<port name="signalReset" value="0"/>
+						<box class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="0:0"/>
+							<port name="endTime" value="23:59"/>
+							<port name="circadian" value="TRUE"/>
+							<port name="signalOutside" value="0"/>
+							<port name="signalOutsideTimeOnly" value="0"/>
+							<port name="signalInside" ref="./adjustment[signal]"/>
+							<box name="adjustment" class="vg::ProportionalSignal">
+								<port name="input" ref="indoors/humidity[rh]"/>
+								<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+								<port name="thresholdBand" value="5"/>
+								<port name="increasingSignal" value="FALSE"/>
+								<port name="minSignal" value="-2"/>
+								<port name="maxSignal" value="0"/>
+							</box>
+						</box>
+					</box>
+				</box>
+			</box>
+			<box name="heating" class="vg::PidControlElement">
+				<port name="value" label="setpointHeating"/>
+				<port name="initState" ref="./target[signalReset]"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::SignalCollection">
+					<port name="rule" value="sum"/>
+					<port name="signalReset" value="18"/>
+					<box name="setpoints" class="vg::SignalCollection">
+						<port name="rule" value="max"/>
+						<port name="signalReset" ref="..[signalReset]"/>
+						<box name="setpoint" class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="0:0"/>
+							<port name="endTime" value="23:59"/>
+							<port name="circadian" value="TRUE"/>
+							<port name="signalOutside" value="0"/>
+							<port name="signalOutsideTimeOnly" value="0"/>
+							<port name="signalInside" value="18"/>
+						</box>
+					</box>
+					<box name="adjustmentsRh" class="vg::SignalCollection">
+						<port name="signalReset" value="0"/>
+						<port name="rule" value="max"/>
+						<box class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="0:0"/>
+							<port name="endTime" value="23:59"/>
+							<port name="circadian" value="TRUE"/>
+							<port name="signalReset" value="0"/>
+							<port name="signalOutside" value="0"/>
+							<port name="signalOutsideTimeOnly" value="0"/>
+							<port name="signalInside" ref="./adjustment[signal]"/>
+							<box name="adjustment" class="vg::ProportionalSignal">
+								<port name="input" ref="indoors/humidity[rh]"/>
+								<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+								<port name="thresholdBand" value="5"/>
+								<port name="increasingSignal" value="TRUE"/>
+								<port name="minSignal" value="0"/>
+								<port name="maxSignal" value="1"/>
+							</box>
+						</box>
+					</box>
+					<box name="adjustmentLight" class="vg::ProportionalSignal">
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="threshold" value="300"/>
+						<port name="thresholdBand" value="100"/>
+						<port name="increasingSignal" value="TRUE"/>
+						<port name="minSignal" value="0"/>
+						<port name="maxSignal" value="1"/>
+					</box>
+				</box>
+			</box>
+		</box>
+		<box name="co2">
+			<box name="minimum" class="vg::SignalCollection">
+				<port name="rule" value="max"/>
+				<port name="signalReset" value="0"/>
+				<port name="rule" value="max"/>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="0:0"/>
+					<port name="endTime" value="23:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+					<port name="signalInside" value="650"/>
+				</box>
+			</box>
+			<box name="maximum" class="vg::SignalCollection">
+				<port name="rule" value="min"/>
+				<port name="signalReset" value="1500"/>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="0:0"/>
+					<port name="endTime" value="23:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+					<port name="signalInside" value="750"/>
+				</box>
+			</box>
+		</box>
+	</box>
+	<box name="controllers">
+		<box name="screens">
+			<box name="maxDrawn" class="vg::PidControlElement">
+				<port name="initState" value="1"/>
+				<port name="signal" ref="./target[signal]"/>
+				<port name="Kprop" value="0.1"/>
+				<box name="target" class="vg::ThresholdSignal">
+					<port name="input" ref="indoors/humidity[rh]"/>
+					<port name="threshold" ref="setpoints/humidity/maximumRh[signal]"/>
+					<port name="signalBelow" value="1"/>
+					<port name="signalAbove" value="0.9"/>
+				</box>
+			</box>
+			<box name="energy">
+				<box name="control" class="vg::SignalCollection">
+					<port name="rule" value="min"/>
+					<port name="signalReset" value="0"/>
+					<box class="vg::ThresholdSignal">
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="threshold" value="10"/>
+						<port name="signalBelow" ref="controllers/screens/maxDrawn[value]"/>
+						<port name="signalAbove" value="0"/>
+					</box>
+					<box class="vg::ThresholdSignal">
+						<port name="input" ref="indoors/temperature[value]"/>
+						<port name="threshold" ref="setpoints/temperature/ventilation[value]"/>
+						<port name="signalBelow" value="1"/>
+						<port name="signalAbove" value="0"/>
+					</box>
+					<box class="vg::EnergyScreenBalanceSignal"/>
+				</box>
+			</box>
+			<box name="shade">
+				<box name="control" class="vg::SignalCollection">
+					<port name="rule" value="max"/>
+					<port name="signalReset" value="0"/>
+					<box class="vg::ThresholdSignal">
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="threshold" value="500"/>
+						<port name="signalBelow" value="0"/>
+						<port name="signalAbove" ref="controllers/screens/maxDrawn[value]"/>
+					</box>
+					<box class="vg::FixedSignal">
+						<port name="input" ref="controllers/screens/energy/control[signal]"/>
+					</box>
+				</box>
+			</box>
+			<box name="blackout">
+				<box name="light" class="vg::ThresholdSignal">
+					<port name="input" ref="outdoors[radiation]"/>
+					<port name="threshold" value="0"/>
+					<port name="signalBelow" value="0"/>
+					<port name="signalAbove" ref="controllers/screens/maxDrawn[value]"/>
+				</box>
+				<box name="control" class="vg::SignalCollection">
+					<port name="rule" value="max"/>
+					<port name="signalReset" value="0"/>
+					<box class="vg::SignalCollection">
+						<port name="rule" value="max"/>
+						<port name="signalReset" value="0"/>
+						<box class="vg::DateTimeSignal">
+							<port name="beginDay" value="1"/>
+							<port name="endDay" value="365"/>
+							<port name="beginTime" value="18:00"/>
+							<port name="endTime" value="6:00"/>
+							<port name="signalInside" value="1"/>
+							<port name="signalOutside" value="0"/>
+							<port name="signalOutsideTimeOnly" value="0"/>
+						</box>
+					</box>
+					<box class="vg::FixedSignal">
+						<port name="input" ref="controllers/screens/energy/control[signal]"/>
+					</box>
+				</box>
+			</box>
+		</box>
+		<box name="growthLight" class="vg::GrowthLightController">
+			<box name="on" class="vg::SignalCollection">
+				<port name="rule" value="max"/>
+				<port name="signalReset" value="0"/>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="0:0"/>
+					<port name="endTime" value="23:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalInside" ref="./on[signal]"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+					<box name="on" class="vg::ThresholdSignal">
+						<port name="threshold" value="40"/>
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="signalBelow" value="1"/>
+						<port name="signalAbove" value="0"/>
+					</box>
+				</box>
+			</box>
+			<box name="off" class="vg::SignalCollection">
+				<port name="rule" value="max"/>
+				<port name="signalReset" value="0"/>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="0:0"/>
+					<port name="endTime" value="23:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalInside" ref="./off[signal]"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+					<box name="off" class="vg::ThresholdSignal">
+						<port name="threshold" value="60"/>
+						<port name="input" ref="outdoors[radiation]"/>
+						<port name="signalBelow" value="0"/>
+						<port name="signalAbove" value="1"/>
+					</box>
+				</box>
+			</box>
+			<box name="periods" class="vg::SignalCollection">
+				<port name="rule" value="max"/>
+				<port name="signalReset" value="0"/>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="1"/>
+					<port name="endDay" value="59"/>
+					<port name="beginTime" value="6:1"/>
+					<port name="endTime" value="21:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalInside" value="1"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+				</box>
+				<box class="vg::DateTimeSignal">
+					<port name="beginDay" value="245"/>
+					<port name="endDay" value="365"/>
+					<port name="beginTime" value="6:1"/>
+					<port name="endTime" value="21:59"/>
+					<port name="circadian" value="TRUE"/>
+					<port name="signalInside" value="1"/>
+					<port name="signalOutside" value="0"/>
+					<port name="signalOutsideTimeOnly" value="0"/>
+				</box>
+			</box>
+		</box>
+		<box name="chalk" class="vg::SignalCollection">
+			<port name="rule" value="max"/>
+			<port name="signalReset" value="0"/>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDay" value="1"/>
+				<port name="endDay" value="365"/>
+				<port name="beginTime" value="0:0"/>
+				<port name="endTime" value="23:59"/>
+				<port name="circadian" value="FALSE"/>
+				<port name="signalOutside" value="0"/>
+				<port name="signalInside" value="0"/>
+			</box>
+		</box>
+		<box name="co2" class="vg::Co2Controller">
+			<port name="injectionRate" ref="./injectionRate[signal]"/>
+			<box name="injectionRate" class="vg::ProportionalSignal">
+				<port name="input" ref="indoors/total/airFlux[value]"/>
+				<port name="threshold" value="6"/>
+				<port name="thresholdBand" value="1"/>
+				<port name="increasingSignal" value="FALSE"/>
+				<port name="minSignal" value="0"/>
+				<port name="maxSignal" value="4.5"/>
+			</box>
+		</box>
+	</box>
+	<box name="actuators">
+		<box name="screens">
+			<box name="energy">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/energy/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+			<box name="shade">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/shade/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+			<box name="blackout">
+				<box name="control" class="vg::PidControlElement">
+					<port name="signal" ref="controllers/screens/blackout/control[signal]"/>
+					<port name="Kprop" value="0.3"/>
+				</box>
+			</box>
+		</box>
+		<box name="heating">
+			<box name="pipes">
+				<box name="pipe1" class="vg::Pipe">
+					<port name="length" value="1.822"/>
+					<port name="diameter" value="52"/>
+					<port name="minTemperature" value="20"/>
+					<port name="maxTemperature" value="80"/>
+				</box>
+				<box name="pipe2" class="vg::Pipe">
+					<port name="length" value="1.822"/>
+					<port name="diameter" value="25"/>
+					<port name="minTemperature" value="20"/>
+					<port name="maxTemperature" value="80"/>
+				</box>
+			</box>
+		</box>
+		<box name="growthLights" class="vg::GrowthLights">
+			<box class="vg::GrowthLight" name="growthLight1">
+				<port name="type" value="HPSL"/>
+				<port name="intensity" value="60"/>
+				<port name="lifeTime" value="12000"/>
+				<port name="age" value="2000"/>
+			</box>
+		</box>
+	</box>
+	<!--Tomato model-->
+	<box name="crop" class="vg::Crop">
+		<port name="density" value="3.9"/>
+		<!--Tomato periods-->
+		<box name="periods" class="vg::SignalCollection">
+			<box class="vg::DateTimeSignal">
+				<port name="beginDay" value="1"/>
+				<port name="endDay" value="365"/>
+				<port name="circadian" value="FALSE"/>
+			</box>
+		</box>
+		<box name="physTime" class="DayDegrees">
+			<port name="T" ref="indoors/temperature[value]"/>
+			<port name="isTicking" ref="../periods[flag]"/>
+			<port name="resetTotal" ref="../periods[flagDown]"/>
+			<port name="timeStepDays" ref="calendar[timeStepDays]"/>
+		</box>
+		<!--Tomato lai-->
+		<box name="lai" class="vg::FruitCropLai">
+			<port name="laiStartPerPlant" value="0.385"/>
+			<port name="maxLai" value="3.5"/>
+			<port name="fractionPlantArea" value="0.9"/>
+		</box>
+		<box name="layers">
+			<box name="top" class="vg::LeafLayer">
+				<port name="xGaussUpperside" value="0.1127"/>
+				<port name="wGaussUpperside" value="0.2778"/>
+				<port name="xGaussLowerside" value="0.8873"/>
+				<port name="wGaussLowerside" value="0.2778"/>
+				<box name="windSpeed" class="vg::LeafWindSpeed">
+					<port name="k" value="0.6"/>
+				</box>
+				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
+				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
+				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed">
+					<port name="lightAbsorbed" label="topLightAbsorbed"/>
+					<port name="growthLightLwAbsorbed" label="topGrowthLightLwAbsorbed"/>
+					<port name="floorLwAbsorbed" label="topFloorLwAbsorbed"/>
+					<port name="shelterLoss" label="topShelterLoss"/>
+					<port name="heatingAbsorbed" label="topHeatingAbsorbed"/>
+				</box>
+				<box name="transpiration" class="vg::LeafTranspiration"/>
+				<box name="temperature" class="vg::LeafTemperature">
+					<port name="value" label="topTemperature"/>
+				</box>
+				<box name="photosynthesis" class="vg::LeafPhotosynthesis">
+					<box name="lightResponse" class="vg::LeafLightResponse"/>
+				</box>
+			</box>
+			<box name="middle" class="vg::LeafLayer">
+				<port name="xGaussUpperside" value="0.5"/>
+				<port name="wGaussUpperside" value="0.4444"/>
+				<port name="xGaussLowerside" value="0.5"/>
+				<port name="wGaussLowerside" value="0.4444"/>
+				<box name="windSpeed" class="vg::LeafWindSpeed">
+					<port name="k" value="0.6"/>
+				</box>
+				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
+				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
+				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed">
+					<port name="lightAbsorbed" label="middleLightAbsorbed"/>
+					<port name="growthLightLwAbsorbed" label="middleGrowthLightLwAbsorbed"/>
+					<port name="floorLwAbsorbed" label="middleFloorLwAbsorbed"/>
+					<port name="shelterLoss" label="middleShelterLoss"/>
+					<port name="heatingAbsorbed" label="middleHeatingAbsorbed"/>
+				</box>
+				<box name="transpiration" class="vg::LeafTranspiration"/>
+				<box name="temperature" class="vg::LeafTemperature">
+					<port name="value" label="middleTemperature"/>
+				</box>
+				<box name="photosynthesis" class="vg::LeafPhotosynthesis">
+					<box name="lightResponse" class="vg::LeafLightResponse"/>
+				</box>
+			</box>
+			<box name="bottom" class="vg::LeafLayer">
+				<port name="xGaussUpperside" value="0.8873"/>
+				<port name="wGaussUpperside" value="0.2778"/>
+				<port name="xGaussLowerside" value="0.1127"/>
+				<port name="wGaussLowerside" value="0.2778"/>
+				<box name="windSpeed" class="vg::LeafWindSpeed">
+					<port name="k" value="0.6"/>
+				</box>
+				<!--Tomato rs-->
+				<box name="rs" class="vg::StomatalResistanceRose"/>
+				<box name="rb" class="vg::BoundaryLayerResistanceStanghellini"/>
+				<box name="radiationAbsorbed" class="vg::LeafRadiationAbsorbed">
+					<port name="lightAbsorbed" label="bottomLightAbsorbed"/>
+					<port name="growthLightLwAbsorbed" label="bottomGrowthLightLwAbsorbed"/>
+					<port name="floorLwAbsorbed" label="bottomFloorLwAbsorbed"/>
+					<port name="shelterLoss" label="bottomShelterLoss"/>
+					<port name="heatingAbsorbed" label="bottomHeatingAbsorbed"/>
+				</box>
+				<box name="transpiration" class="vg::LeafTranspiration"/>
+				<box name="temperature" class="vg::LeafTemperature">
+					<port name="value" label="bottomTemperature"/>
+				</box>
+				<box name="photosynthesis" class="vg::LeafPhotosynthesis">
+					<box name="lightResponse" class="vg::LeafLightResponse"/>
+				</box>
+			</box>
+		</box>
+		<box name="radiation" class="vg::CropRadiation"/>
+		<box name="temperature" class="vg::Average">
+			<port name="inputs" value="(layers/top/temperature[value] layers/middle/temperature[value] layers/bottom/temperature[value])"/>
+		</box>
+		<box name="lightAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
+		</box>
+		<box name="heatingAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[heatingAbsorbed] layers/middle/radiationAbsorbed[heatingAbsorbed] layers/bottom/radiationAbsorbed[heatingAbsorbed])"/>
+		</box>
+		<box name="growthLightLwAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[growthLightLwAbsorbed] layers/middle/radiationAbsorbed[growthLightLwAbsorbed] layers/bottom/radiationAbsorbed[growthLightLwAbsorbed])"/>
+		</box>
+		<box name="radiationAbsorbed" class="vg::Sum">
+			<port name="inputs" value="(layers/top/radiationAbsorbed[lightAbsorbed] layers/middle/radiationAbsorbed[lightAbsorbed] layers/bottom/radiationAbsorbed[lightAbsorbed])"/>
+		</box>
+		<box name="conductance" class="vg::Average">
+			<port name="inputs" value="(layers/top/transpiration[conductance] layers/middle/transpiration[conductance] layers/bottom/transpiration[conductance])"/>
+		</box>
+		<box name="vapourFlux" class="vg::Average">
+			<port name="inputs" value="(layers/top/transpiration[vapourFlux] layers/middle/transpiration[vapourFlux] layers/bottom/transpiration[vapourFlux])"/>
+		</box>
+		<box name="gain" class="vg::Average">
+			<port name="inputs" value="(layers/top/transpiration[gain] layers/middle/transpiration[gain] layers/bottom/transpiration[gain])"/>
+		</box>
+		<box name="growth" class="vg::CropGrowth">
+			<box name="Pg" class="vg::Sum">
+				<port name="value" label="assimilationRate"/>
+				<port name="inputs" value="(layers/top/photosynthesis[Pg] layers/middle/photosynthesis[Pg] layers/bottom/photosynthesis[Pg])"/>
+			</box>
+		</box>
+		<!--Tomato mass-->
+		<box name="mass" class="vg::FruitCropMass">
+			<port name="tempSumReproductive" value="900"/>
+			<port name="tempMaxReproductive" value="45"/>
+			<port name="vegPropRoot" value="0"/>
+			<port name="vegPropStem" value="0.4"/>
+			<port name="vegPropLeaf" value="0.6"/>
+			<port name="vegPropFruit" value="0"/>
+			<port name="reproPropRoot" value="0"/>
+			<port name="reproPropStem" value="0.05"/>
+			<port name="reproPropLeaf" value="0.1"/>
+			<port name="reproPropFruit" value="0.85"/>
+			<port name="fruitFactor" ref="./fruitFactor[value]"/>
+			<box name="fruitFactor" class="vg::FruitFactor">
+				<port name="minDensity" value="3.9"/>
+				<port name="maxValue" value="1.044"/>
+			</box>
+		</box>
+		<!--Tomato yield-->
+		<box name="yield" class="vg::CropYield">
+			<port name="fractionDryWeight" value="0.045"/>
+			<port name="produceMass" ref="../mass[fruit]"/>
+		</box>
+	</box>
+	<box name="budget" class="vg::Budget"/>
+	<box class="OutputR">
+		<port name="popUp" value="TRUE"/>
+		<box name="climate" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
+			<port name="ncol" value="5"/>
+			<box name="co2" class="PlotR">
+				<port name="ports" value="(outdoors[windSpeed] indoors/windSpeed[value] indoors/co2[value])"/>
+			</box>
+			<box name="humidity" class="PlotR">
+				<port name="ports" value="(outdoors[rh] indoors/humidity[rh] outdoors[ah] indoors/humidity[ah])"/>
+			</box>
+			<box name="temperature" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value]             given/energyFlux/shelter[coverTemperature]             given/energyFlux/shelter[screensTemperature] energyFlux/floor[temperature])"/>
+			</box>
+			<box name="temperatureCanopy" class="PlotR">
+				<port name="ports" value="layers/*/temperature[value]"/>
+			</box>
+			<box name="lightAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[lightAbsorbed]"/>
+			</box>
+			<box name="growthLightLwAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[growthLightLwAbsorbed]"/>
+			</box>
+			<box name="floorLwAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[floorLwAbsorbed]"/>
+			</box>
+			<box name="shelterLoss" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[shelterLoss]"/>
+			</box>
+			<box name="heatingAbsorbed" class="PlotR">
+				<port name="ports" value="layers/*/radiationAbsorbed[heatingAbsorbed]"/>
+			</box>
+		</box>
+		<box name="controlled" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
+			<port name="ncol" value="3"/>
+			<box name="airFlux" class="PlotR">
+				<port name="ports" value="(given/airFlux[value] given/airFlux/infiltration[value] given/airFlux/crackVentilation[value] given/airFlux/gravitation[value])"/>
+			</box>
+			<box name="airCooling" class="PlotR">
+				<port name="ports" value="(cooling/airSupplyMax[value] cooling/airSupplyMax/byWind[value] cooling/airSupplyMax/byTemp[value])"/>
+			</box>
+			<box name="coolingDemandSupply" class="PlotR">
+				<port name="ports" value="(energyFlux/cooling/demand[value] energyFlux/cooling/supply[value] cooling/supply[slope] cooling/airFlux[value])"/>
+			</box>
+			<box name="setpoints" class="PlotR">
+				<port name="ports" value="(setpoints/temperature/heating[value] setpoints/temperature/ventilation[value] setpoints/humidity/maximumRh[signal] heating/supply[value])"/>
+			</box>
+			<box name="status" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value] indoors/humidity[rh] indoors/co2[value] indoors/total/airFlux[value])"/>
+			</box>
+			<box name="pipes" class="PlotR">
+				<port name="ports" value="pipes/*[temperature]"/>
+			</box>
+		</box>
+		<box name="checkPipes" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
+			<port name="ncol" value="1"/>
+			<box name="pipe1" class="PlotR">
+				<port name="ports" value="(pipes/pipe1[nextTemperatureMin] pipes/pipe1[temperature] pipes/pipe1[nextTemperatureMax])"/>
+			</box>
+			<box name="pipe2" class="PlotR">
+				<port name="ports" value="(pipes/pipe2[nextTemperatureMin] pipes/pipe2[temperature] pipes/pipe2[nextTemperatureMax])"/>
+			</box>
+		</box>
+		<box name="production" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
+			<port name="ncol" value="2"/>
+			<box name="heating" class="PlotR">
+				<port name="ports" value="(budget[heatingEnergyFlux] budget[heatingEnergyTotal] indoors/temperature[value])"/>
+			</box>
+			<box name="growthLights" class="PlotR">
+				<port name="ports" value="(budget[growthLightsEnergyFlux] growthLights[parEmission] budget[growthLightsEnergyTotal] )"/>
+			</box>
+			<box name="co2" class="PlotR">
+				<port name="ports" value="(budget[co2Flux] budget[co2Total] indoors/co2[value])"/>
+			</box>
+			<box name="crop" class="PlotR">
+				<port name="ports" value="(crop/growth/Pg[value] crop/mass[fruitGrowthRate] crop/yield[freshWeight])"/>
+			</box>
+		</box>
+		<box name="photosynthesis" class="PageR">
+			<port name="xAxis" ref="calendar[dateTime]"/>
+			<port name="ncol" value="5"/>
+			<box name="Pn" class="PlotR">
+				<port name="ports" value="*/photosynthesis[Pn]"/>
+			</box>
+			<box name="Pg" class="PlotR">
+				<port name="ports" value="*/photosynthesis[Pg]"/>
+			</box>
+			<box name="rbH2o" class="PlotR">
+				<port name="ports" value="*/rb[rbH2O]"/>
+			</box>
+			<box name="rbCo2" class="PlotR">
+				<port name="ports" value="*/rb[rbCo2]"/>
+			</box>
+			<box name="rsH2o" class="PlotR">
+				<port name="ports" value="*/rs[rsH2O]"/>
+			</box>
+			<box name="rsCo2" class="PlotR">
+				<port name="ports" value="*/rs[rsCo2]"/>
+			</box>
+			<box name="LUE" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[LUE]"/>
+			</box>
+			<box name="Pnmax" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[Pnmax]"/>
+			</box>
+			<box name="Pgmax" class="PlotR">
+				<port name="ports" value="*/photosynthesis/lightResponse[Pgmax]"/>
+			</box>
+			<box name="climate" class="PlotR">
+				<port name="ports" value="(indoors/temperature[value] indoors/humidity[rh] indoors/co2[value] indoors/total/airFlux[value])"/>
+			</box>
+		</box>
+	</box>
+</box>
