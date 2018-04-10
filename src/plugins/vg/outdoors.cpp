@@ -6,6 +6,7 @@
 */
 #include "outdoors.h"
 #include "general.h"
+#include <base/box_builder.h>
 #include <base/publish.h>
 
 using namespace base;
@@ -32,6 +33,15 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation [0;1]");
     Output(ah).help("Outdoors absolute humidity [kg/m3]");
     Output(sh).help("Outdoors specific humidity [Kg/kg]");
+}
+
+void Outdoors::amend() {
+    BoxBuilder builder(this);
+    if (!findMaybeOne<Box>("./records"))
+        builder.
+        box("Records").name("records").
+            port("fileName").equals("input/sel_dk.txt").
+        endbox();
 }
 
 void Outdoors::reset() {

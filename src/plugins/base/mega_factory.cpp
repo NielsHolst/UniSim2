@@ -77,6 +77,7 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     else {
         switch (me()->productIndex.count(className)) {
         case 0:
+            dialog().information("Unknown class: " + className);
             ThrowException("Unknown class").value(className);
         case 1:
             factory = me()->productIndex.value(className);

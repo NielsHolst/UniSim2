@@ -4,24 +4,21 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef CROP_H
-#define CROP_H
+#include <base/publish.h>
+#include "any_flag.h"
 
-#include <base/box.h>
+using namespace base;
 
 namespace vg {
 
-class Crop : public base::Box
-{
-public:
-    Crop(QString name, QObject *parent);
-    void amend();
+PUBLISH(AnyFlag)
 
-private:
-    double density;
-    void amendLayer(QString level, int upperSide, int lowerSide);
-};
+AnyFlag::AnyFlag(QString name, QObject *parent)
+    : Box(name, parent)
+{
+    help("flags whether any child has flag true");
+    Output(flag).imports("./*[flag]").transform(Any);
+}
+
 } //namespace
 
-
-#endif

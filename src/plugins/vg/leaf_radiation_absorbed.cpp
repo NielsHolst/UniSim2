@@ -38,7 +38,7 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     Input(coverTemperature).imports("given/energyFlux/shelter[coverTemperature]");
     Input(screensTemperature).imports("given/energyFlux/shelter[screensTemperature]");
     Input(screensMaxState).imports("construction/shelter[screensMaxState]");
-    Input(shelterOutgoingLwAbsorptivity).imports("construction/shelters[outgoingLwAbsorptivity]");
+    Input(shelterOutgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]");
     Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
 
     Output(lightAbsorbed).help("Light flux absorbed by this leaf layer [W/m2]");

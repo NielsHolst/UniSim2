@@ -1,38 +1,40 @@
-// vg/03-ventilation.box
+// vg/04-controlled ventilation.box
 Simulation greenhouse {
   .steps = 288
   Calendar calendar {
     .timeStep = 5
     .timeUnit = "m"
   }
-  Box outdoors {
-    +directRadiation = ./directRadiation[value]
-    +diffuseRadiation = ./diffuseRadiation[value]
-    +windSpeed = ./windSpeed[value]
-    +temperature = 5.0
-    Hump directRadiation {
-      .x = calendar[time]
-      .x0 = calendar[sunrise]
-      .x1 = calendar[sunset]
-      .ymin = 0
-      .ymax = 15
-    }
-    Hump diffuseRadiation {
-      .x = calendar[time]
-      .x0 = calendar[sunrise]
-      .x1 = calendar[sunset]
-      .ymin = 0
-      .ymax = 10
-    }
-    Hump windSpeed {
-      .x = calendar[time]
-      .x0 = 14
-      .x1 = 34
-      .ymin = 2
-      .ymax = 15
-    }
+  Outdoors outdoors {
   }
-  Box controllers {
+  // Box outdoors {
+    // +directRadiation = ./directRadiation[value]
+    // +diffuseRadiation = ./diffuseRadiation[value]
+    // +windSpeed = ./windSpeed[value]
+    // +temperature = 5.0
+    // Hump directRadiation {
+      // .x = calendar[time]
+      // .x0 = calendar[sunrise]
+      // .x1 = calendar[sunset]
+      // .ymin = 0
+      // .ymax = 15
+    // }
+    // Hump diffuseRadiation {
+      // .x = calendar[time]
+      // .x0 = calendar[sunrise]
+      // .x1 = calendar[sunset]
+      // .ymin = 0
+      // .ymax = 10
+    // }
+    // Hump windSpeed {
+      // .x = calendar[time]
+      // .x0 = 14
+      // .x1 = 34
+      // .ymin = 2
+      // .ymax = 15
+    // }
+  // }
+  Controllers controllers {
     Box chalk {
       +value = 0
     }
@@ -50,6 +52,14 @@ Simulation greenhouse {
             .ymax = 1
           }
         }
+      }
+    }
+    GrowthLights growthLights {
+      GrowthLight {
+        .type = "HPSL"
+        .intensity = 60
+        .lifeTime = 12000
+        .age = 2000
       }
     }
   }
@@ -73,65 +83,13 @@ Simulation greenhouse {
       }
     }
   }
-  Box indoors {
-    Hump temperature {
-      .x = calendar[time]
-      .x0 = 6
-      .x1 = 18
-      .ymin = 20
-      .ymax = 35
-    }
-    Box humidity {
-      +rh = ./rh[value]
-      Hump rh {
-        .x = calendar[time]
-        .x0 = 5
-        .x1 = 7
-        .ymin = 75
-        .ymax = 95
-      }
-    }
-    Box given {
-      AirFluxGiven airFlux {
-      }
-    }
-    Box controlled {
-      Box energyFlux {
-        Box heating {
-        }
-        Box temperature {
-          +value = 25.0
-        }
-        Box cooling {
-          EnergyFluxCoolingDemand demand {
-          }
-          AirFluxCoolingSupplyMax airSupplyMax {
-            VentilationByWind byWind {
-            } 
-            VentilationByTemperature byTemperature {
-            } 
-          }
-          PidController supply {
-          }
-        }
-      }
-      Box cooling {
-        AirFluxCoolingSupply airFlux {
-        }
-      }
-    }
+  vg::Indoors indoors {
   }
-  Box setpoints {
-    Box humidity {
-      Box maximumRh {
-        +signal = 80.0
-      }
-    }
-    Box temperature {
-      Box ventilation {
-        +value = 26.0
-      }
-    }
+  vg::Setpoints setpoints {
+  }
+  vg::Crop crop {
+  }
+  vg::Budget budget {
   }
   OutputR {
     .popUp = TRUE

@@ -28,7 +28,8 @@ Average::Average(QString name, QObject *parent)
 void Average::initialize() {
     ports.clear();
     for (QString input : inputs)
-        ports << Path(input).resolveMany<Port>();
+        ports << findMany<Port>(input);
+//        ports << Path(input).resolveMany<Port>();
 }
 
 void Average::update() {

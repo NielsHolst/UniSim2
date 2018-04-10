@@ -10,11 +10,13 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
     accumulator.h \
+    actuators.h \
     air_flux_cooling_supply.h \
     air_flux_cooling_supply_max.h \
     air_flux_given.h \
     air_flux_gravitation.h \
     air_flux_infiltration.h \
+    any_flag.h \
     average.h \
     base_signal.h \
     boundary_layer_resistance_base.h \
@@ -24,6 +26,8 @@ HEADERS +=  \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
     co2_controller.h \
+    controlled.h \
+    controllers.h \
     cover.h \
     crop.h \
     crop_mass.h \
@@ -51,11 +55,13 @@ HEADERS +=  \
     fruit_factor.h \
     general.h \
     geometry.h \
+    given.h \
     growth_light_base.h \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
     hump.h \
+    indoors.h \
     indoors_co2.h \
     indoors_humidity.h \
     indoors_light.h \
@@ -75,6 +81,7 @@ HEADERS +=  \
     running_average.h \
     screen.h \
     screens.h \
+    setpoints.h \
     shelter.h \
     shelter_base.h \
     shelter_face.h \
@@ -101,11 +108,13 @@ HEADERS +=  \
 
 SOURCES += \
     accumulator.cpp \
+    actuators.cpp \
     air_flux_cooling_supply.cpp \
     air_flux_cooling_supply_max.cpp \
     air_flux_given.cpp \
     air_flux_gravitation.cpp \
     air_flux_infiltration.cpp \
+    any_flag.cpp \
     average.cpp \
     base_signal.cpp \
     boundary_layer_resistance_base.cpp \
@@ -114,6 +123,8 @@ SOURCES += \
     boundary_layer_resistance_stanghellini.cpp \
     boundary_layer_resistance_monteith_unsworth.cpp \
     budget.cpp \
+    controlled.cpp \
+    controllers.cpp \
     co2_controller.cpp \
     cover.cpp \
     crop.cpp \
@@ -142,11 +153,13 @@ SOURCES += \
     fruit_factor.cpp \
     general.cpp \
     geometry.cpp \
+    given.cpp \
     growth_light_base.cpp \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
     hump.cpp \
+    indoors.cpp \
     indoors_co2.cpp \
     indoors_humidity.cpp \
     indoors_light.cpp \
@@ -166,6 +179,7 @@ SOURCES += \
     running_average.cpp \
     screen.cpp \
     screens.cpp \
+    setpoints.cpp \
     shelter.cpp \
     shelter_base.cpp \
     shelter_face.cpp \

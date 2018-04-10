@@ -28,7 +28,8 @@ Sum::Sum(QString name, QObject *parent)
 void Sum::initialize() {
     ports.clear();
     for (QString input : inputs)
-        ports << Path(input).resolveMany<Port>();
+        ports << findMany<Port>(input);
+//        ports << Path(input).resolveMany<Port>();
 }
 
 void Sum::update() {

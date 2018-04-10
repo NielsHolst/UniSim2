@@ -15,6 +15,7 @@ class Outdoors : public base::Box
 {
 public:
     Outdoors(QString name, QObject *parent);
+    void amend();
     void reset();
     void update();
 private:

@@ -26,7 +26,7 @@ EnergyFluxCoolingSupply::EnergyFluxCoolingSupply(QString name, QObject *parent)
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(airTransmissivity).imports("construction/shelters[airTransmissivity]");
+    Input(airTransmissivity).imports("construction/shelter[airTransmissivity]");
 }
 
 void EnergyFluxCoolingSupply::update() {

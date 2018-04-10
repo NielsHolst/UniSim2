@@ -4,24 +4,24 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef CROP_H
-#define CROP_H
-
+#ifndef ANY_FLAG_H
+#define ANY_FLAG_H
+#include <QVector>
 #include <base/box.h>
+
+namespace base {
+    class Port;
+}
 
 namespace vg {
 
-class Crop : public base::Box
+class AnyFlag : public base::Box
 {
-public:
-    Crop(QString name, QObject *parent);
-    void amend();
-
+public: 
+    AnyFlag(QString name, QObject *parent=0);
 private:
-    double density;
-    void amendLayer(QString level, int upperSide, int lowerSide);
+    bool flag;
 };
+
 } //namespace
-
-
 #endif

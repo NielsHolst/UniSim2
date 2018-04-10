@@ -8,7 +8,7 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += release
+CONFIG += debug
 # AUTO-CONFIG-END
 
 # Set suffix 'd' for debug version

@@ -27,6 +27,7 @@ Shelter::Shelter(QString name, QObject *parent)
     Output(heatCapacityScreensPerGround).help("Capacity of all screens [J/kg/ground m2]");
     Output(screensEffectiveArea).help("Effective (i.e., drawn) area of screens [m2]");
     Output(screensPerGroundArea).help("Effective screen area per ground area [m2/m2]");
+    Output(screensMaxState).help("Max. state of all screens [0;1]");
     Output(horizontalScreenState).help("State of any horizontal screens [0;1]");
     Output(hasHorizontalScreen).help("Has the greenhouse got horizontal screens?");
     Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum)

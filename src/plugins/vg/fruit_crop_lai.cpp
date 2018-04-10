@@ -22,7 +22,7 @@ FruitCropLai::FruitCropLai(QString name, QObject *parent)
     Input(maxLai).equals(3.5).help("Max. LAI in cropped area");
     Input(cropDensity).imports("..[density]");
     Input(tempSum).imports("../physTime[total]");
-    Input(cropPresent).imports("../periods[flag]");
+    Input(cropPresent).imports("../periods/*[flag]").transform(Any);
     Output(maxLaiReached).help("Tells whether max. LAI has been reached");
 }
 

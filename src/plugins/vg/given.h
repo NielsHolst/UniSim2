@@ -4,22 +4,18 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef CROP_H
-#define CROP_H
+#ifndef GIVEN_H
+#define GIVEN_H
 
 #include <base/box.h>
 
 namespace vg {
 
-class Crop : public base::Box
+class Given : public base::Box
 {
 public:
-    Crop(QString name, QObject *parent);
+    Given(QString name, QObject *parent);
     void amend();
-
-private:
-    double density;
-    void amendLayer(QString level, int upperSide, int lowerSide);
 };
 } //namespace
 
