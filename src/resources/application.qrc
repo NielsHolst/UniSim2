@@ -131,8 +131,8 @@
     <file>data/input/projects/resist/resist-sa-end.R</file>
     <file>data/input/projects/vg/01-construction.box</file>
     <file>data/input/projects/vg/02-screen-U.box</file>
-    <file>data/input/projects/vg/03-given ventilation.box</file>
-    <file>data/input/projects/vg/04-controlled ventilation.box</file>
+    <file>data/input/projects/vg/03-given-ventilation.box</file>
+    <file>data/input/projects/vg/04-greenhouse.box</file>
     <file>data/input/projects/vg/crops.xml</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
@@ -144,8 +144,6 @@
     <file>data/input/projects/vg/pid-controller-plot.R</file>
     <file>data/input/projects/vg/pid-controller.box</file>
     <file>data/input/projects/vg/proportional-signal.box</file>
-    <file>data/input/projects/vg/sel_dk.txt</file>
-    <file>data/input/projects/vg/test.box</file>
     <file>data/input/projects/vg/TestOKO1.xml</file>
     <file>data/input/projects/vg/TestOKO1_tr.xml</file>
     <file>data/input/projects/vg/transform1.bat</file>

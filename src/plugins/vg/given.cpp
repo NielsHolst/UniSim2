@@ -48,9 +48,9 @@ void Given::amend() {
     if (!findMaybeOne<Box>("./energyFlux"))
         builder.
         box("EnergyFluxSum").name("energyFlux").
-            box("vg::Sum").name("light").
-                port("inputs").imports("indoors/light[total]").  // simplify?
-            endbox().
+//            box("vg::Sum").name("light").
+//                port("inputs").imports("indoors/light[total]").  // simplify?
+//            endbox().
             box("EnergyFluxCondensation").name("condensationCover").
                 port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
             endbox().

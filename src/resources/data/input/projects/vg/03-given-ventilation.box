@@ -99,7 +99,7 @@ Simulation greenhouse {
   Box setpoints {
     Box humidity {
       Box maximumRh {
-        +signal = 80.0
+        +value = 80.0
       }
     }
   }

@@ -95,41 +95,11 @@ Simulation greenhouse {
       AirFluxGiven airFlux {
       }
     }
-    Box controlled {
-      Box energyFlux {
-        Box heating {
-        }
-        Box temperature {
-          +value = 25.0
-        }
-        Box cooling {
-          EnergyFluxCoolingDemand demand {
-          }
-          AirFluxCoolingSupplyMax airSupplyMax {
-            VentilationByWind byWind {
-            } 
-            VentilationByTemperature byTemperature {
-            } 
-          }
-          PidController supply {
-          }
-        }
-      }
-      Box cooling {
-        AirFluxCoolingSupply airFlux {
-        }
-      }
-    }
   }
   Box setpoints {
     Box humidity {
       Box maximumRh {
-        +signal = 80.0
-      }
-    }
-    Box temperature {
-      Box ventilation {
-        +value = 26.0
+        +value = 80.0
       }
     }
   }

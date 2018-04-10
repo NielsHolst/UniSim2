@@ -36,13 +36,13 @@ void Controlled::amend() {
                 endbox().
                 box("Accumulator").name("supply").
                     port("change").imports("./controller[controlVariable]").
+                    port("minValue").imports("../minSupply[value]").
+                    port("maxValue").imports("../maxSupply[value]").
                     box("PidController").name("controller").
                         port("sensedValue").imports("..[value]").
                         port("desiredValue").imports("../../demand[value]").
                         port("Kprop").equals(0.6).
                         port("Kint").equals(0.01).
-                        port("minimum").imports("../../minSupply[value]").
-                        port("maximum").imports("../../maxSupply[value]").
                     endbox().
                 endbox().
             endbox().

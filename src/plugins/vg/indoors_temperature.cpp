@@ -18,7 +18,7 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors temperature");
-    Input(resetValue).equals(20.).help("Indoors temperture when model is reset [oC]");
+    Input(resetValue).equals(20.).help("Indoors temperature when model is reset [oC]");
     Input(energyFlux).help("Energy flux dissipated into greenhouse air [W/m2]");
     Input(baseTemperature).imports(".[value]");
     Input(height).imports("geometry[indoorsAverageHeight]");

@@ -40,11 +40,49 @@ void Controllers::amend() {
                     endbox().
                 endbox().
             endbox().
-            box().name("energy").
+            box("Minimum").name("energy").
+                port("values").imports("./signals/*[signal]").
+                box().name("signals").
+                    box("vg::ThresholdSignal").name("radiation").
+                        port("input").imports("outdoors[radiation]").
+                        port("threshold").equals(10).
+                        port("signalBelow").imports("controllers/screens/maxDrawn[value]").
+                        port("signalAbove").equals(0).
+                    endbox().
+                    box("vg::ThresholdSignal").name("temperature").
+                        port("input").imports("indoors/temperature[value]").
+                        port("threshold").imports("setpoints/temperature/ventilation[value]").
+                        port("signalBelow").imports("controllers/screens/maxDrawn[value]").
+                        port("signalAbove").equals(0).
+                    endbox().
+                endbox().
             endbox().
-            box().name("shade").
+            box("Maximum").name("shade").
+                port("values").imports("./signals/*[signal]").
+                box().name("signals").
+                    box("vg::ThresholdSignal").name("radiation").
+                        port("input").imports("outdoors[radiation]").
+                        port("threshold").equals(500).
+                        port("signalBelow").equals(0).
+                        port("signalAbove").imports("controllers/screens/maxDrawn[value]").
+                    endbox().
+                    box().name("asEnergy").
+                        newPort("signal").imports("controllers/screens/energy[value]").
+                    endbox().
+                endbox().
             endbox().
-            box().name("blackout").
+            box("Maximum").name("blackout").
+                port("values").imports("./signals/*[signal]").
+                box().name("signals").
+                    box("vg::DateTimeSignal").name("time").
+                        port("beginTime").imports("calendar[sunrise]").
+                        port("endTime").imports("calendar[sunset]").
+                        port("signalInside").equals(1).
+                    endbox().
+                    box().name("asEnergy").
+                        newPort("signal").imports("controllers/screens/energy[value]").
+                    endbox().
+                endbox().
             endbox().
         endbox();
 

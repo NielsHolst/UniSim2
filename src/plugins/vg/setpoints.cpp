@@ -25,7 +25,7 @@ void Setpoints::amend() {
     if (!findMaybeOne<Box>("./isDay"))
         builder.
         box("vg::ThresholdSignal").name("isDay").
-            port("input").imports("outdoors/records[GlobRad]").
+            port("input").imports("outdoors[radiation]").
             port("threshold").equals(10).
             port("signalBelow").equals(0).
             port("signalAbove").equals(1).

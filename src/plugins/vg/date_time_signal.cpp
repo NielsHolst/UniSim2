@@ -17,9 +17,9 @@ DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
     help("Sets a signal according to date and time of day");
     Input(beginDay).equals(1).help("The beginning of the date interval [1..366]");
-    Input(endDay).equals(365).help("The end of the date interval [1..366]");
+    Input(endDay).equals(366).help("The end of the date interval [1..366]");
     Input(beginTime).equals(QTime(0,0)).help("The beginning of the time interval [hh:mm]");
-    Input(endTime).equals(QTime(24,0)).help("The end of the time interval [hh:mm]");
+    Input(endTime).equals(QTime(23,59,59)).help("The end of the time interval [hh:mm]");
     Input(day).imports("calendar[dayOfYear]");
     Input(time).imports("calendar[time]");
     Input(signalInside).equals(1.).help("Resulting signal when day and time are inside the day and time intervals");

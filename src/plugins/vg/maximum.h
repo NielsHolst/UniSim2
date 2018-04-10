@@ -4,22 +4,28 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ACTUATORS_H
-#define ACTUATORS_H
-
+#ifndef MAXIMUM_H
+#define MAXIMUM_H
+#include <QVector>
 #include <base/box.h>
+
+namespace base {
+    class Port;
+}
 
 namespace vg {
 
-class Actuators : public base::Box
+class Maximum : public base::Box
 {
-public:
-    Actuators(QString name, QObject *parent);
-    void amend();
+public: 
+    Maximum(QString name, QObject *parent=0);
+    // standard methods
+    void reset();
+    void update();
 private:
-    void amendScreen(QString name);
+    QVector<double> values;
+    double value;
 };
+
 } //namespace
-
-
 #endif

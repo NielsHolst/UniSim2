@@ -22,27 +22,44 @@ Actuators::Actuators(QString name, QObject *parent)
 
 void Actuators::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./screens"))
+    if (!findMaybeOne<Box>("./screens")) {
         builder.
         box().name("screens").
-            box().name("energy").
-            endbox().
-            box().name("shade").
-            endbox().
-            box().name("blackout").
-            endbox().
         endbox();
+        amendScreen("energy");
+        amendScreen("shade");
+        amendScreen("blackout");
+    }
 
     if (!findMaybeOne<Box>("./heating"))
         builder.
         box().name("heating").
             box().name("pipes").
+                box("vg::Pipe").
+                    port("length").equals(1.8).
+                    port("diameter").equals(52).
+                    port("minTemperature").equals(20).
+                    port("maxTemperature").equals(80).
+                endbox().
             endbox().
         endbox();
 
     if (!findMaybeOne<Box>("./growthLights"))
         builder.
         box("vg::GrowthLights").name("growthLights").
+        endbox();
+}
+
+void Actuators::amendScreen(QString name) {
+    BoxBuilder builder(findOne<Box>("./screens"));
+    builder.
+        box("Accumulator").name(name).
+            port("change").imports("./controller[controlVariable]").
+            box("PidController").name("controller").
+                port("sensedValue").imports("..[value]").
+                port("desiredValue").imports("controllers/screens/"+name+"[value]").
+                port("Kprop").equals(0.3).
+            endbox().
         endbox();
 }
 

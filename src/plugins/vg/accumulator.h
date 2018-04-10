@@ -20,7 +20,7 @@ public:
 
 private:
     // Inputs
-    double initial, change;
+    double initial, change, minValue, maxValue;
     // Outputs
     double value;
 };
