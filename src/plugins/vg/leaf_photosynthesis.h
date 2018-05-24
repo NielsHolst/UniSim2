@@ -16,6 +16,7 @@ class LeafPhotosynthesis : public base::Box
 {
 public:
     LeafPhotosynthesis(QString name, QObject *parent);
+    void amend();
     void reset();
     void update();
 

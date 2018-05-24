@@ -1,0 +1,31 @@
+Simulation sim {
+  .steps =  8760 
+  Calendar calendar {
+    .initialDateTime = 1/1/2001
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Outdoors outdoors {
+  }
+  DiffuseIrradiationRE diffuseRE {
+  }
+  OutputR {
+    .end = "diffuse-irradiation-validation-end.R"
+    .keepPages = TRUE
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .layout = "merged"
+        .ports = (calendar[angot] outdoors[radiation])
+      }
+      PlotR {
+        .ports = (diffuseRE[clearness])
+      }
+    }
+    OutputText {
+      // +DiffuseFractionRE = diffuseRE[fraction]
+      // .ports = (outdoors[diffuseRadiation] .[DiffuseFractionRE])
+      .ports = (outdoors[diffuseRadiation] diffuseRE[*])
+    }
+  }
+}

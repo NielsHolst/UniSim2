@@ -10,7 +10,7 @@ inline QString inputPath() {
     // Direct run
 //    return "../src/apps/test/input/";
     // Debugger run
-    return "C:/data/qdev/UniSim2/src/apps/test/input/";
+    return "C:/Users/au152367/Documents/qdev/UniSim2/src/apps/test/input/";
 }
 
 int main(int argc, char *argv[])
@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
     if (!testDirInput.cd(inputPath())) {
         std::cout << qPrintable(inputPath())
                   << " path not found from "
-                  << qPrintable(testDirInput.absolutePath());
+                  << qPrintable(testDirInput.absolutePath())
+                  << "Check source in src/apps/test/main.cpp";
         return 0;
     }
     base::environment().dir(base::Environment::Input, testDirInput);

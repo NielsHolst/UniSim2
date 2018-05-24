@@ -5,6 +5,8 @@
 #include "dialog.h"
 #include "exception.h"
 
+using namespace std;
+
 namespace base {
 
 BoxReaderBoxes::BoxReaderBoxes(BoxBuilder *builder)
@@ -22,21 +24,15 @@ void BoxReaderBoxes::parse(QString filePath) {
 }
 
 void BoxReaderBoxes::openFile(QString filePath) {
-    _file.open(filePath.toStdString(), std::ios_base::in);
-    if (!_file) {
+    _file.setFileName(filePath);
+    if (!_file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         QString msg("Could not open file for reading");
         ThrowException(msg).value(filePath);
     }
-    // No white space skipping
-    _file.unsetf(std::ios::skipws);
 }
 
 bool BoxReaderBoxes::parse(ast::Node &astRoot) {
-    std::string storage;
-    std::copy(
-        std::istream_iterator<char>(_file),
-        std::istream_iterator<char>(),
-        std::back_inserter(storage));
+    std::string storage = _file.readAll().toStdString();
     // Make certain file ends with a line break
     storage += "\n";
     return ast::parse_boxes(storage.begin(), storage.end(), astRoot);

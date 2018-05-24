@@ -1,7 +1,7 @@
 #ifndef BASE_BOX_READER_BOXES_H
 #define BASE_BOX_READER_BOXES_H
 
-#include <fstream>
+#include <QFile>
 #include "box_reader_base.h"
 
 namespace ast {
@@ -16,7 +16,7 @@ public:
     void parse(QString filePath);
 private:
     // Data
-    std::ifstream _file;
+    QFile _file;
     // Methods
     void openFile(QString filePath);
     bool parse(ast::Node &astRoot);

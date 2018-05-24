@@ -1,0 +1,22 @@
+Simulation sim {
+  .steps = 100
+  Sequence globalI {
+    .min = 0
+    .max = 500
+  }
+  DiffuseIrradiationRE diffuseI {
+    .angot = 300
+    .globalIrradiation = globalI[value]
+  }
+  OutputR {
+    PageR {
+      .xAxis = globalI[value]
+      PlotR {
+        .ports = diffuseI[value]
+      }
+      PlotR {
+        .ports = diffuseI[proportion]
+      }
+    }
+  }
+}

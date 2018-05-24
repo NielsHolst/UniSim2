@@ -56,9 +56,9 @@ void Crop::amend() {
         box().name("layers").
         endbox();
 
-    amendLayer("top", 0, 2);
-    amendLayer("middle", 1, 1);
-    amendLayer("bottom", 2, 0);
+    amendLayer("top");
+    amendLayer("middle");
+    amendLayer("bottom");
 
     if (!findMaybeOne<Box>("./radiation"))
         builder.
@@ -108,7 +108,7 @@ void Crop::amend() {
         builder.
         box("vg::CropGrowth").name("growth").
             box("vg::Sum").name("Pg").
-                port("inputs").equals("../layers/*/photosynthesis[Pg]").
+                port("inputs").equals("../../layers/*/photosynthesis[Pg]").
             endbox().
         endbox();
     if (!findMaybeOne<Box>("./mass"))
@@ -139,15 +139,11 @@ void Crop::amend() {
 
 }
 
-void Crop::amendLayer(QString level, int upperSide, int lowerSide) {
+void Crop::amendLayer(QString level) {
     BoxBuilder builder(findOne<Box>("./layers"));
     if (!findMaybeOne<Box>("./layers/"+level))
         builder.
         box("vg::LeafLayer").name(level).
-            port("xGaussUpperside").equals(xGauss3[upperSide]).
-            port("wGaussUpperside").equals(wGauss3[upperSide]).
-            port("xGaussLowerside").equals(xGauss3[lowerSide]).
-            port("wGaussLowerside").equals(wGauss3[lowerSide]).
             box("LeafWindSpeed").name("windSpeed").
                 port("k").equals(0.6).
             endbox().

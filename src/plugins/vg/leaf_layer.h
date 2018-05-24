@@ -15,6 +15,7 @@ class LeafLayer : public base::Box
 {
 public:
     LeafLayer(QString name, QObject *parent);
+    void initialize();
 
 private:
     double xGaussUpperside, wGaussUpperside,

@@ -19,7 +19,7 @@ public:
 
 private:
     double density;
-    void amendLayer(QString level, int upperSide, int lowerSide);
+    void amendLayer(QString level);
 };
 } //namespace
 

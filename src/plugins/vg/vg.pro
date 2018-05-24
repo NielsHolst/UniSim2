@@ -36,6 +36,8 @@ HEADERS +=  \
     crop_radiation.h \
     crop_yield.h \
     date_time_signal.h \
+    diffuse_irradiation_base.h \
+    diffuse_irradiation_RE.h \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_condensation.h \
@@ -88,6 +90,7 @@ HEADERS +=  \
     shelter_base.h \
     shelter_face.h \
     simulation_time_interval.h \
+    sky_temperature.h \
     sliding_signal.h \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
@@ -136,6 +139,8 @@ SOURCES += \
     crop_radiation.cpp \
     crop_yield.cpp \
     date_time_signal.cpp \
+    diffuse_irradiation_base.cpp \
+    diffuse_irradiation_RE.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_condensation.cpp \
@@ -188,6 +193,7 @@ SOURCES += \
     shelter_base.cpp \
     shelter_face.cpp \
     simulation_time_interval.cpp \
+    sky_temperature.cpp \
     sliding_signal.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \

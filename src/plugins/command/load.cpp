@@ -26,7 +26,6 @@ load::load(QString name, QObject *parent)
 {
 }
 
-
 void load::doExecute() {
     Environment &env(environment());
     QString fileName;

@@ -14,11 +14,12 @@ private:
     // Inputs
     QVector<double> immigration, reproduction, survival;
     double densityThreshold;
-    int step;
+    int step, maxStep;
     // Outputs
     double ss, sr, rr, total;
     QVector<double> values;
     int thresholdGen;
+    bool thresholdPassed;
 };
 
 }

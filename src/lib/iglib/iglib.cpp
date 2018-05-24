@@ -8,7 +8,9 @@
 #include <QTextStream>
 #include <base/box.h>
 #include <base/box_builder.h>
+#include <base/command.h>
 #include <base/dialog_quiet.h>
+#include <base/dialog_stub.h>
 #include <base/exception.h>
 #include <base/object_pool.h>
 #include <base/mega_factory.h>
@@ -40,7 +42,8 @@ void init() {
         ThrowException("iglib has been released; library functions cannot be called");
     if (!_initialized) {
         _app = new QCoreApplication(argc, &argv);
-        _dialog = new DialogQuiet(_app);
+//        _dialog = new DialogQuiet(_app);
+        _dialog = new DialogStub(_app); // TEST
         new ObjectPool(_dialog);
 
         _rnd = MegaFactory::create<Box>("RandomUniform", "rnd", _dialog);
@@ -729,35 +732,47 @@ double wave(double avg, double amplitude, double hour) {
 Response compute(const Query &q) {
     init();
     Response r;
-    Box *sim(0);
+    std::cout << "Compute A\n";
+
+    QStringList com;
+    com << "run" << ":/igclient/greenhouse-standard.box";
+    QObject *parent = new QObject;
+    parent->deleteLater();
+
     try {
-        sim = build(q);
-        sim->run();
-        _errorString.clear();
-        r.hasError = false;
+        Command::submit(com, parent);
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
         std::cout << "\n" << _errorString << "\n";
         r.hasError = true;
     }
-    r.error = _errorString.c_str();
 
-    double light(0);
-    for (int i=0; i<q.growthLights.size; ++i) {
-        const GrowthLight &g(q.growthLights.array[i]);
-        light += g.on.value*g.intensity/g.ballastCorrection;
+    Box *root = environment().root();
+    if (!root) {
+        ThrowException("Cannot find simulation root");
     }
 
-    r.timeStamp = q.timeStamp;
-    r.lightOutdoors = 4.57*q.outdoors.irradiation.value; // www.egc.com/useful_info_lighting.php
-    r.lightArtificial = 4.59*light;
-    r.lightPlantHeight = 0.78*r.lightOutdoors + r.lightArtificial;
-    r.photosynthesisPct = 100*std::max(1-exp(-0.0065*(r.lightPlantHeight - 14.1)), 0.);
-    r.photosynthesisRate = 8.3*1e-6*44.01*3600*r.photosynthesisPct/100;
-    r.co2Indoors = wave(400, 6*r.photosynthesisPct, q.timeStamp.timeOfDay);
+    QObject *tracks;
 
-    delete sim;
+    tracks = root->findOne<QObject>("/*/output");
+    std::cout <<qPrintable(tracks->objectName()) << "\n";
+
+    QObjectList children = tracks->children();
+    for (QObject *child : children) {
+        std::cout << "Child: " << qPrintable(child->objectName()) << "\n";
+    }
+
+    tracks = root->findOne<QObject>("/*/output/tracks");
+    std::cout <<qPrintable(tracks->objectName()) << "\n";
+
+
+//    catch (Exception &ex) {
+//        _errorString = ex.what().toStdString();
+//        std::cout << "\n" << _errorString << "\n";
+//        r.hasError = true;
+//    }
+//    r.error = _errorString.c_str();
     return r;
 }
 

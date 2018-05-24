@@ -36,12 +36,11 @@ private:
     QDateTime dateTime;
     int dayOfYear, totalTime, totalTimeSteps;
     double timeStepSecs, timeStepDays, totalDays, dayLength,
-        sinb, azimuth, solarConstant, angot, irradiationCorrection;
+        sinb, azimuth, solarConstant, angot;
 
     // methods
     void updateDerived();
     void updateSun();
-    void updateRadiation();
     void updateAzimuth();
 };
 

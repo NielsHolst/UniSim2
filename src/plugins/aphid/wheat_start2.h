@@ -13,6 +13,7 @@ public:
 private:
     // Inputs
     double Temperature;
+    double Date;
     double Nb_plants;
     // Outputs
     double startPlants;
@@ -22,8 +23,6 @@ private:
     double Temperature_3;
     double Temperature_4;
     double Temperature_5;
-
-
 };
 
 }

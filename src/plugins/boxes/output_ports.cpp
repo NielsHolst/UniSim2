@@ -1,5 +1,7 @@
 #include <base/path.h>
 #include <base/port.h>
+#include <base/track.h>
+#include <base/track_collection.h>
 #include "output_ports.h"
 
 using namespace base;
@@ -11,6 +13,8 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
 {
     Class(OutputPorts);
     Input(ports).notReferenced().help("Vector of ports to include in plot");
+
+    _tracks = new TrackCollection("tracks", this);
 }
 
 void OutputPorts::amend() {
@@ -23,12 +27,12 @@ void OutputPorts::placeOrders() {
 }
 
 const QVector<Track*> & OutputPorts::tracks() {
-    if (_tracks.isEmpty()) {
+    if (_tracks->isEmpty()) {
         // Collect the tracks that match my orders
         for (Track::Order order : _orders)
-            _tracks << Track::find(order);
+            _tracks->append(Track::find(order));
     }
-    return _tracks;
+    return _tracks->tracks();
 }
 
 }

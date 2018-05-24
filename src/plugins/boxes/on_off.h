@@ -13,7 +13,7 @@ public:
 private:
     // Input
     double x, xOn, xOff, valueOn, valueOff;
-    bool onAtReset;
+    bool onAtReset, isSticky;
     // Output
     double value;
     bool isOn;

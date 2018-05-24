@@ -15,10 +15,11 @@ private:
     // Inputs
     QVector<double> N;
     double rThreshold;
-    int step;
+    int step, maxStep;
     // Outputs
     double ss, sr, rr, s, r;
     int thresholdGen;
+    bool thresholdPassed;
 };
 
 }

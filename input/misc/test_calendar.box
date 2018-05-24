@@ -1,0 +1,15 @@
+Simulation sim {
+  .steps = 24
+  Calendar calendar {
+    .latitude = 50
+    .initialDateTime = 2001/1/30
+    .timeUnit = "h"
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = calendar[angot]
+      }
+    }
+  }
+}

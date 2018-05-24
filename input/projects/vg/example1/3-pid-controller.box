@@ -1,0 +1,46 @@
+Simulation sim {
+  .steps = 100
+  Sequence humidity {
+    .min = 60
+    .max = 100
+  }
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "m"
+  }
+  PidController controller {
+    .desiredValue = ./desiredVentilation[signal]
+    .sensedValue = 0.5
+    .Kprop = 0.1
+    ProportionalSignal desiredVentilation {
+    .input = humidity[value]
+    .threshold = 80 
+    .thresholdBand = 10
+    .increasingSignal = TRUE
+    .maxSignal = ./maxVentilation[signal]
+    .minSignal = 0
+    ProportionalSignal maxVentilation {
+        .input = 20 // fixed temperature
+        .threshold = -5
+        .thresholdBand = 1
+        .increasingSignal = TRUE
+        .maxSignal = 4 
+        .minSignal = 0
+      }
+    }
+  }
+  OutputR {
+    .keepPages = FALSE
+    PageR {
+      .xAxis = humidity[value]
+      PlotR {
+        .ports = desiredVentilation[signal]
+        .ggplot = "geom_point() +  geom_line()"
+      }
+      PlotR {
+        .ports = (controller[controlVariable] controller[error])
+        .ggplot = "geom_point() +  geom_line()"
+      }
+    }
+  }
+}

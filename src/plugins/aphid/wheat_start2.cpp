@@ -12,6 +12,7 @@ Wheat_start2::Wheat_start2(QString name, QObject *parent)
 {
     Input (Temperature);
     Input (Nb_plants);
+    Input (Date);
     Output(startPlants);
     Output (growthAlreadyStarted);
 }
@@ -30,7 +31,7 @@ void Wheat_start2::update() {
         startPlants=0;
     }
     else {
-        growthAlreadyStarted = (Temperature>0 && Temperature_2>0 && Temperature_3>0 && Temperature_4>0 && Temperature_5>0);
+        growthAlreadyStarted = (Temperature>0 && Temperature_2>0 && Temperature_3>0 && Temperature_4>0 && Temperature_5>0 && Date>90);
         if (growthAlreadyStarted)
             startPlants=Nb_plants;
         else {

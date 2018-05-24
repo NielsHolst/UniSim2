@@ -8,7 +8,7 @@ struct Variable {
 };
 
 struct TimeStamp {
-    int dayOfYear;	    // 1..365
+    int dayOfYear;	    // 1..366
     double 
         timeOfDay,	    // 0..24
   		timeZone;		// -24..24 (relative to UTC)
@@ -86,7 +86,7 @@ struct HeatPipes {
 
 struct Vent {
     double
-        length,              // m
+        length,             // m
         height,             // m
         numberOfVents,      // >0
         maxOpening,         // 0..180

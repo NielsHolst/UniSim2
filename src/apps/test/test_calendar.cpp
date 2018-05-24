@@ -204,10 +204,11 @@ void TestCalendar::testDayLength() {
 void TestCalendar::testAngot() {
     try {
         calendar->port("latitude")->equals(50);
-        calendar->port("initialDateTime")->equals(QDate(2001,1,30));
+        calendar->port("initialDateTime")->equals(QDateTime(QDate(2001,1,30), QTime(14,0,0)));
         calendar->reset();
         double angot = calendar->port("angot")->value<double>();
-        QVERIFY(TestNum::eq(angot, 11.15549)); // From angot.R
+        cout << angot << "\n";
+        QVERIFY(TestNum::eq(angot, 414.2890));
     }
     catch (Exception &ex) {
         QFAIL(qPrintable(ex.what()));

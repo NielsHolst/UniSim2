@@ -113,6 +113,6 @@ void TestDistribution::testMonteCarlo() {
     UNEXPECTED
 
     QCOMPARE(sa->port("inputsAnalysed")->value<int>(), 2);
-    QCOMPARE(sa->port("inputsTotal")->value<int>(), 5+4); // StageBase + Stage
+    QCOMPARE(sa->port("inputsTotal")->value<int>(), 10); // Inputs to Stage; root and sa boxes are not counted
     delete sim;
 }

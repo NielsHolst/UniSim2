@@ -15,13 +15,15 @@ Density::Density(QString name, QObject *parent)
     Input(reproduction).help("Reproduction vector (ss,sr,rr)");
     Input(survival).help("Survival vector by genotype (ss,sr,rr)");
     Input(step).imports("/*[step]");
+    Input(maxStep).imports("*[steps]");
     Input(densityThreshold).help("Threshold at which to register density");
     Output(ss).help("Density of ss genotype");
     Output(sr).help("Density of sr genotype");
     Output(rr).help("Density of rr genotype");
     Output(values).help("Density vector (ss, sr, rr)");
     Output(total).help("Total density");
-    Output(thresholdGen).help("Generation in which threshold was reached or zero");
+    Output(thresholdGen).help("Generation in which threshold was reached or maxStep");
+    Output(thresholdPassed).help("Was threshold passed?");
     values.resize(3);
 }
 
@@ -30,7 +32,8 @@ void Density::reset() {
     sr = immigration[1];
     rr = immigration[2];
     total = ss + sr + rr;
-    thresholdGen = 0;
+    thresholdGen = maxStep;
+    thresholdPassed = false;
 }
 
 void Density::update() {
@@ -43,6 +46,10 @@ void Density::update() {
     total = ss + sr + rr;
     if (total>densityThreshold && thresholdGen==0 ) {
         thresholdGen = step;
+    }
+    if (step>0 && total>densityThreshold && !thresholdPassed) {
+        thresholdGen = step;
+        thresholdPassed = true;
     }
 }
 

@@ -1,0 +1,16 @@
+Simulation sim {
+  .steps = 1440
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "m"
+  }
+  OutputR {
+    PageR {
+      .xAxis = sim[step]
+      PlotR {
+        .layout = "facetted"
+        .ports = (calendar[sinb] calendar[solarConstant] calendar[angot])
+      }
+    }
+  }
+}

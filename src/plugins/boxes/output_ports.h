@@ -2,7 +2,11 @@
 #define OUTPUT_PORTS_H
 #include <base/box.h>
 #include <base/port_filter.h>
-#include <base/track.h>
+
+namespace base {
+class Track;
+class TrackCollection;
+}
 
 namespace boxes {
 
@@ -18,7 +22,7 @@ private:
     QVector<QString> ports;
     // Data
     QVector<base::Track::Order> _orders;
-    QVector<base::Track*> _tracks;
+    base::TrackCollection *_tracks;
     // Methods
     void placeOrders();
 };

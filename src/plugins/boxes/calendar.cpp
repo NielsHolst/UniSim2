@@ -51,9 +51,8 @@ Calendar::Calendar(QString name, QObject *parent)
     Output(azimuth).help("The compass direction of the sun relative to north [-180;180]");
     Output(sunrise).help("Time of sunrise");
     Output(sunset).help("Time of sunset");
-    Output(solarConstant).help("The irradiation at the top of the atmsphere (MJ/m^2/d)");
-    Output(angot).help("The irradiation at Earth surface under optimal atmospheric conditions (MJ/m^2/d)");
-    Output(irradiationCorrection).help("Correction factor on daily irradiation depending on sun elevation");
+    Output(solarConstant).help("The irradiation at the top of the atmosphere (W/m^2)");
+    Output(angot).help("The irradiation on Earth surface under optimal atmospheric conditions (W/m^2)");
 }
 
 void Calendar::initialize() {
@@ -88,7 +87,6 @@ void Calendar::updateDerived() {
     totalTime = totalTimeSteps*timeStep;
     totalDays = totalTime*TimeWithUnits::conversionFactor(_timeUnit, Days);
     updateSun();
-    updateRadiation();
     updateAzimuth();
 }
 
@@ -105,23 +103,18 @@ void Calendar::updateSun() {
     if (aob < -1) aob = -1.;
     dayLength = 12.*(1. + 2.*asin(aob)/PI);
     int halfDay = dayLength/2.*60*60;
-    sunrise = QTime(12,00).addSecs(-halfDay);
+    sunrise = QTime(12,00).addSecs(-halfDay); // Shouldn't solar noon be used?
     sunset = QTime(12,00).addSecs(halfDay);
 
     double h = time.hour() + time.minute()/60. + time.second()/3600.;
     sinb = sinLD + cosLD*cos(2.*PI*(h + 12.)/24.);
     if (sinb < 0.) sinb = 0.;
-
+    // From Kropff & Laar (1993), pp. 235-236
     double dsinb = 3600.*(dayLength*sinLD + 24.*cosLD*sqrt(1. - aob*aob)/PI);
     double dsinbe = 3600.*(dayLength*(sinLD + 0.4*(sinLD*sinLD + cosLD*cosLD*0.5)) +
                            12.*cosLD*(2. + 3.*0.4*sinLD)*sqrt(1. - aob*aob)/PI);
     solarConstant = 1370.*(1. + 0.033*cos(2.*PI*dayOfYear/365.));
-    angot = solarConstant*dsinb*1e-6;
-    irradiationCorrection = sinb*(1. + 0.4*sinb)/dsinbe;
-}
-
-void Calendar::updateRadiation() {
-
+    angot = solarConstant*dsinb*sinb*(1. + 0.4*sinb)/dsinbe; // This is symmetrical around noon. So, shouldn't solar time be used?
 }
 
 //! Azimuth is 90 at noon, zero at sunset and sunrise, and -90 at midnight

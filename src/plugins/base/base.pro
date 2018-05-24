@@ -81,6 +81,7 @@ HEADERS +=  \
     table.h \
     test_num.h \
     track.h \
+    track_collection.h \
     time_with_units.h \
     timer.h \
     unique_name.h \
@@ -145,6 +146,7 @@ SOURCES +=  \
     time_with_units.cpp \
     timer.cpp \
     track.cpp \
+    track_collection.cpp \
     unique_name.cpp \
     vector.cpp \
     vector_op.cpp \

@@ -5,9 +5,10 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
+#include <base/box_builder.h>
+#include <base/publish.h>
 #include "general.h"
 #include "leaf_photosynthesis.h"
-#include <base/publish.h>
 
 using namespace base;
 using namespace std;
@@ -61,6 +62,14 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     Output(parAbsorbed).help("Proportion of indoors PAR captured by this leaf layer [0;1]");
     Output(Pn).help("Net assimilation rate [g CO2/ground m2/h]");
     Output(Pg).help("Gross assimilation rate [g CO2/ground m2/h]");
+}
+
+void LeafPhotosynthesis::amend() {
+    BoxBuilder builder(this);
+    if (!findMaybeOne<Box>("./lightResponse"))
+        builder.
+        box("vg::LeafLightResponse").name("lightResponse").
+        endbox();
 }
 
 void LeafPhotosynthesis::reset() {

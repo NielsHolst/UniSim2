@@ -1,0 +1,392 @@
+Simulation sim {
+  .steps=300 
+  
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "d" 
+    .initialDateTime = 01/01/2016
+	//.initialDateTime=01/01/2009
+  }
+  
+  Records weather {
+    .fileName = "aas2_2016.txt"
+	//.fileName="flakkebjerg_2009_modified.txt"
+  }
+  
+  
+  Box StartingPointSeason{
+		// starting point for the wheat growth.
+		Crop_grows wheat_start{
+		.Temperature=weather[Tavg]
+		.Date= calendar[dayOfYear] 
+		.Starting_date=46 // the wheat cannot start growing before that date 
+		}
+	
+		// starting point for the immigrants. For now it is constant //maybe should consider temperature and rain
+		Aphid_migration aphid_start{
+		.Wheat_Pheno= Wheat_dvlp[Pheno_stage]
+		.Date= calendar[dayOfYear]
+		.Daily_Nb_migrants=10
+		}		
+	}
+	
+	Box Wheat{
+		Wheat_growth Wheat_dvlp{
+		.Degree_days=./time[total]
+			DayDegrees time{
+			.T = weather[Tavg]
+			.T0 = 0
+			.isTicking = wheat_start[Growth]
+			}
+		}
+		 
+		Nb_tillersD nb_tillers{
+		.Wheat_Pheno=Wheat_dvlp[Pheno_stage] // According to Duffy et al. 2017
+		}
+	}
+
+	Box Fungus{
+		Box FungusTime{
+			// fungal time inside the aphid: infection process. Check the temperatures in literature and for Norway
+			DayDegrees time_fungus_int {
+			.T=weather[Tavg]
+			.T0=5 
+			.Topt=20 
+			.Tmax=30 
+			}
+			
+			// switch ON/OFF for spores germination and sporulation
+			Humidity_switch RH_On_Off {
+			.RH=weather[RH]
+			.RH_threshold=80 
+			}
+			
+			// fungal time outside the aphid: germination and sporulation. Check the temperatures in literature and for Norway
+			DayDegrees time_fungus_ext {
+			.T=weather[Tavg]
+			.T0=5
+			.Topt=20
+			.Tmax=30
+			.isTicking= RH_On_Off[RH_switch]
+			}
+		}
+		
+		Box InfectionProcess{
+			StageAndPhase Exposed_immigrants{
+			.initial=0
+			.inflow=Immigrants[phaseOutflow]
+			.k= 25
+			.growthFactor=survival[survival]
+			.duration=178.5 // are infected just before to leave the field, or from conidia in the air also when they leave the field?
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration= 72 // for now same lethal time than the apterous adults
+			.phaseTimeStep=time_fungus_int[step]
+			}
+			
+			// Exposed nymphs to the fungus. The proportion of the nymph[content] will develop the disease.
+			StageAndPhase Exposed_nymphs{
+			.initial=0
+			.inflow=nymph_Apterous[phaseOutflow]
+			.k= 25
+			.growthFactor=survival[survival] 
+			.duration=178.5
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration= 73 // average of the lethal time for the larvae, and nymph 1-3 Schmitz et al. 1993
+			.phaseTimeStep=time_fungus_int[step]
+			}	
+			
+			// Exposed alates nymphs to the fungus. The proportion of the nymph[content] will develop the disease.
+			StageAndPhase Exposed_W_nymphs{
+			.initial=0
+			.inflow=nymph_Alates[phaseOutflow]
+			.k= 25
+			.growthFactor=survival[survival] 
+			.duration=203.6
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration= 73 // average of the lethal time for the larvae, and nymph 1-3 Schmitz et al. 1993
+			.phaseTimeStep=time_fungus_int[step]
+			}	
+			
+			// Exposed adults to the fungus. The proportion of the adult[content] will develop the disease.
+			StageAndPhase Exposed_adults{
+			.initial=0
+			.inflow=adult_Apterous[phaseOutflow]
+			.k= 25
+			.growthFactor=survival[survival] 
+			.duration=360 
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration=72 // Schmitz et al. 1993 around 120DD in my lab paper
+			.phaseTimeStep=time_fungus_int[step]
+			}	
+			
+			// How many cadavers unit there are in total, considering the size of the cadavers and their capacity to produce spores
+			cadavers_units2 cadavers_tot{
+			.nb_cadavers_nymphs=Exposed_nymphs[phaseOutflow]
+			.nb_cadavers_W_nymphs=Exposed_W_nymphs[phaseOutflow]			
+			.nb_cadavers_adults=Exposed_adults[phaseOutflow]
+			.nb_cadavers_alates=Exposed_immigrants[phaseOutflow]
+			}
+			
+			// the cadavers ready to sporulate wait here before the sporulation triggered by the humidity.
+			StageAndPhase cadavers{
+			.initial=0
+			.k=25
+			.inflow=cadavers_tot[nb_units]
+			.growthFactor=0.95 // random
+			.duration= 126 //360 1 week at 18C or 20 days like Adults longevity? think it is more vulnerable.
+			.timeStep=time_fungus_int[step]
+			.phaseK=25
+			.phaseTimeStep=time_fungus_ext[step] 
+			.phaseDuration=0.125 // In Ardisson et al 1997: 3h 
+			}
+		}
+		
+		Box SpreadingInfection{
+			// the cadavers that are sporulating at the time t, they participate to the spread of the disease
+			StageAndPhase sporulating_cadavers{
+			.initial=0
+			.k=25
+			.growthFactor=0.95
+			.inflow=cadavers[phaseOutflow]
+			.duration= 60
+			.timeStep=time_fungus_int[step]
+			.phaseK=25
+			.phaseDuration=54
+			.phaseTimeStep=time_fungus_ext[step]	
+			}
+			
+			// the fungnus capacity to infect depending on the weather
+			Infection_rate2 spread{
+			.nb_spo_cadavers=sporulating_cadavers[content] 
+			.transmission_efficiency=0.1728 // 24X rho(h-1) in Ardisson et al. 1997 
+			.nb_susceptible|sum= Immigrants[content] | nymph_Apterous[content] | nymph_Alates[content] |preadult_Apterous[content] |adult_Apterous[content]
+			}
+			
+			// the fungus capacity to infect depending on intrinsic virulence 
+			Contamination contamination{
+			.virulence_strain=0.60 
+			.transmission_efficiency=spread[rho] 
+			}
+		}
+	}
+	
+	Box S_avenae{
+		DayDegrees time_aphid{
+		.T=weather[Tavg]
+		.T0=0 // =5 inBrabec et al. 2014 it is 0 for Duffy et al ?
+		.Topt=25 // average temperatures in Duffy et al. 2017
+		.Tmax=30
+		}  
+					
+		Box AphidDevelopment{	
+			// Aph_survivalD survival{
+			// .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+			// .Temperature=weather[Tavg]
+			// }
+			Aph_survivalP survival{
+			.Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+			}
+			
+			Stage Immigrants{
+			.initial=0
+			.inflow=aphid_start[migration]
+			.growthFactor= survival[survival]
+			.timeStep=time_aphid[step]
+			.duration= 200 //360 // in Duffy: 20 days (20days at 18C= 360DD) 
+			// to try 14 days 252
+			.k=25
+			.phaseOutflowProportion=0.15 // cst arbitrary see Chen Feng, probably humidity effect...
+			}
+			
+			Stage nymph_Apterous{
+			.timeStep = time_aphid[step]
+			.initial = 0
+			.growthFactor= survival[survival]
+			.inflow = reproduction[nb_apterous_nymph]
+			.duration=178.5 // according to Duffy et al. 2017 (after work on it)
+			.phaseOutflowProportion = contamination[proba_infection]
+			.k=25
+			}
+		
+			Stage nymph_Alates{
+			.timeStep = time_aphid[step]
+			.initial = 0
+			.growthFactor= survival[survival]
+			.inflow = reproduction[nb_alates_nymph]
+			.duration=203.6 // according to Duffy et al. 2017 (after work on it)
+			.phaseOutflowProportion = contamination[proba_infection]
+			.k=25
+			}
+		
+			Stage preadult_Apterous{
+			.timeStep = ./time[step]
+			.initial = 0
+			.growthFactor= 1 //survival[survival]
+			.inflow = nymph_Apterous[outflow]
+			.duration=15 // problem with Duffy et al. 2017 because the number of DD depends on the temperature (a lot)
+			.k=25
+				DayDegrees time {
+				.T = weather[Tavg]
+				.T0 = 7 // =5 inBrabec et al. 2014 it is 7 for Duffy et al ?
+				.Topt=17
+				.Tmax=35
+				}
+			}
+			
+			Stage adult_Apterous{
+			.timeStep = time_aphid[step]
+			.initial = 0
+			.growthFactor= survival[survival]
+			.inflow = preadult_Apterous[outflow]
+			.duration=360 // suppose to be 20 days not based on degree days according to Duffy et al 2017 (20days at 18C)
+			.phaseOutflowProportion = contamination[proba_infection]
+			.k=25
+			}
+			
+			// calculate the density of aphid which will influence the proportion of alates produced by the apterous adults.
+			Density_per_tiller aphid_density{
+			.nb_nymph_apterous= nymph_Apterous[content]
+			.nb_nymph_alates= nymph_Alates[content]
+			.nb_pre_adults= preadult_Apterous[content]
+			.nb_adult_apterous= adult_Apterous[content]
+			.nb_adult_alates= Immigrants[content] // only the immigrant, the other left the field
+			.nb_Aapt_infec=Exposed_adults[content]
+			.nb_Napt_infec=Exposed_nymphs[content]
+			.nb_plant=nb_tillers[nb_tillers] // Duffy at al.
+			}
+		}
+		
+		Box Reproduction{
+			// an estimation of the life fecundity of the aphids according to the temperature and the wheat phenology
+			R0_Schmitz life_fec{
+			.Tmin=0.8
+			.Tmax=35
+			.Topt=16.1
+			.R0_opt=51.6 // values above from Schmitz et al. 1993 for apterous SA
+			.Temperature=weather[Tavg]
+			.Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+			}
+			
+			life_fec_infected fec_infec{
+			.life_fec_apt=life_fec[lifetime_fec_apterous]
+			.life_fec_ala=life_fec[lifetime_fec_alates]
+			.reduction=0.30 // arbitrary
+			}
+			
+			Stage Fecundity_apterous{
+			.initial=0
+			.k=1
+			.inflow=preadult_Apterous[outflow]
+			.growthFactor|prod =life_fec[lifetime_fec_apterous] | survival[survival]
+			.timeStep=time_aphid[step]
+			.duration= 360 // 100 default value; in Duffy: 20 days (20days at 18C= 360DD) 
+			// Duffy value takes too much time for the aphids to reproduce
+			}
+			
+			Stage Fecundity_immigrants{
+			.initial=0
+			.k=1
+			.inflow=aphid_start[migration]
+			.growthFactor|prod =life_fec[lifetime_fec_alates] | survival[survival]
+			.timeStep=time_aphid[step]
+			.duration=200 //in Duffy: 20 days (20days at 18C= 360DD) but they may have lived before landing
+			}
+			
+			// the infected adults reproduce themselves. The nymphs are not infected and go into the susceptible pool.
+			StageAndPhase Fecundity_Ainfected{
+			.initial=1
+			.inflow=adult_Apterous[phaseOutflow]
+			.k= 25
+			.growthFactor|prod=fec_infec[life_fec_aptInfected] | survival[survival]
+			.duration=360 
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration=120 
+			.phaseTimeStep=time_fungus_int[step]
+			}
+			
+			StageAndPhase Fecundity_Winfected{
+			.initial=1
+			.inflow=Immigrants[phaseOutflow]
+			.k= 25
+			.growthFactor|prod=fec_infec[life_fec_alaInfected] | survival[survival]
+			.duration=360 
+			.timeStep=time_aphid[step]
+			.phaseK=25
+			.phaseDuration=120 
+			.phaseTimeStep=time_fungus_int[step]
+			}
+			
+			// to estimate the proportion of alates vs apterous offspring.			
+			Fecundity_Schmitz2 reproduction{
+			.potential_fec_alates=Fecundity_immigrants[outflow]
+			.potential_fec_Winfected=Fecundity_Winfected[outflowSum]
+			.potential_fec_apterous=Fecundity_apterous[outflow]
+			.potential_fec_infected=Fecundity_Ainfected[outflowSum]
+			.aphid_density=aphid_density[density]
+			.Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+			}
+		}
+	}
+
+   
+  OutputR {
+    PageR {
+		.xAxis= calendar[date]
+		+monthBreaks = "geom_line(size=1.1) + scale_x_datetime(breaks = date_breaks('months'), 
+						 labels = date_format('%b'))"
+		 PlotR{
+			.layout ="merged"
+			.ports = (weather[RH] weather[Tavg] RH_On_Off[RH_switch] aphid_density[density] Wheat_dvlp[Pheno_stage])
+			.ggplot= ..[monthBreaks]
+		}
+		
+		// PlotR{
+			// .ports = survival[survival]//int_mortality[intrinsic_mortality]
+			// .ggplot= ..[monthBreaks]
+		// }
+		
+		// PROBLEM with the nymph_Alates[outflow] it seems equal to 0 all the time, especially at the end of the season... ?!?!
+		
+		// PlotR{
+			// .layout= "merged"
+			// .ports = (nymph_Apterous[inflowTotal] nymph_Alates[inflowTotal] nymph_Apterous[outflowTotal] nymph_Alates[outflowTotal] adult_Apterous[inflowTotal] Immigrants[inflowTotal])
+			// .ggplot= ..[monthBreaks]
+		// }
+		PlotR{
+			.layout = "merged"
+			.ports = (nymph_Apterous[content] nymph_Alates[content] adult_Apterous[content] nymph_Alates[outflow] aphid_start[migration])
+			.ggplot= ..[monthBreaks]
+		}
+		
+		// PlotR{
+			// .layout ="merged"
+			// .ports = (Fecundity_immigrants[outflow] Fecundity_apterous[outflow]) //   In Plantegenest density peak around 30 aphids per tiller. Here around 75...
+			// // Wheat_dvlp[Pheno_stage] weather[Tavg]
+			// .ggplot= ..[monthBreaks]
+		// }
+		// PlotR{
+			// .layout ="merged"
+			// .ports = (Fecundity_immigrants[outflow] Immigrants[content]) //   In Plantegenest density peak around 30 aphids per tiller. Here around 75...
+			// // Wheat_dvlp[Pheno_stage] weather[Tavg]
+			// .ggplot= ..[monthBreaks]
+		// }
+		PlotR{
+			.layout ="merged"
+			.ports = (spread[rho] contamination[proba_infection] survival[survival]) //spread[newly_infected]
+			.ggplot= ..[monthBreaks]
+			}
+		
+		//graph on the infection process
+		PlotR{
+			.layout ="merged"
+			.ports = (Exposed_adults[content] Exposed_nymphs[content] cadavers[content] sporulating_cadavers[content])
+			.ggplot= ..[monthBreaks]
+			}
+    }
+   }
+}

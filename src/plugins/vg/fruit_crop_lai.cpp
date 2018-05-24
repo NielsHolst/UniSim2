@@ -27,8 +27,7 @@ FruitCropLai::FruitCropLai(QString name, QObject *parent)
 }
 
 void FruitCropLai::reset() {
-    laiStart = laiStartPerPlant*cropDensity;
-    value = 0.;
+    value = laiStart = laiStartPerPlant*cropDensity;
     maxLaiReached = (value>=maxLai);
 }
 

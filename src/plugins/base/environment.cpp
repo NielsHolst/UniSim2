@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <QApplication>
 #include <QClipboard>
 #include <QDir>
@@ -113,6 +115,7 @@ QString Environment::homePath() const {
 
 QString Environment::openOutputFile(QFile &file, QString extension) {
     QString filePath = outputFilePath(extension);
+    std::cout << "OUTPUT=" << qPrintable(filePath) << "\n";
     file.setFileName(filePath);
     if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
