@@ -56,7 +56,7 @@ Port& Port::imports(QString pathToPort) {
     return help("Defaults to " + pathToPort);
 }
 
-Port& Port::importsMaybe(QString pathToPort) {
+Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
 //  Check with vg::GrowthLights
 //    if (access() == PortAccess::Output)
 //        ThrowException("Cannot set value of output port").context(this);
@@ -65,6 +65,7 @@ Port& Port::importsMaybe(QString pathToPort) {
     _mode = PortMode::MaybeReferenced;
     _portValueStep = environment().computationStep();
     _importPath = pathToPort;
+    _fallBackValue = fallBackValue;
     _importPortMustExist = false;
     checkValueOverridden();
     return help("Defaults to " + pathToPort + " (if it exists)");
@@ -216,7 +217,7 @@ namespace {
 }
 
 void Port::resolveImports() {
-    // Only resolve one
+    // Only resolve once
     if (_importsResolved)
         return;
 //        ThrowException("Unexpected: Imports already resolved").context(this);
@@ -241,6 +242,10 @@ void Port::resolveImports() {
             ThrowException("No matching import ports found").value(_importPath).context(this);
         else {
             _importPath.clear();
+            if (!_fallBackValue.isEmpty()) {
+                equals(_fallBackValue);
+                _mode = PortMode::Fixed;
+            }
             return;
         }
     }

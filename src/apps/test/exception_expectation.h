@@ -1,6 +1,8 @@
 #ifndef EXCEPTION_EXPECTATION_H
 #define EXCEPTION_EXPECTATION_H
 
+#include <qtestcase.h>
+
 #define UNEXPECTED \
 catch(Exception &ex) { \
     QString s = "Unexpected exception: " + ex.what(); \

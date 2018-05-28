@@ -1,6 +1,7 @@
 #include "ast_boxes.h"
 #include "dialog.h"
 
+// Note: ast_common processes the structs generated here
 
 namespace ast {
 

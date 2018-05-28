@@ -24,6 +24,7 @@ HEADERS +=  \
     test_calendar.h \
     test_circle_buffer.h \
     test_command.h \
+    test_conditional.h \
     test_convert.h \
     test_copy_folder.h \
     test_data_frame.h \
@@ -69,6 +70,7 @@ SOURCES +=  \
     test_calendar.cpp \
     test_circle_buffer.cpp \
     test_command.cpp \
+    test_conditional.cpp \
     test_convert.cpp \
     test_copy_folder.cpp \
     test_data_frame.cpp \

@@ -115,6 +115,11 @@
     <file>data/input/projects/bph/env-AnGiang.txt</file>
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
+    <file>data/input/projects/ig/1-photosynthesis (0).box</file>
+    <file>data/input/projects/ig/1-photosynthesis.box</file>
+    <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
+    <file>data/input/projects/ig/input/sel_dk.txt</file>
+    <file>data/input/projects/ig/layers-setup.txt</file>
     <file>data/input/projects/resist/quantile-2D.R</file>
     <file>data/input/projects/resist/resist-1.box</file>
     <file>data/input/projects/resist/resist-2.box</file>
@@ -123,9 +128,13 @@
     <file>data/input/projects/resist/resist-4.box</file>
     <file>data/input/projects/resist/resist-5.box</file>
     <file>data/input/projects/resist/resist-5b.box</file>
-    <file>data/input/projects/resist/resist-6-sa-end(0).R</file>
+    <file>data/input/projects/resist/resist-6-0-sa.box</file>
+    <file>data/input/projects/resist/resist-6-1-sa-analysis.R</file>
+    <file>data/input/projects/resist/resist-6-1-sa-generate-scenarios.box</file>
+    <file>data/input/projects/resist/resist-6-1-sa-generated-scenarios.txt</file>
+    <file>data/input/projects/resist/resist-6-1-sa.box</file>
+    <file>data/input/projects/resist/resist-6-2-sa-use-scenarios.box</file>
     <file>data/input/projects/resist/resist-6-sa-end.R</file>
-    <file>data/input/projects/resist/resist-6-sa.box</file>
     <file>data/input/projects/resist/resist-6.box</file>
     <file>data/input/projects/resist/resist-end.R</file>
     <file>data/input/projects/resist/resist-sa-end.R</file>
@@ -133,7 +142,18 @@
     <file>data/input/projects/vg/02-screen-U.box</file>
     <file>data/input/projects/vg/03-given-ventilation.box</file>
     <file>data/input/projects/vg/04-greenhouse.box</file>
+    <file>data/input/projects/vg/angot.box</file>
     <file>data/input/projects/vg/crops.xml</file>
+    <file>data/input/projects/vg/diffuse-irradiation-validation-end.R</file>
+    <file>data/input/projects/vg/diffuse-irradiation-validation.box</file>
+    <file>data/input/projects/vg/diffuse-irradiation.box</file>
+    <file>data/input/projects/vg/DiffuseIrradiationRE.R</file>
+    <file>data/input/projects/vg/example1/1-max-ventilation.box</file>
+    <file>data/input/projects/vg/example1/2-desired-ventilation.box</file>
+    <file>data/input/projects/vg/example1/2a-desired-ventilation.box</file>
+    <file>data/input/projects/vg/example1/3-pid-controller.box</file>
+    <file>data/input/projects/vg/example1/4-pid-controller.box</file>
+    <file>data/input/projects/vg/example1/pid-controller.box</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>

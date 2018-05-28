@@ -123,6 +123,14 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::importsMaybe(QString pathToPort, QString fallBackValue) {
+    if (!_currentBox)
+        ThrowException("BoxBuilder: import out of context");
+    _currentPort->importsMaybe(pathToPort, fallBackValue);
+    _currentDistribution = 0;
+    return *this;
+}
+
 BoxBuilder& BoxBuilder::track(PortFilter filter) {
     _currentPort->track(filter);
     return *this;

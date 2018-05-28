@@ -66,14 +66,24 @@ QString Parameter::toString() const {
 void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
     QString val = QString::fromStdString(value),
-            dist;
+            dist,
+            fallBackValue;
+    if (val.startsWith("?")) {
+        int pos = val.indexOf(":");
+        Q_ASSERT(pos>1);
+        fallBackValue = val.mid(pos+1);
+        val = val.mid(1, pos-1);
+    }
     if (val.contains("@") && !isApostrophed(val) && !isParenthesized(val)) {
         int pos = val.indexOf("@");
         dist = deEmbrace(val.mid(pos+1));
         val = val.left(pos);
     }
 
-    if (isApostrophed(val)) {
+    if (!fallBackValue.isNull()) {
+        builder.importsMaybe(val, fallBackValue);
+    }
+    else if (isApostrophed(val)) {
         val = deEmbrace(val);
         if (isParenthesized(val))
             builder.equals(split(val));

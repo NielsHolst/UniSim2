@@ -1,0 +1,24 @@
+Simulation sim {
+  .steps = 100
+  Sequence temperature {
+    .min = -10
+    .max = 0
+  }
+  ProportionalSignal maxVentilation {
+    .input = temperature[value]    
+    .threshold = -5
+    .thresholdBand = 1
+    .increasingSignal = TRUE
+    .maxSignal = 4 
+    .minSignal = 0
+  }
+  OutputR {
+    PageR {
+      .xAxis = temperature[value]
+      PlotR {
+        .ports = maxVentilation[signal]
+        .ggplot = "geom_point() +  geom_line()"
+      }
+    }
+  }
+}

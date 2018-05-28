@@ -42,7 +42,7 @@ private:
     PortType _valueType, _importType;
     PortMode _mode;
     ComputationStep _portValueStep;
-    QString _importPath;
+    QString _importPath, _fallBackValue;
     QVector<Port *> _importPorts, _exportPorts;
     bool _importPortMustExist, _importsResolved;
     PortAccess _access;
@@ -61,7 +61,7 @@ public:
     Port& equals(const char *value);
     Port& equals(QStringList value);
     Port& imports(QString pathToPort);
-    Port& importsMaybe(QString pathToPort);
+    Port& importsMaybe(QString pathToPort, QString fallBackValue=QString());
     Port& access(PortAccess acc);
     Port& notReferenced();
     Port& zeroAtReset();

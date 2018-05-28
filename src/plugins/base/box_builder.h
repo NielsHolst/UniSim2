@@ -28,6 +28,7 @@ public:
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
     BoxBuilder& imports(QString pathToPort);
+    BoxBuilder& importsMaybe(QString pathToPort, QString fallBackValue);
     BoxBuilder& track(PortFilter filter=PortFilter::None);
     // Distribution
     BoxBuilder& rnd(QString name);

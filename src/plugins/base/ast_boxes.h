@@ -68,7 +68,9 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
 {
     qi::rule<Iterator, Skipper, Node()> node;
     qi::rule<Iterator, Skipper, std::string()>
-            class_name, object_name, name, joker, value, transform, unquoted_value, unquoted_value_item, quoted_value, list_value;
+            class_name, object_name, name, joker, value, transform,
+            unquoted_value, unquoted_value_item, quoted_value, list_value,
+            trailing_list, unconditional_value, conditional_value;
     qi::rule<Iterator, Skipper, ParameterWithAttribute()> attributed_name;
     qi::rule<Iterator, Skipper, Parameter()> parameter;
 
@@ -83,19 +85,24 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // a class name may be qualified by a namespace name
         class_name %= name >> -(char_(':') > char_(':') > name);
         object_name %= name;
-        // A value may be quoted or unquoted, or a list of values
-        value = (quoted_value | unquoted_value | list_value);
+        // An unconditional value may be quoted or unquoted or a list of values
+        unconditional_value %= (quoted_value | unquoted_value | list_value);
+        // A value may be unconditional or conditional an may be followed by a trailing list
+        value %= (unconditional_value | conditional_value) >> -trailing_list;
         // A quoted value is a string of any characters, except apostrophes;
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
         // An unquoted value item is for numbers, dates, times, booleans and path expressions
-        unquoted_value_item = lexeme[+(char_ - char_(" \t\n\"{}()[]@"))]
+        unquoted_value_item %= lexeme[+(char_ - char_(" \t\n\"{}()[]@?:"))]
                 >> -(char_('[') > (joker|name) > char_(']'));
+        // A trailing list is preceeded by @
+        trailing_list %= char_('@') > list_value;
         // An unquoted value is one or more items maybe followed by a list
-        unquoted_value %= unquoted_value_item >> *(char_("|") > unquoted_value_item)
-                >> -(char_('@') > list_value);
+        unquoted_value %= unquoted_value_item >> *(char_("|") > unquoted_value_item);
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
+        // A conditional value is preceeded by ?
+        conditional_value %= char_('?') > unquoted_value > char_(':') > unconditional_value;
         // A name with optional attribute
         transform = name;
         attributed_name %= char_("\\.+") >> name >> -('|' > transform);
@@ -108,11 +115,14 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         RULE_NAME(joker);
         RULE_NAME(class_name);
         RULE_NAME(object_name);
+        RULE_NAME(unconditional_value);
         RULE_NAME(value);
         RULE_NAME(quoted_value);
         RULE_NAME(unquoted_value);
         RULE_NAME(unquoted_value_item);
+        RULE_NAME(trailing_list);
         RULE_NAME(list_value);
+        RULE_NAME(conditional_value);
         RULE_NAME(transform);
         RULE_NAME(attributed_name);
         RULE_NAME(parameter);

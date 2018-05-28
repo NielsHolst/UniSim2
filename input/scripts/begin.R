@@ -4,6 +4,7 @@ library(lubridate)
 library(plyr)
 library(reshape2)
 library(scales)
+library(splines)
 
 if (!keepPages) graphics.off ()
 if (!keepVariables) {
