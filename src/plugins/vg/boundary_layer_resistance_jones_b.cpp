@@ -5,13 +5,14 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "boundary_layer_resistance_jones_b.h"
-#include "general.h"
 
 using std::max;
 using std::min;
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 

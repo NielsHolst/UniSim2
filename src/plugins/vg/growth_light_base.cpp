@@ -23,6 +23,7 @@ GrowthLightBase::GrowthLightBase(QString name, QObject *parent)
     Output(shortWaveEmission).help("Short wave emission (visible light, Rn) [W/m2]");
     Output(totalEmission).help("Total = heatEmission + longWaveEmission + shortWaveEmission [W/m2]");
     Output(parEmission).help("PAR emission [W/m2]");
+    Output(photonIntensity).help("PAR Photon intensity [micromole PAR/s/m2");
     Output(energyFlux).help("Intensity of power used by lamps [W/m2]");
     Output(currentlyOn).help("Tells whether light is on");
 }

@@ -34,7 +34,6 @@ FruitCropMass::FruitCropMass(QString name, QObject *parent)
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(tempSum).imports("../physTime[total]");
     Input(lai).imports("../lai[value]");
-    Input(maxLaiReached).imports("../lai[maxLaiReached]");
 }
 
 void FruitCropMass::setProportions() {
@@ -51,9 +50,6 @@ void FruitCropMass::setProportions() {
         propStem = reproPropStem;
         propFruit = reproPropFruit;
     }
-    // Correct leaf
-    if (maxLaiReached)
-        propLeaf = 0.;
     // Correct fruit and adjust others
     propFruit *= fruitFactor;
     double nonFruit0 = propRoot + propLeaf + propStem,

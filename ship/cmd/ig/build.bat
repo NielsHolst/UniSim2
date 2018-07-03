@@ -1,13 +1,17 @@
 REM pushd ..\win
 REM call build
 REM popd
-set VERSION=debug
+
+set VERSION=release
 
 echo = Set release version =
 ..\bin\update-qt-project %VERSION%
 if errorlevel 1 goto :end_fail
 
 echo = Set path to Qt build environment =
+set QTENV="C:\Qt\5.9.2\mingw53_32\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
+
 set QTENV="C:\Qt\5.7\mingw53_32\bin\qtenv2.bat"
 if exist %QTENV% goto :ok_qt
 
@@ -22,6 +26,8 @@ rem Call Qt batch file
 pushd .
 call %QTENV%
 popd
+
+pause
 
 echo = Build ig =
 pushd ..\..\..

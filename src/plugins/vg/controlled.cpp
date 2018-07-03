@@ -84,6 +84,8 @@ void Controlled::amend() {
         box().name("cooling").
             box("vg::AirFluxCoolingSupply").name("airFlux").
             endbox().
+            box("vg::VentOpening").name("ventOpening").
+            endbox().
             box("vg::VapourFluxAir").name("vapourFlux").
                 port("airFlux").imports("cooling/airFlux[value]").
             endbox().

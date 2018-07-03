@@ -81,7 +81,8 @@ void SurfaceRadiation::setToZero() {
 void SurfaceRadiation::Spectrum::Direction::setRef(double tra) {
     ref = 1. - abs - tra;
     TestNum::snapToZero(ref);
-    Q_ASSERT(ref>=0);
+    if (ref<0)
+        ThrowException("Absorptivity + Transmission > 1").value1(abs).value2(tra);
 }
 
 //! Set absorptivity from transmissivity (assumes reflectivity already set)

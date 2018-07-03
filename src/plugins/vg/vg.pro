@@ -30,6 +30,7 @@ HEADERS +=  \
     controllers.h \
     cover.h \
     crop.h \
+    crop_development.h \
     crop_mass.h \
     crop_growth.h \
     crop_lai.h \
@@ -55,7 +56,6 @@ HEADERS +=  \
     fruit_crop_lai.h \
     fruit_crop_mass.h \
     fruit_factor.h \
-    general.h \
     geometry.h \
     given.h \
     growth_light_base.h \
@@ -107,6 +107,7 @@ HEADERS +=  \
     vapour_flux_sum_base.h \
     vapour_flux_transpiration.h \
     vent.h \
+    vent_opening.h \
     ventilated_latent_heat_converter.h \
     ventilation_by_temperature.h \
     ventilation_by_wind.h
@@ -133,6 +134,7 @@ SOURCES += \
     co2_controller.cpp \
     cover.cpp \
     crop.cpp \
+    crop_development.cpp \
     crop_mass.cpp \
     crop_growth.cpp \
     crop_lai.cpp \
@@ -158,7 +160,6 @@ SOURCES += \
     fruit_crop_lai.cpp \
     fruit_crop_mass.cpp \
     fruit_factor.cpp \
-    general.cpp \
     geometry.cpp \
     given.cpp \
     growth_light_base.cpp \
@@ -210,6 +211,7 @@ SOURCES += \
     vapour_flux_sum_base.cpp \
     vapour_flux_transpiration.cpp \
     vent.cpp \
+    vent_opening.cpp \
     ventilated_latent_heat_converter.cpp \
     ventilation_by_temperature.cpp \
     ventilation_by_wind.cpp

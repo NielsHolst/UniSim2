@@ -1,5 +1,5 @@
-#ifndef SENSITIVITY_ANALYSIS_H
-#define SENSITIVITY_ANALYSIS_H
+#ifndef SENSITIVITY_ANALYSIS_BASE_H
+#define SENSITIVITY_ANALYSIS_BASE_H
 #include <QVector>
 #include <base/box.h>
 
@@ -10,23 +10,26 @@ namespace base {
 
 namespace boxes {
 
-class SensitivityAnalysis : public base::Box
+class SensitivityAnalysisBase : public base::Box
 {
 public:
-    SensitivityAnalysis(QString name, QObject *parent);
+    SensitivityAnalysisBase(QString name, QObject *parent);
     void initialize();
     void reset();
-private:
+protected:
     // Inputs
-    int iterations;
     QString method;
+    int sampleSize;
     // Outputs
-    int inputsTotal, inputsAnalysed;
+    int inputsTotal, inputsAnalysed, iterations;
     // Data
     enum Method {MC, LHS};
     Method _method;
     QVector<base::Distribution*> _saDistributions;
+private:
     // Methods
+    virtual int numberOfIterations() const = 0;
+    virtual int numberOfSamples() const = 0;
     bool canBeAnalysed(base::Port *port) const;
     void setMethod();
     void setInputsTotal();

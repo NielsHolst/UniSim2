@@ -5,13 +5,14 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
-#include "general.h"
 #include "stomatal_resistance_tomato.h"
 
 using std::min;
 using std::max;
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 
@@ -45,7 +46,6 @@ double StomatalResistanceTomato::updateRsH2O() {
            fTemperature = 1 + 2.2593e-2*sqr(temperature + T0 - 297.66),
            fCO2 = atNight ? 1 : min(1 + 6.08e-7*sqr(co2-200), 1.49),
            fHumidity = 4/pow((1 + 255*exp(-0.5427*vpd*0.01)), 0.25);
-//    double test = riH2Omin*fRadiation*fTemperature*fCO2*fHumidity;
     return riH2Omin*fRadiation*fTemperature*fCO2*fHumidity;
 }
 

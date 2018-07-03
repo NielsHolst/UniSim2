@@ -43,7 +43,9 @@ HEADERS +=  \
     records.h \
     sandy.h \
     scenarios.h \
-    sensitivity_analysis.h \
+    sensitivity_analysis_base.h \
+    sensitivity_analysis_simple.h \
+    sensitivity_analysis_sobol.h \
     sequence.h \
     simulation.h \
     stage_base.h \
@@ -84,7 +86,9 @@ SOURCES +=  \
     records.cpp \
     sandy.cpp \
     scenarios.cpp \
-    sensitivity_analysis.cpp \
+    sensitivity_analysis_base.cpp \
+    sensitivity_analysis_simple.cpp \
+    sensitivity_analysis_sobol.cpp \
     sequence.cpp \
     simulation.cpp \
     stage_base.cpp \

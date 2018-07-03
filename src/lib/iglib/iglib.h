@@ -89,7 +89,7 @@ struct Vent {
         length,             // m
         height,             // m
         numberOfVents,      // >0
-        maxOpening,         // 0..180
+        maxOpening,         // not used
         porosity;           // 0..1
     Variable opening;       // 0..1
 };
@@ -178,7 +178,7 @@ struct Query {
     Culture culture;
     Construction construction;
     HeatPipes heatPipes;
-    Vents vents;
+    Vents vents; // Only one vent allowed
     GrowthLights growthLights;
     Co2Dispenser co2Dispenser;
     Screens screens;
@@ -190,15 +190,17 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        photosynthesisRate,     // g/m2/h
-        photosynthesisPct,      // 0..100 (100 = at light saturation and current temp, CO2 and r.h.)
-        lightOutdoors,          // mymol PAR/m2/s
-        lightArtificial,        // mymol PAR/m2/s
-        lightPlantHeight,       // mymol PAR/m2/s
-        co2Indoors;             // ppm (measured or computed)
-    ;
-    bool hasError;
-    const char *error;
+        indoorsCo2 = 0,         // ppm
+        indoorsRh = 0,          // 0-100 %
+        indoorsTemperature = 0, // Celcius
+        growthLight = 0,        // Current expenditure (W/m2)
+        heating = 0,            // Current expenditure (W/m2)
+        photosynthesis = 0,     // Current rate (g/h/m2)
+        costEfficiency = 0,     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
+        grayMoldRisk = 0,       // Not used
+        daysToHarvest = 0;      // Not used
+    bool hasError=false;        // Computation unsuccessful?
+    const char *error;          // Error message if unsuccessful
 };
 
 // Generate a query at random

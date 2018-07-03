@@ -147,8 +147,14 @@ template<> QDateTime convert(QString source) {
     }
     catch (Exception &) {
     }
+
+//    if (source.contains("*<Calendar>[dateTime]")) {
+//        if (!date.isValid() || parts.isEmpty() || parts.size() > 2)
+//            ThrowException("Cannot convert String to DateTime").value(source);
+//    }
     if (!date.isValid() || parts.isEmpty() || parts.size() > 2)
         ThrowException("Cannot convert String to DateTime").value(source);
+
     return QDateTime(date, time);
 }
 

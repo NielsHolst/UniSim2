@@ -62,6 +62,7 @@ HEADERS +=  \
     organisation.h \
     path.h \
     physiological_time.h \
+    phys_math.h \
     port.h \
     port_access.h \
     port_buffer.h \
@@ -127,6 +128,7 @@ SOURCES +=  \
     object_pool.cpp \
     path.cpp \
     physiological_time.cpp \
+    phys_math.cpp \
     port.cpp \
     port_access.cpp \
     port_buffer.cpp \

@@ -4,10 +4,12 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "diffuse_irradiation_RE.h"
-#include "general.h"
+
 using namespace base;
+using namespace phys_math;
 
 // From Kropff & Laar (1993), pp. 235-236
 
@@ -50,21 +52,6 @@ void DiffuseIrradiationRE::update() {
         eq = 3;
     }
 
-//    else if (clearness <= 0.3)
-//        fraction = 1. - 0.232*clearness
-//                      + 0.0239*sinb
-//                      - 0.000682*temperature
-//                      + 0.019*rh;
-//    else if (clearness <= 0.78)
-//        fraction = 1.329 - 1.716*clearness
-//                         + 0.267*sinb
-//                         - 0.00357*temperature
-//                         + 0.106*rh;
-//    else
-//        fraction = 0.426*clearness
-//                   + 0.256*sinb
-//                   - 0.00349*temperature
-//                   + 0.0734*rh;
     fraction = minmax(0., fraction, 1.);
     value = fraction*globalIrradiation;
 }

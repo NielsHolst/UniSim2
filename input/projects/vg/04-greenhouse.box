@@ -1,6 +1,6 @@
 // vg/04-greenhouse.box
 Simulation greenhouse {
-  .steps =  10800 // 15 days
+  .steps =  2000 // 10800 // 15 days
   Calendar calendar {
     .initialDateTime = 1/8/2001
     .timeStep = 2

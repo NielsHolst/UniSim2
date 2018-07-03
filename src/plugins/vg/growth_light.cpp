@@ -17,45 +17,51 @@ PUBLISH(GrowthLight)
 GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
-    Input(type).equals("HPSL").help("Type of growth light [HPSL, LED]");
-    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area [W/m2]");
+    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area (W/m2)");
     Input(ballastCorrection).equals(1.).help("Set to >1 if intensity includes ballast");
-    Input(age).help("Age of the lamps at simulation start [h]");
-    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 90% [h]");
+    Input(heatCoef).help("Proportion of net intensity lost by convection [0;1]");
+    Input(longWaveCoef).help("Proportion of net intensity emitted as long-wave radiation [0;1]");
+    Input(shortWaveCoef).help("Proportion of net intensity emitted as short-wave radiation [0;1]");
+    Input(parCoef).help("Proportion of net intensity emitted as long-wave radiation [0;1]");
+    Input(parPhotonCoef).equals(4.6).help("Number of photons in PAR energy (micromole/J)");
+    Input(minPeriodOn).help("Minimum period that light stays on (m)");
+    Input(age).help("Age of the lamps at simulation start (h)");
+    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 50% (h)");
     Input(on).imports("controllers/growthLight[signal]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(currentPeriod).help("Time since last time light went on [m]");
-    Output(totalPeriod).help("Total period when light has been on [h]");
+    Output(netIntensity).help("Intensity corrected for ballast (W/m2)");
+    Output(currentPower).help("Current power usage (W/m2)");
+    Output(currentPeriod).help("Time since last time light went on (m)");
+    Output(totalPeriod).help("Total period when light has been on (h)");
 }
 
 void GrowthLight::reset() {
     // Set parameters according to type
-    // These hidden parameters should be accessible in box script
-    QString key = type.toLower();
-    if (key == "hpsl") {
-        attributes.heatCoef = 0.23;
-        attributes.longWaveCoef = 0.42;
-        attributes.shortWaveCoef = 0.50;
-        attributes.parCoef = 0.31;
-        attributes.minPeriodOn = 30.;
-    }
-    else if (key == "led") {
-        attributes.heatCoef = 0.02;
-        attributes.longWaveCoef = 0.05;
-        attributes.shortWaveCoef = 0.82;
-        attributes.parCoef = 0.82;
-        attributes.minPeriodOn = 0.;
-    }
-    else
-        ThrowException("Unknown growth light type").value(type).context(this);
+//    QString key = type.toLower();
+//    if (key == "hpsl") {
+//        attributes.heatCoef = 0.23;
+//        attributes.longWaveCoef = 0.42;
+//        attributes.shortWaveCoef = 0.50;
+//        attributes.parCoef = 0.31;
+//        attributes.minPeriodOn = 30.;
+//    }
+//    else if (key == "led") {
+//        attributes.heatCoef = 0.02;
+//        attributes.longWaveCoef = 0.05;
+//        attributes.shortWaveCoef = 0.82;
+//        attributes.parCoef = 0.82;
+//        attributes.minPeriodOn = 0.;
+//    }
+//    else
+//        ThrowException("Unknown growth light type").value(type).context(this);
     // Compute derived parameters
     double netCapacity = intensity/ballastCorrection;
-    netAttributes.heatEmission = attributes.heatCoef*netCapacity;
-    netAttributes.longWaveEmission = attributes.longWaveCoef*netCapacity;
-    netAttributes.shortWaveEmission = attributes.shortWaveCoef*netCapacity;
-    netAttributes.parEmission = attributes.parCoef*netCapacity;
+    netAttributes.heatEmission = heatCoef*netCapacity;
+    netAttributes.longWaveEmission = longWaveCoef*netCapacity;
+    netAttributes.shortWaveEmission = shortWaveCoef*netCapacity;
+    netAttributes.parEmission = parCoef*netCapacity;
     netAttributes.energyFlux = ballastCorrection*intensity;
-    degradationRate = (lifeTime>0) ? log(0.9)/lifeTime : 0.;
+    degradationRate = (lifeTime>0) ? log(0.5)/lifeTime : 0.;
     currentPeriod = 0.;
     totalPeriod = age;
     noLight();
@@ -63,7 +69,7 @@ void GrowthLight::reset() {
 
 void GrowthLight::update() {
     currentlyOn = on ||
-                  ( currentlyOn && (currentPeriod < attributes.minPeriodOn) );
+                  ( currentlyOn && (currentPeriod < minPeriodOn) );
     if (currentlyOn) {
         currentPeriod += timeStep/60.;
         totalPeriod += timeStep/3600.;
@@ -73,7 +79,9 @@ void GrowthLight::update() {
         shortWaveEmission = f*netAttributes.shortWaveEmission;
         totalEmission = heatEmission + longWaveEmission + shortWaveEmission;
         parEmission = f*netAttributes.parEmission;
+        photonIntensity = parEmission*parPhotonCoef;
         energyFlux = netAttributes.energyFlux;
+        currentPower = currentlyOn ? intensity : 0.;
     }
     else
         noLight();
@@ -85,7 +93,9 @@ void GrowthLight::noLight() {
     shortWaveEmission =
     totalEmission =
     parEmission =
-    energyFlux = 0.;
+    photonIntensity =
+    energyFlux =
+    currentPower = 0.;
     currentlyOn = false;
 }
 

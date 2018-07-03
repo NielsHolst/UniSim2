@@ -9,14 +9,18 @@
 #include <base/box.h>
 #include <base/box_builder.h>
 #include <base/command.h>
+#include <base/convert.h>
 #include <base/dialog_quiet.h>
 #include <base/dialog_stub.h>
+#include <base/environment.h>
 #include <base/exception.h>
 #include <base/object_pool.h>
+#include <base/phys_math.h>
 #include <base/mega_factory.h>
 #include "iglib.h"
 
 using namespace base;
+using namespace phys_math;
 
 namespace ig {
 
@@ -64,7 +68,7 @@ double rnd(double floor, double ceiling) {
     _rnd->update();
     double value = _rnd->port("value")->value<double>();
     value = floor + value*(ceiling - floor);
-    return (value*100)/100;
+    return std::floor(value*100)/100.;
 }
 
 int rndi(int floor, int ceiling) {
@@ -122,7 +126,7 @@ Vent randomVent() {
     v.numberOfVents = rndi(5,10);
     v.maxOpening = rndi(70,120);
     v.porosity = rndi(0.9,1);
-    v.opening = rndv(0,1);
+    v.opening = Variable{rnd(0,1), Measured};
     return v;
 }
 
@@ -141,9 +145,10 @@ GrowthLight randomGrowthLight() {
 
 Screen randomScreen() {
     Screen s;
-    s.material.transmissivityLight = rnd(0.3,0.6);
-    s.material.emmisivityInner = rnd(0.3,0.7);
-    s.material.emmisivityOuter = rnd(0.05, 0.6);
+    double tr = rnd(0.3,0.6);
+    s.material.transmissivityLight = tr;
+    s.material.emmisivityInner = rnd(0.1, 0.9-tr);
+    s.material.emmisivityOuter = rnd(0.1, 0.9-tr);
     s.material.haze = rnd(0,0.1);
     s.material.energySaving = rnd(0.3,0.6);
     s.material.transmissivityAir = rnd(0.7,0.9);
@@ -151,13 +156,13 @@ Screen randomScreen() {
     s.material.heatCapacity = rnd(300,700);
     s.layer = (ScreenLayer) rndi(0,3);
     s.position = (ScreenPosition) rndi(0,8);
-    s.effect = rndv(0,1);
+    s.effect = Variable{rnd(0,1), Measured};
     return s;
 }
 
-#define RANDOM_VECTOR(X,Y,N) \
-_##X.resize(N); \
-for (int i=0; i<N; ++i)  _##X[i] = Y(); \
+#define RANDOM_VECTOR(X,Y) \
+_##X.resize(n); \
+for (int i=0; i<n; ++i)  _##X[i] = Y(); \
 q.X.size = n; \
 q.X.array = _##X.data()
 
@@ -167,7 +172,7 @@ Query randomQuery() {
     Query q;
     try {
         QDateTime dateTime = randomDateTime();
-        double latitude = rnd(-65,65),
+        double latitude = rnd(0,65),
                longitude = rnd(-180,180);
         q.timeStamp.dayOfYear = dateTime.date().dayOfYear();
         q.timeStamp.timeOfDay = dateTime.time().hour() + dateTime.time().minute()/60.;
@@ -196,17 +201,10 @@ Query randomQuery() {
         q.construction.floor.heatCapacity = rnd(30000, 50000);
 
         int n;
-        n = rndi(1,4);
-        RANDOM_VECTOR(heatPipes, randomHeatPipe, n);
-
-        n = rndi(1,3);
-        RANDOM_VECTOR(vents, randomVent, n);
-
-        n = rndi(1,4);
-        RANDOM_VECTOR(growthLights, randomGrowthLight, n);
-
-        n = rndi(3,9);
-        RANDOM_VECTOR(screens, randomScreen, n);
+        n = rndi(1,4); RANDOM_VECTOR(heatPipes, randomHeatPipe);
+        n = 1;         RANDOM_VECTOR(vents, randomVent);
+        n = rndi(1,4); RANDOM_VECTOR(growthLights, randomGrowthLight);
+        n = rndi(3,9); RANDOM_VECTOR(screens, randomScreen);
 
         q.co2Dispenser.injectionRate = rndv(0,10);
         q.dehumidifiers.size = 0;
@@ -245,20 +243,6 @@ Query randomQuery() {
 
 #define VAR(X) X.value, X.origin!=NotAvailable
 
-#define SHELTERFACE(X, Y) \
-box("vg::ShelterFace").name(#X). \
-    box("vg::Cover").name("cover"). \
-        port("directTransmissionFile").equals(":/igclient/direct_transmission_single.txt"). \
-        port("U4").equals(q.construction.X.U). \
-        port("emissivity").equals(q.construction.X.emissivity). \
-        port("absorptivity").equals(q.construction.X.absorptivity). \
-        port("transmissivity").equals(q.construction.X.transmissivity). \
-        port("haze").equals(q.construction.X.haze). \
-        port("specificHeatCapacity").equals(q.construction.X.heatCapacity). \
-    endbox(). \
-    box(buildScreens(q.screens, Y)). \
-endbox()
-
 QString toString(ScreenLayer layer) {
     switch(layer) {
     case Inner: return "Inner";
@@ -289,92 +273,6 @@ QString toString(GrowthLightType type) {
     }
     return QString();
 }
-//    {Hpsl, Led}
-Box* buildScreen(const Screen *s) {
-    BoxBuilder builder;
-    builder.
-        box("vg::Screen").name("screen").
-//            port("position").equals(toString(s->position)).
-//            port("layer").equals(toString(s->layer)).
-            port("transmissivityLight").equals(s->material.transmissivityLight).
-            port("emissivityInner").equals(s->material.emmisivityInner).
-            port("emissivityOuter").equals(s->material.emmisivityOuter).
-            port("U").equals(s->material.U).
-            port("energyLossReduction").equals(s->material.energySaving).
-            port("haze").equals(s->material.haze).
-            port("specificHeatCapacity").equals(s->material.heatCapacity).
-            port("transmissivityAir").equals(s->material.transmissivityAir).
-        endbox();
-    return builder.content();
-}
-
-Box* buildScreens(Screens screens, ScreenPosition position) {
-    QVector<const Screen*> selected;
-    for (int i=0; i < screens.size; ++i) {
-        ScreenPosition pos = screens.array[i].position;
-        bool match =
-                (pos==position) ||
-                ((pos==WholeRoof || pos==FlatRoof) && (position==Roof1 || position==Roof2));
-        if (match)
-            selected << &screens.array[i];
-    }
-
-    BoxBuilder builder;
-    builder.box("vg::Screens").name("screens");
-    for (const Screen *screen : selected) {
-        builder.box(buildScreen(screen));
-    }
-    builder.endbox();
-    return builder.content();
-}
-
-Box* buildVent(const Vent *v) {
-    BoxBuilder builder;
-    builder.
-        box("vg::Windows").name("windows").
-            port("length").equals(v->length).
-            port("width").equals(v->height).
-//            port("number").equals(v->numberOfVents).
-            port("transmissivity").equals(v->porosity).
-//            port("maxOpening").equals(v->maxOpening).
-        endbox();
-    return builder.content();
-}
-
-Box* buildVents(Vents vents) {
-//    BoxBuilder builder;
-//    builder.box("vg::Vents").name("vents");
-    // todo:: Update windows interface (UI and struct)
-    if (vents.size == 0)
-        ThrowException("Missing vents");
-    // Hack: Only use first vent
-//    for (int i=0; i<vents.size; ++i) {
-//        builder.box(buildVent(&vents.array[i]));
-//    }
-//    builder.endbox();
-//    return builder.content();
-    return buildVent(&vents.array[0]);
-}
-
-Box* buildOutdoors(const Query &q) {
-    Variable diffuseIrradiation =
-        Variable{q.outdoors.irradiation.value/2,
-                 q.outdoors.irradiation.origin};
-    BoxBuilder builder;
-    builder.
-        box("vg::Outdoors").name("outdoors").
-            port("propParRadiation").equals(0.47).
-            port("co2").equals(VAR(q.outdoors.co2)).
-            port("soilTemperature").equals(10).
-            port("temperature").equals(VAR(q.outdoors.temperature)).
-            port("rh").equals(VAR(q.outdoors.rh)).
-            port("radiation").equals(VAR(q.outdoors.irradiation)).
-            port("diffuseRadiation").equals(VAR(diffuseIrradiation)).
-            port("windSpeed").equals(VAR(q.outdoors.windspeed)).
-            port("skyTemperature").equals(VAR(q.outdoors.temperature)).
-        endbox();
-    return builder.content();
-}
 
 Box* buildControllers(const Query &) {
     BoxBuilder builder;
@@ -387,33 +285,7 @@ Box* buildControllers(const Query &) {
                 newPort("signal").equals(0).
             endbox().
         endbox();
-    return builder.content();
-}
-
-Box* buildConstruction(const Query &q) {
-    BoxBuilder builder;
-    builder.
-        box().name("construction").
-            box("vg::Geometry").name("geometry").
-                port("numSpans").equals(q.construction.spanCount).
-                port("spanWidth").equals(q.construction.spanWidth).
-                port("length").equals(q.construction.length).
-                port("height").equals(q.construction.wallHeight).
-//                port("margin").equals(0.15).
-                port("roofPitch").equals(q.construction.roofInclination).
-                port("reflection").equals(q.construction.internalShading).
-            endbox().
-            box("vg::Shelter").name("shelter").
-                SHELTERFACE(roof1, Roof1).
-                SHELTERFACE(roof2, Roof2).
-                SHELTERFACE(side1, Side1).
-                SHELTERFACE(side2, Side2).
-                SHELTERFACE(end1, End1).
-                SHELTERFACE(end2, End2).
-            endbox().
-            box(buildVents(q.vents)).
-        endbox();
-    return builder.content();
+    return builder.content(BoxBuilder::AmendNone);
 }
 
 Box* buildControlled() {
@@ -452,96 +324,96 @@ Box* buildControlled() {
             box().name("cooling").
             endbox().
         endbox();
-    return builder.content();
+    return builder.content(BoxBuilder::AmendNone);
 }
 
-Box* buildIndoors(const Query &q) {
-    BoxBuilder builder;
-    builder.
-        box().name("indoors").
-            box().name("given").
-                box("vg::AirFluxGiven").name("airFlux").
-                    box("vg::AirFluxInfiltration").name("infiltration").
-                        port("leakage").equals(q.construction.infiltration).
-                    endbox().
-                    box().name("crackVentilation").
-                        newPort("value").equals(1e-9).
-                        newPort("state").equals(0).
-                    endbox().
-                    box("vg::AirFluxGravitation").name("gravitation").
-                    endbox().
-                endbox().
-                box("vg::VapourFluxSum").name("vapourFlux").
-                    box("vg::VapourFluxTranspiration").name("transpiration").
-                    endbox().
-                    box("vg::VapourFluxCondensation").name("condensationCover").
-                        port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
-                        port("surfaceTemperature").imports("energyFlux/shelter[coverTemperature]").
-                    endbox().
-                    box("vg::VapourFluxCondensation").name("condensationScreens").
-                        port("surfaceAreaPerGroundArea").imports("construction/shelter[screensPerGroundArea]").
-                        port("surfaceTemperature").imports("energyFlux/shelter[screensTemperature]").
-                    endbox().
-                    box("vg::VapourFluxAir").name("airFluxOutdoors").
-                        port("airFlux").imports("given/airFlux[value]").
-                    endbox().
-                endbox().
-                box("vg::EnergyFluxSum").name("energyFlux").
-                    box().name("light").
-                        newPort("value").imports("indoors/light[total]").
-                    endbox().
-                    box("vg::EnergyFluxCondensation").name("condensationCover").
-                        port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
-                    endbox().
-                    box("vg::EnergyFluxCondensation").name("condensationScreens").
-                        port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
-                    endbox().
-                    box("vg::EnergyFluxAir").name("airFlux").
-                        port("airFlux").imports("given/airFlux[value]").
-                    endbox().
-                    box("vg::EnergyFluxGrowthLights").name("growthLights").
-                    endbox().
-                    box("vg::EnergyFluxShelters").name("shelter").
-                    endbox().
-                    box("vg::EnergyFluxFloor").name("floor").
-                        port("Uindoors").equals(q.construction.floor.Uindoors).
-                        port("Usoil").equals(q.construction.floor.Usoil).
-                        port("heatCapacity").equals(q.construction.floor.heatCapacity).
-                        port("emissivity").equals(q.construction.floor.emissivity).
-                        box("vg::FloorRadiationAbsorbed").name("radiationAbsorbed").
-                        endbox().
-                    endbox().
-                    box("vg::EnergyFluxTranspiration").name("transpiration").
-                    endbox().
-                endbox().
-            endbox().
-            box(buildControlled()).
-            box().name("total").
-                box("Sum").name("airflux").
-                    port("inputs").equals("(given/airFlux[value] cooling/airFlux[value])").
-                endbox().
-                box("VapourFluxSum").name("vapourFlux").
-                    port("toAdd").equals("(given/vapourFlux cooling/vapourFlux)").
-                endbox().
-                box("Sum").name("energyFlux").
-                    port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])").
-                endbox().
-            endbox().
-            box("vg::IndoorsLight").name("light").
-            endbox().
-            box("vg::IndoorsTemperature").name("temperature").
-                port("resetValue").equals(18).
-                port("energyFlux").imports("total/energyFlux[value]").
-            endbox().
-            box("vg::IndoorsHumidity").name("humidity").
-            endbox().
-            box("vg::IndoorsCo2").name("co2").
-            endbox().
-            box("vg::IndoorsWindSpeed").name("windSpeed").
-            endbox().
-        endbox();
-    return builder.content();
-}
+//Box* buildIndoors(const Query &q) {
+//    BoxBuilder builder;
+//    builder.
+//        box().name("indoors").
+//            box().name("given").
+//                box("vg::AirFluxGiven").name("airFlux").
+//                    box("vg::AirFluxInfiltration").name("infiltration").
+//                        port("leakage").equals(q.construction.infiltration).
+//                    endbox().
+//                    box().name("crackVentilation").
+//                        newPort("value").equals(1e-9).
+//                        newPort("state").equals(0).
+//                    endbox().
+//                    box("vg::AirFluxGravitation").name("gravitation").
+//                    endbox().
+//                endbox().
+//                box("vg::VapourFluxSum").name("vapourFlux").
+//                    box("vg::VapourFluxTranspiration").name("transpiration").
+//                    endbox().
+//                    box("vg::VapourFluxCondensation").name("condensationCover").
+//                        port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
+//                        port("surfaceTemperature").imports("energyFlux/shelter[coverTemperature]").
+//                    endbox().
+//                    box("vg::VapourFluxCondensation").name("condensationScreens").
+//                        port("surfaceAreaPerGroundArea").imports("construction/shelter[screensPerGroundArea]").
+//                        port("surfaceTemperature").imports("energyFlux/shelter[screensTemperature]").
+//                    endbox().
+//                    box("vg::VapourFluxAir").name("airFluxOutdoors").
+//                        port("airFlux").imports("given/airFlux[value]").
+//                    endbox().
+//                endbox().
+//                box("vg::EnergyFluxSum").name("energyFlux").
+//                    box().name("light").
+//                        newPort("value").imports("indoors/light[total]").
+//                    endbox().
+//                    box("vg::EnergyFluxCondensation").name("condensationCover").
+//                        port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
+//                    endbox().
+//                    box("vg::EnergyFluxCondensation").name("condensationScreens").
+//                        port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
+//                    endbox().
+//                    box("vg::EnergyFluxAir").name("airFlux").
+//                        port("airFlux").imports("given/airFlux[value]").
+//                    endbox().
+//                    box("vg::EnergyFluxGrowthLights").name("growthLights").
+//                    endbox().
+//                    box("vg::EnergyFluxShelters").name("shelter").
+//                    endbox().
+//                    box("vg::EnergyFluxFloor").name("floor").
+//                        port("Uindoors").equals(q.construction.floor.Uindoors).
+//                        port("Usoil").equals(q.construction.floor.Usoil).
+//                        port("heatCapacity").equals(q.construction.floor.heatCapacity).
+//                        port("emissivity").equals(q.construction.floor.emissivity).
+//                        box("vg::FloorRadiationAbsorbed").name("radiationAbsorbed").
+//                        endbox().
+//                    endbox().
+//                    box("vg::EnergyFluxTranspiration").name("transpiration").
+//                    endbox().
+//                endbox().
+//            endbox().
+//            box(buildControlled()).
+//            box().name("total").
+//                box("Sum").name("airflux").
+//                    port("inputs").equals("(given/airFlux[value] cooling/airFlux[value])").
+//                endbox().
+//                box("VapourFluxSum").name("vapourFlux").
+//                    port("toAdd").equals("(given/vapourFlux cooling/vapourFlux)").
+//                endbox().
+//                box("Sum").name("energyFlux").
+//                    port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])").
+//                endbox().
+//            endbox().
+//            box("vg::IndoorsLight").name("light").
+//            endbox().
+//            box("vg::IndoorsTemperature").name("temperature").
+//                port("resetValue").equals(18).
+//                port("energyFlux").imports("total/energyFlux[value]").
+//            endbox().
+//            box("vg::IndoorsHumidity").name("humidity").
+//            endbox().
+//            box("vg::IndoorsCo2").name("co2").
+//            endbox().
+//            box("vg::IndoorsWindSpeed").name("windSpeed").
+//            endbox().
+//        endbox();
+//    return builder.content(BoxBuilder::AmendNone);
+//}
 
 //Box* buildScreen(Screen screen) {
 //    BoxBuilder builder;
@@ -560,7 +432,7 @@ Box* buildIndoors(const Query &q) {
 //    return builder.content();
 //}
 
-Box* buildGrowthLight(const GrowthLight *g) {
+void buildGrowthLight(Box *parent, const GrowthLight *g) {
     double age(0), lifeTime(0);
     if (g->age.origin!=NotAvailable && g->age.origin!=NotAvailable) {
         age = g->age.value;
@@ -570,7 +442,7 @@ Box* buildGrowthLight(const GrowthLight *g) {
     if (g->on.origin!=NotAvailable)
         on = g->on.value;
 
-    BoxBuilder builder;
+    BoxBuilder builder(parent);
     builder.
         box("vg::GrowthLight").name("growthLight").
             port("type").equals(toString(g->type)).
@@ -580,37 +452,37 @@ Box* buildGrowthLight(const GrowthLight *g) {
             port("lifeTime").equals(lifeTime).
             port("on").equals(on).
         endbox();
-    return builder.content();
 }
 
-Box* buildGrowthLights(GrowthLights lights) {
-    BoxBuilder builder;
-    builder.box("vg::GrowthLights").name("growthLights");
-    for (int i=0; i < lights.size; ++i) {
-        builder.box(buildGrowthLight(&lights.array[i]));
-    }
-    builder.endbox();
-    return builder.content();
+void buildGrowthLights(Box *parent, GrowthLights lights) {
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::GrowthLights").name("growthLights").
+        endbox();
+    Box *growthLights =  parent->findChild<Box*>("growthLights");
+    for (int i=0; i < lights.size; ++i)
+        buildGrowthLight(growthLights, &lights.array[i]);
 }
 
 //Box* buildPipes(HeatPipes pipes) {
 //    BoxBuilder builder;
 //    builder.box().name("pipes");
 //    for (int i=0; i < pipes.size; ++i) {
-////        builder.box(buildGrowthLight(&lights.array[i]));
+//        builder.box(buildGrowthLight(&lights.array[i]));
 //    }
 //    builder.endbox();
 //    return builder.content();
 //}
 
-Box* buildActuators(const Query &q) {
-    BoxBuilder builder;
+void buildActuators(Box *parent, const Query &q) {
+    BoxBuilder builder(parent);
     builder.
         box().name("actuators").
-            box(buildGrowthLights(q.growthLights)).
-//            box(buildPipes(q.heatPipes)).
         endbox();
-    return builder.content();
+    Box *actuators = parent->findChild<Box*>("actuators");
+    buildGrowthLights(actuators, q.growthLights);
+//            box(buildPipes(q.heatPipes)).
+
 }
 
 struct Gauss {
@@ -651,7 +523,7 @@ Box* buildLayer(QString name, Gauss g) {
                 endbox().
             endbox().
         endbox();
-    return builder.content();
+    return builder.content(BoxBuilder::AmendNone);
 }
 
 Box* buildLayers() {
@@ -662,67 +534,283 @@ Box* buildLayers() {
             box(buildLayer("middle", middleGauss)).
             box(buildLayer("bottom", lowerGauss)).
         endbox();
-    return builder.content();
+    return builder.content(BoxBuilder::AmendNone);
 }
 
-Box* buildCrop(const Query &) {
+void buildSensor(Box *parent, const Query &q) {
+    double indoorsAh = ahFromRh(q.indoors.temperature.value, q.indoors.rh.value),
+           indoorsCo2  = (q.indoors.co2.origin!=NotAvailable) ? q.indoors.co2.value : 405.,
+           outdoorsCo2 = (q.outdoors.co2.origin!=NotAvailable) ? q.outdoors.co2.value : 405.;
+
+    BoxBuilder builder(parent);
+    builder.
+        box().name("sensor").
+            newPort("indoorsTemperature").equals(q.indoors.temperature.value).
+            newPort("indoorsRh").equals(q.indoors.rh.value).
+            newPort("indoorsAh").equals(indoorsAh).
+            newPort("indoorsCo2").equals(indoorsCo2).
+            newPort("indoorsWindspeed").equals(0.1).
+            newPort("outdoorsTemperature").equals(q.outdoors.temperature.value).
+            newPort("outdoorsRh").equals(q.outdoors.rh.value).
+            newPort("outdoorsCo2").equals(outdoorsCo2).
+            newPort("outdoorsGlobalRadiation").equals(q.outdoors.irradiation.value).
+            newPort("outdoorsPropParRadiation").equals(0.47).
+            newPort("outdoorsWindSpeed").equals(q.outdoors.windspeed.value).
+            newPort("soilTemperature").equals(10.).
+        endbox();
+}
+
+void buildCalendar(Box *parent, const Query &q) {
+    QDate date = QDate(2001,1,1);
+    date = date.addDays(q.timeStamp.dayOfYear-1);
+    QTime time = QTime(0,0,0);
+    time = time.addSecs(60*60*q.timeStamp.timeOfDay);
+    QDateTime dateTime = QDateTime(date, time, Qt::UTC);
+
+    BoxBuilder builder(parent);
+    builder.
+        box("Calendar").name("calendar").
+            port("latitude").equals(q.greenhouse.latitude).
+            port("longitude").equals(q.greenhouse.longitude).
+            port("timeZone").equals(q.timeStamp.timeZone).
+            port("initialDateTime").equals(dateTime).
+            port("timeStep").equals(1).
+            port("timeUnit").equals("s").
+        endbox();
+}
+
+void buildOutdoors(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::Outdoors").name("outdoors").
+            port("propParRadiation").imports("sensor[outdoorsPropParRadiation]").
+            port("co2").imports("sensor[outdoorsCo2]").
+            port("soilTemperature").imports("sensor[soilTemperature]").
+            port("temperature").imports("sensor[outdoorsTemperature]").
+            port("rh").imports("sensor[outdoorsRh]").
+            port("radiation").imports("sensor[outdoorsGlobalRadiation]").
+            port("windSpeed").imports("sensor[outdoorsWindSpeed]").
+            port("diffuseRadiation").imports("./diffuseIrradiation[value]").
+            port("skyTemperature").imports("./skyTemperature[temperature]").
+            box("DiffuseIrradiationRE").name("diffuseIrradiation").
+            endbox().
+            box("SkyTemperature").name("skyTemperature").
+            endbox().
+            box().name("records").
+            endbox().
+        endbox();
+}
+
+Box* buildScreen(const Screen *s) {
+    BoxBuilder builder;
+    QString orientation = (s->position==WholeRoof) ? "horizontal" : "cover";
+    double effect = (s->effect.origin!=NotAvailable) ? s->effect.value : 0.;
+    builder.
+        box("vg::Screen").name("screen").
+            port("orientation").equals(orientation).
+            port("transmissivityLight").equals(s->material.transmissivityLight).
+            port("emissivityInner").equals(s->material.emmisivityInner).
+            port("emissivityOuter").equals(s->material.emmisivityOuter).
+            port("U").equals(s->material.U).
+            port("energyLossReduction").equals(s->material.energySaving).
+            port("haze").equals(s->material.haze).
+            port("specificHeatCapacity").equals(s->material.heatCapacity).
+            port("transmissivityAir").equals(s->material.transmissivityAir).
+            port("state").equals(effect).
+        endbox();
+    return builder.content(BoxBuilder::AmendNone);
+}
+
+Box* buildScreens(Screens screens, ScreenPosition position) {
+    QVector<const Screen*> selected;
+    for (int i=0; i < screens.size; ++i) {
+        ScreenPosition pos = screens.array[i].position;
+        bool match =
+                (pos==position) ||
+                ((pos==WholeRoof || pos==FlatRoof) && (position==Roof1 || position==Roof2));
+        if (match)
+            selected << &screens.array[i];
+    }
+
+    BoxBuilder builder;
+    builder.box("vg::Screens").name("screens");
+    for (const Screen *screen : selected) {
+        builder.box(buildScreen(screen));
+    }
+    builder.endbox();
+    return builder.content(BoxBuilder::AmendNone);
+}
+
+Box* buildVent(const Vents vents) {
+    if (vents.size == 0)
+        ThrowException("Missing vent");
+    if (vents.size > 1)
+        ThrowException("Only one vent allowed").value(vents.size);
+    Vent v = *vents.array;
+    double opening = (v.opening.origin!=NotAvailable) ? v.opening.value : 0.;
+
     BoxBuilder builder;
     builder.
-        box().name("crop").
-            box(buildLayers()).
-            box("CropRadiation").name("radiation").
+        box("vg::Vent").name("vent").
+            port("length").equals(v.length).
+            port("width").equals(v.height).
+            port("number").equals(v.numberOfVents).
+            port("transmissivity").equals(v.porosity).
+            port("state").equals(opening).
+        endbox();
+    return builder.content(BoxBuilder::AmendNone);
+}
+
+#define SHELTERFACE(X, Y) \
+box("vg::ShelterFace").name(#X). \
+    box("vg::Cover").name("cover"). \
+        port("directTransmissionFile").equals(":/igclient/input/direct_transmission_single.txt"). \
+        port("U4").equals(q.construction.X.U). \
+        port("emissivity").equals(q.construction.X.emissivity). \
+        port("absorptivity").equals(q.construction.X.absorptivity). \
+        port("transmissivity").equals(q.construction.X.transmissivity). \
+        port("haze").equals(q.construction.X.haze). \
+        port("specificHeatCapacity").equals(q.construction.X.heatCapacity). \
+    endbox(). \
+    box(buildScreens(q.screens, Y))
+
+void buildConstruction(Box *parent, const Query &q) {
+    BoxBuilder builder(parent);
+    builder.
+        box().name("construction").
+            box("vg::Geometry").name("geometry").
+                port("numSpans").equals(q.construction.spanCount).
+                port("spanWidth").equals(q.construction.spanWidth).
+                port("length").equals(q.construction.length).
+                port("height").equals(q.construction.wallHeight).
+                port("roofPitch").equals(q.construction.roofInclination).
+                port("reflection").equals(q.construction.internalShading).
             endbox().
-            box("Average").name("temperature").
-                port("inputs").imports("../layers/*/temperature[value]").
+            box("vg::Shelter").name("shelter").
+                SHELTERFACE(roof1, Roof1).box(buildVent(q.vents)).endbox().
+                SHELTERFACE(roof2, Roof2).endbox().
+                SHELTERFACE(side1, Side1).endbox().
+                SHELTERFACE(side2, Side2).endbox().
+                SHELTERFACE(end1, End1).endbox().
+                SHELTERFACE(end2, End2).endbox().
             endbox().
-            box("Sum").name("lightAbsorbed").
-                port("inputs").imports("../layers/*/radiationAbsorbed[lightAbsorbed]").
+        endbox();
+}
+
+void buildIndoors(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+        box().name("indoors").
+            box("vg::IndoorsLight").name("light").
             endbox().
-            box("Sum").name("heatingAbsorbed").
-                port("inputs").imports("../layers/*/radiationAbsorbed[heatingAbsorbed]").
+            box().name("temperature").
+                newPort("value").imports("sensor[indoorsTemperature]").
             endbox().
-            box("Sum").name("growthLightLwAbsorbed").
-                port("inputs").imports("layers/*/radiationAbsorbed[growthLightLwAbsorbed]").
+            box().name("humidity").
+                newPort("rh").imports("sensor[indoorsRh]").
+                newPort("ah").imports("sensor[indoorsAh]").
             endbox().
-            box("Sum").name("radiationAbsorbed").
-                port("inputs").imports(" layers/*/radiationAbsorbed[lightAbsorbed]").
+            box().name("windSpeed").
+                newPort("value").imports("sensor[indoorsWindspeed]").
             endbox().
-            box("Average").name("conductance").
-                port("inputs").imports("layers/*/transpiration[conductance]").
+            box().name("co2").
+                newPort("value").imports("sensor[indoorsCo2]").
             endbox().
-            box("Average").name("vapourFlux").
-                port("inputs").imports("layers/*/transpiration[vapourFlux]").
-            endbox().
-            box("Average").name("gain").
-                port("inputs").imports("layers/*/transpiration[gain]").
-            endbox().
-            box("CropGrowth").name("growth").
-                box("Sum").name("Pg"). // assimilation rate
-                    port("inputs").imports("layers/*/photosynthesis[Pg]").
+        endbox().
+        box("Given").name("given").
+            box("AirFluxGiven").name("airFlux").
+                box().name("crackVentilation").
                 endbox().
             endbox().
         endbox();
-    return builder.content();
 }
+
+void buildControllers(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+        box().name("controllers").
+            box().name("chalk").
+                newPort("value").equals(0.).
+            endbox().
+        endbox();
+}
+
+void buildCrop(Box *parent, const Query &q) {
+    double lai = (q.culture.lai.origin!=NotAvailable) ? q.culture.lai.value : 1.;
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::Crop").name("crop").
+            box("vg::CropLai").name("lai").
+                port("laiStartPerPlant").equals(lai).
+            endbox().
+//            box(buildLayers()).
+//            box("vg::CropRadiation").name("radiation").
+//            endbox().
+//            box("vg::Average").name("temperature").
+//                port("inputs").imports("../layers/*/temperature[value]").
+//            endbox().
+//            box("vg::Sum").name("lightAbsorbed").
+//                port("inputs").imports("../layers/*/radiationAbsorbed[lightAbsorbed]").
+//            endbox().
+//            box("vg::Sum").name("heatingAbsorbed").
+//                port("inputs").imports("../layers/*/radiationAbsorbed[heatingAbsorbed]").
+//            endbox().
+//            box("vg::Sum").name("growthLightLwAbsorbed").
+//                port("inputs").imports("layers/*/radiationAbsorbed[growthLightLwAbsorbed]").
+//            endbox().
+//            box("vg::Sum").name("radiationAbsorbed").
+//                port("inputs").imports(" layers/*/radiationAbsorbed[lightAbsorbed]").
+//            endbox().
+//            box("vg::Average").name("conductance").
+//                port("inputs").imports("layers/*/transpiration[conductance]").
+//            endbox().
+//            box("vg::Average").name("vapourFlux").
+//                port("inputs").imports("layers/*/transpiration[vapourFlux]").
+//            endbox().
+//            box("vg::Average").name("gain").
+//                port("inputs").imports("layers/*/transpiration[gain]").
+//            endbox().
+//            box("vg::CropGrowth").name("growth").
+//                box("Sum").name("Pg"). // assimilation rate
+//                    port("inputs").imports("layers/*/photosynthesis[Pg]").
+//                endbox().
+//            endbox().
+        endbox();
+}
+
+//void buildOutput(Box *parent) {
+//    BoxBuilder builder(parent);
+//    builder.
+//        box("OutputBuffer").name("output").
+//            port("ports").equals("(crop/layers/*/photosynthesis[Pg]  crop/growth/Pg[value] top/photosynthesis[*] calendar[angot])").
+//        endbox();
+//}
 
 Box* build(const Query &q) {
     init();
     BoxBuilder builder;
-    builder.
-        box("Simulation").name("sim").
-            port("steps").equals(1).
-            box("Calendar").name("calendar").endbox().
-            box(buildOutdoors(q)).
-            box(buildControllers(q)).
-            box(buildConstruction(q)).
-            box(buildIndoors(q)).
-            box(buildActuators(q)).
-            box(buildCrop(q)).
-            box("OutputBuffer").
-                port("ports").equals("(sim[step])").
-            endbox().
-        endbox();
-    return builder.content();
+    Box *sim;
+    try {
+        builder.
+            box("Simulation").name("sim").
+                port("steps").equals(10).
+            endbox();
+        sim = builder.content();
+        buildSensor(sim, q);
+        buildCalendar(sim, q);
+        buildOutdoors(sim);
+        buildConstruction(sim, q);
+        buildIndoors(sim);
+        buildControllers(sim);
+        buildActuators(sim, q);
+        buildCrop(sim, q);
+//        buildOutput(sim);
+    }
+    catch (Exception &ex) {
+        std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
+    }
+    environment().root(sim);
+    return sim;
 }
 
 double wave(double avg, double amplitude, double hour) {
@@ -732,47 +820,42 @@ double wave(double avg, double amplitude, double hour) {
 Response compute(const Query &q) {
     init();
     Response r;
-    std::cout << "Compute A\n";
+    bool excepted = false;
 
-    QStringList com;
-    com << "run" << ":/igclient/greenhouse-standard.box";
-    QObject *parent = new QObject;
-    parent->deleteLater();
-
+    Box *root;
     try {
-        Command::submit(com, parent);
+        root = build(q);
+        root->run();
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
-        std::cout << "\n" << _errorString << "\n";
+        excepted = true;
+    }
+    if (excepted || root->port("hasError")->value<bool>()) {
+        if (!excepted)
+            _errorString = root->port("errorMsg")->value<QString>().toStdString();
         r.hasError = true;
+        r.error = _errorString.c_str();
     }
 
-    Box *root = environment().root();
-    if (!root) {
-        ThrowException("Cannot find simulation root");
+    environment().latestLoadArg("igclient.box");
+    Command::submit(QStringList() << "write", 0);
+
+//    QString s;
+//    QTextStream str(&s);
+//    root->toText(str);
+//    std::cout << qPrintable(s);
+
+    // Extract response from model state
+    try {
+        r.timeStamp = q.timeStamp;
+        r.photosynthesis = root->findOne<Box>("crop/growth")->port("netGrowthRate")->value<double>();
+        r.growthLight = root->findOne<Box>("actuators/growthLights")->port("currentPower")->value<double>();
+    }
+    catch (Exception &ex) {
+        std::cout << ex.what().toStdString() << "\n";
     }
 
-    QObject *tracks;
-
-    tracks = root->findOne<QObject>("/*/output");
-    std::cout <<qPrintable(tracks->objectName()) << "\n";
-
-    QObjectList children = tracks->children();
-    for (QObject *child : children) {
-        std::cout << "Child: " << qPrintable(child->objectName()) << "\n";
-    }
-
-    tracks = root->findOne<QObject>("/*/output/tracks");
-    std::cout <<qPrintable(tracks->objectName()) << "\n";
-
-
-//    catch (Exception &ex) {
-//        _errorString = ex.what().toStdString();
-//        std::cout << "\n" << _errorString << "\n";
-//        r.hasError = true;
-//    }
-//    r.error = _errorString.c_str();
     return r;
 }
 
@@ -796,14 +879,15 @@ const char * responseToString(const Response &r) {
     RESP(timeStamp.dayOfYear);
     RESP(timeStamp.timeOfDay);
     RESP(timeStamp.timeZone);
-    RESP(photosynthesisRate);
-    RESP(photosynthesisPct);
-    RESP(lightOutdoors);
-    RESP(lightArtificial);
-    RESP(lightPlantHeight);
-    RESP(co2Indoors);
+    RESP(indoorsCo2);
+    RESP(indoorsRh);
+    RESP(indoorsTemperature);
+    RESP(growthLight);
+    RESP(heating);
+    RESP(photosynthesis);
+    RESP(costEfficiency);
     if (r.hasError)
-        text << "ERROR:\n" << qPrintable(QString::fromStdString(r.error)) << "\n";
+        text << "ERROR:\n" << qPrintable(QString::fromStdString(r.error)) << "\n\n";
     else
         text << "No errors\n";
     _responseString = text.string()->toStdString();

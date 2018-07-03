@@ -5,11 +5,12 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include "outdoors.h"
-#include "general.h"
 #include <base/box_builder.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 	

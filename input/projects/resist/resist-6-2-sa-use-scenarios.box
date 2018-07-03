@@ -1,38 +1,26 @@
 Simulation sim {
-  .iterations = 10
-  .steps = 0
+  .steps = 30
   .silent = TRUE
-  .stopSteps|all = ./stop/*[isOn]
+  .stopSteps|all = frequencies[thresholdPassed] | density[thresholdPassed]
   .useStopSteps = TRUE
   .stopIterations = sc[atEnd]
   .useStopIterations = TRUE
-  Box stop {
-    OnOff onR {
-      .x = frequencies[thresholdGen]
-      .xOn = 1
-      .xOff = 1e6
-    }
-    OnOff onDensity {
-      .x = density[thresholdGen]
-      .xOn = 1
-      .xOff = 1e6
-    }
-  }
+  
   Scenarios sc {
-    .fileName = "resist-6-1-sa-generated-scenarios"
+    .fileName = "scenarios.txt"
   }
   Box random {
     RandomUniform K {
       .restartAtReset = TRUE
       .minValue = 5000
-      .maxValue = sc[K.maxValue]
+      .maxValue = sc[K_maxValue]
       .drawAtReset = TRUE
       .drawAtUpdate = TRUE
     }
     RandomUniform coverage {
       .restartAtReset = TRUE
       .minValue = 0
-      .maxValue = sc[coverage.maxValue]
+      .maxValue = sc[coverage_maxValue]
       .drawAtReset = TRUE
       .drawAtUpdate = TRUE
     }
@@ -44,7 +32,7 @@ Simulation sim {
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
         ProportionBounds bounds {
-          .logP = sc[proportion.bounds.logP]
+          .logP = sc[proportion_bounds_logP]
           .logWidth = 2
         }
       }
@@ -55,7 +43,7 @@ Simulation sim {
         .drawAtReset = TRUE
         .drawAtUpdate = TRUE
         ProportionBounds bounds {
-          .logP = sc[q.bounds.logP]
+          .logP = sc[q_bounds_logP]
           .logWidth = 2
         }
       }
@@ -94,32 +82,22 @@ Simulation sim {
       .rThreshold = 0.5
     }
   }
-  OutputText {
-    .ports = *<Distribution>/..<Port>
+  OutputR output {
+    +myplot = "geom_point() + 
+               stat_quantile(formula=y ~ bs(x), quantiles = 0.50, size=1, colour='brown') + 
+               scale_y_continuous(trans='sqrt', breaks = c (0, 10, 25, 50, 100, 250, 500, 750, 1000))"
+    PageR {
+      .title = "Resistance threshold"
+      .xAxis = sc[*]
+      .ncol = 1
+      PlotR {
+        .ports = frequencies[thresholdGen]|end
+        .ggplot = ../..[myplot]
+      }
+      PlotR {
+        .ports = density[thresholdGen]|end
+        .ggplot = ../..[myplot]
+      }
+    }
   }
-  // OutputR output {
-    // +ggplot = "geom_point(colour='forestgreen', alpha=0.4)  +
-          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.25, colour='brown') +
-          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.50, size=1, colour='brown') +
-          // stat_quantile(formula=y ~ bs(x, df=4), quantiles = 0.75, colour='brown')"
-    // .end = "resist-6-sa-end.R"
-    // PageR {
-      // .xAxis = *<Distribution>/..<Port>
-      // .title = "Resistance threshold"
-      // PlotR {
-        // .ports = frequencies[thresholdGen]|end
-        // .transform = "log10"
-        // .ggplot = output[ggplot]
-      // }
-    // }
-    // PageR {
-      // .xAxis = *<Distribution>/..<Port>
-      // .title = "Density threshold"
-      // PlotR {
-        // .ports = density[thresholdGen]|end
-        // .transform = "log10"
-        // .ggplot = output[ggplot]
-      // }
-    // }
-  // }
 }

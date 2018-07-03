@@ -2,45 +2,44 @@
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/port.h>
-#include <base/publish.h>
-#include "sensitivity_analysis.h"
+#include "sensitivity_analysis_base.h"
 
 using namespace base;
 
 namespace boxes {
 
-PUBLISH(SensitivityAnalysis)
-
-SensitivityAnalysis::SensitivityAnalysis(QString name, QObject *parent)
+SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("runs a sensitivity analysis");
-    Input(iterations).imports("ancestors::*[iterations]");
-    Input(method).help("Use either Latin hypercube sampling ('LHS') or Monte Carlo ('MC')").equals("LHS");
-    Output(inputsAnalysed).help("Total number of input ports");
+    Class(SensitivityAnalysisBase);
+    help("sensitivity analysis base class");
+    Input(method).equals("LHS").help("For sampling use either Latin hypercube sampling ('LHS') or Monte Carlo ('MC')");
+    Input(sampleSize).equals(30).help("Size of sample in input parameter space (N)");
+    Output(inputsAnalysed).help("Total number of input ports (k)");
     Output(inputsTotal).help("Number of input ports included in analysis");
+    Output(iterations).noReset().help("Number of simulation iterations needed");
 }
 
-void SensitivityAnalysis::initialize() {
+void SensitivityAnalysisBase::initialize() {
     setMethod();
     setInputsTotal();
     setInputsAnalysed();
-    int numStrata = (_method == MC) ? 1 : iterations;
+    iterations = numberOfIterations();
     for (Distribution *dist : _saDistributions)
-        dist->initialize(numStrata);
+        dist->initialize(numberOfSamples());
 }
 
-void SensitivityAnalysis::setMethod() {
+void SensitivityAnalysisBase::setMethod() {
     if (method=="MC")
         _method = MC;
     else if (method=="LHS")
         _method = LHS;
     else
-        ThrowException("SA method must be one 'MC' or 'LHS'")
+        ThrowException("Sampling method must be one 'MC' or 'LHS'")
                 .value(method).context(this);
 }
 
-void SensitivityAnalysis::setInputsTotal() {
+void SensitivityAnalysisBase::setInputsTotal() {
     Box *root = findOne<Box>("/");
     QVector<Port*> ports = root->findMany<Port>("*[*]");
     int n = 0;
@@ -50,7 +49,7 @@ void SensitivityAnalysis::setInputsTotal() {
     inputsTotal = n;
 }
 
-bool SensitivityAnalysis::canBeAnalysed(Port *port) const {
+bool SensitivityAnalysisBase::canBeAnalysed(Port *port) const {
     bool isInput = port->access()==PortAccess::Input,
         isInThisBox = port->boxParent()==this,
         isRoot = port->boxParent()==environment().root(),
@@ -58,7 +57,7 @@ bool SensitivityAnalysis::canBeAnalysed(Port *port) const {
     return ok;
 }
 
-void SensitivityAnalysis::setInputsAnalysed() {
+void SensitivityAnalysisBase::setInputsAnalysed() {
     _saDistributions.clear();
     Box *root = findOne<Box>("/");
     QVector<Distribution*> distributions = root->findMany<Distribution>("*<Distribution>");
@@ -73,7 +72,7 @@ void SensitivityAnalysis::setInputsAnalysed() {
     inputsAnalysed = _saDistributions.size();
 }
 
-void SensitivityAnalysis::reset() {
+void SensitivityAnalysisBase::reset() {
     for (Distribution *dist : _saDistributions) {
         double value = dist->draw();
         dist->port()->equals(value);

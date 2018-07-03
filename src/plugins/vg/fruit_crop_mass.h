@@ -22,7 +22,6 @@ private:
         tempSumReproductive, tempMaxReproductive, lai,
         vegPropRoot, vegPropStem, vegPropLeaf, vegPropFruit,
         reproPropRoot, reproPropStem, reproPropLeaf, reproPropFruit;
-    bool maxLaiReached;
     void reallocateToFruits();
 };
 } //namespace

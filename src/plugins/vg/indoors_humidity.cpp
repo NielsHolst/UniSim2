@@ -4,12 +4,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include "general.h"
 #include "indoors_humidity.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "vapour_flux_base.h"
 
 using namespace std;
+using namespace phys_math;
 using namespace base;
 
 namespace vg {

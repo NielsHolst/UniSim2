@@ -5,8 +5,9 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
-#include "general.h"
 #include <base/publish.h>
+#include <base/test_num.h>
+#include "general.h"
 #include "screen.h"
 
 using namespace base;
@@ -24,11 +25,11 @@ Screen::Screen(QString name, QObject *parent)
     Input(transmissivityLight).equals(0.41).help("Transmissivity to short-wave radiation [0;1]");
     Input(emissivityInner).equals(0.62).help("Inner emissivity(=absorptivity) of long-wave radiation [0;1]");
     Input(emissivityOuter).equals(0.06).help("Outer emissivity(=absorptivity) of long-wave radiation [0;1]");
-    Input(U).equals(infinity()).help("Heat transfer coefficient (W/m2/K)");
-    Input(energyLossReduction).equals(0.4).help("Manufacturer's assessment of reduction in energy loss [0;1]");
-    Input(haze).equals(0.).help("Proportion of direct light transmitted as diffuse light [0;1]");
+    Input(U).equals(2.).help("Heat transfer coefficient (W/m2/K)");
+    Input(energyLossReduction).equals(0.6).help("Manufacturer's assessment of reduction in energy loss [0;1]");
+    Input(haze).equals(0.8).help("Proportion of direct light transmitted as diffuse light [0;1]");
     Input(specificHeatCapacity).equals(1500.).help("Area-specific heat capacity (J/m2 cover/K)");
-    Input(transmissivityAir).equals(0.8).help("Air transmissivity when fully drawn [0;1]");
+    Input(transmissivityAir).equals(0.37).help("Air transmissivity when fully drawn [0;1]");
     Input(transmissivityAirExponent).equals(4.).help("Non-linearity of increase in air transmissivity when screen is not fully drawn (-)");
     Input(state).equals(0.).help("Proportion drawn (0=fully withdrawn; 1=fully drawn");
 
@@ -71,6 +72,10 @@ void Screen::reset() {
 
 void Screen::update() {
     updateByState(state);
+}
+
+inline double diff1(double tr, double ab) {
+    return 1. - tr - ab;
 }
 
 void Screen::updateByState(double state) {

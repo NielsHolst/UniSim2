@@ -6,13 +6,14 @@
 */
 #include <base/exception.h>
 #include <base/path.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include <base/test_num.h>
-#include "general.h"
 #include "leaf_radiation_absorbed.h"
 
 using std::max;
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 

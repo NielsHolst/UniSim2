@@ -4,19 +4,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-
-/* Copyright (C) 2013 by Oliver Koerner, AgroTech [oko@agrotech.dk] and
-** Niels Holst, Aarhus University [niels.holst@agrsci.dk].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
-*/
-#include "vapour_flux_condensation.h"
-#include "general.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
+#include "vapour_flux_condensation.h"
 
-using namespace base;
 using std::max;
+using namespace base;
+using namespace phys_math;
 
 namespace vg {
 

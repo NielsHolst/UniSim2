@@ -1,0 +1,82 @@
+// ig-scenario.box
+Simulation greenhouse {
+  .steps =  2000 // 10800 // 15 days
+  Calendar calendar {
+    .initialDateTime = 1/8/2001
+    .timeStep = 2
+    .timeUnit = "m"
+  }
+  Outdoors outdoors {
+  }
+  Box construction {
+    Geometry geometry {
+    }
+    Shelter shelter {
+      ShelterFace roof1 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace roof2 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+    }
+  }
+  vg::Indoors indoors {
+  }
+  vg::Setpoints setpoints {
+  }
+  vg::Controllers controllers {
+    Box chalk {
+      +value = 0
+    }
+  }
+  vg::Actuators actuators {
+    GrowthLights growthLights {
+      GrowthLight {
+        .type = "HPSL"
+        .intensity = 60
+        .lifeTime = 12000
+        .age = 2000
+      }
+    }
+  }
+  vg::Crop crop {
+    Box lai {
+      +lai = 1.
+      +fractionPlantArea = 1.
+    }
+  }
+  vg::Budget budget {
+  }
+  OutputR {
+    .keepPages = TRUE
+    PageR {
+      .xAxis = calendar[dateTime]
+      .ncol = 4
+      PlotR { 
+        .ports = (heating/minSupply[value] heating/maxSupply[value] heating/demand[value] heating/supply[value]) 
+      }
+      PlotR { 
+        +pipeT = pipes/*[temperature]
+        +indoorsT = indoors/temperature[value]
+        +outdoorsT = outdoors[temperature]
+        +windSpeed = outdoors[windSpeed]
+        +indoorsRh = indoors/humidity[rh]
+        .ports = (.[outdoorsT] .[indoorsT] .[pipeT] .[windSpeed] .[indoorsRh]) 
+      }
+      PlotR { 
+        .ports = (*/supply[value]  temperature[energyFlux]) 
+      }
+      PlotR { 
+        .ports = (given/airFlux[value] given/energyFlux/*[value])
+      }
+    }
+  }
+}

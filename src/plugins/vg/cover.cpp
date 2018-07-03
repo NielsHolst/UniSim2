@@ -33,7 +33,7 @@ Cover::Cover(QString name, QObject *parent)
             .help("Table of direct light transmittance depending on latitude and sun azimuth");
     Input(emissivity).equals(0.84).help("Emissivity of long-wave radiation [0;1]");
     Input(absorptivity).equals(0.04).help("Absorptivity of long-wave radiation [0;1]");
-    Input(transmissivity).equals(1.).help("Transmissivity to short-wave radiation [0;1]");
+    Input(transmissivity).equals(0.83).help("Transmissivity to short-wave radiation [0;1]");
     Input(haze).equals(0.).help("Proportion of direct light transmitted as diffuse light [0;1]");
     Input(U4).equals(7.5).help("Heat transfer coefficient at a wind speed of 4 m/s (W/m2/K)");
     Input(specificHeatCapacity).equals(700.).help("Area-specific heat capacity (J/m2 cover/K)");

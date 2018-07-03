@@ -28,7 +28,7 @@
 9. In Bash:
 cd /c/users/au152367/Documents/QDev/UniSim2
 
-> git commit
+> git commit -F "../commit-msg.txt"
 > git tag 2.1.n
 > git push origin master --tags
 - Note this pushes both source code changes and tags

@@ -1,21 +1,9 @@
 Simulation sim {
-  .iterations = 10
+  .iterations = 1000
   .steps = 0
   // .silent = TRUE
   // .stopSteps|all = ./stop/*[isOn]
   // .useStopSteps = TRUE
-  Box stop {
-    OnOff onR {
-      .x = frequencies[thresholdGen]
-      .xOn = 1
-      .xOff = 1e6
-    }
-    OnOff onDensity {
-      .x = density[thresholdGen]
-      .xOn = 1
-      .xOff = 1e6
-    }
-  }
   SensitivityAnalysis {
   }
   Box random {

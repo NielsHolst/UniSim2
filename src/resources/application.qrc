@@ -1,6 +1,9 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource>
+    <file>igclient/input/direct_transmission_single.txt</file>
+    <file>igclient/greenhouse-standard.box</file>
+    <file>igclient/layers-setup.txt</file>
     <file>boxes_head.cson</file>
     <file>notepad_grammar_template.xml</file>
     <file>svg_template3.html</file>

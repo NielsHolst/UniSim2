@@ -35,6 +35,7 @@ void Actuators::amend() {
         builder.
         box().name("heating").
             box().name("pipes").
+                newPort("energyFlux").imports("./*<Pipe>[energyFlux]").transform(Sum).
                 box("vg::Pipe").
                     port("length").equals(1.8).
                     port("diameter").equals(52).

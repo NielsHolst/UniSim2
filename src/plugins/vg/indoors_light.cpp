@@ -23,12 +23,15 @@ IndoorsLight::IndoorsLight(QString name, QObject *parent)
     Input(sunlightPropPar).imports("outdoors[propParRadiation]");
     Input(growthLigthtsDirect).imports("growthLights[shortWaveEmission]");
     Input(growthLigthtsPar).imports("growthLights[parEmission]");
+    Input(growthLigthtsPhotonIntensity).imports("growthLights[photonIntensity]");
+    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy (micromole/J)");
     Output(direct).help("Intensity of indoors direct light [W/m2]");
     Output(diffuse).help("Intensity of indoors diffuse light [W/m2]");
     Output(total).help("Intensity of indoors direct+diffuse light [W/m2]");
     Output(parDirect).help("Intensity of indoors direct PAR [W/m2]");
     Output(parDiffuse).help("Intensity of indoors diffuse PAR [W/m2]");
     Output(parTotal).help("Intensity of indoors direct+diffuse PAR [W/m2]");
+    Output(photonIntensity).help("PAR Photon intensity [micromole PAR/s/m2]");
 }
 
 void IndoorsLight::reset() {
@@ -44,6 +47,8 @@ void IndoorsLight::update() {
     parDiffuse = sunlightPropPar*diffuse;
     parDirect = sunlightPropPar*direct + growthLigthtsPar;
     parTotal = parDiffuse + parDirect;
+
+    photonIntensity = (sunlightDiffuse + sunlightDirect)*sunlightPhotonCoef + growthLigthtsPhotonIntensity;
 }
 
 } //namespace

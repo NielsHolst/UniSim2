@@ -28,16 +28,16 @@
     </box>
   </box>
   <box name="construction">
-    <box name="geometry" class="vg::ConstructionGeometry">
+    <box name="geometry" class="vg::Geometry">
       <port name="spanWidth" value="12"/>
       <port name="numSpans" value="1"/>
       <port name="height" value="2.5"/>
       <port name="length" value="50"/>
       <port name="roofPitch" value="26"/>
-      <port name="shade" value="0.2"/>
+      <port name="reflection" value="0.2"/>
     </box>
-    <box name="shelters" class="vg::Shelters">
-      <box name="roof1" class="vg::Shelter">
+    <box name="shelter" class="vg::Shelter">
+      <box name="roof1" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -48,8 +48,6 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="roof1_roof2_horizontal"/>
-            <port name="layer" value="outer"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.34"/>
@@ -61,7 +59,7 @@
           </box>
         </box>
       </box>
-      <box name="roof2" class="vg::Shelter">
+      <box name="roof2" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -72,8 +70,6 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="roof1_roof2_horizontal"/>
-            <port name="layer" value="outer"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.34"/>
@@ -85,7 +81,7 @@
           </box>
         </box>
       </box>
-      <box name="side1" class="vg::Shelter">
+      <box name="side1" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -96,8 +92,7 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="side1"/>
-            <port name="layer" value="outer"/>
+            <port name="orientation" value="cover"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.41"/>
@@ -109,7 +104,7 @@
           </box>
         </box>
       </box>
-      <box name="side2" class="vg::Shelter">
+      <box name="side2" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -120,8 +115,7 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="side2"/>
-            <port name="layer" value="outer"/>
+            <port name="orientation" value="cover"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.41"/>
@@ -133,7 +127,7 @@
           </box>
         </box>
       </box>
-      <box name="end1" class="vg::Shelter">
+      <box name="end1" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -144,8 +138,7 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="end1"/>
-            <port name="layer" value="outer"/>
+            <port name="orientation" value="cover"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.41"/>
@@ -157,7 +150,7 @@
           </box>
         </box>
       </box>
-      <box name="end2" class="vg::Shelter">
+      <box name="end2" class="vg::ShelterFace">
         <box name="cover" class="vg::Cover">
           <port name="U4" value="7.5"/>
           <port name="transmissivity" value="0.83"/>
@@ -168,8 +161,7 @@
         </box>
         <box name="screens" class="vg::Screens">
           <box name="energy" class="vg::Screen">
-            <port name="position" value="end2"/>
-            <port name="layer" value="outer"/>
+            <port name="orientation" value="cover"/>
             <port name="emissivityInner" value="0.62"/>
             <port name="emissivityOuter" value="0.06"/>
             <port name="transmissivityLight" value="0.41"/>
@@ -180,20 +172,6 @@
             <port name="state" ref="actuators/screens/energy/control[state]"/>
           </box>
         </box>
-      </box>
-    </box>
-    <box name="vents" class="vg::Vents">
-      <box class="vg::Vent" name="vent1">
-        <port name="length" value="48"/>
-        <port name="height" value="1"/>
-        <port name="number" value="1"/>
-        <port name="porosity" value="1"/>
-      </box>
-      <box class="vg::Vent" name="vent2">
-        <port name="length" value="48"/>
-        <port name="height" value="1"/>
-        <port name="number" value="1"/>
-        <port name="porosity" value="1"/>
       </box>
     </box>
   </box>
@@ -314,9 +292,7 @@
               <port name="dischargeCoefficient" value="0.3"/>
             </box>
           </box>
-          <box name="supply" class="vg::PidControlElement">
-            <port name="value" label="energyFluxCoolingSupply"/>
-            <port name="slope" label="energyFluxCoolingSupplySlope"/>
+          <box name="supply" class="vg::PidController">
             <port name="Kprop" value="0.5"/>
             <port name="maximum" value="0"/>
             <port name="maxSlope" value="1"/>
@@ -396,7 +372,7 @@
       </box>
     </box>
     <box name="temperature">
-      <box name="ventilation" class="vg::PidControlElement">
+      <box name="ventilation" class="vg::PidController">
         <port name="value" label="setpointVentilation"/>
         <port name="initState" ref="./target[signalReset]"/>
         <port name="signal" ref="./target[signal]"/>
@@ -442,7 +418,7 @@
           </box>
         </box>
       </box>
-      <box name="heating" class="vg::PidControlElement">
+      <box name="heating" class="vg::PidController">
         <port name="value" label="setpointHeating"/>
         <port name="initState" ref="./target[signalReset]"/>
         <port name="signal" ref="./target[signal]"/>
@@ -532,7 +508,7 @@
   </box>
   <box name="controllers">
     <box name="screens">
-      <box name="maxDrawn" class="vg::PidControlElement">
+      <box name="maxDrawn" class="vg::PidController">
         <port name="initState" value="1"/>
         <port name="signal" ref="./target[signal]"/>
         <port name="Kprop" value="0.1"/>
@@ -700,19 +676,19 @@
   <box name="actuators">
     <box name="screens">
       <box name="energy">
-        <box name="control" class="vg::PidControlElement">
+        <box name="control" class="vg::PidController">
           <port name="signal" ref="controllers/screens/energy/control[signal]"/>
           <port name="Kprop" value="0.3"/>
         </box>
       </box>
       <box name="shade">
-        <box name="control" class="vg::PidControlElement">
+        <box name="control" class="vg::PidController">
           <port name="signal" ref="controllers/screens/shade/control[signal]"/>
           <port name="Kprop" value="0.3"/>
         </box>
       </box>
       <box name="blackout">
-        <box name="control" class="vg::PidControlElement">
+        <box name="control" class="vg::PidController">
           <port name="signal" ref="controllers/screens/blackout/control[signal]"/>
           <port name="Kprop" value="0.3"/>
         </box>

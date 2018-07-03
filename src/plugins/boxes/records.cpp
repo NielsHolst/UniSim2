@@ -24,7 +24,7 @@ Records::Records(QString name, QObject *parent)
     Input(dateColumnName).help("Name of column with date").equals("Date");
     Input(timeColumnName).help("Name of column with time").equals("Time");
     Input(cycle).equals(false).help("Cycle back to start at end of file? File must begin on 1 January and end on 31 December");
-    Input(calendarDateTime).imports("*<Calendar>[dateTime]");
+    Input(calendarDateTime).imports("calendar[dateTime]");
 
     Output(currentDateTime).help("Date-time stamp of the current outputs");
     Output(nextDateTime).help("Date-time stamp of the next outputs");

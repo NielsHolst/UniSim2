@@ -16,14 +16,16 @@ PUBLISH(GrowthLights)
 GrowthLights::GrowthLights(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
-    help("computes total emmisiom from all GrowthLight child boxes");
+    help("computes total emmision from all GrowthLight child boxes");
     port("heatEmission")->imports("./*<GrowthLight>[heatEmission]").transform(Sum);
     port("longWaveEmission")->imports("./*<GrowthLight>[longWaveEmission]").transform(Sum);
     port("shortWaveEmission")->imports("./*<GrowthLight>[shortWaveEmission]").transform(Sum);
     port("totalEmission")->imports("./*<GrowthLight>[totalEmission]").transform(Sum);
     port("parEmission")->imports("./*<GrowthLight>[parEmission]").transform(Sum);
+    port("photonIntensity")->imports("./*<GrowthLight>[photonIntensity]").transform(Sum);
     port("energyFlux")->imports("./*<GrowthLight>[energyFlux]").transform(Sum);
     port("currentlyOn")->imports("./*<GrowthLight>[on]").transform(Any);
+    Output(currentPower).imports("./*<GrowthLight>[currentPower]").transform(Sum);
 }
 
 } //namespace

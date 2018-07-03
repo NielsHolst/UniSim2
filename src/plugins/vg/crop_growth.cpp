@@ -29,19 +29,23 @@ CropGrowth::CropGrowth(QString name, QObject *parent)
     Input(massFruit).imports("../mass[fruit]");
     Input(Tcrop).imports("../temperature[value]");
     Input(Pg).imports("./Pg[value]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(maintenanceRespiration).help("Mass lost to base respiration in this time step [g/m2]");
-    Output(grossGrowthRate).help("Mass allocated to growth and growth respiration in this time step [g/m2]");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+    Output(grossGrowthRate).help("Gross rate of mass fixated (growth + respiration) [g/m2/h]");
+    Output(netGrowthRate).help("Net rate of growth [g/m2/h]");
+    Output(maintenanceRespirationRate).help("Respiration rate [g/m2/h]");
+    Output(netGrowthAllocation).help("Mass allocated to growth in this time step[g/m2]");
 }
 
 void CropGrowth::update() {
     const double Q10 = 2.;
-    double dt = timeStep/3600; // [h]
-    maintenanceRespiration = maintenanceRespirationRate()*dt*pow(Q10, 0.1*(Tcrop-25.));
-    grossGrowthRate = max(Pg*dt*30./44. - maintenanceRespiration, 0.);
+    double dt = timeStepSecs/3600; // [h]
+    maintenanceRespirationRate = _maintenanceRespirationRate()*pow(Q10, 0.1*(Tcrop-25.));
+    netGrowthRate = Pg*30./44.;                                     // Swap net and gross?
+    grossGrowthRate = netGrowthRate - maintenanceRespirationRate;
+    netGrowthAllocation = netGrowthRate*dt;
 }
 
-double CropGrowth::maintenanceRespirationRate() {
+double CropGrowth::_maintenanceRespirationRate() {
     // At 25 oC [g CH2O/d]
     double rate = respRoot*massRoot +
                   respStem*massStem +

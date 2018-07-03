@@ -42,7 +42,6 @@ void ShelterFace::amend() {
     BoxBuilder builder(this);
     if (!findMaybeOne<Box>("./cover"))
         builder.box("Cover").name("cover").endbox();
-    dialog().message("amend "+objectName());
     if (objectName().contains("roof") && !findMaybeOne<Box>("./vent"))
         builder.box("Vent").name("vent").endbox();
 }

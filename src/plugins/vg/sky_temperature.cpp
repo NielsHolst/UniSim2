@@ -4,11 +4,12 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/phys_math.h>
 #include <base/publish.h>
-#include "general.h"
 #include "sky_temperature.h"
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 	
@@ -20,8 +21,8 @@ SkyTemperature::SkyTemperature(QString name, QObject *parent)
     help("computes sky temperature from temperature and RH");
     Input(intercept).equals(0.00635).help("Emissivity intercept on dew point temperature");
     Input(slope).equals(0.00635).help("Emissivity slope on dew point temperature");
-    Input(airTemperature).help("Temperature (oC)");
-    Input(rh).help("Relative humidity [0;100]");
+    Input(airTemperature).imports("outdoors[temperature]");
+    Input(rh).imports("outdoors[rh]");
     Output(temperature).help("Sky temperature (oC)");
     Output(emissivity).help("Sky emmisivity [0;1]");
 }

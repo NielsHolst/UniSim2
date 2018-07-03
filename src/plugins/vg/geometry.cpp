@@ -20,9 +20,9 @@ Geometry::Geometry(QString name, QObject *parent)
 {
     help("defines the greenhouse geometry");
     Input(numSpans).equals(1).help("Number of spans");
-    Input(spanWidth).equals(20.).help("Width of a span (m)");
+    Input(spanWidth).equals(12.).help("Width of a span (m)");
     Input(length).equals(50.).help("Length of side wall(m)");
-    Input(height).equals(4.).help("Wall height (m)");
+    Input(height).equals(2.5).help("Wall height (m)");
     Input(roofPitch).equals(26.).help("Pitch (slope) of roof (degrees)");
     Input(reflection).equals(0.1).help("Outer reflection of greenhouse construction (excl. cover) [0;1]");
     Input(horizontalScreenState).imports("construction/shelter[horizontalScreenState]");

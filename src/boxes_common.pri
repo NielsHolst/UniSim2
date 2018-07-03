@@ -42,7 +42,7 @@ QMAKE_CXXFLAGS += -ffast-math
 
 # Compiler flags for gcc / gdb version incompatibility
 # https://stackoverflow.com/questions/16611678/how-to-make-the-locals-and-expressions-debugging-window-operational-with-gcc-4
-QMAKE_CXXFLAGS += -gdwarf-3
+## QMAKE_CXXFLAGS += -gdwarf-3
 
 # Additional folders with header files
 BOOST_PATH = $$(BOOST_ROOT)

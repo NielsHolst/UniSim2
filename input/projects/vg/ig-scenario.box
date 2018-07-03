@@ -1,0 +1,164 @@
+// vg/04-greenhouse.box
+Simulation greenhouse {
+  .steps =  5040 // 262800 //525600 
+  Calendar calendar {
+    .initialDateTime = 1/4/2001
+    .timeStep = 2
+    .timeUnit = "m"
+  }
+  Outdoors outdoors {
+  }
+  Box construction {
+    Geometry geometry {
+    }
+    Shelter shelter {
+      ShelterFace roof1 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace roof2 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace side1 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace side2 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace end1 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace end2 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+    }
+  }
+  vg::Indoors indoors {
+  }
+  vg::Setpoints setpoints {
+  }
+  vg::Controllers controllers {
+    Box chalk {
+      +value = 0
+    }
+  }
+  vg::Actuators actuators {
+    GrowthLights growthLights {
+      GrowthLight { //HPSL
+        .intensity = 60
+        .heatCoef = 0.23
+        .longWaveCoef = 0.42
+        .shortWaveCoef = 0.50
+        .parCoef = 0.31
+        .minPeriodOn = 30
+        .parPhotonCoef = 4.2
+        .lifeTime = 12000
+        .age = 2000
+      }
+    }
+  }
+  vg::Crop crop {
+    Box lai {
+      +value = 1.
+      +fractionPlantArea = 1.
+    }
+  }
+  vg::Budget budget {
+  }
+  vg::CropDevelopment development {
+    .physDuration = 300
+    .physStep = ./time[step]
+    DayDegrees time {
+      .T = indoors/temperature[value]
+      .T0 = 12
+      .Topt = 27
+      .Tmax = 32
+    }
+  }
+  OutputR {
+    .keepPages = TRUE
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .layout = "merged"
+        .ports = (
+          pipes/*[temperature] 
+          energyFlux/cooling/supply[value] 
+          indoors/temperature[value]
+          )
+        .ggplot = "geom_line() + scale_y_continuous(breaks=10*(-10:10))"
+      }
+    }
+    // PageR {
+      // .xAxis = calendar[dateTime]
+      // PlotR columns { 
+        // +outdoorsCo2 = outdoors [co2]
+        // +outdoorsT = outdoors[temperature]
+        // +outdoorsRh = outdoors[rh]
+        // +outdoorsWindSpeed = outdoors[windSpeed]
+
+        // +indoorsCo2 = indoors/co2[value]
+        // +indoorsT = indoors/temperature[value]
+        // +indoorsRh = indoors/humidity[rh]
+
+        // +growthLightPower = actuators/growthLights[energyFlux] // W/m2
+        // +heatingPower = actuators/heating/pipes[energyFlux] // W/m2
+
+        // +growthLightIntensity = actuators/growthLights[photonIntensity] // micromol/m2/s
+        // +totalLightIntensity = indoors/light[photonIntensity] // micromol/m2/s
+        
+        // +leafLightUseEfficiency = crop/layers/top/photosynthesis/lightResponse[LUE] // mg CO2/J
+        // +leafNetPhotosynthesis = crop/growth[netGrowthRate] // g/leaf m2/h
+
+        // +developmentDuration = development[duration] // days
+        // +developmentRate = development[rate] // per day
+        
+        // .ncol = 4
+        // .ports = (
+          // .[outdoorsCo2]
+          // .[outdoorsT]
+          // .[outdoorsRh]
+          // .[outdoorsWindSpeed]
+          // .[indoorsCo2]
+          // .[indoorsT]
+          // .[indoorsRh]
+          // .[growthLightPower]
+          // .[heatingPower]
+          // .[growthLightIntensity]
+          // .[totalLightIntensity]
+          // .[leafLightUseEfficiency]
+          // .[leafNetPhotosynthesis]
+          // .[developmentDuration]
+          // .[developmentRate]
+        // )
+      // }
+    // }
+  }
+}

@@ -4,11 +4,14 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/publish.h>
 #include "crop_lai.h"
 
 using namespace base;
 
 namespace vg {
+
+PUBLISH(CropLai)
 
 CropLai::CropLai(QString name, QObject *parent)
 	: Box(name, parent)

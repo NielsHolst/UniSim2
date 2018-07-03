@@ -440,9 +440,14 @@ void Port::toText(QTextStream &text, int indentation) const {
     QString postfix = showAmended ? " //amended" : "";
 
     QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
-    QString assignment = hasImport() ? _importPath : valueAsString();
-    if (_valueType == Char || _valueType == String || _valueType == DateTime)
-        assignment = "\"" + assignment + "\"";
+    QString assignment;
+    if (hasImport())
+        assignment = _importPath;
+    else {
+        assignment = valueAsString();
+        if (_valueType == Char || _valueType == String || _valueType == DateTime)
+            assignment = "\"" + assignment + "\"";
+    }
 
     text << fill
          << prefix << objectName()
