@@ -1,9 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource>
-    <file>igclient/input/direct_transmission_single.txt</file>
-    <file>igclient/greenhouse-standard.box</file>
-    <file>igclient/layers-setup.txt</file>
     <file>boxes_head.cson</file>
     <file>notepad_grammar_template.xml</file>
     <file>svg_template3.html</file>
@@ -17,6 +14,7 @@
     <file>data/input/book/butterfly3a.box</file>
     <file>data/input/book/butterfly3b.box</file>
     <file>data/input/book/butterfly4.box</file>
+    <file>data/input/book/butterfly5.box</file>
     <file>data/input/book/dist-delay-scenarios.txt</file>
     <file>data/input/book/dist-delay1.box</file>
     <file>data/input/book/dist-delay2.box</file>
@@ -39,7 +37,6 @@
     <file>data/input/book/func-resp/func-resp-2.box</file>
     <file>data/input/book/func-resp/func-resp-3.box</file>
     <file>data/input/book/func-resp/func-resp-4.box</file>
-    <file>data/input/book/func-resp/func-resp-scenarios.txt</file>
     <file>data/input/book/honeybee1.box</file>
     <file>data/input/book/honeybee2.box</file>
     <file>data/input/book/insect.box</file>
@@ -120,10 +117,22 @@
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/ig/1-photosynthesis (0).box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
+    <file>data/input/projects/ig/excel/DVV_Input_data(0).xml</file>
+    <file>data/input/projects/ig/excel/DVV_Input_data.xml</file>
+    <file>data/input/projects/ig/excel/excel-to-vg.bat</file>
+    <file>data/input/projects/ig/excel/excel-to-vg.xsl</file>
+    <file>data/input/projects/ig/excel/vg-input.xml</file>
+    <file>data/input/projects/ig/ig-scenario.box</file>
+    <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
-    <file>data/input/projects/resist/quantile-2D.R</file>
+    <file>data/input/projects/ig/ud.box</file>
+    <file>data/input/projects/ig/vg logic description.txt</file>
+    <file>data/input/projects/resist/gsa.docx</file>
+    <file>data/input/projects/resist/gsa.png</file>
+    <file>data/input/projects/resist/gsa.txt</file>
+    <file>data/input/projects/resist/question.txt</file>
     <file>data/input/projects/resist/resist-1.box</file>
     <file>data/input/projects/resist/resist-2.box</file>
     <file>data/input/projects/resist/resist-3(0).box</file>
@@ -133,14 +142,18 @@
     <file>data/input/projects/resist/resist-5b.box</file>
     <file>data/input/projects/resist/resist-6-0-sa.box</file>
     <file>data/input/projects/resist/resist-6-1-sa-analysis.R</file>
+    <file>data/input/projects/resist/resist-6-1-sa-generate-scenarios-output.txt</file>
     <file>data/input/projects/resist/resist-6-1-sa-generate-scenarios.box</file>
-    <file>data/input/projects/resist/resist-6-1-sa-generated-scenarios.txt</file>
     <file>data/input/projects/resist/resist-6-1-sa.box</file>
+    <file>data/input/projects/resist/resist-6-2-sa-use-scenarios-output.txt</file>
     <file>data/input/projects/resist/resist-6-2-sa-use-scenarios.box</file>
     <file>data/input/projects/resist/resist-6-sa-end.R</file>
     <file>data/input/projects/resist/resist-6.box</file>
-    <file>data/input/projects/resist/resist-end.R</file>
+    <file>data/input/projects/resist/resist-7-0-sa-end.R</file>
+    <file>data/input/projects/resist/resist-7-0-sa.box</file>
     <file>data/input/projects/resist/resist-sa-end.R</file>
+    <file>data/input/projects/resist/sample-scenarios.R</file>
+    <file>data/input/projects/resist/scenarios.txt</file>
     <file>data/input/projects/vg/01-construction.box</file>
     <file>data/input/projects/vg/02-screen-U.box</file>
     <file>data/input/projects/vg/03-given-ventilation.box</file>
@@ -160,6 +173,13 @@
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
+    <file>data/input/projects/vg/ig-scenario(0).box</file>
+    <file>data/input/projects/vg/ig-scenario(1).box</file>
+    <file>data/input/projects/vg/ig-scenario-end.R</file>
+    <file>data/input/projects/vg/ig-scenario-output.R</file>
+    <file>data/input/projects/vg/ig-scenario.box</file>
+    <file>data/input/projects/vg/ig-scenario.R</file>
+    <file>data/input/projects/vg/ig-soil-temperature.box</file>
     <file>data/input/projects/vg/ig2.box</file>
     <file>data/input/projects/vg/igclient_0000_with_crop.box</file>
     <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
@@ -168,7 +188,7 @@
     <file>data/input/projects/vg/pid-controller.box</file>
     <file>data/input/projects/vg/proportional-signal.box</file>
     <file>data/input/projects/vg/TestOKO1.xml</file>
-    <file>data/input/projects/vg/TestOKO1_tr.xml</file>
+    <file>data/input/projects/vg/TestOKO1_tr_2018.xml</file>
     <file>data/input/projects/vg/transform1.bat</file>
     <file>data/input/projects/vg/transform_all.bat</file>
     <file>data/input/projects/vg/transform_OKO1.bat</file>
@@ -177,12 +197,7 @@
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
-    <file>data/input/teaching/amanda.box</file>
     <file>data/input/teaching/cabbage-nightshade.box</file>
-    <file>data/input/teaching/NesidiocorisTenuis.box</file>
-    <file>data/input/teaching/RabiesContact.box</file>
-    <file>data/input/teaching/Tehran 2010 (0).txt</file>
-    <file>data/input/teaching/Tehran 2010.txt</file>
     <file>data/input/teaching/weather/alpine 2016.txt</file>
     <file>data/input/teaching/weather/braunschweig 2009.txt</file>
     <file>data/input/teaching/weather/flakkebjerg 2005.txt</file>

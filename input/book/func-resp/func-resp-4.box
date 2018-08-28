@@ -16,8 +16,8 @@ Simulation sim {
       .timeStep = ./time[value]
       OnOff time { 
         .x = calendar[dayOfYear]
-        .xOn = 107    // 1 May
-        .xOff = 152   // 15 June
+        .xOn = 107    
+        .xOff = 152   
         .valueOn = ./dayDegrees[step]
         .valueOff = 0
         DayDegrees dayDegrees {
@@ -139,7 +139,7 @@ Simulation sim {
                         labels = date_format('%b')
                       )" 
       PlotR {
-        .ports = butterfly/descendants::*[content]
+        .ports = (butterfly/*[content] butterfly/adult/*[content])
         .ggplot = ..[monthBreaks]
       }
       PlotR {

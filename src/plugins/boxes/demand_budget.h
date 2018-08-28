@@ -8,6 +8,7 @@ class DemandBudget : public base::Box
 {
 public: 
     DemandBudget(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // Inputs

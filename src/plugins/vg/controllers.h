@@ -7,16 +7,17 @@
 #ifndef CONTROLLERS_H
 #define CONTROLLERS_H
 
-#include <base/box.h>
+#include "controllers_input.h"
 
 namespace vg {
 
-class Controllers : public base::Box
+class Controllers : public ControllersInput
 {
 public:
     Controllers(QString name, QObject *parent);
     void amend();
 };
+
 } //namespace
 
 

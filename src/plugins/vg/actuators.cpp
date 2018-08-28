@@ -31,19 +31,30 @@ void Actuators::amend() {
         amendScreen("blackout");
     }
 
-    if (!findMaybeOne<Box>("./heating"))
-        builder.
-        box().name("heating").
-            box().name("pipes").
-                newPort("energyFlux").imports("./*<Pipe>[energyFlux]").transform(Sum).
-                box("vg::Pipe").
-                    port("length").equals(1.8).
-                    port("diameter").equals(52).
-                    port("minTemperature").equals(20).
-                    port("maxTemperature").equals(80).
-                endbox().
-            endbox().
-        endbox();
+//    if (!findMaybeOne<Box>("./cooling"))
+//        builder.
+//        box("Accumulator").name("cooling").
+//            port("change").imports("./controller[controlVariable]").
+//            box("PidController").name("controller").
+//                port("desiredValue").imports("setpoints/temperature/ventilation[value]").
+//                port("sensedValue").imports("indoors/temperature[value]").
+//                port("Kprop").equals(0.1).
+//            endbox().
+//        endbox();
+
+//    if (!findMaybeOne<Box>("./heating"))
+//        builder.
+//        box().name("heating").
+//            box().name("pipes").
+//                newPort("energyFlux").imports("./*<Pipe>[energyFlux]").transform(Sum).
+//                box("vg::Pipe").
+//                    port("length").equals(1.8).
+//                    port("diameter").equals(52).
+//                    port("minTemperature").equals(20).
+//                    port("maxTemperature").equals(80).
+//                endbox().
+//            endbox().
+//        endbox();
 
     if (!findMaybeOne<Box>("./growthLights"))
         builder.
@@ -59,7 +70,7 @@ void Actuators::amendScreen(QString name) {
             box("PidController").name("controller").
                 port("sensedValue").imports("..[value]").
                 port("desiredValue").imports("controllers/screens/"+name+"[value]").
-                port("Kprop").equals(0.3).
+                port("Kprop").equals(0.05).
             endbox().
         endbox();
 }

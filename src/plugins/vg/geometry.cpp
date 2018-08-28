@@ -20,8 +20,8 @@ Geometry::Geometry(QString name, QObject *parent)
 {
     help("defines the greenhouse geometry");
     Input(numSpans).equals(1).help("Number of spans");
-    Input(spanWidth).equals(12.).help("Width of a span (m)");
-    Input(length).equals(50.).help("Length of side wall(m)");
+    Input(spanWidth).equals(40.).help("Width of a span (m)");
+    Input(length).equals(100.).help("Length of side wall(m)");
     Input(height).equals(2.5).help("Wall height (m)");
     Input(roofPitch).equals(26.).help("Pitch (slope) of roof (degrees)");
     Input(reflection).equals(0.1).help("Outer reflection of greenhouse construction (excl. cover) [0;1]");
@@ -35,6 +35,7 @@ Geometry::Geometry(QString name, QObject *parent)
     Output(gablesArea).help("Total area of gables (m2)");
     Output(coverArea).help("Total area of greenhouse cover (m2)");
     Output(coverPerGroundArea).help("Area to ground cover ratio (m2/m2)");
+    Output(indoorsVolumeTotal).help("Total greenhouse volume");
     Output(indoorsVolume).help("Total greenhouse volume;"
                                "roof volume included in proportion to horizontal screen state (m3)");
     Output(indoorsAverageHeight).help("Aveage height computed from indoorsVolume/groundArea");
@@ -54,6 +55,7 @@ void Geometry::reset() {
     coverPerGroundArea = coverArea/groundArea;
 
     roofVolume  = length*gablesArea/2.,
+    indoorsVolumeTotal =
     indoorsVolume = groundArea*height + roofVolume;
     indoorsAverageHeight = indoorsVolume/groundArea;
 }

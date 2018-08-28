@@ -3,15 +3,15 @@ Simulation {
   .iterations = 100
   .steps = 1
   .silent = TRUE
-  SensitivityAnalysis {
+  SensitivityAnalysisSimple {
   }
   // Since the type of a blind port is deduced from its value, 
-  // we must provide values as decimals numbers (0.) not as integers
+  // we must provide values as decimals numbers (0.0) not as integers
   Box inputs {
-    +uniform = 0. @(uniform 0 30)
-    +loguniform = 0. @(loguniform 0.001 1)
-    +normal = 0. @(normal 100 10)
-    +lognormal = 0. @(lognormal 100 0.5)
+    +uniform = 0.0 @(uniform 0 30)
+    +loguniform = 0.0 @(loguniform 0.001 1)
+    +normal = 0.0 @(normal 100 10)
+    +lognormal = 0.0 @(lognormal 100 0.5)
   }
   OutputR {
     .end = "sensitivity5.R"

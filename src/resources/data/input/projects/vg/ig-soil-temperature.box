@@ -1,0 +1,37 @@
+// vg/04-greenhouse.box
+Simulation greenhouse {
+  .steps =  262800 
+  Calendar calendar {
+    .initialDateTime = 1/1/2001
+    .timeStep = 2
+    .timeUnit = "m"
+  }
+  Outdoors outdoors {
+    Accumulator soilTemperature {
+      .initial = initial[value]
+      .change = ./controller[controlVariable]
+      Hump initial {
+        .x = calendar[dayOfYear]
+        .x0 = 70
+        .x1 = 365
+        .ymin = 0
+        .ymax = 16
+      }
+      PidController controller {
+        .sensedValue = ..[value]
+        .desiredValue = outdoors[temperature]
+        .Kprop = 0.5e-4
+      }
+    }
+  }
+  OutputR {
+    .keepPages = TRUE
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .layout = "merged"
+        .ports = (outdoors[temperature] outdoors[soilTemperature] soilTemperature[initial] )
+      }
+    }
+  }
+}

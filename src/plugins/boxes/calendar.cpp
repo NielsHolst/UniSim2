@@ -53,6 +53,8 @@ Calendar::Calendar(QString name, QObject *parent)
     Output(sunset).help("Time of sunset");
     Output(solarConstant).help("The irradiation at the top of the atmosphere (W/m^2)");
     Output(angot).help("The irradiation on Earth surface under optimal atmospheric conditions (W/m^2)");
+    Output(isDay).help("Tells of its between sunrise and sunset");
+    Output(isNight).help("Tells of its between sunset and sunrise");
 }
 
 void Calendar::initialize() {
@@ -88,6 +90,7 @@ void Calendar::updateDerived() {
     totalDays = totalTime*TimeWithUnits::conversionFactor(_timeUnit, Days);
     updateSun();
     updateAzimuth();
+    updateDayAndNight();
 }
 
 void Calendar::updateSun() {
@@ -157,6 +160,11 @@ void Calendar::updateAzimuth() {
     double az1 = -(sin(lat)*cos(phi)-sin(declin))/(cos(lat)*sin(phi));
     double az2 = acos(az1)*DEGREES;
     azimuth = az2-90.;
+}
+
+void Calendar::updateDayAndNight() {
+    isNight = (time > sunset) || (time < sunrise);
+    isDay = !isNight;
 }
 
 } //namespace

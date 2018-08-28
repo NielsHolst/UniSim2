@@ -20,6 +20,7 @@ public:
 private:
     // Inputs
     double givenEnergyFlux, heatingSetpoint, indoorsTemperature, timeStep, height;
+    bool noHeating;
 };
 } //namespace
 

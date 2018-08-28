@@ -26,7 +26,7 @@ private:
     double width, groundArea,
         roofArea, sideWallsArea, endWallsArea, gablesArea,
         coverArea, coverPerGroundArea,
-        indoorsVolume, indoorsAverageHeight;
+        indoorsVolume, indoorsVolumeTotal, indoorsAverageHeight;
 
     // Data
     double roofVolume;

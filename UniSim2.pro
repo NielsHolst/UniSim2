@@ -78,15 +78,15 @@ unisim.depends = vg
 #bmsb.depends = base
 #unisim.depends = bmsb
 
-#SUBDIRS += cmbp
-#cmbp.subdir = src/plugins/cmbp
-#cmbp.depends = base
-#unisim.depends = cmbp
+SUBDIRS += cmbp
+cmbp.subdir = src/plugins/cmbp
+cmbp.depends = base
+unisim.depends = cmbp
 
-#SUBDIRS += conductance
-#conductance.subdir = src/plugins/conductance
-#conductance.depends = base
-#unisim.depends = conductance
+SUBDIRS += conductance
+conductance.subdir = src/plugins/conductance
+conductance.depends = base
+unisim.depends = conductance
 
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed

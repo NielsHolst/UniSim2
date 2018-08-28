@@ -23,11 +23,17 @@ EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+}
+
+inline double y(double y0, double z, double v, double dt) {
+  return z + (y0 - z)*exp(-v*dt);
 }
 
 void EnergyFluxAir::update() {
-    double Cair = height*CpAirVol,   // J/K/m2 = m * J/K/m3
-           dT = outdoorsTemperature - indoorsTemperature;
+    double indoorsTemperatureFinal = y(indoorsTemperature, outdoorsTemperature, airFlux, timeStepSecs/3600.),
+           dT = indoorsTemperatureFinal - indoorsTemperature,
+           Cair = height*CpAirVol;   // J/K/m2 = m * J/K/m3
     value = Cair*dT*airFlux/3600;    // W/m2 = J/K/m2 / h * h/s
 }
 

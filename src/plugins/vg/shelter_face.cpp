@@ -7,13 +7,14 @@
 #include <base/dialog.h>
 #include <base/box_builder.h>
 #include <base/path.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "cover.h"
-#include "general.h"
 #include "screens.h"
 #include "shelter_face.h"
 
 using namespace base;
+using phys_math::div0;
 
 namespace vg {
 
@@ -108,8 +109,8 @@ void ShelterFace::update() {
 }
 
 void ShelterFace::updateU() {
-    if (_hasScreens) {
-        double resistance = 1./(*pCoverU) + 1./(*pScreensU);
+    if (_hasScreens && *pScreensU < phys_math::infinity()) {
+        double resistance = 1./(*pCoverU) + 1./(*pScreensU*screensMaxState);
         U = 1./resistance;
     }
     else
@@ -118,7 +119,7 @@ void ShelterFace::updateU() {
 
 void ShelterFace::updateHaze() {
     if (_hasScreens) {
-        double unhazed = (1 - (*pCoverHaze)) * (1 - (*pScreensHaze));
+        double unhazed = (1 - (*pCoverHaze)) * (1 - (*pScreensHaze)*screensMaxState);
         haze = 1 - unhazed;
     }
     else
@@ -126,7 +127,7 @@ void ShelterFace::updateHaze() {
 }
 
 void ShelterFace::updateAirTransmission() {
-    airTransmissivity = _hasScreens ? *pScreensAirTransmission : 1.;
+    airTransmissivity = _hasScreens ? *pScreensAirTransmission*screensMaxState : 1.;
 }
 
 void ShelterFace::updateLightTransmission() {
@@ -141,8 +142,8 @@ void ShelterFace::updateLightTransmission() {
     double diffuseAbsSum = (*cover.diffuse.abs);
     double directAbsSum  = (*cover.direct.abs);
     if (_hasScreens) {
-        diffuseAbsSum += (*screens.diffuse.abs);
-        directAbsSum  += (*screens.direct.abs);
+        diffuseAbsSum += (*screens.diffuse.abs*screensMaxState);
+        directAbsSum  += (*screens.direct.abs*screensMaxState);
     }
     lightAbsorbedCover = div0(*cover.diffuse.abs, diffuseAbsSum) * diffuseLightAbsorbedTotal +
                          div0(*cover.direct.abs, directAbsSum) * directLightAbsorbedTotal;

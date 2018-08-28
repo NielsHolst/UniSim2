@@ -18,6 +18,8 @@ Indoors::Indoors(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("contains sub-models for indoors climate");
+    Input(noHeating).equals(false).help("Turn heating off always?");
+    Input(noCooling).equals(false).help("Turn cooling off always?");
 }
 
 void Indoors::amend() {
@@ -42,7 +44,7 @@ void Indoors::amend() {
                 port("toAdd").equals("(given/vapourFlux cooling/vapourFlux)").
             endbox().
             box("vg::Sum").name("energyFlux").
-                port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value] cooling/energyFlux[value])").
+                port("inputs").equals("(given/energyFlux[value] controlled/cooling/energyFlux[value] controlled/heating/energyFlux[value])").
             endbox().
         endbox();
 

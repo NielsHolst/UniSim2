@@ -16,14 +16,10 @@ class Vent : public base::Box
 public:
     Vent(QString name, QObject *parent);
     void amend();
-    void reset();
-    void update();
 private:
     // Inputs
     int number;
     double length, width, state, transmissivity;
-    // Outputs
-    double area, effectiveArea, maxEffectiveArea;
     // Data
     QString pathTransmissivity;
 };

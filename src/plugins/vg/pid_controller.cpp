@@ -30,8 +30,8 @@ PidController::PidController(QString name, QObject *parent)
 
     Input(minimum).equals(-doubleMax).help("Minimum allowed value of control variable");
     Input(maximum).equals(doubleMax).help("Maximum allowed value of control variable");
-    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate if change in control variable (per min)");
-    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate if change in control variable (per min)");
+    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate of change in control variable (per min)");
+    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate of change in control variable (per min)");
     Input(timeStep).imports("calendar[timeStepSecs]");
 
     Output(controlVariable).help("The control variable; tends to zero when all three error terms summed tend to zero");

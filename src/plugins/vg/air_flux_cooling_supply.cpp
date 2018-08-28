@@ -18,7 +18,7 @@ namespace vg {
 PUBLISH(AirFluxCoolingSupply)
 
 AirFluxCoolingSupply::AirFluxCoolingSupply(QString name, QObject *parent)
-    : Box(name, parent)
+    : AirFluxBase(name, parent)
 {
     help("computes supply of air flux to cool greenhouse");
     Input(energyFlux).imports("energyFlux/cooling/supply[value]");
@@ -26,11 +26,6 @@ AirFluxCoolingSupply::AirFluxCoolingSupply(QString name, QObject *parent)
     Input(indoorsHeight).imports("geometry[indoorsAverageHeight]");
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Output(value).help("Relative rate of air exchange [m3/m3/h]");
-}
-
-void AirFluxCoolingSupply::reset() {
-    value =  0;
 }
 
 void AirFluxCoolingSupply::update() {

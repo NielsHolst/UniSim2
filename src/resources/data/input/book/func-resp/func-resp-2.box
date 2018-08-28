@@ -1,10 +1,13 @@
 // func-resp-2.box
 Simulation {
   .steps = 100
-  Scenarios predators {
-    .fileName = "func-resp-scenarios.txt"
+  .iterations = 3
+  Sequence predator {
+    .by = "reset"
+    .values = (0.5 1 20)
   }
-  Sequence resource {
+  Sequence prey {
+    .by = "update"
     .min = 0
     .max = 100
   }
@@ -20,8 +23,8 @@ Simulation {
     .egested = ../budget[egested]
   }
   FunctionalResponse funcResp {
-    .attacker = predators[Predator]
-    .resource = resource[value]
+    .attacker = predator[value]
+    .resource = prey[value]
     .demand = ../demandBudget[demand]
     .attackRate = 0.8
   }
@@ -33,7 +36,7 @@ Simulation {
   }
   OutputR {
     PageR {
-      .xAxis = resource[value]
+      .xAxis = prey[value]
       .title = "Functional response at predator density = 0.5, 1 and 20"
       PlotR {
         .layout = "merged"

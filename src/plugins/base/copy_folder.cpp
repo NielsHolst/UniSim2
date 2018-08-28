@@ -43,7 +43,7 @@ void renameFolder(QDir dir) {
     bool ok = QDir().rename(oldPath, newPath);
     if (!ok)
         ThrowException("Cannot rename folder").value(info)
-                      .hint("Close all other open programs then try again");
+                      .hint("Close all programs then try again");
 }
 
 void copyFolderHard(QDir source, QDir destination) {
@@ -52,7 +52,7 @@ void copyFolderHard(QDir source, QDir destination) {
         bool ok = QDir().mkpath(destination.absolutePath());
         if (!ok)
             ThrowException("Cannot create destination folder").value(destination.absolutePath())
-                    .hint("Close all other open programs then try again");
+                    .hint("Close all programs then try again");
     }
 
     // Copy folder

@@ -21,14 +21,19 @@ FloorRadiationAbsorbed::FloorRadiationAbsorbed(QString name, QObject *parent)
     help("computes thermal radiation absorbed by the floow");
     Input(indoorsLight).imports("indoors/light[total]");
     Input(growthLightLight).imports("actuators/growthLights[shortWaveEmission]");
+    Input(reflectance).equals(0.5).help("Short-wave reflectance of floor[0;1]");
     Input(lightAbsorbedByCrop).imports("crop/lightAbsorbed[value]");
     Input(growthLightLwAbsorbedByCrop).imports("crop/growthLightLwAbsorbed[value]");
-    Output(value).help("Thermal radiation flux absorbed by the floor [W/m2]");
+    Output(value).help("Radiation absorbed by the floor [W/m2]");
+    Output(reflected).help("Radiation reflected by the floor [W/m2]");
 }
 
 void FloorRadiationAbsorbed::update() {
-    value = max(indoorsLight + growthLightLight - lightAbsorbedByCrop, 0.) +
+    double maxAbsorbed =
+            max(indoorsLight + growthLightLight - lightAbsorbedByCrop, 0.) +
             max(growthLightLw - growthLightLwAbsorbedByCrop, 0.);
+    reflected = reflectance*maxAbsorbed;
+    value = maxAbsorbed - reflected;
 }
 
 } //namespace

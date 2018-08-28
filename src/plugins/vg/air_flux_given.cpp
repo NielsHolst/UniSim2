@@ -16,11 +16,10 @@ namespace vg {
 PUBLISH(AirFluxGiven)
 
 AirFluxGiven::AirFluxGiven(QString name, QObject *parent)
-    : Box(name, parent)
+    : AirFluxBase(name, parent)
 {
     help("sums up total given air flux");
     Input(airFluxes).imports("./*[value]");
-    Output(value).help("Summed air fluxes [m3/m3/h]");
 }
 
 void AirFluxGiven::amend() {
@@ -30,37 +29,37 @@ void AirFluxGiven::amend() {
         box("AirFluxInfiltration").name("infiltration").
         endbox();
 
-    if (!findMaybeOne<Box>("./gravitation"))
-        builder.
-        box("AirFluxGravitation").name("gravitation").
-        endbox();
+//    if (!findMaybeOne<Box>("./gravitation"))
+//        builder.
+//        box("AirFluxGravitation").name("gravitation").
+//        endbox();
 
-    if (!findMaybeOne<Box>("./crackVentilation"))
-        builder.
-        box("Accumulator").name("crackVentilation").
-            port("change").imports("./controller[controlVariable]").
-            box("PidController").name("controller").
-                port("desiredValue").imports("./desiredVentilation[signal]").
-                port("sensedValue").imports("..[value]").
-                port("Kprop").equals(0.02).
-                box("ProportionalSignal").name("desiredVentilation").
-                    port("input").imports("indoors/humidity[rh]").
-                    port("threshold").imports("setpoints/humidity/maximumRh[value]").
-                    port("thresholdBand").equals(10).
-                    port("increasingSignal").equals(true).
-                    port("maxSignal").imports("./maxVentilation[signal]").
-                    port("minSignal").equals(0).
-                    box("ProportionalSignal").name("maxVentilation").
-                        port("input").imports("outdoors[temperature]").
-                        port("threshold").equals(-5).
-                        port("thresholdBand").equals(1).
-                        port("increasingSignal").equals(true).
-                        port("maxSignal").equals(0.5).
-                        port("minSignal").equals(0).
-                    endbox().
-                endbox().
-            endbox().
-        endbox();
+//    if (!findMaybeOne<Box>("./crackVentilation"))
+//        builder.
+//        box("Accumulator").name("crackVentilation").
+//            port("change").imports("./controller[controlVariable]").
+//            box("PidController").name("controller").
+//                port("desiredValue").imports("./desiredVentilation[signal]").
+//                port("sensedValue").imports("..[value]").
+//                port("Kprop").equals(0.02).
+//                box("ProportionalSignal").name("desiredVentilation").
+//                    port("input").imports("indoors/humidity[rh]").
+//                    port("threshold").imports("setpoints/humidity/maximumRh[value]").
+//                    port("thresholdBand").equals(10).
+//                    port("increasingSignal").equals(true).
+//                    port("maxSignal").imports("./maxVentilation[signal]").
+//                    port("minSignal").equals(0).
+//                    box("ProportionalSignal").name("maxVentilation").
+//                        port("input").imports("outdoors[temperature]").
+//                        port("threshold").equals(-5).
+//                        port("thresholdBand").equals(1).
+//                        port("increasingSignal").equals(true).
+//                        port("maxSignal").equals(0.5).
+//                        port("minSignal").equals(0).
+//                    endbox().
+//                endbox().
+//            endbox().
+//        endbox();
 }
 
 void AirFluxGiven::update() {

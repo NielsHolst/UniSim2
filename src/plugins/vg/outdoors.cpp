@@ -22,7 +22,6 @@ Outdoors::Outdoors(QString name, QObject *parent)
     help("delivers readings of ourdoors weather");
     Input(propParRadiation).equals(0.47).help("Proportion of PAR in sunlight irradiation [0;1]");
     Input(co2).equals(400.).help("Outdoors CO2 concentration [ppm]");
-    Input(soilTemperature).equals(10).help("Outdoors soil temperature [oC]");
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature [oC]");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity [0;100]");
     Input(radiation).imports("./records[GlobRad]").help("Total sunlight irradiation [W/m2]");
@@ -34,6 +33,7 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation [0;1]");
     Output(ah).help("Outdoors absolute humidity [kg/m3]");
     Output(sh).help("Outdoors specific humidity [Kg/kg]");
+    Output(soilTemperature).imports("./soilTemperature[value]").help("Outdoors soil temperature [oC]");
 }
 
 void Outdoors::amend() {
@@ -42,6 +42,24 @@ void Outdoors::amend() {
         builder.
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").
+        endbox();
+    if (!findMaybeOne<Box>("./soilTemperature"))
+        builder.
+        box("Accumulator").name("soilTemperature").
+            port("initial").imports("./initial[value]").
+            port("change").imports("./controller[controlVariable]").
+            box("Hump").name("initial").
+                port("x").imports("calendar[dayOfYear]").
+                port("x0").equals(70).
+                port("x1").equals(365).
+                port("ymin").equals(0).
+                port("ymax").equals(16).
+            endbox().
+            box("PidController").name("controller").
+                port("sensedValue").imports("..[value]").
+                port("desiredValue").imports("outdoors[temperature]").
+                port("Kprop").equals(0.5e-4).
+            endbox().
         endbox();
 }
 

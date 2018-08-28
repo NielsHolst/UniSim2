@@ -7,16 +7,17 @@
 #ifndef SETPOINTS_H
 #define SETPOINTS_H
 
-#include <base/box.h>
+#include "setpoints_input.h"
 
 namespace vg {
 
-class Setpoints : public base::Box
+class Setpoints : public SetpointsInput
 {
 public:
     Setpoints(QString name, QObject *parent);
     void amend();
 };
+
 } //namespace
 
 

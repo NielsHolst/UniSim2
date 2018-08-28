@@ -21,10 +21,14 @@ public:
     virtual double computeSignal() = 0;
 private:
     // Input
-    double signalReset;
+    double signalReset, maxChange, timeStepSecs;
     // Output
     double signal;
     bool flag, flagUp, flagDown;
+    // Data
+    double _prevSignal;
+    // Methods
+    void limitSignal();
 };
 } //namespace
 

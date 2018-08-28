@@ -1,0 +1,27 @@
+Simulation sim {
+  .steps = 100
+  Calendar calendar {}
+  Box weather {
+    +irradiation = 20
+  }
+  conductance::Community community {
+    Plant wheat {
+      .n =9
+      .initWeight = 0.05
+      .F = 0.0158
+      .theta = 0.84
+      .A = 0.0314
+      .phi = 0.529
+      .k = 0.71
+      .eps = 1.40
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = sim[step]
+      PlotR  {
+        .ports = (wheat[WeightTotal] wheat[LAI])
+      }
+    }
+  }
+}

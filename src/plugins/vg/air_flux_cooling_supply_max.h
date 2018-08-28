@@ -7,22 +7,19 @@
 #ifndef AIR_FLUX_COOLING_SUPPLY_MAX_H
 #define AIR_FLUX_COOLING_SUPPLY_MAX_H
 
-#include <base/box.h>
+#include "air_flux_base.h"
 
 namespace vg {
 
-class AirFluxCoolingSupplyMax : public base::Box
+class AirFluxCoolingSupplyMax : public AirFluxBase
 {
 public:
     AirFluxCoolingSupplyMax(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:
     // Inputs
     double byWind, byTemperature, givenAirflux;
-    // Output
-    double value;
 };
 } //namespace
 

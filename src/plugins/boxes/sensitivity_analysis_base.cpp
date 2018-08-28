@@ -14,7 +14,7 @@ SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
     Class(SensitivityAnalysisBase);
     help("sensitivity analysis base class");
     Input(method).equals("LHS").help("For sampling use either Latin hypercube sampling ('LHS') or Monte Carlo ('MC')");
-    Input(sampleSize).equals(30).help("Size of sample in input parameter space (N)");
+    Input(sampleSize).imports("/*[iterations]").help("Size of sample in input parameter space (N)");
     Output(inputsAnalysed).help("Total number of input ports (k)");
     Output(inputsTotal).help("Number of input ports included in analysis");
     Output(iterations).noReset().help("Number of simulation iterations needed");

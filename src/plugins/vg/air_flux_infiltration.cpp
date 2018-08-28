@@ -14,12 +14,11 @@ namespace vg {
 PUBLISH(AirFluxInfiltration)
 
 AirFluxInfiltration::AirFluxInfiltration(QString name, QObject *parent)
-    : Box(name, parent)
+    : AirFluxBase(name, parent)
 {
     help("computes air infiltration rate");
     Input(leakage).equals(1).help("The infiltration rate [m3/m3/h] at a wind speed of 4 m/s");
     Input(windSpeed).imports("outdoors[windSpeed]");
-    Output(value).help("Relative rate of air exchange [m3/m3/h]");
 }
 
 void AirFluxInfiltration::reset() {

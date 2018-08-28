@@ -2,8 +2,8 @@ Simulation sim {
   .steps = 100
   Calendar calendar {
   }
-  conductance::Weather weather {
-    .irradiation = 20
+  Box weather {
+    +irradiation = 20
   }
   conductance::Community community {
     Plant carrot {

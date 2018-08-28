@@ -7,23 +7,19 @@
 #ifndef AIR_FLUX_GRAVITATION_H
 #define AIR_FLUX_GRAVITATION_H
 
-#include <base/box.h>
+#include "air_flux_base.h"
 
 namespace vg {
 
-class AirFluxGravitation : public base::Box
+class AirFluxGravitation : public AirFluxBase
 {
 public:
     AirFluxGravitation(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:
     // Inputs
     double screensState, outdoorsTemperature, indoorsTemperature, indoorsVolume, groundArea;
-
-    // Outputs
-    double value;
 
     // Methods
     double maxFiniteRate(double finiteRate1) const;

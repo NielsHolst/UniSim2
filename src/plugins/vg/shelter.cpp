@@ -30,10 +30,10 @@ Shelter::Shelter(QString name, QObject *parent)
     Output(screensMaxState).help("Max. state of all screens [0;1]");
     Output(horizontalScreenState).help("State of any horizontal screens [0;1]");
     Output(hasHorizontalScreen).help("Has the greenhouse got horizontal screens?");
-    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum)
-            .help("Effective area of vents [m2]");
-    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum)
-            .help("Effective area of vents when max. open [m2]");
+//    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum)
+//            .help("Effective area of vents [m2]");
+//    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum)
+//            .help("Effective area of vents when max. open [m2]");
 }
 
 void Shelter::amend() {

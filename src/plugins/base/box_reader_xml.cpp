@@ -28,6 +28,9 @@ void BoxReaderXml::parse(QString filePath) {
                 case PortElement:
                     setPortAttributes();
                     break;
+                case NewPortElement:
+                    setNewPortAttributes();
+                    break;
             }
             break;
             case QXmlStreamReader::EndElement:
@@ -37,6 +40,7 @@ void BoxReaderXml::parse(QString filePath) {
                         _builder->endbox();
                         break;
                     case PortElement:
+                case NewPortElement:
                         break;
                 }
                 break;
@@ -62,6 +66,8 @@ void BoxReaderXml::setElementType() {
         _elementType = BoxElement;
     else if (name == "port")
         _elementType = PortElement;
+    else if (name == "newPort")
+        _elementType = NewPortElement;
     else
         ThrowException("Unknown XML element. " + currentInfo()).value(name);
 }
@@ -101,6 +107,10 @@ void BoxReaderXml::setPortAttributes() {
     }
     if (!nameSet)
         ThrowException("Port misses \"name\" attribute" + currentInfo());
+}
+
+void BoxReaderXml::setNewPortAttributes() {
+
 }
 
 } // namespace

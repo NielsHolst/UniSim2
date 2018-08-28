@@ -17,6 +17,10 @@ DemandBudget::DemandBudget(QString name, QObject *parent)
     Output(demand).help("Total demand of the whole energy budget");
 }
 
+void DemandBudget::reset() {
+    update();
+}
+
 void DemandBudget::update() {
     demand = (netDemand/(1. - conversionCost) + respirationDemand)/(1. - egested);
 }

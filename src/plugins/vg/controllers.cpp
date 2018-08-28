@@ -15,13 +15,42 @@ namespace vg {
 PUBLISH(Controllers)
 
 Controllers::Controllers(QString name, QObject *parent)
-    : Box(name, parent)
+    : ControllersInput(name, parent)
 {
     help("contains sub-models to control actuators");
 }
 
 void Controllers::amend() {
     BoxBuilder builder(this);
+
+//    if (!findMaybeOne<Box>("./input"))
+//        builder.
+//        box("ControllersInput").name("input");
+
+    if (!findMaybeOne<Box>("./ventilation"))
+        builder.
+        box("ProportionalSignal").name("ventilation").
+            port("input").imports("indoors/temperature[value]").
+            port("threshold").imports("setpoints/temperature/ventilation[value]").
+            port("thresholdBand").imports("controllers[ventilationThresholdBand]").
+            port("maxSignal").equals(1.).
+            port("minSignal").imports("./crack[value]").
+            box("ProportionalSignal").name("crack").
+                port("input").imports("indoors/humidity[rh]").
+                port("threshold").imports("setpoints[rhMax]").
+                port("thresholdBand").imports("setpoints[rhMaxband]").
+                port("maxSignal").imports("./minsMax[value]").
+                port("minSignal").equals(0).
+                box("ProportionalSignal").name("minsMax").
+                    port("input").imports("outdoors[temperature]").
+                    port("threshold").imports("controllers[crackVentilationTemperatureMin]").
+                    port("thresholdBand").imports("controllers[crackVentilationTemperatureMinband]").
+                    port("maxSignal").imports("controllers[crackVentilation]").
+                    port("minSignal").equals(0).
+                endbox().
+            endbox().
+        endbox();
+
     if (!findMaybeOne<Box>("./screens"))
         builder.
         box().name("screens").
@@ -34,37 +63,34 @@ void Controllers::amend() {
                     port("Kprop").equals(0.02).
                     box("vg::ThresholdSignal").name("target").
                         port("input").imports("indoors/humidity[rh]").
-                        port("threshold").imports("setpoints/humidity/maximumRh[value]").
+                        port("threshold").imports("setpoints[rhMax]").
                         port("signalBelow").equals(1).
-                        port("signalAbove").equals(0.9).
+                        port("signalAbove").imports("controllers[screenMaxAtHighRh]").
                     endbox().
                 endbox().
             endbox().
             box("Minimum").name("energy").
                 port("values").imports("./signals/*[signal]").
                 box().name("signals").
-                    box("vg::ThresholdSignal").name("radiation").
+                    box("vg::ProportionalSignal").name("radiation").
                         port("input").imports("outdoors[radiation]").
-                        port("threshold").equals(10).
-                        port("signalBelow").imports("controllers/screens/maxDrawn[value]").
-                        port("signalAbove").equals(0).
-                    endbox().
-                    box("vg::ThresholdSignal").name("temperature").
-                        port("input").imports("indoors/temperature[value]").
-                        port("threshold").imports("setpoints/temperature/ventilation[value]").
-                        port("signalBelow").imports("controllers/screens/maxDrawn[value]").
-                        port("signalAbove").equals(0).
+                        port("threshold").imports("controllers[screenEnergyThreshold]").
+                        port("thresholdBand").imports("controllers[screenEnergyThresholdBand]").
+                        port("maxSignal").imports("controllers/screens/maxDrawn[value]").
+                        port("minSignal").equals(0).
+                        port("increasingSignal").equals(false).
                     endbox().
                 endbox().
             endbox().
             box("Maximum").name("shade").
                 port("values").imports("./signals/*[signal]").
                 box().name("signals").
-                    box("vg::ThresholdSignal").name("radiation").
+                    box("vg::ProportionalSignal").name("radiation").
                         port("input").imports("outdoors[radiation]").
-                        port("threshold").equals(500).
-                        port("signalBelow").equals(0).
-                        port("signalAbove").imports("controllers/screens/maxDrawn[value]").
+                        port("threshold").imports("controllers[screenShadeThreshold]").
+                        port("thresholdBand").imports("controllers[screenShadeThresholdBand]").
+                        port("maxSignal").imports("controllers/screens/maxDrawn[value]").
+                        port("minSignal").equals(0).
                     endbox().
                     box().name("asEnergy").
                         newPort("signal").imports("controllers/screens/energy[value]").
@@ -75,9 +101,9 @@ void Controllers::amend() {
                 port("values").imports("./signals/*[signal]").
                 box().name("signals").
                     box("vg::DateTimeSignal").name("time").
-                        port("beginTime").imports("calendar[sunrise]").
-                        port("endTime").imports("calendar[sunset]").
-                        port("signalInside").equals(1).
+                        port("beginTime").imports("controllers[screenBlackoutFromTime]").
+                        port("endTime").imports("controllers[screenBlackoutToTime]").
+                        port("signalInside").imports("setpoints/daylightLevel[day]").
                     endbox().
                     box().name("asEnergy").
                         newPort("signal").imports("controllers/screens/energy[value]").

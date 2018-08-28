@@ -18,17 +18,12 @@ namespace vg {
 PUBLISH(AirFluxCoolingSupplyMax)
 
 AirFluxCoolingSupplyMax::AirFluxCoolingSupplyMax(QString name, QObject *parent)
-    : Box(name, parent)
+    : AirFluxBase(name, parent)
 {
     help("computes max. supply of air flux");
     Input(byWind).imports("./byWind[max]");
     Input(byTemperature).imports("./byTemperature[max]");
     Input(givenAirflux).imports("given/airFlux[value]");
-    Output(value).help("Max. relative rate of air exchange [m3/m3/h]");
-}
-
-void AirFluxCoolingSupplyMax::reset() {
-    value = 0.;
 }
 
 void AirFluxCoolingSupplyMax::update() {

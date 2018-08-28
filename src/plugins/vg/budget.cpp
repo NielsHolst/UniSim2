@@ -17,7 +17,7 @@ Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
-    Input(heatingEnergyFlux).imports("heating/supply[value]");
+    Input(heatingEnergyFlux).imports("controlled/heating/energyFlux[value]");
     Input(growthLightsEnergyFlux).imports("actuators/growthLights[energyFlux]");
     Input(co2Flux).imports("controllers/co2[signal]");
     Input(dt).imports("calendar[timeStepSecs]");

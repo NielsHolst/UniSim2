@@ -24,11 +24,12 @@ EnergyFluxHeatingDemand::EnergyFluxHeatingDemand(QString name, QObject *parent)
     Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(height).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(noHeating).imports("indoors[noHeating]");
 }
 
 void EnergyFluxHeatingDemand::update() {
     double dT = max(heatingSetpoint - indoorsTemperature, 0.);
-    value = max(dT*CpAir*RhoAir*height/timeStep - givenEnergyFlux, 0.);
+    value = noHeating ? 0. : max(dT*CpAir*RhoAir*height/timeStep - givenEnergyFlux, 0.);
 }
 
 } //namespace

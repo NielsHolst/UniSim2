@@ -322,7 +322,9 @@ void Box::toText(QTextStream &text, int indentation) const {
     QString postfix = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
 
     text << fill << className() << " " << objectName()
-         << "{" << postfix << "\n";
+         << " {" << postfix
+         << " // #" << order()
+         << "\n";
 
     for (Port *port : me->findMany<Port>(".[*]")) {
         if (port->access() == PortAccess::Input)

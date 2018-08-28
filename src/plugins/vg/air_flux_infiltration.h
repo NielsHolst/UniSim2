@@ -7,11 +7,11 @@
 #ifndef AIR_FLUX_INFILTRATION_H
 #define AIR_FLUX_INFILTRATION_H
 
-#include <base/box.h>
+#include "air_flux_base.h"
 
 namespace vg {
 
-class AirFluxInfiltration : public base::Box
+class AirFluxInfiltration : public AirFluxBase
 {
 public:
     AirFluxInfiltration(QString name, QObject *parent);
@@ -19,12 +19,8 @@ public:
     void update();
 
 private:
-    // Parameters
+    // Inputs
     double leakage, windSpeed;
-
-    // Variables
-    double value;
-
 };
 } //namespace
 

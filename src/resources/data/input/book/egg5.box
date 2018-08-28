@@ -1,3 +1,4 @@
+// egg5.box
 Simulation sim {
   .steps = 60
   Calendar calendar {

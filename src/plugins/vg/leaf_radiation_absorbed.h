@@ -28,7 +28,8 @@ private:
         floorTemperature, floorEmissivity,
         leafTemperature, coverTemperature, screensTemperature, screensMaxState,
         shelterOutgoingLwAbsorptivity,
-        coverPerGroundArea;
+        coverPerGroundArea,
+        pipeInflowTemperature;
 
     // Outputs
     double value, lightAbsorbed, heatingAbsorbed,
@@ -40,8 +41,8 @@ private:
     double lwTransmissionLowerside, lwTransmissionUpperside;
 
     struct PipeInfo {
-        const double *length, *diameter, *temperature, *emissivity;
-        double area() {return (*length)*(*diameter)/1000./2; }  // Only half of the area faces upwards
+        const double *density, *diameter, *emissivity;
+        double area() {return (*density)*(*diameter)/1000./2; }  // Only half of the area faces upwards
     };
     QVector<PipeInfo> pipeInfos;
 

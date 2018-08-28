@@ -1,0 +1,12 @@
+construction:
+define greenhouse hardware, dimensions and specifications
+
+setpoints:
+compute setpoints to control temperature, humidity, light and CO2
+
+controllers:
+compute target settings for actuators (vents, heat pipes, screens, CO2 dispensers)
+
+actuators:
+(keeps actuators not defined in contruction)
+regulate state of actuators

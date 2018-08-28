@@ -41,6 +41,7 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     Input(screensMaxState).imports("construction/shelter[screensMaxState]");
     Input(shelterOutgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]");
     Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
+    Input(pipeInflowTemperature).imports("actuators/heating[value]");
 
     Output(lightAbsorbed).help("Light flux absorbed by this leaf layer [W/m2]");
     Output(heatingAbsorbed).help("Heating radiation flux absorbed by this leaf layer [W/m2]");
@@ -54,9 +55,8 @@ void LeafRadiationAbsorbed::initialize() {
     QVector<Box*> pipes = Path("actuators/heating/pipes/*").resolveMany<Box>(this);
     for (Box *pipe : pipes) {
         pipeInfos << PipeInfo {
-                        pipe->port("length")->valuePtr<double>(),
+                        pipe->port("density")->valuePtr<double>(),
                         pipe->port("diameter")->valuePtr<double>(),
-                        pipe->port("temperature")->valuePtr<double>(),
                         pipe->port("emissivity")->valuePtr<double>()
                      };
     }
@@ -96,12 +96,13 @@ void LeafRadiationAbsorbed::setShelterLoss() {
                   (screensDiff*screensMaxState + coverDiff*(1-screensMaxState));
 }
 
+// Check this. Pipe heating to air already taken care of. At least integrate from inflow to outflow temperature.
 void LeafRadiationAbsorbed::setHeatingAbsorbed() {
     heatingAbsorbed = 0;
     for (PipeInfo pi : pipeInfos) {
-        if (*pi.temperature > leafTemperature) {
+        if (pipeInflowTemperature > leafTemperature) {
             double em = jointEmissivity(emissivity, *pi.emissivity);
-            heatingAbsorbed += Sigma*em*(p4K(*pi.temperature) - p4K(leafTemperature))*lwTransmissionLowerside*pi.area();
+            heatingAbsorbed += Sigma*em*(p4K(pipeInflowTemperature) - p4K(leafTemperature))*lwTransmissionLowerside*pi.area();
         }
     }
 }

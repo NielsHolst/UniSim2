@@ -1,3 +1,4 @@
+// egg2.box
 Simulation sim {
   .steps = 14
   Stage egg {

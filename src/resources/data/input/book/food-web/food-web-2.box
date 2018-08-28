@@ -236,7 +236,7 @@ Simulation sim {
       .xAxis = calendar[date]
       .title = "Butterfly"
       PlotR {
-        .ports = butterfly/descendants::*[content]
+        .ports = (butterfly/*[content] butterfly/adult/*[content])
         .ggplot = output[ggplot]
         .transform = "log10"
       }
@@ -245,7 +245,7 @@ Simulation sim {
       .xAxis = calendar[date]
       .title = "Trichogramma"
       PlotR {
-        .ports = trichogramma/descendants::*[content]
+        .ports = (trichogramma/*[content] trichogramma/adult/*[content])
         .ggplot = output[ggplot]
         .transform = "log10"
       }
@@ -254,7 +254,7 @@ Simulation sim {
       .xAxis = calendar[date]
       .title = "Carabus"
       PlotR {
-        .ports = carabus/descendants::*[content]
+        .ports = (carabus/*[content] carabus/adult/*[content])
         .ggplot = output[ggplot]
         .transform = "log10"
       }

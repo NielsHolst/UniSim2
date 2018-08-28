@@ -15,29 +15,9 @@ class Pipe : public base::Box
 {
 public:
     Pipe(QString name, QObject *parent);
-    void initialize();
-    void reset();
-    void update();
 private:
     // Inputs
-    double length, diameter, minTemperature, maxTemperature, maxTemperatureIncreaseRate, emissivity,
-        energyFluxTotal, indoorsTemperature, timeStep;
-    // Outputs
-    double temperature, energyFlux,
-        nextTemperatureMin, nextTemperatureMax,
-        nextEnergyFluxMin, nextEnergyFluxMax;
-
-    // Data
-    const double exponent{1.25};
-    double slope;
-    QVector<const double*> energyFluxFromPreceedingPipes;
-
-    // Methods
-    QList<base::Box*> seekPrecedingSiblings();
-    double calcEnergyFlux(double temperatureDifference) const;
-    double calcTemperatureDifference(double energyFluxTotal) const;
-    void setNextTemperatureMin();
-    double energyFluxFromPreceedingPipesSum();
+    double density, diameter, flowRate, minTemperature, maxTemperature, a, b, emissivity;
 };
 
 } //namespace

@@ -33,7 +33,7 @@ void IndoorsCo2::reset() {
 
 namespace {
     double integrate(double a,  // injection rate - assimilation rate
-                     double b,  // ventilation rate)
+                     double b,  // ventilation rate
                      double c,  // outdoors CO2
                      double y0, // initial indoors CO2
                      double dt) // time step

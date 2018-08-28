@@ -18,13 +18,14 @@ private:
     // Data
     QXmlStreamReader _reader;
     QFile _file;
-    enum ElementType {BoxElement, PortElement};
+    enum ElementType {BoxElement, PortElement, NewPortElement};
     ElementType _elementType;
     // Methods
     void openReader(QString filePath);
     void setElementType();
     void setBoxAttributes();
     void setPortAttributes();
+    void setNewPortAttributes();
 };
 
 }

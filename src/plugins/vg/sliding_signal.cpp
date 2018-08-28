@@ -30,7 +30,8 @@ double SlidingSignal::computeSignal() {
            x1{threshold + thresholdBand},
            y0{increasingSignal ? minSignal : maxSignal},
            y1{increasingSignal ? maxSignal : minSignal};
-    QString test = fullName();
+    if (thresholdBand < 0)
+        std::swap(x0, x1);
     if (input <= x0)
         res = y0;
     else if (input >= x1)
@@ -38,7 +39,7 @@ double SlidingSignal::computeSignal() {
     else {
         Q_ASSERT(thresholdBand != 0.);
         double gap = input - x0;
-        res = y0 + slide(gap/thresholdBand)*(y1 - y0);
+        res = y0 + slide(gap/fabs(thresholdBand))*(y1 - y0);
     }
     return res;
 }

@@ -18,11 +18,12 @@ public:
     void update();
 private:
     // Inputs
-    double indoorsLight, growthLightLight, lightAbsorbedByCrop,
+    double indoorsLight, growthLightLight, reflectance,
+        lightAbsorbedByCrop,
         growthLightLw, growthLightLwAbsorbedByCrop;
 
     // Outputs
-    double value;
+    double value, reflected;
 };
 
 } //namespace

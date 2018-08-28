@@ -2,7 +2,7 @@
 Simulation sim {
   .iterations = 50
   .steps = 35
-  SensitivityAnalysis {
+  SensitivityAnalysisSimple {
     .method = "LHS"
   }
   Box butterfly {

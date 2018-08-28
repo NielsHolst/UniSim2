@@ -7,11 +7,11 @@
 #ifndef AIR_FLUX_GIVEN_H
 #define AIR_FLUX_GIVEN_H
 
-#include <base/box.h>
+#include "air_flux_base.h"
 
 namespace vg {
 
-class AirFluxGiven : public base::Box
+class AirFluxGiven : public AirFluxBase
 {
 public:
     AirFluxGiven(QString name, QObject *parent);
@@ -20,8 +20,6 @@ public:
 private:
     // Inputs
     QVector<double> airFluxes;
-    // Outputs
-    double value;
 };
 } //namespace
 

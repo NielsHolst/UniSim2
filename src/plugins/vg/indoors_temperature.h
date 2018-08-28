@@ -4,10 +4,12 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_INDOORS_TEMPERATURE_H
-#define VG_INDOORS_TEMPERATURE_H
+#ifndef INDOORS_TEMPERATURE_H
+#define INDOORS_TEMPERATURE_H
 
+#include <QVector>
 #include <base/box.h>
+#include <base/circular_buffer.h>
 
 namespace vg {
 
@@ -19,11 +21,14 @@ public:
     void update();
 private:
     // Inputs
-    double height, timeStep, energyFlux, resetValue, baseTemperature;
+    double height, timeStep, energyFlux, resetValue, baseTemperature, averageTimeSpan;
     // Output
-    double value;
+    double value, average;
+    int averageNumber;
     // Data
     int tick;
+    QVector<double> _data;
+    base::CircularBuffer<double> _buffer;
 };
 } //namespace
 

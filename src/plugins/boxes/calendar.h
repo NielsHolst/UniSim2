@@ -37,11 +37,13 @@ private:
     int dayOfYear, totalTime, totalTimeSteps;
     double timeStepSecs, timeStepDays, totalDays, dayLength,
         sinb, azimuth, solarConstant, angot;
+    bool isDay, isNight;
 
     // methods
     void updateDerived();
     void updateSun();
     void updateAzimuth();
+    void updateDayAndNight();
 };
 
 } //namespace

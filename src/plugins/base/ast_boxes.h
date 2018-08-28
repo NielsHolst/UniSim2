@@ -102,7 +102,7 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // A list value is captured; keeping parentheses and everything inside
         list_value %= lexeme[char_('(') >> *(char_ - ')') > char_(')')];
         // A conditional value is preceeded by ?
-        conditional_value %= char_('?') > unquoted_value > char_(':') > unconditional_value;
+        conditional_value %= char_('?') > unquoted_value > char_('?') > unconditional_value;
         // A name with optional attribute
         transform = name;
         attributed_name %= char_("\\.+") >> name >> -('|' > transform);

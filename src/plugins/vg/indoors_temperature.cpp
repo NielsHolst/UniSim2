@@ -15,7 +15,7 @@ namespace vg {
 PUBLISH(IndoorsTemperature)
 
 IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
-	: Box(name, parent)
+    : Box(name, parent), _buffer(&_data)
 {
     help("models indoors temperature");
     Input(resetValue).equals(20.).help("Indoors temperature when model is reset [oC]");
@@ -23,12 +23,20 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     Input(baseTemperature).imports(".[value]");
     Input(height).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(averageTimeSpan).equals(15.).help("Time span over which to calculate average [min]");
     Output(value).help("Indoors temperature [oC]");
+    Output(average).help("Indoors temperature averages over averageTimeSpan [oC]");
+    Output(averageNumber).help("Number of temperatures used to compute average");
 }
 
 void IndoorsTemperature::reset() {
-    value = resetValue;
+    value = average = resetValue;
     tick = 0;
+    double dt = timeStep/60.;
+    averageNumber = static_cast<int>(floor(averageTimeSpan/dt));
+    _buffer.resize(averageNumber);
+    for (int i=0; i<averageNumber; ++i)
+        _buffer.push(resetValue);
 }
 
 void IndoorsTemperature::update() {
@@ -36,6 +44,9 @@ void IndoorsTemperature::update() {
     if (tick++ < 10) return;
     double Cair = height*RhoAir*CpAir;               // J/m2/K = m * kg/m3 * J/kg/K
     value = baseTemperature + energyFlux*timeStep/Cair;  // K = W/m2 * s / (J/m2/K)
+    // Compute average
+    _buffer.push(value);
+    average = _buffer.average();
 }
 
 } //namespace

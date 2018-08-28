@@ -18,7 +18,7 @@ public:
     void update();
 private:
     // Inputs
-    double airFlux, indoorsTemperature, outdoorsTemperature, height;
+    double airFlux, indoorsTemperature, outdoorsTemperature, height, timeStepSecs;
 };
 } //namespace
 

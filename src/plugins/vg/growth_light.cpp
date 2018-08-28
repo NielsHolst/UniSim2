@@ -22,7 +22,7 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     Input(heatCoef).help("Proportion of net intensity lost by convection [0;1]");
     Input(longWaveCoef).help("Proportion of net intensity emitted as long-wave radiation [0;1]");
     Input(shortWaveCoef).help("Proportion of net intensity emitted as short-wave radiation [0;1]");
-    Input(parCoef).help("Proportion of net intensity emitted as long-wave radiation [0;1]");
+    Input(parCoef).help("Proportion of net intensity emitted as PAR radiation [0;1]");
     Input(parPhotonCoef).equals(4.6).help("Number of photons in PAR energy (micromole/J)");
     Input(minPeriodOn).help("Minimum period that light stays on (m)");
     Input(age).help("Age of the lamps at simulation start (h)");

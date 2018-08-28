@@ -7,21 +7,18 @@
 #ifndef AIR_FLUX_COOLING_SUPPLY_H
 #define AIR_FLUX_COOLING_SUPPLY_H
 
-#include <base/box.h>
+#include "air_flux_base.h"
 
 namespace vg {
 
-class AirFluxCoolingSupply : public base::Box
+class AirFluxCoolingSupply : public AirFluxBase
 {
 public:
     AirFluxCoolingSupply(QString name, QObject *parent);
-    void reset();
     void update();
 private:
     // Inputs;
     double energyFlux, airSupplyMax, indoorsTemperature, outdoorsTemperature, indoorsHeight;
-    // Outputs
-    double value;
 };
 } //namespace
 

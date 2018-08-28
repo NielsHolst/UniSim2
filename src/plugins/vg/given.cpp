@@ -65,9 +65,7 @@ void Given::amend() {
                 box("PidController").name("controller").
                     port("Kprop").equals(0.1).
                     port("sensedValue").imports("..[value]").
-                    port("desiredValue").imports("./growthLights[value]").
-                    box("EnergyFluxGrowthLights").name("growthLights").
-                    endbox().
+                    port("desiredValue").imports("actuators/growthLights[energyFlux]").
                 endbox().
             endbox().
             box("EnergyFluxShelter").name("shelter").
@@ -78,6 +76,8 @@ void Given::amend() {
                 port("heatCapacity").equals(42000).
                 box("FloorRadiationAbsorbed").name("radiationAbsorbed").
                 endbox().
+            endbox().
+            box("EnergyFluxSunlight").name("sunlight").
             endbox().
             box("EnergyFluxTranspiration").name("transpiration").
             endbox().
