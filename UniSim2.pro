@@ -78,15 +78,15 @@ unisim.depends = vg
 #bmsb.depends = base
 #unisim.depends = bmsb
 
-SUBDIRS += cmbp
-cmbp.subdir = src/plugins/cmbp
-cmbp.depends = base
-unisim.depends = cmbp
+#SUBDIRS += cmbp
+#cmbp.subdir = src/plugins/cmbp
+#cmbp.depends = base
+#unisim.depends = cmbp
 
-SUBDIRS += conductance
-conductance.subdir = src/plugins/conductance
-conductance.depends = base
-unisim.depends = conductance
+#SUBDIRS += conductance
+#conductance.subdir = src/plugins/conductance
+#conductance.depends = base
+#unisim.depends = conductance
 
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed
@@ -108,10 +108,10 @@ unisim.depends = conductance
 #pollnet.depends = base
 #unisim.depends = pollnet
 
-SUBDIRS += resist
-resist.subdir = src/plugins/resist
-resist.depends = base
-unisim.depends = resist
+#SUBDIRS += resist
+#resist.subdir = src/plugins/resist
+#resist.depends = base
+#unisim.depends = resist
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

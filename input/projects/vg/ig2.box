@@ -1,8 +1,0 @@
-Simulation ig2 {
-  vg::Crop crop {
-    density = 3.9
-    Box lai {
-      value = 3
-    }
-  }
-}

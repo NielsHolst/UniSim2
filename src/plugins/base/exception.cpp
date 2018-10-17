@@ -13,11 +13,16 @@
 namespace base {
 
 int Exception::_count = 0;
+const QObject *Exception::_fallbackContext = nullptr;
 
 Exception::Exception(QString message)
-    : _message(message)
+    : _context(_fallbackContext), _message(message)
 {
     ++_count;
+}
+
+Exception::~Exception() {
+    _fallbackContext = nullptr;
 }
 
 Exception& Exception::file(const char *s) {
@@ -31,15 +36,22 @@ Exception& Exception::line(int i) {
 }
 
 Exception& Exception::context(const QObject *object) {
-    if (object) {
-        _fullName = fullName(object);
-        const Box *box = dynamic_cast<const Box *>(object);
-        if (!box)
-            box = dynamic_cast<const Box *>(object->parent());
-        if (box)
-            _fullName += QString(" (#%1)").arg(box->order());
-    }
+    _context = object;
     return *this;
+}
+
+QString Exception::contextDescription() const {
+    QString description;
+    const QObject *context = _context ? _context : _fallbackContext;
+    if (context) {
+        description = fullName(context);
+        const Box *box = dynamic_cast<const Box *>(context);
+        if (!box)
+            box = dynamic_cast<const Box *>(context->parent());
+        if (box)
+            description += QString(" (#%1)").arg(box->order());
+    }
+    return description;
 }
 
 Exception& Exception::hint(QString s) {
@@ -57,15 +69,16 @@ QString Exception::id() const {
 }
 
 QString Exception::what() const {
-    QString text = QString{"Error: %1"}.arg(_message);
-    if (!_value.isEmpty())
+    QString text = QString{"Error: %1"}.arg(_message),
+            description = contextDescription();
+    if (!_value.isNull())
         text += QString("\nValue: '%1'").arg(_value);
-    if (!_value1.isEmpty())
+    if (!_value1.isNull())
         text += QString("\nValue1: '%1'").arg(_value1);
-    if (!_value2.isEmpty())
+    if (!_value2.isNull())
         text += QString("\nValue2: '%1'").arg(_value2);
-    if (!_fullName.isEmpty())
-        text += QString("\nObject: %1").arg(_fullName);
+    if (!description.isEmpty())
+        text += QString("\nObject: %1").arg(description);
     if (!_hint.isEmpty())
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
@@ -75,6 +88,10 @@ QString Exception::what() const {
 
 int Exception::count() {
     return _count;
+}
+
+void Exception::setContext(const QObject *object) {
+    _fallbackContext = object;
 }
 
 template <> QString Exception::asString(bool v) {

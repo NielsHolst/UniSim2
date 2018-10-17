@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QtWidgets>
 #include <base/dialog.h>
+#include <base/environment.h>
 #include <base/version.h>
 #include "main_window.h"
 
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(_dialog->textEdit());
     setWindowTitle("Universal Simulator " + base::version());
     restore();
+    base::environment().checkInstallation();
 }
 
 

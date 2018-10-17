@@ -58,7 +58,7 @@ void DataFrame::read(QString fileName, Labelling labelling) {
         if (hasRowNames) {
             QStringList names;
             for (QStringList row : _rows.toList()) names << row.at(0);
-            if (hasColNames) names.removeFirst();
+            if (hasColNames) names.removeAt(0);
             int ixRow(0);
             _rowNames.clear();
             for (QString name : names.toVector()) {
@@ -69,7 +69,7 @@ void DataFrame::read(QString fileName, Labelling labelling) {
 
         if (hasColNames) {
             QStringList names = _rows.at(0);
-            if (hasRowNames) names.removeFirst();
+            if (hasRowNames) names.removeAt(0);
             int ixCol(0);
             _colNames.clear();
             for (QString name : names.toVector()) {
@@ -78,12 +78,12 @@ void DataFrame::read(QString fileName, Labelling labelling) {
             }
         }
 
-        if (hasColNames) _rows.removeFirst();
+        if (hasColNames) _rows.remove(0);
 
         if (hasRowNames) {
             int n = _rows.size();
             for (int i=0; i<n; ++i)
-                _rows[i].removeFirst();
+                _rows[i].removeAt(0);
         }
     }
 }

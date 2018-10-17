@@ -22,7 +22,7 @@ list::list(QString name, QObject *parent)
 
 void list::doExecute() {
     // Drop "list"
-    _args.removeFirst();
+    _args.removeAt(0);
 
     // Find boxes
     QString path = _args.isEmpty() ?  QString(".") : _args.first();
@@ -42,7 +42,7 @@ void list::doExecute() {
         }
         // Set option set
         if (!_args.isEmpty())
-            _args.removeFirst();
+            _args.removeAt(0);
         QString ops = _args.join("");
         _options = convert<ListOptionSet>(ops);
 

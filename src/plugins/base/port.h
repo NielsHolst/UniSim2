@@ -7,7 +7,6 @@
 #include <QTextStream>
 #include <QVector>
 #include "assign.h"
-#include "box_step.h"
 #include "construction_step.h"
 #include "convert.h"
 #include "enum_functions.h"
@@ -28,26 +27,19 @@ class Box;
 
 class Port : public QObject, public ConstructionStep {
 public:
-    struct Attributes {
-        QString format, label, transform, help;
-        PortTransform portTransform;
-        Attributes() {
-            transform = "Identity";
-            portTransform = Identity;
-        }
-    };
 private:
     int _id;
     void *_valuePtr;
     PortType _valueType, _importType;
     PortMode _mode;
+    PortTransform _portTransform;
+    QMap<QString, QString> _attributes;
     ComputationStep _portValueStep;
     QString _importPath, _fallBackValue;
     QVector<Port *> _importPorts, _exportPorts;
     bool _importPortMustExist, _importsResolved;
     PortAccess _access;
     bool _notReferenced, _reset, _valueOverridden;
-    Attributes _attributes;
     bool _isBlind;
     QStringList _warnings;
 
@@ -55,7 +47,7 @@ private:
 
 public:
     // Configure
-    Port(QString name="noname", QObject *parent=0);
+    Port(QString name="noname", QObject *parent=nullptr);
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value);
@@ -67,25 +59,26 @@ public:
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
-    Port& isBlind(bool on);
 
     // Attributes
     static QStringList attributes();
 
     Port& attribute(QString name, QString value);
-    Port& format(QString s);
-    Port& label(QString s);
-    Port& transform(QString s);
-    Port& help(QString s);
+    Port& help(QString value);
+    Port& format(QString value);
+    Port& label(QString value);
+    Port& transform(QString value);
     Port& transform(PortTransform t);
+    Port& isBlind(bool on);
 
     QString attribute(QString name) const;
+    QString help() const;
     QString format() const;
     QString label() const;
-    QString help() const;
     PortTransform transform() const;
     bool isBlind() const;
 
+    // Names and id
     QString name() const;
     QString fullName() const;
     int id() const;
@@ -152,12 +145,13 @@ template <class T> void Port::deducePortType(T value) {
 
 template <class T> Port& Port::equals(T value)
 {
+    ExceptionContext(this);
     _mode = PortMode::Fixed;
     _portValueStep = environment().computationStep();
     // Deduce the value type as necessary
     deducePortType<T>(value);
     // Create a buffer for the value if it does not exist
-    if (_valuePtr == 0)
+    if (_valuePtr == nullptr)
         _valuePtr = portBuffer(this).createBuffer(_valueType);
     // Copy value to the buffer that _valuePtr points to
     base::assign(_valueType, _valuePtr, typeOf<T>(), &value, transform(), this);

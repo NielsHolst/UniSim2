@@ -20,13 +20,12 @@ public:
 
 private:
     // Inputs
-    double sunlightDiffuse, sunlightDirect, sunlightPropPar, sunlightPhotonCoef,
-        growthLigthtsDirect, growthLigthtsPar, growthLigthtsPhotonIntensity;
+    double sunlightDiffuse, sunlightDirect, sunlightPhotonCoef,
+        growthLigthtsDirect, growthLigthtsParIntensity;
 
     // Outputs
     double direct, diffuse, total,
-           parDirect, parDiffuse, parTotal,
-           photonIntensity;
+           parDirect, parDiffuse, parTotal;
 };
 } //namespace
 

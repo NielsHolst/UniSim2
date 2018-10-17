@@ -1,0 +1,56 @@
+// tomato.box
+// change of phase for a tomato plant from vegetative stage (leaves only)
+// to generative stage (beginning of flowering)
+// Based on Chapter 9 of Bram Vanthoor, "A model-based greenhouse design method" (2011)
+
+Simulation sim {
+  .steps = 180
+  Calendar calendar {
+    .initialDateTime = 1/5/2009
+  }
+  Records weather {
+    .fileName = "book/weather/flakkebjerg 2009.txt"
+  }
+  Box tomato {
+    Stage vegetative {
+      .initial = 1  // model a single plant 
+      .duration = 1035 // degree days until generative stage, Vanthoor (2011)
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T0 = 0 // Vanthoor (2011)
+        .T = weather[Tavg]
+      }
+    }
+    Stage generative {
+      .inflow = ../vegetative[outflow]
+      .duration = 300
+      .timeStep = sim[step]
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      PlotR {
+        .ports = *[content]
+        .ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('months'), 
+                      labels = date_format('%b')
+                    )" 
+      }
+      PlotR {
+        .ports = *[outflowTotal]
+        .ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('months'), 
+                      labels = date_format('%b')
+                    )" 
+      }
+	  PlotR {
+	    .ports = vegetative/time[step] // how can I see the cumulative increase in day degrees?
+	  }
+    }
+  }
+}
+

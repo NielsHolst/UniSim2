@@ -3,8 +3,11 @@
 
 #include <QFont>
 #include <QObject>
+#include <QStack>
 #include <QString>
+#include <QTime>
 
+class QProgressBar;
 class QTextEdit;
 
 namespace base {
@@ -13,24 +16,42 @@ class DialogBase : public QObject
 {
 public:
     DialogBase(QObject *parent);
-    virtual void progress(int current, int total) = 0;
-    virtual void finished() = 0;
-    virtual void message(QString s) = 0;
+
+    struct ProgressInfo{
+        QTime time;
+        int step, steps, iteration, iterations;
+    };
+    void resetProgress();
+    void updateProgress(const ProgressInfo &info);
+    virtual QProgressBar* progressBar() = 0;
+    virtual void finishProgress() = 0;
     virtual void information(QString s) = 0;
     virtual QTextEdit* textEdit();
     virtual void setFont(QString, int) {}
     virtual QFont font() { return QFont(); }
+
+    void message(QString s);
+    void pushMessage();
+    void popMessage();
+
     void error(QString s);
     friend DialogBase& dialog();
     void resetErrorCount();
     int errorCount() const;
+
+    virtual void writePrompt() {}
+
 private:
     // singleton data
     static DialogBase *_dialog;
+    static QStack<QString> _messages;
     // data
     int _errorCount;
+    double _nextShowProgress;
+    QString _message;
     // methods
     virtual void errorImpl(QString s) = 0;
+    virtual void messageImpl(QString s) = 0;
 };
 
 // singleton method

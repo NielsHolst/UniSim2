@@ -4,7 +4,7 @@
 #include <QString>
 #include "product_base.h"
 
-#define PUBLISH(name) Product<name> name##Product(#name, productList());
+#define PUBLISH(name) static Product<name> name##Product(#name, productList());
 
 namespace base {
 

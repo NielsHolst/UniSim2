@@ -168,8 +168,7 @@ template<> QTime convert(QDate);
 //
 
 template<class T> T convert(QTime source) {
-    double msecs  = source.msecsSinceStartOfDay(),
-           hours = msecs/1000./60./60.;
+    double hours = source.hour() + source.minute()/60. + source.second()/3600.;
     return numeric_cast<T>(hours);
 }
 template<> bool convert(QTime);

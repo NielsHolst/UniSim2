@@ -16,9 +16,6 @@ class Indoors : public base::Box
 public:
     Indoors(QString name, QObject *parent);
     void amend();
-private:
-    // Inputs
-    bool noHeating, noCooling;
 };
 } //namespace
 

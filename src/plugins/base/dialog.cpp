@@ -28,20 +28,24 @@ QFont Dialog::font() {
     return _widget->font();
 }
 
-void Dialog::progress(int current, int total) {
-    _widget->progress(current, total);
+void Dialog::writePrompt() {
+    _widget->writePrompt();
+;}
+
+QProgressBar* Dialog::progressBar() {
+    return _widget->progressBar();
 }
 
-void Dialog::finished() {
+void Dialog::finishProgress() {
     _widget->finished();
-}
-
-void Dialog::message(QString s) {
-    _widget->message(s);
 }
 
 void Dialog::information(QString s) {
     _widget->information(s);
+}
+
+void Dialog::messageImpl(QString s) {
+    _widget->message(s);
 }
 
 void Dialog::errorImpl(QString s) {

@@ -11,6 +11,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QTime>
+#include "exception_context.h"
 
 #define ThrowException(X) \
     throw base::Exception((X)).file(__FILE__).line(__LINE__)
@@ -22,6 +23,7 @@ namespace base {
 class Exception {
 public:
     Exception(QString message);
+    ~Exception();
     Exception& file(const char *s);
     Exception& line(int i);
     Exception& context(const QObject *object);
@@ -34,12 +36,16 @@ public:
     QString id() const;
     QString what() const;
     static int count();
+    static void setContext(const QObject *object);
 private:
     // data
+    const QObject *_context;
     QString _message, _value, _value1, _value2, _hint, _fullName, _file, _id;
     int _line;
     static int _count;
+    static const QObject *_fallbackContext;
     // methods
+    QString contextDescription() const;
     template <class T> QString asString(T v);
 };
 

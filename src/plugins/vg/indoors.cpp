@@ -18,8 +18,6 @@ Indoors::Indoors(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("contains sub-models for indoors climate");
-    Input(noHeating).equals(false).help("Turn heating off always?");
-    Input(noCooling).equals(false).help("Turn cooling off always?");
 }
 
 void Indoors::amend() {

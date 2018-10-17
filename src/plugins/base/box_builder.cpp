@@ -1,6 +1,6 @@
+#include <QObject>
 #include "box.h"
 #include "box_builder.h"
-#include "box_step.h"
 #include "computation_step.h"
 #include "dialog.h"
 #include "distribution.h"
@@ -13,8 +13,8 @@
 namespace base {
 
 BoxBuilder::BoxBuilder(Box *parent)
-    : _hasParent(parent!=0),
-      _content(0), _currentBox(0), _currentPort(0), _currentDistribution(0)
+    : _hasParent(parent!=nullptr),
+      _content(nullptr), _currentBox(nullptr), _currentPort(nullptr), _currentDistribution(nullptr)
 {
     if (_hasParent) {
         _content = _currentBox = parent;
@@ -37,19 +37,25 @@ void BoxBuilder::clear() {
 
 BoxBuilder& BoxBuilder::box(Box *box) {
     box->setParent(_currentBox);
-    _currentPort = 0;
+    _currentPort = nullptr;
     return *this;
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
-    if (_content && _stack.isEmpty()) {
+    if (_content && _stack.isEmpty())
         ThrowException("BoxBuilder: Boxes miss a common root");
-    }
+    Box *newBox = MegaFactory::create<Box>(className, "", _currentBox);
     _stack.push(_currentBox);
-    _currentBox =  MegaFactory::create<Box>(className, "", _currentBox);
+    return moveToBox(newBox);
+}
+
+BoxBuilder& BoxBuilder::moveToBox(Box *box) {
+    if (!box)
+        ThrowException("BoxBuilder cannot move to non-existing box");
+    _currentBox =  box;
     if (!_content)
         _content = _currentBox; // set _content on first call of box
-    _currentPort = 0;
+    _currentPort = nullptr;
     return *this;
 }
 
@@ -62,8 +68,8 @@ BoxBuilder& BoxBuilder::endbox() {
     if (_stack.isEmpty())
         ThrowException("BoxBuilder: box body ended twice");
     _currentBox = _stack.pop();
-    _currentPort = 0;
-    _currentDistribution = 0;
+    _currentPort = nullptr;
+    _currentDistribution = nullptr;
     return *this;
 }
 
@@ -71,7 +77,7 @@ BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
         ThrowException("BoxBuilder: port declaration outside of box context");
     _currentPort = _currentBox->port(name);
-    _currentDistribution = 0;
+    _currentDistribution = nullptr;
     return *this;
 }
 
@@ -81,7 +87,7 @@ BoxBuilder& BoxBuilder::newPort(QString name) {
     }
     _currentPort = new Port(name, _currentBox);
     _currentPort->isBlind(true);
-    _currentDistribution = 0;
+    _currentDistribution = nullptr;
     return *this;
 }
 
@@ -94,7 +100,7 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
         ThrowException("Missing distribution parameters").context(_currentPort);
 
     QString className = items.first();
-    items.removeFirst();
+    items.removeAt(0);
 
     _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort); //->boxParent());
     _currentDistribution->arguments(items);
@@ -119,7 +125,7 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort) {
     if (!_currentBox)
         ThrowException("BoxBuilder: import out of context");
     _currentPort->imports(pathToPort);
-    _currentDistribution = 0;
+    _currentDistribution = nullptr;
     return *this;
 }
 
@@ -127,7 +133,7 @@ BoxBuilder& BoxBuilder::importsMaybe(QString pathToPort, QString fallBackValue) 
     if (!_currentBox)
         ThrowException("BoxBuilder: import out of context");
     _currentPort->importsMaybe(pathToPort, fallBackValue);
-    _currentDistribution = 0;
+    _currentDistribution = nullptr;
     return *this;
 }
 
@@ -187,7 +193,8 @@ Box* BoxBuilder::content(AmendOption amendOption) {
         endbox();
         if (!_stack.isEmpty())
             ThrowException("BoxBuilder: unclosed box(es) at end")
-                    .hint("Possibly missing endbox() call").value(_stack.size());
+                    .hint("Possibly missing endbox() call").value(_stack.size())
+                    .context(_stack.top());
     }
     if (_content) {
         switch (amendOption) {

@@ -20,6 +20,7 @@ TARGET = universal_simulator_base$${SUFFIX}
 
 # Our project header and source code
 HEADERS +=  \
+    altova_xml.h \
     any_year.h \
     assign.h \
     ast_boxes.h \
@@ -30,7 +31,6 @@ HEADERS +=  \
     box_reader_boxes.h \
     box_reader_xml.h \
     box_output.h \
-#    box_step.h \
     circular_buffer.h \
     command.h  \
     command_help.h  \
@@ -42,6 +42,7 @@ HEADERS +=  \
     data_grid.h \
     dialog.h \
     dialog_base.h \
+    dialog_minimal.h \
     dialog_quiet.h \
     dialog_stub.h \
     dialog_widget.h \
@@ -49,6 +50,7 @@ HEADERS +=  \
     enum_functions.h \
     environment.h \
     exception.h \
+    exception_context.h \
     factory_plug_in.h \
     food_web_box_base.h \
     general.h \
@@ -73,6 +75,8 @@ HEADERS +=  \
     port_value_op.h \
     product_base.h \
     product.h \
+#    progress_indicator_base.h \
+#    progress_indicator_progress_bar.h \
     random_generator.h \
     save_grammar_atom.h \
     save_grammar_base.h \
@@ -93,6 +97,7 @@ HEADERS +=  \
     version.h
 
 SOURCES +=  \
+    altova_xml.cpp \
     any_year.cpp \
     assign.cpp \
     ast_boxes.cpp \
@@ -103,7 +108,6 @@ SOURCES +=  \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \
-#    box_step.cpp \
     command.cpp \
     command_help.cpp  \
     computation_step.cpp \
@@ -114,12 +118,14 @@ SOURCES +=  \
     data_grid.cpp \
     dialog.cpp \
     dialog_base.cpp \
+    dialog_minimal.cpp \
     dialog_quiet.cpp \
     dialog_stub.cpp \
     dialog_widget.cpp \
     distribution.cpp \
     environment.cpp \
     exception.cpp \
+    exception_context.cpp \
     food_web_box_base.cpp \
     general.cpp \
     history.cpp \
@@ -138,6 +144,8 @@ SOURCES +=  \
     port_type.cpp \
     port_value_op.cpp \
     product_base.cpp \
+#    progress_indicator_base.cpp \
+#    progress_indicator_progress_bar.cpp \
     random_generator.cpp \
     save_grammar_atom.cpp \
     save_grammar_base.cpp \

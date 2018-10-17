@@ -20,7 +20,7 @@ Outdoors::Outdoors(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("delivers readings of ourdoors weather");
-    Input(propParRadiation).equals(0.47).help("Proportion of PAR in sunlight irradiation [0;1]");
+    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy (micromole/J)");
     Input(co2).equals(400.).help("Outdoors CO2 concentration [ppm]");
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature [oC]");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity [0;100]");
@@ -28,7 +28,6 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Input(diffuseRadiation).importsMaybe("./records[DifRad]").help("Diffuse component of sunlight irradiation [W/m2]");
     Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed [m/s]");
     Input(skyTemperature).importsMaybe("./records[Tsky]").help("Sky temperature [oC]");
-    Output(parRadiation).help("PAR component of sunlight irradiation [W/m2]");
     Output(directRadiation).help("Direct component of sunlight irradiation [W/m2]");
     Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation [0;1]");
     Output(ah).help("Outdoors absolute humidity [kg/m3]");
@@ -68,7 +67,6 @@ void Outdoors::reset() {
 }
 
 void Outdoors::update() {
-    parRadiation = propParRadiation*radiation;
     directRadiation = radiation - diffuseRadiation;
     propDirectRadiation = div0(directRadiation, radiation);
     ah = ahFromRh(temperature, rh);

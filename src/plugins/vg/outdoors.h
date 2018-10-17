@@ -21,11 +21,11 @@ public:
 private:
     // Parameters
     double temperature, skyTemperature, windSpeed, rh,
-    radiation, diffuseRadiation, propParRadiation,
+    radiation, diffuseRadiation, sunlightPhotonCoef,
     co2, soilTemperature;
 
     // Variables
-    double parRadiation, directRadiation, propDirectRadiation, ah, sh;
+    double directRadiation, propDirectRadiation, ah, sh;
 
 };
 } //namespace

@@ -22,6 +22,7 @@ public:
     // Box
     BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
+    BoxBuilder& moveToBox(Box *box);
     BoxBuilder& name(QString boxName);
     BoxBuilder& endbox();
     // Port

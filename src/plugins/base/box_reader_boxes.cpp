@@ -1,4 +1,5 @@
 #include <string>
+#include <QString>
 #include "ast_boxes.h"
 #include "box.h"
 #include "box_reader_boxes.h"
@@ -32,7 +33,7 @@ void BoxReaderBoxes::openFile(QString filePath) {
 }
 
 bool BoxReaderBoxes::parse(ast::Node &astRoot) {
-    std::string storage = _file.readAll().toStdString();
+    std::string storage = QString(_file.readAll()).toStdString();
     // Make certain file ends with a line break
     storage += "\n";
     return ast::parse_boxes(storage.begin(), storage.end(), astRoot);

@@ -13,11 +13,11 @@ void DialogQuiet::progress(int, int) {
 void DialogQuiet::finished() {
 }
 
-void DialogQuiet::message(QString) {
-}
-
 void DialogQuiet::information(QString s) {
     _information = s;
+}
+
+void DialogQuiet::messageImpl(QString) {
 }
 
 void DialogQuiet::errorImpl(QString s) {

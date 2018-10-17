@@ -21,11 +21,11 @@ private:
     enum ElementType {BoxElement, PortElement, NewPortElement};
     ElementType _elementType;
     // Methods
+    typedef BoxBuilder& (BoxBuilder::*BuilderMethod) (QString name);
     void openReader(QString filePath);
     void setElementType();
     void setBoxAttributes();
-    void setPortAttributes();
-    void setNewPortAttributes();
+    void setPortAttributes(BuilderMethod portMethod);
 };
 
 }

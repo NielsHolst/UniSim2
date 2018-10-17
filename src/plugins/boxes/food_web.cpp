@@ -19,6 +19,7 @@ FoodWeb::FoodWeb(QString name, QObject *parent)
 }
 
 void FoodWeb::amend() {
+    ExceptionContext(this);
     // Read attack file
     readAttackDataFrame();
     _n = _attackDf.numCol();
@@ -134,6 +135,7 @@ void FoodWeb::createOutputs() {
 }
 
 void FoodWeb::reset() {
+    ExceptionContext(this);
     if (attackFile != _currentAttackFile) {
         readAttackDataFrame();
         int n = _attackDf.numCol();

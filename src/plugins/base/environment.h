@@ -33,7 +33,7 @@ public:
     QString homePath() const;
 
     QString openOutputFile(QFile &file, QString extension);
-    QString outputFilePath(QString extension);
+    QString outputFilePath(QString extension, int offset=0);
     QString outputFileNamePath(QString fileName);
 
     QString filePath(Folder folder, QString fileName) const;
@@ -62,6 +62,7 @@ public:
     void copyToClipboard(QString text);
     void recreateClipboard();
 
+    void checkInstallation() const;
     bool isFirstInstallation() const;
     bool isNewInstallation() const;
     void updateInstallation() const;

@@ -12,7 +12,8 @@ QVector<Port*> Port::_index;
 // Configure
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(0), _valueType(Null), _mode(PortMode::Default),
+    : QObject(parent), _valuePtr(nullptr), _valueType(Null), _mode(PortMode::Default),
+      _portTransform(Identity),
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true), _importsResolved(false),
       _access(PortAccess::Input),
@@ -26,6 +27,9 @@ Port::Port(QString name, QObject *parent)
         boxParent->addPort(this);
     _id = _index.size();
     _index << this;
+    _attributes["format"] = "";
+    _attributes["label"] = "";
+    _attributes["help"] = "";
 }
 
 Port& Port::equals(const char *value) {
@@ -108,42 +112,71 @@ QStringList Port::attributes() {
 
 // Set attributes
 
-#define CASE_SET_ATTRIBUTE(X,Y) \
-if (name == #X) { \
-    _attributes.X = Y; \
-    return *this; \
-}
-
 Port& Port::attribute(QString name, QString value) {
-    CASE_SET_ATTRIBUTE(format, value)
-    CASE_SET_ATTRIBUTE(label, value)
-    CASE_SET_ATTRIBUTE(help, value)
-    if (name == "transform") {
-        _attributes.transform = value;
-        _attributes.portTransform = convert<PortTransform>(value);
-        return *this;
-    }
-    ThrowException("Unknown attribute").value(name).context(this);
+    _attributes[name] = value;
+    return *this;
 }
 
-#define SET_ATTRIBUTE(X) \
-Port& Port::X(QString value) { \
-    return attribute(#X, value); \
+Port& Port::help(QString value) {
+    _attributes["help"] = value;
+    return *this;
 }
 
-SET_ATTRIBUTE(format)
-SET_ATTRIBUTE(label)
-SET_ATTRIBUTE(transform)
-SET_ATTRIBUTE(help)
+Port& Port::format(QString value) {
+    _attributes["format"] = value;
+    return *this;
+}
+
+Port& Port::label(QString value) {
+    _attributes["label"] = value;
+    return *this;
+}
+
+Port& Port::transform(QString value) {
+    _portTransform = convert<PortTransform>(value);
+    return *this;
+}
 
 Port& Port::transform(PortTransform tr) {
-    return attribute("transform", convert<QString>(tr));
+    _portTransform = tr;
+    return *this;
 }
 
 Port& Port::isBlind(bool on) {
     _isBlind = on;
     return *this;
 }
+
+// Get attributes
+
+QString Port::attribute(QString name) const {
+    if (_attributes.contains(name))
+        return _attributes.value(name);
+    else
+        ThrowException("Unknown attribute").value(name).context(this);
+}
+
+QString Port::help() const {
+    return _attributes.value("help");
+}
+
+QString Port::format() const {
+    return _attributes.value("format");
+}
+
+QString Port::label() const {
+    return _attributes.value("label");
+}
+
+PortTransform Port::transform() const {
+    return _portTransform;
+}
+
+bool Port::isBlind() const {
+    return _isBlind;
+}
+
+// Names and id
 
 QString Port::name() const {
     return objectName();
@@ -156,35 +189,6 @@ QString Port::fullName() const {
 
 int Port::id() const {
     return _id;
-}
-
-// Get attributes
-
-#define CASE_GET_ATTRIBUTE(X) if (name == #X) return _attributes. X
-
-QString Port::attribute(QString name) const {
-    CASE_GET_ATTRIBUTE(format);
-    CASE_GET_ATTRIBUTE(label);
-    CASE_GET_ATTRIBUTE(transform);
-    CASE_GET_ATTRIBUTE(help);
-    ThrowException("Unknown attribute").value(name).context(this);
-}
-
-#define GET_ATTRIBUTE(X) \
-QString Port::X() const { \
-    return _attributes. X; \
-}
-
-GET_ATTRIBUTE(format)
-GET_ATTRIBUTE(label)
-GET_ATTRIBUTE(help)
-
-bool Port::isBlind() const {
-    return _isBlind;
-}
-
-PortTransform Port::transform() const {
-    return _attributes.portTransform;
 }
 
 // Change
@@ -336,7 +340,7 @@ Box *Port::boxParent() {
 }
 
 bool Port::hasValue() const {
-    return _valuePtr != 0;
+    return _valuePtr != nullptr;
 }
 
 #define CASE_VALUE_SIZE(X,Y) \

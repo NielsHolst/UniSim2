@@ -1,10 +1,13 @@
-#include<QTextEdit>
+#include <QApplication>
+#include <QProgressBar>
+#include <QTextEdit>
 #include "dialog_base.h"
 #include "exception.h"
 
 namespace base {
 
-DialogBase* DialogBase::_dialog = 0;
+DialogBase* DialogBase::_dialog = nullptr;
+QStack<QString> DialogBase::_messages;
 
 DialogBase& dialog() {
     Q_ASSERT(DialogBase::_dialog);
@@ -16,11 +19,44 @@ DialogBase::DialogBase(QObject *parent)
       _errorCount(0)
 {
     _dialog = this;
+    resetProgress();
+}
+
+void DialogBase::resetProgress() {
+    _nextShowProgress = 0.01;
+}
+
+void DialogBase::updateProgress(const ProgressInfo &info) {
+    double progress = double(info.step + (info.iteration-1)*info.steps)/info.steps/info.iterations;
+    if (progress > _nextShowProgress) {
+        QProgressBar *bar = progressBar();
+        bar->setFormat(" %p% of %ms");
+        double total = info.time.elapsed()/progress;
+        bar->setMaximum(static_cast<int>(total)/1000);
+        bar->setValue(static_cast<int>(info.time.elapsed())/1000);
+        bar->show();
+        qApp->processEvents();
+        _nextShowProgress += 0.01;
+    }
 }
 
 QTextEdit* DialogBase::textEdit() {
     ThrowException("Dialog has no TextEdit widget");
-    return 0;
+}
+
+void DialogBase::message(QString s) {
+    _message = s;
+    messageImpl(s);
+}
+
+void DialogBase::pushMessage() {
+    _messages.push(_message);
+}
+
+void DialogBase::popMessage() {
+    if (_messages.isEmpty())
+        ThrowException("Unexpected empty message stack").context(this);
+    message(_messages.pop());
 }
 
 void DialogBase::error(QString s) {

@@ -17,12 +17,13 @@ class DialogWidget : public QTextEdit
     Q_OBJECT
 public:
     DialogWidget(QMainWindow *parent);
-    ~DialogWidget();
+    ~DialogWidget() override;
     void init();
-    void progress(int current, int total);
+    QProgressBar* progressBar();
     void finished();
     void message(QString s);
     void information(QString s);
+    void writePrompt();
     void errorImpl(QString s);
     void setFont(QString family, int pt);
     QFont font();
@@ -48,7 +49,6 @@ private:
     void saveFont();
     void restoreFont();
     QTextCursor getCursor();
-    void writePrompt();
     void writeWelcome();
     void insertText(QString text, QColor color = QColor("black"));
     int numLines();

@@ -36,12 +36,12 @@ void increment(double *x, const double *toAdd, int n);
 QVector<double> add(const QVector<double> &x, const QVector<double> &y);
 void scale(QVector<double> &x, double factor);
 
-double pow0(double x, double c, QObject *context = 0);
+double pow0(double x, double c, QObject *context = nullptr);
 double negExp(double x);
 double divBounded(double x, double y, double bound = std::numeric_limits<double>::max());
 double GBFuncResp(double demand, double resource);
 int toDayOfYear(int day, int month);
-double convertTime(double time, char fromUnit, char toUnit, QObject *context = 0);
+double convertTime(double time, char fromUnit, char toUnit, QObject *context = nullptr);
 //@}
 
 //! @name String handling

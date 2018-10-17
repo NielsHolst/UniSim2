@@ -26,10 +26,10 @@ void BoxReaderXml::parse(QString filePath) {
                     setBoxAttributes();
                     break;
                 case PortElement:
-                    setPortAttributes();
+                    setPortAttributes(&BoxBuilder::port);
                     break;
                 case NewPortElement:
-                    setNewPortAttributes();
+                    setPortAttributes(&BoxBuilder::newPort);
                     break;
             }
             break;
@@ -89,13 +89,14 @@ void BoxReaderXml::setBoxAttributes() {
     }
 }
 
-void BoxReaderXml::setPortAttributes() {
+void BoxReaderXml::setPortAttributes(BuilderMethod portMethod) {
     bool nameSet{false};
     for (QXmlStreamAttribute attribute : _reader.attributes()) {
         QString name = attribute.name().toString(),
                 value = _reader.attributes().value(name).toString();
         if (name == "name"){
-            _builder->port(value);
+//            _builder->port(value);
+            (_builder->*portMethod)(value);
             nameSet = true;
         }
         else if (name == "value")
@@ -107,10 +108,6 @@ void BoxReaderXml::setPortAttributes() {
     }
     if (!nameSet)
         ThrowException("Port misses \"name\" attribute" + currentInfo());
-}
-
-void BoxReaderXml::setNewPortAttributes() {
-
 }
 
 } // namespace

@@ -18,15 +18,15 @@ public:
     void update();
 private:
     // Inputs
-    double timeStep, intensity, ballastCorrection,
-        heatCoef, longWaveCoef, shortWaveCoef, parCoef, parPhotonCoef,
+    QString type;
+    double timeStep, intensity, parPhotonCoef,
         minPeriodOn, age, lifeTime;
     bool on;
     // Outputs
-    double netIntensity, currentPower, currentPeriod, totalPeriod;
+    double
+        currentPeriod, totalPeriod;
     // Data
-    struct { double heatEmission, longWaveEmission, shortWaveEmission, parEmission, energyFlux; } netAttributes;
-    double degradationRate;
+    double _degradationRate;
     // Methods
     void noLight();
 };

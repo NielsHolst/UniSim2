@@ -29,8 +29,6 @@ private:
     int iteration, step, finalStep, executionTime;
     bool hasError;
     QString errorMsg;
-    // Data
-    double _nextShowProgress;
     // Methods
     void collectTrackedPorts();
     void removeObsoletePorts();

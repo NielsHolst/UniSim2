@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include "box.h"
+#include "command.h"
 #include "dialog.h"
 #include "environment.h"
 #include "general.h"
@@ -122,11 +123,11 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
     return filePath;
 }
 
-QString Environment::outputFilePath(QString extension) {
+QString Environment::outputFilePath(QString extension, int offset) {
     QString fileName = _latestLoadArg;
 
     char numberFilled[16];
-    sprintf(numberFilled, "%04d", fileCountervalue());
+    sprintf(numberFilled, "%04d", fileCountervalue() + offset);
 
     QString ext = (extension.at(0) == '.') ? extension : ("." + extension);
     return outputFileNamePath(QFileInfo(fileName).baseName() + "_" + numberFilled + ext);
@@ -328,6 +329,23 @@ void Environment::recreateClipboard() {
         QString text = QTextStream(&file).readAll();
         QApplication::clipboard()->setText(text);
         dialog().information("Executable R script copied to clipboard");
+    }
+}
+
+void Environment::checkInstallation() const {
+    if (isNewInstallation()) {
+        dialog().information("New installation detected; reconfiguring HOME folder...");
+        Environment *this2 = const_cast<Environment *>(this);
+
+        int numErrors = Exception::count();
+        Command::submit(QStringList() << "reconfigure", this2);
+        bool successful = (numErrors == Exception::count());
+        if (successful) {
+            dialog().information("Work folder set to:");
+            Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this2);
+            updateInstallation();
+        }
+        dialog().writePrompt();
     }
 }
 

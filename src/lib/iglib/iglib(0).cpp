@@ -21,7 +21,7 @@ namespace {
             QString msg("Expected '%1'");
             ThrowException(msg.arg(name)).value(items.at(0));
         }
-        items.removeFirst();
+        items.removeAt(0);
         return items;
     }
 }

@@ -1,0 +1,56 @@
+// tithonia1.box
+Simulation sim {
+  .steps = 6000
+  Calendar calendar {
+      .initialDateTime = 1/4/2014
+      .timeStep = 1
+      .timeUnit = "h"
+  }
+  Records weather {
+      .fileName = "weather_ui_2014.txt"
+  }
+Box tithonia{  
+  Stage seedling { 
+      .initial = 200
+      .duration = 7
+     DayDegrees	time {
+	  .T0 = 22
+	  .T = weather[Avg_Temp]
+    }
+  }
+  Stage juvenile {
+      .initial = 150
+	  .duration = 21
+	 DayDegrees	time {
+	  .T0 = 22
+	  .T = weather[Avg_Temp]
+    }
+  }
+  Stage vegetativeAdult {
+      .initial = 100
+	  .duration = 180
+	 DayDegrees	time {
+	  .T0 = 22
+	  .T = weather[Avg_Temp]
+    }
+  }
+  Stage reproductiveAdult {
+      .initial = 100 
+	  .duration = 60
+	 DayDegrees	time {
+	  .T0 = 22
+	  .T = weather[Avg_Temp]
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+	  PlotR {
+	  .ports = (seedling[content] juvenile[content] vegetativeAdult[content] reproductiveAdult[content])
+	  .ncol = 2
+	  .nrow = 2
+	 }	  
+   }
+  }
+}
+}

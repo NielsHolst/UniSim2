@@ -31,7 +31,7 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     Input(lai).imports("crop/lai[value]");
     Input(indoorsLight).imports("indoors/light[total]");
     Input(lightAbsorptivity).imports("../photosynthesis[absorptivity]");
-    Input(growthLightLw).imports("actuators/growthLights[longWaveEmission]");
+    Input(growthLightLw).imports("actuators/growthLights[longWaveIntensity]");
     Input(growthLightViewFactor).equals(1.);
     Input(floorTemperature).imports("energyFlux/floor[temperature]");
     Input(floorEmissivity).imports("energyFlux/floor[emissivity]");

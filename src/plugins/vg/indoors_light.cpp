@@ -18,20 +18,17 @@ IndoorsLight::IndoorsLight(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes indoors diffuse and direct light and PAR");
+    Input(sunlightPhotonCoef).imports("outdoors[sunlightPhotonCoef]");
     Input(sunlightDiffuse).imports("construction/shelter[diffuseLightTransmitted]");
     Input(sunlightDirect).imports("construction/shelter[directLightTransmitted]");
-    Input(sunlightPropPar).imports("outdoors[propParRadiation]");
-    Input(growthLigthtsDirect).imports("growthLights[shortWaveEmission]");
-    Input(growthLigthtsPar).imports("growthLights[parEmission]");
-    Input(growthLigthtsPhotonIntensity).imports("growthLights[photonIntensity]");
-    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy (micromole/J)");
+    Input(growthLigthtsDirect).imports("growthLights[shortWaveIntensity]");
+    Input(growthLigthtsParIntensity).imports("growthLights[parIntensity]");
     Output(direct).help("Intensity of indoors direct light [W/m2]");
     Output(diffuse).help("Intensity of indoors diffuse light [W/m2]");
     Output(total).help("Intensity of indoors direct+diffuse light [W/m2]");
-    Output(parDirect).help("Intensity of indoors direct PAR [W/m2]");
-    Output(parDiffuse).help("Intensity of indoors diffuse PAR [W/m2]");
-    Output(parTotal).help("Intensity of indoors direct+diffuse PAR [W/m2]");
-    Output(photonIntensity).help("PAR Photon intensity [micromole PAR/s/m2]");
+    Output(parDirect).help("Intensity of indoors direct PAR [micromole/s/m2]");
+    Output(parDiffuse).help("Intensity of indoors diffuse PAR [micromole/s/m2]");
+    Output(parTotal).help("Intensity of indoors direct+diffuse PAR [micromole/s/m2]");
 }
 
 void IndoorsLight::reset() {
@@ -44,11 +41,9 @@ void IndoorsLight::update() {
     direct = sunlightDirect + growthLigthtsDirect;
     total = direct + diffuse;
 
-    parDiffuse = sunlightPropPar*diffuse;
-    parDirect = sunlightPropPar*direct + growthLigthtsPar;
+    parDiffuse = sunlightPhotonCoef*diffuse;
+    parDirect = sunlightPhotonCoef*direct + growthLigthtsParIntensity;
     parTotal = parDiffuse + parDirect;
-
-    photonIntensity = (sunlightDiffuse + sunlightDirect)*sunlightPhotonCoef + growthLigthtsPhotonIntensity;
 }
 
 } //namespace

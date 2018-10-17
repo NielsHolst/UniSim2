@@ -26,21 +26,22 @@ MegaFactory::MegaFactory() {
         dialog().error("Could not find plugins folder,\nexpected near here: " +
                        QDir(QApplication::applicationDirPath()).absolutePath());
 
+    dialog().pushMessage();
     foreach (QString filename, dir.entryList(QDir::Files)) {
         QString filePath = dir.absoluteFilePath(filename);
         QPluginLoader loader(filePath);
         FactoryPlugIn *factory = qobject_cast<FactoryPlugIn*>(loader.instance());
         if (factory) {
-            dialog().information("loading " + filePath +"...");
+            dialog().message("loading " + filePath +"...");
             _factories << factory;
             for (QString id : factory->inventory()) {
                 productIndex.insert(id, factory);
                 QString idWithNamespace = factory->id() + "::" + id;
                 productIndex.insert(idWithNamespace, factory);
-
             }
         }
     }
+    dialog().popMessage();
 }
 
 QDir MegaFactory::pluginsDir() {

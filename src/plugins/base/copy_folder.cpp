@@ -27,6 +27,11 @@ namespace {
 void copyFolder(QDir source, QDir destination) {
     if (destination.exists())
         renameFolder(destination);
+    QString msg = "Copying '%1' to '%2'";
+    QString sourcePath = (source.absolutePath() == ":/data") ?
+                "default data" : source.absolutePath(),
+            destinationPath = destination.absolutePath();
+    dialog().information(msg.arg(sourcePath).arg(destinationPath));
     copyFolderHard(source, destination);
 }
 
@@ -43,7 +48,7 @@ void renameFolder(QDir dir) {
     bool ok = QDir().rename(oldPath, newPath);
     if (!ok)
         ThrowException("Cannot rename folder").value(info)
-                      .hint("Close all programs then try again");
+                      .hint("Close programs using the folder then try again");
 }
 
 void copyFolderHard(QDir source, QDir destination) {
@@ -52,7 +57,7 @@ void copyFolderHard(QDir source, QDir destination) {
         bool ok = QDir().mkpath(destination.absolutePath());
         if (!ok)
             ThrowException("Cannot create destination folder").value(destination.absolutePath())
-                    .hint("Close all programs then try again");
+                    .hint("Close programs using the destination folder then try again");
     }
 
     // Copy folder

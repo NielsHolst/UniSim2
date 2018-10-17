@@ -23,6 +23,7 @@ public:
 private:
     // Inputs
     double
+        sunlightPhotonCoef,
         kDiffuse, kDirect, kDirectDirect, scattering,
         diffuseReflectivity, directReflectivity,
         parDiffuse, parDirect,
@@ -31,6 +32,9 @@ private:
 
     // Outputs
     double absorptivity, parAbsorbed, Pg, Pn;
+
+    // Data
+    double _parDiffuseW, _parDirectW;
 
     // Methods
     double lad() const;

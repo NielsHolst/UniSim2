@@ -9,6 +9,10 @@
 
 #include <base/box.h>
 
+namespace base {
+    class BoxBuilder;
+}
+
 namespace vg {
 
 class Given : public base::Box
@@ -16,6 +20,10 @@ class Given : public base::Box
 public:
     Given(QString name, QObject *parent);
     void amend();
+private:
+    void amendAirFlux(base::BoxBuilder &builder);
+    void amendVapourFlux(base::BoxBuilder &builder);
+    void amendEnergyFlux(base::BoxBuilder &builder);
 };
 } //namespace
 

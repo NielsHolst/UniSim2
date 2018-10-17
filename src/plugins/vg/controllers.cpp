@@ -38,16 +38,29 @@ void Controllers::amend() {
             box("ProportionalSignal").name("crack").
                 port("input").imports("indoors/humidity[rh]").
                 port("threshold").imports("setpoints[rhMax]").
-                port("thresholdBand").imports("setpoints[rhMaxband]").
+                port("thresholdBand").imports("setpoints[rhMaxBand]").
                 port("maxSignal").imports("./minsMax[value]").
                 port("minSignal").equals(0).
                 box("ProportionalSignal").name("minsMax").
                     port("input").imports("outdoors[temperature]").
                     port("threshold").imports("controllers[crackVentilationTemperatureMin]").
-                    port("thresholdBand").imports("controllers[crackVentilationTemperatureMinband]").
+                    port("thresholdBand").imports("controllers[crackVentilationTemperatureMinBand]").
                     port("maxSignal").imports("controllers[crackVentilation]").
                     port("minSignal").equals(0).
                 endbox().
+            endbox().
+        endbox();
+
+    if (!findMaybeOne<Box>("./heating"))
+        builder.
+        box("Accumulator").name("heating").
+            port("change").imports("./controller[controlVariable]").
+            port("minValue").equals(0).
+            port("maxValue").equals(1).
+            box("PidController").name("controller").
+                port("sensedValue").imports("indoors/temperature[value]").
+                port("desiredValue").imports("setpoints/temperature/heating[value]").
+                port("Kprop").equals(0.1).
             endbox().
         endbox();
 

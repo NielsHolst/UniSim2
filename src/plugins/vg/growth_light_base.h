@@ -17,7 +17,12 @@ public:
     GrowthLightBase(QString name, QObject *parent);
 protected:
     // Outputs
-    double heatEmission, longWaveEmission, shortWaveEmission, totalEmission, parEmission, photonIntensity, energyFlux;
+    double
+        powerUsage, totalIntensity,
+        shortWaveProp, shortWaveIntensity,
+        longWaveProp, longWaveIntensity,
+        heatProp, heatIntensity,
+        parIntensity;
     bool currentlyOn;
 };
 } //namespace

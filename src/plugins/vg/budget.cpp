@@ -17,8 +17,8 @@ Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
-    Input(heatingEnergyFlux).imports("controlled/heating/energyFlux[value]");
-    Input(growthLightsEnergyFlux).imports("actuators/growthLights[energyFlux]");
+    Input(heatingPowerUsage).imports("controlled/heating/energyFlux[value]");
+    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]");
     Input(co2Flux).imports("controllers/co2[signal]");
     Input(dt).imports("calendar[timeStepSecs]");
     Input(energyUnit).equals("GJ").help("Energy units for outpurs, 'GJ' or 'kWh'");
@@ -28,8 +28,8 @@ Budget::Budget(QString name, QObject *parent)
 }
 
 void Budget::reset() {
-    heatingEnergyFlux = heatingEnergyTotal =
-    growthLightsEnergyFlux = growthLightsEnergyTotal =
+    heatingPowerUsage = heatingEnergyTotal =
+    growthLightsPowerUsage = growthLightsEnergyTotal =
     co2Flux = co2Total = 0.;
     QString u = energyUnit.toLower();
     if (u=="gj")
@@ -43,8 +43,8 @@ void Budget::reset() {
 }
 
 void Budget::update() {
-    heatingEnergyTotal += heatingEnergyFlux*eUnit;
-    growthLightsEnergyTotal += growthLightsEnergyFlux*eUnit;
+    heatingEnergyTotal += heatingPowerUsage*eUnit;
+    growthLightsEnergyTotal += growthLightsPowerUsage*eUnit;
     co2Total += co2Flux*dt/3600.*1e-3;   // g/m2/h * s / (s/h) * k
 }
 

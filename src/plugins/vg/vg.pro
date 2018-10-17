@@ -27,6 +27,7 @@ HEADERS +=  \
     boundary_layer_resistance_stanghellini.h \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
+    chalk.h \
     co2_controller.h \
     controlled.h \
     controller_vent_max.h \
@@ -96,7 +97,7 @@ HEADERS +=  \
     shelter.h \
     shelter_base.h \
     shelter_face.h \
-    simulation_time_interval.h \
+    simulation_period.h \
     sky_temperature.h \
     sliding_signal.h \
     stomatal_resistance_base.h \
@@ -138,6 +139,7 @@ SOURCES += \
     boundary_layer_resistance_stanghellini.cpp \
     boundary_layer_resistance_monteith_unsworth.cpp \
     budget.cpp \
+    chalk.cpp \
     controlled.cpp \
     controller_vent_max.cpp \
     controllers.cpp \
@@ -207,7 +209,7 @@ SOURCES += \
     shelter.cpp \
     shelter_base.cpp \
     shelter_face.cpp \
-    simulation_time_interval.cpp \
+    simulation_period.cpp \
     sky_temperature.cpp \
     sliding_signal.cpp \
     stomatal_resistance_base.cpp \

@@ -23,6 +23,11 @@ else {
 CONFIG += c++11
 QT += core widgets
 
+# Turn warnings off in debug mode
+#CONFIG(debug, debug|release) {
+#  CONFIG += warn_off
+#}
+
 # Compiler options add-ons
 QMAKE_CXXFLAGS += -Wall -Wextra
 

@@ -17,15 +17,19 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
     help("computes total emmision from all GrowthLight child boxes");
-    port("heatEmission")->imports("./*<GrowthLight>[heatEmission]").transform(Sum);
-    port("longWaveEmission")->imports("./*<GrowthLight>[longWaveEmission]").transform(Sum);
-    port("shortWaveEmission")->imports("./*<GrowthLight>[shortWaveEmission]").transform(Sum);
-    port("totalEmission")->imports("./*<GrowthLight>[totalEmission]").transform(Sum);
-    port("parEmission")->imports("./*<GrowthLight>[parEmission]").transform(Sum);
-    port("photonIntensity")->imports("./*<GrowthLight>[photonIntensity]").transform(Sum);
-    port("energyFlux")->imports("./*<GrowthLight>[energyFlux]").transform(Sum);
+
+    port("shortWaveProp")->imports("./*<GrowthLight>[shortWaveProp]").transform(Sum);
+    port("longWaveProp")->imports("./*<GrowthLight>[longWaveProp]").transform(Sum);
+    port("heatProp")->imports("./*<GrowthLight>[heatProp]").transform(Sum);
+
+    port("powerUsage")->imports("./*<GrowthLight>[powerUsage]").transform(Sum);
+    port("totalIntensity")->imports("./*<GrowthLight>[totalIntensity]").transform(Sum);
+    port("shortWaveIntensity")->imports("./*<GrowthLight>[shortWaveIntensity]").transform(Sum);
+    port("longWaveIntensity")->imports("./*<GrowthLight>[longWaveIntensity]").transform(Sum);
+    port("heatIntensity")->imports("./*<GrowthLight>[heatIntensity]").transform(Sum);
+
+    port("parIntensity")->imports("./*<GrowthLight>[parIntensity]").transform(Sum);
     port("currentlyOn")->imports("./*<GrowthLight>[on]").transform(Any);
-    Output(currentPower).imports("./*<GrowthLight>[currentPower]").transform(Sum);
 }
 
 } //namespace

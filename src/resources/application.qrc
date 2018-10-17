@@ -115,20 +115,21 @@
     <file>data/input/projects/bph/env-AnGiang.txt</file>
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
-    <file>data/input/projects/ig/1-photosynthesis (0).box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
-    <file>data/input/projects/ig/excel/DVV_Input_data(0).xml</file>
+    <file>data/input/projects/ig/excel/check_average_output.R</file>
+    <file>data/input/projects/ig/excel/debug-arguments.txt</file>
     <file>data/input/projects/ig/excel/DVV_Input_data.xml</file>
     <file>data/input/projects/ig/excel/excel-to-vg.bat</file>
     <file>data/input/projects/ig/excel/excel-to-vg.xsl</file>
+    <file>data/input/projects/ig/excel/jeaa.xml</file>
+    <file>data/input/projects/ig/excel/jeaa_ny.xml</file>
+    <file>data/input/projects/ig/excel/jeaa_ny_trans.xml</file>
     <file>data/input/projects/ig/excel/vg-input.xml</file>
     <file>data/input/projects/ig/ig-scenario.box</file>
     <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
-    <file>data/input/projects/ig/ud.box</file>
-    <file>data/input/projects/ig/vg logic description.txt</file>
     <file>data/input/projects/resist/gsa.docx</file>
     <file>data/input/projects/resist/gsa.png</file>
     <file>data/input/projects/resist/gsa.txt</file>
@@ -173,15 +174,6 @@
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
-    <file>data/input/projects/vg/ig-scenario(0).box</file>
-    <file>data/input/projects/vg/ig-scenario(1).box</file>
-    <file>data/input/projects/vg/ig-scenario-end.R</file>
-    <file>data/input/projects/vg/ig-scenario-output.R</file>
-    <file>data/input/projects/vg/ig-scenario.box</file>
-    <file>data/input/projects/vg/ig-scenario.R</file>
-    <file>data/input/projects/vg/ig-soil-temperature.box</file>
-    <file>data/input/projects/vg/ig2.box</file>
-    <file>data/input/projects/vg/igclient_0000_with_crop.box</file>
     <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
     <file>data/input/projects/vg/pid-controller-plot.R</file>
@@ -192,9 +184,12 @@
     <file>data/input/projects/vg/transform1.bat</file>
     <file>data/input/projects/vg/transform_all.bat</file>
     <file>data/input/projects/vg/transform_OKO1.bat</file>
+    <file>data/input/projects/vg/vg-demo-end.R</file>
+    <file>data/input/projects/vg/vg-demo.box</file>
     <file>data/input/projects/vg/vv_to_unisim.xsl</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>
+    <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
     <file>data/input/teaching/cabbage-nightshade.box</file>

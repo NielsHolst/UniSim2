@@ -1,4 +1,4 @@
-// vg/04-greenhouse.box
+// i/ig-scenario.box
 Simulation greenhouse {
   .steps =  2000 // 10800 // 15 days
   Calendar calendar {
@@ -46,38 +46,48 @@ Simulation greenhouse {
         .age = 2000
       }
     }
+    Box heating {
+      +value = 40
+      Box pipes {
+        Pipe pipe {
+          .density = 1.8
+        }
+      }
+    }
   }
+//    if (!findMaybeOne<Box>("./heating"))
+//        builder.
+//        box().name("heating").
+//            box().name("pipes").
+//                newPort("energyFlux").imports("./*<Pipe>[energyFlux]").transform(Sum).
+//                box("vg::Pipe").
+//                    port("length").equals(1.8).
+//                    port("diameter").equals(52).
+//                    port("minTemperature").equals(20).
+//                    port("maxTemperature").equals(80).
+//                endbox().
+//            endbox().
+//        endbox();
   vg::Crop crop {
     Box lai {
-      +lai = 1.
+      +value = 1.
       +fractionPlantArea = 1.
     }
   }
   vg::Budget budget {
   }
   vg::CropDevelopment development {
-    .physDuration = ./time[duration]
+    .physDuration = 300
     .physStep = ./time[step]
     DayDegrees time {
       .T = indoors/temperature[value]
       .T0 = 12
       .Topt = 27
       .Tmax = 32
-      .duration = 300
     }
   }
   OutputR {
-        // indoorsCo2 = 0,         // ppm
-        // indoorsRh = 0,          // 0-100 %
-        // indoorsTemperature = 0, // Celcius
-        // growthLight = 0,        // Current expenditure (W/m2)
-        // heating = 0,            // Current expenditure (W/m2)
-        // photosynthesis = 0,     // Current rate (g/h/leaf m2)
-        // costEfficiency = 0,     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
-        // grayMoldRisk = 0,       // Not used
-        // daysToHarvest = 0;      // Not used
-
-  PageR {
+    PageR {
       .xAxis = calendar[dateTime]
       PlotR { 
         +outdoorsT = outdoors[temperature]
@@ -87,11 +97,11 @@ Simulation greenhouse {
         +indoorsT = indoors/temperature[value]
         +indoorsRh = indoors/humidity[rh]
 
-        +growthLightPower = actuators/growthLights[energyFlux] // W/m2
-        +heatingPower = actuators/heating/pipes[energyFlux] // W/m2
+        +growthLightPower = actuators/growthLights[powerUsage] // W/m2
+        +heatingPower = controlled/heating/energyFlux[value] // W/m2
 
         +leafLightUseEfficiency = crop/layers/top/photosynthesis/lightResponse[LUE] // mg CO2/J
-        +leafNetPhotosynthesis = crop/layers/top/photosynthesis[leafPn] // g CO2/leaf m2/h
+        +leafNetPhotosynthesis = crop/layers/top/photosynthesis[Pn] // g CO2/leaf m2/h
 
         +developmentDuration = development[duration]
         +developmentRate = development[rate]

@@ -50,7 +50,6 @@ void load::doExecute() {
 void load::readFile(QString fileName) {
     BoxReaderBase *reader{0};
     BoxBuilder builder;
-//    builder.clear();
     try {
         switch(fileType(fileName)) {
         case Boxes:

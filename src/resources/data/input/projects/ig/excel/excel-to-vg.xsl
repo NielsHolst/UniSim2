@@ -23,6 +23,7 @@
 <xsl:variable name="screenShadeThresholdBand" select="50"/>
 <xsl:variable name="screenBlackoutFromTime" select="concat('08',$colon,'00',$colon,'00')"/>
 <xsl:variable name="screenBlackoutToTime" select="concat('16',$colon,'00',$colon,'00')"/>
+<xsl:variable name="heatPipeFlowRate" select="5"/>
 
 <!-- Call templates -->
 <xsl:template name="float-value">
@@ -51,7 +52,7 @@
 	<xsl:param name="cover"/>
   <box class="vg::Cover" name="cover">
     <port name="transmissivity">
-      <xsl:call-template name="float-value">
+      <xsl:call-template name="pct-value">
         <xsl:with-param name="value" 
           select="$cover/Constants/Parameters[ParameterName='PaneTransmission']/Value"/>
       </xsl:call-template>
@@ -130,7 +131,7 @@
   <box name="default">
       <xsl:choose>
         <xsl:when test="string-length(climateSetpointName)=0">
-          <newPort name="signal" value="0"/>
+          <newPort name="signal" value="0.0"/>
         </xsl:when>
         <xsl:otherwise>
           <newPort name="signal">
@@ -189,22 +190,27 @@
 </xsl:template>
 
 <xsl:template name="extract-growth-light">
-  <xsl:variable name="capacity" select="number(replace(Constants/Parameters[ParameterName='Capacity']/Value, ',', '.'))"/>
-  <xsl:variable name="capacityPerM2" select="number(replace(Constants/Parameters[ParameterName='LightCapacityPerSqm']/Value, ',', '.'))"/>
-  <xsl:variable name="number" select="$capacity div $capacityPerM2"/>
-  <xsl:variable name="power" select="number(replace(Constants/Parameters[ParameterName='Power']/Value, ',', '.'))"/>
-  <xsl:variable name="powerPerM2" select="$power div $number"/>
   <xsl:variable name="type" select="number(Constants/Parameters[ParameterName='LampType']/Value)"/>
-  <xsl:if test="$powerPerM2 > 0">
-    <box class="GrowthLight">
+  <xsl:variable name="intensity" select="number(replace(Constants/Parameters[ParameterName='LightCapacityPerSqm']/Value, ',', '.'))"/>
+  <xsl:variable name="parPhotonCoef" select="number(replace(Constants/Parameters[ParameterName='MicromolParPerWatt']/Value, ',', '.'))"/>
+  <xsl:if test="$intensity > 0">
+    <box class="vg::GrowthLight" name="growthLight">
+      <xsl:if test="$type=1">
+        <port name="type" value="HPS"/>
+        <port name="minPeriodOn" value="30"/>
+      </xsl:if>
+      <xsl:if test="$type=2">
+        <port name="type" value="LED"/>
+        <port name="minPeriodOn" value="0"/>
+      </xsl:if>
       <port name="intensity">
         <xsl:attribute name="value">
-          <xsl:value-of select="$powerPerM2"/>
+          <xsl:value-of select="$intensity"/>
         </xsl:attribute>
       </port>
-      <port name="ballastCorrection">
+      <port name="parPhotonCoef">
         <xsl:attribute name="value">
-          <xsl:value-of select="$power div $capacity"/>
+          <xsl:value-of select="$parPhotonCoef"/>
         </xsl:attribute>
       </port>
       <port name="age">
@@ -217,37 +223,96 @@
           <xsl:value-of select="Constants/Parameters[ParameterName='LifeTime']/Value"/>
         </xsl:attribute>
       </port>
-      <xsl:if test="$type=1">
-        <port name="heatCoef" value="0.23"/>
-        <port name="longWaveCoef" value="0.42"/>
-        <port name="shortWaveCoef" value="0.50"/>
-        <port name="parCoef" value="0.31"/>
-        <port name="minPeriodOn" value="30"/>
-      </xsl:if>
-      <xsl:if test="$type=2">
-        <port name="heatCoef" value="0.02"/>
-        <port name="longWaveCoef" value="0.05"/>
-        <port name="shortWaveCoef" value="0.82"/>
-        <port name="parCoef" value="0.82"/>
-        <port name="minPeriodOn" value="0"/>
-      </xsl:if>
     </box>
   </xsl:if>
 </xsl:template>
 
+<xsl:template name="extract-heat-pipe">
+  <xsl:variable name="density" select="number(replace(Constants/Parameters[ParameterName='PipelengthPerSqm']/Value, ',', '.'))"/>
+  <xsl:variable name="diameter" select="number(replace(Constants/Parameters[ParameterName='InnerDiameter']/Value, ',', '.'))"/>
+  <xsl:variable name="minTemperature" select="number(replace(Constants/Parameters[ParameterName='CommonReturnTemperature']/Value, ',', '.'))"/>
+  <xsl:variable name="maxTemperature" select="number(replace(Constants/Parameters[ParameterName='CommonFlowTemperature']/Value, ',', '.'))"/>
+  <box class="vg::Pipe" name="pipe">
+    <port name="density">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$density"/>
+      </xsl:attribute>
+    </port>
+    <port name="diameter">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$diameter * 1000"/>
+      </xsl:attribute>
+    </port>
+    <port name="flowRate">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$heatPipeFlowRate"/>
+      </xsl:attribute>
+    </port>
+    <port name="minTemperature">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$minTemperature"/>
+      </xsl:attribute>
+    </port>
+    <port name="maxTemperature">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$maxTemperature"/>
+      </xsl:attribute>
+    </port>
+  </box>
+</xsl:template>
+
 <!-- MAIN -->
-		
-<xsl:template match="/"> <box class="Simulation" name="VirtualGreenhouse">
-	<xsl:variable name="startTime" select="DVV_SETUP/StartTime"/>
-	<xsl:variable name="stopTime" select="DVV_SETUP/StopTime"/>
-	<xsl:variable name="startYear" select="number( substring($startTime, 1, 4) )"/>
-	<xsl:variable name="stopYear" select="number( substring($stopTime, 1, 4) )"/>
-	<xsl:variable name="incYear" select="$stopYear - $startYear"/>
-  <port name="steps" value="720"/>
-  <box class="Calendar" name="calendar">
-    <port name="initialDateTime" value="1/1/2001"/>
+
+<xsl:template match="/"> <box class="Simulation" name="greenhouse">
+  <port name="steps" ref="./period[steps]"/>
+  <xsl:comment> *** SimulationPeriod *** </xsl:comment>
+  <box class="SimulationPeriod" name="period">
+    <xsl:variable name="beginDateTime" select="DVV_SETUP/StartTime"/>
+    <xsl:variable name="endDateTime"  select="DVV_SETUP/StopTime"/>
+    <xsl:variable name="beginDate" select="substring($beginDateTime, 1, 10)"/>
+    <xsl:variable name="endDate"  select="substring($endDateTime,  1, 10)"/>
+    <xsl:variable name="beginTime" select="substring($beginDateTime, 12, 8)"/>
+    <xsl:variable name="endTime"  select="substring($endDateTime,  12, 8)"/>
+    <port name="beginDate">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$beginDate"/>
+      </xsl:attribute>
+    </port>
+    <port name="endDate">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$endDate"/>
+      </xsl:attribute>
+    </port>
+    <port name="beginTime">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$beginTime"/>
+      </xsl:attribute>
+    </port>
+    <port name="endTime">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$endTime"/>
+      </xsl:attribute>
+    </port>
     <port name="timeStep" value="2"/>
     <port name="timeUnit" value="m"/>
+  </box>
+  <xsl:comment> *** Calendar *** </xsl:comment>
+  <box class="Calendar" name="calendar">
+    <port name="initialDateTime" ref="../period[beginDateTime]"/>
+    <port name="timeStep" ref="../period[timeStep]"/>
+    <port name="timeUnit" ref="../period[timeUnit]"/>
+    <port name="latitude">
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" 
+          select="DVV_SETUP/Latitude"/>
+      </xsl:call-template>
+    </port>
+    <port name="longitude">
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" 
+          select="DVV_SETUP/Longitude"/>
+      </xsl:call-template>
+    </port>
   </box>
   <xsl:comment> *** Outdoors *** </xsl:comment>
   <box class="vg::Outdoors" name="outdoors">
@@ -281,9 +346,9 @@
         </xsl:attribute>
       </port>
       <port name="reflection">
-				<xsl:call-template name="float-value">
-					<xsl:with-param name="value" select="DVV_SETUP/Greenhouse/constants/Parameters[ParameterName='GreenhouseReductionFactorLight']/Value"/>
-				</xsl:call-template>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="DVV_SETUP/Greenhouse/constants/Parameters[ParameterName='GreenhouseReductionFactorLight']/Value"/>
+        </xsl:call-template>
       </port>
     </box>
     <box class="vg::Shelter" name="shelter">
@@ -416,14 +481,14 @@
       </xsl:call-template>
     </box>
     <box name="rhMaxBand">
-      <newPort name="signal">
+      <newPort name="value">
         <xsl:attribute name="value">
           <xsl:value-of select="$rh-max-band"/>
         </xsl:attribute>
       </newPort>
     </box>
     <box name="dawnThreshold">
-      <newPort name="signal">
+      <newPort name="value">
         <xsl:call-template name="float-value">
           <xsl:with-param name="value" 
             select="DVV_SETUP/Greenhouse/zone/Climate/Setpoint/Constants/Parameters[ParameterName='Cli_LightChangeFromNight']/Value"/>
@@ -431,14 +496,14 @@
       </newPort>
     </box>
     <box name="duskThreshold">
-      <newPort name="signal">
+      <newPort name="value">
         <xsl:call-template name="float-value">
           <xsl:with-param name="value" 
             select="DVV_SETUP/Greenhouse/zone/Climate/Setpoint/Constants/Parameters[ParameterName='Cli_LightChangeFromDay']/Value"/>
         </xsl:call-template>
       </newPort>
     </box>
-	</box>
+  </box>
   <xsl:comment> *** Setpoints *** </xsl:comment>
   <box class="vg::Setpoints" name="setpoints">
     <xsl:call-template name="setpoint-reference">
@@ -529,10 +594,11 @@
         <xsl:value-of select="$screenBlackoutToTime"/>
       </xsl:attribute>
     </port>
-    <box name="chalk">
-      <port name="value" ref="allSetpoints/chalk[value]"/>
+    <box class="vg::Chalk" name="chalk">
+      <port name="setpoint" ref="allSetpoints/chalk[value]"/>
     </box>
   </box>
+
   <xsl:comment> *** Actuators *** </xsl:comment>
   <box class="vg::Actuators" name="actuators">
     <box class="GrowthLights" name="growthLights">
@@ -540,7 +606,21 @@
         <xsl:call-template name="extract-growth-light"/>
       </xsl:for-each>
     </box>
+    <box class="ProportionalSignal" name="heating">
+      <port name="signalReset" ref="indoors/temperature[value]"/>
+      <port name="input" ref="controllers/heating[value]"/>
+      <port name="threshold" value="0"/>
+      <port name="thresholdBand" value="1"/>
+      <port name="minSignal" ref="indoors/temperature[value]"/>
+      <port name="maxSignal" value="60"/>
+      <box name="pipes">
+        <xsl:for-each select="DVV_SETUP/Greenhouse/zone/Heatpipes/Heatpipe">
+          <xsl:call-template name="extract-heat-pipe"/>
+        </xsl:for-each>
+      </box>
+    </box>
   </box>
+       
   <xsl:comment> *** Crop *** </xsl:comment>
   <box class="vg::Crop" name="crop">
     <box name="lai">
@@ -563,11 +643,11 @@
       <newPort name="indoorsT" ref="indoors/temperature[value]"/>
       <newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
       <newPort name="indoorsLight" ref="indoors/light[total]"/>
-      <newPort name="growthLightPower" ref="actuators/growthLights[energyFlux] "/>
+      <newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
       <newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
       <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
-      <newPort name="growthLightIntensity" ref="actuators/growthLights[photonIntensity]"/>
-      <newPort name="totalLightIntensity" ref="indoors/light[photonIntensity]"/>
+      <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
+      <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
       <newPort name="leafLightUseEfficiency" ref="crop/layers/top/photosynthesis/lightResponse[LUE] "/>
       <newPort name="leafNetPhotosynthesis" ref="crop/growth[netGrowthRate]"/>
     </box>

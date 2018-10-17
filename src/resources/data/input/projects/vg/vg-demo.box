@@ -1,0 +1,235 @@
+// vg/ig-scenario.box
+Simulation greenhouse {
+  .steps = 10000 //264000  //720  //525600 
+  Calendar calendar {
+    .initialDateTime = 1/1/2001 //1/8/2001
+    .timeStep = 2
+    .timeUnit = "m"
+  }
+  Outdoors outdoors {
+  }
+  Box construction {
+    Geometry geometry {
+    }
+    Shelter shelter {
+      ShelterFace roof1 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace roof2 {
+        Screens screens {
+          Screen energy {
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace side1 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace side2 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace end1 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+      ShelterFace end2 {
+        Screens screens {
+          Screen energy {
+            .orientation = "cover"
+            .state = actuators/screens/energy[value]
+          }
+        }
+      }
+    }
+  }
+  vg::Indoors indoors {
+  }
+  vg::Setpoints setpoints {
+  }
+  vg::Controllers controllers {
+    Box chalk {
+      +value = 0
+    }
+    ProportionalSignal ventilation { 
+      .input = indoors/temperature[value]
+      .threshold = setpoints/temperature/ventilation[value]
+      .thresholdBand = 1
+      .minSignal = ./crack[value]
+      .maxSignal = 1
+      ProportionalSignal crack {
+        .input = indoors/humidity[rh]
+        .threshold = setpoints[rhMax]
+        .thresholdBand = setpoints[rhMaxBand]
+        .minSignal = 0
+        .maxSignal = ./minsMax[value]
+        ProportionalSignal minsMax{ 
+          .input = outdoors[temperature]
+          .threshold = -5
+          .thresholdBand = 1
+          .minSignal = 0
+          .maxSignal = 0.05
+        }
+      }
+    }
+    Accumulator heating {
+      .change = ./controller[controlVariable]
+      .minValue = 0
+      .maxValue = 1
+      PidController controller {
+        .sensedValue = indoors/temperature[value]
+        .desiredValue = setpoints/temperature/heating[value]
+        .Kprop = 0.1
+      }
+    }
+  }
+  vg::Actuators actuators {
+    GrowthLights growthLights {
+      GrowthLight { 
+        .type = "HPSL"
+        .intensity = 60
+        .lifeTime = 12000
+        .age = 2000
+      }
+    }
+    Accumulator vents {
+      .initial = controllers/ventilation/crack[value]
+      .change = ./controller[controlVariable]
+      .minValue = 0
+      .maxValue = 1
+      PidController controller {
+        .sensedValue = ..[value]
+        .desiredValue = controllers/ventilation[value]
+        .Kprop = 0.1
+        .Kderiv = 0.2
+        .Kint = 0.01
+      }
+    }
+    
+    ProportionalSignal heating {
+      .input = controllers/heating[value]
+      .threshold = 0
+      .thresholdBand = 1
+      .signalReset = indoors/temperature[value]
+      .minSignal = indoors/temperature[value]
+      .maxSignal = 60
+      // .maxChange = 0.5
+      Box pipes {
+        vg::Pipe steel { 
+          .density = 1.6
+          .diameter = 35    
+          .maxTemperature = 80
+        }
+        vg::Pipe steel2 { 
+          .density = 1.8
+          .diameter = 35    
+          .maxTemperature = 80
+        }
+      }
+    }
+  }
+  vg::Crop crop {
+    Box lai {
+      +value = 1.
+      +fractionPlantArea = 1.
+    }
+  }
+  vg::Budget budget {
+  }
+  vg::CropDevelopment development {
+    .physDuration = 300
+    .physStep = ./time[step]
+    DayDegrees time {
+      .T = indoors/temperature[value]
+      .T0 = 12
+      .Topt = 27
+      .Tmax = 32
+    }
+  }
+  OutputR {
+    .keepPages = FALSE
+    .end = "vg-demo-end.R"
+    Box p {
+      +outdoorsCo2 = outdoors [co2]
+      +outdoorsT = outdoors[temperature]
+      +soilT = outdoors[soilTemperature]
+      +outdoorsRh = outdoors[rh]
+      +outdoorsWindSpeed = outdoors[windSpeed]
+      +outdoorsLight = outdoors[radiation]
+
+      +indoorsCo2 = indoors/co2[value]
+      +indoorsT = indoors/temperature[value]
+      +indoorsRh = indoors/humidity[rh]
+      +indoorsLight = indoors/light[total]
+
+      +growthLightPower = actuators/growthLights[powerUsage] // W/m2
+      +heatingPower = controlled/heating/energyFlux[value] // W/m2
+      +coolingPower = controlled/cooling/energyFlux[value] // W/m2
+
+      +growthLightIntensity = actuators/growthLights[parIntensity] // micromol/m2/s
+      +totalLightIntensity = indoors/light[parTotal] // micromol/m2/s
+      
+      +leafTemperatureTop = crop/layers/top/temperature[value] // oC
+      +leafTemperatureMiddle = crop/layers/middle/temperature[value] // oC
+      +leafTemperatureBottom = crop/layers/bottom/temperature[value] // oC
+
+      +leafLightUseEfficiencyTop = crop/layers/top/photosynthesis/lightResponse[LUE] // mg CO2/J
+      +leafLightUseEfficiencyMiddle = crop/layers/middle/photosynthesis/lightResponse[LUE] // mg CO2/J
+      +leafLightUseEfficiencyBottom = crop/layers/bottom/photosynthesis/lightResponse[LUE] // mg CO2/J
+     
+      +leafNetPhotosynthesis = crop/growth[netGrowthRate] // g/leaf m2/h
+
+      +developmentDuration = development[duration] // days
+      +developmentRate = development[rate] // per day
+    }
+
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR { 
+        .ncol = 6
+        .ports = (
+          p[outdoorsLight]
+          p[outdoorsT]
+          p[outdoorsRh]
+          p[outdoorsCo2]
+          p[outdoorsWindSpeed]
+          p[indoorsLight]
+          p[indoorsT]
+          p[indoorsRh]
+          p[indoorsCo2]
+          p[growthLightPower]
+          p[heatingPower]
+          p[coolingPower]
+          p[growthLightIntensity]
+          p[totalLightIntensity]
+          p[leafTemperatureTop]
+          p[leafTemperatureMiddle]
+          p[leafTemperatureBottom]
+          p[leafLightUseEfficiencyTop]
+          p[leafLightUseEfficiencyMiddle]
+          p[leafLightUseEfficiencyBottom]
+          p[leafNetPhotosynthesis]
+          p[developmentDuration]
+          p[developmentRate]
+        )
+      }
+    }   
+  }
+}

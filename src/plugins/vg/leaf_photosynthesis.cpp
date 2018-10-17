@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <base/box_builder.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "general.h"
 #include "leaf_photosynthesis.h"
 
@@ -41,6 +42,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes light capture and photosynthetic rate");
+    Input(sunlightPhotonCoef).imports("outdoors[sunlightPhotonCoef]");
     Input(parDiffuse).imports("indoors/light[parDiffuse]");
     Input(parDirect).imports("indoors/light[parDirect]");
     Input(kDiffuse).imports("crop/radiation[kDiffuse]");
@@ -77,6 +79,11 @@ void LeafPhotosynthesis::reset() {
 }
 
 void LeafPhotosynthesis::update() {
+    // The inputs are in micromole PAR/s/m2 which we convert into equivalent sunlight intensity in W/m2
+    // micromole/s/m2 / (micromole/J) = J/s/m2 = W/m2
+    _parDiffuseW = parDiffuse/sunlightPhotonCoef;
+    _parDirectW = parDirect/sunlightPhotonCoef;
+
     // Compute light absorned and gross assimilation
     double absorbedShaded = absorbedByShadedLeaves(),           // [J / m2 leaf / s]
            PgShade = grossAssimilation(absorbedShaded);         // [mg CO2 / m2 leaf / s]
@@ -94,7 +101,7 @@ void LeafPhotosynthesis::update() {
     // [J / m2 ground / s] = [J / m2 leaf / s * m2 leaf / m2 ground]
 //    parAbsorbed = absorbedTotal*wGauss*lai;
     parAbsorbed = absorbedTotal*integrationWeight;
-    absorptivity = div0(parAbsorbed, parDiffuse + parDirect);
+    absorptivity = div0(parAbsorbed, _parDiffuseW + _parDirectW);
 
     // [mg CO2 / m2 ground / s] = [mg CO2 / m2 leaf / s * m2 leaf / m2 ground]
     Pg = PgTotal*integrationWeight;
@@ -107,19 +114,19 @@ void LeafPhotosynthesis::update() {
 
 double LeafPhotosynthesis::absorbedByShadedLeaves() const {
     double laic_ = laic();
-    double absorbedDiffuse = (1-diffuseReflectivity)*parDiffuse*kDiffuse*exp(-kDiffuse*laic_),
-           absorbedTotal = (1-directReflectivity)*parDirect*kDirect*exp(-kDirect*laic_),
-           absorbedDirect = (1-scattering)*parDirect*kDirectDirect*exp(-kDirectDirect*laic_);
+    double absorbedDiffuse = (1-diffuseReflectivity)*_parDiffuseW*kDiffuse*exp(-kDiffuse*laic_),
+           absorbedTotal = (1-directReflectivity)*_parDirectW*kDirect*exp(-kDirect*laic_),
+           absorbedDirect = (1-scattering)*_parDirectW*kDirectDirect*exp(-kDirectDirect*laic_);
     return absorbedDiffuse + absorbedTotal - absorbedDirect; // [J/m2/leaf/s]
 }
 
 QPair<double, double> LeafPhotosynthesis::absorbedBySunlitLeaves(double absorbedShaded) const {
-    if (Pgmax==0 || sinb==0) return qMakePair(0.,0.);
+    if (TestNum::eqZero(Pgmax) || TestNum::eqZero(sinb)) return qMakePair(0.,0.);
 
     // Direct flux absorbed by leaves perpendicular on direct beam (VISpp)[J*m-2 leaf s-1]
     // Original eq. changed to guard against sinB->0 yielding absorptivity>1
     double absorptivity = min((1-scattering)/sinb, 1.);
-    double absorbedPerpendicular = absorptivity*parDirect;
+    double absorbedPerpendicular = absorptivity*_parDirectW;
     // Integration over all leaf angles
     double assimilationSum{0}, absorbedSum{0};
     for(int i=0; i<3; ++i) {
@@ -134,7 +141,7 @@ QPair<double, double> LeafPhotosynthesis::absorbedBySunlitLeaves(double absorbed
 
 
 double LeafPhotosynthesis::grossAssimilation(double absorbed) const {
-    return (Pgmax==0) ? 0 : Pgmax*(1-exp(-absorbed*LUE/Pgmax));
+    return TestNum::eqZero(Pgmax) ? 0 : Pgmax*(1-exp(-absorbed*LUE/Pgmax));
 }
 
 } //namespace

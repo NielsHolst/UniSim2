@@ -36,7 +36,7 @@ Simulation::Simulation(QString name, QObject *parent)
 
 Simulation::~Simulation() {
     if (environment().root() == this)
-        environment().root(0);
+        environment().root(nullptr);
 }
 
 void Simulation::amend() {
@@ -45,10 +45,10 @@ void Simulation::amend() {
 }
 
 void Simulation::run() {
+    dialog().resetProgress();
     environment().isSilent(silent);
     if (silent)
         dialog().information("Running silently...");
-    _nextShowProgress = 0.01;
     hasError = false;
     QTime time;
     try {
@@ -89,18 +89,24 @@ void Simulation::run() {
         hasError = true;
         errorMsg = ex.what();
     }
-    dialog().finished();
 //    environment().computationStep(ComputationStep::Ready);
     executionTime = time.elapsed();
 }
 
 void Simulation::show(QTime time) {
-    double progress = double(step + (iteration-1)*steps)/steps/iterations;
-    if (progress > _nextShowProgress) {
-        double total = time.elapsed()/progress;
-        dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
-        _nextShowProgress += 0.01;
-    }
+    DialogBase::ProgressInfo info;
+    info.time = time;
+    info.step = step;
+    info.steps = steps;
+    info.iteration = iteration;
+    info.iterations = iterations;
+    dialog().updateProgress(info);
+//    double progress = double(step + (iteration-1)*steps)/steps/iterations;
+//    if (progress > _nextShowProgress) {
+//        double total = time.elapsed()/progress;
+//        dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
+//        _nextShowProgress += 0.01;
+//    }
 }
 
 void Simulation::cleanup() {
@@ -110,6 +116,7 @@ void Simulation::cleanup() {
 
 void Simulation::debrief() {
     environment().incrementFileCounter();
+    dialog().finishProgress();
 }
 
 

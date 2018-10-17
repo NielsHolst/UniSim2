@@ -1,0 +1,10 @@
+// aphis 1 
+Simulation aphis {
+  Box aphis {
+    Stage nymph {
+      DayDegrees time {
+        .T= weather[Tavg]
+      }
+    }
+  }
+}

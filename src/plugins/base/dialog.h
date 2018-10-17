@@ -11,16 +11,18 @@ class Dialog : public DialogBase
 {
 public:
     Dialog(QObject *parent);
-    void progress(int current, int total);
-    void finished();
-    void message(QString s);
+    QProgressBar* progressBar();
+    void finishProgress();
     void information(QString s);
-    void errorImpl(QString s);
     QTextEdit* textEdit();
     void setFont(QString family, int pt);
     QFont font();
+    void writePrompt();
 private:
     DialogWidget *_widget;
+    QString _message;
+    void errorImpl(QString s);
+    void messageImpl(QString s);
 };
 
 }

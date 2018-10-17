@@ -22,65 +22,120 @@ Given::Given(QString name, QObject *parent)
 
 void Given::amend() {
     BoxBuilder builder(this);
+    amendAirFlux(builder);
+    amendVapourFlux(builder);
+    amendEnergyFlux(builder);
+}
+
+void Given::amendAirFlux(BoxBuilder &builder) {
     if (!findMaybeOne<Box>("./airFlux"))
         builder.
         box("AirFluxGiven").name("airFlux").
         endbox();
+}
 
-    if (!findMaybeOne<Box>("./vapourFlux"))
+void Given::amendVapourFlux(BoxBuilder &builder) {
+    Box *vapourFlux = findMaybeOne<Box>("./vapourFlux");
+    bool createVapourFlux = !vapourFlux;
+
+    // Either create vapourFlux box or move to existing vapourFlux box
+    if (createVapourFlux)
         builder.
-        box("VapourFluxSum").name("vapourFlux").
-            box("VapourFluxTranspiration").name("transpiration").
-            endbox().
-            box("VapourFluxCondensation").name("condensationCover").
-                port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
-                port("surfaceTemperature").imports("given/energyFlux/shelter[coverTemperature]").
-            endbox().
-            box("VapourFluxCondensation").name("condensationScreens").
-                port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
-                port("surfaceTemperature").imports("given/energyFlux/shelter[screensTemperature]").
-            endbox().
-            box("VapourFluxAir").name("airFluxOutdoors").
-                port("airFlux").imports("given/airFlux[value]").
-            endbox().
+        box("VapourFluxSum").name("vapourFlux");
+    else
+        builder.moveToBox(vapourFlux);
+
+    // Create missing boxes inside vapourFlux
+    if (!findMaybeOne<Box>("./vapourFlux/transpiration"))
+        builder.
+        box("VapourFluxTranspiration").name("transpiration").
+        endbox();
+    if (!findMaybeOne<Box>("./vapourFlux/condensationCover"))
+        builder.
+        box("VapourFluxCondensation").name("condensationCover").
+            port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
+            port("surfaceTemperature").imports("given/energyFlux/shelter[coverTemperature]").
+        endbox();
+    if (!findMaybeOne<Box>("./vapourFlux/condensationScreens"))
+        builder.
+        box("VapourFluxCondensation").name("condensationScreens").
+            port("surfaceAreaPerGroundArea").imports("geometry[coverPerGroundArea]").
+            port("surfaceTemperature").imports("given/energyFlux/shelter[screensTemperature]").
+        endbox();
+    if (!findMaybeOne<Box>("./vapourFlux/airFluxOutdoors"))
+        builder.
+        box("VapourFluxAir").name("airFluxOutdoors").
+            port("airFlux").imports("given/airFlux[value]").
         endbox();
 
-    if (!findMaybeOne<Box>("./energyFlux"))
+    // Finish creation of vapourFlux box
+    if (createVapourFlux)
         builder.
-        box("EnergyFluxSum").name("energyFlux").
-//            box("vg::Sum").name("light").
-//                port("inputs").imports("indoors/light[total]").  // simplify?
-//            endbox().
-            box("EnergyFluxCondensation").name("condensationCover").
-                port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
+        endbox();
+}
+
+void Given::amendEnergyFlux(BoxBuilder &builder) {
+    Box *energyFlux = findMaybeOne<Box>("./energyFlux");
+    bool createEnergyFlux = !energyFlux;
+
+    // Either create vapourFlux box or move to existing vapourFlux box
+    if (createEnergyFlux)
+        builder.
+        box("EnergyFluxSum").name("energyFlux");
+    else
+        builder.moveToBox(energyFlux);
+
+    // Create missing boxes inside energyFlux
+    if (!findMaybeOne<Box>("./energyFlux/condensationCover"))
+        builder.
+        box("EnergyFluxCondensation").name("condensationCover").
+            port("vapourFlux").imports("../../vapourFlux/condensationCover[vapourFlux]").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/condensationScreens"))
+        builder.
+        box("EnergyFluxCondensation").name("condensationScreens").
+            port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/airFlux"))
+        builder.
+        box("EnergyFluxAir").name("airFlux").
+            port("airFlux").imports("given/airFlux[value]").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/growthLights"))
+        builder.
+        box("Accumulator").name("growthLights").
+            port("change").imports("./controller[controlVariable]").
+            box("PidController").name("controller").
+                port("Kprop").equals(0.1).
+                port("sensedValue").imports("..[value]").
+                port("desiredValue").imports("actuators/growthLights[powerUsage]").
             endbox().
-            box("EnergyFluxCondensation").name("condensationScreens").
-                port("vapourFlux").imports("../../vapourFlux/condensationScreens[vapourFlux]").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/shelter"))
+        builder.
+        box("EnergyFluxShelter").name("shelter").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/floor"))
+        builder.
+        box("EnergyFluxFloor").name("floor").
+            port("Uindoors").equals(7.5).
+            port("Usoil").equals(4).
+            port("heatCapacity").equals(42000).
+            box("FloorRadiationAbsorbed").name("radiationAbsorbed").
             endbox().
-            box("EnergyFluxAir").name("airFlux").
-                port("airFlux").imports("given/airFlux[value]").
-            endbox().
-            box("Accumulator").name("growthLights").
-                port("change").imports("./controller[controlVariable]").
-                box("PidController").name("controller").
-                    port("Kprop").equals(0.1).
-                    port("sensedValue").imports("..[value]").
-                    port("desiredValue").imports("actuators/growthLights[energyFlux]").
-                endbox().
-            endbox().
-            box("EnergyFluxShelter").name("shelter").
-            endbox().
-            box("EnergyFluxFloor").name("floor").
-                port("Uindoors").equals(7.5).
-                port("Usoil").equals(4).
-                port("heatCapacity").equals(42000).
-                box("FloorRadiationAbsorbed").name("radiationAbsorbed").
-                endbox().
-            endbox().
-            box("EnergyFluxSunlight").name("sunlight").
-            endbox().
-            box("EnergyFluxTranspiration").name("transpiration").
-            endbox().
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/sunlight"))
+        builder.
+        box("EnergyFluxSunlight").name("sunlight").
+        endbox();
+    if (!findMaybeOne<Box>("./energyFlux/transpiration"))
+        builder.
+        box("EnergyFluxTranspiration").name("transpiration").
+        endbox();
+
+    // Finish creation of vapourFlux box
+    if (createEnergyFlux)
+        builder.
         endbox();
 }
 

@@ -40,7 +40,6 @@ void DialogWidget::init() {
     writePrompt();
     setAcceptRichText(false);
     _progressBar = new QProgressBar(this);
-    _progressBar->setFormat(" %p% of %ms");
     _progressBar->hide();
     mainWindow()->statusBar()->addPermanentWidget(_progressBar);
     QObject::connect(qApp, &QApplication::focusChanged,
@@ -123,12 +122,9 @@ bool DialogWidget::fontExists(QString family) {
            QGuiApplication::font().family();
 }
 
-
-void DialogWidget::progress(int current, int total) {
-    _progressBar->setMaximum(total);
-    _progressBar->setValue(current);
-    _progressBar->show();
-     qApp->processEvents();
+QProgressBar* DialogWidget::progressBar() {
+    Q_ASSERT(_progressBar);
+    return _progressBar;
 }
 
 void DialogWidget::finished() {
@@ -184,7 +180,7 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
             QStringList items = lineItems();
             if (items.size() > 1) {
                 clearLine();
-                items.removeLast();
+                items.removeAt(items.size() - 1);
                 items << s;
                 s = items.join(" ");
             }
@@ -320,20 +316,10 @@ void DialogWidget::writePrompt() {
 }
 
 void DialogWidget::writeWelcome() {
-    MegaFactory::loadPlugins();
-
     information(environment().isFirstInstallation() ?
                 "\nWelcome to Universal Simulator!" : "\nWelcome back!");
 
     environment().computationStep(ComputationStep::Start);
-
-    if (environment().isNewInstallation()) {
-        information("New installation detected; reconfiguring HOME folder...");
-        Command::submit(QStringList() << "reconfigure", this);
-        Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this);
-        environment().updateInstallation();
-    }
-
 
     information("Saving box script grammar...");
     Command::submit(QStringList() << "save" << "grammar", this);
@@ -417,7 +403,7 @@ void DialogWidget::submitCommand() {
     if (!line.isEmpty())
         _history.add(line);
 
-    insertText("\n" + _prompt);
+    writePrompt();
 }
 
 QString DialogWidget::line() {

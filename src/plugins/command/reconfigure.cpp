@@ -20,9 +20,6 @@ reconfigure::reconfigure(QString name, QObject *parent)
 }
 
 void reconfigure::doExecute() {
-    QString msg = "Copying default data files to " +
-                   destination().absolutePath();
-    dialog().information(msg);
     copyFolder(source(), destination());
 }
 

@@ -139,12 +139,13 @@ void Calendar::updateAzimuth() {
 
     // Next, the true solar time is calculated in the following two equations. First the time offset is
     // found, in minutes, and then the true solar time, in minutes.
-    double timeOffset = eqtime - 4*longitude + 60*timeZone;
+    double timeOffset = eqtime - 4*longitude + 60*timeZone; // minutes
     // where eqtime is in minutes, longitude is in degrees, timezone is in hours from UTC
 
     // True solar time
-    double tst = time.hour()*60 + time.minute() + time.second()/60. + timeOffset;
-    trueSolarTime = QTime::fromMSecsSinceStartOfDay(int(tst+0.5)*60*1000);
+    double tst = time.hour()*60 + time.minute() + time.second()/60. + timeOffset; // minutes
+    trueSolarTime = QTime(0,0,0).addSecs(int(tst+0.5)*60);
+//    trueSolarTime = QTime::fromMSecsSinceStartOfDay(int(tst+0.5)*60*1000);
     if (!trueSolarTime.isValid())
         trueSolarTime = QTime(0,0);
 

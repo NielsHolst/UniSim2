@@ -28,7 +28,7 @@ void what::doExecute() {
     QFileInfo fi(fileName);
     QString msg = "Current script is '" + fileName + "'";
     if (!fi.isAbsolute())
-        msg += "\nfound in your work folder '" + env.dir(Environment::Work).absolutePath() + "'";
+        msg += "\nfound in your intput folder '" + env.dir(Environment::Input).absolutePath() + "'";
 
     dialog().information(msg);
 }

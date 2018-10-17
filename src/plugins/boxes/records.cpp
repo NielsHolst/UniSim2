@@ -40,6 +40,7 @@ Records::Records(QString name, QObject *parent)
 }
 
 void Records::amend() {
+    ExceptionContext(this);
     // Allow imports defined in amend step
     resolvePortImports();
     updateImports();
@@ -109,6 +110,7 @@ void Records::createColumnOutputs() {
 }
 
 void Records::initialize() {
+    ExceptionContext(this);
     // Set lastDateTime
     bool saveCycle = cycle;
     cycle = false;
@@ -124,6 +126,7 @@ void Records::initialize() {
 }
 
 void Records::reset() {
+    ExceptionContext(this);
     readToFirstLine();
     _yearOffset = calendarDateTime.date().year() - currentDate.year();
     _extraYearOffset = 0;
@@ -184,6 +187,7 @@ void Records::extrapolateValues() {
 }
 
 void Records::update() {
+    ExceptionContext(this);
     QDateTime currentT, nextT;
     while (true) {
         currentT = alignDateTime(currentDateTime, _yearOffset);

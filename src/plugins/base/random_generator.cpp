@@ -8,15 +8,15 @@
 
 namespace base {
 
-RandomGenerator *RandomGenerator::theRandomGenerator = 0;
+RandomGenerator *RandomGenerator::theRandomGenerator = nullptr;
 
 RandomGenerator::RandomGenerator()
 {
 }
 
 unsigned RandomGenerator::Shuffler::operator()(unsigned i) {
-    boost::uniform_int<> rng(0, i - 1);
-    return rng(*randomGenerator());
+    boost::uniform_int<> rng(0, int(i) - 1);
+    return unsigned ( rng(*randomGenerator()) );
 }
 
 
@@ -31,7 +31,7 @@ RandomGenerator::Generator* randomGenerator() {
 void seedRandomGenerator(int seed) {
     static bool seeded = false;
     if (!seeded) {
-        randomGenerator()->seed(seed);
+        randomGenerator()->seed(unsigned(seed));
         seeded = true;
     }
 }
