@@ -32,7 +32,6 @@ private:
     void *_valuePtr;
     PortType _valueType, _importType;
     PortMode _mode;
-    PortTransform _portTransform;
     QMap<QString, QString> _attributes;
     ComputationStep _portValueStep;
     QString _importPath, _fallBackValue;

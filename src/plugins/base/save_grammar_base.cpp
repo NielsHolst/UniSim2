@@ -76,6 +76,7 @@ QStringList SaveGrammarBase::portNames() {
                 }
                 catch (Exception &ex) {
                     dialog().information("Class not included in grammar (error in its constructor): " + qualifiedClassName);
+                    dialog().error(ex.what());
                 }
             }
         }

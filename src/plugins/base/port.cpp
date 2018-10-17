@@ -13,7 +13,6 @@ QVector<Port*> Port::_index;
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(nullptr), _valueType(Null), _mode(PortMode::Default),
-      _portTransform(Identity),
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true), _importsResolved(false),
       _access(PortAccess::Input),
@@ -30,6 +29,7 @@ Port::Port(QString name, QObject *parent)
     _attributes["format"] = "";
     _attributes["label"] = "";
     _attributes["help"] = "";
+    _attributes["transform"] = convert<QString>(PortTransform::Identity);
 }
 
 Port& Port::equals(const char *value) {
@@ -133,12 +133,12 @@ Port& Port::label(QString value) {
 }
 
 Port& Port::transform(QString value) {
-    _portTransform = convert<PortTransform>(value);
+    _attributes["transform"] = value;
     return *this;
 }
 
 Port& Port::transform(PortTransform tr) {
-    _portTransform = tr;
+    _attributes["transform"] = convert<QString>(tr);
     return *this;
 }
 
@@ -169,7 +169,7 @@ QString Port::label() const {
 }
 
 PortTransform Port::transform() const {
-    return _portTransform;
+    return convert<PortTransform>(_attributes.value("transform"));
 }
 
 bool Port::isBlind() const {
