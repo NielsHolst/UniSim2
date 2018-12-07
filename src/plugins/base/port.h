@@ -97,6 +97,7 @@ public:
     bool hasValue() const;
     int valueSize() const;
     QString valueAsString() const;
+    void verifyValue() const;
     template <class T> T value() const;
     template <class T> const T* valuePtr() const;
     PortType type() const;

@@ -23,7 +23,7 @@ private:
     // Inputs
     bool hide;
     QVector<QString> ports;
-    QString layout, end, endCode, ggplot, transform;
+    QString layout, guideTitle, end, endCode, ggplot, transform;
     int ncol, nrow, iteration, fontSize;
     // Methods
     QVector<base::Track*> xAxisTracks();

@@ -28,7 +28,7 @@ private:
     // inputs
     QString fileName, dateColumnName, timeColumnName;
     QDateTime calendarDateTime;
-    bool cycle;
+    bool cycle, ignoreYear;
 
     // outputs
     QDateTime currentDateTime, nextDateTime, firstDateTime, lastDateTime;
@@ -49,6 +49,7 @@ private:
     void extrapolateValues();
     void advanceTime();
     QDateTime alignDateTime(QDateTime dt, int yearOffset) const;
+    void ignoreYearMaybe();
 
     // data
     QFile _file;

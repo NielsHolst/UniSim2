@@ -12,7 +12,7 @@ Q_INTERFACES(base::FactoryPlugIn)
 Q_PLUGIN_METADATA(IID "org.ecolmod.base")
 public:
     QString id() const;
-    QList<QString> inventory();
+    QList<QString> inventory() const;
     QObject* create(QString className, QString objectName, QObject *parent);
 };
 

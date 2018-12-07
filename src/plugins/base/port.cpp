@@ -380,6 +380,12 @@ QString Port::valueAsString() const {
     return s;
 }
 
+void Port::verifyValue() const {
+    if (valueAsString() == "nan") {
+        ThrowException("Value is not a number").context(this);
+    }
+}
+
 template <> const void* Port::valuePtr() const {
     return _valuePtr;
 }

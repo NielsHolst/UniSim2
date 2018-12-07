@@ -21,10 +21,6 @@ Exception::Exception(QString message)
     ++_count;
 }
 
-Exception::~Exception() {
-    _fallbackContext = nullptr;
-}
-
 Exception& Exception::file(const char *s) {
     _file = s;
     return *this;

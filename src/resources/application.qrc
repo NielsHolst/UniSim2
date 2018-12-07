@@ -116,15 +116,6 @@
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
-    <file>data/input/projects/ig/excel/check_average_output.R</file>
-    <file>data/input/projects/ig/excel/debug-arguments.txt</file>
-    <file>data/input/projects/ig/excel/DVV_Input_data.xml</file>
-    <file>data/input/projects/ig/excel/excel-to-vg.bat</file>
-    <file>data/input/projects/ig/excel/excel-to-vg.xsl</file>
-    <file>data/input/projects/ig/excel/jeaa.xml</file>
-    <file>data/input/projects/ig/excel/jeaa_ny.xml</file>
-    <file>data/input/projects/ig/excel/jeaa_ny_trans.xml</file>
-    <file>data/input/projects/ig/excel/vg-input.xml</file>
     <file>data/input/projects/ig/ig-scenario.box</file>
     <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
@@ -171,6 +162,12 @@
     <file>data/input/projects/vg/example1/3-pid-controller.box</file>
     <file>data/input/projects/vg/example1/4-pid-controller.box</file>
     <file>data/input/projects/vg/example1/pid-controller.box</file>
+    <file>data/input/projects/vg/excel/2018-10-30-jeaa-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2018-10-30-jeaa.xml</file>
+    <file>data/input/projects/vg/excel/2018-11-07-jeaa.xml</file>
+    <file>data/input/projects/vg/excel/all jeaa setpoints.txt</file>
+    <file>data/input/projects/vg/excel/DVV_Input_data.xml</file>
+    <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
@@ -179,6 +176,8 @@
     <file>data/input/projects/vg/pid-controller-plot.R</file>
     <file>data/input/projects/vg/pid-controller.box</file>
     <file>data/input/projects/vg/proportional-signal.box</file>
+    <file>data/input/projects/vg/temp/2018-10-30-jeaa.xml</file>
+    <file>data/input/projects/vg/temp/2018-11-07-jeaa.xml</file>
     <file>data/input/projects/vg/TestOKO1.xml</file>
     <file>data/input/projects/vg/TestOKO1_tr_2018.xml</file>
     <file>data/input/projects/vg/transform1.bat</file>
@@ -199,5 +198,6 @@
     <file>data/input/teaching/weather/flakkebjerg 2009.txt</file>
     <file>data/input/teaching/weather/geneva 2009.txt</file>
     <file>data/input/teaching/weather/ljubljana 2009.txt</file>
+    <file>data/vg/direct_transmission_single.txt</file>
   </qresource>
 </RCC>

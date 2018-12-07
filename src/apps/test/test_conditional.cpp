@@ -13,7 +13,7 @@ void TestConditional::testSimple() {
     int errors = dialog().errorCount();
     Box *sim;
     try {
-        Command::submit(QStringList() << "load" << "conditional/simple.box", 0);
+        Command::submit(QStringList() << "load" << "conditional/simple.box", nullptr);
         sim = environment().root();
         sim->initializeFamily();
         sim->resetFamily();

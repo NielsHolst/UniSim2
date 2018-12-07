@@ -79,6 +79,8 @@ inline double diff1(double tr, double ab) {
 }
 
 void Screen::updateByState(double state) {
+    if (state<0. || state>1.)
+        ThrowException("Screen state out of [0;1] bounds").value(state).context(this);
     transmissivityLightNet= 1. - state + state*transmissivityLight;
     absorptivityLwInnerNet = state*emissivityInner;   // Absorptivity = Emissivity for IR
     absorptivityLwOuterNet = state*emissivityOuter;   // do.

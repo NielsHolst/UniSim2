@@ -14,6 +14,14 @@ void DialogStub::progress(int, int) {
 void DialogStub::finished() {
 }
 
+QProgressBar* DialogStub::progressBar() {
+    return nullptr;
+}
+
+void DialogStub::finishProgress() {
+    std::cout << "Finished\n";
+}
+
 void DialogStub::information(QString s) {
     std::cout << "DIALOG INFORMATION: " << qPrintable(s) << "\n";
     _information = s;

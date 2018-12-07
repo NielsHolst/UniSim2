@@ -21,7 +21,7 @@
 
 namespace base {
 
-Environment *Environment::_environment = 0;
+Environment *Environment::_environment = nullptr;
 
 const QString PATH_NOT_SET = "/FolderNotSet";
 
@@ -34,7 +34,7 @@ Environment& environment() {
 }
 
 Environment::Environment()
-    : _root(0), _current(0), _isSilent(false)
+    : _root(nullptr), _current(nullptr), _isSilent(false)
 {
     QSettings settings;
     _isFirstInstallation = !QDir(homePath()).exists();
@@ -43,6 +43,7 @@ Environment::Environment()
     else
         getDirSettings();
     _latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
+    _latestInputFilePath = QFileInfo(_latestLoadArg).path();
     _latestOutputFilePath["txt"] = settings.value("environment/latest-output-file-path-txt", QString()).toString();
 }
 
@@ -89,7 +90,7 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
     switch (step) {
     case ComputationStep::Construct:
         if (_root) delete _root;
-        _root = _current = 0;
+        _root = _current = nullptr;
         break;
     case ComputationStep::Start:
         dialog().message("Starting...");
@@ -219,6 +220,7 @@ bool Environment::isSilent() const {
 
 void Environment::latestLoadArg(QString arg) {
     _latestLoadArg = arg;
+    _latestInputFilePath = QFileInfo(_latestLoadArg).path();
 }
 
 QString Environment::latestLoadArg() const {
@@ -228,6 +230,10 @@ QString Environment::latestLoadArg() const {
 QDir Environment::currentBoxScriptFolder() const {
     QString loadFileNamePath = filePath(Input, _currentLoadArg);
     return QFileInfo(loadFileNamePath).absoluteDir();
+}
+
+QString Environment::latestInputFilePath() const {
+    return _latestInputFilePath;
 }
 
 QString Environment::inputFileNamePath(QString fileName) const {
@@ -272,6 +278,8 @@ void Environment::dir(Folder folder, QString path) {
 
 void Environment::dir(Folder folder, QDir specificDir) {
     _dir[folder] = specificDir;
+    if (folder == Input)
+        _latestInputFilePath = specificDir.path();
 }
 
 QDir Environment::resolveDir(Folder folder, Folder work) const {

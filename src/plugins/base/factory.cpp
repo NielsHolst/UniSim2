@@ -11,7 +11,7 @@ QString Factory::id() const {
     return BOXES_PLUGIN_NAME_TEXT;
 }
 
-QList<QString> Factory::inventory() {
+QList<QString> Factory::inventory() const{
     return productList().keys();
 }
 

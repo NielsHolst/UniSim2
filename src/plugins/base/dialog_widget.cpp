@@ -201,8 +201,9 @@ QString DialogWidget::selectFile() {
     QStringList items = lineItems();
     QString writtenPath = (items.size() > 1) ? items.last() : "",
             inputPath = environment().resolveDir(Environment::Input).absolutePath(),
-            latestFile = environment().latestLoadArg(),
-            latestPath = QFileInfo(latestFile).path(),
+//            latestFile = environment().latestLoadArg(),
+//            latestPath = QFileInfo(latestFile).path(),
+            latestPath = environment().latestInputFilePath(),
             usePath = writtenPath.isEmpty() ? latestPath : writtenPath,
             combinedPath = QDir::isAbsolutePath(usePath) ? usePath : inputPath + "/" + usePath,
             path = QDir(combinedPath).exists() ? combinedPath : inputPath;

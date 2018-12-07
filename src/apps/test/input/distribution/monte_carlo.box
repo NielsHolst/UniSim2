@@ -1,6 +1,6 @@
 Simulation sim {
 	.iterations = 30
-	SensitivityAnalysis sa { 
+	SensitivityAnalysisSimple sa { 
 	}
 	Stage a {
     .initial = 100 @ (uniform 50 200)

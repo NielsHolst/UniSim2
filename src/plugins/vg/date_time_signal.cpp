@@ -16,8 +16,8 @@ PUBLISH(DateTimeSignal)
 DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
     help("Sets a signal according to date and time of day");
-    Input(beginDay).equals(1).help("The beginning of the date interval [1..366]");
-    Input(endDay).equals(366).help("The end of the date interval [1..366]");
+    Input(beginDate).equals(QDate(2001,1,1)).help("The beginning of the date interval [1..366]");
+    Input(endDate).equals(QDate(2001,12,31)).help("The end of the date interval [1..366]");
     Input(beginTime).equals(QTime(0,0)).help("The beginning of the time interval [hh:mm]");
     Input(endTime).equals(QTime(23,59,59)).help("The end of the time interval [hh:mm]");
     Input(day).imports("calendar[dayOfYear]");
@@ -32,10 +32,17 @@ inline QDate date(int day) {
     return QDate(2000,12,31).addDays(day);
 }
 
+inline QDate date(QDate date) {
+    return QDate(2001, date.month(), date.day());
+}
+
 double DateTimeSignal::computeSignal() {
-    bool nowOnDay = (beginDay < endDay) ?
-                (day >= beginDay) && (day <= endDay) :
-                (day >= beginDay) || (day <= endDay);
+    QDate today = date(day);
+    beginDate = date(beginDate);
+    endDate = date(endDate);
+    bool nowOnDay = (beginDate < endDate) ?
+                (today >= beginDate) && (today <= endDate) :
+                (today >= beginDate) || (today <= endDate);
     bool nowOnTime = (beginTime < endTime) ?
                 (time >= beginTime) && (time <= endTime) :
                 (time >= beginTime) || (time <= endTime);
@@ -46,9 +53,9 @@ double DateTimeSignal::computeSignal() {
                   : signalOutside;
     }
     else {
-        QDateTime begin(date(beginDay), beginTime),
-                  end(date(endDay), endTime),
-                  now(date(day), time);
+        QDateTime begin(beginDate, beginTime),
+                  end(endDate, endTime),
+                  now(today, time);
         result = (now >= begin && now <= end) ?
                  signalInside : signalOutside;
     }

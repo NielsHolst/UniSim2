@@ -1,0 +1,86 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2009 
+  }
+  Records weather {
+    .fileName = "flakkebjerg 2009.txt"
+  }
+  Box potato {
+    PotatoDevelopmentByHour devByHour {
+      .temp = weather[Tavg]
+    }
+    PotatoDevelopmentByDay devByDay {
+      PotatoDevelopmentAtTemp min {
+        .temp = weather[Tmin]
+      }
+      PotatoDevelopmentAtTemp max {
+        .temp = weather[Tmax]
+      }
+    }
+  }
+  Box beetle {
+    Stage egg {
+      .timeStep = ./time[step]
+      .duration = 67
+      .inflow = ../fecundity[outflow]
+      DayDegrees time {
+        .T0 = 11.7
+      }
+    }
+    Stage larva {
+      .timeStep = ./time[step]
+      .duration = 224
+      .inflow = ../egg[outflow]
+      DayDegrees time {
+        .T0 = 11.0
+      }
+    }
+    Stage pupa {
+      .timeStep = ./time[step]
+      .duration = 86
+      .inflow = ../larva[outflow]
+      DayDegrees time {
+        .T0 = 12.0
+      }
+    }
+    Stage preAdult {
+      .duration = 25
+      .inflow|sum = ../pupa[outflow] | ./immigration[value]
+      OnOff immigration {
+        .x = calendar[dayOfYear]
+        .xOn  = 180
+        .xOff = 180
+        .valueOn = 1
+      }
+    }
+    Stage adult {
+      .duration = 38
+      .inflow = ../preAdult[outflow]
+    }
+    Stage fecundity {
+      .duration = 22
+      .growthFactor = 173
+      .inflow = ../preAdult[outflow]
+    }
+  }
+  OutputR output {
+    +monthBreaks = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('3 months'), 
+                      labels = date_format('%b')
+                    )"
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      PlotR {
+        .ports = potato/*[step]
+        .ggplot = output[monthBreaks]
+      }
+      PlotR {
+        .ports = beetle/*[content]
+        .ggplot = output[monthBreaks]
+      }
+    }
+  }
+}

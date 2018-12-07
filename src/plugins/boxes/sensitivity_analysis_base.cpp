@@ -13,30 +13,18 @@ SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
 {
     Class(SensitivityAnalysisBase);
     help("sensitivity analysis base class");
-    Input(method).equals("LHS").help("For sampling use either Latin hypercube sampling ('LHS') or Monte Carlo ('MC')");
-    Input(sampleSize).imports("/*[iterations]").help("Size of sample in input parameter space (N)");
-    Output(inputsAnalysed).help("Total number of input ports (k)");
-    Output(inputsTotal).help("Number of input ports included in analysis");
+    Input(sampleSize).equals(5).help("Size of sample in input parameter space (N)");
+    Output(inputsAnalysed).help("Number of input ports included in analysis (k)");
+    Output(inputsTotal).help("Total number of input ports in model");
     Output(iterations).noReset().help("Number of simulation iterations needed");
 }
 
 void SensitivityAnalysisBase::initialize() {
-    setMethod();
     setInputsTotal();
     setInputsAnalysed();
     iterations = numberOfIterations();
     for (Distribution *dist : _saDistributions)
         dist->initialize(numberOfSamples());
-}
-
-void SensitivityAnalysisBase::setMethod() {
-    if (method=="MC")
-        _method = MC;
-    else if (method=="LHS")
-        _method = LHS;
-    else
-        ThrowException("Sampling method must be one 'MC' or 'LHS'")
-                .value(method).context(this);
 }
 
 void SensitivityAnalysisBase::setInputsTotal() {
@@ -70,13 +58,8 @@ void SensitivityAnalysisBase::setInputsAnalysed() {
         _saDistributions << dist;
     }
     inputsAnalysed = _saDistributions.size();
-}
-
-void SensitivityAnalysisBase::reset() {
-    for (Distribution *dist : _saDistributions) {
-        double value = dist->draw();
-        dist->port()->equals(value);
-    }
+    if (inputsAnalysed == 0)
+        ThrowException("No ports set up for analysis (use @ notation)");
 }
 
 }

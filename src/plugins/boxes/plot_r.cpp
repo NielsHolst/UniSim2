@@ -19,6 +19,7 @@ PlotR::PlotR(QString name, QObject *parent)
     help("produces an R plot");
     Input(hide).equals(false).help("If hidden will still figure in output file");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
+    Input(guideTitle).help("Title of guide legends");
     Input(fontSize).help("Used for axes and panels; zero yields default font size");
     Input(ggplot).equals(defaultGgplot).help("R code that will be added to the ggplot");
     Input(transform).help("Transformation of y-axis; only 'log10' available");
@@ -124,6 +125,8 @@ void PlotR::appendGgplot(QTextStream &s) {
         ggplot.prepend("+");
     if (!ggplot.contains("geom_"))
         ggplot.prepend("+" + defaultGgplot);
+    if (!guideTitle.isEmpty())
+        ggplot.prepend("+labs(colour=\"" + guideTitle + "\")");
     s << ggplot;
 }
 

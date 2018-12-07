@@ -14,45 +14,67 @@ using namespace base;
 namespace command {
 
 PUBLISH(help_class)
-HELP(help_help_class, "help <class name>", "shows class documentation")
+HELP(help_help_class, "help <class or plug-in name> [x]", "shows class og plug-in documentation")
 
 help_class::help_class(QString name, QObject *parent)
     : Command(name, parent), _box(0)
 {
 }
 
-inline const base::FactoryPlugIn* plugIn(QString name) {
-    for (auto factory : MegaFactory::factories()) {
-        if (name == factory->id())
-            return factory;
-    }
-    return 0;
-}
-
 void help_class::doExecute() {
-    if (_args.size() == 2) {
+    bool hasOption = false;
+    if (_args.size() >= 2 && _args.size() <= 3) {
+        if (_args.size() == 3) {
+            QString option = _args.at(2);
+            if (option.toLower() == "x")
+                hasOption = true;
+            else
+                dialog().error("Wrong option. Only 'x' allowed");
+        }
         QString className = _args.at(1);
-        createBox(className);
-        if (_box) {
-            setColWidths();
-            writeHelp();
+        if (getPlugIn(className)) {
+            _expand = hasOption;
+            writePlugInHelp();
+        }
+        else if (createBox(className)) {
+            _expand = true;
+            writeClassHelp();
             _box->deleteLater();
         }
         else
             dialog().error("Class name '" + className + " 'not found");
     }
     else
-        dialog().error("Write: 'help <class name>'");
+        dialog().error("Write: 'help <class or plug-in name> [x]' ");
 }
 
-void help_class::createBox(QString className) {
+bool help_class::getPlugIn(QString name) {
+    _plugIn = nullptr;
+    for (auto factory : MegaFactory::factories()) {
+        if (name == factory->id()) {
+            _plugIn = factory;
+        }
+    }
+    return _plugIn;
+}
+
+bool help_class::createBox(QString className) {
     try {
         Box::saveCurrentRoot();
         _box = MegaFactory::create<Box>(className, "helpObject", 0);
         Box::restoreCurrentRoot();
     }
     catch (Exception &) {
-        _box = 0;
+        _box = nullptr;
+    }
+    return _box;
+}
+
+void help_class::writePlugInHelp() {
+    for (QString className : _plugIn->inventory()) {
+        createBox(className);
+        writeClassHelp();
+        _box->deleteLater();
     }
 }
 
@@ -76,14 +98,18 @@ void help_class::setColWidths() {
     }
 }
 
-void help_class::writeHelp() {
-    QString msg = "\n" + _box->className() + " " + _box->help() +
-            "\n\nInput:\n" +
-            portsHelp(PortAccess::Input).join("\n") +
-            "\n\nOutput:\n" +
-            portsHelp(PortAccess::Output).join("\n");
-    if (!_box->sideEffects().isEmpty())
-        msg += "\n\nSide effects:\n" + sideEffects();
+void help_class::writeClassHelp() {
+    setColWidths();
+    QString msg = _expand ? "\n" : "";
+    msg += _box->className() + " " + _box->help();
+    if (_expand) {
+        msg += "\n\nInput:\n" +
+               portsHelp(PortAccess::Input).join("\n") +
+               "\n\nOutput:\n" +
+               portsHelp(PortAccess::Output).join("\n");
+        if (!_box->sideEffects().isEmpty())
+            msg += "\n\nSide effects:\n" + sideEffects();
+    }
     dialog().information(msg);
 }
 

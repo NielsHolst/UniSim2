@@ -58,6 +58,8 @@ void Actuators::amendScreen(QString name) {
     builder.
         box("Accumulator").name(name).
             port("change").imports("./controller[controlVariable]").
+            port("minValue").equals(0.).
+            port("maxValue").equals(1.).
             box("PidController").name("controller").
                 port("sensedValue").imports("..[value]").
                 port("desiredValue").imports("controllers/screens/"+name+"[value]").

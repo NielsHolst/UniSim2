@@ -9,7 +9,10 @@ class SensitivityAnalysisSimple : public SensitivityAnalysisBase
 {
 public:
     SensitivityAnalysisSimple(QString name, QObject *parent);
+    void reset();
 private:
+    // Inputs
+    QString method;
     // Methods
     int numberOfIterations() const;
     int numberOfSamples() const;

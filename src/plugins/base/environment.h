@@ -50,6 +50,7 @@ public:
     QString latestLoadArg() const;
 
     QDir currentBoxScriptFolder() const;
+    QString latestInputFilePath() const;
     QString inputFileNamePath(QString fileName) const;
     QString inputFileContent(QString fileName) const;
 
@@ -76,7 +77,7 @@ private:
     ComputationStep _computationStep;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
-    QString _latestLoadArg, _currentLoadArg;
+    QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;
     bool _isFirstInstallation, _isSilent;
     // Singleton
     static Environment *_environment;

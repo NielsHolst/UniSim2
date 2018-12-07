@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -8,6 +7,7 @@
 #include <QProgressDialog>
 #include <QString>
 #include <QStringList>
+#include <QTextStream>
 #include <base/altova_xml.h>
 #include <base/command.h>
 #include <base/dialog_minimal.h>
@@ -72,7 +72,12 @@ QStringList extractArguments(int argc, char *argv[]) {
     return list;
 }
 
-void clearDestination(QString filePath) {
+QString destinationFilePath(QStringList args) {
+    return QFileInfo(args.at(1)).absoluteFilePath();
+}
+
+void clearDestination(QStringList args) {
+    QString filePath = destinationFilePath(args);
     if (QFile::exists(filePath)) {
         if (!QFile::remove(filePath))
             QMessageBox::warning(nullptr, "Error", "Cannot access output file:\n"+filePath);
@@ -85,32 +90,43 @@ void copyFile(QString fromFilePath, QString toFilePath) {
         ThrowException(message.arg(fromFilePath).arg(toFilePath));
     }
 }
+void writeErrorToOutputFile(QString errorMessage, QStringList args) {
+    QString filePath = destinationFilePath(args);
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        ThrowException("Cannot open output file").value(filePath);
+    QTextStream stream(&file);
+    stream << "!\n" << errorMessage;
+}
 
 int runWithoutDialog(int argc, char *argv[]) {
     DialogMinimal *dialog = new DialogMinimal(qApp);
-    environment().checkInstallation();
     QStringList args = extractArguments(argc, argv);
+    try {
+        environment().checkInstallation();
 
-    QString inputFilePath = args.at(0),
-        destinationFileName = args.at(1),
-        destinationFilePath = QFileInfo(destinationFileName).absoluteFilePath();
+        QString inputFilePath = args.at(0);
+        clearDestination(args);
 
-    clearDestination(destinationFilePath);
+        QString translatedFilePath = translateInputXml(inputFilePath);
 
-    QString translatedFilePath = translateInputXml(inputFilePath);
+        Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", nullptr);
+        Command::submit(QStringList() << "set" << "folder" << "input" << "input", nullptr);
+        Command::submit(QStringList() << "set" << "folder" << "output" << "output", nullptr);
 
-    Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", nullptr);
-    Command::submit(QStringList() << "set" << "folder" << "input" << "input", nullptr);
-    Command::submit(QStringList() << "set" << "folder" << "output" << "output", nullptr);
+        dialog->resetErrorCount();
+        Command::submit(QStringList() << "run" << translatedFilePath, nullptr);
+        if (dialog->errorCount() > 0)
+            ThrowException(dialog->getError());
 
-    dialog->resetErrorCount();
-    Command::submit(QStringList() << "run" << translatedFilePath, nullptr);
-    if (dialog->errorCount() > 0)
-        ThrowException(dialog->getError());
-
-    QString outputFilePath = environment().outputFilePath(".txt", -1 );
-    copyFile(outputFilePath, destinationFilePath);
-
+        QString outputFilePath = environment().outputFilePath(".txt", -1 );
+        copyFile(outputFilePath, destinationFilePath(args));
+    }
+    catch (Exception &ex){
+        writeErrorToOutputFile(ex.what(), args);
+        QMessageBox::warning(nullptr, "Error", ex.what());
+        return 1;
+    }
     return 0;
 }
 

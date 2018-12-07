@@ -37,6 +37,7 @@ private:
 
     // Data
     base::DataGrid *dirTransTable;
+    bool _isInitialized;
 };
 } //namespace
 

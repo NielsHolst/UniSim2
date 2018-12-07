@@ -50,7 +50,7 @@ HEADERS +=  \
     enum_functions.h \
     environment.h \
     exception.h \
-    exception_context.h \
+    exception_context_class.h \
     factory_plug_in.h \
     food_web_box_base.h \
     general.h \
@@ -125,7 +125,7 @@ SOURCES +=  \
     distribution.cpp \
     environment.cpp \
     exception.cpp \
-    exception_context.cpp \
+    exception_context_class.cpp \
     food_web_box_base.cpp \
     general.cpp \
     history.cpp \

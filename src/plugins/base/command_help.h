@@ -4,7 +4,7 @@
 #include <QMap>
 #include <QVector>
 
-#define HELP(id, command, text) base::CommandHelp id##CommandHelp(command, text);
+#define HELP(id, command, text) static base::CommandHelp id##CommandHelp(command, text);
 
 namespace base {
 

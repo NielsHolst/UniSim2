@@ -17,7 +17,7 @@ VapourFluxBase::VapourFluxBase(QString name, QObject *parent)
     help("base class for vapour flux computations");
     Output(conductance).help("Vapour flux conductance [m/s]");
     Output(vapourFlux).help("Vapour flux rate [kg/m2/s]");
-    Output(gain).help("For integrate of all vapour fluxes (GCC, p. 148) [kg/m2/s]");
+    Output(gain).help("For integration of all vapour fluxes (GCC, p. 148) [kg/m2/s]");
 }
 
 } //namespace

@@ -94,7 +94,7 @@ bool writeQrc() {
             "</RCC>";
     _dataFiles.clear();
     if (!collectDataFiles(QDir(pathResources() + "/data/input")) ||
-        !collectDataFiles(QDir(pathResources() + "/data/script")))
+        !collectDataFiles(QDir(pathResources() + "/data/vg")))
             return false;
     file.write(qPrintable(head+body()+tail));
     return true;

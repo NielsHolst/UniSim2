@@ -24,9 +24,24 @@ ControllersInput::ControllersInput(QString name, QObject *parent)
     Input(screenEnergyThresholdBand).equals(5.).help("Width of energy screen response [W/2]");
     Input(screenShadeThreshold).equals(500.).help("Draw shade screen above this sunlight level [W/2]");
     Input(screenShadeThresholdBand).equals(50.).help("Width of shade screen response [W/2]");
-    Input(screenBlackoutFromTime).equals(QTime(8,0,0)).help("Draw blackout screen at this time [h:m:s]");
-    Input(screenBlackoutToTime).equals(QTime(16,0,0)).help("Withdraw blackout screen at this time [h:m:s]");
+    Input(screenBlackoutFromTimeFloat).help("Draw blackout screen at this time (day fraction) [0;1]");
+    Input(screenBlackoutToTimeFloat).help("Withdraw blackout screen at this time (day fraction) [0;1]");
     Input(chalk).help("Effect of chalk [0;1]");
+    Output(screenBlackoutFromTime).help("Draw blackout screen at this time [h:m:s]");
+    Output(screenBlackoutToTime).help("Withdraw blackout screen at this time [h:m:s]");
+}
+
+namespace {
+    QTime dayFractionToTime(double fraction) {
+         QTime time(0,0);
+         time.addSecs(24*60*60*fraction);
+         return time;
+    }
+}
+
+void ControllersInput::reset() {
+    screenBlackoutFromTime = dayFractionToTime(screenBlackoutFromTimeFloat);
+    screenBlackoutToTime = dayFractionToTime(screenBlackoutToTimeFloat);
 }
 
 } //namespace

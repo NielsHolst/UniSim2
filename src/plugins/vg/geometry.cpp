@@ -49,12 +49,12 @@ void Geometry::reset() {
     roofArea = 2*numSpans*roofWidth*length;
     sideWallsArea = 2*length*height;
     endWallsArea = 2*width*height;
-    gablesArea = numSpans*roofHeight*spanWidth,
+    gablesArea = numSpans*roofHeight*spanWidth;
 
     coverArea = sideWallsArea + endWallsArea + gablesArea + roofArea;
     coverPerGroundArea = coverArea/groundArea;
 
-    roofVolume  = length*gablesArea/2.,
+    roofVolume  = length*gablesArea/2.;
     indoorsVolumeTotal =
     indoorsVolume = groundArea*height + roofVolume;
     indoorsAverageHeight = indoorsVolume/groundArea;

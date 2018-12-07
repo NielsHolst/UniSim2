@@ -72,6 +72,7 @@ public:
     void resolvePortImports();
     void updateImports();
     void updateSelfImports();
+    void verifyPorts();
 
     void cloneFamily(QString name, QObject *parent);
 

@@ -18,22 +18,20 @@ CropDevelopment::CropDevelopment(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models crop development");
-    Input(physDuration).equals(200).help("Duration in physiological time units (ptu)");
-    Input(physStep).equals(10).help("Development step (ptu/day)");
+    Input(duration).equals(1).help("Duration in physiological time units (ptu)");
+    Input(step).equals(0.05).help("Development step (ptu/day)");
+    Input(timeStepDays).imports("calendar[timeStepDays]");
     Output(rate).help("Development rate (per day)");
-    Output(duration).help("Development duration (days)");
 }
 
 void CropDevelopment::reset() {
-    if (physDuration < 0.)
-        ThrowException("physDuration must be positive").value(physDuration).context(this);
+    update();
 }
 
 void CropDevelopment::update() {
-    rate = physStep/physDuration;
-    duration = (rate > 0.) ? 1./rate : 365.;
-    if (duration > 365.)
-        duration = 365.;
+    if (duration == 0.)
+        ThrowException("Duration must be > 0").value(duration).context(this);
+    rate = step/duration*timeStepDays;
 }
 
 } //namespace

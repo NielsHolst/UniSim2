@@ -21,14 +21,11 @@ public:
     void update();
 private:
     // Inputs
-    double height, timeStep, energyFlux, resetValue, baseTemperature, averageTimeSpan;
+    double height, timeStep, energyFlux, resetValue, baseTemperature;
     // Output
-    double value, average;
-    int averageNumber;
+    double value;
     // Data
     int tick;
-    QVector<double> _data;
-    base::CircularBuffer<double> _buffer;
 };
 } //namespace
 

@@ -19,9 +19,9 @@ public:
     void update();
 protected:
     // Inputs
-    double physDuration, physStep;
+    double duration, step, timeStepDays;
     // Outputs
-    double rate, duration;
+    double rate;
 };
 } //namespace
 

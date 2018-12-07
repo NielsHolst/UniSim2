@@ -12,45 +12,61 @@
 <xsl:variable name="floor-emissivity" select="0.85"/>
 <xsl:variable name="floor-reflectance" select="0.5"/>
 <xsl:variable name="rh-max-band" select="10"/>
-<xsl:variable name="ventilationThresholdBand" select="1"/>
-<xsl:variable name="crackVentilation" select="0.05"/>
-<xsl:variable name="crackVentilationTemperatureMin" select="-5"/>
-<xsl:variable name="crackVentilationTemperatureMinBand" select="1"/>
-<xsl:variable name="screenMaxAtHighRh" select="0.9"/>
-<xsl:variable name="screenEnergyThreshold" select="5"/>
-<xsl:variable name="screenEnergyThresholdBand" select="5"/>
-<xsl:variable name="screenShadeThreshold" select="500"/>
-<xsl:variable name="screenShadeThresholdBand" select="50"/>
-<xsl:variable name="screenBlackoutFromTime" select="concat('08',$colon,'00',$colon,'00')"/>
-<xsl:variable name="screenBlackoutToTime" select="concat('16',$colon,'00',$colon,'00')"/>
+<!-- <xsl:variable name="ventilationThresholdBand" select="1"/> -->
+<!-- <xsl:variable name="crackVentilation" select="0.05"/> -->
+<!-- <xsl:variable name="crackVentilationTemperatureMin" select="-5"/> -->
+<!-- <xsl:variable name="crackVentilationTemperatureMinBand" select="1"/> -->
+<!-- <xsl:variable name="screenMaxAtHighRh" select="0.9"/> -->
+<!-- <xsl:variable name="screenEnergyThreshold" select="5"/> -->
+<!-- <xsl:variable name="screenEnergyThresholdBand" select="5"/> -->
+<!-- <xsl:variable name="screenShadeThreshold" select="500"/> -->
+<!-- <xsl:variable name="screenShadeThresholdBand" select="50"/> -->
+<!-- <xsl:variable name="screenBlackoutFromTime" select="concat('08',$colon,'00',$colon,'00')"/> -->
+<!-- <xsl:variable name="screenBlackoutToTime" select="concat('16',$colon,'00',$colon,'00')"/> -->
 <xsl:variable name="heatPipeFlowRate" select="5"/>
 <xsl:variable name="heatPipeMaxTemperature" select="60"/>
 
 <!-- Call templates -->
+<xsl:template name="float-with-period">
+  <xsl:param name="value"/>
+  <xsl:choose>
+    <xsl:when test="contains(string($value), '.')">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$value"/>
+      </xsl:attribute>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:attribute name="value">
+        <xsl:value-of select="concat($value, '.0')"/>
+      </xsl:attribute>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template name="float-value">
-	<xsl:param name="value"/>
+  <xsl:param name="value"/>
   <xsl:param name="correction" select="0"/>
-  <xsl:attribute name="value">
-    <xsl:value-of select="number(replace($value, ',', '.')) + $correction"/>
-  </xsl:attribute>
+  <xsl:call-template name="float-with-period">
+    <xsl:with-param name="value" select="number(replace($value, ',', '.')) + $correction"/>
+  </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="pct-value">
-	<xsl:param name="value"/>
-  <xsl:attribute name="value">
-    <xsl:value-of select="number(replace($value, ',', '.')) div 100"/>
-  </xsl:attribute>
+  <xsl:param name="value"/>
+  <xsl:call-template name="float-with-period">
+    <xsl:with-param name="value" select="number(replace($value, ',', '.')) div 100"/>
+  </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="time-value">
-	<xsl:param name="value"/>
+  <xsl:param name="value"/>
   <xsl:attribute name="value">
     <xsl:value-of select="concat(substring($value, 1, 2), $colon, substring($value, 3, 2), $colon, '00')"/>
   </xsl:attribute>
 </xsl:template>
 
 <xsl:template name="extract-cover">
-	<xsl:param name="cover"/>
+  <xsl:param name="cover"/>
   <box class="vg::Cover" name="cover">
     <port name="transmissivity">
       <xsl:call-template name="pct-value">
@@ -112,7 +128,7 @@
 </xsl:template>
 
 <xsl:template name="extract-shelter-face">
-	<xsl:param name="position"/>
+  <xsl:param name="position"/>
   <xsl:call-template name="extract-cover">
     <xsl:with-param name="cover" select="DVV_SETUP/Greenhouse/Panes/Pane[Position=$position]"/>
   </xsl:call-template>
@@ -124,21 +140,20 @@
 </xsl:template>
 
 <xsl:template name="extract-setpoints">
-	<xsl:param name="climateSetpointName"/>
-	<xsl:param name="cultureSetpointName"/>
+  <xsl:param name="climateSetpointName"/>
   <xsl:param name="correction" select="0"/>
   <port name="reverseOrder" value="TRUE"/>
 
   <box name="default">
       <xsl:choose>
-        <xsl:when test="string-length(climateSetpointName)=0">
+        <xsl:when test="string-length($climateSetpointName)=0">
           <newPort name="signal" value="0.0"/>
         </xsl:when>
         <xsl:otherwise>
           <newPort name="signal">
             <xsl:call-template name="float-value">
               <xsl:with-param name="value" 
-                select="DVV_SETUP/Greenhouse/zone/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
+                select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
               <xsl:with-param name="correction" select="$correction"/>
             </xsl:call-template>
           </newPort>
@@ -146,31 +161,31 @@
       </xsl:choose>
   </box>
 
-  <xsl:for-each select="DVV_SETUP/Greenhouse/zone/Cultures/Culture/Steps/CultureStep/Setpoints/Setpoint[SetpointName=$cultureSetpointName]/SetpointTimes/SetpointTime">
+  <xsl:for-each select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants[Parameters/ParameterName=$climateSetpointName]/ModSetpoint">
     <box class="vg::DateTimeSignal">
-      <port name="beginDay">
+      <port name="beginDate">
         <xsl:attribute name="value">
           <xsl:value-of select="FromDay"/>
         </xsl:attribute>
       </port>
-      <port name="endDay">
+      <port name="endDate">
         <xsl:attribute name="value">
           <xsl:value-of select="ToDay"/>
         </xsl:attribute>
       </port>
       <port name="beginTime">
-        <xsl:call-template name="time-value">
-          <xsl:with-param name="value" select="FromTime"/>
-        </xsl:call-template>
+        <xsl:attribute name="value">
+          <xsl:value-of select="FromTime"/>
+        </xsl:attribute>
       </port>
       <port name="endTime">
-        <xsl:call-template name="time-value">
-          <xsl:with-param name="value" select="ToTime"/>
-        </xsl:call-template>
+        <xsl:attribute name="value">
+          <xsl:value-of select="ToTime"/>
+        </xsl:attribute>
       </port>
       <port name="signalInside">
         <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="SetpointValue"/>
+          <xsl:with-param name="value" select="Value"/>
           <xsl:with-param name="correction" select="$correction"/>
         </xsl:call-template>
       </port>
@@ -271,7 +286,7 @@
     <xsl:variable name="beginDate" select="DVV_SETUP/StartTime"/>
     <xsl:variable name="endDate"  select="DVV_SETUP/StopTime"/>
     <xsl:variable name="beginTime" select="concat('00',$colon,'00',$colon,'00')"/>
-    <xsl:variable name="endTime"  select="concat('24',$colon,'00',$colon,'00')"/>
+    <xsl:variable name="endTime"  select="concat('00',$colon,'00',$colon,'00')"/>
     <port name="beginDate">
       <xsl:attribute name="value">
         <xsl:value-of select="$beginDate"/>
@@ -293,10 +308,9 @@
       </xsl:attribute>
     </port>
     <port name="timeStep">
-      <xsl:call-template name="float-value">
-        <xsl:with-param name="value" 
-          select="DVV_SETUP/TimeStep"/>
-      </xsl:call-template>
+      <xsl:attribute name="value">
+        <xsl:value-of select="DVV_SETUP/TimeStep"/>
+      </xsl:attribute>
     </port>
     <port name="timeUnit" value="m"/>
   </box>
@@ -320,6 +334,15 @@
   </box>
   <xsl:comment> *** Outdoors *** </xsl:comment>
   <box class="vg::Outdoors" name="outdoors">
+    <box class="Records" name="records">
+      <port name="fileName">
+        <xsl:attribute name="value">
+          <xsl:value-of select="DVV_SETUP/Weather/File"/>
+          <!-- <xsl:value-of select="'input/sel_dk.txt'"/> -->
+        </xsl:attribute>
+      </port>
+      <port name="ignoreYear" value="TRUE"/>
+    </box>
   </box>
   <xsl:comment> *** Construction *** </xsl:comment>
   <box name="construction">
@@ -434,54 +457,58 @@
     </box>
   </box>
   <xsl:comment> *** allSetpoints *** </xsl:comment>
+  <!-- <LIST> -->
+    <!-- <xsl:for-each select="DVV_SETUP/Greenhouse/Climate/Setpoint"> -->
+      <!-- <Setpoint> -->
+        <!-- <xsl:value-of select="Constants/Parameters/ParameterName"/> -->
+      <!-- </Setpoint> -->
+    <!-- </xsl:for-each>       -->
+  <!-- </LIST> -->
   <box name="allSetpoints">
     <box class="PrioritySignal" name="heatingTemperatureAtLowRh">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_HeatingTemp'"/>
-        <xsl:with-param name="cultureSetpointName" select="'Theat'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal"  name="ventilationTemperatureMargin">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_VentTemp'"/>
-        <xsl:with-param name="cultureSetpointName" select="'Tvent'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal"  name="rhMax">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxRelHmd'"/>
-        <xsl:with-param name="cultureSetpointName" select="'MaxRH'"/>
         <xsl:with-param name="correction" select="-$rh-max-band"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal"  name="heatingTemperatureMargin">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxHeatAddHighRH'"/>
-        <xsl:with-param name="cultureSetpointName" select="'MaxTheatRH'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal"  name="ventilationTemperatureRhMargin">
+   <box class="PrioritySignal"  name="ventilationTemperatureRhMargin">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxVentDecHighRH'"/>
-        <xsl:with-param name="cultureSetpointName" select="'MaxTventRH'"/>
+      </xsl:call-template>
+    </box>
+   <box class="PrioritySignal"  name="ventilationThresholdBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'ventilationsThresholdBand'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="co2Min">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MinCO2'"/>
-        <xsl:with-param name="cultureSetpointName" select="'CO2Min'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="co2Max">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxCO2'"/>
-        <xsl:with-param name="cultureSetpointName" select="'CO2Max'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="chalk">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="''"/>
-        <xsl:with-param name="cultureSetpointName" select="'ChalkOnOff'"/>
+        <xsl:with-param name="climateSetpointName" select="'Cli_ShadingAgentReduction'"/>
       </xsl:call-template>
     </box>
     <box name="rhMaxBand">
@@ -491,21 +518,66 @@
         </xsl:attribute>
       </newPort>
     </box>
-    <box name="dawnThreshold">
-      <newPort name="value">
-        <xsl:call-template name="float-value">
-          <xsl:with-param name="value" 
-            select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName='Cli_LightChangeFromNight']/Value"/>
-        </xsl:call-template>
-      </newPort>
+    <box class="PrioritySignal" name="dawnThreshold">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromNight'"/>
+      </xsl:call-template>
     </box>
-    <box name="duskThreshold">
-      <newPort name="value">
-        <xsl:call-template name="float-value">
-          <xsl:with-param name="value" 
-            select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName='Cli_LightChangeFromDay']/Value"/>
-        </xsl:call-template>
-      </newPort>
+    <box class="PrioritySignal" name="duskThreshold">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromDay'"/>
+      </xsl:call-template>
+    </box>
+    <!-- new -->
+    <box class="PrioritySignal" name="crackVentilation">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="crackVentilationTemperatureMin">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMin'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenEnergyThreshold">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenEnergyThresholdBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenShadeThreshold">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenShadeThresholdBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenBlackoutFromTimeFloat">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenBlackoutFromTime'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenBlackoutToTimeFloat">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenBlackoutToTime'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenMaxAtHighRh">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenMaxAtHighRh'"/>
+      </xsl:call-template>
     </box>
   </box>
   <xsl:comment> *** Setpoints *** </xsl:comment>
@@ -543,64 +615,42 @@
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
-    <port name="ventilationThresholdBand">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$ventilationThresholdBand"/>
-      </xsl:attribute>
-    </port>
-    <port name="crackVentilation">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$crackVentilation"/>
-      </xsl:attribute>
-    </port>
-    <port name="crackVentilationTemperatureMin">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$crackVentilationTemperatureMin"/>
-      </xsl:attribute>
-    </port>
-    <port name="crackVentilationTemperatureMinBand">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$crackVentilationTemperatureMinBand"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenMaxAtHighRh">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenMaxAtHighRh"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenEnergyThreshold">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenEnergyThreshold"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenEnergyThresholdBand">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenEnergyThresholdBand"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenShadeThreshold">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenShadeThreshold"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenShadeThresholdBand">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenShadeThresholdBand"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenBlackoutFromTime">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenBlackoutFromTime"/>
-      </xsl:attribute>
-    </port>
-    <port name="screenBlackoutToTime">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$screenBlackoutToTime"/>
-      </xsl:attribute>
-    </port>
-    <box class="vg::Chalk" name="chalk">
-      <port name="setpoint" ref="allSetpoints/chalk[value]"/>
-    </box>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'ventilationThresholdBand'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'crackVentilation'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMin'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMinBand'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenMaxAtHighRh'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenEnergyThreshold'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenEnergyThresholdBand'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenShadeThreshold'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenShadeThresholdBand'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenBlackoutFromTimeFloat'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenBlackoutToTimeFloat'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'chalk'"/>
+    </xsl:call-template>
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
@@ -636,7 +686,6 @@
       <newPort name="fractionPlantArea" value="1"/>
     </box>
   </box>
-  <xsl:comment> *** Crop *** </xsl:comment>
   <box class="vg::Budget" name="budget"/>
   <xsl:comment> *** Output *** </xsl:comment>
   <box class="OutputR" name="output">
@@ -656,8 +705,13 @@
       <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
       <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
       <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
-      <newPort name="leafLightUseEfficiency" ref="crop/layers/top/photosynthesis/lightResponse[LUE] "/>
       <newPort name="leafNetPhotosynthesis" ref="crop/growth[netGrowthRate]"/>
+      <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
+      <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
+      <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>
@@ -666,10 +720,19 @@
         <port name="ports" value="output/p[*]"/>
       </box>
     </box>
+    <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
     <box class="OutputText">
       <port name="skipFormats" value="TRUE"/>
-      <port name="skipInitialRows" value="720"/>
-      <port name="averageN" value="30"/>
+      <port name="skipInitialRows">
+        <xsl:attribute name="value">
+          <xsl:value-of select="1440 div number($TimeStep)"/>
+        </xsl:attribute>
+      </port>
+      <port name="averageN">
+        <xsl:attribute name="value">
+          <xsl:value-of select="60 div number($TimeStep)"/>
+        </xsl:attribute>
+      </port>
     </box>
   </box>
 </box> </xsl:template>

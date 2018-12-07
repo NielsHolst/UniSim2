@@ -20,16 +20,16 @@ namespace vg {
 PUBLISH(Cover)
 
 Cover::Cover(QString name, QObject *parent)
-    : SurfaceRadiationOutputs(name, parent)
+    : SurfaceRadiationOutputs(name, parent), _isInitialized(false)
 {
     help("computes cover light and heat characteristics");
     Input(greenhouseReflection).imports("geometry[reflection]");
-    Input(chalk).imports("controllers/chalk[value]");
+    Input(chalk).imports("controllers[chalk]");
     Input(latitude).imports("calendar[latitude]");
     Input(azimuth).imports("calendar[azimuth]");
     Input(area).imports("..[area]");
     Input(windSpeed).imports("outdoors[windSpeed]");
-    Input(directTransmissionFile).equals("input/direct_transmission_single.txt")
+    Input(directTransmissionFile).equals(":/data/vg/direct_transmission_single.txt")
             .help("Table of direct light transmittance depending on latitude and sun azimuth");
     Input(emissivity).equals(0.84).help("Emissivity of long-wave radiation [0;1]");
     Input(absorptivity).equals(0.04).help("Absorptivity of long-wave radiation [0;1]");
@@ -43,11 +43,15 @@ Cover::Cover(QString name, QObject *parent)
 }
 
 void Cover::initialize() {
-    QString filePath = environment().inputFileNamePath(directTransmissionFile);
+    _isInitialized = true;
+    bool isInResources = (directTransmissionFile.at(0) == ":");
+    QString filePath = isInResources ? directTransmissionFile : environment().inputFileNamePath(directTransmissionFile);
     dirTransTable = new DataGrid(filePath, this);
 }
 
 void Cover::reset() {
+    if (!_isInitialized)
+        ThrowException("Program error: Not initialized before reset").context(this);
     update();
 //    resetRadiationOutputs();
 //    U = U4;

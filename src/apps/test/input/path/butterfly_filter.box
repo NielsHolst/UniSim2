@@ -1,7 +1,7 @@
 Simulation sim {
 	.iterations = 5
 	.steps = 35
-	SensitivityAnalysis {
+	SensitivityAnalysisSimple {
 	}
 	Box butterfly {
 		Stage egg {

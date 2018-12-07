@@ -7,6 +7,7 @@ class TestDistribution : public QObject
     Q_OBJECT
 private slots:
     void testLoad();
+    void testBlindPort();
     void testBuilder();
     void testMonteCarlo();
 };

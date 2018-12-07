@@ -73,8 +73,8 @@ void Shelter::initialize() {
         Box *cover   = face->findOne<Box>("./cover"),
             *screens = face->findMaybeOne<Box>("./screens");
         info.heatCapacityCover = cover->port("heatCapacity")->valuePtr<double>();
-        info.heatCapacityScreens = screens ? screens->port("heatCapacity")->valuePtr<double>() : 0;
-        info.screensEffectiveArea = screens ? screens->port("effectiveArea")->valuePtr<double>() : 0;
+        info.heatCapacityScreens = screens ? screens->port("heatCapacity")->valuePtr<double>() : nullptr;
+        info.screensEffectiveArea = screens ? screens->port("effectiveArea")->valuePtr<double>() : nullptr;
         infos << info;
     }
     initHorizontalScreens();

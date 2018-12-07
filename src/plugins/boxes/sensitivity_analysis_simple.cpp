@@ -15,6 +15,15 @@ SensitivityAnalysisSimple::SensitivityAnalysisSimple(QString name, QObject *pare
     : SensitivityAnalysisBase(name, parent)
 {
     help("runs a simple sensitivity analysis");
+    Input(method).help("Not used");
+}
+
+void SensitivityAnalysisSimple::reset() {
+    // Draw new values at every reset
+    for (Distribution *dist : _saDistributions) {
+        double value = dist->draw();
+        dist->port()->equals(value);
+    }
 }
 
 int SensitivityAnalysisSimple::numberOfIterations() const {

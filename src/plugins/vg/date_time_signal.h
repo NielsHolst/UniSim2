@@ -18,8 +18,9 @@ public:
     double computeSignal();
 private:
     // Inputs
-    int beginDay, endDay, day;
+    QDate beginDate, endDate;
     QTime beginTime, endTime, time;
+    int day;
     double signalInside, signalOutsideTimeOnly, signalOutside;
     bool circadian;
 };

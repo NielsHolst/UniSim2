@@ -17,6 +17,7 @@ HEADERS +=  \
     test_any_year.h \
     test_assign.h \
     test_ast_boxes.h \
+    test_blind_port.h \
     test_box.h \
     test_box_builder.h \
     test_box_cases.h \
@@ -24,7 +25,7 @@ HEADERS +=  \
     test_calendar.h \
     test_circle_buffer.h \
     test_command.h \
-    test_conditional.h \
+#    test_conditional.h \
     test_convert.h \
     test_copy_folder.h \
     test_data_frame.h \
@@ -63,6 +64,7 @@ SOURCES +=  \
     test_any_year.cpp \
     test_assign.cpp \
     test_ast_boxes.cpp \
+    test_blind_port.cpp \
     test_box.cpp \
     test_box_builder.cpp \
     test_box_cases.cpp \
@@ -70,7 +72,7 @@ SOURCES +=  \
     test_calendar.cpp \
     test_circle_buffer.cpp \
     test_command.cpp \
-    test_conditional.cpp \
+#    test_conditional.cpp \
     test_convert.cpp \
     test_copy_folder.cpp \
     test_data_frame.cpp \

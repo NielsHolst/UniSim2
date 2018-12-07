@@ -48,7 +48,7 @@ void renameFolder(QDir dir) {
     bool ok = QDir().rename(oldPath, newPath);
     if (!ok)
         ThrowException("Cannot rename folder").value(info)
-                      .hint("Close programs using the folder then try again");
+                      .hint("Close programs using the folder then try again.\nMost often, just close Windows File Explorer");
 }
 
 void copyFolderHard(QDir source, QDir destination) {

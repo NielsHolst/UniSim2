@@ -24,10 +24,10 @@ command.subdir = src/plugins/command
 command.depends = base
 unisim.depends = command
 
-SUBDIRS += demo
-demo.subdir = src/plugins/demo
-demo.depends = base
-unisim.depends = demo
+#SUBDIRS += demo
+#demo.subdir = src/plugins/demo
+#demo.depends = base
+#unisim.depends = demo
 
 SUBDIRS += distribution
 distribution.subdir = src/plugins/distribution
@@ -39,10 +39,10 @@ eq.subdir = src/plugins/eq
 eq.depends = base
 unisim.depends = eq
 
-SUBDIRS += student
-student.subdir = src/plugins/student
-student.depends = base
-unisim.depends = student
+#SUBDIRS += student
+#student.subdir = src/plugins/student
+#student.depends = base
+#unisim.depends = student
 
 SUBDIRS += vg
 vg.subdir = src/plugins/vg
@@ -107,6 +107,11 @@ unisim.depends = vg
 #pollnet.subdir = src/plugins/pollnet
 #pollnet.depends = base
 #unisim.depends = pollnet
+
+SUBDIRS += potato
+potato.subdir = src/plugins/potato
+potato.depends = base
+unisim.depends = potato
 
 #SUBDIRS += resist
 #resist.subdir = src/plugins/resist

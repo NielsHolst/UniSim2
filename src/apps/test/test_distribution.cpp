@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QSet>
 #include <base/box.h>
 #include <base/box_builder.h>
@@ -6,6 +7,7 @@
 #include <base/distribution.h>
 #include <base/exception.h>
 #include "exception_expectation.h"
+#include "output_file.h"
 #include "test_distribution.h"
 
 using namespace base;
@@ -14,14 +16,14 @@ void TestDistribution::testLoad() {
     int errors = dialog().errorCount();
     Box *sim;
     try {
-        Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", 0);
+        Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", nullptr);
         sim = environment().root();
         sim->initializeFamily();
     }
     UNEXPECTED
     QCOMPARE(errors, dialog().errorCount());
 
-    Distribution *uniform(0), *normal(0);
+    Distribution *uniform(nullptr), *normal(nullptr);
     try {
         uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
         normal  = sim->findOne<Distribution>("/sim/a/inflow<Port>/*<Distribution>");
@@ -57,12 +59,35 @@ void TestDistribution::testLoad() {
     delete sim;
 }
 
+void TestDistribution::testBlindPort() {
+    int errors = dialog().errorCount();
+    Box *sim;
+    try {
+        Command::submit(QStringList() << "run" << "distribution/distribution-blind-port.box", nullptr);
+        sim = environment().root();
+        sim->initializeFamily();
+    }
+    UNEXPECTED
+    QCOMPARE(errors, dialog().errorCount());
+
+    OutputFile file;
+    std::cout << "*** " << qPrintable(file.filePath()) << " "
+              << qPrintable(file.columnLabels().join(" ")) << "\n";
+
+    QStringList values = file.column("f");
+    QCOMPARE(values.size(), 20);
+    QSet<QString> set;
+    for (QString value : values.toVector())
+        set << value;
+    QCOMPARE(set.size(), 5);
+}
+
 void TestDistribution::testBuilder() {
     BoxBuilder builder;
     try {
         builder.
             box("Simulation").name("sim").
-                box("SensitivityAnalysis").endbox().
+                box("SensitivityAnalysisSimple").endbox().
                 box("Stage").name("a").
                     port("initial").equals(100).rnd("uniform").min(50).max(200).
                     port("inflow").equals(15).rnd("normal").mean(15).sd(2).
@@ -72,7 +97,7 @@ void TestDistribution::testBuilder() {
     UNEXPECTED
     Box *sim = builder.content();
 
-    Distribution *uniform(0), *normal(0);
+    Distribution *uniform(nullptr), *normal(nullptr);
     try {
         sim->initializeFamily();
         uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
@@ -103,7 +128,7 @@ void TestDistribution::testBuilder() {
 }
 
 void TestDistribution::testMonteCarlo() {
-    Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", 0);
+    Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", nullptr);
     Box *sim = environment().root();
     Box *sa;
     try {

@@ -11,7 +11,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QTime>
-#include "exception_context.h"
+#include "exception_context_class.h"
 
 #define ThrowException(X) \
     throw base::Exception((X)).file(__FILE__).line(__LINE__)
@@ -23,7 +23,6 @@ namespace base {
 class Exception {
 public:
     Exception(QString message);
-    ~Exception();
     Exception& file(const char *s);
     Exception& line(int i);
     Exception& context(const QObject *object);

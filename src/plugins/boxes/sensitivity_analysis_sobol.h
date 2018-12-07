@@ -14,11 +14,14 @@ public:
 private:
     // Input
     int iteration;
+    // Output
+    char phase;
     // Data
-    base::Matrix<double> _A, _B;
+    base::Matrix<double> A, B, C;
     // Methods
     int numberOfIterations() const;
     int numberOfSamples() const;
+    void fillMatrices();
 };
 
 }

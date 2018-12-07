@@ -43,6 +43,7 @@ void TestBoxScript::testStringInDoubleQuotes() {
 }
 
 void TestBoxScript::testStringInSingleQuotes() {
+    ExceptionContext(nullptr);
     int errors = dialog().errorCount();
     Command::submit(QStringList() << "load" << "box_script/string_in_single_quotes.box", 0);
     QCOMPARE(errors, dialog().errorCount());

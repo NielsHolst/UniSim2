@@ -70,6 +70,8 @@ void Controllers::amend() {
             box("Accumulator").name("maxDrawn").
                 port("initial").equals(1).
                 port("change").imports("./controller[controlVariable]").
+                port("minValue").equals(0.).
+                port("maxValue").equals(1.).
                 box("PidController").name("controller").
                     port("sensedValue").imports("..[value]").
                     port("desiredValue").imports("./target[signal]").
@@ -130,10 +132,6 @@ void Controllers::amend() {
         box("vg::GrowthLightController").name("growthLight").
             box("vg::AnyFlag").name("on").
                 box("vg::DateTimeSignal").
-                    port("beginDay").equals(1).
-                    port("endDay").equals(365).
-                    port("beginTime").equals(QTime(0,0,0)).
-                    port("endTime").equals(QTime(23,59,0)).
                     port("circadian").equals(true).
                     port("signalInside").imports("./on[signal]").
                     port("signalOutside").equals(0).
@@ -148,10 +146,6 @@ void Controllers::amend() {
             endbox().
             box("vg::AnyFlag").name("off").
                 box("vg::DateTimeSignal").
-                    port("beginDay").equals(1).
-                    port("endDay").equals(365).
-                    port("beginTime").equals(QTime(0,0,0)).
-                    port("endTime").equals(QTime(23,59,0)).
                     port("circadian").equals(true).
                     port("signalInside").imports("./off[signal]").
                     port("signalOutside").equals(0).
@@ -166,8 +160,6 @@ void Controllers::amend() {
             endbox().
             box("vg::AnyFlag").name("periods").
                 box("vg::DateTimeSignal").
-                    port("beginDay").equals(1).
-                    port("endDay").equals(365).
                     port("beginTime").imports("calendar[sunrise]").
                     port("endTime").imports("calendar[sunset]").
                     port("circadian").equals(true).

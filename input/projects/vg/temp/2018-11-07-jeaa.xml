@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<box class="Simulation" name="greenhouse">
+	<port name="steps" ref="./period[steps]"/>
+	<!-- *** SimulationPeriod *** -->
+	<box class="SimulationPeriod" name="period">
+		<port name="beginDate" value="01-01-2018"/>
+		<port name="endDate" value="10-01-2018"/>
+		<port name="beginTime" value="00:00:00"/>
+		<port name="endTime" value="00:00:00"/>
+		<port name="timeStep" value="2"/>
+		<port name="timeUnit" value="m"/>
+	</box>
+	<!-- *** Calendar *** -->
+	<box class="Calendar" name="calendar">
+		<port name="initialDateTime" ref="../period[beginDateTime]"/>
+		<port name="timeStep" ref="../period[timeStep]"/>
+		<port name="timeUnit" ref="../period[timeUnit]"/>
+		<port name="latitude" value="55.5"/>
+		<port name="longitude" value="10.5"/>
+	</box>
+	<!-- *** Outdoors *** -->
+	<box class="vg::Outdoors" name="outdoors">
+		<box class="Records" name="records">
+			<port name="fileName" value="C:\Users\au152367\UniversalSimulatorHome\input\projects\ig\input\sel_dk.txt"/>
+			<port name="ignoreYear" value="TRUE"/>
+		</box>
+	</box>
+	<!-- *** Construction *** -->
+	<box name="construction">
+		<box class="vg::Geometry" name="geometry">
+			<port name="numSpans" value="26"/>
+			<port name="spanWidth" value="4"/>
+			<port name="length" value="100"/>
+			<port name="height" value="4"/>
+			<port name="roofPitch" value="26"/>
+			<port name="reflection" value="0.2"/>
+		</box>
+		<box class="vg::Shelter" name="shelter">
+			<box class="vg::ShelterFace" name="roof1">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.83"/>
+					<port name="U4" value="6.5"/>
+				</box>
+				<box class="vg::Screens" name="screens"/>
+			</box>
+			<box class="vg::ShelterFace" name="roof2">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.83"/>
+					<port name="U4" value="6.5"/>
+				</box>
+				<box class="vg::Screens" name="screens"/>
+			</box>
+			<box class="vg::ShelterFace" name="side1">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.81"/>
+					<port name="U4" value="3.02"/>
+				</box>
+				<box class="vg::Screens" name="screens">
+					<box class="vg::Screen" name="energy">
+						<port name="orientation" value="cover"/>
+						<port name="transmissivityLight" value="0.45"/>
+						<port name="energyLossReduction" value="0.45"/>
+						<port name="transmissivityAir" value="0.03"/>
+						<port name="state" ref="actuators/screens/energy[value]"/>
+					</box>
+				</box>
+			</box>
+			<box class="vg::ShelterFace" name="side2">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.81"/>
+					<port name="U4" value="3.02"/>
+				</box>
+				<box class="vg::Screens" name="screens">
+					<box class="vg::Screen" name="shade">
+						<port name="orientation" value="cover"/>
+						<port name="transmissivityLight" value="0.35"/>
+						<port name="energyLossReduction" value="0.35"/>
+						<port name="transmissivityAir" value="0.03"/>
+						<port name="state" ref="actuators/screens/shade[value]"/>
+					</box>
+				</box>
+			</box>
+			<box class="vg::ShelterFace" name="end1">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.81"/>
+					<port name="U4" value="3.02"/>
+				</box>
+				<box class="vg::Screens" name="screens">
+					<box class="vg::Screen" name="energy">
+						<port name="orientation" value="cover"/>
+						<port name="transmissivityLight" value="0.45"/>
+						<port name="energyLossReduction" value="0.45"/>
+						<port name="transmissivityAir" value="0.03"/>
+						<port name="state" ref="actuators/screens/energy[value]"/>
+					</box>
+				</box>
+			</box>
+			<box class="vg::ShelterFace" name="end2">
+				<box class="vg::Cover" name="cover">
+					<port name="transmissivity" value="0.81"/>
+					<port name="U4" value="3.02"/>
+				</box>
+				<box class="vg::Screens" name="screens">
+					<box class="vg::Screen" name="energy">
+						<port name="orientation" value="cover"/>
+						<port name="transmissivityLight" value="0.45"/>
+						<port name="energyLossReduction" value="0.45"/>
+						<port name="transmissivityAir" value="0.03"/>
+						<port name="state" ref="actuators/screens/energy[value]"/>
+					</box>
+				</box>
+			</box>
+		</box>
+	</box>
+	<!-- *** Indoors *** -->
+	<box class="vg::Indoors" name="indoors">
+		<box class="vg::Given" name="given">
+			<box class="vg::AirFluxGiven" name="airFlux">
+				<box class="vg::AirFluxInfiltration" name="infiltration">
+					<port name="leakage" value="1"/>
+				</box>
+			</box>
+			<box class="vg::EnergyFluxSum" name="energyFlux">
+				<box class="vg::EnergyFluxFloor" name="floor">
+					<port name="Uindoors" value="7.5"/>
+					<port name="Usoil" value="4"/>
+					<port name="heatCapacity" value="42000"/>
+					<port name="emissivity" value="0.85"/>
+					<box class="vg::FloorRadiationAbsorbed" name="radiationAbsorbed">
+						<port name="reflectance" value="0.5"/>
+					</box>
+				</box>
+			</box>
+		</box>
+	</box>
+	<!-- *** allSetpoints *** -->
+	<box name="allSetpoints">
+		<box class="PrioritySignal" name="heatingTemperatureAtLowRh">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="21.0"/>
+			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" value="01-01-2018"/>
+				<port name="endDate" value="01-10-2018"/>
+				<port name="beginTime" value="18:00"/>
+				<port name="endTime" value="23:59"/>
+				<port name="signalInside" value="22.0"/>
+			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" value="02-10-2018"/>
+				<port name="endDate" value="31-12-2018"/>
+				<port name="beginTime" value="18:00"/>
+				<port name="endTime" value="19:00"/>
+				<port name="signalInside" value="22.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="ventilationTemperatureMargin">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="9.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="rhMax">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="80.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="heatingTemperatureMargin">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="2.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="ventilationTemperatureRhMargin">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="2.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="ventilationThresholdBand">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="1.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="co2Min">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="400.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="co2Max">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="900.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="chalk">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="0.0"/>
+			</box>
+		</box>
+		<box name="rhMaxBand">
+			<newPort name="value" value="10"/>
+		</box>
+		<box class="PrioritySignal" name="dawnThreshold">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="0.2"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="duskThreshold">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="0.3"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="crackVentilation">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="5.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="crackVentilationTemperatureMin">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="-5.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="1.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenEnergyThreshold">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="5.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenEnergyThresholdBand">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="5.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenShadeThreshold">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="500.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenShadeThresholdBand">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="50.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenBlackoutFromTimeFloat">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="0.5"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenBlackoutToTimeFloat">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="0.791666666666667"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="screenMaxAtHighRh">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="90.0"/>
+			</box>
+		</box>
+	</box>
+	<!-- *** Setpoints *** -->
+	<box class="vg::Setpoints" name="setpoints">
+		<port name="heatingTemperatureAtLowRh" ref="allSetpoints/heatingTemperatureAtLowRh[value]"/>
+		<port name="heatingTemperatureMargin" ref="allSetpoints/heatingTemperatureMargin[value]"/>
+		<port name="ventilationTemperatureMargin" ref="allSetpoints/ventilationTemperatureMargin[value]"/>
+		<port name="ventilationTemperatureRhMargin" ref="allSetpoints/ventilationTemperatureRhMargin[value]"/>
+		<port name="rhMax" ref="allSetpoints/rhMax[value]"/>
+		<port name="rhMaxBand" ref="allSetpoints/rhMaxBand[value]"/>
+		<port name="co2Min" ref="allSetpoints/co2Min[value]"/>
+		<port name="co2Max" ref="allSetpoints/co2Max[value]"/>
+		<port name="dawnThreshold" ref="allSetpoints/dawnThreshold[value]"/>
+		<port name="duskThreshold" ref="allSetpoints/duskThreshold[value]"/>
+	</box>
+	<!-- *** Controllers *** -->
+	<box class="vg::Controllers" name="controllers">
+		<port name="ventilationThresholdBand" ref="allSetpoints/ventilationThresholdBand[value]"/>
+		<port name="crackVentilation" ref="allSetpoints/crackVentilation[value]"/>
+		<port name="crackVentilationTemperatureMin" ref="allSetpoints/crackVentilationTemperatureMin[value]"/>
+		<port name="crackVentilationTemperatureMinBand" ref="allSetpoints/crackVentilationTemperatureMinBand[value]"/>
+		<port name="screenMaxAtHighRh" ref="allSetpoints/screenMaxAtHighRh[value]"/>
+		<port name="screenEnergyThreshold" ref="allSetpoints/screenEnergyThreshold[value]"/>
+		<port name="screenEnergyThresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
+		<port name="screenShadeThreshold" ref="allSetpoints/screenShadeThreshold[value]"/>
+		<port name="screenShadeThresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
+		<port name="screenBlackoutFromTimeFloat" ref="allSetpoints/screenBlackoutFromTimeFloat[value]"/>
+		<port name="screenBlackoutToTimeFloat" ref="allSetpoints/screenBlackoutToTimeFloat[value]"/>
+		<port name="chalk" ref="allSetpoints/chalk[value]"/>
+	</box>
+	<!-- *** Actuators *** -->
+	<box class="vg::Actuators" name="actuators">
+		<box class="GrowthLights" name="growthLights">
+			<box class="vg::GrowthLight" name="growthLight">
+				<port name="type" value="HPS"/>
+				<port name="minPeriodOn" value="30"/>
+				<port name="intensity" value="50"/>
+				<port name="parPhotonCoef" value="1.642"/>
+				<port name="age" value="16.0"/>
+				<port name="lifeTime" value="12000"/>
+			</box>
+		</box>
+		<box class="ProportionalSignal" name="heating">
+			<port name="signalReset" ref="indoors/temperature[value]"/>
+			<port name="input" ref="controllers/heating[value]"/>
+			<port name="threshold" value="0"/>
+			<port name="thresholdBand" value="1"/>
+			<port name="minSignal" ref="indoors/temperature[value]"/>
+			<port name="maxSignal" value="60"/>
+			<box name="pipes">
+				<box class="vg::Pipe" name="pipe">
+					<port name="density" value="1.822"/>
+					<port name="diameter" value="52"/>
+					<port name="flowRate" value="5"/>
+					<port name="minTemperature" value="20"/>
+					<port name="maxTemperature" value="80"/>
+				</box>
+				<box class="vg::Pipe" name="pipe">
+					<port name="density" value="1.822"/>
+					<port name="diameter" value="32"/>
+					<port name="flowRate" value="5"/>
+					<port name="minTemperature" value="20"/>
+					<port name="maxTemperature" value="80"/>
+				</box>
+			</box>
+		</box>
+	</box>
+	<!-- *** Crop *** -->
+	<box class="vg::Crop" name="crop">
+		<box name="lai">
+			<newPort name="value" value="1"/>
+			<newPort name="fractionPlantArea" value="1"/>
+		</box>
+	</box>
+	<box class="vg::Budget" name="budget"/>
+	<!-- *** Output *** -->
+	<box class="OutputR" name="output">
+		<box name="p">
+			<newPort name="outdoorsCo2" ref="outdoors[co2]"/>
+			<newPort name="outdoorsT" ref="outdoors[temperature]"/>
+			<newPort name="soilT" ref="outdoors[soilTemperature]"/>
+			<newPort name="outdoorsRh" ref="outdoors[rh]"/>
+			<newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
+			<newPort name="outdoorsLight" ref="outdoors[radiation]"/>
+			<newPort name="indoorsCo2" ref="indoors/co2[value]"/>
+			<newPort name="indoorsT" ref="indoors/temperature[value]"/>
+			<newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
+			<newPort name="indoorsLight" ref="indoors/light[total]"/>
+			<newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
+			<newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
+			<newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
+			<newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
+			<newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
+			<newPort name="leafNetPhotosynthesis" ref="crop/growth[netGrowthRate]"/>
+			<newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafTemperatureTop" ref="crop/layers/top/temperature[value]"/>
+			<newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
+			<newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
+		</box>
+		<box class="PageR">
+			<port name="xAxis" value="calendar[dateTime]"/>
+			<box class="PlotR">
+				<port name="ncol" value="4"/>
+				<port name="ports" value="output/p[*]"/>
+			</box>
+		</box>
+		<box class="OutputText">
+			<port name="skipFormats" value="TRUE"/>
+			<port name="skipInitialRows" value="720"/>
+			<port name="averageN" value="30"/>
+		</box>
+	</box>
+</box>

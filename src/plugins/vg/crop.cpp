@@ -28,8 +28,6 @@ void Crop::amend() {
         builder.
         box().name("periods").
             box("DateTimeSignal").
-                port("beginDay").equals(1).
-                port("endDay").equals(366).
                 port("circadian").equals(false).
             endbox().
         endbox();

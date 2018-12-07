@@ -44,6 +44,10 @@ void Simulation::amend() {
         port("iteration")->track();
 }
 
+void Simulation::initialize() {
+    iteration = 1;
+}
+
 void Simulation::run() {
     dialog().resetProgress();
     environment().isSilent(silent);

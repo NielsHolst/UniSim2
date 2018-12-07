@@ -1,4 +1,4 @@
 pushd bin
-unisimd.exe \Users\au152367\Documents\ig\input\2018-10-15-jeaa.xml \Users\au152367\Documents\ig\output\2018-10-15-jeaa.txt
+unisimd.exe C:\Users\au152367\Documents\QDev\UniSim2\input\projects\vg\excel\2018-11-07-jeaa.xml C:\Users\au152367\Documents\QDev\UniSim2\output\2018-11-07-jeaa-output.txt
 popd
 

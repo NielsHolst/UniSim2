@@ -11,6 +11,8 @@ public:
     DialogStub(QObject *parent);
     void progress(int current, int total);
     void finished();
+    QProgressBar* progressBar();
+    void finishProgress();
     void information(QString s);
     QString getInformation() const;
     QString getError() const;

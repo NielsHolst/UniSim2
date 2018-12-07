@@ -30,13 +30,15 @@ void DialogBase::updateProgress(const ProgressInfo &info) {
     double progress = double(info.step + (info.iteration-1)*info.steps)/info.steps/info.iterations;
     if (progress > _nextShowProgress) {
         QProgressBar *bar = progressBar();
-        bar->setFormat(" %p% of %ms");
-        double total = info.time.elapsed()/progress;
-        bar->setMaximum(static_cast<int>(total)/1000);
-        bar->setValue(static_cast<int>(info.time.elapsed())/1000);
-        bar->show();
-        qApp->processEvents();
-        _nextShowProgress += 0.01;
+        if (bar) {
+            bar->setFormat(" %p% of %ms");
+            double total = info.time.elapsed()/progress;
+            bar->setMaximum(static_cast<int>(total)/1000);
+            bar->setValue(static_cast<int>(info.time.elapsed())/1000);
+            bar->show();
+            qApp->processEvents();
+            _nextShowProgress += 0.01;
+        }
     }
 }
 

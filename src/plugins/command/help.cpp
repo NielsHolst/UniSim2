@@ -25,6 +25,7 @@ void help::doExecute() {
         writeCommands();
         break;
     case 2:
+    case 3:
         command = new help_class("help_class", this);
         break;
     default:

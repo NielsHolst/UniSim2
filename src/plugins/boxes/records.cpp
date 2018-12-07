@@ -25,6 +25,7 @@ Records::Records(QString name, QObject *parent)
     Input(timeColumnName).help("Name of column with time").equals("Time");
     Input(cycle).equals(false).help("Cycle back to start at end of file? File must begin on 1 January and end on 31 December");
     Input(calendarDateTime).imports("calendar[dateTime]");
+    Input(ignoreYear).equals(false).help("Ignore year when synchronizing calendar and records date?");
 
     Output(currentDateTime).help("Date-time stamp of the current outputs");
     Output(nextDateTime).help("Date-time stamp of the next outputs");
@@ -203,6 +204,15 @@ void Records::update() {
         double dy = _nextColumnValues->at(i) - _currentColumnValues->at(i);
         double x = currentT.secsTo(calendarDateTime);
         values[i] = ((dx > 0) ? x*dy/dx : 0.) + _currentColumnValues->at(i);
+    }
+}
+
+void Records::ignoreYearMaybe() {
+    if (ignoreYear) {
+        QDate date = QDate(firstDateTime.date().year(),
+                           calendarDateTime.date().month(),
+                           calendarDateTime.date().day());
+        calendarDateTime.setDate(date);
     }
 }
 

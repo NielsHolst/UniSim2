@@ -11,8 +11,8 @@
 
 namespace base {
 
-Box *Box::_currentRoot = 0;
-Box *Box::_savedCurrentRoot = 0;
+Box *Box::_currentRoot = nullptr;
+Box *Box::_savedCurrentRoot = nullptr;
 int Box::_count = 0;
 bool Box::_debugOn = false;
 
@@ -28,7 +28,7 @@ Box::Box(QString name, QObject *parent)
 
 Box::~Box() {
     if (this == _currentRoot)
-        _currentRoot = 0;
+        _currentRoot = nullptr;
 }
 
 void Box::addPort(Port *port) {
@@ -43,11 +43,11 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
 }
 
 Port* Box::peakPort(QString name) {
-    return _ports.contains(name) ? _ports.value(name) : 0;
+    return _ports.contains(name) ? _ports.value(name) : nullptr;
 }
 
 const Port* Box::peakPort(QString name) const {
-    return _ports.contains(name) ? _ports.value(name) : 0;
+    return _ports.contains(name) ? _ports.value(name) : nullptr;
 }
 
 Port* Box::port(QString name) {
@@ -58,7 +58,7 @@ Port* Box::port(QString name) {
 }
 
 const Port* Box::port(QString name) const {
-    const Port *port = peakPort(name); \
+    const Port *port = peakPort(name);
     if (!port)
         ThrowException("No port of that name in this box").value(name).context(this);
     return port;
@@ -81,8 +81,8 @@ QString Box::sideEffects() const {
 }
 
 Box* Box::currentRoot() {
-    if (_currentRoot==0)
-        return 0;
+    if (_currentRoot==nullptr)
+        return nullptr;
     while (true) {
         Box *p = dynamic_cast<Box*>(_currentRoot->parent());
         if (!p) break;
@@ -144,7 +144,7 @@ void Box::amendFamily() {
                 box->amendFamily();
         }
         if (_debugOn)
-            dialog().information("reset " + fullName());
+            dialog().information("amend " + fullName());
         amend();
         _count = 0;
         enumerateBoxes(_count);
@@ -210,6 +210,7 @@ void Box::resetFamily() {
     if (_debugOn)
         dialog().information("reset " + fullName());
     reset();
+    verifyPorts();
     updateSelfImports();
     _timer->stop("reset");
 }
@@ -229,6 +230,7 @@ void Box::updateFamily() {
     if (_debugOn)
         dialog().information("update " + fullName());
     update();
+    verifyPorts();
     updateSelfImports();
     _timer->stop("update-update");
 
@@ -247,6 +249,7 @@ void Box::cleanupFamily() {
     if (_debugOn)
         dialog().information("cleanup " + fullName());
     cleanup();
+    verifyPorts();
     updateSelfImports();
     _timer->stop("cleanup");
 }
@@ -262,6 +265,7 @@ void Box::debriefFamily() {
     if (_debugOn)
         dialog().information("debrief " + fullName());
     debrief();
+    verifyPorts();
     updateSelfImports();
     _timer->stop("debrief");
 }
@@ -282,6 +286,13 @@ void Box::updateImports() {
 void Box::updateSelfImports() {
     for (Port *port : _ports.values())
         port->copyFromSelfImport(this);
+}
+
+void Box::verifyPorts() {
+    if (_debugOn) {
+        for (Port *port : _ports.values())
+            port->verifyValue();
+    }
 }
 
 void Box::resetPorts() {

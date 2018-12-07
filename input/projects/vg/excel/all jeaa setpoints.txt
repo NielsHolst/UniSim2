@@ -1,0 +1,26 @@
+used Cli_HeatingTemp</Setpoint>
+used Cli_VentTemp</Setpoint>
+unsd Cli_MinRelHmd</Setpoint>
+used Cli_MaxRelHmd</Setpoint>
+used Cli_MaxHeatAddHighRH</Setpoint>
+used ventilationsThresholdBand</Setpoint>
+used Cli_MaxVentDecHighRH</Setpoint>
+used Cli_MaxCO2</Setpoint>
+used rh-max-band</Setpoint>
+used Cli_MinCO2</Setpoint>
+used screenMaxAtHighRh</Setpoint>
+Cli_AssLightOn</Setpoint>
+Cli_AssLightOff</Setpoint>
+Cli_AssLightActive</Setpoint>
+used screenEnergyThreshold</Setpoint>
+used screenEnergyThresholdBand</Setpoint>
+used screenShadeThreshold</Setpoint>
+used screenShadeThresholdBand</Setpoint>
+used screenBlackoutFromTime</Setpoint>
+used screenBlackoutToTime</Setpoint>
+used Cli_ShadingAgentReduction</Setpoint>
+used Cli_LightChangeFromDay</Setpoint>
+used Cli_LightChangeFromNight</Setpoint>
+used crackVentilation</Setpoint>
+used crackVentilationTemperatureMin</Setpoint>
+used crackVentilationTemperatureMinBand</Setpoint>

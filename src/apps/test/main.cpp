@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     new base::ObjectPool(&app);
-    base::DialogStub *dialog = new base::DialogStub(0);
+    base::DialogStub *dialog = new base::DialogStub(qApp);
 
     QString saveLoadArg = base::environment().latestLoadArg();
     base::environment().latestLoadArg("test.box");

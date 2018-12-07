@@ -7,6 +7,7 @@
 
 namespace base {
     class Box;
+    class FactoryPlugIn;
 }
 
 namespace command {
@@ -17,13 +18,18 @@ public:
     help_class(QString name, QObject *parent);
 private:
     // data
+    const base::FactoryPlugIn* _plugIn;
     base::Box *_box;
     int _colWidthName, _colWidthValue;
+    bool _expand;
     // methods
     void doExecute();
-    void createBox(QString className);
+    bool getPlugIn(QString name);
+    void writePlugInHelp();
+
+    bool createBox(QString className);
     void setColWidths();
-    void writeHelp();
+    void writeClassHelp();
     QStringList portsHelp(base::PortAccess access);
     QString sideEffects();
 };

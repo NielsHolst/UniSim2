@@ -1,3 +1,4 @@
+#include <base/dialog.h>
 #include <base/distribution.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -16,44 +17,73 @@ SensitivityAnalysisSobol::SensitivityAnalysisSobol(QString name, QObject *parent
 {
     help("runs a Sobol sensitivity analysis");
     Input(iteration).imports("/*[iteration]");
+    Output(phase).help("Matrix used in this iteration (A, B or C)");
 }
 
 void SensitivityAnalysisSobol::initialize() {
     SensitivityAnalysisBase::initialize();
-    _A.resize(sampleSize, inputsAnalysed);
-    _B.resize(sampleSize, inputsAnalysed);
+    fillMatrices();
 }
 
-int SensitivityAnalysisSobol::numberOfIterations() const {
-    return sampleSize*(2+inputsAnalysed);
+namespace {
+    void copyColumn(const Matrix<double> &a, Matrix<double> &b, int col) {
+        for (int row=0; row<a.numRow(); ++row)
+            b(row,col) = a.at(row,col);
+    }
 }
 
 void SensitivityAnalysisSobol::reset() {
-    char phase = (iteration <= sampleSize) ? 'A' : (iteration <= 2*sampleSize) ? 'B' : 'C';
-    if (phase < 'C') {
-        Matrix<double> *M = (phase == 'A') ? &_A : &_B;
-        int row = (iteration-1) % sampleSize,
-            col = 0;
+    phase = (iteration <= sampleSize) ? 'A' :
+            (iteration <= 2*sampleSize) ? 'B' : 'C';
+    int row = (iteration-1) % sampleSize,
+        col = 0;
+    dialog().information("Size = " + QString::number(A.numRow()) + ":" + QString::number(A.numCol()));
+    switch (phase) {
+    case 'A':
         for (Distribution *dist : _saDistributions) {
-            double value = dist->draw();
-            dist->port()->equals(value);
-            (*M)(row,col++) = value;
+            dialog().information(QString::number(row) + ":" + QString::number(col));
+            dist->port()->equals(A.at(row, col++));
+            dialog().information("OK B");
         }
+        dialog().information("OK C");
+        break;
+    case 'B':
+        for (Distribution *dist : _saDistributions)
+            dist->port()->equals(B.at(row, col++));
+        break;
+    case 'C':
+        int colSwap = (iteration - 2*sampleSize)/inputsAnalysed;
+        Q_ASSERT(colSwap < inputsAnalysed);
+        if (colSwap > 1)
+            copyColumn(B,C,colSwap-1);
+        copyColumn(A,C,colSwap);
+        for (Distribution *dist : _saDistributions)
+            dist->port()->equals(C.at(row, col++));
     }
-    else {
-        int row = (iteration-1) % sampleSize,
-            colA = (iteration-1) / sampleSize - 2,
-            colB = 0;
+}
+
+void SensitivityAnalysisSobol::fillMatrices() {
+    A.resize(sampleSize, inputsAnalysed);
+    B.resize(sampleSize, inputsAnalysed);
+    C.resize(sampleSize, inputsAnalysed);
+    Q_ASSERT(inputsAnalysed == _saDistributions.size());
+    for (int row = 0; row < sampleSize; ++row) {
+        int col = 0;
         for (Distribution *dist : _saDistributions) {
-            double value = (colA == colB) ? _A.at(row, colA) : _B.at(row, colB);
-            ++colB;
-            dist->port()->equals(value);
+            A(row, col) = dist->draw();
+            B(row, col) = dist->draw();
+            C(row, col) = B(row, col);
+            ++col;
         }
     }
 }
 
 int SensitivityAnalysisSobol::numberOfSamples() const {
     return 2*sampleSize;
+}
+
+int SensitivityAnalysisSobol::numberOfIterations() const {
+    return sampleSize*(2+inputsAnalysed);
 }
 
 }
