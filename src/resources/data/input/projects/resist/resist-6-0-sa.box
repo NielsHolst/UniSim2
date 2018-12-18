@@ -3,7 +3,7 @@ Simulation sim {
   .steps = 1000 // max. number of generations
   .stopSteps|all = frequencies[thresholdPassed] | density[thresholdPassed]
   .useStopSteps = TRUE
-  SensitivityAnalysis {
+  SensitivityAnalysisSimple {
   }
   Box random {
     RandomUniform K {

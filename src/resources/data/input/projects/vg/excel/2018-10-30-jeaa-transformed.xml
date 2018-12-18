@@ -21,7 +21,7 @@
 	<!-- *** Outdoors *** -->
 	<box class="vg::Outdoors" name="outdoors">
 		<box class="Records" name="records">
-			<port name="fileName" value="/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/input/sel_dk.txt"/>
+			<port name="fileName" value="C:\Users\au152367\UniversalSimulatorHome\input\projects\ig\input\sel_dk.txt"/>
 			<port name="ignoreYear" value="TRUE"/>
 		</box>
 	</box>
@@ -210,6 +210,18 @@
 				<newPort name="signal" value="0.0"/>
 			</box>
 		</box>
+		<box class="PrioritySignal" name="growthLightOn">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="25.0"/>
+			</box>
+		</box>
+		<box class="PrioritySignal" name="growthLightOff">
+			<port name="reverseOrder" value="TRUE"/>
+			<box name="default">
+				<newPort name="signal" value="30.0"/>
+			</box>
+		</box>
 		<box name="rhMaxBand">
 			<newPort name="value" value="10"/>
 		</box>
@@ -358,7 +370,6 @@
 			<newPort name="fractionPlantArea" value="1"/>
 		</box>
 	</box>
-	<!-- *** Crop *** -->
 	<box class="vg::Budget" name="budget"/>
 	<!-- *** Output *** -->
 	<box class="OutputR" name="output">
@@ -378,8 +389,19 @@
 			<newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
 			<newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
 			<newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
-			<newPort name="leafLightUseEfficiency" ref="crop/layers/top/photosynthesis/lightResponse[LUE] "/>
 			<newPort name="leafNetPhotosynthesis" ref="crop/growth[netGrowthRate]"/>
+			<newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
+			<newPort name="leafTemperatureTop" ref="crop/layers/top/temperature[value]"/>
+			<newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
+			<newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
+			<newPort name="setpointVentilation" ref="setpoints/temperature/ventilation[value]"/>
+			<newPort name="setpointHeating" ref="setpoints/temperature/heating[value]"/>
+			<newPort name="setpointCo2Minimum" ref="setpoints/co2/minimum[signal]"/>
+			<newPort name="setpointCo2Maximum" ref="setpoints/co2/maximum[signal]"/>
+			<newPort name="ventsOpening" ref="actuators/vents[value]"/>
+			<newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
 		</box>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
@@ -389,7 +411,6 @@
 			</box>
 		</box>
 		<box class="OutputText">
-			<port name="skipFormats" value="TRUE"/>
 			<port name="skipInitialRows" value="288"/>
 			<port name="averageN" value="12"/>
 		</box>

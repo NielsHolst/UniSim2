@@ -34,7 +34,7 @@ ControllersInput::ControllersInput(QString name, QObject *parent)
 namespace {
     QTime dayFractionToTime(double fraction) {
          QTime time(0,0);
-         time.addSecs(24*60*60*fraction);
+         time.addSecs(static_cast<int>(24*60*60*fraction));
          return time;
     }
 }

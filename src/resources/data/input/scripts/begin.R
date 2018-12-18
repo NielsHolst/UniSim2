@@ -90,10 +90,13 @@ ggplot_theme = function(fontSize) {
     NULL
   } else {
     sz = element_text(size = fontSize)
+    sz1 = element_text(size = fontSize+1)
     theme(axis.text    = sz,
           axis.title   = sz,
           strip.text.x = sz,
-          strip.text.y = sz
+          strip.text.y = sz,
+          legend.title = sz1,
+          legend.text  = sz
           )
   }
 }

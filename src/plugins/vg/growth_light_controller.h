@@ -15,11 +15,11 @@ class GrowthLightController : public BaseSignal
 {
 public:
     GrowthLightController(QString name, QObject *parent);
-    void amend();
     double computeSignal();
 private:
-    const bool *periodFlag, *offFlag, *onFlag;
-    const bool * getFlag(QString name);
+    // Inputs
+    bool isActive;
+    double lightThresholdLow, lightThresholdHigh, lightOutdoors;
 };
 } //namespace
 

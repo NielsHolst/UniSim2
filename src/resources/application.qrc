@@ -83,6 +83,8 @@
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2005.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009.txt</file>
+    <file>data/input/book/weather/flakkebjerg 2018.csv</file>
+    <file>data/input/book/weather/flakkebjerg 2018.txt</file>
     <file>data/input/book/weather/geneva 2009.txt</file>
     <file>data/input/book/weather/ljubljana 2009.txt</file>
     <file>data/input/book/wrong-class.box</file>
@@ -121,6 +123,12 @@
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
+    <file>data/input/projects/potato/generate-scenarios.R</file>
+    <file>data/input/projects/potato/potato-end.R</file>
+    <file>data/input/projects/potato/potato1.box</file>
+    <file>data/input/projects/potato/potato2-end.R</file>
+    <file>data/input/projects/potato/potato2.box</file>
+    <file>data/input/projects/potato/scenarios.txt</file>
     <file>data/input/projects/resist/gsa.docx</file>
     <file>data/input/projects/resist/gsa.png</file>
     <file>data/input/projects/resist/gsa.txt</file>
@@ -146,6 +154,7 @@
     <file>data/input/projects/resist/resist-sa-end.R</file>
     <file>data/input/projects/resist/sample-scenarios.R</file>
     <file>data/input/projects/resist/scenarios.txt</file>
+    <file>data/input/projects/sensitivity1 sobol.box</file>
     <file>data/input/projects/vg/01-construction.box</file>
     <file>data/input/projects/vg/02-screen-U.box</file>
     <file>data/input/projects/vg/03-given-ventilation.box</file>
@@ -165,6 +174,8 @@
     <file>data/input/projects/vg/excel/2018-10-30-jeaa-transformed.xml</file>
     <file>data/input/projects/vg/excel/2018-10-30-jeaa.xml</file>
     <file>data/input/projects/vg/excel/2018-11-07-jeaa.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-17-jeaa-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-17-jeaa.xml</file>
     <file>data/input/projects/vg/excel/all jeaa setpoints.txt</file>
     <file>data/input/projects/vg/excel/DVV_Input_data.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>

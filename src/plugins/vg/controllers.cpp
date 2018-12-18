@@ -130,44 +130,6 @@ void Controllers::amend() {
     if (!findMaybeOne<Box>("./growthLight"))
         builder.
         box("vg::GrowthLightController").name("growthLight").
-            box("vg::AnyFlag").name("on").
-                box("vg::DateTimeSignal").
-                    port("circadian").equals(true).
-                    port("signalInside").imports("./on[signal]").
-                    port("signalOutside").equals(0).
-                    port("signalOutsideTimeOnly").equals(0).
-                    box("vg::ThresholdSignal").name("on").
-                        port("input").imports("outdoors[radiation]").
-                        port("threshold").equals(40).
-                        port("signalBelow").equals(1).
-                        port("signalAbove").equals(0).
-                    endbox().
-                endbox().
-            endbox().
-            box("vg::AnyFlag").name("off").
-                box("vg::DateTimeSignal").
-                    port("circadian").equals(true).
-                    port("signalInside").imports("./off[signal]").
-                    port("signalOutside").equals(0).
-                    port("signalOutsideTimeOnly").equals(0).
-                    box("vg::ThresholdSignal").name("off").
-                        port("input").imports("outdoors[radiation]").
-                        port("threshold").equals(60).
-                        port("signalBelow").equals(0).
-                        port("signalAbove").equals(1).
-                    endbox().
-                endbox().
-            endbox().
-            box("vg::AnyFlag").name("periods").
-                box("vg::DateTimeSignal").
-                    port("beginTime").imports("calendar[sunrise]").
-                    port("endTime").imports("calendar[sunset]").
-                    port("circadian").equals(true).
-                    port("signalInside").equals(1).
-                    port("signalOutside").equals(0).
-                    port("signalOutsideTimeOnly").equals(0).
-                endbox().
-            endbox().
         endbox();
 
     if (!findMaybeOne<Box>("./co2"))

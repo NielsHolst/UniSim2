@@ -18,24 +18,15 @@ PUBLISH(GrowthLightController)
 GrowthLightController::GrowthLightController(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
-    help("compounds signal from boxes: periods, on and off ");
-}
-
-void GrowthLightController::amend() {
-    periodFlag = getFlag("periods");
-    onFlag = getFlag("on");
-    offFlag = getFlag("off");
-}
-
-const bool * GrowthLightController::getFlag(QString name) {
-    QString path{"./%1[flag]"};
-    Port *port = Path(path.arg(name), this).resolveOne<Port>(this);
-    return port->valuePtr<bool>();
+    help("compounds on and off signals");
+    Input(isActive).imports("allSetpoints/growthLightActive[value]").help("Could light be on?");
+    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]").help("?");
+    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]").help("No light above this threshold?");
+    Input(lightOutdoors).imports("outdoors[radiation]");
 }
 
 double GrowthLightController::computeSignal() {
-    bool isOn = *periodFlag && *onFlag && !(*offFlag);
-    return isOn ? 1 : 0;
+    return isActive && (lightOutdoors < lightThresholdHigh);
 }
 
 } //namespace

@@ -511,6 +511,21 @@
         <xsl:with-param name="climateSetpointName" select="'Cli_ShadingAgentReduction'"/>
       </xsl:call-template>
     </box>
+    <box class="PrioritySignal" name="growthLightThresholdLow">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightOn'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="growthLightThresholdHigh">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightOff'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="growthLightActive">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightActive'"/>
+      </xsl:call-template>
+    </box>
     <box name="rhMaxBand">
       <newPort name="value">
         <xsl:attribute name="value">
@@ -712,6 +727,12 @@
       <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
       <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
       <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
+      <newPort name="setpointVentilation" ref="setpoints/temperature/ventilation[value]"/>
+      <newPort name="setpointHeating" ref="setpoints/temperature/heating[value]"/>
+      <newPort name="setpointCo2Minimum" ref="setpoints/co2/minimum[signal]"/>
+      <newPort name="setpointCo2Maximum" ref="setpoints/co2/maximum[signal]"/>
+      <newPort name="ventsOpening" ref="actuators/vents[value]"/>
+      <newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>
