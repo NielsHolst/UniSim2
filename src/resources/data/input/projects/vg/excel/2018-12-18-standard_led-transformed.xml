@@ -4,7 +4,7 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" value="01-01-2018"/>
-		<port name="endDate" value="10-01-2018"/>
+		<port name="endDate" value="31-12-2018"/>
 		<port name="beginTime" value="00:00:00"/>
 		<port name="endTime" value="00:00:00"/>
 		<port name="timeStep" value="4"/>
@@ -21,7 +21,7 @@
 	<!-- *** Outdoors *** -->
 	<box class="vg::Outdoors" name="outdoors">
 		<box class="Records" name="records">
-			<port name="fileName" value="C:\Users\au152367\UniversalSimulatorHome\input\projects\ig\input\sel_dk.txt"/>
+			<port name="fileName" value="C:\Virtual Greenhouse Development\DVV Weather\sel_dk.txt"/>
 			<port name="ignoreYear" value="TRUE"/>
 		</box>
 	</box>
@@ -157,75 +157,61 @@
 		<box class="PrioritySignal" name="rhMax">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="80.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="heatingTemperatureMargin">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="2.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="ventilationTemperatureRhMargin">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="2.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="ventilationThresholdBand">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="1.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="co2Min">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="400.0"/>
-			</box>
-			<box class="vg::DateTimeSignal">
-				<port name="beginDate" value="01-01-2018"/>
-				<port name="endDate" value="31-12-2018"/>
-				<port name="beginTime" value="19:00"/>
-				<port name="endTime" value="23:59"/>
-				<port name="signalInside" value="400.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="co2Max">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="900.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="chalk">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="growthLightThresholdLow">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="40.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="growthLightThresholdHigh">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="600.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="growthLightActive">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.0"/>
-			</box>
-			<box class="vg::DateTimeSignal">
-				<port name="beginDate" value="01-01-2018"/>
-				<port name="endDate" value="31-12-2018"/>
-				<port name="beginTime" value="06:00"/>
-				<port name="endTime" value="22:00"/>
-				<port name="signalInside" value="1.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box name="rhMaxBand">
@@ -234,73 +220,73 @@
 		<box class="PrioritySignal" name="dawnThreshold">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.2"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="duskThreshold">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.3"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="crackVentilation">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="5.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="crackVentilationTemperatureMin">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="-5.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="1.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenEnergyThreshold">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="5.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenEnergyThresholdBand">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="5.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenShadeThreshold">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="500.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenShadeThresholdBand">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="50.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenBlackoutFromTimeFloat">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.5"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenBlackoutToTimeFloat">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="0.791666666666667"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="screenMaxAtHighRh">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" value="90.0"/>
+				<newPort name="signal" value="NaN.0"/>
 			</box>
 		</box>
 	</box>
@@ -336,12 +322,12 @@
 	<box class="vg::Actuators" name="actuators">
 		<box class="GrowthLights" name="growthLights">
 			<box class="vg::GrowthLight" name="growthLight">
-				<port name="type" value="HPS"/>
-				<port name="minPeriodOn" value="30"/>
-				<port name="intensity" value="50"/>
-				<port name="parPhotonCoef" value="1.642"/>
+				<port name="type" value="LED"/>
+				<port name="minPeriodOn" value="0"/>
+				<port name="intensity" value="36"/>
+				<port name="parPhotonCoef" value="2.3"/>
 				<port name="age" value="16.0"/>
-				<port name="lifeTime" value="12000"/>
+				<port name="lifeTime" value="50000"/>
 			</box>
 		</box>
 		<box class="ProportionalSignal" name="heating">

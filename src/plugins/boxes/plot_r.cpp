@@ -12,6 +12,7 @@ namespace boxes {
 PUBLISH(PlotR)
 
 const QString defaultGgplot = "geom_line(size=1.1)";
+QString PlotR::_variablesScript;
 
 PlotR::PlotR(QString name, QObject *parent)
     : OutputPorts(name, parent)
@@ -69,9 +70,9 @@ QString PlotR::toScript() {
     for (Track *track : xAxisTracks())
         xLabels << apostrophed(track->uniqueNameExpanded());
 
-    QStringList portLabels;
+    QStringList yLabels;
     for (Track *track : tracks())
-        portLabels << apostrophed(track->uniqueNameExpanded());
+        yLabels << apostrophed(track->uniqueNameExpanded());
 
     // Set iteration label according to filter
     bool isFiltered = (xAxisTracks().at(0)->filter() != PortFilter::None);
@@ -87,7 +88,7 @@ QString PlotR::toScript() {
       << ", "
       << (iteration > 2 ? ("\""+iterationLabel+"\"") : "NULL")
       << ", "
-      << "c(" << portLabels.join(", ") << ")"
+      << "c(" << yLabels.join(", ") << ")"
       << ", "
       << "ytrans=" << apostrophed(transform)
       << ", "
@@ -103,7 +104,14 @@ QString PlotR::toScript() {
     if (fontSize > 0)
         s << "+ggplot_theme(" << fontSize << ")";
     s << ",\n";
+
+    // Side effect: Build list
+    _variablesScript += "# X=" + xLabels.join(", ") + " Y=" + xLabels.join(", ") +"\n";
     return string;
+}
+
+QString PlotR::variablesScript() {
+    return _variablesScript;
 }
 
 QVector<Track*> PlotR::xAxisTracks() {

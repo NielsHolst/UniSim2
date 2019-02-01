@@ -17,8 +17,10 @@ is_rstudio = function() !is.na(Sys.getenv("RSTUDIO", unset = NA))
 
 open_plot_window = function(width, height) {
   is_windows = (.Platform$OS.type == "windows")
-  if (is_windows) windows(width=width, height=height) else
-  X11(width=width, height=height, type="cairo") 
+  if (!is_rstudio()) {
+    if (is_windows) windows(width=width, height=height) else
+    X11(width=width, height=height, type="cairo") 
+  }
 }
 
 read_output = function(file_path) {
@@ -100,17 +102,6 @@ ggplot_theme = function(fontSize) {
           )
   }
 }
-
-# facet_labels = c (
-  # "values_0" = "SS",
-  # "values_1" = "SR",
-  # "values_2" = "RR",
-  # "1" = "Iter 1",
-  # "2" = "Iter 2",
-  # "3" = "Iter 3",
-  # "4" = "Iter 4",
-  # "5" = "Iter 5"
-# )
 
 plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
   M = melted(df, id_x, id_iteration, cols)

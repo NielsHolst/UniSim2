@@ -11,9 +11,11 @@ public:
     SensitivityAnalysisSobol(QString name, QObject *parent);
     void initialize();
     void reset();
+    void debrief();
 private:
     // Input
     int iteration;
+    const int &N, &k;
     // Output
     char phase;
     // Data

@@ -1,3 +1,6 @@
+#ifndef IGLIB_H
+#define IGLIB_H
+
 namespace ig {
 
 enum Origin {UserDefined, Measured, NotAvailable};
@@ -219,3 +222,5 @@ extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r
 extern "C" void __declspec(IGLIB_DLL) release();
 
 } // namespace
+
+#endif

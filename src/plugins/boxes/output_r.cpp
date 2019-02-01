@@ -3,6 +3,7 @@
 #include <QMapIterator>
 #include <QSet>
 #include <QTextStream>
+#include <QVector>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -55,6 +56,12 @@ void OutputR::initialize() {
     // Find pages in this output
     _pages = findMany<PageR>("./*<PageR>");
     numPages = _pages.size();
+    // Check that only one OutputR objects exists
+    QVector<OutputR*> outputs = findMany<OutputR>("*");
+    if (outputs.size() > 1)
+        ThrowException("Only one OutputR box is allowed").
+                hint("Put all PageR boxes inside the same OutputR box").
+                context(this);
 }
 
 QString OutputR::toString() {
@@ -77,6 +84,10 @@ QString OutputR::toScript() {
     }
     s += "}\n";
     return s;
+}
+
+void OutputR::addRCode(QString s) {
+    _RCodes << s;
 }
 
 //
@@ -117,6 +128,7 @@ QString OutputR::makeClipboardOutput() {
     s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
     s += "source(\""+_filePathR+"\")\n";
     s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";
+    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
     s += "source(\"" + environment().inputFileNamePath(end) + "\")\n";
     return s;
 }

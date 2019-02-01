@@ -33,6 +33,7 @@ QMAKE_CXXFLAGS += -Wall -Wextra
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
+DEFINES += BOOST_ALLOW_DEPRECATED_HEADERS
 
 # Compiler options to silence warnings when compiling under Mac OS X
 MY_HASH = $$LITERAL_HASH

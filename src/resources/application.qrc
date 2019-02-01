@@ -78,6 +78,7 @@
     <file>data/input/book/sensitivity4.box</file>
     <file>data/input/book/sensitivity5.box</file>
     <file>data/input/book/sensitivity5.R</file>
+    <file>data/input/book/sobol1.box</file>
     <file>data/input/book/student-weather.box</file>
     <file>data/input/book/syntax-error.box</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
@@ -154,7 +155,6 @@
     <file>data/input/projects/resist/resist-sa-end.R</file>
     <file>data/input/projects/resist/sample-scenarios.R</file>
     <file>data/input/projects/resist/scenarios.txt</file>
-    <file>data/input/projects/sensitivity1 sobol.box</file>
     <file>data/input/projects/vg/01-construction.box</file>
     <file>data/input/projects/vg/02-screen-U.box</file>
     <file>data/input/projects/vg/03-given-ventilation.box</file>
@@ -176,6 +176,10 @@
     <file>data/input/projects/vg/excel/2018-11-07-jeaa.xml</file>
     <file>data/input/projects/vg/excel/2018-12-17-jeaa-transformed.xml</file>
     <file>data/input/projects/vg/excel/2018-12-17-jeaa.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-18-standard_greenhouse-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-18-standard_greenhouse.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-18-standard_led-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2018-12-18-standard_led.xml</file>
     <file>data/input/projects/vg/excel/all jeaa setpoints.txt</file>
     <file>data/input/projects/vg/excel/DVV_Input_data.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
@@ -198,6 +202,7 @@
     <file>data/input/projects/vg/vg-demo.box</file>
     <file>data/input/projects/vg/vv_to_unisim.xsl</file>
     <file>data/input/scripts/begin.R</file>
+    <file>data/input/scripts/end-sobol.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>

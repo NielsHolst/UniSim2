@@ -1,19 +1,21 @@
-// sensitivity1.box
+// sobol1.box
 Simulation sim {
   .iterations = sa[iterations]
   .steps = 35
+  .silent = TRUE
   SensitivityAnalysisSobol sa {
-    .sampleSize = 3
+    .sampleSize = 1000
   }
   Box butterfly {
     Stage egg {
       .initial = 100 
-      .duration = 7 @(uniform 5 30)
-      .k = 30 @(uniform 1 30)
+      .duration = 7  @(uniform 5 12)
+      .k = 30  @(uniform 1 30)
     }
     Stage larva {
       .inflow = ../egg[outflow]
-      .duration = 15
+      .duration = 15 @ (uniform 5 25)
+      .k = 30 @(uniform 1 30)
     }
     Stage pupa {
       .inflow = ../larva[outflow]
@@ -25,10 +27,12 @@ Simulation sim {
     }
   }
   OutputR {
+    .end = "scripts/end-sobol.R"
     PageR {
+      .xAxis =  *<Distribution>/..<Port>
       PlotR {
-        .ports = (larva[content] pupa[content] sa[phase])
-        .ggplot = "geom_point() + geom_line()"
+        .ports = (larva[content]|end pupa[content]|end)
+        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
       }
     }
   }

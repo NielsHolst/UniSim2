@@ -96,6 +96,7 @@ QString PageR::toScript() {
     s << "    ...,\n"
       << "    nrow = " << dim("nrow") << ",\n"
       << "    ncol = " << dim("ncol") << "\n  )\n}\n";
+    s << PlotR::variablesScript();
     return string;
 }
 

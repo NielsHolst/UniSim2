@@ -19,12 +19,15 @@ public:
     void initialize();
     QString toString();
     QString toScript();
+    static QString variablesScript();
 private:
     // Inputs
     bool hide;
     QVector<QString> ports;
     QString layout, guideTitle, end, endCode, ggplot, transform;
     int ncol, nrow, iteration, fontSize;
+    // Data
+    static QString _variablesScript;
     // Methods
     QVector<base::Track*> xAxisTracks();
     QString dim(QString portName);

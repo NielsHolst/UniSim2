@@ -2,6 +2,7 @@ Simulation {
   .steps = 330
   Calendar calendar {
     .initialDateTime = weather[firstDateTime]
+    .timeUnit = "h"
   }
   Records weather {
     .fileName = "../../book/weather/flakkebjerg 2009.txt"

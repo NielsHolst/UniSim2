@@ -21,7 +21,7 @@ public:
     void debrief();
     QString toString();
     QString toScript();
-
+    void addRCode(QString s);
 private:
     // Input
     QString begin, end, outputFileNameVariable;
@@ -35,6 +35,7 @@ private:
     QVector<PageR*> _pages;
     QFile _file;
     QString _filePathR;
+    QStringList _RCodes;
 
     // Methods
     QString popUpCode();
