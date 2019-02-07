@@ -21,9 +21,9 @@ INCLUDEPATH += $$_PRO_FILE_PWD_/../../lib
 
 # Our project source code
 HEADERS = \
-    query_reader_xml.h
+    query_reader_json.h
 
 SOURCES +=  \
     main.cpp \
-    query_reader_xml.cpp
+    query_reader_json.cpp
 

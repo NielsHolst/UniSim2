@@ -53,10 +53,10 @@ unisim.depends = vg
 # Optional plug-ins
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
 
 #SUBDIRS += apis
 #apis.subdir = src/plugins/apis

@@ -9,7 +9,7 @@ Simulation sim {
   }
   
   Records weather {
-    .fileName = "aas2_2016.txt"
+    .fileName = "Rygge_2017.txt"
   //.fileName="flakkebjerg_2009_modified.txt"
   }
   

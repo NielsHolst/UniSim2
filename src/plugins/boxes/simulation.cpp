@@ -105,12 +105,6 @@ void Simulation::show(QTime time) {
     info.iteration = iteration;
     info.iterations = iterations;
     dialog().updateProgress(info);
-//    double progress = double(step + (iteration-1)*steps)/steps/iterations;
-//    if (progress > _nextShowProgress) {
-//        double total = time.elapsed()/progress;
-//        dialog().progress(convert<int>(time.elapsed())/1000, convert<int>(total)/1000);
-//        _nextShowProgress += 0.01;
-//    }
 }
 
 void Simulation::cleanup() {

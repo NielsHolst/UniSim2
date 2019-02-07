@@ -14,7 +14,6 @@
 #include <base/dialog_stub.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/object_pool.h>
 #include <base/phys_math.h>
 #include <base/mega_factory.h>
 #include "iglib.h"
@@ -26,29 +25,25 @@ namespace ig {
 
 // Flags
 static bool _initialized = false;
-static bool _released = false;
 // Global objects
-static QCoreApplication *_app = 0;
-static DialogBase *_dialog = 0;
+static QCoreApplication *_app = nullptr;
+static DialogBase *_dialog = nullptr;
 static Box *_rnd;
 // Buffers
 static std::string _queryString, _responseString, _errorString;
-QVector<HeatPipe> _heatPipes;
-QVector<GrowthLight> _growthLights;
-QVector<Vent> _vents;
-QVector<Screen> _screens;
+static QVector<HeatPipe> _heatPipes;
+static QVector<GrowthLight> _growthLights;
+static QVector<Vent> _vents;
+static QVector<Screen> _screens;
 
 void init() {
     static int argc = 1;
     static char ch = 0;
     static char *argv = &ch;
-    if (_released)
-        ThrowException("iglib has been released; library functions cannot be called");
     if (!_initialized) {
         _app = new QCoreApplication(argc, &argv);
 //        _dialog = new DialogQuiet(_app);
         _dialog = new DialogStub(_app); // TEST
-        new ObjectPool(_dialog);
 
         _rnd = MegaFactory::create<Box>("RandomUniform", "rnd", _dialog);
         _rnd->port("drawAtUpdate")->equals(true);
@@ -56,12 +51,6 @@ void init() {
 
         _initialized = true;
     }
-}
-
-void release() {
-    _released = true;
-    _dialog->deleteLater();
-    _app->deleteLater();
 }
 
 double rnd(double floor, double ceiling) {
@@ -72,11 +61,11 @@ double rnd(double floor, double ceiling) {
 }
 
 int rndi(int floor, int ceiling) {
-    return (int) rnd(floor,ceiling);
+    return static_cast<int>(rnd(floor,ceiling));
 }
 
 Origin rndo() {
-    return (Origin) rndi(0,3);
+    return static_cast<Origin>(rndi(0,3));
 }
 
 double value(Variable v) {
@@ -113,9 +102,9 @@ HeatPipe randomHeatPipe() {
     h.temperatureInflow = Variable{t, rndo()};
     h.temperatureOutflow = Variable{t - rnd(2,8), rndo()};
     double d = rndi(20,28);;
-    h.innerDiameter = Variable{d - rnd(0.5,1), UserDefined};
-    h.outerDiameter = Variable{d, UserDefined};
-    h.length = rndv(0.5, 1.5);
+    h.innerDiameter = d - rnd(0.5,1);
+    h.outerDiameter = d;
+    h.length = rnd(0.5, 1.5);
     return h;
 }
 
@@ -125,21 +114,21 @@ Vent randomVent() {
     v.height = rnd(0.5,1);
     v.numberOfVents = rndi(5,10);
     v.maxOpening = rndi(70,120);
-    v.porosity = rndi(0.9,1);
+    v.porosity = rnd(0.9,1);
     v.opening = Variable{rnd(0,1), Measured};
     return v;
 }
 
 GrowthLight randomGrowthLight() {
     GrowthLight g;
-    g.type = (GrowthLightType) rndi(0,2) ;
+    g.type = static_cast<GrowthLightType>(rndi(0,2)) ;
     g.intensity = rndi(20,50);
     g.ballastCorrection = 1 + 0.05*rndi(0,3);
     double v =rnd(1000,10000);
     Origin o = rndo();
     g.age = Variable{v, o};
     g.lifeTime = Variable{v*rnd(5,10), o};
-    g.on = Variable{(double) rndi(0,2), Measured};
+    g.on = Variable{static_cast<double>(rndi(0,2)), Measured};
     return g;
 }
 
@@ -154,8 +143,8 @@ Screen randomScreen() {
     s.material.transmissivityAir = rnd(0.7,0.9);
     s.material.U = rnd(4,8);
     s.material.heatCapacity = rnd(300,700);
-    s.layer = (ScreenLayer) rndi(0,3);
-    s.position = (ScreenPosition) rndi(0,8);
+    s.layer = static_cast<ScreenLayer>(rndi(0,3));
+    s.position =static_cast<ScreenPosition>(rndi(0,8));
     s.effect = Variable{rnd(0,1), Measured};
     return s;
 }
@@ -176,11 +165,11 @@ Query randomQuery() {
                longitude = rnd(-180,180);
         q.timeStamp.dayOfYear = dateTime.date().dayOfYear();
         q.timeStamp.timeOfDay = dateTime.time().hour() + dateTime.time().minute()/60.;
-        q.timeStamp.timeZone = (int) (longitude/15. + 0.5);
+        q.timeStamp.timeZone = static_cast<int>((longitude/15. + 0.5));
         q.greenhouse.latitude = latitude;
         q.greenhouse.longitude = longitude;
         q.greenhouse.direction = rndi(0,360);
-        q.culture.type = (CultureType) rndi(0,5);
+        q.culture.type = static_cast<CultureType>(rndi(0,5));
         q.culture.lai = rndv(1,5);
         q.construction.internalShading = rnd(0.05,0.1);
         q.construction.length = 10*rndi(5,13);
@@ -209,7 +198,7 @@ Query randomQuery() {
         q.co2Dispenser.injectionRate = rndv(0,10);
         q.dehumidifiers.size = 0;
 
-        Box *calendar = MegaFactory::create<Box>("Calendar", "calendar", 0);
+        Box *calendar = MegaFactory::create<Box>("Calendar", "calendar", nullptr);
         calendar->port("latitude")->equals(q.greenhouse.latitude);
         calendar->port("longitude")->equals(q.greenhouse.longitude);
         calendar->port("timeZone")->equals(q.timeStamp.timeZone);
@@ -564,7 +553,7 @@ void buildCalendar(Box *parent, const Query &q) {
     QDate date = QDate(2001,1,1);
     date = date.addDays(q.timeStamp.dayOfYear-1);
     QTime time = QTime(0,0,0);
-    time = time.addSecs(60*60*q.timeStamp.timeOfDay);
+    time = time.addSecs(60*60*static_cast<int>(q.timeStamp.timeOfDay));
     QDateTime dateTime = QDateTime(date, time, Qt::UTC);
 
     BoxBuilder builder(parent);
@@ -839,7 +828,7 @@ Response compute(const Query &q) {
     }
 
     environment().latestLoadArg("igclient.box");
-    Command::submit(QStringList() << "write", 0);
+    Command::submit(QStringList() << "write", nullptr);
 
 //    QString s;
 //    QTextStream str(&s);

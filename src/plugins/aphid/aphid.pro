@@ -11,7 +11,11 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 HEADERS +=  \
     crop_grows.h\
     wheat_growth.h\
+    wheat_growth_AG.h\
+    beginning_migration.h\
+    end_migration.h\
     aphid_migration.h\
+    aphid_migration_limited.h\
     aphid_migration2.h\
     potential_fecundity_Duffy.h\
     R0_Schmitz.h\
@@ -27,8 +31,11 @@ HEADERS +=  \
     aph_survivalP.h\
     Infection_rate.h\
     Infection_rate2.h\
+    Infection_rate3.h\
+    Threshold_pop.h\
     cadavers_units.h\
     cadavers_units2.h\
+    CadaverDensity.h\
     humidity_switch.h\
     Spo_cadavers.h\
     contamination.h\
@@ -44,7 +51,11 @@ HEADERS +=  \
 SOURCES +=  \
     crop_grows.cpp\
     wheat_growth.cpp\
+    wheat_growth_AG.cpp\
+    beginning_migration.cpp\
+    end_migration.cpp\
     aphid_migration.cpp\
+    aphid_migration_limited.cpp\
     aphid_migration2.cpp\
     potential_fecundity_Duffy.cpp\
     R0_Schmitz.cpp\
@@ -60,8 +71,11 @@ SOURCES +=  \
     aph_survivalP.cpp\
     Infection_rate.cpp\
     Infection_rate2.cpp\
+    Infection_rate3.cpp\
+    Threshold_pop.cpp\
     cadavers_units.cpp\
     cadavers_units2.cpp\
+    CadaverDensity.cpp\
     humidity_switch.cpp\
     Spo_cadavers.cpp\
     contamination.cpp\

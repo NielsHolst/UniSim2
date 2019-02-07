@@ -13,7 +13,9 @@ public:
 private:
     // Inputs
     double Wheat_Pheno;
-    double Date;
+    double Date; // in Julian days
+    double Beginning; // in Julian days
+    double End; // in Julian days
     double Daily_Nb_migrants;
     // Outputs
     double migration;

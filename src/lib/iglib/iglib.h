@@ -76,7 +76,8 @@ struct HeatPipe {
     Variable 
         flowRate,           // m3/h
         temperatureInflow,  // oC
-        temperatureOutflow, // oC
+        temperatureOutflow; // oC
+    double
         innerDiameter,      // mm
         outerDiameter,      // mm
         length;             // m pipe / m floor area
@@ -218,8 +219,6 @@ extern "C" const char * __declspec(IGLIB_DLL) queryToString(const Query &q);
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);
 
-// Release memory resources; call at the end of the session
-extern "C" void __declspec(IGLIB_DLL) release();
 
 } // namespace
 

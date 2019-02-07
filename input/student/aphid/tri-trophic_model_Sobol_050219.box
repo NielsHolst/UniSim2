@@ -1,0 +1,445 @@
+Simulation sim {
+  .steps=300
+  .iterations=sa[iterations]
+  .silent=TRUE
+  
+ SensitivityAnalysisSobol sa{
+  .sampleSize= 1000
+  }
+    
+  Box param{
+  //1. General parameters
+  +k=25 // for the combination of all Stage and StageAndPhase boxes
+  +kReproHealthy=1 // only for the healthy apterous and immigrants arbitrary
+  
+  //variability of wheat phenology
+  +Min=20 @ (uniform 10 27) // to take into account the variability in sowing date and its effect on the phenological development of the wheat
+  +ED50= 720 @ (uniform 747 843) // to take into account the variability in sowing date and its effect on the phenological development of the wheat
+  //2. Fungus parameters
+  +T0Fungus=2 // base temperature for P. neoaphidis development WAS 5C, SHOULD WE DECREASE IT TO 2C cf. Nielsen et al. 2001 ????
+  +ToptFungus=20 // optimal temperature for P. neoaphidis development
+  +TmaxFungus=30 //maximum temperature for P. neoaphidis development
+  +Threshold_RH=70 @ (uniform 70 95) // no disease spreading below 80% of RH
+  +virulence=0.7 @ (uniform 0.2 0.95) //0.1728 // 24X rho(h-1) in Ardisson et al. 1997  // SENSITIVITY ANALYSIS !!!!
+          // 0.1728 is the maximum value when conditions are perfect in the lab. For the sensitivity analysis decrease the value.
+  +cadaver_longevity=126 @ (uniform 54 130) //360 1 week at 18C or 20 days like Adults longevity? think it is more vulnerable.
+  +DD_for_sporu=0.125 // nb of DD with high humidity to trigger the sporulation In Ardisson et al 1997: 3h 
+  +sporu_cada_longevity=126 @ (uniform 40 250)  // how long will last the sporulation of a cadaver under optimal conditions: arbitrary. MAYBE WE NEED TO CHANGE THAT
+              // in Ardisson et al. 1997 p579 cadavers sporulated for about 50h at 20C about 40 DD 
+              // !!!!! SO FAR same time for duration and PhaseDuration for this StageAndPhase box of sporulating cadaver
+              // yes, but Steinkraus 2006 cite Brobyn et al. 1985 and say that spores can survive 14 days on leaves depending on if they are 
+              // on the upper or lower side of the leaf. What if we increase the longevity of the sporulating cadavers to take this into account?
+              // can we then have an epizootic?
+  +cadaverSurvival=0.95 // 5% of all cadavers won't sporulate for any reason PROBABLY SHOULD DEPEND ON WEATHER ????
+
+              
+  //3. Aphid parameters
+  +GS_max=80 // when the immigration of aphids stop. Arbitrary so far.
+  +nb_immigrants=15  // @ (uniform 1 20) arbitrary so far, find paper about landing SA see Mamadou 2014??
+  +longevityImmigrant=200 // in Duffy et al. 2017: 20 days at 18oC = 360 DD but they may have lived before landing in the field
+  +longevityAdult=360 // in Duffy et al. 2017: 20 days at 18oC = 360 DD
+  +longevityNapt=178.5 // from Duffy et al. 2017. I have worked on the equations given in the paper.
+  +longevityNala=203.6 // from Duffy et al. 2017. I have worked on the equations given in the paper
+  +Repro_optimal=51.6  // @ (uniform 30 60) value above from Schmitz et al. 1993 for apterous SA
+
+  //4. Infection parameters
+  +infected_immigrants=0.5 @ (uniform 0.1 0.7) //0.15 // cst arbitrary see Chen & Feng 2004 and Chen et al. 2004 vary through time from 10 to 70 % of infection SA with PN
+  +LTimmigrants=45 @ (uniform 30 100)// See Chen & Feng 2004 they have been infected before and the LT has already started to run
+  +LTAdult=72 @ (uniform 60 180) // Schmitz et al. 1993 (around 120DD in my lab paper) FOR NOW: same value for winged and apterous adults
+  +LTNymph=73 @ (uniform 60 180) // average of the lethal time for the larvae, and nymph 1-3 Schmitz et al. 1993 FOR NOW: same value for winged and apterous nymphs
+  +immunity_cost=0.30 @ (uniform 0 0.8) // by how much the reproduction of SA is decreased when infected with PN. Arbitrary in Baverstock et al. 2006 MP, PN 35% decrease of fecundity
+  }
+ 
+  Calendar calendar {
+    .timeStep = 1
+    .timeUnit = "d" 
+    .initialDateTime = 01/01/2017
+  }
+  
+  Records weather {
+    .fileName = "Rygge_2017.txt"
+  } 
+  
+  Box StartingPointSeason{
+    // starting point for the wheat growth.
+    Crop_grows wheat_start{
+    .Temperature=weather[Tavg]
+    .Date=calendar[dayOfYear] 
+    }
+    
+    //beginning of migration based on Hansen 2006
+    Beginning_migration first_migrants{
+    .Temperature=weather[Tavg]
+    .Date=calendar[dayOfYear] 
+    }
+    
+    //end of migration based on the wheat phenological stage 
+    End_migration stop_migrants{
+    .GS=Wheat_dvlp[Pheno_stage]
+    .GS_max=param[GS_max] // arbitrary
+    .Date=calendar[dayOfYear]
+    }
+    
+    // starting point for the immigrants. For now it is constant //maybe should consider temperature and rain
+    Aphid_migration aphid_start{
+    .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+    .Date=calendar[dayOfYear]
+    .Beginning=first_migrants[starting_date] // March based on degree day see Danish model Lars Hensen
+    .End=stop_migrants[stopping_date] // to try
+    .Daily_Nb_migrants=param[nb_immigrants] // SENSITIVITY ANALYSIS !!!
+    }
+  }
+  
+  Box Wheat{
+    Wheat_growth_AG Wheat_dvlp{
+    .Degree_days=./time[total]
+    .Min= param[Min] // to take into account the variability in sowing date and its effect on the phenological development of the wheat
+    .ED50= param[ED50] // to take into account the variability in sowing date and its effect on the phenological development of the wheat
+      DayDegrees time{
+      .T=weather[Tavg]
+      .T0=0
+      .isTicking=wheat_start[Growth]
+      }
+    }
+     
+    Nb_tillersD nb_tillers{
+    .Wheat_Pheno=Wheat_dvlp[Pheno_stage] // According to Duffy et al. 2017
+    }
+  }
+
+  Box Fungus{
+    Box FungusTime{
+      // fungal time inside the aphid: infection process. Check the temperatures in literature and for Norway
+      DayDegrees time_fungus_int{
+      .T=weather[Tavg]
+      .T0=param[T0Fungus] 
+      .Topt=param[ToptFungus]
+      .Tmax=param[TmaxFungus] 
+      }
+      
+      // switch ON/OFF for spores germination and sporulation
+      Humidity_switch RH_On_Off{
+      .RH=weather[RH]
+      .RH_threshold=param[Threshold_RH]
+      }
+      
+      // fungal time outside the aphid: germination and sporulation. Check the temperatures in literature and for Norway
+      DayDegrees time_fungus_ext{
+      .T=weather[Tavg]
+      .T0=param[T0Fungus] 
+      .Topt=param[ToptFungus]
+      .Tmax=param[TmaxFungus]
+      .isTicking= RH_On_Off[RH_switch]
+      }
+    }
+    
+    Box InfectionProcess{
+      StageAndPhase Exposed_immigrants{
+      .initial=0
+      .inflow=Immigrants[phaseOutflow]
+      .k=param[k]
+      .growthFactor=survival[survival]
+      .duration=param[longevityImmigrant] // are infected just before to leave the field, or from conidia in the air also when they leave the field?
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTimmigrants] // for now same lethal time than the apterous adults
+      .phaseTimeStep=time_fungus_int[step]
+      }
+      
+      // Exposed nymphs to the fungus. The proportion of the nymph[content] will develop the disease.
+      StageAndPhase Exposed_nymphs{
+      .initial=0
+      .inflow=nymph_Apterous[phaseOutflow]
+      .k=param[k]
+      .growthFactor=survival[survival] 
+      .duration=param[longevityNapt]
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTNymph] // average of the lethal time for the larvae, and nymph 1-3 Schmitz et al. 1993
+      .phaseTimeStep=time_fungus_int[step]
+      }  
+      
+      // Exposed alates nymphs to the fungus. The proportion of the nymph[content] will develop the disease.
+      StageAndPhase Exposed_W_nymphs{
+      .initial=0
+      .inflow=nymph_Alates[phaseOutflow]
+      .k= param[k]
+      .growthFactor=survival[survival] 
+      .duration=param[longevityNala]
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTNymph] // average of the lethal time for the larvae, and nymph 1-3 Schmitz et al. 1993
+      .phaseTimeStep=time_fungus_int[step]
+      }  
+      
+      // Exposed adults to the fungus. The proportion of the adult[content] will develop the disease.
+      StageAndPhase Exposed_adults{
+      .initial=0
+      .inflow=adult_Apterous[phaseOutflow]
+      .k= param[k]
+      .growthFactor=survival[survival] 
+      .duration=param[longevityAdult]
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTAdult]  // Schmitz et al. 1993 around 120DD in my lab paper
+      .phaseTimeStep=time_fungus_int[step]
+      }  
+      
+      // How many cadavers unit there are in total, considering the size of the cadavers and their capacity to produce spores
+      cadavers_units2 cadavers_tot{
+      .nb_cadavers_nymphs=Exposed_nymphs[phaseOutflow]
+      .nb_cadavers_W_nymphs=Exposed_W_nymphs[phaseOutflow]      
+      .nb_cadavers_adults=Exposed_adults[phaseOutflow]
+      .nb_cadavers_alates=Exposed_immigrants[phaseOutflow]
+      }
+          
+      // the cadavers ready to sporulate wait here before the sporulation triggered by the humidity.
+      StageAndPhase cadavers{
+      .initial=0
+      .k=param[k]
+      .inflow=cadavers_tot[nb_units]
+      .growthFactor=param[cadaverSurvival] // random
+      .duration= param[cadaver_longevity] //360 1 week at 18C or 20 days like Adults longevity? think it is more vulnerable.
+      .timeStep=time_fungus_int[step]
+      .phaseK=param[k]
+      .phaseTimeStep=time_fungus_ext[step] 
+      .phaseDuration=param[DD_for_sporu] // In Ardisson et al 1997: 3h 
+      }
+      
+    }
+    
+    Box SpreadingInfection{
+      // the cadavers that are sporulating at the time t, they participate to the spread of the disease
+      StageAndPhase sporulating_cadavers{
+      .initial=0
+      .k=param[k]
+      .growthFactor=param[cadaverSurvival]
+      .inflow=cadavers[phaseOutflow]
+      .duration=param[sporu_cada_longevity] // in Ardisson et al. 1997 p579 cadavers sporulated for about 50h at 20C about 40 DD 
+      //(can sporulate max 3 days at 18oC from my observation with Mellomvoll cadavers (incubations)= 54 DD
+      .timeStep=time_fungus_int[step]
+      .phaseK=param[k]
+      .phaseDuration=param[sporu_cada_longevity] 
+      .phaseTimeStep=time_fungus_ext[step]  
+      }
+      
+      ////////////////////////////////////////////////////////////////////////////////////////////////
+      //sporulating cadavers density taking account of the size of the cadavers. Just for model output
+      ////////////////////////////////////////////////////////////////////////////////////////////////
+      CadaverDensity cadaver_density{
+      .nb_cadavers=sporulating_cadavers[content]
+      .nb_plant=nb_tillers[nb_tillers]
+      }
+          
+      ThresholdSignal transmission_eff{
+      .input=weather[RH]
+      .threshold=param[Threshold_RH] // the transmission efficiency of the disease is different from 0 only when RH >80%
+      .signalBelow=0
+      .signalAbove=param[virulence]
+      }
+          
+      // the fungnus capacity to infect depending on the weather
+      Infection_rate2 spread{
+      .nb_spo_cadavers=sporulating_cadavers[content] 
+      .nb_new_spo_cadavers=sporulating_cadavers[inflowSum]
+      .transmission_efficiency=transmission_eff[signal] // 24X rho(h-1) in Ardisson et al. 1997  // SENSITIVITY ANALYSIS !!!!
+      .nb_susceptible|sum= Immigrants[content] | nymph_Apterous[content] | nymph_Alates[content] |preadult_Apterous[content] |adult_Apterous[content]
+      }
+      
+      Threshold_pop HT{
+      .fungal_mortality=sporulating_cadavers[inflowSum]
+      .natural_survival=survival[survival]
+      .transmission_capa=param[virulence]
+      }
+    }
+  }
+  
+  Box S_avenae{
+    DayDegrees time_aphid{
+    .T=weather[Tavg]
+    .T0=0 // =5 inBrabec et al. 2014 it is 0 for Duffy et al ?
+    .Topt=25 // average temperatures in Duffy et al. 2017
+    .Tmax=30
+    }  
+          
+    Box AphidDevelopment{  
+       Aph_survivalD survival{
+       .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+       .Temperature=weather[Tavg]
+       }
+      // Aph_survivalP survival{
+      // .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+      // }
+      
+      Stage Immigrants{
+      .initial=0
+      .inflow=aphid_start[migration]
+      .growthFactor=survival[survival]
+      .timeStep=time_aphid[step]
+      .duration=param[longevityImmigrant] // in Duffy: 20 days (20days at 18C= 360DD) // to try 14 days 252
+      .k=param[k]
+      .phaseOutflowProportion=param[infected_immigrants] // cst arbitrary see Chen Feng, probably humidity effect... SENSITIVITY ANALYSIS!!!!! 
+      }
+      
+      Stage nymph_Apterous{
+      .timeStep=time_aphid[step]
+      .initial=0
+      .growthFactor=survival[survival]
+      .inflow=reproduction[nb_apterous_nymph]
+      .duration=param[longevityNapt] // according to Duffy et al. 2017 (after work on it)
+      .phaseOutflowProportion=spread[rho]
+      .k=param[k]
+      }
+    
+      Stage nymph_Alates{
+      .timeStep=time_aphid[step]
+      .initial=0
+      .growthFactor=survival[survival]
+      .inflow=reproduction[nb_alates_nymph]
+      .duration=param[longevityNala] // according to Duffy et al. 2017 (after work on it)
+      .phaseOutflowProportion=spread[rho]
+      .k=param[k]
+      }
+    
+      Stage preadult_Apterous{
+      .timeStep= ./time[step]
+      .initial=0
+      .growthFactor=1 //survival[survival] this step is so short
+      .inflow=nymph_Apterous[outflow]
+      .duration=15 // problem with Duffy et al. 2017 because the number of DD depends on the temperature (a lot) WORK ON THAT BECAUSE IT VARIES !!!!
+      .k=param[k]
+        DayDegrees time {
+        .T=weather[Tavg]
+        .T0=7 // =5 inBrabec et al. 2014 ; it is 7 for Duffy et al ?
+        .Topt=17
+        .Tmax=35
+        }
+      }
+      
+      Stage adult_Apterous{
+      .timeStep=time_aphid[step]
+      .initial=0
+      .growthFactor=survival[survival]
+      .inflow=preadult_Apterous[outflow]
+      .duration=param[longevityAdult] // suppose to be 20 days not based on degree days according to Duffy et al 2017 (20days at 18C)
+      .phaseOutflowProportion=spread[rho]
+      .k=param[k]
+      }
+      
+      // calculate the density of aphid which will influence the proportion of alates produced by the apterous adults.
+      Density_per_tiller aphid_density{
+      .nb_nymph_apterous=nymph_Apterous[content]
+      .nb_nymph_alates=nymph_Alates[content]
+      .nb_pre_adults=preadult_Apterous[content]
+      .nb_adult_apterous=adult_Apterous[content]
+      .nb_adult_alates=Immigrants[content] // only the immigrant, the other left the field
+      .nb_Aapt_infec=Exposed_adults[content]
+      .nb_Napt_infec=Exposed_nymphs[content]
+      .nb_Nala_infec=Exposed_W_nymphs[content]
+      .nb_immi_infec=Exposed_immigrants[content]
+      .nb_plant=nb_tillers[nb_tillers] // Duffy at al.
+      .nb_W_produced=nymph_Alates[outflow]
+      }
+    }
+    
+    Box Reproduction{
+      // an estimation of the life fecundity of the aphids according to the temperature and the wheat phenology
+      R0_Schmitz life_fec{
+      .Tmin=0.8
+      .Tmax=35
+      .Topt=16.1
+      .R0_opt=param[Repro_optimal] // value above from Schmitz et al. 1993 for apterous SA
+      .Temperature=weather[Tavg]
+      .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+      }
+      
+      life_fec_infected fec_infec{
+      .life_fec_apt=life_fec[lifetime_fec_apterous]
+      .life_fec_ala=life_fec[lifetime_fec_alates]
+      .reduction=param[immunity_cost] // arbitrary SENSITIVITY ANALYSIS !!!!!!!!!
+      }
+      
+      Stage Fecundity_apterous{
+      .initial=0
+      .k=param[kReproHealthy]
+      .inflow=preadult_Apterous[outflow]
+      .growthFactor|prod =life_fec[lifetime_fec_apterous] | survival[survival]
+      .timeStep=time_aphid[step]
+      .duration=param[longevityAdult] // 100 default value; in Duffy: 20 days (20days at 18C= 360DD) 
+      // Duffy value takes too much time for the aphids to reproduce
+      }
+      
+      Stage Fecundity_immigrants{
+      .initial=0
+      .k=param[kReproHealthy]
+      .inflow=aphid_start[migration]
+      .growthFactor|prod =life_fec[lifetime_fec_alates] | survival[survival]
+      .timeStep=time_aphid[step]
+      .duration=param[longevityImmigrant] //in Duffy: 20 days (20days at 18C= 360DD) but they may have lived before landing
+      }
+      
+      // the infected adults reproduce themselves. The nymphs are not infected and go into the susceptible pool.
+      StageAndPhase Fecundity_Ainfected{
+      .initial=0
+      .inflow=adult_Apterous[phaseOutflow]
+      .k= param[k]
+      .growthFactor|prod=fec_infec[life_fec_aptInfected] | survival[survival]
+      .duration=param[longevityAdult]
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTAdult] 
+      .phaseTimeStep=time_fungus_int[step]
+      }
+      
+      StageAndPhase Fecundity_Winfected{
+      .initial=0
+      .inflow=Immigrants[phaseOutflow]
+      .k=param[k]
+      .growthFactor|prod=fec_infec[life_fec_alaInfected] | survival[survival]
+      .duration=param[longevityImmigrant] 
+      .timeStep=time_aphid[step]
+      .phaseK=param[k]
+      .phaseDuration=param[LTAdult] 
+      .phaseTimeStep=time_fungus_int[step]
+      }
+      
+      // to estimate the proportion of alates vs apterous offspring.      
+      Fecundity_Schmitz2 reproduction{
+      .potential_fec_alates=Fecundity_immigrants[outflow]
+      .potential_fec_Winfected=Fecundity_Winfected[outflowSum]
+      .potential_fec_apterous=Fecundity_apterous[outflow]
+      .potential_fec_infected=Fecundity_Ainfected[outflowSum]
+      .aphid_density=aphid_density[density]
+      .Wheat_Pheno=Wheat_dvlp[Pheno_stage]
+      }
+    }
+  }
+
+  OutputR {
+    .end="scripts/end-sobol.R"
+    PageR {
+      .title =("RH and inoculum")
+        .xAxis = (param[Threshold_RH]|end param[infected_immigrants]|end param[virulence]|end)
+        PlotR {
+          .ports = (aphid_density[density]|sum cadaver_density[d_cadaver]|sum)
+          .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+        }
+    }
+    PageR {
+    .title =("infection parameters")
+      .xAxis = (param[immunity_cost]|end param[cadaver_longevity]|end param[sporu_cada_longevity]|end param[LTimmigrants]|end param[LTAdult]|end param[LTNymph]|end)
+      PlotR {
+        .ports = (aphid_density[density]|sum cadaver_density[d_cadaver]|sum)
+        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+      }
+    }
+    PageR {
+    .title =("wheat phenology uncertainty")
+      .xAxis = (param[Min]|end param[ED50]|end)
+      PlotR {
+        .ports = (aphid_density[density]|sum cadaver_density[d_cadaver]|sum)
+        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+      }
+    }
+  }
+}

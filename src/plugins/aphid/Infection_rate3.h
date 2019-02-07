@@ -1,25 +1,24 @@
-#ifndef INFECTION_RATE2_H
-#define INFECTION_RATE2_H
+#ifndef INFECTION_RATE3_H
+#define INFECTION_RATE3_H
 #include <base/box.h>
 
 namespace aphid {
 
-class Infection_rate2 : public base::Box
+class Infection_rate3 : public base::Box
 {
 public:
-    Infection_rate2(QString name, QObject *parent);
+    Infection_rate3(QString name, QObject *parent);
     void reset();
     void update();
 private:
     // Inputs
     double nb_spo_cadavers;
-    double nb_new_spo_cadavers;
     double transmission_efficiency;
     double nb_susceptible;
+    double nb_tillers;
     // Outputs
     double rho;
     double newly_infected;
-    double R_daugther_to_parent;
     // Data
     double density_cadavers;
 };

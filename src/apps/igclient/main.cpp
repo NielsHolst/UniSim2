@@ -2,42 +2,37 @@
 
 #include <iostream>
 #include <string>
-#include <QApplication>
 #include <QString>
-#include <base/dialog_stub.h>
+#include <base/exception.h>
 #include <iglib/iglib.h>
-#include "query_reader_xml.h"
+#include "query_reader_json.h"
 
 using namespace ig;
 using namespace std;
 
-const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig";
+const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/UniSimData.json";
 
 
-int main(int argc, char **argv)
+int main(int, char **)
 {
-    QApplication app(argc, argv);
-    new base::DialogStub(&app);
     int result = 0;
-    QueryReaderXml reader;
+    QueryReaderJson reader;
     try {
-//        Query q =
-                reader.parse(filePath + "/ig-interface-test.xml");
-        Response r; // = compute(q);
+        Query q = reader.parse(filePath);
+//        Response r = compute(q);
 
-        if (r.hasError) {
-            cout << "\n\nError in iglib:\n" << r.error << "\n";
-        }
-        else
-            cout << responseToString(r);
+//        if (r.hasError) {
+//            cout << "\n\nError in iglib:\n" << r.error << "\n";
+//        }
+//        else
+//            cout << responseToString(r);
 
-        ig::release();
     }
-    catch (QString msg) {
-        cout << qPrintable(msg);
+    catch (const base::Exception &ex) {
+        cout << qPrintable(ex.what());
         result = 1;
     }
-    cout << "\n\nDone!\n>";
+    cout << "\n\nDone!\nHit <Enter>";
     char s[8];
     cin.getline(s,7);
     return result;
