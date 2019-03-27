@@ -34,9 +34,9 @@ void Setpoints::amend() {
             port("duskThreshold").imports("setpoints[duskThreshold]").
         endbox();
 
-  if (!findMaybeOne<Box>("./temperature"))
-    builder.
-    box().name("temperature").
+    if (!findMaybeOne<Box>("./temperature"))
+        builder.
+        box().name("temperature").
         box("Accumulator").name("ventilation").
             port("initial").imports("./controller/target[maxSignal]").
             port("change").imports("./controller[controlVariable]").

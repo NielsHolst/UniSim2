@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <limits>
 #include <math.h>
+#include <QPair>
 
 /*! \file general.h
  * General physical functions and constants
@@ -89,6 +90,11 @@ inline double p2(double x) { return sqr(x); }
 inline double p3(double x) { return pow(x, 3.); }
 inline double p4(double x) { return pow(x, 4.); }
 inline double p4K(double T) { return pow(T+T0, 4.); }
+
+double cumNormal(double x, double m=0, double sd=1);
+double invCumNormal(double p, double m=0, double sd=1);
+QPair<double, double> inferNormal(double xmin, double xmax, double p=0.99);
+double invNormalRange(double u, double xmin, double xmax, double p=0.99);
 
 double logistic(double current, double target, double rate, double dt);
 double propIntegral(double current, double target, double rate, double dt);

@@ -18,10 +18,10 @@ CropDevelopment::CropDevelopment(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models crop development");
-    Input(duration).equals(1).help("Duration in physiological time units (ptu)");
-    Input(step).equals(0.05).help("Development step (ptu/day)");
-    Input(timeStepDays).imports("calendar[timeStepDays]");
-    Output(rate).help("Development rate (per day)");
+    Input(duration).equals(1).help("Duration in physiological time units").unit("ptu");
+    Input(step).equals(0.05).help("Development step per day").unit("ptu/d");
+    Input(timeStepDays).imports("calendar[timeStepDays]").unit("d");
+    Output(rate).help("Development rate (per day)").unit("/d");
 }
 
 void CropDevelopment::reset() {

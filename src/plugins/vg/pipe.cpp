@@ -5,6 +5,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
+#include <QStringList>
 #include <base/exception.h>
 #include <base/general.h>
 #include <base/path.h>
@@ -27,16 +28,33 @@ Pipe::Pipe(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("holds heat pipe characteristics");
-    Input(density).equals(1.).help("Pipe length per greenhouse area [m/m2]");
-    Input(diameter).equals(51.).help("Pipe inner diameter [mm]");
-    Input(flowRate).equals(5.).help("Water flow rate [L/s]");
-    Input(minTemperature).equals(20.).help("Minimum inflow temperature [oC]");
-    Input(maxTemperature).equals(80.).help("Maximum inflow temperature [oC]");
-    Input(a).equals(0.0154).help("Heat pipe effect coefficient [W/m/mm]");
-    Input(b).equals(1.253).help("Heat pipe effect coefficient (!=1)");
-    Input(emissivity).equals(0.9).help("Pipe emissivity [0;1] (not used?)");
+    Input(material).equals("carbon steel").help("Material type").unit("text id");
+    Input(density).equals(1.).help("Pipe length per greenhouse area").unit("m/m2");
+    Input(diameter).equals(51.).help("Pipe inner diameter").unit("mm");
+    Input(flowRate).equals(5.).help("Water flow rate").unit("L/s");
+    Input(minTemperature).equals(20.).help("Minimum inflow temperature").unit("oC");
+    Input(maxTemperature).equals(80.).help("Maximum inflow temperature").unit("oC");
+    Output(a).help("Heat pipe effect coefficient").unit("W/m/mm");
+    Output(b).help("Heat pipe effect coefficient").unit("!=1");
+    materialInputs["carbon steel"] = MaterialInputs{0.0154, 1.253};
+    materialInputs["polyethylene"] = MaterialInputs{0.0123, 1.281};
+    materialInputs["copper"]       = MaterialInputs{0.0154, 1.253};
+    materialInputs["aluminium"]    = MaterialInputs{0.0154, 1.253};
+    parseMaterial();
+}
+
+void Pipe::reset() {
+    parseMaterial();
+}
+
+void Pipe::parseMaterial() {
+    QString s = material.toLower();
+    if (!materialInputs.contains(s))
+        ThrowException("Unknown pipe material").value(material).
+                hint(QStringList(materialInputs.keys()).join(",")).context(this);
+    a = materialInputs.value(s).a;
+    b = materialInputs.value(s).b;
 }
 
 }
-
 

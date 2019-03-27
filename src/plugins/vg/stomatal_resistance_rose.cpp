@@ -20,11 +20,11 @@ StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance of rose");
-    Input(co2).imports("indoors/co2[value]");
-    Input(rh).imports("indoors/humidity[rh]");
-    Input(Pn).imports("../photosynthesis[Pn]");
-    Input(rbCO2).imports("../rb[rbCo2]");
-    Input(lai).imports("crop/lai[value]");
+    Input(co2).imports("indoors/co2[value]").unit("ppm");
+    Input(rh).imports("indoors/humidity[rh]").unit("[0;100]");
+    Input(Pn).imports("../photosynthesis[Pn]").unit("g CO2/ground m2/h");
+    Input(rbCO2).imports("../rb[rbCo2]").unit("s/m");
+    Input(lai).imports("crop/lai[value]").unit("m2/m2");
 }
 
 double StomatalResistanceRose::resetRsH2O() {

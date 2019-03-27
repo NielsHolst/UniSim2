@@ -17,9 +17,9 @@ Chalk::Chalk(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes average of inputs");
-    Input(setpoint).help("Setpoint for chalk [0;1]");
-    Input(maxReflectance).equals(0.8).help("Maximum reflectance at full chalk coverage [0;1]");
-    Output(value).help("Reflectance caused by chalk [0;1]");
+    Input(setpoint).help("Setpoint for chalk").unit("[0;1]");
+    Input(maxReflectance).equals(0.8).help("Maximum reflectance at full chalk coverage").unit("[0;1]");
+    Output(value).help("Reflectance caused by chalk").unit("[0;1]");
 }
 
 void Chalk::reset() {

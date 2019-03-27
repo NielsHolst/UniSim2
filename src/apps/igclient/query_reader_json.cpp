@@ -6,6 +6,8 @@
 #include <base/exception.h>
 #include "query_reader_json.h"
 
+const ig::Variable NullVariable = ig::Variable{0, ig::NotAvailable};
+
 QueryReaderJson::QueryReaderJson(QObject *parent) : QObject(parent)
 {
 }
@@ -34,12 +36,15 @@ ig::Query QueryReaderJson::parse(QString filePath) {
 QJsonValue QueryReaderJson::findValue(QJsonObject object, QString name) const {
     QJsonObject::const_iterator it = object.find(name);
     if (it==object.end())
-        ThrowException("Cannot find JSON value").value(name);
+        ThrowException("Cannot find JSON value").value(name).
+                value2(object.keys().join(", "));
     return it.value();
 }
 
 QJsonObject QueryReaderJson::findObject(QJsonObject object, QString name) const {
     QJsonValue value = findValue(object, name);
+    if (value.isNull())
+        return QJsonObject();
     if (!value.isObject())
         ThrowException("Found a JSON value but expected a JSON object").value(name);
     return value.toObject();
@@ -63,8 +68,15 @@ double QueryReaderJson::findDouble(QJsonObject object, QString name) const {
 ig::Variable QueryReaderJson::findVariable(QJsonObject object, QString name) const {
     ig::Variable var;
     QJsonObject varObject = findObject(object, name);
-    var.value = findDouble(varObject, "Value");
-    var.origin = static_cast<ig::Origin>(findInt(varObject, "Origin"));
+    if (varObject.isEmpty()) {
+        std::cout << qPrintable(name) << " is null!\n";
+        var.value = 0.;
+        var.origin = ig::NotAvailable;
+    }
+    else {
+        var.value = findDouble(varObject, "Value");
+        var.origin = static_cast<ig::Origin>(findInt(varObject, "Origin"));
+    }
     return var;
 }
 
@@ -81,7 +93,7 @@ ig::Variable QueryReaderJson::findVariableFromValue(QJsonObject object, QString 
 #define PARSE_ARRAY(x)  parse##x( findArray(object, #x))
 
 void QueryReaderJson::parseQuery(QJsonObject object) {
-    parseTimeStamp(object);
+    PARSE_OBJECT(TimeStamp);
     PARSE_OBJECT(Culture);
     PARSE_OBJECT(Construction);
     PARSE_ARRAY(HeatPipes);
@@ -95,6 +107,13 @@ void QueryReaderJson::parseQuery(QJsonObject object) {
 }
 
 void QueryReaderJson::parseTimeStamp(QJsonObject object) {
+    _query.timeStamp.dayOfYear = findInt(object, "DayOfYear");
+    _query.timeStamp.timeOfDay = findDouble(object, "TimeOfDay");
+    _query.timeStamp.timeZone = findDouble(object, "TimeZone");
+
+}
+
+void QueryReaderJson::parseTimeStampTformat(QJsonObject object) {
     QJsonValue
         offset = findValue(object, "BaseUtcOffset"),
         ymdhms = findValue(object, "TimeStamp");
@@ -168,8 +187,8 @@ void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     ig::HeatPipe hp;
     hp.material = static_cast<ig::HeatPipeMaterial>(findInt(object, "Material"));
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.temperatureInflow = findVariableFromValue(object, "FlowTemperature");
-    hp.temperatureOutflow = ig::Variable{0., ig::NotAvailable};
+    hp.temperatureInflow = findVariableFromValue(object, "TemperatureInflow");
+    hp.temperatureOutflow = NullVariable; //findVariable(object, "TemperatureOutflow");
     hp.innerDiameter = findDouble(object, "InnerDiameter");
     hp.outerDiameter = findDouble(object, "OuterDiameter");
     hp.length = findDouble(object, "Length");
@@ -191,7 +210,7 @@ void QueryReaderJson::parseVent(QJsonObject object) {
     vent.numberOfVents = findDouble(object, "NumberOfVents");
     vent.maxOpening = findDouble(object, "MaxOpening");
     vent.porosity = findDouble(object, "Porosity");
-    vent.opening = findVariable(object, "Opening");
+    vent.opening = NullVariable; //findVariable(object, "Opening");
     _vents.push_back(vent);
 }
 
@@ -207,7 +226,7 @@ void QueryReaderJson::parseGrowthLight(QJsonObject object) {
     ig::GrowthLight gl;
     gl.type = static_cast<ig::GrowthLightType>(findInt(object, "Type"));
     gl.intensity = findDouble(object, "Intensity");
-    gl.ballastCorrection = findDouble(object, "BallactCorrection");
+    gl.ballastCorrection = findDouble(object, "BalactCorrection");
     gl.age = findVariable(object, "Age");
     gl.lifeTime = findVariable(object, "LifeTime");
     gl.on = findVariable(object, "On");
@@ -225,28 +244,27 @@ void QueryReaderJson::parseScreens(QJsonArray objects) {
 void QueryReaderJson::parseScreen(QJsonObject object) {
     ig::Screen screen;
     screen.material = parseScreenMaterial(findObject(object, "Material"));
-//    ScreenMaterial material;
-//    ScreenLayer layer;
-//    ScreenPosition position;
-//    Variable effect;                // 0..1
-
+    screen.layer = static_cast<ig::ScreenLayer>(findInt(object, "Layer"));
+    screen.position = static_cast<ig::ScreenPosition>(findInt(object, "Position"));
+    screen.effect = findVariable(object, "Effect");
     _screens.push_back(screen);
 }
 
 ig::ScreenMaterial QueryReaderJson::parseScreenMaterial(QJsonObject object) {
     ig::ScreenMaterial mat;
     mat.transmissivityLight = findDouble(object, "TransmissivityLight");
-    mat.emmisivityInner = findDouble(object, "EmmisivityInner");
-    mat.emmisivityOuter  = findDouble(object, "EmmisivityOuter");
+    mat.emmisivityInner = findDouble(object, "EmissivityInner");
+    mat.emmisivityOuter  = findDouble(object, "EmissivityOuter");
     mat.haze  = findDouble(object, "Haze");
     mat.energySaving  = findDouble(object, "EnergySaving");
-    mat.transmissivityAir  = findDouble(object, "TransmissivityAir");
-    mat.U  = findDouble(object, "U");
+    mat.transmissivityAir  = findDouble(object, "TranmissivityAir");
+    mat.U  = findDouble(object, "UValue");
     mat.heatCapacity = findDouble(object, "HeatCapacity");
     return mat;
 }
 
-void QueryReaderJson::parseDehumidifiers(QJsonArray objects) {
+void QueryReaderJson::parseDehumidifiers(QJsonArray) {
+    _query.dehumidifiers.size = 0;
 }
 
 void QueryReaderJson::parseCo2Dispenser(QJsonObject) {
@@ -254,9 +272,22 @@ void QueryReaderJson::parseCo2Dispenser(QJsonObject) {
 }
 
 void QueryReaderJson::parseOutdoorClimate(QJsonObject object) {
+    _query.outdoors.temperature = findVariable(object, "Temperature");
+    _query.outdoors.irradiation = findVariable(object, "Irradiation");
+    _query.outdoors.rh = findVariable(object, "RelativeHumidity");
+    if (findValue(object, "Co2").isNull())
+        _query.outdoors.co2.origin = ig::NotAvailable;
+    else
+        _query.outdoors.co2 = findVariable(object, "Co2");
+    _query.outdoors.windspeed = findVariable(object, "WindSpeed");
+    _query.outdoors.windDirection = findVariable(object, "WindDirection");
 }
 
 void QueryReaderJson::parseIndoorClimate(QJsonObject object) {
+    _query.indoors.temperature = findVariable(object, "Temperature");
+    _query.indoors.lightIntensity = findVariable(object, "LightIntensity");
+    _query.indoors.rh = findVariable(object, "RelativeHumidity");
+    _query.indoors.co2 = findVariable(object, "Co2");
 }
 
 

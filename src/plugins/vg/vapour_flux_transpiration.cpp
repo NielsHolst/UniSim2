@@ -19,9 +19,9 @@ VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("computes vapour flux from transpiration");
-    Input(conductanceIn).imports("crop/conductance[value]");
-    Input(vapourFluxIn).imports("crop/vapourFlux[value]");
-    Input(gainIn).imports("crop/gain[value]");
+    Input(conductanceIn).imports("crop/conductance[value]").unit("s/m");
+    Input(vapourFluxIn).imports("crop/vapourFlux[value]").unit("kg/m2/s");
+    Input(gainIn).imports("crop/gain[value]").unit("kg/m2/s");
 }
 
 void VapourFluxTranspiration::update() {

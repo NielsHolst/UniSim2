@@ -15,6 +15,7 @@ class Budget : public base::Box
 {
 public:
     Budget(QString name, QObject *parent);
+    void initialize();
     void reset();
     void update();
 

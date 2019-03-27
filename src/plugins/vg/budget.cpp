@@ -17,14 +17,26 @@ Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
-    Input(heatingPowerUsage).imports("controlled/heating/energyFlux[value]");
-    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]");
-    Input(co2Flux).imports("controllers/co2[signal]");
-    Input(dt).imports("calendar[timeStepSecs]");
-    Input(energyUnit).equals("GJ").help("Energy units for outpurs, 'GJ' or 'kWh'");
-    Output(heatingEnergyTotal).help("Accumulated energy spent on heating [GJ/m2 or kWh/m2]");
-    Output(growthLightsEnergyTotal).help("Accumulated energy spent on growth lights [GJ/m2 or kWh/m2]");
-    Output(co2Total).help("Accumulated CO2 spent [kg/m2]");
+    Input(heatingPowerUsage).imports("controlled/heating/energyFlux[value]").unit("W/m2");
+    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]").unit("W/m2");
+    Input(co2Flux).imports("controllers/co2[signal]").unit("g/m2/h");
+    Input(dt).imports("calendar[timeStepSecs]").unit("s");
+    Input(energyUnit).equals("GJ").help("Energy units for outputs").unit("GJ|kWh");
+    Output(heatingEnergyTotal).help("Accumulated energy spent on heating");
+    Output(growthLightsEnergyTotal).help("Accumulated energy spent on growth lights");
+    Output(co2Total).help("Accumulated CO2 spent").unit("kg/m2");
+}
+
+void Budget::initialize() {
+    QString u = energyUnit.toLower();
+    if (u=="gj") {
+        port("heatingEnergyTotal")->unit("GJ");
+        port("growthLightsEnergyTotal")->unit("GJ");
+    }
+    else if (u=="kwh") {
+        port("heatingEnergyTotal")->unit("kWh");
+        port("growthLightsEnergyTotal")->unit("kWh");
+    }
 }
 
 void Budget::reset() {
@@ -32,10 +44,12 @@ void Budget::reset() {
     growthLightsPowerUsage = growthLightsEnergyTotal =
     co2Flux = co2Total = 0.;
     QString u = energyUnit.toLower();
-    if (u=="gj")
+    if (u=="gj") {
         eUnit = dt*1e-9;          // Gs = s * G
-    else if (u=="kwh")
+    }
+    else if (u=="kwh") {
         eUnit = dt/3600.*1e-3;    // kh = s / (s/h) * k
+    }
     else {
         QString msg {"Unknown energy unit '%1', expected 'kWh' or 'GJ'"};
         ThrowException(msg.arg(energyUnit)).value(energyUnit).context(this);

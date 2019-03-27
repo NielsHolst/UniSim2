@@ -16,9 +16,9 @@ DiffuseIrradiationBase::DiffuseIrradiationBase(QString name, QObject *parent)
 {
     Class(DiffuseIrradiationBase);
     help("computes diffuse fraction of global irradiation");
-    Input(angot).imports("calendar[angot]");
-    Input(globalIrradiation).imports("outdoors[radiation]");
-    Output(clearness).help("Fraction of angot irradiation [0;1]");
+    Input(angot).imports("calendar[angot]").unit("W/m2");
+    Input(globalIrradiation).imports("outdoors[radiation]").unit("W/m2");
+    Output(clearness).help("Fraction of angot irradiation").unit("[0;1]");
 }
 
 void DiffuseIrradiationBase::updateClearness() {

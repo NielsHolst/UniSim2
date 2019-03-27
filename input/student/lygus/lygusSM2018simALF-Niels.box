@@ -1,0 +1,111 @@
+// lygusCAS2018sim.box
+Simulation sim {
+  .steps = 150 
+  Calendar calendar {
+    .initialDateTime = /4/01/2018 
+  }
+  Box weather {
+    +Tavg = 26
+  }
+  // Records weather {
+    // .fileName = "weather/SantaMaria2018.txt"
+    // .cycle = TRUE //!
+  // }
+  Box Lygus {
+    Stage egg {
+      .inflow = ../adult/oviposition[outflow]
+      .duration = 144.1
+      .timeStep = ./time[step]
+       DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 8.5
+        .Topt = 32
+        .Tmax = 43.8  
+       }
+    }
+    Stage n1 {
+      .inflow = ../egg[outflow]
+      .duration = 53.7
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 10.4
+        .Topt = 33.1
+        .Tmax = 43.8
+      }
+    }
+    Stage n2 {
+      .inflow = ../n1[outflow]
+      .duration = 32.9
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 11.8
+        .Topt = 31.8
+        .Tmax = 44.3
+      }
+    }
+    Stage n3 {
+      .inflow = ../n2[outflow]
+      .duration = 31.5
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 12.7
+        .Topt = 32.4
+        .Tmax = 46.2
+      }
+    }
+    Stage n4 {
+      .inflow = ../n3[outflow]
+      .duration = 38.4
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 12.8
+        .Topt = 31.6
+        .Tmax = 36
+      }
+    }
+    Stage n5 {
+      .inflow = ../n4[outflow]
+      .duration = 74.1
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 9.5
+        .Topt = 33.1
+        .Tmax = 38.9
+      }
+    }
+    Box adult{
+      +immigration = 0.00007716
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 7.43
+        .Topt = 32
+        .Tmax = 35
+      }
+      Stage adults {
+        .inflow|sum = ../../n5[outflow] |..[immigration]
+        .inflow = 0.00007716
+        .duration = 646.4
+        .timeStep = ../time[step]
+      }
+      Stage oviposition {
+        .inflow|sum = ../../n5[outflow] | ..[immigration]
+        .duration = 468.4
+        .timeStep = ../time[step]
+        .growthFactor = 40 //@ (uniform 10 100) //fix R0 value
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+      .ports = *[content]
+      }
+    }
+  }
+}
+

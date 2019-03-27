@@ -20,18 +20,18 @@ PUBLISH(AirFluxVents)
 AirFluxVents::AirFluxVents(QString name, QObject *parent)
     : AirFluxBase(name, parent)
 {
-    help("computes air flux through a vent");
+    help("computes total air flux through all vents");
     Input(pathToVents).equals("shelter/*/*<Vent>").help("Path to Vent boxes");
-    Input(ventOpening).imports("actuators/vents[value]");
-    Input(roofPitch).imports("geometry[roofPitch]");
-    Input(greenhouseLength).imports("geometry[length]");
-    Input(indoorsVolumeTotal).imports("geometry[indoorsVolumeTotal]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Input(windSpeed).imports("outdoors[windSpeed]");
-    Output(ventLength).noReset().help("Length scaled to two vents of greenhouse length (m)");
-    Output(ventWidth).noReset().help("Average vent width weighted by length (m)");
-    Output(ventTransmissivity).noReset().help("Average vent air transmissivity weighted by area [0;1]");
+    Input(ventOpening).imports("actuators/vents[value]").unit("[0;1]");
+    Input(roofPitch).imports("geometry[roofPitch]").unit("[0;180]");
+    Input(greenhouseLength).imports("geometry[length]").unit("m");
+    Input(indoorsVolumeTotal).imports("geometry[indoorsVolumeTotal]").unit("m3");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
+    Input(windSpeed).imports("outdoors[windSpeed]").unit("m/s");
+    Output(ventLength).noReset().help("Length scaled to two vents of greenhouse length").unit("m");
+    Output(ventWidth).noReset().help("Average vent width weighted by length").unit("m");
+    Output(ventTransmissivity).noReset().help("Average vent air transmissivity weighted by area").unit("[0;1]");
 }
 
 void AirFluxVents::initialize() {

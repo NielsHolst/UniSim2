@@ -19,10 +19,10 @@ VapourFluxAir::VapourFluxAir(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux through air exchange");
-    Input(airFlux).help("Rate of air exchange with outdoors [h-1]");
-    Input(indoorsAh).imports("indoors/humidity[ah]");
-    Input(outdoorsAh).imports("outdoors[ah]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
+    Input(airFlux).help("Rate of air exchange with outdoors").unit("m3/m3/h");
+    Input(indoorsAh).imports("indoors/humidity[ah]").unit("kg/m3");
+    Input(outdoorsAh).imports("outdoors[ah]").unit("kg/m3");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
 }
 
 void VapourFluxAir::update() {

@@ -19,14 +19,14 @@ ShelterBase::ShelterBase(QString name, QObject *parent)
 {
     Class(ShelterBase);
     help("is a base class for the ShelterFace's and the whole Shelter");
-    Output(diffuseLightTransmitted).help("Intensity of sunlight transmitted as diffuse light [W/ground m2]");
-    Output(directLightTransmitted).help("Intensity of sunlight transmitted as direct light [W/ground m2]");
-    Output(totalLightTransmitted).help("Intensity of sunlight transmitted in total (diffuse+direct) [W/ground m2]");
-    Output(lightAbsorbedCover).help("Intensity of sunlight absorbed by cover [W/ground m2]");
-    Output(lightAbsorbedScreens).help("Intensity of sunlight absorbed by screens [W/ground m2]");
-    Output(haze).help("Proportion of direct light becoming dispersed on passage through cover and screens [0;1]");
-    Output(U).help("Combined U-value of cover and screens [W/m2/K]");
-    Output(airTransmissivity).help("Proportion of air transmitted through cover and screens [0;1]");
+    Output(diffuseLightTransmitted).help("Intensity of sunlight transmitted as diffuse light").unit("W/m2 ground");
+    Output(directLightTransmitted).help("Intensity of sunlight transmitted as direct light").unit("W/m2 ground");
+    Output(totalLightTransmitted).help("Intensity of sunlight transmitted in total (diffuse+direct)").unit("W/m2 ground");
+    Output(lightAbsorbedCover).help("Intensity of sunlight absorbed by cover").unit("W/m2 ground");
+    Output(lightAbsorbedScreens).help("Intensity of sunlight absorbed by screens").unit("W/m2 ground");
+    Output(haze).help("Proportion of direct light becoming dispersed on passage through cover and screens").unit("[0;1]");
+    Output(U).help("Combined U-value of cover and screens").unit("W/K/m2");
+    Output(airTransmissivity).help("Proportion of air transmitted through cover and screens").unit("[0;1]");
 }
 
 void ShelterBase::reset() {

@@ -17,6 +17,7 @@ SensitivityAnalysisSobol::SensitivityAnalysisSobol(QString name, QObject *parent
       N(sampleSize), k(inputsAnalysed)
 {
     help("runs a Sobol sensitivity analysis");
+    Input(bootstrapSize).equals(1000).help("Size of bootstrap sample (cheap in computation time)");
     Input(iteration).imports("/*[iteration]");
     Output(phase).help("Matrix used in this iteration (A, B or C)");
 }
@@ -94,7 +95,10 @@ void SensitivityAnalysisSobol::debrief() {
     OutputR *outputR = findMaybeOne<OutputR>("*");
     if (outputR) {
         outputR->addRCode("sobol_k = " + QString::number(k) +
-                          "; sobol_N = " + QString::number(N));
+                          "; sobol_N = " + QString::number(N) +
+                          "; sobol_B = " + QString::number(bootstrapSize) +"\n" +
+                          "source(\"" + environment().inputFileNamePath("scripts/begin-sobol.R") + "\")"
+                          );
     }
 }
 

@@ -16,9 +16,6 @@ class GrowthLights : public GrowthLightBase
 {
 public:
     GrowthLights(QString name, QObject *parent);
-// Outputs
-private:
-    double currentPower;
 };
 } //namespace
 

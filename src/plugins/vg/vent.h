@@ -15,13 +15,15 @@ class Vent : public base::Box
 {
 public:
     Vent(QString name, QObject *parent);
-    void amend();
+    void reset();
+    void update();
 private:
     // Inputs
     int number;
-    double length, width, state, transmissivity;
-    // Data
-    QString pathTransmissivity;
+    double length, width, state,
+        ventTransmissivity, screensTransmissivity;
+    // Output
+    double transmissivity;
 };
 
 } //namespace

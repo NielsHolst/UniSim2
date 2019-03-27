@@ -18,17 +18,17 @@ PUBLISH(GrowthLight)
 GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
-    Input(type).equals("HPS").help("Type of lamp, 'HPS' or 'LED'");
-    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area (W/m2)");
-    Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy (micromole/J)");
-    Input(minPeriodOn).help("Minimum period that light stays on (m)");
-    Input(age).help("Age of the lamps at simulation start (h)");
-    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 50% (h)");
-    Input(on).imports("controllers/growthLight[signal]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(type).equals("HPS").help("Type of lamp").unit("HPS|LED");
+    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area").unit("W/m2");
+    Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
+    Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
+    Input(age).help("Age of the lamps at simulation start").unit("h");
+    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 50%").unit("h");
+    Input(on).imports("controllers/growthLight[signal]").unit("y|n");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
-    Output(currentPeriod).help("Time since last time light went on (m)");
-    Output(totalPeriod).help("Total period when light has been on (h)");
+    Output(currentPeriod).help("Time since last time light went on").unit("m");
+    Output(totalPeriod).help("Total period when light has been on").unit("h");
 }
 
 void GrowthLight::reset() {

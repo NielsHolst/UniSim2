@@ -14,6 +14,7 @@
 #include <base/dialog_stub.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/object_pool.h>
 #include <base/phys_math.h>
 #include <base/mega_factory.h>
 #include "iglib.h"
@@ -35,6 +36,12 @@ static QVector<HeatPipe> _heatPipes;
 static QVector<GrowthLight> _growthLights;
 static QVector<Vent> _vents;
 static QVector<Screen> _screens;
+// Functions
+static double value(Variable v, QString name) {
+    if (v.origin == NotAvailable)
+        ThrowException("Value not available for variable").value(name);
+    return v.value;
+}
 
 void init() {
     static int argc = 1;
@@ -42,6 +49,7 @@ void init() {
     static char *argv = &ch;
     if (!_initialized) {
         _app = new QCoreApplication(argc, &argv);
+        new base::ObjectPool(_app);
 //        _dialog = new DialogQuiet(_app);
         _dialog = new DialogStub(_app); // TEST
 
@@ -527,24 +535,28 @@ Box* buildLayers() {
 }
 
 void buildSensor(Box *parent, const Query &q) {
-    double indoorsAh = ahFromRh(q.indoors.temperature.value, q.indoors.rh.value),
+    double indoorsAh = ahFromRh(value(q.indoors.temperature, "indoors.temperature"),
+                                value(q.indoors.rh, "indoors.rh")),
            indoorsCo2  = (q.indoors.co2.origin!=NotAvailable) ? q.indoors.co2.value : 405.,
-           outdoorsCo2 = (q.outdoors.co2.origin!=NotAvailable) ? q.outdoors.co2.value : 405.;
+           outdoorsCo2 = (q.outdoors.co2.origin!=NotAvailable) ? q.outdoors.co2.value : 405.,
+           indoorsRh = value(q.indoors.rh, "indoors.rh"),
+           outdoorsRh = (q.indoors.co2.origin!=NotAvailable) ? q.indoors.rh.value : indoorsRh,
+           windspeed = (q.outdoors.windspeed.origin!=NotAvailable) ? q.outdoors.windspeed.value : 4.;
 
     BoxBuilder builder(parent);
     builder.
         box().name("sensor").
-            newPort("indoorsTemperature").equals(q.indoors.temperature.value).
-            newPort("indoorsRh").equals(q.indoors.rh.value).
+            newPort("indoorsTemperature").equals(value(q.indoors.temperature, "indoors.temperature")).
+            newPort("indoorsRh").equals(indoorsRh).
             newPort("indoorsAh").equals(indoorsAh).
             newPort("indoorsCo2").equals(indoorsCo2).
             newPort("indoorsWindspeed").equals(0.1).
-            newPort("outdoorsTemperature").equals(q.outdoors.temperature.value).
-            newPort("outdoorsRh").equals(q.outdoors.rh.value).
+            newPort("outdoorsTemperature").equals(value(q.outdoors.temperature, "outdoors.temperature")).
+            newPort("outdoorsRh").equals(outdoorsRh).
             newPort("outdoorsCo2").equals(outdoorsCo2).
-            newPort("outdoorsGlobalRadiation").equals(q.outdoors.irradiation.value).
+            newPort("outdoorsGlobalRadiation").equals(value(q.outdoors.irradiation, "outdoors.irradiation")).
             newPort("outdoorsPropParRadiation").equals(0.47).
-            newPort("outdoorsWindSpeed").equals(q.outdoors.windspeed.value).
+            newPort("outdoorsWindSpeed").equals(windspeed).
             newPort("soilTemperature").equals(10.).
         endbox();
 }
@@ -724,8 +736,9 @@ void buildControllers(Box *parent) {
         endbox();
 }
 
-void buildCrop(Box *parent, const Query &q) {
-    double lai = (q.culture.lai.origin!=NotAvailable) ? q.culture.lai.value : 1.;
+void buildCrop(Box *parent, const Query &) {
+//    double lai = (q.culture.lai.origin!=NotAvailable) ? q.culture.lai.value : 1.;
+    double lai = 1.;
     BoxBuilder builder(parent);
     builder.
         box("vg::Crop").name("crop").
@@ -778,7 +791,7 @@ void buildCrop(Box *parent, const Query &q) {
 Box* build(const Query &q) {
     init();
     BoxBuilder builder;
-    Box *sim;
+    Box *sim(nullptr);
     try {
         builder.
             box("Simulation").name("sim").
@@ -811,7 +824,7 @@ Response compute(const Query &q) {
     Response r;
     bool excepted = false;
 
-    Box *root;
+    Box *root(nullptr);
     try {
         root = build(q);
         root->run();

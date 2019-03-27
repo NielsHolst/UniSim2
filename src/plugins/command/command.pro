@@ -14,6 +14,7 @@ HEADERS +=  \
     clear.h \
     clip.h \
     debug.h \
+    doc.h \
     edit.h \
     find.h \
     general.h \
@@ -43,6 +44,7 @@ SOURCES +=  \
     clear.cpp \
     clip.cpp \
     debug.cpp \
+    doc.cpp \
     edit.cpp \
     find.cpp \
     general.cpp \

@@ -119,11 +119,15 @@
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
+    <file>data/input/projects/ig/Ig typer - rettet af Nielsl.xlsx</file>
     <file>data/input/projects/ig/ig-scenario.box</file>
     <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
+    <file>data/input/projects/ig/UniSimData.json</file>
+    <file>data/input/projects/ig/UnisimInputData-1-day.json</file>
+    <file>data/input/projects/ig/UnisimInputData-3-months.json</file>
     <file>data/input/projects/potato/generate-scenarios.R</file>
     <file>data/input/projects/potato/potato-end.R</file>
     <file>data/input/projects/potato/potato1.box</file>
@@ -180,9 +184,14 @@
     <file>data/input/projects/vg/excel/2018-12-18-standard_greenhouse.xml</file>
     <file>data/input/projects/vg/excel/2018-12-18-standard_led-transformed.xml</file>
     <file>data/input/projects/vg/excel/2018-12-18-standard_led.xml</file>
+    <file>data/input/projects/vg/excel/2019-03-08-standard_greenhouse-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-03-08-standard_greenhouse.xml</file>
+    <file>data/input/projects/vg/excel/2019-03-19-obscura-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-03-19-obscura.xml</file>
     <file>data/input/projects/vg/excel/all jeaa setpoints.txt</file>
     <file>data/input/projects/vg/excel/DVV_Input_data.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
+    <file>data/input/projects/vg/excel/VG.xlsm</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
@@ -201,8 +210,8 @@
     <file>data/input/projects/vg/vg-demo-end.R</file>
     <file>data/input/projects/vg/vg-demo.box</file>
     <file>data/input/projects/vg/vv_to_unisim.xsl</file>
+    <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
-    <file>data/input/scripts/end-sobol.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>

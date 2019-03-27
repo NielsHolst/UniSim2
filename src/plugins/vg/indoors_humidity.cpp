@@ -21,19 +21,19 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors humidity");
-    Input(conductance).imports("indoors/total/vapourFlux[conductance]");
-    Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]");
-    Input(gain).imports("indoors/total/vapourFlux[gain]");
-    Input(temperature).imports("indoors/temperature[value]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(conductance).imports("indoors/total/vapourFlux[conductance]").unit("m/s");
+    Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]").unit("kg/m2/s");
+    Input(gain).imports("indoors/total/vapourFlux[gain]").unit("kg/m2/s");
+    Input(temperature).imports("indoors/temperature[value]").unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
-    Output(rh).help("Indoors relative humidity [0;100]");
-    Output(ah).help("Indoors absolute humidity [kg/m3]");
-    Output(ahEq).help("Asymptotic (with time) equilibrium absolute humidity [kg/m3]");
-    Output(timeConstant).help("Time constant for integrating netVapourFlux [s-1]");
-    Output(surplusAh).help("Integration inaccuracy that was rounded off [kg/m3]");
-    Output(netVapourFlux).help("Total water vapour flux in/out (+/-) of the greenhouse [kg/m2/s]");
+    Output(rh).help("Indoors relative humidity").unit("[0;100]");
+    Output(ah).help("Indoors absolute humidity").unit("kg/m3");
+    Output(ahEq).help("Asymptotic (with time) equilibrium absolute humidity").unit("kg/m3");
+    Output(timeConstant).help("Time constant for integrating netVapourFlux").unit("/s");
+    Output(surplusAh).help("Integration inaccuracy that was rounded off").unit("kg/m3");
+    Output(netVapourFlux).help("Total water vapour flux in/out (+/-) of the greenhouse").unit("kg/m2/s");
 }
 
 void IndoorsHumidity::reset() {

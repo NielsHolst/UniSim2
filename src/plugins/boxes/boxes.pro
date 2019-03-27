@@ -14,6 +14,7 @@ HEADERS +=  \
     briere.h \
     buffer.h \
     calendar.h \
+    date.h \
     day_degrees.h \
     demand_budget.h \
     distributed_delay_base.h \
@@ -58,6 +59,7 @@ SOURCES +=  \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \
+    date.cpp \
     day_degrees.cpp \
     demand_budget.cpp \
     distributed_delay_base.cpp \

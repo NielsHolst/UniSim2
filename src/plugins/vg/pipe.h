@@ -7,6 +7,7 @@
 #ifndef VG_PIPE_H
 #define VG_PIPE_H
 
+#include <QMap>
 #include <base/box.h>
 
 namespace vg {
@@ -15,9 +16,20 @@ class Pipe : public base::Box
 {
 public:
     Pipe(QString name, QObject *parent);
+    void reset();
 private:
     // Inputs
-    double density, diameter, flowRate, minTemperature, maxTemperature, a, b, emissivity;
+    QString material;
+    double density, diameter, flowRate, minTemperature, maxTemperature;
+    // Outputs
+    double a, b;
+    // Methods
+    void parseMaterial();
+    // Data
+    struct MaterialInputs {
+        double a, b;
+    };
+    QMap<QString, MaterialInputs> materialInputs;
 };
 
 } //namespace

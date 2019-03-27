@@ -20,32 +20,32 @@ EnergyFluxShelter::EnergyFluxShelter(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("models shelter temperature and energy flux");
-    Input(U).imports("construction/shelter[U]");
-    Input(incomingLwAbsorptivity).imports("construction/shelter[incomingLwAbsorptivity]");
-    Input(outgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]");
-    Input(lightAbsorbedCover).imports("construction/shelter[lightAbsorbedCover]");
-    Input(lightAbsorbedScreens).imports("construction/shelter[lightAbsorbedScreens]");
-    Input(heatCapacityCover).imports("construction/shelter[heatCapacityCoversPerGround]");
-    Input(heatCapacityScreens).imports("construction/shelter[heatCapacityScreensPerGround]");
+    Input(U).imports("construction/shelter[U]").unit("W/m2/K");
+    Input(incomingLwAbsorptivity).imports("construction/shelter[incomingLwAbsorptivity]").unit("[0;1]");
+    Input(outgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]").unit("[0;1]");
+    Input(lightAbsorbedCover).imports("construction/shelter[lightAbsorbedCover]").unit("W/ground m2");
+    Input(lightAbsorbedScreens).imports("construction/shelter[lightAbsorbedScreens]").unit("W/ground m2");
+    Input(heatCapacityCover).imports("construction/shelter[heatCapacityCoversPerGround]").unit("J/ground m2");
+    Input(heatCapacityScreens).imports("construction/shelter[heatCapacityScreensPerGround]").unit("J/ground m2");
 
-    Input(timeStep).imports("calendar[timeStepSecs]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]").unit("m2/m2");
 
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Input(skyTemperature).imports("outdoors[skyTemperature]");
-    Input(radiationFluxCropTop).imports("crop/layers/top/radiationAbsorbed[shelterLoss]");
-    Input(radiationFluxCropMiddle).imports("crop/layers/middle/radiationAbsorbed[shelterLoss]");
-    Input(radiationFluxCropBottom).imports("crop/layers/bottom/radiationAbsorbed[shelterLoss]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
+    Input(skyTemperature).imports("outdoors[skyTemperature]").unit("oC");
+    Input(radiationFluxCropTop).imports("crop/layers/top/radiationAbsorbed[shelterLoss]").unit("W/m2");
+    Input(radiationFluxCropMiddle).imports("crop/layers/middle/radiationAbsorbed[shelterLoss]").unit("W/m2");
+    Input(radiationFluxCropBottom).imports("crop/layers/bottom/radiationAbsorbed[shelterLoss]").unit("W/m2");
 
-    Output(heatFluxOutsideToCover).help("Energy flux from inside to cover [W/m2]");
-    Output(heatFluxInsideToCover).help("Energy flux from inside to cover [W/m2]");
-    Output(radiationFluxSkyToCover).help("Energy flux from sky to cover (negative) [W/m2]");
-    Output(radiationFluxSunToCover).help("Energy flux from sun to cover (positive) [W/m2]");
-    Output(radiationFluxSunToScreens).help("Energy flux from sun to screens (positive) [W/m2]");
-    Output(coverTemperature).help("Temperature of cover [oC]");
-    Output(screensTemperature).help("Temperature of screens [oC]");
+    Output(heatFluxOutsideToCover).help("Energy flux from inside to cover").unit("W/m2");
+    Output(heatFluxInsideToCover).help("Energy flux from inside to cover").unit("W/m2");
+    Output(radiationFluxSkyToCover).help("Energy flux from sky to cover (negative)").unit("W/m2");
+    Output(radiationFluxSunToCover).help("Energy flux from sun to cover (positive)").unit("W/m2");
+    Output(radiationFluxSunToScreens).help("Energy flux from sun to screens (positive)").unit("W/m2");
+    Output(coverTemperature).help("Temperature of cover").unit("oC");
+    Output(screensTemperature).help("Temperature of screens").unit("oC");
 }
 
 void EnergyFluxShelter::reset() {

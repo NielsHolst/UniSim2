@@ -22,14 +22,14 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models leaf transpiration");
-    Input(lai).imports("crop/lai[value]");
-    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]");
-    Input(indoorsAh).imports("indoors/humidity[ah]");
-    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]");
-    Input(leafTemperature).imports("../temperature[value]");
-    Input(rbH2O).imports("../rb[rbH2O]");
-    Input(rsH2O).imports("../rs[rsH2O]");
-    Output(leafAh).help("Leaf absolute humidity [kg/m3]");
+    Input(lai).imports("crop/lai[value]").unit("oC");
+    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]").unit("[0;1]");
+    Input(indoorsAh).imports("indoors/humidity[ah]").unit("kg/m3");
+    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]").unit("W/m2");
+    Input(leafTemperature).imports("../temperature[value]").unit("oC");
+    Input(rbH2O).imports("../rb[rbH2O]").unit("s/m");
+    Input(rsH2O).imports("../rs[rsH2O]").unit("s/m");
+    Output(leafAh).help("Leaf absolute humidity").unit("kg/m3");
 }
 
 void LeafTranspiration::reset() {

@@ -20,7 +20,7 @@ private:
     // data
     const base::FactoryPlugIn* _plugIn;
     base::Box *_box;
-    int _colWidthName, _colWidthValue;
+    int _colWidthName, _colWidthValue, _colWidthUnit;
     bool _expand;
     // methods
     void doExecute();

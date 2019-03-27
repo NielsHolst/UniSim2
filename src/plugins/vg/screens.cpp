@@ -25,13 +25,13 @@ Screens::Screens(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent)
 {
     help("summarizes a colletion of Screen models");
-    Output(areHorizontal).help("Are these screens horizontal?");
-    Output(maxState).help("Maximum screen state [0;1]");
-    Output(airTransmissivity).help("Proportion of air transmitted through the screens [0;1]");
-    Output(haze).help("Proportion of direct light becoming dispersed on passage through the screens [0;1]");
-    Output(U).help("Combined U-value of all screens [W/m2/K]");
-    Output(heatCapacity).help("Combined heat capacity of all screens [J/K]");
-    Output(effectiveArea).help("The draw area of the screens [m2]");
+    Output(areHorizontal).help("Are these screens horizontal?").unit("y|n");
+    Output(maxState).help("Maximum screen state").unit("[0;1]");
+    Output(airTransmissivity).help("Proportion of air transmitted through the screens").unit("[0;1]");
+    Output(haze).help("Proportion of direct light becoming dispersed on passage through the screens").unit("[0;1]");
+    Output(U).help("Combined U-value of all screens").unit("W/K/m2");
+    Output(heatCapacity).help("Combined heat capacity of all screens").unit("J/K");
+    Output(effectiveArea).help("The drawn area of the screens").unit("m2");
 }
 
 void Screens::initialize() {

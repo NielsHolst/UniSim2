@@ -1,0 +1,7 @@
+web/cowpeaFlowering	web/marucaInstar1	web/marucaInstar2	web/marucaInstar3	web/marucaInstar4	web/marucaInstar5
+0	0	0	0	0	0
+1	0	0	0	0	0
+1	0	0	0	0	0
+1	0	0	0	0	0
+1	0	0	0	0	0
+1	0	0	0	0	0

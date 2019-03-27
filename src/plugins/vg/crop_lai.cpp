@@ -16,10 +16,10 @@ PUBLISH(CropLai)
 CropLai::CropLai(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    help("models crop LAI");
-    Input(laiStartPerPlant).equals(0.3).help("LAI when the crop is established [m2 leaf area per m2 planted area]");
-    Input(fractionPlantArea).equals(1.).help("Fraction of ground area covered by the crop [0;1]");
-    Output(value).help("Crop LAI [m2 leaf area per m2 planted area]");
+    help("models LAI in cropped area");
+    Input(laiStartPerPlant).equals(0.3).help("Initial crop LAI in cropped area").unit("m2/m2");
+    Input(fractionPlantArea).equals(1.).help("Fraction of cropped area").unit("[0;1]");
+    Output(value).help("Current LAI in cropped area]").unit("m2/m2");
 }
 
 void CropLai::reset() {

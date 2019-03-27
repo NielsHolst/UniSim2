@@ -28,7 +28,7 @@ EnergyFluxBase::EnergyFluxBase(QString name, QObject *parent)
 {
     Class(EnergyFluxBase);
     help("is a base class for models of energy flux to the greenhouse air");
-    Output(value).help("Energy flux to the greenhouse air per greenhouse area [W/m2]");
+    Output(value).help("Energy flux to the greenhouse air per greenhouse area").unit("W/m2");
 }
 
 

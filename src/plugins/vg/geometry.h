@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Input
-    double spanWidth, length, height, roofPitch, reflection, horizontalScreenState;
+    double orientation, spanWidth, length, height, roofPitch, reflection, horizontalScreenState;
     int numSpans;
 
     // Output

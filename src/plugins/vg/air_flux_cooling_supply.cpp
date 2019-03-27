@@ -21,11 +21,11 @@ AirFluxCoolingSupply::AirFluxCoolingSupply(QString name, QObject *parent)
     : AirFluxBase(name, parent)
 {
     help("computes supply of air flux to cool greenhouse");
-    Input(energyFlux).imports("energyFlux/cooling/supply[value]");
-    Input(airSupplyMax).imports("cooling/airSupplyMax[value]");
-    Input(indoorsHeight).imports("geometry[indoorsAverageHeight]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(outdoorsTemperature).imports("outdoors[temperature]");
+    Input(energyFlux).imports("energyFlux/cooling/supply[value]").unit("W/m2");
+    Input(airSupplyMax).imports("cooling/airSupplyMax[value]").unit("m3/m3/h");
+    Input(indoorsHeight).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
 }
 
 void AirFluxCoolingSupply::update() {

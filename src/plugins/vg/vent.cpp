@@ -17,20 +17,25 @@ namespace vg {
 PUBLISH(Vent)
 
 Vent::Vent(QString name, QObject *parent)
-    : Box(name, parent),
-      pathTransmissivity("../screens[airTransmissivity]")
+    : Box(name, parent)
 {
     help("computes vent effective area");
-    Input(length).imports("construction/geometry[length]").help("Length of one window (m)");
-    Input(width).equals(1).help("Width of one window (m)");
-    Input(number).equals(1).help("Number of windows");
-    Input(state).imports("actuators/vents[value]").help("Relative vent opening [0;1]");
-    Input(transmissivity).importsMaybe(pathTransmissivity);
+    Input(length).imports("construction/geometry[length]").unit("m");
+    Input(width).equals(1).help("Width of one window (m)").unit("m");
+    Input(number).equals(1).help("Number of windows").unit("-");
+    Input(state).imports("actuators/vents[value]").help("Relative vent opening").unit("[0;1]");
+    Input(ventTransmissivity).equals(1.).help("Air transmissivity through vent").unit("[0;1]");
+    Input(screensTransmissivity).imports("../screens[airTransmissivity]")
+            .help("Air transmissivity through all screens").unit("[0;1]");
+    Output(transmissivity).help("Net air transmissivity").unit("[0;1]");
 }
 
-void Vent::amend() {
-    if (!findMaybeOne<Box>(pathTransmissivity))
-        transmissivity = 1.;
+void Vent::reset() {
+    update();
+}
+
+void Vent::update() {
+    transmissivity = ventTransmissivity*screensTransmissivity;
 }
 
 } //namespace

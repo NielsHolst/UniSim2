@@ -8,7 +8,7 @@ namespace boxes {
 PUBLISH(RandomNormal)
 
 RandomNormal::RandomNormal(QString name, QObject *parent)
-    : RandomBase<double>(name, parent), distribution(0), variate(0)
+    : RandomBase<double>(name, parent), distribution(nullptr), variate(nullptr)
 {
     help("produces random numbers from the normal distribution");
     Input(mean).equals(10);

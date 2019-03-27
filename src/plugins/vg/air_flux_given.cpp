@@ -19,7 +19,7 @@ AirFluxGiven::AirFluxGiven(QString name, QObject *parent)
     : AirFluxBase(name, parent)
 {
     help("sums up total given air flux");
-    Input(airFluxes).imports("./*[value]");
+    Input(airFluxes).imports("./*[value]").unit("m3/m3/h");;
 }
 
 void AirFluxGiven::amend() {

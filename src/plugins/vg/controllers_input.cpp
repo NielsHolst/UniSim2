@@ -15,27 +15,26 @@ ControllersInput::ControllersInput(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("contains input ports for actuators");
-    Input(ventilationThresholdBand).equals(1.).help("Width of ventilation temperature response [oC]");
-    Input(crackVentilation).equals(0.05).help("Ventilation crack; reduced at low temperarure [0;1]");
-    Input(crackVentilationTemperatureMin).equals(-5.).help("Threshold temperature at which crack is reduced [oC]");
-    Input(crackVentilationTemperatureMinBand).equals(1).help("Width of crack temperature response [oC]");
-    Input(screenMaxAtHighRh).equals(0.9).help("Limit on screens drawn at high RH [0;1]");
-    Input(screenEnergyThreshold).equals(5.).help("Draw energy screen below this sunlight level [W/2]");
-    Input(screenEnergyThresholdBand).equals(5.).help("Width of energy screen response [W/2]");
-    Input(screenShadeThreshold).equals(500.).help("Draw shade screen above this sunlight level [W/2]");
-    Input(screenShadeThresholdBand).equals(50.).help("Width of shade screen response [W/2]");
-    Input(screenBlackoutFromTimeFloat).help("Draw blackout screen at this time (day fraction) [0;1]");
-    Input(screenBlackoutToTimeFloat).help("Withdraw blackout screen at this time (day fraction) [0;1]");
-    Input(chalk).help("Effect of chalk [0;1]");
-    Output(screenBlackoutFromTime).help("Draw blackout screen at this time [h:m:s]");
-    Output(screenBlackoutToTime).help("Withdraw blackout screen at this time [h:m:s]");
+    Input(ventilationThresholdBand).equals(1.).help("Width of ventilation temperature response").unit("oC");
+    Input(crackVentilation).equals(0.05).help("Ventilation crack; reduced at low temperarure").unit("[0;1]");
+    Input(crackVentilationTemperatureMin).equals(-5.).help("Threshold temperature at which crack is reduced").unit("oC");
+    Input(crackVentilationTemperatureMinBand).equals(1).help("Width of crack temperature response").unit("oC");
+    Input(screenMaxAtHighRh).equals(0.9).help("Limit on screens drawn at high RH").unit("[0;1]");
+    Input(screenEnergyThreshold).equals(5.).help("Draw energy screen below this sunlight level").unit("W/m2");
+    Input(screenEnergyThresholdBand).equals(5.).help("Width of energy screen response").unit("W/m2");
+    Input(screenShadeThreshold).equals(500.).help("Draw shade screen above this sunlight level").unit("W/m2");
+    Input(screenShadeThresholdBand).equals(50.).help("Width of shade screen response").unit("W/m2");
+    Input(screenBlackoutFromTimeFloat).help("Draw blackout screen at this time (day fraction)").unit("[0;1]");
+    Input(screenBlackoutToTimeFloat).help("Withdraw blackout screen at this time (day fraction)").unit("[0;1]");
+    Input(chalk).help("Effect of chalk").unit("[0;1]");
+    Output(screenBlackoutFromTime).help("Draw blackout screen at this time").unit("h:m:s");
+    Output(screenBlackoutToTime).help("Withdraw blackout screen at this time").unit("h:m:s");
 }
 
 namespace {
     QTime dayFractionToTime(double fraction) {
          QTime time(0,0);
-         time.addSecs(static_cast<int>(24*60*60*fraction));
-         return time;
+         return time.addSecs(static_cast<int>(24*60*60*fraction));
     }
 }
 

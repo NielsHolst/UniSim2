@@ -15,17 +15,17 @@ PUBLISH(DateTimeSignal)
 
 DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    help("Sets a signal according to date and time of day");
-    Input(beginDate).equals(QDate(2001,1,1)).help("The beginning of the date interval [1..366]");
-    Input(endDate).equals(QDate(2001,12,31)).help("The end of the date interval [1..366]");
-    Input(beginTime).equals(QTime(0,0)).help("The beginning of the time interval [hh:mm]");
-    Input(endTime).equals(QTime(23,59,59)).help("The end of the time interval [hh:mm]");
-    Input(day).imports("calendar[dayOfYear]");
-    Input(time).imports("calendar[time]");
+    help("Sets a signal according to date (ignoring year) and time of day");
+    Input(beginDate).equals(QDate(2001,1,1)).help("The beginning of the date interval").unit("d/m/y");
+    Input(endDate).equals(QDate(2001,12,31)).help("The end of the date interval [1..366]").unit("d/m/y");
+    Input(beginTime).equals(QTime(0,0)).help("The beginning of the time interval [hh:mm]").unit("h:m:s");
+    Input(endTime).equals(QTime(23,59,59)).help("The end of the time interval [hh:mm]").unit("h:m:s");
+    Input(day).imports("calendar[dayOfYear]").unit("[1:366]");
+    Input(time).imports("calendar[time]").unit("h:m:s");
     Input(signalInside).equals(1.).help("Resulting signal when day and time are inside the day and time intervals");
     Input(signalOutside).equals(0.).help("Resulting signal when day and time are outside the day and time intervals");
     Input(signalOutsideTimeOnly).equals(0.).help("Resulting signal when day is inside its interval but time is outside its interval");
-    Input(circadian).equals(true).help("Tells whether signal follows a daily rythm");
+    Input(circadian).equals(true).help("Tells whether signal follows a daily rythm").unit("y|n");
 }
 
 inline QDate date(int day) {

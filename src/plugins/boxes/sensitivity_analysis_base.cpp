@@ -12,7 +12,7 @@ SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(SensitivityAnalysisBase);
-    help("sensitivity analysis base class");
+    help("is the sensitivity analysis base class");
     Input(sampleSize).equals(5).help("Size of sample in input parameter space (N)");
     Output(inputsAnalysed).noReset().help("Number of input ports included in analysis (k)");
     Output(inputsTotal).noReset().help("Total number of input ports in model");

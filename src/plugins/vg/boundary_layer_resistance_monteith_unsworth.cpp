@@ -20,10 +20,10 @@ BoundaryLayerResistanceMonteithUnsworth::BoundaryLayerResistanceMonteithUnsworth
 {
     Class(BoundaryLayerResistanceMonteithUnsworth);
     help("computes boundary layer resistance from Monteith and Unsworth (1990)");
-    Input(leafTemperature).imports("../temperature[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Output(gbH2Oforced).help("Resistance depending on leaf wind speed [s/m]");
-    Output(gbH2Ofree).help("Resistance depending on leaf temperature [s/m]");
+    Input(leafTemperature).imports("../temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Output(gbH2Oforced).help("Resistance depending on leaf wind speed").unit("s/m");
+    Output(gbH2Ofree).help("Resistance depending on leaf temperature").unit("s/m");
 }
 
 void BoundaryLayerResistanceMonteithUnsworth::reset() {

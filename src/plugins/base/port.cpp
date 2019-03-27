@@ -29,6 +29,7 @@ Port::Port(QString name, QObject *parent)
     _attributes["format"] = "";
     _attributes["label"] = "";
     _attributes["help"] = "";
+    _attributes["unit"] = "";
     _attributes["transform"] = convert<QString>(PortTransform::Identity);
 }
 
@@ -103,11 +104,7 @@ Port& Port::noReset() {
 }
 
 QStringList Port::attributes() {
-    static QStringList attr;
-    if (attr.isEmpty()) {
-        attr << "format" << "page" << "plot" << "label" << "transform";
-    }
-    return attr;
+    return QStringList(_attributes.keys());
 }
 
 // Set attributes
@@ -119,6 +116,11 @@ Port& Port::attribute(QString name, QString value) {
 
 Port& Port::help(QString value) {
     _attributes["help"] = value;
+    return *this;
+}
+
+Port& Port::unit(QString value) {
+    _attributes["unit"] = value;
     return *this;
 }
 
@@ -158,6 +160,10 @@ QString Port::attribute(QString name) const {
 
 QString Port::help() const {
     return _attributes.value("help");
+}
+
+QString Port::unit() const {
+    return _attributes.value("unit");
 }
 
 QString Port::format() const {

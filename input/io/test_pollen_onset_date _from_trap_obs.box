@@ -1,0 +1,41 @@
+// Test pollen onset date
+Simulation sim {
+  .steps = 2
+  .iterations = 10
+  Box random {
+    RandomUniformInt year {
+      .minValue = 1994
+      .maxValue = 2007
+      .drawAtReset = TRUE
+    }
+  }
+  Calendar calendar {
+    .initialDateTime = ./date[value]
+    Date date {
+      .year = random/year[value]
+    }
+  }
+  Records weather {
+    .fileName = "input/pollen-weather-Westerloge.txt"
+  }
+  PollenOnsetDateFromTrapObs pollenOnset {
+    .year = random/year[value]
+    .fileName = weather[fileName]
+  }
+  // Pollen pollen {
+    // .onsetDate = pollenOnset[date]
+    // .currentDate = calendar[date]
+    // .lossRate = 0.3
+  // }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (weather[Tavg] weather[pollen] random/year[value])
+      }
+      PlotR {
+        .ports = (pollenOnset[fraction] pollenOnset[date])
+      }
+    }
+  }
+}

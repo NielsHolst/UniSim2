@@ -11,8 +11,10 @@
 #include "test_distribution.h"
 
 using namespace base;
+using namespace std;
 
 void TestDistribution::testLoad() {
+    cout << "A\n";
     int errors = dialog().errorCount();
     Box *sim;
     try {
@@ -23,6 +25,7 @@ void TestDistribution::testLoad() {
     UNEXPECTED
     QCOMPARE(errors, dialog().errorCount());
 
+    cout << "B\n";
     Distribution *uniform(nullptr), *normal(nullptr);
     try {
         uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
@@ -30,9 +33,11 @@ void TestDistribution::testLoad() {
     }
     UNEXPECTED
 
+    cout << "C\n";
     double sample;
     QSet<double> samples;
     for (int i=0; i<30; ++i) {
+        cout << i << " C\n";
         try {
             sample = uniform->draw();
         }
@@ -42,6 +47,7 @@ void TestDistribution::testLoad() {
     }
     QCOMPARE(samples.size(), 30);
 
+    cout << "D\n";
     samples.clear();
     for (int i=0; i<30; ++i) {
         try {
@@ -57,6 +63,7 @@ void TestDistribution::testLoad() {
     }
     QCOMPARE(samples.size(), 30);
     delete sim;
+    cout << "Z\n";
 }
 
 void TestDistribution::testBlindPort() {

@@ -1,30 +1,15 @@
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ecolmod="http://www.ecolmod.org">
 <xsl:output indent="yes" encoding="ISO-8859-1"/>
 
 <!-- Helpers -->
 <xsl:variable name="colon" select="codepoints-to-string(58)"/>
 
 <!-- Missing parameters -->
-<xsl:variable name="leakage" select="1"/>
-<xsl:variable name="floor-Uindoors" select="7.5"/>
-<xsl:variable name="floor-Usoil" select="4"/>
-<xsl:variable name="floor-heatCapacity" select="42000"/>
-<xsl:variable name="floor-emissivity" select="0.85"/>
-<xsl:variable name="floor-reflectance" select="0.5"/>
-<xsl:variable name="rh-max-band" select="10"/>
-<!-- <xsl:variable name="ventilationThresholdBand" select="1"/> -->
-<!-- <xsl:variable name="crackVentilation" select="0.05"/> -->
-<!-- <xsl:variable name="crackVentilationTemperatureMin" select="-5"/> -->
-<!-- <xsl:variable name="crackVentilationTemperatureMinBand" select="1"/> -->
-<!-- <xsl:variable name="screenMaxAtHighRh" select="0.9"/> -->
-<!-- <xsl:variable name="screenEnergyThreshold" select="5"/> -->
-<!-- <xsl:variable name="screenEnergyThresholdBand" select="5"/> -->
-<!-- <xsl:variable name="screenShadeThreshold" select="500"/> -->
-<!-- <xsl:variable name="screenShadeThresholdBand" select="50"/> -->
-<!-- <xsl:variable name="screenBlackoutFromTime" select="concat('08',$colon,'00',$colon,'00')"/> -->
-<!-- <xsl:variable name="screenBlackoutToTime" select="concat('16',$colon,'00',$colon,'00')"/> -->
-<xsl:variable name="heatPipeFlowRate" select="5"/>
 <xsl:variable name="heatPipeMaxTemperature" select="60"/>
+<xsl:variable name="HPS-minPeriodOn" select="30"/>
+<xsl:variable name="LED-minPeriodOn" select="0"/>
 
 <!-- Call templates -->
 <xsl:template name="float-with-period">
@@ -65,16 +50,43 @@
   </xsl:attribute>
 </xsl:template>
 
+<xsl:function name="ecolmod:generateXPath" >
+  <xsl:param name="pNode" as="node()"/>
+
+<xsl:for-each select="$pNode/ancestor::*">    
+    <xsl:value-of select="concat('/', name())" />    
+  </xsl:for-each>    
+  <xsl:value-of select="concat('/', name($pNode))" />     
+</xsl:function>
+
 <xsl:template name="extract-cover">
   <xsl:param name="cover"/>
+
+  <xsl:variable name="transmissivityName" select="'PaneTransmission'"/>
+  <xsl:variable name="transmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
+  <xsl:variable name="U4Name" select="'PaneUValue'"/>
+  <xsl:variable name="U4Src" select="$cover/Constants/Parameters[ParameterName=$U4Name]/Value" as="node()"/>
+
   <box class="vg::Cover" name="cover">
     <port name="transmissivity">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$transmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+      </xsl:attribute>
       <xsl:call-template name="pct-value">
-        <xsl:with-param name="value" 
-          select="$cover/Constants/Parameters[ParameterName='PaneTransmission']/Value"/>
+        <xsl:with-param name="value" select="$transmissivitySrc"/>
       </xsl:call-template>
     </port>
+
     <port name="U4">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$U4Name"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($U4Src)"/>
+      </xsl:attribute>
       <xsl:call-template name="float-value">
         <xsl:with-param name="value" 
           select="$cover/Constants/Parameters[ParameterName='PaneUValue']/Value"/>
@@ -86,24 +98,50 @@
 <xsl:template name="extract-screen">
   <xsl:if test="Constants/Parameters[ParameterName='ScreenProduct']/Value!='No screen'">
     <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/>
-    <box class="vg::Screen" name="MISSING">
+    
+    <xsl:variable name="transmissivityLightName" select="'Transmission'"/>
+    <xsl:variable name="transmissivityLightSrc" select="Constants/Parameters[ParameterName=$transmissivityLightName]/Value" as="node()"/>
+    <xsl:variable name="energyLossReductionName" select="'InsulationRatio'"/>
+    <xsl:variable name="energyLossReductionSrc" select="Constants/Parameters[ParameterName=$energyLossReductionName]/Value" as="node()"/>
+    <xsl:variable name="transmissivityAirName" select="'Porosity'"/>
+    <xsl:variable name="transmissivityAirSrc" select="Constants/Parameters[ParameterName=$transmissivityAirName]/Value" as="node()"/>
+    
+        <box class="vg::Screen" name="MISSING">
       <xsl:attribute name="name">
         <xsl:value-of select="$name"/>
       </xsl:attribute>
-      <port name="orientation" value="cover"/>
+      <port name="orientation" externalName="No name" source="Fixed" value="cover"/>
       <port name="transmissivityLight">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityLightName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivityLightSrc)"/>
+        </xsl:attribute>
         <xsl:call-template name="pct-value">
-          <xsl:with-param name="value" select="Constants/Parameters[ParameterName='Transmission']/Value"/>
+          <xsl:with-param name="value" select="$transmissivityLightSrc"/>
         </xsl:call-template>
       </port>
       <port name="energyLossReduction">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$energyLossReductionName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($energyLossReductionSrc)"/>
+        </xsl:attribute>
         <xsl:call-template name="pct-value">
-          <xsl:with-param name="value" select="Constants/Parameters[ParameterName='InsulationRatio']/Value"/>
+          <xsl:with-param name="value" select="$energyLossReductionSrc"/>
         </xsl:call-template>
       </port>
       <port name="transmissivityAir">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityAirName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivityAirSrc)"/>
+        </xsl:attribute>
         <xsl:call-template name="pct-value">
-          <xsl:with-param name="value" select="Constants/Parameters[ParameterName='Porosity']/Value"/>
+          <xsl:with-param name="value" select="$transmissivityAirSrc"/>
         </xsl:call-template>
       </port>
       <port name="state">
@@ -139,9 +177,73 @@
   </box>
 </xsl:template>
 
+<xsl:template name="extract-vent">
+  <xsl:param name="position"/>
+  <xsl:variable name="lengthName" select="'Length'"/>
+  <xsl:variable name="lengthSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$lengthName]/Value"/>
+  <xsl:variable name="lengthValue" select="number(replace($lengthSrc, ',', '.'))"/>
+  <xsl:variable name="widthName" select="'Width'"/>
+  <xsl:variable name="widthSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$widthName]/Value"/>
+  <xsl:variable name="widthValue" select="number(replace($widthSrc, ',', '.'))"/>
+  <xsl:variable name="numberName" select="'Number'"/>
+  <xsl:variable name="numberSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$numberName]/Value"/>
+  <xsl:variable name="numberValue" select="number(replace($numberSrc, ',', '.'))"/>
+  <xsl:variable name="transmissivityName" select="'VentTransmission'"/>
+  <xsl:variable name="transmissivitySrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$transmissivityName]/Value"/>
+  <xsl:variable name="transmissivityValue" select="number(replace($transmissivitySrc, ',', '.'))"/>
+
+  <box class="vg::Vent" name="vent">
+    <port name="length">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lengthName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lengthSrc)"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="$lengthValue"/>
+      </xsl:attribute>
+    </port>
+    <port name="width">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$widthName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($widthSrc)"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="$widthValue"/>
+      </xsl:attribute>
+    </port>
+    <port name="number">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$numberName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($numberSrc)"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="$numberValue"/>
+      </xsl:attribute>
+    </port>
+    <port name="transmissivity">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$transmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="$transmissivityValue"/>
+      </xsl:attribute>
+    </port>
+  </box>
+</xsl:template>
+
 <xsl:template name="extract-setpoints">
   <xsl:param name="climateSetpointName"/>
   <xsl:param name="correction" select="0"/>
+
   <port name="reverseOrder" value="TRUE"/>
 
   <box name="default">
@@ -150,43 +252,90 @@
           <newPort name="signal" value="0.0"/>
         </xsl:when>
         <xsl:otherwise>
+          <xsl:variable name="signalSrc" 
+                        select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
           <newPort name="signal">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$climateSetpointName"/>
+            </xsl:attribute>
+            <xsl:if test="string-length($signalSrc)=0">
+              <xsl:attribute name="source">
+                <xsl:value-of select="'Missing'"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="string-length($signalSrc)!=0">
+              <xsl:attribute name="source">
+                <xsl:value-of select="ecolmod:generateXPath($signalSrc)"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:call-template name="float-value">
-              <xsl:with-param name="value" 
-                select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
-              <xsl:with-param name="correction" select="$correction"/>
+              <xsl:with-param name="value" select="$signalSrc"/>
+              <!-- <xsl:with-param name="correction" select="$correction"/> -->
             </xsl:call-template>
           </newPort>
         </xsl:otherwise>
       </xsl:choose>
   </box>
 
-  <xsl:for-each select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants[Parameters/ParameterName=$climateSetpointName]/ModSetpoint">
+  <xsl:variable name="setpointSrc" 
+                select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants[Parameters/ParameterName=$climateSetpointName]/ModSetpoint"/>
+
+  <xsl:for-each select="$setpointSrc">
     <box class="vg::DateTimeSignal">
       <port name="beginDate">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$climateSetpointName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($setpointSrc/FromDay)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="FromDay"/>
         </xsl:attribute>
       </port>
       <port name="endDate">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$climateSetpointName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($setpointSrc/ToDay)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="ToDay"/>
         </xsl:attribute>
       </port>
       <port name="beginTime">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$climateSetpointName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($setpointSrc/FromTime)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="FromTime"/>
         </xsl:attribute>
       </port>
       <port name="endTime">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$climateSetpointName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($setpointSrc/ToTime)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="ToTime"/>
         </xsl:attribute>
       </port>
       <port name="signalInside">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$climateSetpointName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($setpointSrc/Value)"/>
+        </xsl:attribute>
         <xsl:call-template name="float-value">
           <xsl:with-param name="value" select="Value"/>
-          <xsl:with-param name="correction" select="$correction"/>
+          <!-- <xsl:with-param name="correction" select="$correction"/> -->
         </xsl:call-template>
       </port>
     </box>
@@ -206,37 +355,96 @@
 </xsl:template>
 
 <xsl:template name="extract-growth-light">
-  <xsl:variable name="type" select="number(Constants/Parameters[ParameterName='LampType']/Value)"/>
-  <xsl:variable name="intensity" select="number(replace(Constants/Parameters[ParameterName='LightCapacityPerSqm']/Value, ',', '.'))"/>
-  <xsl:variable name="parPhotonCoef" select="number(replace(Constants/Parameters[ParameterName='MicromolParPerWatt']/Value, ',', '.'))"/>
-  <xsl:if test="$intensity > 0">
+  <xsl:variable name="typeName" select="'LampType'"/>
+  <xsl:variable name="typeSrc" select="Constants/Parameters[ParameterName=$typeName]/Value"/>
+  <xsl:variable name="intensityName" select="'LightCapacityPerSqm'"/>
+  <xsl:variable name="intensitySrc" select="Constants/Parameters[ParameterName=$intensityName]/Value"/>
+  <xsl:variable name="intensityValue" select="number(replace($intensitySrc, ',', '.'))"/>
+  <xsl:variable name="parPhotonCoefName" select="'MicromolParPerWatt'"/>
+  <xsl:variable name="parPhotonCoefSrc" select="Constants/Parameters[ParameterName=$parPhotonCoefName]/Value"/>
+  <xsl:variable name="parPhotonCoefValue" select="number(replace($parPhotonCoefSrc, ',', '.'))"/>
+  <xsl:variable name="ageName" select="'UsedHours'"/>
+  <xsl:variable name="ageSrc" select="Constants/Parameters[ParameterName=$ageName]/Value"/>
+  <xsl:variable name="ageValue" select="number(replace($ageSrc, ',', '.'))"/>
+  <xsl:variable name="lifeTimeName" select="'LifeTime'"/>
+  <xsl:variable name="lifeTimeSrc" select="Constants/Parameters[ParameterName=$lifeTimeName]/Value"/>
+  <xsl:variable name="lifeTimeValue" select="number(replace($lifeTimeSrc, ',', '.'))"/>
+
+  <xsl:if test="$intensityValue > 0">
     <box class="vg::GrowthLight" name="growthLight">
-      <xsl:if test="$type=1">
-        <port name="type" value="HPS"/>
-        <port name="minPeriodOn" value="30"/>
+      <xsl:if test="number($typeSrc)=1">
+        <port name="type" value="HPS">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$typeName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($typeSrc)"/>
+          </xsl:attribute>
+        </port>
+        <port name="minPeriodOn" externalName="HPS-minPeriodOn" source="Fixed">
+          <xsl:attribute name="value">
+            <xsl:value-of select="$HPS-minPeriodOn"/>
+          </xsl:attribute>
+        </port>
       </xsl:if>
-      <xsl:if test="$type=2">
-        <port name="type" value="LED"/>
-        <port name="minPeriodOn" value="0"/>
+      <xsl:if test="number($typeSrc)=2">
+        <port name="type" value="LED">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$typeName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($typeSrc)"/>
+          </xsl:attribute>
+        </port>
+        <port name="minPeriodOn" externalName="LED-minPeriodOn" source="Fixed">
+          <xsl:attribute name="value">
+            <xsl:value-of select="$LED-minPeriodOn"/>
+          </xsl:attribute>
+        </port>
       </xsl:if>
+      
       <port name="intensity">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$intensityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($intensitySrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="$intensity"/>
+          <xsl:value-of select="$intensityValue"/>
         </xsl:attribute>
       </port>
       <port name="parPhotonCoef">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$parPhotonCoefName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($parPhotonCoefSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="$parPhotonCoef"/>
+          <xsl:value-of select="$parPhotonCoefValue"/>
         </xsl:attribute>
       </port>
       <port name="age">
-        <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="Constants/Parameters[ParameterName='UsedHours']/Value"/>
-        </xsl:call-template>
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$ageName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($ageSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$ageValue"/>
+        </xsl:attribute>
       </port>
       <port name="lifeTime">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$lifeTimeName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($lifeTimeSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="Constants/Parameters[ParameterName='LifeTime']/Value"/>
+          <xsl:value-of select="$lifeTimeValue"/>
         </xsl:attribute>
       </port>
     </box>
@@ -244,34 +452,76 @@
 </xsl:template>
 
 <xsl:template name="extract-heat-pipe">
-  <xsl:variable name="density" select="number(replace(Constants/Parameters[ParameterName='PipelengthPerSqm']/Value, ',', '.'))"/>
-  <xsl:variable name="diameter" select="number(replace(Constants/Parameters[ParameterName='InnerDiameter']/Value, ',', '.'))"/>
-  <xsl:variable name="minTemperature" select="number(replace(Constants/Parameters[ParameterName='CommonReturnTemperature']/Value, ',', '.'))"/>
-  <xsl:variable name="maxTemperature" select="number(replace(Constants/Parameters[ParameterName='CommonFlowTemperature']/Value, ',', '.'))"/>
+  <xsl:variable name="densityName" select="'PipelengthPerSqm'"/>
+  <xsl:variable name="densitySrc" select="Constants/Parameters[ParameterName=$densityName]/Value" as="node()"/>
+  <xsl:variable name="densityValue" select="number(replace($densitySrc, ',', '.'))"/>
+  <xsl:variable name="diameterName" select="'InnerDiameter'"/>
+  <xsl:variable name="diameterSrc" select="Constants/Parameters[ParameterName=$diameterName]/Value" as="node()"/>
+  <xsl:variable name="diameterValue" select="number(replace($diameterSrc, ',', '.'))"/>
+  <xsl:variable name="minTemperatureName" select="'CommonReturnTemperature'"/>
+  <xsl:variable name="minTemperatureSrc" select="Constants/Parameters[ParameterName=$minTemperatureName]/Value" as="node()"/>
+  <xsl:variable name="minTemperatureValue" select="number(replace($minTemperatureSrc, ',', '.'))"/>
+  <xsl:variable name="maxTemperatureName" select="'CommonFlowTemperature'"/>
+  <xsl:variable name="maxTemperatureSrc" select="Constants/Parameters[ParameterName=$maxTemperatureName]/Value" as="node()"/>
+  <xsl:variable name="maxTemperatureValue" select="number(replace($maxTemperatureSrc, ',', '.'))"/>
+  <xsl:variable name="flowRateName" select="'heatPipeFlowRate'"/>
+  <xsl:variable name="flowRateSrc" select="Constants/Parameters[ParameterName=$flowRateName]/Value" as="node()"/>
+  <xsl:variable name="flowRateValue" select="number(replace($flowRateSrc, ',', '.'))"/>
+
   <box class="vg::Pipe" name="pipe">
     <port name="density">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$densityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($densitySrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$density"/>
+        <xsl:value-of select="$densityValue"/>
       </xsl:attribute>
     </port>
     <port name="diameter">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$diameterName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($diameterSrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$diameter * 1000"/>
+        <xsl:value-of select="$diameterValue * 1000"/>
       </xsl:attribute>
     </port>
     <port name="flowRate">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$flowRateName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($flowRateSrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$heatPipeFlowRate"/>
+        <xsl:value-of select="$flowRateValue"/>
       </xsl:attribute>
     </port>
     <port name="minTemperature">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$minTemperatureName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($minTemperatureSrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$minTemperature"/>
+        <xsl:value-of select="$minTemperatureValue"/>
       </xsl:attribute>
     </port>
     <port name="maxTemperature">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$maxTemperatureName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($maxTemperatureSrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$maxTemperature"/>
+        <xsl:value-of select="$maxTemperatureValue"/>
       </xsl:attribute>
     </port>
   </box>
@@ -284,98 +534,187 @@
   <xsl:comment> *** SimulationPeriod *** </xsl:comment>
   <box class="SimulationPeriod" name="period">
     <xsl:variable name="beginDate" select="DVV_SETUP/StartTime"/>
-    <xsl:variable name="endDate"  select="DVV_SETUP/StopTime"/>
+    <xsl:variable name="endDate"   select="DVV_SETUP/StopTime"/>
     <xsl:variable name="beginTime" select="concat('00',$colon,'00',$colon,'00')"/>
-    <xsl:variable name="endTime"  select="concat('00',$colon,'00',$colon,'00')"/>
-    <port name="beginDate">
+    <xsl:variable name="endTime"   select="concat('00',$colon,'00',$colon,'00')"/>
+    <xsl:variable name="timeStep"  select="DVV_SETUP/TimeStep"/>
+    <port name="beginDate" externalName="None">
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($beginDate)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
         <xsl:value-of select="$beginDate"/>
       </xsl:attribute>
     </port>
-    <port name="endDate">
+    <port name="endDate" externalName="None">
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($endDate)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
         <xsl:value-of select="$endDate"/>
       </xsl:attribute>
     </port>
-    <port name="beginTime">
+    <port name="beginTime" externalName="None" source="Fixed">
       <xsl:attribute name="value">
         <xsl:value-of select="$beginTime"/>
       </xsl:attribute>
     </port>
-    <port name="endTime">
+    <port name="endTime" externalName="None" source="Fixed">
       <xsl:attribute name="value">
         <xsl:value-of select="$endTime"/>
       </xsl:attribute>
     </port>
-    <port name="timeStep">
+    <port name="timeStep" externalName="None">
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($timeStep)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="DVV_SETUP/TimeStep"/>
+        <xsl:value-of select="$timeStep"/>
       </xsl:attribute>
     </port>
-    <port name="timeUnit" value="m"/>
+    <port name="timeUnit" value="m" externalName="None" source="Fixed"/>
   </box>
   <xsl:comment> *** Calendar *** </xsl:comment>
+  <xsl:variable name="latitude"  select="DVV_SETUP/Latitude"/>
+  <xsl:variable name="longitude" select="DVV_SETUP/Longitude"/>
   <box class="Calendar" name="calendar">
     <port name="initialDateTime" ref="../period[beginDateTime]"/>
     <port name="timeStep" ref="../period[timeStep]"/>
     <port name="timeUnit" ref="../period[timeUnit]"/>
-    <port name="latitude">
-      <xsl:call-template name="float-value">
-        <xsl:with-param name="value" 
-          select="DVV_SETUP/Latitude"/>
-      </xsl:call-template>
+    <port name="latitude" externalName="None">
+      <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($latitude)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$latitude"/>
+        </xsl:call-template>
     </port>
-    <port name="longitude">
+    <port name="longitude" externalName="None">
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($longitude)"/>
+      </xsl:attribute>
       <xsl:call-template name="float-value">
-        <xsl:with-param name="value" 
-          select="DVV_SETUP/Longitude"/>
+        <xsl:with-param name="value" select="$longitude"/>
       </xsl:call-template>
     </port>
   </box>
   <xsl:comment> *** Outdoors *** </xsl:comment>
+  <xsl:variable name="fileName"  select="DVV_SETUP/Weather/File"/>
   <box class="vg::Outdoors" name="outdoors">
     <box class="Records" name="records">
-      <port name="fileName">
+      <port name="fileName" externalName="None">
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($fileName)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Weather/File"/>
+          <xsl:value-of select="$fileName"/>
           <!-- <xsl:value-of select="'input/sel_dk.txt'"/> -->
         </xsl:attribute>
       </port>
-      <port name="ignoreYear" value="TRUE"/>
+      <port name="ignoreYear" externalName="None" source="Fixed" value="TRUE"/>
     </box>
   </box>
   <xsl:comment> *** Construction *** </xsl:comment>
+  <xsl:variable name="orientationName" select="'Direction'"/>
+  <xsl:variable name="orientationSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$orientationName]/Value" as="node()"/>
+  <xsl:variable name="orientationValue" select="number(replace($orientationSrc, ',', '.'))"/>
+  <xsl:variable name="numSpansName" select="'NumberOfSpans'"/>
+  <xsl:variable name="numSpansSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$numSpansName]/Value" as="node()"/>
+  <xsl:variable name="numSpansValue" select="number(replace($numSpansSrc, ',', '.'))"/>
+  <xsl:variable name="spanWidthName" select="'SpanSize'"/>
+  <xsl:variable name="spanWidthSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$spanWidthName]/Value" as="node()"/>
+  <xsl:variable name="spanWidthValue" select="number(replace($spanWidthSrc, ',', '.'))"/>
+  <xsl:variable name="lengthName" select="'Length'"/>
+  <xsl:variable name="lengthSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$lengthName]/Value" as="node()"/>
+  <xsl:variable name="lengthValue" select="number(replace($lengthSrc, ',', '.'))"/>
+  <xsl:variable name="heightName" select="'TrempelHeight'"/>
+  <xsl:variable name="heightSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$heightName]/Value" as="node()"/>
+  <xsl:variable name="heightValue" select="number(replace($heightSrc, ',', '.'))"/>
+  <xsl:variable name="roofPitchName" select="'RoofPitch'"/>
+  <xsl:variable name="roofPitchSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$roofPitchName]/Value" as="node()"/>
+  <xsl:variable name="roofPitchValue" select="number(replace($roofPitchSrc, ',', '.'))"/>
+  <xsl:variable name="reflectionName" select="'GreenhouseReductionFactorLight'"/>
+  <xsl:variable name="reflectionSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$reflectionName]/Value" as="node()"/>
+  <xsl:variable name="reflectionValue" select="number(replace($reflectionSrc, ',', '.'))"/>
+
   <box name="construction">
     <box class="vg::Geometry" name="geometry">
-      <port name="numSpans">
+      <port name="orientation">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$orientationName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($orientationSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='NumberOfSpans']/Value"/>
+          <xsl:value-of select="$orientationValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="numSpans">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$numSpansName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($numSpansSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$numSpansValue"/>
         </xsl:attribute>
       </port>
       <port name="spanWidth">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$spanWidthName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($spanWidthSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='SpanSize']/Value"/>
+          <xsl:value-of select="$spanWidthValue"/>
         </xsl:attribute>
       </port>
       <port name="length">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$lengthName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($lengthSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='Length']/Value"/>
+          <xsl:value-of select="$lengthValue"/>
         </xsl:attribute>
       </port>
       <port name="height">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$heightName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($heightSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='TrempelHeight']/Value"/>
+          <xsl:value-of select="$heightValue"/>
         </xsl:attribute>
       </port>
       <port name="roofPitch">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$roofPitchName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($roofPitchSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='RoofPitch']/Value"/>
+          <xsl:value-of select="$roofPitchValue"/>
         </xsl:attribute>
       </port>
       <port name="reflection">
-        <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName='GreenhouseReductionFactorLight']/Value"/>
-        </xsl:call-template>
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectionName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectionSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$reflectionValue"/>
+        </xsl:attribute>
       </port>
     </box>
     <box class="vg::Shelter" name="shelter">
@@ -383,9 +722,15 @@
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="1"/>
         </xsl:call-template>
+        <xsl:call-template name="extract-vent">
+          <xsl:with-param name="position" select="1"/>
+        </xsl:call-template>
       </box>
       <box class="vg::ShelterFace" name="roof2">
         <xsl:call-template name="extract-shelter-face">
+          <xsl:with-param name="position" select="2"/>
+        </xsl:call-template>
+        <xsl:call-template name="extract-vent">
           <xsl:with-param name="position" select="2"/>
         </xsl:call-template>
       </box>
@@ -412,13 +757,37 @@
     </box>
   </box>
   <xsl:comment> *** Indoors *** </xsl:comment>
+  <xsl:variable name="leakageName" select="'leakage'"/>
+  <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
+  <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
+  <xsl:variable name="floorUindoorsName" select="'floor-Uindoors'"/>
+  <xsl:variable name="floorUindoorsSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUindoorsName]/Value" as="node()"/>
+  <xsl:variable name="floorUindoorsValue" select="number(replace($floorUindoorsSrc, ',', '.'))"/>
+  <xsl:variable name="floorUsoilName" select="'floor-Usoil'"/>
+  <xsl:variable name="floorUsoilSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUsoilName]/Value" as="node()"/>
+  <xsl:variable name="floorUsoilValue" select="number(replace($floorUsoilSrc, ',', '.'))"/>
+  <xsl:variable name="floorHeatCapacityName" select="'floor-heatCapacity'"/>
+  <xsl:variable name="floorHeatCapacitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorHeatCapacityName]/Value" as="node()"/>
+  <xsl:variable name="floorHeatCapacityValue" select="number(replace($floorHeatCapacitySrc, ',', '.'))"/>
+  <xsl:variable name="floorEmissivityName" select="'floor-emissivity'"/>
+  <xsl:variable name="floorEmissivitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorEmissivityName]/Value" as="node()"/>
+  <xsl:variable name="floorEmissivityValue" select="number(replace($floorEmissivitySrc, ',', '.'))"/>
+  <xsl:variable name="floorReflectanceName" select="'floor-reflectance'"/>
+  <xsl:variable name="floorReflectanceSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorReflectanceName]/Value" as="node()"/>
+  <xsl:variable name="floorReflectanceValue" select="number(replace($floorReflectanceSrc, ',', '.'))"/>
   <box class="vg::Indoors" name="indoors">
     <box class="vg::Given" name="given">
       <box class="vg::AirFluxGiven" name="airFlux">
         <box class="vg::AirFluxInfiltration" name="infiltration">
           <port name="leakage">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$leakageName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
+            </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="$leakage"/>
+              <xsl:value-of select="$leakageValue"/>
             </xsl:attribute>
           </port>
         </box>      
@@ -426,29 +795,59 @@
       <box class="vg::EnergyFluxSum" name="energyFlux">
         <box class="vg::EnergyFluxFloor" name="floor">
           <port name="Uindoors">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$floorUindoorsName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($floorUindoorsSrc)"/>
+            </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="$floor-Uindoors"/>
+              <xsl:value-of select="$floorUindoorsValue"/>
             </xsl:attribute>
           </port>
           <port name="Usoil">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$floorUsoilName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($floorUsoilSrc)"/>
+            </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="$floor-Usoil"/>
+              <xsl:value-of select="$floorUsoilValue"/>
             </xsl:attribute>
           </port>
           <port name="heatCapacity">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$floorHeatCapacityName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($floorHeatCapacitySrc)"/>
+            </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="$floor-heatCapacity"/>
+              <xsl:value-of select="$floorHeatCapacityValue"/>
             </xsl:attribute>
           </port>
           <port name="emissivity">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$floorEmissivityName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($floorEmissivitySrc)"/>
+            </xsl:attribute>
             <xsl:attribute name="value">
-              <xsl:value-of select="$floor-emissivity"/>
+              <xsl:value-of select="$floorEmissivityValue"/>
             </xsl:attribute>
           </port>
           <box class="vg::FloorRadiationAbsorbed" name="radiationAbsorbed">
             <port name="reflectance">
+              <xsl:attribute name="externalName">
+                <xsl:value-of select="$floorReflectanceName"/>
+              </xsl:attribute>
+              <xsl:attribute name="source">
+                <xsl:value-of select="ecolmod:generateXPath($floorReflectanceSrc)"/>
+              </xsl:attribute>
               <xsl:attribute name="value">
-                <xsl:value-of select="$floor-reflectance"/>
+                <xsl:value-of select="$floorReflectanceValue"/>
               </xsl:attribute>
             </port>
           </box>      
@@ -478,7 +877,7 @@
     <box class="PrioritySignal"  name="rhMax">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxRelHmd'"/>
-        <xsl:with-param name="correction" select="-$rh-max-band"/>
+        <!-- <xsl:with-param name="correction" select="-$rh-max-band"/> -->
       </xsl:call-template>
     </box>
     <box class="PrioritySignal"  name="heatingTemperatureMargin">
@@ -526,12 +925,10 @@
         <xsl:with-param name="climateSetpointName" select="'Cli_AssLightActive'"/>
       </xsl:call-template>
     </box>
-    <box name="rhMaxBand">
-      <newPort name="value">
-        <xsl:attribute name="value">
-          <xsl:value-of select="$rh-max-band"/>
-        </xsl:attribute>
-      </newPort>
+    <box class="PrioritySignal" name="rhMaxBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'rh-max-band'"/>
+      </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="dawnThreshold">
       <xsl:call-template name="extract-setpoints">
@@ -681,7 +1078,7 @@
       <port name="threshold" value="0"/>
       <port name="thresholdBand" value="1"/>
       <port name="minSignal" ref="indoors/temperature[value]"/>
-      <port name="maxSignal">
+      <port name="maxSignal" externalName="None" source="Fixed">
         <xsl:attribute name="value">
           <xsl:value-of select="$heatPipeMaxTemperature"/>
         </xsl:attribute>
@@ -697,8 +1094,8 @@
   <xsl:comment> *** Crop *** </xsl:comment>
   <box class="vg::Crop" name="crop">
     <box name="lai">
-      <newPort name="value" value="1"/>
-      <newPort name="fractionPlantArea" value="1"/>
+      <newPort name="value" externalName="None" source="Fixed" value="1"/>
+      <newPort name="fractionPlantArea" externalName="None" source="Fixed" value="1"/>
     </box>
   </box>
   <box class="vg::Budget" name="budget"/>
@@ -733,6 +1130,11 @@
       <newPort name="setpointCo2Maximum" ref="setpoints/co2/maximum[signal]"/>
       <newPort name="ventsOpening" ref="actuators/vents[value]"/>
       <newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
+      <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
+      <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
+      <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

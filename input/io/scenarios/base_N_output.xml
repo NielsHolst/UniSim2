@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<outputs>
+
+	<output type="plot" name="Io">
+		<parameter name="title" value="Inachis io"/>
+		<trace label="Day" ref="calendar[totalTime]"/>
+		<trace label="Egg" ref="generation(1)/egg[value]"/>
+		<trace label="Larva" ref="generation(1)/larva[value]"/>
+		<trace label="Pupa" ref="generation(1)/pupa[value]"/>
+		<trace label="Adult" ref="generation(1)/adult[value]"/>
+	</output>
+	
+	<output type="plot" name="Exposure">
+		<parameter name="title" value="Bt exposure (log10)"/>
+		<parameter name="logy" value="yes"/>
+		<parameter name="ymin" value="-2"/>
+		<trace label="Day" ref="calendar[totalTime]"/>
+		<trace label="Larva" ref="generation(1)/larva[value]"/>
+		<trace label="Pollen density" ref="pollen[density]"/>
+	</output>
+		
+	<output type="plot" name="Response">
+		<parameter name="title" value="Population response"/>
+		<parameter name="ymax" value="1"/>
+		<trace label="Day" ref="calendar[totalTime]"/>
+		<trace label="Hibernating" ref="hibernatingAdult[value]"/>
+		<trace label="Completed larvae" ref="generation(1)/pupa[inflowTotal]"/>
+	</output>
+
+</outputs>

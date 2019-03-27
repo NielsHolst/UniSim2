@@ -16,6 +16,7 @@ SensitivityAnalysisSimple::SensitivityAnalysisSimple(QString name, QObject *pare
 {
     help("runs a simple sensitivity analysis");
     Input(method).help("Not used");
+    Input(simIterations).imports("/*[iterations]");
 }
 
 void SensitivityAnalysisSimple::reset() {
@@ -27,11 +28,11 @@ void SensitivityAnalysisSimple::reset() {
 }
 
 int SensitivityAnalysisSimple::numberOfIterations() const {
-    return sampleSize;
+    return simIterations;
 }
 
 int SensitivityAnalysisSimple::numberOfSamples() const {
-    return sampleSize;
+    return simIterations;
 }
 
 }

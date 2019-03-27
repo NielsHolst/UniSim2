@@ -49,6 +49,7 @@ SurfaceRadiation& SurfaceRadiation::asCover(double transmissivity, double direct
     directLight.inner.setRef(directLight.tra);
     lw.outer.setRef(lw.tra);
     lw.inner.setRef(lw.tra);
+    check();
     return *this;
 }
 
@@ -67,6 +68,7 @@ SurfaceRadiation& SurfaceRadiation::asScreen(double transmissivity, double absor
     light.inner.setAbs(light.tra);
 
     directLight = light;
+    check();
     return *this;
 }
 
@@ -92,6 +94,24 @@ void SurfaceRadiation::Spectrum::Direction::setAbs(double tra) {
     Q_ASSERT(abs>=0.);
 }
 
+void SurfaceRadiation::Spectrum::Direction::check(double tra, QString name) {
+    QString context = "SurfaceRadiation::Spectrum::Direction " + name;
+    double sum = tra + abs + ref;
+    if (TestNum::gt(sum, 1.))
+        ThrowException("Light t+a+r>1 in " + context).value(sum);
+    if (TestNum::gt(tra, 1.) || TestNum::ltZero(tra))
+        ThrowException("Light transmission not inside [0;1] " + context).value(tra);
+    if (TestNum::gt(abs, 1.) || TestNum::ltZero(abs))
+        ThrowException("Light absorption not inside [0;1] " + context).value(abs);
+    if (TestNum::gt(ref, 1.) || TestNum::ltZero(ref))
+        ThrowException("Light reflection not inside [0;1] " + context).value(ref);
+}
+
+void SurfaceRadiation::Spectrum::check(QString name) {
+    inner.check(tra, name+".inner");
+    outer.check(tra, name+".outer");
+}
+
 //! Obtained combined characteristics of this and another Spectrum object
 SurfaceRadiation::Spectrum& SurfaceRadiation::Spectrum::operator*=(const SurfaceRadiation::Spectrum &s2) {
     double k = 1. - inner.ref*s2.outer.ref,
@@ -101,7 +121,7 @@ SurfaceRadiation::Spectrum& SurfaceRadiation::Spectrum::operator*=(const Surface
 
            r12_inner = s2.inner.ref + sqr(s2.tra)*inner.ref,
            a12_inner = 1. - r12_inner - t12;
-    if (k==0) {
+    if (TestNum::eqZero(k)) {
         ThrowException("Two facing surfaces cannot both have 100% reflection");
     }
     tra = t12;
@@ -121,8 +141,10 @@ SurfaceRadiation& SurfaceRadiation::operator*=(const SurfaceRadiation &s2) {
 }
 
 //! Check that the object holds valid characteristics
-bool SurfaceRadiation::isOk() {
-    return !( std::isnan(lw.inner.abs) || std::isnan(lw.inner.ref) );
+void SurfaceRadiation::check() {
+    light.check("light");
+    directLight.check("directLight");
+    lw.check("kw");
 }
 
 } //namespace

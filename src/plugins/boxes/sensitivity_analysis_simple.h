@@ -13,6 +13,7 @@ public:
 private:
     // Inputs
     QString method;
+    int simIterations;
     // Methods
     int numberOfIterations() const;
     int numberOfSamples() const;

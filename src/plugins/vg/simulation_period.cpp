@@ -18,15 +18,15 @@ SimulationPeriod::SimulationPeriod(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("help defining a time interval for the simulation");
-    Input(weatherFirstDateTime).imports("outdoors/records[firstDateTime]");
-    Input(beginDate).help("Simulation start date");
-    Input(endDate).help("Simulation end date");
-    Input(beginTime).equals(QTime(0,0,0)).help("Simulation start time");
-    Input(endTime).equals(QTime(0,0,0)).help("Simulation end time");
-    Input(timeStep).equals(2).help("Time step length");
-    Input(timeUnit).equals('m').help("Time step unit");
-    Output(steps).help("Number of steps in simulation");
-    Output(beginDateTime).help("Date and time to begin simulation");
+    Input(weatherFirstDateTime).imports("outdoors/records[firstDateTime]").unit("DateTime");
+    Input(beginDate).help("Simulation start date").unit("Date");
+    Input(endDate).help("Simulation end date").unit("Date");
+    Input(beginTime).equals(QTime(0,0,0)).help("Simulation start time").unit("Time");
+    Input(endTime).equals(QTime(0,0,0)).help("Simulation end time").unit("Time");
+    Input(timeStep).equals(2).help("Time step length").unit("-");
+    Input(timeUnit).equals('m').help("Time step unit").unit("y|d|h|m|s");
+    Output(steps).help("Number of steps in simulation").unit("-");
+    Output(beginDateTime).help("Date and time to begin simulation").unit("DateTime");
 }
 
 void SimulationPeriod::reset() {

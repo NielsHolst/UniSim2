@@ -24,15 +24,15 @@ PidController::PidController(QString name, QObject *parent)
     Input(sensedValue).help("The sensed value");
     Input(desiredValue).help("The desired value (setpoint)");
     Input(controlVariableReset).help("The initial value of the control variable at reset");
-    Input(Kprop).equals(0.5).help("The proportional gain (per min)");
-    Input(Kint).equals(0.).help("The integral gain (per min)");
-    Input(Kderiv).equals(0.).help("The derivative gain (per min)");
+    Input(Kprop).equals(0.5).help("The proportional gain").unit("/min");
+    Input(Kint).equals(0.).help("The integral gain").unit("/min");
+    Input(Kderiv).equals(0.).help("The derivative gain").unit("/min");
 
     Input(minimum).equals(-doubleMax).help("Minimum allowed value of control variable");
     Input(maximum).equals(doubleMax).help("Maximum allowed value of control variable");
-    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate of change in control variable (per min)");
-    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate of change in control variable (per min)");
-    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate of change in control variable").unit("/min");
+    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate of change in control variable").unit("/min");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
     Output(controlVariable).help("The control variable; tends to zero when all three error terms summed tend to zero");
     Output(controlVariableSlope).help("Slope of change in control variable (per min)");

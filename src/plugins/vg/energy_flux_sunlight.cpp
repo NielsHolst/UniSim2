@@ -21,11 +21,11 @@ EnergyFluxSunlight::EnergyFluxSunlight(QString name, QObject *parent)
     help("computes energy flux from unabsorbed indoors light");
     // This is the amount of light energy (mostly sunlight) assumed to be turned into
     // heating of the air immediately
-    Input(unabsorbedRadiation).imports("radiationAbsorbed[reflected]");
+    Input(unabsorbedRadiation).imports("radiationAbsorbed[reflected]").unit("W/m2");
 }
 
 void EnergyFluxSunlight::update() {
-    value = unabsorbedRadiation;  // W/m2
+    value = unabsorbedRadiation;
 }
 
 } //namespace

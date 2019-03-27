@@ -104,7 +104,7 @@ QSet<QString> SaveGrammarBase::collectPortNames(const Box *root) {
 }
 
 QStringList SaveGrammarBase::attributeNames() {
-    return Port::attributes();
+    return QStringList(); // unused
 }
 
 QStringList SaveGrammarBase::transformNames() {

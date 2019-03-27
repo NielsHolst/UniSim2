@@ -19,11 +19,11 @@ EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("models energy flux carried by air from outdoors to indoors");
-    Input(airFlux).equals(0).help("Rate of air exchange between outdoors and indoors [m3/m3/h]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+    Input(airFlux).equals(0).help("Rate of air exchange between outdoors and indoors").unit("m3/m3/h");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(timeStepSecs).imports("calendar[timeStepSecs]").unit("s");
 }
 
 inline double y(double y0, double z, double v, double dt) {

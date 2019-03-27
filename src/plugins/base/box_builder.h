@@ -56,13 +56,14 @@ public:
     const Port* currentPort() const;
     const Distribution* currentDistribution() const;
     enum AmendOption{AmendFamily, AmendDescendants, AmendNone};
-    Box* content(AmendOption amendOption=AmendFamily);
+    Box* content(AmendOption amendOption=AmendFamily, bool allowException=true);
 private:
     // Data
     bool _hasParent;
     Box *_content, *_currentBox;
     Port *_currentPort;
     Distribution *_currentDistribution;
+    int _exceptionCount;
     QStack<Box*> _stack;
 };
 

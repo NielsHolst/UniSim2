@@ -19,7 +19,7 @@ Crop::Crop(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("holds crop parameters");
-    Input(density).equals(3.9);
+    Input(density).equals(3.9).unit("/m2");
 }
 
 void Crop::amend() {

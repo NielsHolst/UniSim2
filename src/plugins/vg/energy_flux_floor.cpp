@@ -18,15 +18,15 @@ EnergyFluxFloor::EnergyFluxFloor(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("models floor temperature and energy flux to greenhouse");
-    Input(Uindoors).equals(7.5);
-    Input(Usoil).equals(7.5);
-    Input(heatCapacity).equals(42000.).help("Heat capacity of the floor [J/m2/K]");
-    Input(emissivity).equals(0.85).help("Emissivity of thermal radiation from the floor [0;1]");  // concrete
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(soilTemperature).imports("outdoors[soilTemperature]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(temperature).help("Floor temperature [oC]");
+    Input(Uindoors).equals(7.5).unit("W/m2/K");
+    Input(Usoil).equals(7.5).unit("W/m2/K");
+    Input(heatCapacity).equals(42000.).help("Heat capacity of the floor").unit("J/m2/K");
+    Input(emissivity).equals(0.85).help("Emissivity of thermal radiation from the floor").unit("[0;1]");  // concrete
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(soilTemperature).imports("outdoors[soilTemperature]").unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
+    Output(temperature).help("Floor temperature").unit("oC");
 }
 
 void EnergyFluxFloor::reset() {

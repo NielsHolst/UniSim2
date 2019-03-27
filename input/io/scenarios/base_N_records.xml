@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<simulation name="simulation">
+
+	<model name="weather" type="UniSim::Records">
+		<parameter name="fileName" value="Westerloge - Bad Hersfeld.txt"/>
+		<parameter name="randomizeInitialYear" value="yes"/>
+	</model>
+	
+	<model name="pollen" type="EcoTox::Pollen">
+		<model name="onset" type="EcoTox::PollenOnsetDateFromTrapObs">
+			<parameter name="obsFileName" ref="weather[fileName]"/>
+		</model>
+
+		<parameter name="onsetDate" ref="./onset[date]"/>
+		<parameter name="currentDate" ref="calendar[date]"/>
+		<parameter name="distance" value="0"/>
+		<parameter name="duration" value="14"/>
+		<parameter name="Npeak" ref="random/Npeak[value]"/>
+		<parameter name="lossRate" ref="random/lossRate[value]"/>
+	</model>
+
+</simulation>

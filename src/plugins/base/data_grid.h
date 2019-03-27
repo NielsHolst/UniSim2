@@ -22,7 +22,7 @@ namespace base {
 class DataGrid : public QObject
 {
 public:
-    DataGrid(QString filePath, QObject *parent = 0);
+    DataGrid(QString filePath, QObject *parent = nullptr);
 
     typedef QMapIterator<int,QString> KeySubsetIterator; // <column number, key value>
     typedef QMap<int,QString> KeySubset; // <column number, key value>

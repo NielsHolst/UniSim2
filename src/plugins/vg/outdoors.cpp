@@ -20,19 +20,19 @@ Outdoors::Outdoors(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("delivers readings of ourdoors weather");
-    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy (micromole/J)");
-    Input(co2).equals(400.).help("Outdoors CO2 concentration [ppm]");
-    Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature [oC]");
-    Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity [0;100]");
-    Input(radiation).imports("./records[GlobRad]").help("Total sunlight irradiation [W/m2]");
-    Input(diffuseRadiation).importsMaybe("./records[DifRad]").help("Diffuse component of sunlight irradiation [W/m2]");
-    Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed [m/s]");
-    Input(skyTemperature).importsMaybe("./records[Tsky]").help("Sky temperature [oC]");
-    Output(directRadiation).help("Direct component of sunlight irradiation [W/m2]");
-    Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation [0;1]");
-    Output(ah).help("Outdoors absolute humidity [kg/m3]");
-    Output(sh).help("Outdoors specific humidity [Kg/kg]");
-    Output(soilTemperature).imports("./soilTemperature[value]").help("Outdoors soil temperature [oC]");
+    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy").unit("micromole/J");
+    Input(co2).equals(400.).help("Outdoors CO2 concentration").unit("ppm");
+    Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature").unit("oC");
+    Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity").unit("[0;100]");
+    Input(radiation).imports("./records[GlobRad]").help("Total sunlight irradiation").unit("W/m2");
+    Input(diffuseRadiation).importsMaybe("./records[DifRad]").help("Diffuse component of sunlight irradiation").unit("W/m2");
+    Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed").unit("m/s");
+    Input(skyTemperature).importsMaybe("./records[Tsky]").help("Sky temperature").unit("oC");
+    Output(directRadiation).help("Direct component of sunlight irradiation").unit("W/m2");
+    Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation").unit("[0;1]");
+    Output(ah).help("Outdoors absolute humidity").unit("kg/m3");
+    Output(sh).help("Outdoors specific humidity").unit("kg/kg");
+    Output(soilTemperature).imports("./soilTemperature[value]").unit("oC");
 }
 
 void Outdoors::amend() {
@@ -41,6 +41,7 @@ void Outdoors::amend() {
         builder.
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").
+            port("ignoreYear").equals(true).
         endbox();
     if (!findMaybeOne<Box>("./soilTemperature"))
         builder.

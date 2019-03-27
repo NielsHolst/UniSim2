@@ -8,7 +8,7 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += release
+CONFIG += debug
 # AUTO-CONFIG-END
 
 # Set suffix 'd' for debug version
@@ -20,7 +20,7 @@ else {
 }
 
 # What we are building
-CONFIG += c++11
+CONFIG += c++17
 QT += core widgets
 
 # Turn warnings off in debug mode
@@ -28,8 +28,14 @@ QT += core widgets
 #  CONFIG += warn_off
 #}
 
+# Show warning when using deprecated Qt features
+DEFINES += QT_DEPRECATED_WARNINGS
+
 # Compiler options add-ons
 QMAKE_CXXFLAGS += -Wall -Wextra
+
+# Compiler options to silence warnings
+QMAKE_CXXFLAGS += -Wno-padded
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
@@ -44,7 +50,7 @@ macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
 !macx:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
 # Compiler options to speed up code
-QMAKE_CXXFLAGS += -ffast-math
+QMAKE_CXXFLAGS += -ffast-math -O3
 
 # Compiler flags for gcc / gdb version incompatibility
 # https://stackoverflow.com/questions/16611678/how-to-make-the-locals-and-expressions-debugging-window-operational-with-gcc-4

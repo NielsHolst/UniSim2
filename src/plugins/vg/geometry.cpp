@@ -19,26 +19,27 @@ Geometry::Geometry(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("defines the greenhouse geometry");
-    Input(numSpans).equals(1).help("Number of spans");
-    Input(spanWidth).equals(40.).help("Width of a span (m)");
-    Input(length).equals(100.).help("Length of side wall(m)");
-    Input(height).equals(2.5).help("Wall height (m)");
-    Input(roofPitch).equals(26.).help("Pitch (slope) of roof (degrees)");
-    Input(reflection).equals(0.1).help("Outer reflection of greenhouse construction (excl. cover) [0;1]");
-    Input(horizontalScreenState).imports("construction/shelter[horizontalScreenState]");
+    Input(orientation).equals(90.).help("Compass direction of greenhouse long axis").unit("[0;360]");
+    Input(numSpans).equals(1).help("Number of spans").unit("-");;
+    Input(spanWidth).equals(40.).help("Width of a span").unit("m");
+    Input(length).equals(100.).help("Length of side wall").unit("m");
+    Input(height).equals(2.5).help("Wall height").unit("m");
+    Input(roofPitch).equals(26.).help("Pitch (slope) of roof").unit("[0;180]");
+    Input(reflection).equals(0.1).help("Outer reflection of greenhouse construction (excl. cover").unit("[0;1]");
+    Input(horizontalScreenState).imports("construction/shelter[horizontalScreenState]").unit("[0;1]");
 
-    Output(width).help("Total width of greenhouse across spans (m)");
-    Output(groundArea).help("Total area covered by greenhouse (m2)");
-    Output(roofArea).help("Total area of greenhouse roof (m2)");
-    Output(sideWallsArea).help("Total area of side walls (m2)");
-    Output(endWallsArea).help("Total area of end walls (m2)");
-    Output(gablesArea).help("Total area of gables (m2)");
-    Output(coverArea).help("Total area of greenhouse cover (m2)");
-    Output(coverPerGroundArea).help("Area to ground cover ratio (m2/m2)");
-    Output(indoorsVolumeTotal).help("Total greenhouse volume");
+    Output(width).help("Total width of greenhouse across spans").unit("m");
+    Output(groundArea).help("Total area covered by greenhouse").unit("m2");
+    Output(roofArea).help("Total area of greenhouse roof").unit("m2");
+    Output(sideWallsArea).help("Total area of side walls").unit("m2");
+    Output(endWallsArea).help("Total area of end walls").unit("m2");
+    Output(gablesArea).help("Total area of gables").unit("m2");
+    Output(coverArea).help("Total area of greenhouse cover").unit("m2");
+    Output(coverPerGroundArea).help("Area to ground cover ratio").unit("m2/m2");
+    Output(indoorsVolumeTotal).help("Total greenhouse volume").unit("m3");
     Output(indoorsVolume).help("Total greenhouse volume;"
-                               "roof volume included in proportion to horizontal screen state (m3)");
-    Output(indoorsAverageHeight).help("Aveage height computed from indoorsVolume/groundArea");
+                               "roof volume included in proportion to horizontal screen state").unit("m3");
+    Output(indoorsAverageHeight).help("Average height computed from indoorsVolume/groundArea").unit("m");
 }
 
 void Geometry::reset() {

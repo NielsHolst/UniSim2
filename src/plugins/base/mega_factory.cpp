@@ -98,10 +98,14 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
 }
 
 QStringList MegaFactory::qualifiedClassNames(QString className) {
-    QList<FactoryPlugIn*> factories = me()->productIndex.values(className);
     QStringList result;
-    for (auto factory : factories)
-        result << (factory->id() + "::" + className);
+    if (className.contains("::"))
+        result << className;
+    else {
+        QList<FactoryPlugIn*> factories = me()->productIndex.values(className);
+        for (auto factory : factories)
+            result << (factory->id() + "::" + className);
+    }
     return result;
 }
 

@@ -22,14 +22,14 @@ Shelter::Shelter(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
     help("models the greenhouse sjeler");
-    Input(groundArea).imports("geometry[groundArea]");
-    Output(heatCapacityCoversPerGround).help("Capacity of all covers [J/kg/ground m2]");
-    Output(heatCapacityScreensPerGround).help("Capacity of all screens [J/kg/ground m2]");
-    Output(screensEffectiveArea).help("Effective (i.e., drawn) area of screens [m2]");
-    Output(screensPerGroundArea).help("Effective screen area per ground area [m2/m2]");
-    Output(screensMaxState).help("Max. state of all screens [0;1]");
-    Output(horizontalScreenState).help("State of any horizontal screens [0;1]");
-    Output(hasHorizontalScreen).help("Has the greenhouse got horizontal screens?");
+    Input(groundArea).imports("geometry[groundArea]").unit("m2");
+    Output(heatCapacityCoversPerGround).help("Capacity of all covers").unit("J/ground m2");
+    Output(heatCapacityScreensPerGround).help("Capacity of all screens").unit("J/ground m2");
+    Output(screensEffectiveArea).help("Effective (i.e., drawn) area of screens").unit("m2");
+    Output(screensPerGroundArea).help("Effective screen area per ground area").unit("m2/m2");
+    Output(screensMaxState).help("Max. state of all screens").unit("[0;1]");
+    Output(horizontalScreenState).help("State of any horizontal screens [0;1]").unit("[0;1]");
+    Output(hasHorizontalScreen).help("Has the greenhouse got horizontal screens?").unit("y|n");
 //    Output(ventsEffectiveArea).imports("*/vent[effectiveArea]").transform(Sum)
 //            .help("Effective area of vents [m2]");
 //    Output(ventsMaxEffectiveArea).imports("*/vent[maxEffectiveArea]").transform(Sum)

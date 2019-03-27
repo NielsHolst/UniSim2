@@ -20,7 +20,7 @@ QMap<QString, Path::Directive> Path::_directives;
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
 Path::Path(const QObject *context)
-    : _originalContext(context), _caller(0)
+    : _originalContext(context), _caller(nullptr)
 {
     initDirectives();
 }
@@ -58,10 +58,10 @@ void Path::initDirectives() {
 Path::QObjects Path::_resolve(int number, const QObject *caller) {
     _caller = caller;
     _candidates.clear();
-    _current.normalisedContext = 0;
+    _current.normalisedContext = nullptr;
     for (int i = 0; i <_originalPaths.size(); ++i) {
         normalise(i);
-        if (_current.normalisedContext == 0)
+        if (_current.normalisedContext == nullptr)
             ThrowException("Path misses a context object").value(_current.originalPath).context(_caller);
         QObjects nextCandidates = (QObjects() << _current.normalisedContext);
         addCandidates(_current.normalisedPath, nextCandidates);
@@ -289,7 +289,7 @@ namespace {
     const QObject* preceedingSibling(const QObject *p) {
         Q_ASSERT(p);
         const QObject *parent = p->parent();
-        const QObject *sib{0};
+        const QObject *sib{nullptr};
         if (parent) {
             for (const QObject *child : parent->children()) {
                 if (child == p) break;
@@ -302,14 +302,14 @@ namespace {
     const QObject* followingSibling(const QObject *p) {
         Q_ASSERT(p);
         const QObject *parent = p->parent();
-        const QObject *sib{0};
+        const QObject *sib{nullptr};
         if (parent) {
             for (const QObject *child : parent->children()) {
                 if (sib == p) return child;
                 sib = child;
             }
         }
-        return 0;
+        return nullptr;
     }
 
     Path::QObjects filter(Path::QObjects candidates, QString box, QString type) {
@@ -364,7 +364,7 @@ void Path::addCandidates(QString path, QObjects &candidates) {
             break;
         case SelfOrDescendants:
             newCandidates << filter(candidate, box, type);
-            // no break
+            [[fallthrough]];
         case Descendants:
             newCandidates << filter(candidate->findChildren<const QObject*>(findBoxName, Qt::FindChildrenRecursively), box, type);
             break;

@@ -3,7 +3,8 @@
 #include "exception.h"
 #include "distribution.h"
 #include "general.h"
-#include "random_generator.h"
+
+#include <iostream>
 
 namespace base {
 
@@ -56,6 +57,7 @@ void Distribution::arguments(QStringList args) {
 }
 
 void Distribution::initialize(int numSamples) {
+    std::cout << numSamples << " Distribution::initialize\n";
     if (numSamples <= 0)
         ThrowException("Number of samples must be > 0").value(numSamples).context(this);
     QPair<double,double> b = bounds();
@@ -73,12 +75,14 @@ void Distribution::initialize(int numSamples) {
 
 double Distribution::draw() {
     int n = _strata.size();
+    std::cout << n << " " << _ixNext << "Distribution::draw\n";
     if (!canDraw())
         Exception("Draw past size of distribution").value1(_ixNext).value2(n).context(this);
     int stratum = _strata.at(_ixNext);
     if (n > 1)
         ++_ixNext;
     double y = _y0 + _dy*(stratum + (*variate)());
+    std::cout << "Z Distribution::draw\n";
     return inverse(y);
 }
 

@@ -10,7 +10,7 @@ namespace boxes {
 class RandomUniform : public RandomBase<double>
 {
 public: 
-    RandomUniform(QString name, QObject *parent=0);
+    RandomUniform(QString name, QObject *parent=nullptr);
     ~RandomUniform();
     void createGenerator();
 private:

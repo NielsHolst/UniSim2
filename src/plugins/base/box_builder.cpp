@@ -14,7 +14,8 @@ namespace base {
 
 BoxBuilder::BoxBuilder(Box *parent)
     : _hasParent(parent!=nullptr),
-      _content(nullptr), _currentBox(nullptr), _currentPort(nullptr), _currentDistribution(nullptr)
+      _content(nullptr), _currentBox(nullptr), _currentPort(nullptr), _currentDistribution(nullptr),
+      _exceptionCount(Exception::count())
 {
     if (_hasParent) {
         _content = _currentBox = parent;
@@ -26,7 +27,7 @@ BoxBuilder::BoxBuilder(Box *parent)
 
 BoxBuilder::~BoxBuilder() {
     if (_content && _hasParent)
-        content(BoxBuilder::AmendDescendants);
+        content(BoxBuilder::AmendDescendants, _exceptionCount==Exception::count());
 }
 
 void BoxBuilder::clear() {
@@ -102,7 +103,7 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
     QString className = items.first();
     items.removeAt(0);
 
-    _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort); //->boxParent());
+    _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort);
     _currentDistribution->arguments(items);
     _currentDistribution->port(_currentPort);
 
@@ -188,10 +189,10 @@ const Port* BoxBuilder::currentPort() const {
     return _currentPort;
 }
 
-Box* BoxBuilder::content(AmendOption amendOption) {
+Box* BoxBuilder::content(AmendOption amendOption, bool allowException) {
     if (_hasParent) {
         endbox();
-        if (!_stack.isEmpty())
+        if (allowException && !_stack.isEmpty())
             ThrowException("BoxBuilder: unclosed box(es) at end")
                     .hint("Possibly missing endbox() call").value(_stack.size())
                     .context(_stack.top());

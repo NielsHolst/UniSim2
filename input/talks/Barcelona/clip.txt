@@ -1,0 +1,6 @@
+keepPages = FALSE; keepVariables = FALSE; box_script_folder = "C:/Users/au152367/Documents/QDev/UniSim2/input/talks/Barcelona"
+source("C:/Users/au152367/Documents/QDev/UniSim2/input/scripts/begin.R")
+source("C:/Users/au152367/Documents/QDev/UniSim2/input/talks/Barcelona/copied_output/tri-trophic_model_Sobol_0001.R")
+output_file_name = "C:/Users/au152367/Documents/QDev/UniSim2/input/talks/Barcelona/copied_output/tri-trophic_model_Sobol_0001.txt"
+sobol_k = 11; sobol_N = 200
+source("C:/Users/au152367/Documents/QDev/UniSim2/input/scripts/end-sobol.R")

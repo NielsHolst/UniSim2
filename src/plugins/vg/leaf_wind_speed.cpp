@@ -19,12 +19,12 @@ LeafWindSpeed::LeafWindSpeed(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes leaf wind speed");
-    Input(k).help("Extinction coefficient for wind down throught the canopy");
-    Input(indoorsWindSpeedMinimum).equals(0.025).help("Minimum indoors wind speed [m/s]");
-    Input(indoorsWindSpeed).imports("indoors/windSpeed[value]");
-    Input(xGauss).imports("..[xGaussUpperside]");
-    Input(lai).imports("crop/lai[value]");
-    Output(value).help("Wind speed at leaf level [m/s]");
+    Input(k).help("Extinction coefficient for wind down throught the canopy").unit("m2/m2");
+    Input(indoorsWindSpeedMinimum).equals(0.025).help("Minimum indoors wind speed [m/s]").unit("m/s");
+    Input(indoorsWindSpeed).imports("indoors/windSpeed[value]").unit("m/s");
+    Input(xGauss).imports("..[xGaussUpperside]").unit("[0;1]");
+    Input(lai).imports("crop/lai[value]").unit("m2/m2");
+    Output(value).help("Wind speed at leaf level").unit("m/s");
 }
 
 void LeafWindSpeed::reset() {

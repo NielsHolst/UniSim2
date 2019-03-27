@@ -17,14 +17,14 @@ DaylightLevel::DaylightLevel(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes if its day or night based on sunlight intensity");
-    Input(dawnThreshold).equals(0.2).help("Day begins above this sunlight intensity [W/m2]");
-    Input(duskThreshold).equals(0.3).help("Night begins below this sunlight intensity [W/m2]");
-    Input(outdoorsRadiation).imports("outdoors[radiation]");
-    Input(time).imports("calendar[time]");
-    Output(isDay).help("Is it day time?");
-    Output(isNight).help("Is it night time?");
-    Output(day).help("Day value [0 or 1]");
-    Output(night).help("Day value [0 or 1]");
+    Input(dawnThreshold).equals(0.2).help("Day begins above this sunlight intensity [W/m2]").unit("W/m2");
+    Input(duskThreshold).equals(0.3).help("Night begins below this sunlight intensity [W/m2]").unit("W/m2");
+    Input(outdoorsRadiation).imports("outdoors[radiation]").unit("W/m2");
+    Input(time).imports("calendar[time]").unit("Time");
+    Output(isDay).help("Is it day time?").unit("y|n");
+    Output(isNight).help("Is it night time?").unit("y|n");
+    Output(day).help("Day value").unit("0|1");
+    Output(night).help("Night value").unit("0|1");
 }
 
 void DaylightLevel::reset() {

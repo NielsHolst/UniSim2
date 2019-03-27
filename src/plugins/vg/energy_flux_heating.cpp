@@ -20,22 +20,22 @@ PUBLISH(EnergyFluxHeating)
 EnergyFluxHeating::EnergyFluxHeating(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
-    Input(density).imports("actuators/heating/pipes/*[density]");
-    Input(diameter).imports("actuators/heating/pipes/*[diameter]");
-    Input(flowRate).imports("actuators/heating/pipes/*[flowRate]");
-    Input(a).imports("actuators/heating/pipes/*[a]");
-    Input(b).imports("actuators/heating/pipes/*[b]");
+    Input(density).imports("actuators/heating/pipes/*[density]").unit("m/m2");
+    Input(diameter).imports("actuators/heating/pipes/*[diameter]").unit("mm");
+    Input(flowRate).imports("actuators/heating/pipes/*[flowRate]").unit("L/s");
+    Input(a).imports("actuators/heating/pipes/*[a]").unit("W/m/mm");
+    Input(b).imports("actuators/heating/pipes/*[b]").unit("!=1");
 
-    Input(inflowTemperature).imports("actuators/heating[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(groundArea).imports("geometry[groundArea]");
+    Input(inflowTemperature).imports("actuators/heating[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(groundArea).imports("geometry[groundArea]").unit("m2");
 
-    Output(pipeLength).help("Total length of each pipe [m]");
-    Output(pipeVolume).help("Total volume of each pipe [m3]");
-    Output(transitTime).help("Average transit time of water in each pipe [s]");
-    Output(outflowTemperature).help("Water temperature at exit from each pipe [oC]");
-    Output(temperatureDrop).help("Drop in water temperature from entry to exit in each pipe [oC]");
-    Output(energyFlux).help("Energy flux from each pipe [W/m2]");
+    Output(pipeLength).help("Total length of each pipe").unit("m");
+    Output(pipeVolume).help("Total volume of each pipe").unit("m3");
+    Output(transitTime).help("Average transit time of water in each pipe").unit("s");
+    Output(outflowTemperature).help("Water temperature at exit from each pipe").unit("oC");
+    Output(temperatureDrop).help("Drop in water temperature from entry to exit in each pipe").unit("oC");
+    Output(energyFlux).help("Energy flux from each pipe").unit("W/m2");
 
 }
 

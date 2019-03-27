@@ -42,28 +42,28 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes light capture and photosynthetic rate");
-    Input(sunlightPhotonCoef).imports("outdoors[sunlightPhotonCoef]");
-    Input(parDiffuse).imports("indoors/light[parDiffuse]");
-    Input(parDirect).imports("indoors/light[parDirect]");
-    Input(kDiffuse).imports("crop/radiation[kDiffuse]");
-    Input(kDirect).imports("crop/radiation[kDirect]");
-    Input(kDirectDirect).imports("crop/radiation[kDirectDirect]");
-    Input(scattering).imports("crop/radiation[scattering]");
-    Input(diffuseReflectivity).imports("crop/radiation[diffuseReflectivity]");
-    Input(directReflectivity).imports("crop/radiation[directReflectivity]");
-    Input(lai).imports("crop/lai[value]");
-    Input(sinb).imports("calendar[sinb]");
+    Input(sunlightPhotonCoef).imports("outdoors[sunlightPhotonCoef]").unit("micromole/J");
+    Input(parDiffuse).imports("indoors/light[parDiffuse]").unit("W/m2");
+    Input(parDirect).imports("indoors/light[parDirect]").unit("W/m2");
+    Input(kDiffuse).imports("crop/radiation[kDiffuse]").unit("m2/m2");
+    Input(kDirect).imports("crop/radiation[kDirect]").unit("m2/m2");
+    Input(kDirectDirect).imports("crop/radiation[kDirectDirect]").unit("m2/m2");
+    Input(scattering).imports("crop/radiation[scattering]").unit("[0;1]");
+    Input(diffuseReflectivity).imports("crop/radiation[diffuseReflectivity]").unit("[0;1]");
+    Input(directReflectivity).imports("crop/radiation[directReflectivity]").unit("[0;1]");
+    Input(lai).imports("crop/lai[value]").unit("m2/m2");
+    Input(sinb).imports("calendar[sinb]").unit("[0;90]");
 
-    Input(LUE).imports("./lightResponse[LUE]");
-    Input(Pgmax).imports("./lightResponse[Pgmax]");
-    Input(Rd).imports("./lightResponse[Rd]");
-    Input(xGauss).imports("..[xGaussUpperside]");
-    Input(wGauss).imports("..[wGaussUpperside]");
+    Input(LUE).imports("./lightResponse[LUE]").unit("mg CO2/J");
+    Input(Pgmax).imports("./lightResponse[Pgmax]").unit("mg CO2/leaf m2/s");
+    Input(Rd).imports("./lightResponse[Rd]").unit("mg CO2/leaf m2/s");
+    Input(xGauss).imports("..[xGaussUpperside]").unit("[0;1]");
+    Input(wGauss).imports("..[wGaussUpperside]").unit("[0;1]");
 
-    Output(absorptivity).help("Proportion of indoors light captured by this leaf layer [0;1]");
-    Output(parAbsorbed).help("Proportion of indoors PAR captured by this leaf layer [0;1]");
-    Output(Pn).help("Net assimilation rate [g CO2/ground m2/h]");
-    Output(Pg).help("Gross assimilation rate [g CO2/ground m2/h]");
+    Output(absorptivity).help("Proportion of indoors light captured by this leaf layer").unit("[0;1]");
+    Output(parAbsorbed).help("Proportion of indoors PAR captured by this leaf layer").unit("[0;1]");
+    Output(Pn).help("Net assimilation rate").unit("g CO2/ground m2/h");
+    Output(Pg).help("Gross assimilation rate").unit("g CO2/ground m2/h");
 }
 
 void LeafPhotosynthesis::amend() {

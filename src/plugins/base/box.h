@@ -28,13 +28,16 @@ public:
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
+
     Port* peakPort(QString name);
     const Port* peakPort(QString name) const;
+
     Port* port(QString name);
     const Port* port(QString name) const;
 
     void help(QString s);
     QString help() const;
+
     void sideEffects(QString s);
     QString sideEffects() const;
 

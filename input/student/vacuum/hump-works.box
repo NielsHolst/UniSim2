@@ -1,0 +1,26 @@
+Simulation sim {
+  .steps = 170 
+  .silent = TRUE
+  Calendar calendar {
+    .initialDateTime = /1/10/2016
+  }
+  Records weather {
+    .fileName = "Oakville.txt"
+  }
+  Hump immigration {
+    .x = calendar[dayOfYear]
+    .x0 = 45
+    .x1 = 69 
+    .ymin = 0
+    .ymax = 2.2
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (calendar[dayOfYear] immigration[value])
+      }
+    }
+  }
+}
+

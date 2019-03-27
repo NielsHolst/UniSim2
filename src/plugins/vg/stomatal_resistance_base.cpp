@@ -16,8 +16,8 @@ StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
 {
     Class(StomatalResistanceBase);
     help("base class for computing stomatal resistance");
-    Output(rsH2O).help("Stomatal resistance against water vapour [s/m]");
-    Output(rsCo2).help("Stomatal resistance against CO2 [s/m]");
+    Output(rsH2O).help("Stomatal resistance against water vapour").unit("s/m");
+    Output(rsCo2).help("Stomatal resistance against CO2").unit("s/m");
 }
 
 void StomatalResistanceBase::reset() {

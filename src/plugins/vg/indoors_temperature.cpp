@@ -18,12 +18,12 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("models indoors temperature");
-    Input(resetValue).equals(20.).help("Indoors temperature when model is reset [oC]");
-    Input(energyFlux).help("Energy flux dissipated into greenhouse air [W/m2]");
-    Input(baseTemperature).imports(".[value]");
-    Input(height).imports("geometry[indoorsAverageHeight]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(value).help("Indoors temperature [oC]");
+    Input(resetValue).equals(20.).help("Indoors temperature when model is reset").unit("oC");
+    Input(energyFlux).help("Energy flux dissipated into greenhouse air").unit("W/m2");
+    Input(baseTemperature).imports(".[value]").unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
+    Output(value).help("Indoors temperature").unit("oC");
 }
 
 void IndoorsTemperature::reset() {

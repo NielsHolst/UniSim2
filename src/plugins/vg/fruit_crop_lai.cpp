@@ -19,11 +19,11 @@ FruitCropLai::FruitCropLai(QString name, QObject *parent)
     : CropLai(name, parent)
 {
     help("models LAI of fruit crops");
-    Input(maxLai).equals(3.5).help("Max. LAI in cropped area");
-    Input(cropDensity).imports("..[density]");
-    Input(tempSum).imports("../physTime[total]");
-    Input(cropPresent).imports("../periods/*[flag]").transform(Any);
-    Output(maxLaiReached).help("Tells whether max. LAI has been reached");
+    Input(maxLai).equals(3.5).help("Max. LAI in cropped area").unit("m2/m2");
+    Input(cropDensity).imports("..[density]").unit("/m2");
+    Input(tempSum).imports("../physTime[total]").unit("DD");
+    Input(cropPresent).imports("../periods/*[flag]").transform(Any).unit("y|n");
+    Output(maxLaiReached).help("Tells whether max. LAI has been reached").unit("y|n");
 }
 
 void FruitCropLai::reset() {

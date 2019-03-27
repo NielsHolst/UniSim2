@@ -19,6 +19,11 @@ boxes.subdir = src/plugins/boxes
 boxes.depends = base
 unisim.depends = boxes
 
+#SUBDIRS += cmbp
+#cmbp.subdir = src/plugins/cmbp
+#cmbp.depends = base
+#unisim.depends = cmbp
+
 SUBDIRS += command
 command.subdir = src/plugins/command
 command.depends = base
@@ -39,24 +44,24 @@ eq.subdir = src/plugins/eq
 eq.depends = base
 unisim.depends = eq
 
-SUBDIRS += student
-student.subdir = src/plugins/student
-student.depends = base
-unisim.depends = student
+#SUBDIRS += student
+#student.subdir = src/plugins/student
+#student.depends = base
+#unisim.depends = student
 
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
-unisim.depends = vg
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
+#unisim.depends = vg
 
 #
 # Optional plug-ins
 #
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
-unisim.depends = aphid
+#SUBDIRS += aphid
+#aphid.subdir = src/plugins/aphid
+#aphid.depends = base
+#unisim.depends = aphid
 
 #SUBDIRS += apis
 #apis.subdir = src/plugins/apis
@@ -78,15 +83,15 @@ unisim.depends = aphid
 #bmsb.depends = base
 #unisim.depends = bmsb
 
-#SUBDIRS += cmbp
-#cmbp.subdir = src/plugins/cmbp
-#cmbp.depends = base
-#unisim.depends = cmbp
-
 #SUBDIRS += conductance
 #conductance.subdir = src/plugins/conductance
 #conductance.depends = base
 #unisim.depends = conductance
+
+#SUBDIRS += io
+#io.subdir = src/plugins/io
+#io.depends = base
+#unisim.depends = io
 
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed

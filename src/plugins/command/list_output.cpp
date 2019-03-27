@@ -20,11 +20,19 @@ ListOutput::ListOutput(QVector<Box*> boxes, ListOptionSet options)
     _recurse     = _options.contains(ListOption::Recurse);
     _listExportsOnly = _listExports && !(_listInputs || _listOutputs || _listImports);
 
-    ComputationStep step = environment().computationStep();
-    if (step == ComputationStep::Amend) {
-        environment().root()->initializeFamily();
-        environment().root()->resetFamily();
-        dialog().message("Ready");
+    try {
+        ComputationStep step = environment().computationStep();
+        if (step == ComputationStep::Amend) {
+            environment().root()->initializeFamily();
+            environment().root()->resetFamily();
+            dialog().message("Ready");
+        }
+    }
+    catch (Exception &ex) {
+        dialog().error(ex.what());
+    }
+    catch (...) {
+        dialog().error("Something went wrong");
     }
 }
 
@@ -88,6 +96,8 @@ void ListOutput::toString(base::Port *port, int level) {
                 assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
         }
+        if (!port->unit().isEmpty())
+            assignment += " " + port->unit();
         _s += fill +
               prefix +
               port->objectName() +

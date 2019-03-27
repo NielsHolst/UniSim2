@@ -15,7 +15,7 @@
 	<Weather>
 		<Country>DK</Country>
 		<Region>none</Region>
-		<File>C:\Virtual Greenhouse Development\DVV Weather\sel_dk.txt</File>
+		<File>input\sel_dk.txt</File>
 	</Weather>
 	<Greenhouse>
 		<Name></Name>

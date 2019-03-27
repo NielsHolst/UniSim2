@@ -22,33 +22,33 @@ LeafRadiationAbsorbed::LeafRadiationAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes leaf absorption of short and long waved radiation");
-    Input(kLw).equals(0.8).help("Extinction coefficent for long-waved radiation [0;1]");
-    Input(emissivity).equals(0.8).help("Leaf emissivity for long-waved radiation [0;1]");
-    Input(xGaussLowerside).imports("..[xGaussLowerside]");
-    Input(wGaussLowerside).imports("..[wGaussLowerside]");
-    Input(xGaussUpperside).imports("..[xGaussUpperside]");
-    Input(wGaussUpperside).imports("..[wGaussUpperside]");
-    Input(lai).imports("crop/lai[value]");
-    Input(indoorsLight).imports("indoors/light[total]");
-    Input(lightAbsorptivity).imports("../photosynthesis[absorptivity]");
-    Input(growthLightLw).imports("actuators/growthLights[longWaveIntensity]");
-    Input(growthLightViewFactor).equals(1.);
-    Input(floorTemperature).imports("energyFlux/floor[temperature]");
-    Input(floorEmissivity).imports("energyFlux/floor[emissivity]");
-    Input(leafTemperature).imports("../temperature[value]");
-    Input(coverTemperature).imports("given/energyFlux/shelter[coverTemperature]");
-    Input(screensTemperature).imports("given/energyFlux/shelter[screensTemperature]");
-    Input(screensMaxState).imports("construction/shelter[screensMaxState]");
-    Input(shelterOutgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]");
-    Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
-    Input(pipeInflowTemperature).imports("actuators/heating[value]");
+    Input(kLw).equals(0.8).help("Extinction coefficent for long-waved radiation [0;1]").unit("m2/m2");
+    Input(emissivity).equals(0.8).help("Leaf emissivity for long-waved radiation [0;1]").unit("[0;1]");
+    Input(xGaussLowerside).imports("..[xGaussLowerside]").unit("[0;1]");
+    Input(wGaussLowerside).imports("..[wGaussLowerside]").unit("[0;1]");
+    Input(xGaussUpperside).imports("..[xGaussUpperside]").unit("[0;1]");
+    Input(wGaussUpperside).imports("..[wGaussUpperside]").unit("[0;1]");
+    Input(lai).imports("crop/lai[value]").unit("m2/m2");
+    Input(indoorsLight).imports("indoors/light[total]").unit("W/m2");
+    Input(lightAbsorptivity).imports("../photosynthesis[absorptivity]").unit("[0;1]");
+    Input(growthLightLw).imports("actuators/growthLights[longWaveIntensity]").unit("W/m2");
+    Input(growthLightViewFactor).equals(1.).unit("[0;1]");
+    Input(floorTemperature).imports("energyFlux/floor[temperature]").unit("oC");
+    Input(floorEmissivity).imports("energyFlux/floor[emissivity]").unit("[0;1]");
+    Input(leafTemperature).imports("../temperature[value]").unit("oC");
+    Input(coverTemperature).imports("given/energyFlux/shelter[coverTemperature]").unit("oC");
+    Input(screensTemperature).imports("given/energyFlux/shelter[screensTemperature]").unit("oC");
+    Input(screensMaxState).imports("construction/shelter[screensMaxState]").unit("[0;1]");
+    Input(shelterOutgoingLwAbsorptivity).imports("construction/shelter[outgoingLwAbsorptivity]").unit("W/m2");
+    Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]").unit("m2/m2");
+    Input(pipeInflowTemperature).imports("actuators/heating[value]").unit("oC");
 
-    Output(lightAbsorbed).help("Light flux absorbed by this leaf layer [W/m2]");
-    Output(heatingAbsorbed).help("Heating radiation flux absorbed by this leaf layer [W/m2]");
-    Output(growthLightLwAbsorbed).help("Lamp thermal radiation flux absorbed by this leaf layer [W/m2]");
-    Output(floorLwAbsorbed).help("Floor thermal radiation flux absorbed by this leaf layer [W/m2]");
-    Output(shelterLoss).help("Thermal radiation lost to the shelter from this leaf layer [W/m2]");
-    Output(value).help("Net energy flux absorbed by this leaf layer [W/m2]");
+    Output(lightAbsorbed).help("Light flux absorbed by this leaf layer").unit("W/m2");
+    Output(heatingAbsorbed).help("Heating radiation flux absorbed by this leaf layer").unit("W/m2");
+    Output(growthLightLwAbsorbed).help("Lamp thermal radiation flux absorbed by this leaf layer").unit("W/m2");
+    Output(floorLwAbsorbed).help("Floor thermal radiation flux absorbed by this leaf layer").unit("W/m2");
+    Output(shelterLoss).help("Thermal radiation lost to the shelter from this leaf layer").unit("W/m2");
+    Output(value).help("Net energy flux absorbed by this leaf layer").unit("W/m2");
 }
 
 void LeafRadiationAbsorbed::initialize() {

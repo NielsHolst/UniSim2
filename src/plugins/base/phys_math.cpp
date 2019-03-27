@@ -5,10 +5,12 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <math.h>
+#include <boost/math/distributions/normal.hpp>
 #include <QtGlobal>
 #include "phys_math.h"
 
 using namespace std;
+using boost::math::normal;
 
 /*! \file phys_math.cpp
  * General physical-mathematical functions and constants
@@ -263,8 +265,7 @@ double rhoAir(double T) {
 }
 
 //! Joint of two emissivities
-/*!
- * \brief Joint emmisivity of two opposing surfaces
+/*! * \brief Joint emmisivity of two opposing surfaces
  * \param em1 is the emmisivity of the one surface
  * \param em2 is the emmisivity of the other surface
  * \return joint emmisivity of the two
@@ -274,6 +275,72 @@ double jointEmissivity(double em1, double em2) {
     return (em1==0 || em2==0) ? 0. :
            1/(1/em1 + 1/em2 - 1);
 
+}
+
+//! Cumulative normal distribution
+/*!
+ * \param x a value of the normally distributed variate
+ * \param m the mean
+ * \param s the standard deviation
+ * \return the probability of a value <= x
+ */
+double cumNormal(double x, double m, double sd) {
+    normal s(m, sd);
+    return cdf(s, x);
+//    return 0.5*(1 + erf((x-m)/sqrt(2)/sd));
+}
+
+//! The inverse of the cumulative normal distribution
+/*!
+ * \param p the probability
+ * \param m the mean
+ * \param s the standard deviation
+ * \return the maximum value attained at probability p
+ */
+double invCumNormal(double p, double m, double sd) {
+    normal s(m, sd);
+    return quantile(s, p);
+    /* From Shore, H (1982). Simple Approximations for the Inverse Cumulative Function,
+     * the Density Function and the Loss Integral of the Normal Distribution.
+     * Journal of the Royal Statistical Society. Series C (Applied Statistics). 31: 108–114.
+     * doi:10.2307/2347972
+     */
+//    bool flip = p<0.5;
+//    if (flip) p = 1. - p;
+//    double y = 5.5556*(1. - pow((1. - p)/p, 0.1186);
+//    if (flip) y = -y;
+//    return m + y*sd;
+}
+
+//! Infer the normal distribution from x-range and x-range probability
+/*!
+ * \param xmin the minimum allowed x value
+ * \param xmax the maximum allowed x value
+ * \param p the probability that x falls in the [xmin,xmax] range
+ * \return mean and standard deviation of the corresponding normal distribution
+ */
+QPair<double, double> inferNormal(double xmin, double xmax, double p) {
+    double pmax = (1. + p)/2.,
+           xsd = invCumNormal(pmax);
+    return qMakePair(
+      (xmax + xmin)/2.,
+      (xmax - xmin)/2./xsd
+    );
+}
+
+//! Produce a value from normal distribution re-scaled to x-range
+/*!
+ * \param the probability of an outcome <= value
+ * \param xmin the minimum allowed x value
+ * \param xmax the maximum allowed x value
+ * \param p the probability that x falls in the [xmin,xmax] range
+ * \return value for which an outcome <= value has u probability
+ */
+double invNormalRange(double u, double xmin, double xmax, double p) {
+    auto normal = inferNormal(xmin, xmax, p);
+    double pmin = (1. - p)/2.,
+           pscaled = pmin + u*p;
+    return invCumNormal(pscaled, normal.first, normal.second);
 }
 
 //! Logistic growth integral

@@ -20,11 +20,11 @@ EnergyFluxCoolingDemand::EnergyFluxCoolingDemand(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("computes the energy flux demanded to cool the greenhouse to the ventilation setpoint");
-    Input(heatedTemperature).imports("../../temperature[value]");
-    Input(setpointTemperature).imports("setpoints/temperature/ventilation[value]");
-    Input(volume).imports("geometry[indoorsVolume]");
-    Input(area).imports("geometry[groundArea]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(heatedTemperature).imports("../../temperature[value]").unit("oC");
+    Input(setpointTemperature).imports("setpoints/temperature/ventilation[value]").unit("oC");
+    Input(volume).imports("geometry[indoorsVolume]").unit("m3");
+    Input(area).imports("geometry[groundArea]").unit("m2");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 }
 
 void EnergyFluxCoolingDemand::update() {

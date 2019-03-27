@@ -6,6 +6,7 @@
 */
 #ifndef SURFACE_RADIATION_H
 #define SURFACE_RADIATION_H
+#include <QString>
 
 namespace vg {
 
@@ -23,14 +24,16 @@ struct SurfaceRadiation {
             void setRef(double tra);
             void setAbs(double tra);
             double abs, ref;
+            void check(double tra, QString name);
         } inner, outer;
+        void check(QString name);
     } light, directLight, lw;
 
     // Methods
     void setToZero();
     SurfaceRadiation& asCover(double transmissivity, double directTransmissivity, double absorptivity, double emissivity);
     SurfaceRadiation& asScreen(double transmissivity, double absorptivityLwOuter, double absorptivityLwInner);
-    bool isOk();
+    void check();
 
     // Operators
     SurfaceRadiation& operator*=(const SurfaceRadiation &s2);

@@ -19,7 +19,7 @@ RunningAverage::RunningAverage(QString name, QObject *parent)
     help("computes a running average");
     Input(resetValue).help("Value of running average at reset");
     Input(input).help("Input to add to running average");
-    Input(length).equals(10).help("Number of inputs to average");
+    Input(length).equals(10).help("Number of inputs to average").unit("-");
     Output(value).help("Running average");
 }
 

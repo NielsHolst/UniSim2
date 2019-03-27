@@ -21,7 +21,7 @@ SlidingSignal::SlidingSignal(QString name, QObject *parent)
     Input(thresholdBand).equals(5.).help("Interval of the input over which the signal is changing");
     Input(minSignal).equals(0.).help("Minimum possible signal");
     Input(maxSignal).equals(100.).help("Maximum possible signal");
-    Input(increasingSignal).equals(true).help("Is the signal increasing inside the threshold band?");
+    Input(increasingSignal).equals(true).help("Is the signal increasing inside the threshold band?").unit("y|n");
 }
 
 double SlidingSignal::computeSignal() {

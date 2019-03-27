@@ -18,7 +18,7 @@ EnergyFluxCondensation::EnergyFluxCondensation(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("models energy flux caused by condensation");
-    Input(vapourFlux).equals(0).help("Condensation rate per greenhouse ground area [kg/m2/s]");
+    Input(vapourFlux).equals(0).help("Condensation rate per greenhouse ground area").unit("kg/m2/s");
 }
 
 void EnergyFluxCondensation::update() {

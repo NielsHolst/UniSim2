@@ -1,0 +1,213 @@
+// cowpea simulation GDD taken from cavalcante et al. 2016, 
+//sowing time from (AbdouRzakou Ibrahim et al. 2018)
+// Maruca GDD : the data are from the article Adati T, Nakamura S, Tamò M, Kawazu K. 
+// Effect of temperature on development and survival of the legume pod borer, Maruca vitrata (Fabricius) (Lepidoptera : Pyralidae) reared on a semi-synthetic diet. 
+// Applied Entomology and Zoology. 2004;39(1):139-45. 
+Simulation LowPrecipitation {
+  .steps = 365
+  Box parameters {
+    +pestPressure = 0.2 // number of adults arriving per day during flowering // Niels
+  }
+  Scenarios scenarios {
+    .fileName = "weather400/weather400.txt"
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2017
+  }
+  Records weather400 {
+    .fileName = scenarios[FileName] 
+  }
+  Box cowpea { //prey
+    Stage initial {
+      .initial = parameters[pestPressure]
+      .duration = 307 
+      .timeStep= ./time[value]
+      OnOff time  {
+        .x= calendar [dayOfYear]
+        .xOn = 167 // 15th of june // Based on precipitation
+        .xOff = 197 //15th of july 
+        .valueOn=./dayDegrees[step]
+        .valueOff= 0
+        DayDegrees dayDegrees {
+          .T0 = 8 
+          .Topt = 28 // cavhalho, 2017
+          .T = weather400[Tavg]
+        }
+      }
+    }
+    Stage vegetative {
+      .inflow = ../initial[outflow]
+      .duration = 326
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+    Stage flowering {
+      .inflow = ../vegetative[outflow]
+      .duration = 463
+      .timeStep= ./time[step]
+      // .instantLossRate = web/cowpeaFlowering[lossRatio] //Niels // 52,3% of the larvae where found on flower (Karel,1985) so assumption that it's the only stage attacked
+      DayDegrees time {
+        .T0 = 8
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+    Stage maturation {
+      .inflow = ../flowering[outflow]
+      .duration = 265
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+  }
+  Box maruca {
+    Stage egg {
+      // .initial = 50  // Niels
+      .inflow = ../adult/oviposition[outflow]
+      .duration = 51.1 // adati et al. 2014
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.5 // adati et al. 2014
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9 // adati et al. 2014
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar1 {
+      .inflow = ../egg[outflow]
+      .duration = 50.8
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 11.5 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar2 {
+      .inflow = ../instar1[outflow]
+      .duration = 40.0
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.4 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar3 {
+      .inflow = ../instar2[outflow]
+      .duration = 40.1
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.4 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar4 {
+      .inflow = ../instar3[outflow]
+      .duration = 51.8
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 8 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar5 {
+      .inflow = ../instar4[outflow]
+      .duration = 73.6
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 9.7 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage prepupae {
+      .inflow = ../instar5[outflow]
+      .duration = 28.2
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 7.7 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage pupae {
+      .inflow = ../prepupae[outflow]
+      .duration = 116.5
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.9 // adati et al. 2004
+        .Topt = 25 // adati et al. 2004 -- optimum between 20 and 30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Box adult {
+      +immigration  = cowpea/flowering[content]
+      Stage individuals {
+        .inflow|sum = ../../pupae[outflow] | cowpea/flowering[content]  //Niels
+        .duration = 12.24 //  days mean taken from dannon et al 2009
+        .timeStep = 1
+      }
+      Stage preOviposition {
+        .inflow|sum = ../../pupae[outflow] | cowpea/flowering[content]  //Niels
+        .duration = 2
+        .timeStep = 1
+      }
+      Stage oviposition {
+        .inflow = ../preOviposition[outflow]
+        .duration = 3 // mating only once between the 2nd and 5th night of adulthood (Souna 2018)
+        .timeStep = 1
+        .growthFactor = 46.69 // Mean taken from Dannon et al 2009 -- total fecundity 140.06 egg/female then divide in 3 it gives 46.69 egg/female
+      }
+    }
+  }
+  OutputR output {
+    +ggplot2 = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('4 months'), 
+                      labels = date_format('%b')
+                    ) + 
+                    ylim(-1,NA)"   //Niels
+    +ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('years'),
+                      labels = date_format('%y')
+                    ) + 
+                    ylim(-1,NA)"   //Niels
+    PageR Maruca {
+      .xAxis = calendar[date]
+      .title = "Maruca"
+      PlotR {
+        .ports = (maruca/adult[immigration] maruca/*[content] maruca/adult/*[content]) //Niels
+        .ggplot = output[ggplot]
+        .transform = "log10"
+      }
+    }
+    PageR cowpea {
+      .xAxis = calendar[date]
+      .title = "cowpea"
+      PlotR {
+        .ports = (cowpea/*[content] cowpea/adult/*[content])
+        .ggplot = output[ggplot]
+        .transform = "log10"
+      }    
+    }
+  }
+  
+}

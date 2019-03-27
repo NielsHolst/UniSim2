@@ -19,9 +19,9 @@ IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors wind speed");
-    Input(ventilation).imports("indoors/total/airFlux[value]");
-    Input(constructionWidth).imports("geometry[width]");
-    Output(value).help("Indoors wind speed [m/s]");
+    Input(ventilation).imports("indoors/total/airFlux[value]").unit("m3/m3/h");
+    Input(constructionWidth).imports("geometry[width]").unit("m");
+    Output(value).help("Indoors wind speed [m/s]").unit("m/s");
 }
 
 void IndoorsWindSpeed::reset() {

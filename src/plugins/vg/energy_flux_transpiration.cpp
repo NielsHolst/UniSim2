@@ -18,7 +18,7 @@ EnergyFluxTranspiration::EnergyFluxTranspiration(QString name, QObject *parent)
     : EnergyFluxBase(name, parent)
 {
     help("models energy flux caused by transpiration");
-    Input(transpiration).imports("../../vapourFlux/transpiration[vapourFlux]");
+    Input(transpiration).imports("../../vapourFlux/transpiration[vapourFlux]").unit("kg/m2/s");
 }
 
 void EnergyFluxTranspiration::update() {

@@ -20,20 +20,20 @@ FruitCropMass::FruitCropMass(QString name, QObject *parent)
     : CropMass(name, parent)
 {
     help("models growth and dry mass for a fruit crop");
-    Input(vegPropRoot).equals(0.) .help("Proportion of growth in vegetative stage [0;1]");
-    Input(vegPropStem).equals(0.5).help("Proportion of growth in vegetative stage [0;1]");
-    Input(vegPropLeaf).equals(0.5).help("Proportion of growth in vegetative stage [0;1]");
-    Input(vegPropFruit).equals(0.).help("Proportion of growth in vegetative stage  [0;1]");
-    Input(reproPropRoot).equals(0.).help("Proportion of growth in reproductive stage [0;1]");
-    Input(reproPropStem).equals(0.).help("Proportion of growth in reproductive stage [0;1]");;
-    Input(reproPropLeaf).equals(0.).help("Proportion of growth in reproductive stage [0;1]");;
-    Input(reproPropFruit).equals(1.).help("Proportion of growth in reproductive stage [0;1]");;
-    Input(tempSumReproductive).equals(975.).help("Temperature sum when the reproductive stage is reached [DD]");
-    Input(tempMaxReproductive).equals(30.).help("Max. temperature for plant producing fruits");
-    Input(fruitFactor).equals(1.).help("Factor multiplied on propFruit");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(tempSum).imports("../physTime[total]");
-    Input(lai).imports("../lai[value]");
+    Input(vegPropRoot).equals(0.) .help("Proportion of growth in vegetative stage").unit("[0;1]");
+    Input(vegPropStem).equals(0.5).help("Proportion of growth in vegetative stage").unit("[0;1]");
+    Input(vegPropLeaf).equals(0.5).help("Proportion of growth in vegetative stage").unit("[0;1]");
+    Input(vegPropFruit).equals(0.).help("Proportion of growth in vegetative stage").unit("[0;1]");
+    Input(reproPropRoot).equals(0.).help("Proportion of growth in reproductive stage").unit("[0;1]");
+    Input(reproPropStem).equals(0.).help("Proportion of growth in reproductive stage").unit("[0;1]");
+    Input(reproPropLeaf).equals(0.).help("Proportion of growth in reproductive stage").unit("[0;1]");
+    Input(reproPropFruit).equals(1.).help("Proportion of growth in reproductive stage").unit("[0;1]");
+    Input(tempSumReproductive).equals(975.).help("Temperature sum when the reproductive stage is reached").unit("DD");
+    Input(tempMaxReproductive).equals(30.).help("Max. temperature for plant producing fruits").unit("oC");
+    Input(fruitFactor).equals(1.).help("Factor multiplied on propFruit").unit("-");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(tempSum).imports("../physTime[total]").unit("DD");
+    Input(lai).imports("../lai[value]").unit("m2/m2");
 }
 
 void FruitCropMass::setProportions() {

@@ -17,10 +17,10 @@ FruitFactor::FruitFactor(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("models density-dependent fruit set");
-    Input(minDensity).equals(1.).help("Crop density at which factor is 1 [m-2]");
-    Input(maxValue).equals(1.).help("Max. value of factor");
-    Input(plantDensity).imports("../..[density]");
-    Output(value).help("Density-dependent fruit set factor");
+    Input(minDensity).equals(1.).help("Crop density at which factor is 1").unit("/m2");
+    Input(maxValue).equals(1.).help("Max. value of factor").unit("-");
+    Input(plantDensity).imports("../..[density]").unit("/m2");
+    Output(value).help("Density-dependent fruit set factor").unit("-");
 }
 
 void FruitFactor::reset() {

@@ -16,19 +16,19 @@ SetpointsInput::SetpointsInput(QString name, QObject *parent)
 {
     Class(SetpointsInput);
     help("contains inputs and derived outputs for setpoints");
-    Input(heatingTemperatureAtLowRh).equals(21.).help("Heat below this temperature at low RH[oC]");
-    Input(heatingTemperatureMargin).equals(2.).help("Add this to heating temperature at high RH []");
-    Input(ventilationTemperatureMargin).equals(3.).help("Ventilate above this additional margin on heatingTemperature [oC]");
-    Input(ventilationTemperatureRhMargin).equals(2.).help("Decrease ventilationTemperatureMargin by this at high RH [oC]");
-    Input(rhMax).equals(80).help("Regulate RH below this level [0..100]");
-    Input(rhMaxBand).equals(10).help("Proportional band for max. RH [0..100]");
-    Input(co2Min).equals(400.).help("Minimum CO2 [ppm]");
-    Input(co2Max).equals(900.).help("Maximum CO2 [ppm]");
-    Input(dawnThreshold).equals(0.2).help("Day begins above this sunlight intensity [W/m2]");
-    Input(duskThreshold).equals(0.3).help("Night begins below this sunlight intensity [W/m2]");
-    Output(ventilationTemperatureAtLowRh).help("Ventilate above this temperature at low RH [oC]");
-    Output(ventilationTemperatureAtHighRh).help("Ventilate above this temperature at high RH [oC]");
-    Output(heatingTemperatureAtHighRh).equals(21.).help("Heat below this temperature at high RH[oC]");
+    Input(heatingTemperatureAtLowRh).equals(21.).help("Heat below this temperature at low RH").unit("oC");
+    Input(heatingTemperatureMargin).equals(2.).help("Add this to heating temperature at high RH").unit("oC");
+    Input(ventilationTemperatureMargin).equals(3.).help("Ventilate above this additional margin on heatingTemperature").unit("oC");
+    Input(ventilationTemperatureRhMargin).equals(2.).help("Decrease ventilationTemperatureMargin by this at high RH").unit("oC");
+    Input(rhMax).equals(80).help("Regulate RH below this level").unit("[0;100]");
+    Input(rhMaxBand).equals(10).help("Proportional band for max. RH").unit("[0;100]");
+    Input(co2Min).equals(400.).help("Minimum CO2").unit("ppm");
+    Input(co2Max).equals(900.).help("Maximum CO2").unit("ppm");
+    Input(dawnThreshold).equals(0.2).help("Day begins above this sunlight intensity").unit("W/m2");
+    Input(duskThreshold).equals(0.3).help("Night begins below this sunlight intensity").unit("W/m2");
+    Output(ventilationTemperatureAtLowRh).help("Ventilate above this temperature at low RH").unit("oC");
+    Output(ventilationTemperatureAtHighRh).help("Ventilate above this temperature at high RH").unit("oC");
+    Output(heatingTemperatureAtHighRh).equals(21.).help("Heat below this temperature at high RH").unit("oC");
 }
 
 void SetpointsInput::reset() {

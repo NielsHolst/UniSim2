@@ -40,6 +40,7 @@ HEADERS +=  \
     test_output_buffer.h \
     test_output_text.h \
     test_path.h \
+    test_phys_math.h \
 #    test_population.h \
     test_port.h \
     test_port_buffer.h \
@@ -87,6 +88,7 @@ SOURCES +=  \
     test_output_buffer.cpp \
     test_output_text.cpp \
     test_path.cpp \
+    test_phys_math.cpp \
 #    test_population.cpp \
     test_port.cpp \
     test_port_buffer.cpp \

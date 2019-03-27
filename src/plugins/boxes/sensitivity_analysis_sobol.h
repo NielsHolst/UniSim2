@@ -14,7 +14,7 @@ public:
     void debrief();
 private:
     // Input
-    int iteration;
+    int iteration, bootstrapSize;
     const int &N, &k;
     // Output
     char phase;

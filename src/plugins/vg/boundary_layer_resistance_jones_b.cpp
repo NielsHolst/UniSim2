@@ -23,10 +23,10 @@ BoundaryLayerResistanceJonesB::BoundaryLayerResistanceJonesB(QString name, QObje
 {
     Class(BoundaryLayerResistanceJonesB);
     help("computes boundary layer resistance from Jones (1992, eq. A.8.1)");
-    Input(evaporation).imports("../transpiration[vapourFlux]");
-    Input(leafTemperature).imports("../temperature[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(indoorsRh).imports("indoors/humidity[rh]");
+    Input(evaporation).imports("../transpiration[vapourFlux]").unit("kg/m2/s");
+    Input(leafTemperature).imports("../temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(indoorsRh).imports("indoors/humidity[rh]").unit("[0;100]");
 }
 
 void BoundaryLayerResistanceJonesB::reset() {

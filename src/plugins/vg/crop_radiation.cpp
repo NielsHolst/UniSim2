@@ -21,20 +21,20 @@ CropRadiation::CropRadiation(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes crop light budget");
-    Input(kDiffuse).equals(0.8).help("Extinction coefficient for diffuse light [0;1]");
-    Input(scattering).equals(0.2).help("Scattering coefficent for direct light [0;1]");
-    Input(sinb).imports("calendar[sinb]");
-    Input(lightDiffuse).imports("indoors/light[diffuse]");
-    Input(lightDirect).imports("indoors/light[direct]");
-    Input(absorptivityTop).imports("layers/top/photosynthesis[absorptivity]");
-    Input(absorptivityMiddle).imports("layers/middle/photosynthesis[absorptivity]");
-    Input(absorptivityBottom).imports("layers/bottom/photosynthesis[absorptivity]");
+    Input(kDiffuse).equals(0.8).help("Extinction coefficient for diffuse light").unit("[0;1]");
+    Input(scattering).equals(0.2).help("Scattering coefficent for direct light").unit("[0;1]");
+    Input(sinb).imports("calendar[sinb]").unit("[-1;1]");
+    Input(lightDiffuse).imports("indoors/light[diffuse]").unit("W/m2");
+    Input(lightDirect).imports("indoors/light[direct]").unit("W/m2");
+    Input(absorptivityTop).imports("layers/top/photosynthesis[absorptivity]").unit("[0;1]");
+    Input(absorptivityMiddle).imports("layers/middle/photosynthesis[absorptivity]").unit("[0;1]");
+    Input(absorptivityBottom).imports("layers/bottom/photosynthesis[absorptivity]").unit("[0;1]");
 
-    Output(kDirect).help("Extinction coefficient for direct light [0;1]");
-    Output(kDirectDirect).help("Extinction coefficient for the direct component of direct light [0;1]");
-    Output(diffuseReflectivity).help("Reflectivity of diffuse light [0;1]");
-    Output(directReflectivity).help("Reflectivity of direct light [0;1]");
-    Output(reflectivity).help("Net reflectivity [0;1]");
+    Output(kDirect).help("Extinction coefficient for direct light").unit("[0;1]");
+    Output(kDirectDirect).help("Extinction coefficient for the direct component of direct light").unit("[0;1]");
+    Output(diffuseReflectivity).help("Reflectivity of diffuse light").unit("[0;1]");
+    Output(directReflectivity).help("Reflectivity of direct light").unit("[0;1]");
+    Output(reflectivity).help("Net reflectivity").unit("[0;1]");
 }
 
 void CropRadiation::reset() {

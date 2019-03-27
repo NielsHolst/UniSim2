@@ -23,23 +23,23 @@ Cover::Cover(QString name, QObject *parent)
     : SurfaceRadiationOutputs(name, parent), _isInitialized(false)
 {
     help("computes cover light and heat characteristics");
-    Input(greenhouseReflection).imports("geometry[reflection]");
-    Input(chalk).imports("controllers[chalk]");
-    Input(latitude).imports("calendar[latitude]");
-    Input(azimuth).imports("calendar[azimuth]");
-    Input(area).imports("..[area]");
-    Input(windSpeed).imports("outdoors[windSpeed]");
-    Input(directTransmissionFile).equals(":/data/vg/direct_transmission_single.txt")
+    Input(greenhouseReflection).imports("geometry[reflection]").unit("[0;1]");
+    Input(chalk).imports("controllers[chalk]").unit("[0;1]");
+    Input(latitude).imports("calendar[latitude]").unit("[0;90]");
+    Input(azimuth).imports("calendar[azimuth]").unit("[-180;180]");
+    Input(area).imports("..[area]").unit("m2");
+    Input(windSpeed).imports("outdoors[windSpeed]").unit("m/s");
+    Input(directTransmissionFile).equals(":/data/vg/direct_transmission_single.txt").unit("String")
             .help("Table of direct light transmittance depending on latitude and sun azimuth");
-    Input(emissivity).equals(0.84).help("Emissivity of long-wave radiation [0;1]");
-    Input(absorptivity).equals(0.04).help("Absorptivity of long-wave radiation [0;1]");
-    Input(transmissivity).equals(0.83).help("Transmissivity to short-wave radiation [0;1]");
-    Input(haze).equals(0.).help("Proportion of direct light transmitted as diffuse light [0;1]");
-    Input(U4).equals(7.5).help("Heat transfer coefficient at a wind speed of 4 m/s (W/m2/K)");
-    Input(specificHeatCapacity).equals(700.).help("Area-specific heat capacity (J/m2 cover/K)");
+    Input(emissivity).equals(0.84).help("Emissivity of long-wave radiation").unit("[0;1]");
+    Input(absorptivity).equals(0.04).help("Absorptivity of long-wave radiation").unit("[0;1]");
+    Input(transmissivity).equals(0.83).help("Transmissivity to short-wave radiation").unit("[0;1]");
+    Input(haze).equals(0.).help("Proportion of direct light transmitted as diffuse light").unit("[0;1]");
+    Input(U4).equals(7.5).help("Heat transfer coefficient at a wind speed of 4 m/s").unit("W/m2/K");
+    Input(specificHeatCapacity).equals(700.).help("Area-specific heat capacity").unit("J/m2/K");
 
-    Output(U).help("Heat transfer coefficient, corrected for wind speed (W/m2/K)");
-    Output(heatCapacity).help("Whole-cover heat capacity (J/K)");
+    Output(U).help("Heat transfer coefficient, corrected for wind speed").unit("W/m2/K");
+    Output(heatCapacity).help("Whole-cover heat capacity").unit("J/K");
 }
 
 void Cover::initialize() {

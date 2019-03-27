@@ -24,19 +24,19 @@ ShelterFace::ShelterFace(QString name, QObject *parent)
     : ShelterBase(name, parent)
 {
     help("models a shelter face");
-    Input(roofArea).imports("geometry[roofArea]");
-    Input(sideWallsArea).imports("geometry[sideWallsArea]");
-    Input(endWallsArea).imports("geometry[endWallsArea]");
-    Input(gablesArea).imports("geometry[gablesArea]");
-    Input(groundArea).imports("geometry[groundArea]");
+    Input(roofArea).imports("geometry[roofArea]").unit("m2");
+    Input(sideWallsArea).imports("geometry[sideWallsArea]").unit("m2");
+    Input(endWallsArea).imports("geometry[endWallsArea]").unit("m2");
+    Input(gablesArea).imports("geometry[gablesArea]").unit("m2");
+    Input(groundArea).imports("geometry[groundArea]").unit("m2");
 
-    Input(outdoorsDirectRadiation).imports("outdoors[directRadiation]");
-    Input(outdoorsDiffuseRadiation).imports("outdoors[diffuseRadiation]");
+    Input(outdoorsDirectRadiation).imports("outdoors[directRadiation]").unit("W/m2");
+    Input(outdoorsDiffuseRadiation).imports("outdoors[diffuseRadiation]").unit("W/m2");
 
-    Output(area).help("Surface area [m2]");
-    Output(relativeArea).help("Proportion of this surface area out of the total surface area [0;1]");
-    Output(areaPerGround).help("Surface area relative to the ground area [m2/m2]");
-    Output(screensMaxState).help("Max. state of screens on this surface");
+    Output(area).help("Surface area").unit("m2");
+    Output(relativeArea).help("Proportion of this surface area out of the total surface area").unit("[0;1]");
+    Output(areaPerGround).help("Surface area relative to the ground area").unit("m2/m2");
+    Output(screensMaxState).help("Max. state of screens on this surface").unit("[0;1]");
 }
 
 void ShelterFace::amend() {

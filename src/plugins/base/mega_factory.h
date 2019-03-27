@@ -22,12 +22,12 @@ public:
 
     static const QList<base::FactoryPlugIn*> &factories();
     static QDir pluginsDir();
+    static QStringList qualifiedClassNames(QString className);
 private:
     // methods
     MegaFactory();
     static MegaFactory* me();
     static QObject* createObject(QString className, QString objectName, QObject *parent=0);
-    static QStringList qualifiedClassNames(QString className);
     // data
     typedef QMultiMap<QString, FactoryPlugIn*> ProductIndex;
     static MegaFactory *_me;

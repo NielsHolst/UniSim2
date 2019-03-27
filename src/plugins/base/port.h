@@ -60,10 +60,11 @@ public:
     Port& noReset();
 
     // Attributes
-    static QStringList attributes();
+    QStringList attributes();
 
     Port& attribute(QString name, QString value);
     Port& help(QString value);
+    Port& unit(QString value);
     Port& format(QString value);
     Port& label(QString value);
     Port& transform(QString value);
@@ -72,6 +73,7 @@ public:
 
     QString attribute(QString name) const;
     QString help() const;
+    QString unit() const;
     QString format() const;
     QString label() const;
     PortTransform transform() const;

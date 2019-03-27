@@ -16,21 +16,21 @@ SurfaceRadiationOutputs::SurfaceRadiationOutputs(QString name, QObject *parent)
 {
     Class(SurfaceRadiationOutputs);
     help("base class for surface radiation models");
-    Output(lightTransmissivity).help("Transmissivity for diffuse light [0;1]");
-    Output(directLightTransmissivity).help("Transmissivity for direct light [0;1]");
-    Output(lwTransmissivity).help("Transmissivity for long-wave radiation [0;1]");
-    Output(incomingLightAbsorptivity).help("Absorptivity for incoming diffuse light [0;1]");
-    Output(incomingLightReflectivity).help("Reflectivity for incoming diffuse light [0;1]");
-    Output(incomingDirectLightAbsorptivity).help("Absorptivity for incoming direct light [0;1]");
-    Output(incomingDirectLightReflectivity).help("Reflectivity for incoming direct light [0;1]");
-    Output(incomingLwAbsorptivity).help("Absorptivity for incoming long-wave radiation [0;1]");
-    Output(incomingLwReflectivity).help("Reflectivity for incoming long-wave radiation [0;1]");
-    Output(outgoingLightAbsorptivity).help("Absorptivity for outgoing diffuse light [0;1]");
-    Output(outgoingLightReflectivity).help("Reflectivity for outgoing diffuse light [0;1]");
-    Output(outgoingDirectLightAbsorptivity).help("Absorptivity for outgoing direct light [0;1]");
-    Output(outgoingDirectLightReflectivity).help("Reflectivity for outgoing direct light [0;1]");
-    Output(outgoingLwAbsorptivity).help("Absorptivity for outgoing long-wave radiation [0;1]");
-    Output(outgoingLwReflectivity).help("Reflectivity for outgoing long-wave radiation [0;1]");
+    Output(lightTransmissivity).help("Transmissivity for diffuse light").unit("[0;1]");
+    Output(directLightTransmissivity).help("Transmissivity for direct light").unit("[0;1]");
+    Output(lwTransmissivity).help("Transmissivity for long-wave radiation").unit("[0;1]");
+    Output(incomingLightAbsorptivity).help("Absorptivity for incoming diffuse light").unit("[0;1]");
+    Output(incomingLightReflectivity).help("Reflectivity for incoming diffuse light").unit("[0;1]");
+    Output(incomingDirectLightAbsorptivity).help("Absorptivity for incoming direct light").unit("[0;1]");
+    Output(incomingDirectLightReflectivity).help("Reflectivity for incoming direct light").unit("[0;1]");
+    Output(incomingLwAbsorptivity).help("Absorptivity for incoming long-wave radiation").unit("[0;1]");
+    Output(incomingLwReflectivity).help("Reflectivity for incoming long-wave radiation").unit("[0;1]");
+    Output(outgoingLightAbsorptivity).help("Absorptivity for outgoing diffuse light").unit("[0;1]");
+    Output(outgoingLightReflectivity).help("Reflectivity for outgoing diffuse light").unit("[0;1]");
+    Output(outgoingDirectLightAbsorptivity).help("Absorptivity for outgoing direct light").unit("[0;1]");
+    Output(outgoingDirectLightReflectivity).help("Reflectivity for outgoing direct light").unit("[0;1]");
+    Output(outgoingLwAbsorptivity).help("Absorptivity for outgoing long-wave radiation").unit("[0;1]");
+    Output(outgoingLwReflectivity).help("Reflectivity for outgoing long-wave radiation").unit("[0;1]");
 }
 
 void SurfaceRadiationOutputs::resetRadiationOutputs() {

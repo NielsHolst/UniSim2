@@ -22,13 +22,13 @@ StomatalResistanceTomato::StomatalResistanceTomato(QString name, QObject *parent
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance of tomato");
-    Input(riH2Omin).equals(82.).help("Minimum resistance against H2O");
-    Input(lai).imports("crop/lai[value]");
-    Input(temperature).imports("../temperature[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(rh).imports("indoors/humidity[rh]");
-    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]");
-    Input(co2).imports("indoors/co2[value]");
+    Input(riH2Omin).equals(82.).help("Minimum resistance against H2O").unit("s/m");
+    Input(lai).imports("crop/lai[value]").unit("m2/m2");
+    Input(temperature).imports("../temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(rh).imports("indoors/humidity[rh]").unit("[0;100]");
+    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]").unit("W/m2");
+    Input(co2).imports("indoors/co2[value]").unit("ppm");
 }
 
 double StomatalResistanceTomato::resetRsH2O() {

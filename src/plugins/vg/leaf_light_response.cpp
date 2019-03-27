@@ -22,19 +22,19 @@ LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes the light response curve");
-    Input(rsCO2).imports("../../rs[rsCo2]");
-    Input(rbCO2).imports("../../rb[rbCo2]");
-    Input(Tleaf).imports("../../temperature[value]");
-    Input(co2Air).imports("indoors/co2[value]");
-    Input(rhoChl).equals(0.45).help("Chlorophyll density [units?]");
-    Input(theta).equals(0.7).help("Shape parameter for the light response curve ");
-    Input(frParAbs).equals(0.3).help("Fraction of PAR absorbed [0;1]");
-    Input(concEnzyme).equals(87).help("Enzyme concentration [units?]");
-    Output(LUE).help("Light use efficiency [mg CO2/J]");
-    Output(Pnmax).help("Net assimilation rate [mg CO2/leaf m2/s]");
-    Output(Pgmax).help("Gross assimilation rate [mg CO2/leaf m2/s]");
-    Output(Rd).help("Dark respiration rate [mg CO2/leaf m2/s]");
-    Output(rtCO2).help("Total CO2 resistance against [s/m]");
+    Input(rsCO2).imports("../../rs[rsCo2]").unit("s/m");
+    Input(rbCO2).imports("../../rb[rbCo2]").unit("s/m");
+    Input(Tleaf).imports("../../temperature[value]").unit("oC");
+    Input(co2Air).imports("indoors/co2[value]").unit("ppm");
+    Input(rhoChl).equals(0.45).help("Chlorophyll density").unit("unit?");
+    Input(theta).equals(0.7).help("Shape parameter for the light response curve").unit("-");
+    Input(frParAbs).equals(0.3).help("Fraction of PAR absorbed [0;1]").unit("[0;1]");
+    Input(concEnzyme).equals(87).help("Enzyme concentration").unit("unit?");
+    Output(LUE).help("Light use efficiency").unit("mg CO2/J");
+    Output(Pnmax).help("Net assimilation rate").unit("mg CO2/leaf m2/s");
+    Output(Pgmax).help("Gross assimilation rate").unit("mg CO2/leaf m2/s");
+    Output(Rd).help("Dark respiration rate").unit("mg CO2/leaf m2/s");
+    Output(rtCO2).help("Total CO2 resistance against").unit("s/m");
 }
 
 void LeafLightResponse::reset() {

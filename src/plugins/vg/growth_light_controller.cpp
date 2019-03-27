@@ -19,10 +19,10 @@ GrowthLightController::GrowthLightController(QString name, QObject *parent)
     : BaseSignal(name, parent)
 {
     help("compounds on and off signals");
-    Input(isActive).imports("allSetpoints/growthLightActive[value]").help("Could light be on?");
-    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]").help("?");
-    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]").help("No light above this threshold?");
-    Input(lightOutdoors).imports("outdoors[radiation]");
+    Input(isActive).imports("allSetpoints/growthLightActive[value]").help("Could light be on?").unit("y|n");
+    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]").help("Not used").unit("W/m2");
+    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]").unit("W/m2");
+    Input(lightOutdoors).imports("outdoors[radiation]").unit("W/m2");
 }
 
 double GrowthLightController::computeSignal() {

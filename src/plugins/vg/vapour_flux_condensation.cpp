@@ -20,10 +20,10 @@ VapourFluxCondensation::VapourFluxCondensation(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux through condensation on inside greenhouse surface");
-    Input(surfaceAreaPerGroundArea).help("Surface area per ground area [m2/m2]");
-    Input(surfaceTemperature).imports("indoors/temperature[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(indoorsAh).imports("indoors/humidity[ah]");
+    Input(surfaceAreaPerGroundArea).help("Surface area per ground area").unit("m2/m2");
+    Input(surfaceTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(indoorsAh).imports("indoors/humidity[ah]").unit("kg/m3");
 }
 
 void VapourFluxCondensation::update() {

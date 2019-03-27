@@ -1,0 +1,13 @@
+FileName
+"Maruca/weather400/Agadez.txt"
+"Maruca/weather400/Bilma.txt"
+"Maruca/weather400/Diffa.txt"
+"Maruca/weather400/Goure.txt"
+"Maruca/weather400/Maine_soroa.txt"
+"Maruca/weather400/N_Guigni.txt"
+"Maruca/weather400/Nouadhibou.txt"
+"Maruca/weather400/Nouakchott.txt"
+"Maruca/weather400/Podor.txt"
+"Maruca/weather400/Saint_louis.txt"
+"Maruca/weather400/Tahoua.txt"
+"Maruca/weather400/Tillabery.txt"

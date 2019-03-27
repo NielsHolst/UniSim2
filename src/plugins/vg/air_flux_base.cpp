@@ -15,7 +15,7 @@ AirFluxBase::AirFluxBase(QString name, QObject *parent)
 {
     Class(AirFluxBase);
     help("computes air exchange rate");
-    Output(value).help("Relative rate of air exchange [m3/m3/h]");
+    Output(value).help("Relative rate of air exchange").unit("m3/m3/h");
 }
 
 } //namespace

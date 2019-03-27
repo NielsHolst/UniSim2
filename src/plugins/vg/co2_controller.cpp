@@ -19,12 +19,12 @@ Co2Controller::Co2Controller(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("Computes the rate of CO2 enrichment");
-    Input(minCo2).imports("setpoints/co2/minimum[signal]");
-    Input(maxCo2).imports("setpoints/co2/maximum[signal]");
-    Input(indoorsCo2).imports("indoors/co2[value]");
-    Input(timeStep).imports("calendar[timeStepSecs]");
-    Input(injectionRate).equals(4.5).help("Rate of CO2 injection [g/m2/h]");
-    Output(signal).help("Rate of CO2 enrichment [g/m2/h]");
+    Input(minCo2).imports("setpoints/co2/minimum[signal]").unit("ppm");
+    Input(maxCo2).imports("setpoints/co2/maximum[signal]").unit("ppm");
+    Input(indoorsCo2).imports("indoors/co2[value]").unit("ppm");
+    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
+    Input(injectionRate).equals(4.5).help("Rate of CO2 injection").unit("g/m2/h");
+    Output(signal).help("Rate of CO2 enrichment").unit("g/m2/h");
 }
 
 void Co2Controller::reset() {
