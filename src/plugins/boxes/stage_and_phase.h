@@ -22,7 +22,7 @@ public:
 private:
     // inputs
     int phaseK;
-    double phaseDuration, phaseTimeStep;
+    double phaseDuration, phaseTimeStep, scalarInflow;
     QVector<double> inflow;
 
     // outputs

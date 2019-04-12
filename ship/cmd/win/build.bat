@@ -4,11 +4,14 @@ cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
 rem Set up version
 set MAJOR=2
 set MINOR=2
-set SUB=1
+set SUB=3
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
 echo = Set path to Qt build environment =
+
+set QTENV="C:\Qt\5.12.1\mingw73_64\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
 
 set QTENV="C:\Qt\5.9.2\mingw53_32\bin\qtenv2.bat"
 if exist %QTENV% goto :ok_qt

@@ -21,7 +21,7 @@ public:
 
 private:
     // inputs
-    QString fileName;
+    QString fileName, title;
     // outputs
     QVector<QString> values;
     bool atEnd;

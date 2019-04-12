@@ -175,23 +175,9 @@
     <file>data/input/projects/vg/example1/3-pid-controller.box</file>
     <file>data/input/projects/vg/example1/4-pid-controller.box</file>
     <file>data/input/projects/vg/example1/pid-controller.box</file>
-    <file>data/input/projects/vg/excel/2018-10-30-jeaa-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2018-10-30-jeaa.xml</file>
-    <file>data/input/projects/vg/excel/2018-11-07-jeaa.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-17-jeaa-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-17-jeaa.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-18-standard_greenhouse-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-18-standard_greenhouse.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-18-standard_led-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2018-12-18-standard_led.xml</file>
-    <file>data/input/projects/vg/excel/2019-03-08-standard_greenhouse-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-03-08-standard_greenhouse.xml</file>
-    <file>data/input/projects/vg/excel/2019-03-19-obscura-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-03-19-obscura.xml</file>
-    <file>data/input/projects/vg/excel/all jeaa setpoints.txt</file>
-    <file>data/input/projects/vg/excel/DVV_Input_data.xml</file>
+    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
-    <file>data/input/projects/vg/excel/VG.xlsm</file>
+    <file>data/input/projects/vg/excel/ud.xml</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
@@ -200,8 +186,7 @@
     <file>data/input/projects/vg/pid-controller-plot.R</file>
     <file>data/input/projects/vg/pid-controller.box</file>
     <file>data/input/projects/vg/proportional-signal.box</file>
-    <file>data/input/projects/vg/temp/2018-10-30-jeaa.xml</file>
-    <file>data/input/projects/vg/temp/2018-11-07-jeaa.xml</file>
+    <file>data/input/projects/vg/temp/2019-03-29-standard_greenhouse.xml</file>
     <file>data/input/projects/vg/TestOKO1.xml</file>
     <file>data/input/projects/vg/TestOKO1_tr_2018.xml</file>
     <file>data/input/projects/vg/transform1.bat</file>

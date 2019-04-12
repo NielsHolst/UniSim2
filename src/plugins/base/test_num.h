@@ -25,7 +25,7 @@ inline bool eq(double n, double d, double feps = 1e-6) {
 		return false;
     if (fabs(d)>1 && fabs(n)<fabs(d)*DBL_MIN) // underflow
         return false;
-    return 1.-feps<n/d && n/d<1+feps;
+    return (1.-feps<n/d && n/d<1+feps) || fabs(n-d)<feps;
 }
 
 inline bool ne(double n, double d, double feps = 1e-6) {

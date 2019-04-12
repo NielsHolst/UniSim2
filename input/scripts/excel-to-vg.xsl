@@ -5,6 +5,7 @@
 
 <!-- Helpers -->
 <xsl:variable name="colon" select="codepoints-to-string(58)"/>
+<xsl:variable name="test-weather-file" select="'input/sel_dk.txt'"/> 
 
 <!-- Missing parameters -->
 <xsl:variable name="heatPipeMaxTemperature" select="60"/>
@@ -53,7 +54,7 @@
 <xsl:function name="ecolmod:generateXPath" >
   <xsl:param name="pNode" as="node()"/>
 
-<xsl:for-each select="$pNode/ancestor::*">    
+  <xsl:for-each select="$pNode/ancestor::*">    
     <xsl:value-of select="concat('/', name())" />    
   </xsl:for-each>    
   <xsl:value-of select="concat('/', name($pNode))" />     
@@ -452,7 +453,10 @@
 </xsl:template>
 
 <xsl:template name="extract-heat-pipe">
-  <xsl:variable name="densityName" select="'PipelengthPerSqm'"/>
+  <xsl:variable name="materialName" select="'PipeMaterialDesc'"/>
+  <xsl:variable name="materialSrc" select="Constants/Parameters[ParameterName=$materialName]/Value" as="node()"/>
+  <xsl:variable name="materialValue" select="$materialSrc"/>
+  <xsl:variable name="densityName" select="'PipeLengthPerSqm'"/>
   <xsl:variable name="densitySrc" select="Constants/Parameters[ParameterName=$densityName]/Value" as="node()"/>
   <xsl:variable name="densityValue" select="number(replace($densitySrc, ',', '.'))"/>
   <xsl:variable name="diameterName" select="'InnerDiameter'"/>
@@ -608,14 +612,14 @@
         </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="$fileName"/>
-          <!-- <xsl:value-of select="'input/sel_dk.txt'"/> -->
+          <!-- <xsl:value-of select="$test-weather-file"/> -->
         </xsl:attribute>
       </port>
       <port name="ignoreYear" externalName="None" source="Fixed" value="TRUE"/>
     </box>
   </box>
   <xsl:comment> *** Construction *** </xsl:comment>
-  <xsl:variable name="orientationName" select="'Direction'"/>
+  <xsl:variable name="orientationName" select="'Orientation'"/>
   <xsl:variable name="orientationSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$orientationName]/Value" as="node()"/>
   <xsl:variable name="orientationValue" select="number(replace($orientationSrc, ',', '.'))"/>
   <xsl:variable name="numSpansName" select="'NumberOfSpans'"/>
@@ -722,17 +726,17 @@
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="1"/>
         </xsl:call-template>
-        <xsl:call-template name="extract-vent">
-          <xsl:with-param name="position" select="1"/>
-        </xsl:call-template>
+        <!-- <xsl:call-template name="extract-vent"> -->
+          <!-- <xsl:with-param name="position" select="1"/> -->
+        <!-- </xsl:call-template> -->
       </box>
       <box class="vg::ShelterFace" name="roof2">
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="2"/>
         </xsl:call-template>
-        <xsl:call-template name="extract-vent">
-          <xsl:with-param name="position" select="2"/>
-        </xsl:call-template>
+        <!-- <xsl:call-template name="extract-vent"> -->
+          <!-- <xsl:with-param name="position" select="2"/> -->
+        <!-- </xsl:call-template> -->
       </box>
       <box class="vg::ShelterFace" name="side1">
         <xsl:call-template name="extract-shelter-face">
@@ -856,13 +860,6 @@
     </box>
   </box>
   <xsl:comment> *** allSetpoints *** </xsl:comment>
-  <!-- <LIST> -->
-    <!-- <xsl:for-each select="DVV_SETUP/Greenhouse/Climate/Setpoint"> -->
-      <!-- <Setpoint> -->
-        <!-- <xsl:value-of select="Constants/Parameters/ParameterName"/> -->
-      <!-- </Setpoint> -->
-    <!-- </xsl:for-each>       -->
-  <!-- </LIST> -->
   <box name="allSetpoints">
     <box class="PrioritySignal" name="heatingTemperatureAtLowRh">
       <xsl:call-template name="extract-setpoints">
@@ -877,7 +874,6 @@
     <box class="PrioritySignal"  name="rhMax">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'Cli_MaxRelHmd'"/>
-        <!-- <xsl:with-param name="correction" select="-$rh-max-band"/> -->
       </xsl:call-template>
     </box>
     <box class="PrioritySignal"  name="heatingTemperatureMargin">
@@ -927,7 +923,7 @@
     </box>
     <box class="PrioritySignal" name="rhMaxBand">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'rh-max-band'"/>
+        <xsl:with-param name="climateSetpointName" select="'rhMaxBand'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="dawnThreshold">
@@ -940,7 +936,6 @@
         <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromDay'"/>
       </xsl:call-template>
     </box>
-    <!-- new -->
     <box class="PrioritySignal" name="crackVentilation">
       <xsl:call-template name="extract-setpoints">
         <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
@@ -1158,6 +1153,7 @@
       </port>
     </box>
   </box>
-</box> </xsl:template>
+  
+  </box> </xsl:template>
 
 </xsl:stylesheet>

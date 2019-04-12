@@ -20,6 +20,7 @@ StageAndPhase::StageAndPhase(QString name, QObject *parent)
     : StageBase(name, parent), _firstUpdate(true)
 {
     Input(inflow).help("Amount of inflow (vector)");
+    Input(scalarInflow).help("Amount of inflow (scalar)");
     Input(phaseK).equals(30).help("Phase distribution parameter");
     Input(phaseDuration).equals(100.).help("Average delay between inflow and outflow through phase");
     Input(phaseTimeStep).equals(1).help("Time step for phase development");
@@ -67,6 +68,8 @@ void StageAndPhase::update() {
     phaseInflowTotal += phaseInflowSum;
     if (_firstUpdate)
         inflow[0] += initial;
+    inflow[0] += scalarInflow;
+
 
     // Replace zero time step with neglible time step
     if (timeStep == 0)

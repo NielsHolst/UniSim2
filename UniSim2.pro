@@ -19,10 +19,10 @@ boxes.subdir = src/plugins/boxes
 boxes.depends = base
 unisim.depends = boxes
 
-#SUBDIRS += cmbp
-#cmbp.subdir = src/plugins/cmbp
-#cmbp.depends = base
-#unisim.depends = cmbp
+SUBDIRS += cmbp
+cmbp.subdir = src/plugins/cmbp
+cmbp.depends = base
+unisim.depends = cmbp
 
 SUBDIRS += command
 command.subdir = src/plugins/command
@@ -44,15 +44,15 @@ eq.subdir = src/plugins/eq
 eq.depends = base
 unisim.depends = eq
 
-#SUBDIRS += student
-#student.subdir = src/plugins/student
-#student.depends = base
-#unisim.depends = student
+SUBDIRS += student
+student.subdir = src/plugins/student
+student.depends = base
+unisim.depends = student
 
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
-#unisim.depends = vg
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg
 
 #
 # Optional plug-ins

@@ -15,6 +15,7 @@ class OutputText : public OutputPorts
 {
 public:
     OutputText(QString name, QObject *parent);
+    void initialize();
     void debrief();
 private:
     // Inputs

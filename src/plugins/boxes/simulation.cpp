@@ -93,7 +93,8 @@ void Simulation::run() {
         hasError = true;
         errorMsg = ex.what();
     }
-//    environment().computationStep(ComputationStep::Ready);
+    // environment().computationStep(ComputationStep::Ready);
+    dialog().finishProgress();
     executionTime = time.elapsed();
 }
 

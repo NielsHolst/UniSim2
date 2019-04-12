@@ -67,13 +67,13 @@ QStringList extractArguments(int argc, char *argv[]) {
     for(int i = 1; i < argc; ++i) {
         list << argv[i];
     }
-    if (argc != 3)
+    if (argc != 4)
         ThrowException("Wrong number or arguments:\n"+list.join("\n"));
     return list;
 }
 
 QString destinationFilePath(QStringList args) {
-    return QFileInfo(args.at(1)).absoluteFilePath();
+    return QFileInfo(args.at(2)).absoluteFilePath();
 }
 
 void clearDestination(QStringList args) {
@@ -105,7 +105,11 @@ int runWithoutDialog(int argc, char *argv[]) {
     try {
         environment().checkInstallation();
 
-        QString inputFilePath = args.at(0);
+        QString command = args.at(0).toLower();
+        if (command!="run" && command!="doc")
+            ThrowException("Use 'run' or 'doc' as first argument").value(command).value2(args.join("\n"));
+
+        QString inputFilePath = args.at(1);
         clearDestination(args);
 
         QString translatedFilePath = translateInputXml(inputFilePath);
@@ -115,7 +119,7 @@ int runWithoutDialog(int argc, char *argv[]) {
         Command::submit(QStringList() << "set" << "folder" << "output" << "output", nullptr);
 
         dialog->resetErrorCount();
-        Command::submit(QStringList() << "run" << translatedFilePath, nullptr);
+        Command::submit(QStringList() << command << translatedFilePath, nullptr);
         if (dialog->errorCount() > 0)
             ThrowException(dialog->getError());
 

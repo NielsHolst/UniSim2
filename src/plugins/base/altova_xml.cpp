@@ -37,11 +37,10 @@ void AltovaXml::run(QString inputFilePath,
     process->start(embrace(altovaPath()), args);
 
     if (process->waitForStarted()) {
-        if (!process->waitForFinished())
+        if (!process->waitForFinished()) {
             ThrowException(message);
+        }
     }
-    else
-        ThrowException(message);
 }
 
 QString AltovaXml::xsltPath() {

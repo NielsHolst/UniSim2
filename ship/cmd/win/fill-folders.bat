@@ -1,6 +1,8 @@
 set UNISIM_SHIP=C:\Users\au152367\Documents\QDev\UniSim2\ship
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
+set QT_ROOT=C:\Qt\5.12.1\mingw73_64
+if exist %QTENV% goto :ok_qt
 set QT_ROOT=C:\Qt\5.9.2\mingw53_32
 if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\5.9.1\mingw53_32
@@ -48,6 +50,7 @@ pushd %QT_BIN%
 copy icu*.dll %UNISIM_BIN%\
 copy libwinpthread-1.dll %UNISIM_BIN%
 copy libgcc_s_dw2-1.dll %UNISIM_BIN%
+copy libgcc_s_seh-1.dll %UNISIM_BIN%
 copy libstd*.dll %UNISIM_BIN%
 
 echo = Copy Qt libraries =

@@ -38,6 +38,7 @@ private:
     void readAttackDataFrame();
     void fillAttackMatrix();
     void createOutputs();
+    void resetOutcomes();
     double N(int i) const { return *_densities.at(i); }
     double D(int i) const { return *_demands.at(i); }
     void update_sPooled();

@@ -1,6 +1,7 @@
 #include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "food_web.h"
 using namespace base;
 
@@ -134,6 +135,12 @@ void FoodWeb::createOutputs() {
     }
 }
 
+void FoodWeb::resetOutcomes() {
+    for (Outcome outcome : _outcomes) {
+        outcome = Outcome{0,0,0,0};
+    }
+}
+
 void FoodWeb::reset() {
     ExceptionContext(this);
     if (attackFile != _currentAttackFile) {
@@ -145,6 +152,7 @@ void FoodWeb::reset() {
         fillAttackMatrix();
         _currentAttackFile = attackFile;
     }
+    resetOutcomes();
 }
 
 void FoodWeb::update() {
@@ -190,11 +198,16 @@ void FoodWeb::update_s() {
 void FoodWeb::update_acqPooled() {
 //    dialog().information("_s");
     for (int i = 0; i < _n; ++i) {
-        // Acquistion by attacker (j) pooled on all resources
+        double Di = D(i);
+        // Acquistion by attacker (i) pooled on all resources
         double sum = 0.;
         for (int j = 0; j < _n; ++j)
             sum += _s.at(i,j)*_g.at(i,j)*N(j);
-        _acqPooled[i] = (D(i) > 0.) ? D(i)*(1. - exp(-sum/D(i))) : 0.;
+        double acq = (D(i) > 0.) ? D(i)*(1. - exp(-sum/Di)) : 0.;
+        // Round off error
+        if (acq > Di) acq = Di;
+        if (acq > sum) acq = sum;
+        _acqPooled[i] = acq;
 //        QString s("[%1] %2");
 //        dialog().information(s.arg(i).arg(_acqPooled[i]));
     }
@@ -204,9 +217,16 @@ void FoodWeb::update_acqApprox() {
 //Acquistion by attacker (j) of resource (i), first approximation
     for (int i = 0; i < _n; ++i) {
         double Di = D(i);
+//        dialog().information("Di = " + QString::number(Di));
         // Acquistion by attacker (j) pooled on all resources
         for (int j = 0; j < _n; ++j) {
-            _acqApprox(i,j) = (Di > 0.) ? Di*(1. - exp(-_s.at(i,j)*_g.at(i,j)*N(j)/Di))  : 0.;
+            double Nj = N(j);
+//            dialog().information("  Nj = " + QString::number(N(j)));
+            double acq = (Di > 0.) ? Di*(1. - exp(-_s.at(i,j)*_g.at(i,j)*Nj/Di))  : 0.;
+            // Round off error
+            if (acq > Di) acq = Di;
+            if (acq > Nj) acq = Nj;
+            _acqApprox(i,j) = acq;
         }
     }
 //    dialog().information("_acqApprox");
@@ -236,20 +256,26 @@ void FoodWeb::update_losses() {
             sum += (g > 0.) ? _acq.at(i,j)/g : 0.;
         }
         // Round off error
-        double Nj = N(j);
-        if (fabs(sum - Nj) < 1e-6 && sum > 0.)
-            sum = Nj;
+        double Nj = N(j),
+               lossRatio = (Nj>0) ? sum/Nj : 0.;
+        TestNum::snapTo(lossRatio, 1.);
+
+        // HACK!
+        if (lossRatio > 1.) lossRatio = 1.;
+
+        double loss = TestNum::eq(lossRatio, 1.) ? Nj : sum;
+
         // Put outcomes
-        _outcomes[j].loss = sum;
-        _outcomes[j].lossRatio = (Nj>0) ? sum/Nj : 0.;
-//        if (sum > Nj) {
-//            QString s("loss=%1 > density=%2  -  diff=%3");
-//            dialog().information(s.arg(sum).arg(Nj).arg(sum-Nj));
-//            dialog().information("_s");
-//            dialog().information(_s.toString());
-//            dialog().information("_acq");
-//            dialog().information(_acq.toString());
-//        }
+        _outcomes[j].loss = loss;
+        _outcomes[j].lossRatio = lossRatio;
+        if (lossRatio >1. || loss > Nj) {
+            QString s("loss=%1 > density=%2  -  diff=%3 - lossRatio=%4");
+            dialog().information(s.arg(loss).arg(Nj).arg(loss-Nj).arg(lossRatio));
+            dialog().information("_s");
+            dialog().information(_s.toString());
+            dialog().information("_acq");
+            dialog().information(_acq.toString());
+        }
     }
 }
 
@@ -261,19 +287,18 @@ void FoodWeb::update_supplies() {
         }
         // Round off error
         double Di = D(i);
-        if (fabs(sum - Di) < 1e-6 && Di > 0.)
-            sum = Di;
+        TestNum::snapTo(sum, Di);
         // Put outcomes
         _outcomes[i].supply = sum;
         _outcomes[i].sdRatio = (Di>0) ? sum/Di : 0.;
-//        if (sum > D(i)) {
-//            QString s("supply=%1 > demand=%2");
-//            dialog().information(s.arg(sum).arg(D(i)));
-//            dialog().information("_s");
-//            dialog().information(_s.toString());
-//            dialog().information("_acq");
-//            dialog().information(_acq.toString());
-//        }
+        if (sum > D(i)) {
+            QString s("supply=%1 > demand=%2");
+            dialog().information(s.arg(sum).arg(D(i)));
+            dialog().information("_s");
+            dialog().information(_s.toString());
+            dialog().information("_acq");
+            dialog().information(_acq.toString());
+        }
     }
 }
 

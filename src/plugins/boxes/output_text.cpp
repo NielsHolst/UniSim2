@@ -4,6 +4,7 @@
 #include <base/port.h>
 #include <base/publish.h>
 #include <base/track.h>
+#include "output_r.h"
 #include "output_text.h"
 
 using namespace base;
@@ -20,6 +21,14 @@ OutputText::OutputText(QString name, QObject *parent)
     Input(skipInitialRows).equals(0).help("Skip this number of data frame rows");
     Input(averageN).equals(1).help("If N>1 then rows will be averaged for every N rows");
     help("creates an output text file");
+}
+
+void OutputText::initialize() {
+    if (skipFormats) {
+        OutputR *outputR = findMaybeOne<OutputR>("*");
+        if (outputR)
+            outputR->addRCode("output_skip_formats = TRUE");
+    }
 }
 
 void OutputText::debrief() {

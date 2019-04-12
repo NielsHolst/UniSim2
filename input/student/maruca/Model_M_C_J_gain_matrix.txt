@@ -1,0 +1,4 @@
+web/marucaInstar2	web/marucaInstar3	web/therophilusAdult
+1	1	1
+1	1	1
+1	1	1

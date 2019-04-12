@@ -36,10 +36,11 @@ Pipe::Pipe(QString name, QObject *parent)
     Input(maxTemperature).equals(80.).help("Maximum inflow temperature").unit("oC");
     Output(a).help("Heat pipe effect coefficient").unit("W/m/mm");
     Output(b).help("Heat pipe effect coefficient").unit("!=1");
-    materialInputs["carbon steel"] = MaterialInputs{0.0154, 1.253};
-    materialInputs["polyethylene"] = MaterialInputs{0.0123, 1.281};
-    materialInputs["copper"]       = MaterialInputs{0.0154, 1.253};
-    materialInputs["aluminium"]    = MaterialInputs{0.0154, 1.253};
+    Output(emissivity).help("Emissivity of pipe").unit("[0;1]");
+    materialInputs["carbon steel"] = MaterialInputs{0.0154, 1.253, 0.8};
+    materialInputs["polyethylene"] = MaterialInputs{0.0123, 1.281, 0.1};
+    materialInputs["copper"]       = MaterialInputs{0.0154, 1.253, 0.2};
+    materialInputs["aluminium"]    = MaterialInputs{0.0154, 1.253, 0.2};
     parseMaterial();
 }
 
@@ -54,6 +55,7 @@ void Pipe::parseMaterial() {
                 hint(QStringList(materialInputs.keys()).join(",")).context(this);
     a = materialInputs.value(s).a;
     b = materialInputs.value(s).b;
+    emissivity = materialInputs.value(s).emissivity;
 }
 
 }

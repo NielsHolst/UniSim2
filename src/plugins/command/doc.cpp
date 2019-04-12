@@ -18,17 +18,28 @@ HELP(doc, "doc", "writes model documentation file")
 doc::doc(QString name, QObject *parent)
     : Command(name, parent)
 {
-}
+    }
 
 void doc::doExecute() {
-    if (_args.size() > 1)
-        ThrowException("The 'doc' command takes no arguments");
-    Box *sim = environment().root();
-    if (!sim)
-        ThrowException("No model has been loaded");
+    if (_args.size() > 2)
+        ThrowException("Command 'doc' takes at most one argument");
+    dialog().resetErrorCount();
+    doLoad();
+    if (dialog().errorCount() == 0) {
+        Command::submit(QStringList() << "list", this);
+        doDoc();
+    }
+}
 
-    Command::submit(QStringList() << "list", this);
+void doc::doLoad() {
+    QStringList com;
+    com << "load";
+    if (_args.size() == 2)
+        com << _args[1];
+    Command::submit(com, this);
+}
 
+void doc::doDoc() {
     environment().openOutputFile(_file, "txt");
     _text.setDevice(&_file);
     appendHeadings();

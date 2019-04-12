@@ -1,3 +1,5 @@
+#include <base/dialog.h>
+#include <base/environment.h>
 #include <base/exception.h>
 #include <base/publish.h>
 #include "scenarios.h"
@@ -13,6 +15,7 @@ Scenarios::Scenarios(QString name, QObject *parent)
 {
     help("runs scenarios from a text file");
     Input(fileName).help("Text file with columns, one for each output produced. One iteration is run for each line").equals("scenarios.txt");
+    Input(title).help("Name of column that holds title of scenarion (optional)");
     Output(atEnd).help("Has last iteration run?");
 }
 
@@ -39,6 +42,19 @@ void Scenarios::initialize() {
     }
 }
 
+void Scenarios::reset() {
+    Q_ASSERT(!atEnd);
+    copyValues();
+    atEnd = (++_ixRow == _df.numRow());
+
+    if (!environment().isSilent()) {
+        QString titleName = port("title")->value<QString>(),
+                title = titleName.isEmpty() ? "" : port(titleName)->value<QString>();
+
+        dialog().information(QString::number(_ixRow) + " " + title);
+    }
+}
+
 void Scenarios::readDataFrame() {
     _df.read(fileName, DataFrame::ColumnLabelled);
     if (_df.numRow() == 0)
@@ -52,12 +68,6 @@ void Scenarios::createColumnOutputs() {
         int ixCol = _df.ixCol(colname);
         port->data(&values[ixCol]);
     }
-}
-
-void Scenarios::reset() {
-    Q_ASSERT(!atEnd);
-    copyValues();
-    atEnd = (++_ixRow == _df.numRow());
 }
 
 void Scenarios::copyValues() {

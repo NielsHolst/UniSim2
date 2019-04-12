@@ -14,6 +14,7 @@ if (!keepVariables) {
 }
 
 is_rstudio = function() !is.na(Sys.getenv("RSTUDIO", unset = NA))
+skip_formats = exists("output_skip_formats")
 
 open_plot_window = function(width, height) {
   is_windows = (.Platform$OS.type == "windows")
@@ -36,19 +37,23 @@ read_output = function(file_path) {
     list(col_names=colnames(sip), Rformat=Rformat, read_format=read_format)
   }
 
-  # Extract column info
-  cl = column_info(file_path)
+  if (skip_formats) {
+    U = read.table(file_path, header=TRUE, sep="\t")
+  } else {
+    # Extract column info
+    cl = column_info(file_path)
 
-  # Read data frame
-  U = read.table(file_path, header=FALSE, sep="\t", colClasses = cl$read_format, skip=2)
-  colnames(U) = cl$col_names
+    # Read data frame
+    U = read.table(file_path, header=FALSE, sep="\t", colClasses = cl$read_format, skip=2)
+    colnames(U) = cl$col_names
 
-  # Convert date/time columns
-  ix_date = which(!is.na(cl$Rformat))
-  if (length(ix_date) > 0 ) {
-    for (i in 1:length(ix_date)) {
-      ix = ix_date[i]
-      U[,ix] = parse_date_time(U[,ix], c(cl$Rformat[ix]))
+    # Convert date/time columns
+    ix_date = which(!is.na(cl$Rformat))
+    if (length(ix_date) > 0 ) {
+      for (i in 1:length(ix_date)) {
+        ix = ix_date[i]
+        U[,ix] = parse_date_time(U[,ix], c(cl$Rformat[ix]))
+      }
     }
   }
   U

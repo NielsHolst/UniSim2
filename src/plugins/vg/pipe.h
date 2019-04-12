@@ -22,12 +22,12 @@ private:
     QString material;
     double density, diameter, flowRate, minTemperature, maxTemperature;
     // Outputs
-    double a, b;
+    double a, b, emissivity;
     // Methods
     void parseMaterial();
     // Data
     struct MaterialInputs {
-        double a, b;
+        double a, b, emissivity;
     };
     QMap<QString, MaterialInputs> materialInputs;
 };

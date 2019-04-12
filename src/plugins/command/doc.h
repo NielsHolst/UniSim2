@@ -20,6 +20,8 @@ private:
     QTextStream _text;
     // methods
     void doExecute();
+    void doDoc();
+    void doLoad();
     void appendHeadings();
     void appendText(base::Box *box);
     QString qualifiedClassName(QString className);
