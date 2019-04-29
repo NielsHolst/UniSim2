@@ -316,6 +316,8 @@ void Box::cloneFamily(QString name, QObject *parent) {
         else {
             myClone->port(name)->equals(port->valueAsString());
         }
+        // Copy transform
+        myClone->port(name)->transform( port->transform() );
     }
     for (Box *child : findMany<Box>("./*"))
         child->cloneFamily(child->objectName(), myClone);

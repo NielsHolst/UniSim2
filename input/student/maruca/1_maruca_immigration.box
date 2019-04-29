@@ -1,0 +1,25 @@
+Simulation {
+  .steps = 20
+  Sequence flowering {
+    .min = 0
+    .max = 1
+  }
+  ProportionalSignal immigration {
+    .input = flowering[value]
+    .minSignal = 0
+    .maxSignal = 0.2
+    .threshold = 0
+    .thresholdBand = 1
+  }
+  OutputR {
+    PageR {
+      +cowpeaFlowering = flowering[value]
+      .xAxis = .[cowpeaFlowering]
+      PlotR {
+        +immigrantsPerDay = immigration[value]
+        .ports = .[immigrantsPerDay]
+        .ggplot = "geom_line(size=1.1) + geom_point(size=3.5)"
+      }
+    }
+  }
+}

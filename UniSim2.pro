@@ -58,10 +58,10 @@ unisim.depends = vg
 # Optional plug-ins
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
 
 #SUBDIRS += apis
 #apis.subdir = src/plugins/apis
@@ -93,10 +93,10 @@ unisim.depends = vg
 #io.depends = base
 #unisim.depends = io
 
-#SUBDIRS += MusselBed
-#MusselBed.subdir = src/plugins/MusselBed
-#MusselBed.depends = base
-#unisim.depends = MusselBed
+SUBDIRS += MusselBed
+MusselBed.subdir = src/plugins/MusselBed
+MusselBed.depends = base
+unisim.depends = MusselBed
 
 #SUBDIRS += PestTox
 #PestTox.subdir = src/plugins/PestTox

@@ -1,6 +1,8 @@
 sim = read_output(output_file_name)
 sim$Location = factor(sim$iteration)
-levels(sim$Location) = c("Agadez","Bilma","Diffa","Goure","Maine Soroa","N_guigni","Nouadhibou","Nouakchott","Podor","Saint_louis","Tahoua","Tillabery")
+levels(sim$Location) = c("Agadez","Bilma","Diffa","Goure",
+                         "Maine Soroa","N_guigni","Nouadhibou",
+                         "Nouakchott","Podor","Saint_louis","Tahoua","Tillabery")
 MCJ400 = ddply(sim, ~Location, summarise, 
                sum.individuals = sum(individuals.content),
                sum.individualsTJ = sum(individualsTJ.content),

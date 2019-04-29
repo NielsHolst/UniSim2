@@ -67,7 +67,7 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
         if (!(0.<a && a<=1.)) {
             QString msg = "Illegal value for flow coefficient in DistributedDelay (a==%1). "
                     "Should be within ]0;1]. Other parameters: k=%2, del=%3, dt=%4, idt=%5, fgr=%6, L=%7";
-            ThrowException(msg.arg(a).arg(p.k).arg(del).arg(dt).arg(idt).arg(fgr).arg(p.L));
+            ThrowException(msg.arg(a).arg(p.k).arg(del).arg(dt).arg(idt).arg(fgr).arg(p.L)).context(parent);
         }
 
         // Integrate

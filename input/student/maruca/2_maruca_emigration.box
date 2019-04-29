@@ -1,0 +1,27 @@
+Simulation {
+  .steps = 20
+  Sequence maturation {
+    .min = 0
+    .max = 1
+  }
+  ProportionalSignal staying {
+    .input = maturation[value]
+    .signalReset = 1
+    .minSignal = 0
+    .maxSignal = 1
+    .threshold = 0
+    .thresholdBand = 1
+    .increasingSignal = FALSE
+  }
+  OutputR {
+    PageR {
+      +cowpeaMaturation = maturation[value]
+      .xAxis = .[cowpeaMaturation]
+      PlotR {
+        +proportionStayingPerDay = staying[value]
+        .ports = .[proportionStayingPerDay]
+        .ggplot = "geom_line(size=1.1) + geom_point(size=3.5)"
+      }
+    }
+  }
+}

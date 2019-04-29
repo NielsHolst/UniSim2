@@ -1,0 +1,216 @@
+Simulation maruca {
+  .steps = 365
+  Box parameters {
+    +pestPressure = 0.2 // number of adult arriving per day during flowering
+  }
+  Scenarios scenarios {
+    .fileName = "weather400/weather400.txt"
+    .title = "FileName"
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2017
+  }
+  Records weather400 {
+    .fileName = scenarios[FileName] 
+  }
+  Box cowpea { 
+    Stage initial {
+      .initial = 1
+      .duration = 307 
+      .timeStep= ./time[value]
+      OnOff time  {
+        .x= calendar [dayOfYear]
+        .xOn = 166 // 15th of june // Based on precipitation
+        .xOff = 196 //15th of july 
+        .valueOn=./dayDegrees[step]
+        .valueOff= 0
+        DayDegrees dayDegrees {
+          .T0 = 8 
+          .Topt = 28 // cavhalho, 2017
+          .T = weather400[Tavg]
+        }
+      }
+    }
+    Stage vegetative {
+      .inflow = ../initial[outflow]
+      .duration = 326
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+    Stage flowering {
+      .inflow = ../vegetative[outflow]
+      .duration = 463
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 8
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+    Stage maturation {
+      .inflow = ../flowering[outflow]
+      .duration = 265
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10
+        .Topt = 28
+        .T = weather400[Tavg]
+      }
+    }
+  }
+  Box maruca {
+    Stage egg {
+      .inflow = ../adult/oviposition[outflow]
+      .duration = 51.1 // adati et al. 2014
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.5 // adati et al. 2014
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9 // adati et al. 2014
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar1 {
+      .inflow = ../egg[outflow]
+      .duration = 50.8
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 11.5 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar2 {
+      .inflow = ../instar1[outflow]
+      .duration = 40.0
+      .timeStep= ./time[step]
+      // .instantLossRate = web/marucaInstar2[lossRatio] // Dung et al 2011
+      DayDegrees time {
+        .T0 = 10.4 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar3 {
+      .inflow = ../instar2[outflow]
+      .duration = 40.1
+      .timeStep= ./time[step]
+      // .instantLossRate = web/marucaInstar3[lossRatio]
+      DayDegrees time {
+        .T0 = 10.4 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar4 {
+      .inflow = ../instar3[outflow]
+      .duration = 51.8
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 8 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage instar5 {
+      .inflow = ../instar4[outflow]
+      .duration = 73.6
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 9.7 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage prepupae {
+      .inflow = ../instar5[outflow]
+      .duration = 28.2
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 7.7 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage pupae {
+      .inflow = ../prepupae[outflow]
+      .duration = 116.5
+      .timeStep= ./time[step]
+      DayDegrees time {
+        .T0 = 10.9 // adati et al. 2004
+        .Topt = 28 // Dannon et al. 2009 --> optimum btw 26-30° 
+        .Tmax = 31.9
+        .T = weather400[Tavg]
+      }
+    }
+    Stage preOviposition {
+      .inflow = ../pupae[outflow]
+      .duration = 2
+      .timeStep = 1
+      .growthFactor = ./staying[value]
+      ProportionalSignal staying {
+        .input = cowpea/flowering[content]
+        .minSignal = 0
+        .maxSignal = 1
+        .threshold = 0
+        .thresholdBand = 1
+      }
+    }
+    Box adult {
+      ProportionalSignal immigration {
+        .input = cowpea/flowering[content]
+        .minSignal = 0
+        .maxSignal = parameters[pestPressure]
+        .threshold = 0
+        .thresholdBand = 1
+      }
+      Stage individuals {
+        .inflow|sum = ../../preOviposition[outflow] | ../immigration[value]
+        .duration = 10.24 //  days mean taken from dannon et al 2009 (12.24 days total - 2 days pre-oviposition)
+        .timeStep = 1
+      }
+      Stage oviposition {
+        .inflow = ../individuals[inflow]
+        .duration = 3 // mating only once between the 2nd and 5th night of adulthood (Souna 2018)
+        .timeStep = 1
+        .growthFactor = 46.69 // Mean taken from Dannon et al 2009 -- total fecundity 140.06 egg/female then divide in 3 it gives 46.69 egg/female
+      }
+    }
+  }
+  OutputR output {
+    +ggplot = "geom_line(size=1.1) + 
+                    scale_x_datetime(
+                      breaks = date_breaks('months'), 
+                      labels = date_format('%b')
+                    )
+                    + 
+                    ylim(-1,NA)" 
+    PageR cowpea {
+      .xAxis = calendar[date]
+      .title = "Cowpea"
+      PlotR {
+        .ports = (cowpea/*[content] cowpea/maturation/*[content])
+        .ggplot = output[ggplot]
+      }    
+    }
+    PageR Maruca {
+      .xAxis = calendar[date]
+      .title = "Maruca population dynamics"
+      PlotR {
+        .ports = (maruca/adult/individuals[content] maruca/egg[content])
+        .ggplot = output[ggplot]
+        .transform = "log10"
+      }
+    }
+  }
+}

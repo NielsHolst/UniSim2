@@ -9,82 +9,35 @@ BOXES_PLUGIN_NAME = aphid
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
-    crop_grows.h\
-    wheat_growth.h\
-    wheat_growth_AG.h\
-    beginning_migration.h\
-    end_migration.h\
-    aphid_migration.h\
-    aphid_migration_limited.h\
-    aphid_migration2.h\
-    potential_fecundity_Duffy.h\
-    R0_Schmitz.h\
-    life_fec_infected.h\
-    nb_tillersD.h\
-    density_per_tiller.h \
-    Fecundity.h\
-    Fecundity_Schmitz.h\
-    Fecundity_Schmitz2.h\
-    aph_intrinsic_mortality.h\
-    aph_intrinsic_mortalityD.h\
-    aph_survivalD.h\
-    aph_survivalP.h\
-    Infection_rate.h\
-    Infection_rate2.h\
-    Infection_rate3.h\
-    Threshold_pop.h\
-    cadavers_units.h\
-    cadavers_units2.h\
-    CadaverDensity.h\
-    humidity_switch.h\
-    Spo_cadavers.h\
-    contamination.h\
-            wheat_start2.h \
-            alate3.h \
-            aph_fecundity.h \
-            aphid_start_simple.h \
-            fungalMortality.h \
-            fungus_start_simple.h \
-            growthRate.h \
-            infection_pressure.h
+  aphid_immigration.h \
+  aphid_index.h \
+  aphid_juvenile_survival.h \
+  aphid_net_reproduction.h \
+  aphid_offspring.h \
+  biocontrol.h \
+  cadaver_conversion.h \
+  cadaver_time.h \
+  crop_growth_stage.h \
+  crop_is_growing.h \
+  infection_rate.h \
+  threshold_base.h \
+  threshold_norway.h \
+  threshold_sweden.h \
+  yield.h
 
 SOURCES +=  \
-    crop_grows.cpp\
-    wheat_growth.cpp\
-    wheat_growth_AG.cpp\
-    beginning_migration.cpp\
-    end_migration.cpp\
-    aphid_migration.cpp\
-    aphid_migration_limited.cpp\
-    aphid_migration2.cpp\
-    potential_fecundity_Duffy.cpp\
-    R0_Schmitz.cpp\
-    life_fec_infected.cpp\
-    nb_tillersD.cpp\
-    density_per_tiller.cpp \
-    Fecundity.cpp\
-    Fecundity_Schmitz.cpp\
-    Fecundity_Schmitz2.cpp\
-    aph_intrinsic_mortality.cpp\
-    aph_intrinsic_mortalityD.cpp\
-    aph_survivalD.cpp\
-    aph_survivalP.cpp\
-    Infection_rate.cpp\
-    Infection_rate2.cpp\
-    Infection_rate3.cpp\
-    Threshold_pop.cpp\
-    cadavers_units.cpp\
-    cadavers_units2.cpp\
-    CadaverDensity.cpp\
-    humidity_switch.cpp\
-    Spo_cadavers.cpp\
-    contamination.cpp\
-            wheat_start2.cpp \
-            alate3.cpp \
-            aph_fecundity.cpp \
-            aphid_start_simple.cpp \
-            fungalMortality.cpp \
-            fungus_start_simple.cpp \
-            growthRate.cpp \
-            infection_pressure.cpp
-
+  aphid_immigration.cpp \
+  aphid_index.cpp \
+  aphid_juvenile_survival.cpp \
+  aphid_net_reproduction.cpp \
+  aphid_offspring.cpp \
+  biocontrol.cpp \
+  cadaver_conversion.cpp \
+  cadaver_time.cpp \
+  crop_growth_stage.cpp \
+  crop_is_growing.cpp \
+  infection_rate.cpp \
+  threshold_base.cpp \
+  threshold_norway.cpp \
+  threshold_sweden.cpp \
+  yield.cpp

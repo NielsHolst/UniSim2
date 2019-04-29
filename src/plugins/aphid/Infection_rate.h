@@ -4,20 +4,18 @@
 
 namespace aphid {
 
-class Infection_rate : public base::Box
+class InfectionRate: public base::Box
 {
 public:
-    Infection_rate(QString name, QObject *parent);
-    void reset();
+    InfectionRate(QString name, QObject *parent);
     void update();
 private:
     // Inputs
-    double nb_spo_cadavers;
-    double transmission_efficiency;
-    double nb_susceptible;
+    bool isSporulating;
+    double cadavers, transmissionEfficiency;
     // Outputs
-    double rho;
-    double newly_infected;
+    double value;
+
 };
 
 }

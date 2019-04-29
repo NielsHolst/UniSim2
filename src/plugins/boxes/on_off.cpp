@@ -12,7 +12,7 @@ OnOff::OnOff(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("swithes on inside [xOn,xOff] interval");
-    Input(x).help("x-value at which to calculate curve value");
+    Input(x).help("x-value at which to calculate value");
     Input(xOn).equals(0).help("Lower threshold");
     Input(xOff).equals(1).help("Upper threshold");
     Input(valueOn).equals(1).help("Value inside [xOn,xOff] interval");

@@ -42,6 +42,7 @@ HEADERS +=  \
     random_uniform.h \
     random_uniform_int.h \
     records.h \
+#    replicator.h \
     sandy.h \
     scenarios.h \
     sensitivity_analysis_base.h \
@@ -86,6 +87,7 @@ SOURCES +=  \
     random_uniform.cpp \
     random_uniform_int.cpp \
     records.cpp \
+#    replicator.cpp \
     sandy.cpp \
     scenarios.cpp \
     sensitivity_analysis_base.cpp \
