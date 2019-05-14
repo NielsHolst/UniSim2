@@ -512,5 +512,13 @@ template<> Environment::Folder convert(QString s) {
     ThrowException("Unknown folder").value(s);
 }
 
+void Environment::option(QString name, QVariant value) {
+    _options[name] = value;
+}
+
+QVariant Environment::option(QString name) {
+    return _options.contains(name) ? _options.value(name) : QVariant();
+}
+
 }
 

@@ -93,7 +93,7 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
         // An unquoted value item is for numbers, dates, times, booleans and path expressions
-        unquoted_value_item %= lexeme[+(char_ - char_(" \t\n\"{}()[]@?:"))]
+        unquoted_value_item %= lexeme[+(char_ - char_(" \t\n\"{}()[]@?"))]
                 >> -(char_('[') > (joker|name) > char_(']'));
         // A trailing list is preceeded by @
         trailing_list %= char_('@') > list_value;

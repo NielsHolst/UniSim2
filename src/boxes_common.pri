@@ -8,7 +8,9 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += debug
+CONFIG += release
+VERSION = 2.2.5
+CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 
 # Set suffix 'd' for debug version

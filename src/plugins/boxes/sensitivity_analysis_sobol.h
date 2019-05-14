@@ -14,13 +14,13 @@ public:
     void debrief();
 private:
     // Input
-    int iteration, bootstrapSize;
-    const int &N, &k;
+    int iteration, bootstrapSize, &N, &k;
     // Output
     char phase;
     // Data
     base::Matrix<double> A, B, C;
     // Methods
+    void reviewNumberOfSamples();
     int numberOfIterations() const;
     int numberOfSamples() const;
     void fillMatrices();

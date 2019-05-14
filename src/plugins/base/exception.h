@@ -38,13 +38,12 @@ public:
     static void setContext(const QObject *object);
 private:
     // data
-    const QObject *_context;
-    QString _message, _value, _value1, _value2, _hint, _fullName, _file, _id;
+    QString _message, _contextDescription,
+            _value, _value1, _value2, _hint, _fullName, _file, _id;
     int _line;
     static int _count;
     static const QObject *_fallbackContext;
     // methods
-    QString contextDescription() const;
     template <class T> QString asString(T v);
 };
 

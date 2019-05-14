@@ -46,6 +46,11 @@ Pipe::Pipe(QString name, QObject *parent)
 
 void Pipe::reset() {
     parseMaterial();
+    update();
+}
+
+void Pipe::update() {
+    if (TestNum::eq(flowRate, -999)) flowRate = 5.;
 }
 
 void Pipe::parseMaterial() {

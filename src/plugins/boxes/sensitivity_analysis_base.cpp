@@ -1,3 +1,4 @@
+#include <base/dialog.h>
 #include <base/distribution.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -22,9 +23,12 @@ SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
 void SensitivityAnalysisBase::initialize() {
     setInputsTotal();
     setInputsAnalysed();
+    reviewNumberOfSamples();
     iterations = numberOfIterations();
     for (Distribution *dist : _saDistributions)
         dist->initialize(numberOfSamples());
+    QString msg = "Running sensitivity analysis for %1 iterations...";
+    dialog().information(msg.arg(iterations));
 }
 
 void SensitivityAnalysisBase::setInputsTotal() {

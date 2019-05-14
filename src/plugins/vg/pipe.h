@@ -17,6 +17,7 @@ class Pipe : public base::Box
 public:
     Pipe(QString name, QObject *parent);
     void reset();
+    void update();
 private:
     // Inputs
     QString material;

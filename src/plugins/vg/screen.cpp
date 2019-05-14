@@ -26,6 +26,7 @@ Screen::Screen(QString name, QObject *parent)
     Input(emissivityInner).equals(0.62).help("Inner emissivity(=absorptivity) of long-wave radiation [0;1]").unit("[0;1]");
     Input(emissivityOuter).equals(0.06).help("Outer emissivity(=absorptivity) of long-wave radiation [0;1]").unit("[0;1]");
     Input(U).equals(2.).help("Heat transfer coefficient").unit("W/m2/K");
+    Input(acceptZeroU).equals(false).help("Accept U=0 and set it to U=infinity").unit("y|n");
     Input(energyLossReduction).equals(0.6).help("Manufacturer's assessment of reduction in energy loss [0;1]").unit("[0;1]");
     Input(haze).equals(0.8).help("Proportion of direct light transmitted as diffuse light [0;1]").unit("[0;1]");
     Input(specificHeatCapacity).equals(1500.).help("Area-specific heat capacity").unit("J/m2 cover/K");
@@ -60,7 +61,9 @@ void Screen::initialize() {
     if (layer == -1)
         ThrowException("Unexpected: Cannot find self among among screens").context(this);
     // Check values
-    if (U<=0.)
+    if (TestNum::eqZero(U, 1e-12) && acceptZeroU)
+        U = infinity();
+    else if (U<=0.)
         ThrowException("U-value must be positive").value(U).context(this);
 }
 

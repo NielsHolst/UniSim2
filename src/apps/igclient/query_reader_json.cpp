@@ -26,7 +26,6 @@ ig::Query QueryReaderJson::parse(QString filePath) {
         QJsonValue rootValue = doc.array().first();
         if (rootValue.isObject()) {
             QJsonObject rootObject = rootValue.toObject();
-            std::cout << qPrintable(rootObject.keys().join("\n")) << "\n";
             parseQuery(rootObject);
         }
     }
@@ -94,6 +93,7 @@ ig::Variable QueryReaderJson::findVariableFromValue(QJsonObject object, QString 
 
 void QueryReaderJson::parseQuery(QJsonObject object) {
     PARSE_OBJECT(TimeStamp);
+    PARSE_OBJECT(GreenHouse);
     PARSE_OBJECT(Culture);
     PARSE_OBJECT(Construction);
     PARSE_ARRAY(HeatPipes);
@@ -110,7 +110,6 @@ void QueryReaderJson::parseTimeStamp(QJsonObject object) {
     _query.timeStamp.dayOfYear = findInt(object, "DayOfYear");
     _query.timeStamp.timeOfDay = findDouble(object, "TimeOfDay");
     _query.timeStamp.timeZone = findDouble(object, "TimeZone");
-
 }
 
 void QueryReaderJson::parseTimeStampTformat(QJsonObject object) {
@@ -130,6 +129,12 @@ void QueryReaderJson::parseTimeStampTformat(QJsonObject object) {
     _query.timeStamp.dayOfYear = date.dayOfYear();
     _query.timeStamp.timeOfDay = hour;
     _query.timeStamp.timeZone = offset.toDouble();
+}
+
+void QueryReaderJson::parseGreenHouse(QJsonObject object) {
+    _query.greenhouse.latitude = findDouble(object, "Latitude");
+    _query.greenhouse.longitude = findDouble(object, "Longitude");
+    _query.greenhouse.direction = findDouble(object, "Direction");
 }
 
 void QueryReaderJson::parseCulture(QJsonObject) {
@@ -187,8 +192,8 @@ void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     ig::HeatPipe hp;
     hp.material = static_cast<ig::HeatPipeMaterial>(findInt(object, "Material"));
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.temperatureInflow = findVariableFromValue(object, "TemperatureInflow");
-    hp.temperatureOutflow = NullVariable; //findVariable(object, "TemperatureOutflow");
+    hp.temperatureInflow = findVariableFromValue(object, "TemperatureInFlow");
+    hp.temperatureOutflow = NullVariable; //findVariable(object, "TemperatureOutFlow");
     hp.innerDiameter = findDouble(object, "InnerDiameter");
     hp.outerDiameter = findDouble(object, "OuterDiameter");
     hp.length = findDouble(object, "Length");

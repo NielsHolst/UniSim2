@@ -11,9 +11,11 @@ public:
     void update();
 private:
     // Inputs
-    double Tmin, Tmax, Topt, R0opt, temperature, cropGrowthStage, aphidDensity, aphidDensityThreshold;
+    double Tmin, Tmax, Topt, R0opt, temperature, cropGrowthStage,
+        aphidDensity, aphidDensityThreshold, exposureCost;
     // Outputs
-    double apterous, alate;
+    double apterous, alate,
+        apterousExposed, alateExposed;
 };
 
 }

@@ -10,13 +10,17 @@
 using namespace std;
 
 bool argsOk(int argc) {
-    if (argc == 2)
+    if (argc == 5)
         return true;
-    cout << "One argument is needed";
+    cout << "Four arguments are needed";
     return false;
 }
 
-bool updateConfig(QString config) {
+bool updateConfig(QString major,
+                  QString minor,
+                  QString sub,
+                  QString config) {
+    QString version = major + "." + minor + "." + sub;
     if (config != "debug" && config != "release") {
         cout << "Invalid config value";
         return false;
@@ -44,6 +48,8 @@ bool updateConfig(QString config) {
             s.left(begin) +
             "# AUTO-CONFIG-BEGIN\n" +
             "CONFIG += " + config + "\n" +
+            "VERSION = " + version + "\n" +
+            "CONFIG += skip_target_version_ext\n" +
             s.mid(end);
 
     file.close();
@@ -58,7 +64,7 @@ bool updateConfig(QString config) {
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    if (!argsOk(argc) || !updateConfig(argv[1]))
+    if (!argsOk(argc) || !updateConfig(argv[1], argv[2], argv[3], argv[4]))
         return 1;
     return 0;
 }

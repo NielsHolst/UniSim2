@@ -24,6 +24,7 @@ protected:
     QVector<base::Distribution*> _saDistributions;
 private:
     // Methods
+    virtual void reviewNumberOfSamples() {}
     virtual int numberOfIterations() const = 0;
     virtual int numberOfSamples() const = 0;
     bool canBeAnalysed(base::Port *port) const;

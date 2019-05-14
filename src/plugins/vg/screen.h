@@ -30,6 +30,7 @@ private:
            specificHeatCapacity,
            energyLossReduction, U, haze,
            transmissivityAir, transmissivityAirExponent, state;
+    bool acceptZeroU;
     // Outputs
     int layer;
     double

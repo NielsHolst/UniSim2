@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QObject>
 #include <QMap>
+#include <QVariant>
 #include "computation_step.h"
 #include "convert.h"
 #include "exception.h"
@@ -71,6 +72,9 @@ public:
     bool isLinux() const;
     bool isMac() const;
     bool isWindows() const;
+
+    void option(QString name, QVariant value);
+    QVariant option(QString name);
 private:
     // Data
     Box *_root, *_current;
@@ -79,6 +83,7 @@ private:
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;
     bool _isFirstInstallation, _isSilent;
+    QMap<QString, QVariant> _options;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();

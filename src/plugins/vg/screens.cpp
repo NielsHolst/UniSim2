@@ -13,6 +13,7 @@
 #include "screens.h"
 #include "surface_radiation.h"
 
+#include <base/dialog.h>
 
 using std::max;
 using namespace base;
@@ -88,11 +89,19 @@ void Screens::update() {
     U = 1./resistance;
 
     SurfaceRadiation rad;
+    Exception::setContext(this);
+//    dialog().information("Screens::update() A");
     for (ScreenInfo si: screenInfos) {
+        QString s = "(%1 %2 %3)";
+//        dialog().information(s.arg(*si.transmissivityLightNet).arg(*si.absorptivityLwOuterNet).arg(*si.absorptivityLwInnerNet));
         SurfaceRadiation &screenRad( SurfaceRadiation().asScreen(*si.transmissivityLightNet, *si.absorptivityLwOuterNet, *si.absorptivityLwInnerNet) );
+//        dialog().information("Screens::update() B");
         rad *= screenRad;
+//        dialog().information("Screens::update() C");
     }
+//    dialog().information("Screens::update() Y");
     set(rad);
+//    dialog().information("Screens::update() Z");
 }
 
 } //namespace

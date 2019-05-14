@@ -26,7 +26,6 @@ int main(int, char **)
         }
         else
             cout << responseToString(r);
-
     }
     catch (const base::Exception &ex) {
         cout << qPrintable(ex.what());

@@ -16,7 +16,7 @@ int Exception::_count = 0;
 const QObject *Exception::_fallbackContext = nullptr;
 
 Exception::Exception(QString message)
-    : _context(_fallbackContext), _message(message)
+    : _message(message)
 {
     ++_count;
 }
@@ -32,22 +32,16 @@ Exception& Exception::line(int i) {
 }
 
 Exception& Exception::context(const QObject *object) {
-    _context = object;
-    return *this;
-}
-
-QString Exception::contextDescription() const {
-    QString description;
-    const QObject *context = _context ? _context : _fallbackContext;
-    if (context) {
-        description = fullName(context);
-        const Box *box = dynamic_cast<const Box *>(context);
+    _contextDescription.clear();
+    if (object) {
+        _contextDescription = fullName(object);
+        const Box *box = dynamic_cast<const Box *>(object);
         if (!box)
-            box = dynamic_cast<const Box *>(context->parent());
+            box = dynamic_cast<const Box *>(object->parent());
         if (box)
-            description += QString(" (#%1)").arg(box->order());
+            _contextDescription += QString(" (#%1)").arg(box->order());
     }
-    return description;
+    return *this;
 }
 
 Exception& Exception::hint(QString s) {
@@ -66,7 +60,7 @@ QString Exception::id() const {
 
 QString Exception::what() const {
     QString text = QString{"Error: %1"}.arg(_message),
-            description = contextDescription();
+            description = _contextDescription;
     if (!_value.isNull())
         text += QString("\nValue: '%1'").arg(_value);
     if (!_value1.isNull())

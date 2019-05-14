@@ -19,7 +19,7 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     : GrowthLightBase(name, parent)
 {
     Input(type).equals("HPS").help("Type of lamp").unit("HPS|LED");
-    Input(intensity).equals(40.).help("Power of installed lamps per greenhouse area").unit("W/m2");
+    Input(intensity).help("Power of installed lamps per greenhouse area").unit("W/m2");
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
     Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
     Input(age).help("Age of the lamps at simulation start").unit("h");

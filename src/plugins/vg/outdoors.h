@@ -19,12 +19,12 @@ public:
     void reset();
     void update();
 private:
-    // Parameters
+    // Inputs
     double temperature, skyTemperature, windSpeed, rh,
     radiation, diffuseRadiation, sunlightPhotonCoef,
     co2, soilTemperature;
 
-    // Variables
+    // Outputs
     double directRadiation, propDirectRadiation, ah, sh;
 
 };

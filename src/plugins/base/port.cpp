@@ -382,6 +382,9 @@ QString Port::valueAsString() const {
     }
     else {
         s = value<QString>();
+        if ((type()==Float || type()==Double || type()==LongDouble)
+             && !s.contains("inf") && !s.contains(".") && !s.contains("e"))
+            s = s + ".0";
     }
     return s;
 }

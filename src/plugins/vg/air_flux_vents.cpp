@@ -41,8 +41,8 @@ void AirFluxVents::initialize() {
         sumWidth = 0,
         sumLength = 0,
         sumWeightedWidth = 0;
-    for (Vent *vent : vents) {
-        double
+        for (Vent *vent : vents) {
+            double
             number = vent->port("number")->value<int>(),
             length = vent->port("length")->value<double>(),
             width  = vent->port("width")->value<double>(),

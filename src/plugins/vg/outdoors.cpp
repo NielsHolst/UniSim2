@@ -6,6 +6,7 @@
 */
 #include "outdoors.h"
 #include <base/box_builder.h>
+#include <base/environment.h>
 #include <base/phys_math.h>
 #include <base/publish.h>
 
@@ -37,7 +38,7 @@ Outdoors::Outdoors(QString name, QObject *parent)
 
 void Outdoors::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./records"))
+    if (!findMaybeOne<Box>("./records") && environment().option("dontAutoCreateRecords").isNull())
         builder.
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").

@@ -92,6 +92,7 @@ HEADERS +=  \
     running_average.h \
     screen.h \
     screens.h \
+    sensor.h \
     setpoints.h \
     setpoints_input.h \
     shelter.h \
@@ -204,6 +205,7 @@ SOURCES += \
     running_average.cpp \
     screen.cpp \
     screens.cpp \
+    sensor.cpp \
     setpoints.cpp \
     setpoints_input.cpp \
     shelter.cpp \

@@ -1,3 +1,8 @@
+// Version 2.2.5
+
+#ifndef IGLIB_H
+#define IGLIB_H
+
 namespace ig {
 
 enum Origin {UserDefined, Measured, NotAvailable};
@@ -8,7 +13,7 @@ struct Variable {
 };
 
 struct TimeStamp {
-    int dayOfYear;	    // 1..365
+    int dayOfYear;	    // 1..366
     double 
         timeOfDay,	    // 0..24
   		timeZone;		// -24..24 (relative to UTC)
@@ -73,7 +78,8 @@ struct HeatPipe {
     Variable 
         flowRate,           // m3/h
         temperatureInflow,  // oC
-        temperatureOutflow, // oC
+        temperatureOutflow; // oC
+    double
         innerDiameter,      // mm
         outerDiameter,      // mm
         length;             // m pipe / m floor area
@@ -86,10 +92,10 @@ struct HeatPipes {
 
 struct Vent {
     double
-        length,              // m
+        length,             // m
         height,             // m
         numberOfVents,      // >0
-        maxOpening,         // 0..180
+        maxOpening,         // not used
         porosity;           // 0..1
     Variable opening;       // 0..1
 };
@@ -190,30 +196,24 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        photosynthesisRate,     // g/m2/h
-        photosynthesisPct,      // 0..100 (100 = at light saturation and current temp, CO2 and r.h.)
-        lightOutdoors,          // mymol PAR/m2/s
-        lightArtificial,        // mymol PAR/m2/s
-        lightPlantHeight,       // mymol PAR/m2/s
-        co2Indoors;             // ppm (measured or computed)
-    ;
-    bool hasError;
-    const char *error;
+        indoorsCo2 = 0,         // ppm
+        indoorsRh = 0,          // 0-100 %
+        indoorsTemperature = 0, // Celcius
+        growthLight = 0,        // Current expenditure (W/m2)
+        heating = 0,            // Current expenditure (W/m2)
+        photosynthesis = 0,     // Current rate (g/h/m2)
+        costEfficiency = 0;     // Not used
+    bool hasError=false;        // Computation unsuccessful?
+    const char *error;          // Error message if unsuccessful
 };
-
-// Generate a query at random
-extern "C" Query __declspec(IGLIB_DLL) randomQuery();
 
 // Compute response variables from query
 extern "C" Response __declspec(IGLIB_DLL) compute(const Query &q);
 
-// Convert query to a string presentation
-extern "C" const char * __declspec(IGLIB_DLL) queryToString(const Query &q);
-
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);
 
-// Release memory resources; call at the end of the session
-extern "C" void __declspec(IGLIB_DLL) release();
 
 } // namespace
+
+#endif

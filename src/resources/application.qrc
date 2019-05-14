@@ -119,12 +119,16 @@
     <file>data/input/projects/conductance/cabbage-nightshade.box</file>
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
+    <file>data/input/projects/ig/extract-simulation.R</file>
     <file>data/input/projects/ig/Ig typer - rettet af Nielsl.xlsx</file>
     <file>data/input/projects/ig/ig-scenario.box</file>
     <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
+    <file>data/input/projects/ig/simulation-1440-minutes.txt</file>
+    <file>data/input/projects/ig/simulation.txt</file>
+    <file>data/input/projects/ig/sun_height.box</file>
     <file>data/input/projects/ig/UniSimData.json</file>
     <file>data/input/projects/ig/UnisimInputData-1-day.json</file>
     <file>data/input/projects/ig/UnisimInputData-3-months.json</file>
@@ -175,8 +179,12 @@
     <file>data/input/projects/vg/example1/3-pid-controller.box</file>
     <file>data/input/projects/vg/example1/4-pid-controller.box</file>
     <file>data/input/projects/vg/example1/pid-controller.box</file>
+    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-example.box</file>
+    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.box</file>
+    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.xml</file>
     <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
+    <file>data/input/projects/vg/excel/test.box</file>
     <file>data/input/projects/vg/excel/ud.xml</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>

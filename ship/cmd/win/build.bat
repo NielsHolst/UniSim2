@@ -4,7 +4,7 @@ cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
 rem Set up version
 set MAJOR=2
 set MINOR=2
-set SUB=4
+set SUB=5
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
@@ -70,7 +70,7 @@ if errorlevel 1 goto :end_fail
 ..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% %VERSION%
 
 echo = Update Qt project  =
-..\bin\update-qt-project %VERSION%
+..\bin\update-qt-project %MAJOR% %MINOR% %SUB% %VERSION%
 if errorlevel 1 goto :end_fail
 
 echo = Build Universal Simulator =
@@ -96,7 +96,7 @@ popd
 
 echo = Restore to debug version =
 ..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% debug
-..\bin\update-qt-project debug
+..\bin\update-qt-project %MAJOR% %MINOR% %SUB% debug
 
 echo *** SUCCESS ***
 pause

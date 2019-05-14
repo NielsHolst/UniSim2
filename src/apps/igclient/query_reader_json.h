@@ -33,6 +33,7 @@ private:
     void parseQuery(QJsonObject object);
     void parseTimeStamp(QJsonObject object);
     void parseTimeStampTformat(QJsonObject object);
+    void parseGreenHouse(QJsonObject object);
     void parseCulture(QJsonObject object);
     void parseConstruction(QJsonObject object);
 

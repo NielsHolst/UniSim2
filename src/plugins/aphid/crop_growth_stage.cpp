@@ -23,8 +23,8 @@ void CropGrowthStage::reset() {
 }
 
 void CropGrowthStage::update() {
-    const double maxGrowthStage = 99;
-    value = (dayDegrees == 0.) ? 20. :
+    const double maxGrowthStage = 92;
+    value = (dayDegrees == 0.) ? valueAtStart :
              valueAtStart + (maxGrowthStage-valueAtStart)/(1.+exp(-slope*(log(dayDegrees)-log(dayDegreesHalfways))));
 }
 

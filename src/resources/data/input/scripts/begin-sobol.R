@@ -165,7 +165,8 @@ plot_effects = function(stats) {
     geom_errorbar(aes(ymin=LowerPercentile, ymax=HigherPercentile, colour=Measure), 
                   size=2, width=0,
                   position=dodge) +
-    scale_colour_manual(values=colour_effects, aesthetics = c("colour", "fill")) +
+    scale_fill_manual(values=colour_effects) +
+    scale_colour_manual(values=colour_effects) +
     guides(colour = guide_legend(reverse=T), fill = guide_legend(reverse=T)) +
     scale_y_continuous("Effect", breaks=(0:8)/4) +
     theme_classic() +

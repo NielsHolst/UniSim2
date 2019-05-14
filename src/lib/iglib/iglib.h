@@ -1,3 +1,5 @@
+// Version 2.2.5
+
 #ifndef IGLIB_H
 #define IGLIB_H
 
@@ -182,7 +184,7 @@ struct Query {
     Culture culture;
     Construction construction;
     HeatPipes heatPipes;
-    Vents vents; // Only one vent allowed
+    Vents vents;
     GrowthLights growthLights;
     Co2Dispenser co2Dispenser;
     Screens screens;
@@ -200,21 +202,13 @@ struct Response {
         growthLight = 0,        // Current expenditure (W/m2)
         heating = 0,            // Current expenditure (W/m2)
         photosynthesis = 0,     // Current rate (g/h/m2)
-        costEfficiency = 0,     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
-        grayMoldRisk = 0,       // Not used
-        daysToHarvest = 0;      // Not used
+        costEfficiency = 0;     // Not used
     bool hasError=false;        // Computation unsuccessful?
     const char *error;          // Error message if unsuccessful
 };
 
-// Generate a query at random
-extern "C" Query __declspec(IGLIB_DLL) randomQuery();
-
 // Compute response variables from query
 extern "C" Response __declspec(IGLIB_DLL) compute(const Query &q);
-
-// Convert query to a string presentation
-extern "C" const char * __declspec(IGLIB_DLL) queryToString(const Query &q);
 
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);

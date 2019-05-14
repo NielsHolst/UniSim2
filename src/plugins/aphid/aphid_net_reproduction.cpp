@@ -21,6 +21,7 @@ AphidNetReproduction::AphidNetReproduction(QString name, QObject *parent)
     Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");;
     Input(aphidDensity).help("Aphid density").unit("per tiller");
     Input(aphidDensityThreshold).help("Density threshold when net reproduction is zero").unit("per tiller");
+    Input(exposureCost).help("Relative reduction in reproduction when exposed").unit("[0;1]");
     Output(apterous).help("Net reproduction for apterous aphids").unit("per capita");
     Output(alate).help("Net reproduction for alate aphids").unit("per capita");
 } 
@@ -63,6 +64,10 @@ void AphidNetReproduction::update() {
     // THE CASE OF THE ALATES NOW
     // In Duffy et al. 2017 the maximum daily nymph production per alates=2/3 of the max fec of apterous
     alate = apterous*2./3.;
+
+    // Reduction when exposed
+    apterousExposed = (1.-exposureCost)*apterous;
+    alateExposed = (1.-exposureCost)*alate;
 }
 
 

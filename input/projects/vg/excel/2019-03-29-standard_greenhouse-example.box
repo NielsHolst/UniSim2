@@ -1,0 +1,2597 @@
+Simulation greenhouse { // #226
+  .iterations = 1
+  .steps = ./period[steps]
+  .stopIterations = FALSE
+  .stopSteps = FALSE
+  .useStopIterations = FALSE
+  .useStopSteps = FALSE
+  .silent = FALSE
+  //~iteration == 0
+  //~step == 0
+  //~finalStep == 0
+  //~executionTime == 0
+  //~hasError == FALSE
+  //~errorMsg == ""
+  SimulationPeriod period { // #0
+    .weatherFirstDateTime = outdoors/records[firstDateTime]
+    .beginDate = 2019/5/10
+    .endDate = 2019/5/12
+    .beginTime = 00:00:00
+    .endTime = 00:00:00
+    .timeStep = 1
+    .timeUnit = "m"
+    //~steps == 0
+    //~beginDateTime == "2001/1/1 00:00:00"
+  }
+  Calendar calendar { // #1
+    .latitude = 55.5
+    .longitude = 10.5
+    .timeZone = 1
+    .initialDateTime = ../period[beginDateTime]
+    .timeStep = ../period[timeStep]
+    .timeUnit = ../period[timeUnit]
+    .sample = 1
+    //~date == 2001/1/1
+    //~time == 00:00:00
+    //~trueSolarTime == 00:00:00
+    //~dateTime == "2001/1/1 00:00:00"
+    //~timeStepSecs == 0.0
+    //~timeStepDays == 0.0
+    //~totalTimeSteps == 0
+    //~totalTime == 0
+    //~totalDays == 0.0
+    //~dayOfYear == 0
+    //~dayLength == 0.0
+    //~sinb == 0.0
+    //~azimuth == 0.0
+    //~sunrise == 00:00:00
+    //~sunset == 00:00:00
+    //~solarConstant == 0.0
+    //~angot == 0.0
+    //~isDay == FALSE
+    //~isNight == FALSE
+  }
+  vg::Outdoors outdoors { // #6
+    .sunlightPhotonCoef = 4.6
+    .co2 = 400.0
+    .temperature = ./records[Tair]
+    .rh = ./records[Rhair]
+    .radiation = ./records[GlobRad]
+    .diffuseRadiation = ./records[DifRad]
+    .windSpeed = ./records[Windspeed]
+    .skyTemperature = ./records[Tsky]
+    //~directRadiation == 0.0
+    //~propDirectRadiation == 0.0
+    //~ah == 0.0
+    //~sh == 0.0
+    //~soilTemperature == ./soilTemperature[value]
+    Records records { // #2
+      .fileName = "C:\Users\au152367\Documents\QDev\UniSim2\input\projects\vg\input\sel_dk.txt"
+      .dateColumnName = "Date"
+      .timeColumnName = "Time"
+      .cycle = FALSE
+      .calendarDateTime = calendar[dateTime]
+      .ignoreYear = TRUE
+      //~currentDateTime == "2001/1/1 00:00:00"
+      //~nextDateTime == "2001/1/1 00:00:00"
+      //~firstDateTime == "2001/1/1 00:00:00"
+      //~lastDateTime == "2001/1/1 00:00:00"
+      //~currentDate == 2001/1/1
+      //~nextDate == 2001/1/1
+      //~currentTime == 00:00:00
+      //~nextTime == 00:00:00
+      //~Tair == 0.0 //amended
+      //~Rhair == 0.0 //amended
+      //~GlobRad == 0.0 //amended
+      //~DifRad == 0.0 //amended
+      //~Windspeed == 0.0 //amended
+      //~Tsky == 0.0 //amended
+    }
+    Accumulator soilTemperature { //amended // #5
+      .initial = ./initial[value]
+      .change = ./controller[controlVariable]
+      .minValue = -1.79769e+308
+      .maxValue = 1.79769e+308
+      //~value == 0.0
+      Hump initial { //amended // #3
+        .x = calendar[dayOfYear]
+        .x0 = 70.0
+        .x1 = 365.0
+        .ymin = 0.0
+        .ymax = 16.0
+        .ditch = FALSE
+        //~value == 0.0
+      }
+      PidController controller { //amended // #4
+        .sensedValue = ..[value]
+        .desiredValue = outdoors[temperature]
+        .controlVariableReset = 0.0
+        .Kprop = 5e-05
+        .Kint = 0.0
+        .Kderiv = 0.0
+        .minimum = -1.79769e+308
+        .maximum = 1.79769e+308
+        .minSlope = -1.79769e+308
+        .maxSlope = 1.79769e+308
+        .timeStep = calendar[timeStepSecs]
+        //~controlVariable == 0.0
+        //~controlVariableSlope == 0.0
+        //~error == 0.0
+        //~errorIntegral == 0.0
+        //~errorDerivative == 0.0
+      }
+    }
+  }
+  Box construction { // #31
+    vg::Geometry geometry { // #7
+      .orientation = 0.0
+      .numSpans = 26
+      .spanWidth = 4.0
+      .length = 100.0
+      .height = 4.0
+      .roofPitch = 26.0
+      .reflection = 0.2
+      .horizontalScreenState = construction/shelter[horizontalScreenState]
+      //~width == 0.0
+      //~groundArea == 0.0
+      //~roofArea == 0.0
+      //~sideWallsArea == 0.0
+      //~endWallsArea == 0.0
+      //~gablesArea == 0.0
+      //~coverArea == 0.0
+      //~coverPerGroundArea == 0.0
+      //~indoorsVolumeTotal == 0.0
+      //~indoorsVolume == 0.0
+      //~indoorsAverageHeight == 0.0
+    }
+    vg::Shelter shelter { // #30
+      .groundArea = geometry[groundArea]
+      //~lightTransmissivity == 0.0
+      //~directLightTransmissivity == 0.0
+      //~lwTransmissivity == 0.0
+      //~incomingLightAbsorptivity == 0.0
+      //~incomingLightReflectivity == 0.0
+      //~incomingDirectLightAbsorptivity == 0.0
+      //~incomingDirectLightReflectivity == 0.0
+      //~incomingLwAbsorptivity == 0.0
+      //~incomingLwReflectivity == 0.0
+      //~outgoingLightAbsorptivity == 0.0
+      //~outgoingLightReflectivity == 0.0
+      //~outgoingDirectLightAbsorptivity == 0.0
+      //~outgoingDirectLightReflectivity == 0.0
+      //~outgoingLwAbsorptivity == 0.0
+      //~outgoingLwReflectivity == 0.0
+      //~diffuseLightTransmitted == 0.0
+      //~directLightTransmitted == 0.0
+      //~totalLightTransmitted == 0.0
+      //~lightAbsorbedCover == 0.0
+      //~lightAbsorbedScreens == 0.0
+      //~haze == 0.0
+      //~U == 0.0
+      //~airTransmissivity == 0.0
+      //~heatCapacityCoversPerGround == 0.0
+      //~heatCapacityScreensPerGround == 0.0
+      //~screensEffectiveArea == 0.0
+      //~screensPerGroundArea == 0.0
+      //~screensMaxState == 0.0
+      //~horizontalScreenState == 0.0
+      //~hasHorizontalScreen == FALSE
+      vg::ShelterFace roof1 { // #11
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #8
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #9
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+        }
+        Vent vent { //amended // #10
+          .length = construction/geometry[length]
+          .width = 1.0
+          .number = 1
+          .state = actuators/vents[value]
+          .ventTransmissivity = 1.0
+          .screensTransmissivity = ../screens[airTransmissivity]
+          //~transmissivity == 0.0
+        }
+      }
+      vg::ShelterFace roof2 { // #15
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #12
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #13
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+        }
+        Vent vent { //amended // #14
+          .length = construction/geometry[length]
+          .width = 1.0
+          .number = 1
+          .state = actuators/vents[value]
+          .ventTransmissivity = 1.0
+          .screensTransmissivity = ../screens[airTransmissivity]
+          //~transmissivity == 0.0
+        }
+      }
+      vg::ShelterFace side1 { // #19
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #16
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #18
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+          vg::Screen energy { // #17
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.007
+            .emissivityInner = 0.62
+            .emissivityOuter = 0.06
+            .U = 2.0
+            .acceptZeroU = FALSE
+            .energyLossReduction = 0.0045
+            .haze = 0.8
+            .specificHeatCapacity = 1500.0
+            .transmissivityAir = 0.0003
+            .transmissivityAirExponent = 4.0
+            .state = actuators/screens/energy[value]
+            //~layer == 0
+            //~transmissivityLightNet == 0.0
+            //~absorptivityLwInnerNet == 0.0
+            //~absorptivityLwOuterNet == 0.0
+            //~unhazed == 0.0
+            //~resistance == 0.0
+            //~heatCapacity == 0.0
+            //~transmissivityAirNet == 0.0
+            //~effectiveArea == 0.0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace side2 { // #23
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #20
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #22
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+          vg::Screen energy { // #21
+            .shelterArea = ../..[area]
+            .orientation = "cover"
+            .transmissivityLight = 0.007
+            .emissivityInner = 0.62
+            .emissivityOuter = 0.06
+            .U = 2.0
+            .acceptZeroU = FALSE
+            .energyLossReduction = 0.0045
+            .haze = 0.8
+            .specificHeatCapacity = 1500.0
+            .transmissivityAir = 0.0003
+            .transmissivityAirExponent = 4.0
+            .state = actuators/screens/energy[value]
+            //~layer == 0
+            //~transmissivityLightNet == 0.0
+            //~absorptivityLwInnerNet == 0.0
+            //~absorptivityLwOuterNet == 0.0
+            //~unhazed == 0.0
+            //~resistance == 0.0
+            //~heatCapacity == 0.0
+            //~transmissivityAirNet == 0.0
+            //~effectiveArea == 0.0
+            //~isHorizontal == FALSE
+          }
+        }
+      }
+      vg::ShelterFace end1 { // #26
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #24
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #25
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+        }
+      }
+      vg::ShelterFace end2 { // #29
+        .roofArea = geometry[roofArea]
+        .sideWallsArea = geometry[sideWallsArea]
+        .endWallsArea = geometry[endWallsArea]
+        .gablesArea = geometry[gablesArea]
+        .groundArea = geometry[groundArea]
+        .outdoorsDirectRadiation = outdoors[directRadiation]
+        .outdoorsDiffuseRadiation = outdoors[diffuseRadiation]
+        //~lightTransmissivity == 0.0
+        //~directLightTransmissivity == 0.0
+        //~lwTransmissivity == 0.0
+        //~incomingLightAbsorptivity == 0.0
+        //~incomingLightReflectivity == 0.0
+        //~incomingDirectLightAbsorptivity == 0.0
+        //~incomingDirectLightReflectivity == 0.0
+        //~incomingLwAbsorptivity == 0.0
+        //~incomingLwReflectivity == 0.0
+        //~outgoingLightAbsorptivity == 0.0
+        //~outgoingLightReflectivity == 0.0
+        //~outgoingDirectLightAbsorptivity == 0.0
+        //~outgoingDirectLightReflectivity == 0.0
+        //~outgoingLwAbsorptivity == 0.0
+        //~outgoingLwReflectivity == 0.0
+        //~diffuseLightTransmitted == 0.0
+        //~directLightTransmitted == 0.0
+        //~totalLightTransmitted == 0.0
+        //~lightAbsorbedCover == 0.0
+        //~lightAbsorbedScreens == 0.0
+        //~haze == 0.0
+        //~U == 0.0
+        //~airTransmissivity == 0.0
+        //~area == 0.0
+        //~relativeArea == 0.0
+        //~areaPerGround == 0.0
+        //~screensMaxState == 0.0
+        vg::Cover cover { // #27
+          .greenhouseReflection = geometry[reflection]
+          .chalk = controllers[chalk]
+          .latitude = calendar[latitude]
+          .azimuth = calendar[azimuth]
+          .area = ..[area]
+          .windSpeed = outdoors[windSpeed]
+          .directTransmissionFile = ":/data/vg/direct_transmission_single.txt"
+          .emissivity = 0.84
+          .absorptivity = 0.04
+          .transmissivity = 0.0089
+          .haze = 0.0
+          .U4 = 6.5
+          .specificHeatCapacity = 700.0
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+        }
+        vg::Screens screens { // #28
+          //~lightTransmissivity == 0.0
+          //~directLightTransmissivity == 0.0
+          //~lwTransmissivity == 0.0
+          //~incomingLightAbsorptivity == 0.0
+          //~incomingLightReflectivity == 0.0
+          //~incomingDirectLightAbsorptivity == 0.0
+          //~incomingDirectLightReflectivity == 0.0
+          //~incomingLwAbsorptivity == 0.0
+          //~incomingLwReflectivity == 0.0
+          //~outgoingLightAbsorptivity == 0.0
+          //~outgoingLightReflectivity == 0.0
+          //~outgoingDirectLightAbsorptivity == 0.0
+          //~outgoingDirectLightReflectivity == 0.0
+          //~outgoingLwAbsorptivity == 0.0
+          //~outgoingLwReflectivity == 0.0
+          //~areHorizontal == FALSE
+          //~maxState == 0.0
+          //~airTransmissivity == 0.0
+          //~haze == 0.0
+          //~U == 0.0
+          //~heatCapacity == 0.0
+          //~effectiveArea == 0.0
+        }
+      }
+    }
+  }
+  vg::Indoors indoors { // #67
+    vg::Given given { // #50
+      vg::AirFluxGiven airFlux { // #33
+        .airFluxes = ./*[value]
+        //~value == 0.0
+        vg::AirFluxInfiltration infiltration { // #32
+          .leakage = 1.0
+          .windSpeed = outdoors[windSpeed]
+          //~value == 0.0
+        }
+      }
+      vg::EnergyFluxSum energyFlux { // #44
+        //~value == 0.0
+        vg::EnergyFluxFloor floor { // #35
+          .Uindoors = 7.5
+          .Usoil = 4.0
+          .heatCapacity = 1000.0
+          .emissivity = 0.85
+          .indoorsTemperature = indoors/temperature[value]
+          .soilTemperature = outdoors[soilTemperature]
+          .height = geometry[indoorsAverageHeight]
+          .timeStep = calendar[timeStepSecs]
+          //~value == 0.0
+          //~temperature == 0.0
+          vg::FloorRadiationAbsorbed radiationAbsorbed { // #34
+            .indoorsLight = indoors/light[total]
+            .growthLightLight = actuators/growthLights[shortWaveIntensity]
+            .reflectance = 0.5
+            .lightAbsorbedByCrop = crop/lightAbsorbed[value]
+            .growthLightLwAbsorbedByCrop = crop/growthLightLwAbsorbed[value]
+            //~value == 0.0
+            //~reflected == 0.0
+          }
+        }
+        EnergyFluxCondensation condensationCover { //amended // #36
+          .vapourFlux = ../../vapourFlux/condensationCover[vapourFlux]
+          //~value == 0.0
+        }
+        EnergyFluxCondensation condensationScreens { //amended // #37
+          .vapourFlux = ../../vapourFlux/condensationScreens[vapourFlux]
+          //~value == 0.0
+        }
+        EnergyFluxAir airFlux { //amended // #38
+          .airFlux = given/airFlux[value]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .height = geometry[indoorsAverageHeight]
+          .timeStepSecs = calendar[timeStepSecs]
+          //~value == 0.0
+        }
+        Accumulator growthLights { //amended // #40
+          .initial = 0.0
+          .change = ./controller[controlVariable]
+          .minValue = -1.79769e+308
+          .maxValue = 1.79769e+308
+          //~value == 0.0
+          PidController controller { //amended // #39
+            .sensedValue = ..[value]
+            .desiredValue = actuators/growthLights[powerUsage]
+            .controlVariableReset = 0.0
+            .Kprop = 0.1
+            .Kint = 0.0
+            .Kderiv = 0.0
+            .minimum = -1.79769e+308
+            .maximum = 1.79769e+308
+            .minSlope = -1.79769e+308
+            .maxSlope = 1.79769e+308
+            .timeStep = calendar[timeStepSecs]
+            //~controlVariable == 0.0
+            //~controlVariableSlope == 0.0
+            //~error == 0.0
+            //~errorIntegral == 0.0
+            //~errorDerivative == 0.0
+          }
+        }
+        EnergyFluxShelter shelter { //amended // #41
+          .U = construction/shelter[U]
+          .incomingLwAbsorptivity = construction/shelter[incomingLwAbsorptivity]
+          .outgoingLwAbsorptivity = construction/shelter[outgoingLwAbsorptivity]
+          .lightAbsorbedCover = construction/shelter[lightAbsorbedCover]
+          .lightAbsorbedScreens = construction/shelter[lightAbsorbedScreens]
+          .heatCapacityCover = construction/shelter[heatCapacityCoversPerGround]
+          .heatCapacityScreens = construction/shelter[heatCapacityScreensPerGround]
+          .timeStep = calendar[timeStepSecs]
+          .height = geometry[indoorsAverageHeight]
+          .coverPerGroundArea = geometry[coverPerGroundArea]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .skyTemperature = outdoors[skyTemperature]
+          .radiationFluxCropTop = crop/layers/top/radiationAbsorbed[shelterLoss]
+          .radiationFluxCropMiddle = crop/layers/middle/radiationAbsorbed[shelterLoss]
+          .radiationFluxCropBottom = crop/layers/bottom/radiationAbsorbed[shelterLoss]
+          //~value == 0.0
+          //~heatFluxOutsideToCover == 0.0
+          //~heatFluxInsideToCover == 0.0
+          //~radiationFluxSkyToCover == 0.0
+          //~radiationFluxSunToCover == 0.0
+          //~radiationFluxSunToScreens == 0.0
+          //~coverTemperature == 0.0
+          //~screensTemperature == 0.0
+        }
+        EnergyFluxSunlight sunlight { //amended // #42
+          .unabsorbedRadiation = radiationAbsorbed[reflected]
+          //~value == 0.0
+        }
+        EnergyFluxTranspiration transpiration { //amended // #43
+          .transpiration = ../../vapourFlux/transpiration[vapourFlux]
+          //~value == 0.0
+        }
+      }
+      VapourFluxSum vapourFlux { //amended // #49
+        .toAdd = ()
+        //~conductance == 0.0
+        //~vapourFlux == 0.0
+        //~gain == 0.0
+        VapourFluxTranspiration transpiration { //amended // #45
+          .conductanceIn = crop/conductance[value]
+          .vapourFluxIn = crop/vapourFlux[value]
+          .gainIn = crop/gain[value]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+        }
+        VapourFluxCondensation condensationCover { //amended // #46
+          .surfaceAreaPerGroundArea = geometry[coverPerGroundArea]
+          .surfaceTemperature = given/energyFlux/shelter[coverTemperature]
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsAh = indoors/humidity[ah]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+        }
+        VapourFluxCondensation condensationScreens { //amended // #47
+          .surfaceAreaPerGroundArea = geometry[coverPerGroundArea]
+          .surfaceTemperature = given/energyFlux/shelter[screensTemperature]
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsAh = indoors/humidity[ah]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+        }
+        VapourFluxAir airFluxOutdoors { //amended // #48
+          .airFlux = given/airFlux[value]
+          .indoorsAh = indoors/humidity[ah]
+          .outdoorsAh = outdoors[ah]
+          .height = geometry[indoorsAverageHeight]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+        }
+      }
+    }
+    Controlled controlled { //amended // #57
+      Box cooling { //amended // #54
+        AirFluxVents airFluxVents { //amended // #51
+          .pathToVents = "shelter/*/*<Vent>"
+          .ventOpening = actuators/vents[value]
+          .roofPitch = geometry[roofPitch]
+          .greenhouseLength = geometry[length]
+          .indoorsVolumeTotal = geometry[indoorsVolumeTotal]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .windSpeed = outdoors[windSpeed]
+          //~value == 0.0
+          //~ventLength == 0.0
+          //~ventWidth == 0.0
+          //~ventTransmissivity == 0.0
+        }
+        vg::VapourFluxAir vapourFlux { //amended // #52
+          .airFlux = ../airFluxVents[value]
+          .indoorsAh = indoors/humidity[ah]
+          .outdoorsAh = outdoors[ah]
+          .height = geometry[indoorsAverageHeight]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+        }
+        vg::EnergyFluxAir energyFlux { //amended // #53
+          .airFlux = ../airFluxVents[value]
+          .indoorsTemperature = indoors/temperature[value]
+          .outdoorsTemperature = outdoors[temperature]
+          .height = geometry[indoorsAverageHeight]
+          .timeStepSecs = calendar[timeStepSecs]
+          //~value == 0.0
+        }
+      }
+      Box heating { //amended // #56
+        EnergyFluxHeating energyFlux { //amended // #55
+          .density = actuators/heating/pipes/*[density]
+          .diameter = actuators/heating/pipes/*[diameter]
+          .flowRate = actuators/heating/pipes/*[flowRate]
+          .a = actuators/heating/pipes/*[a]
+          .b = actuators/heating/pipes/*[b]
+          .inflowTemperature = actuators/heating[value]
+          .indoorsTemperature = indoors/temperature[value]
+          .groundArea = geometry[groundArea]
+          //~value == 0.0
+          //~pipeLength == ()
+          //~pipeVolume == ()
+          //~transitTime == ()
+          //~outflowTemperature == ()
+          //~temperatureDrop == ()
+          //~energyFlux == ()
+        }
+      }
+    }
+    Box total { //amended // #61
+      vg::Sum airFlux { //amended // #58
+        .inputs = (given/airFlux[value] cooling/airFlux[value])
+        //~value == 0.0
+      }
+      vg::VapourFluxSum vapourFlux { //amended // #59
+        .toAdd = (given/vapourFlux cooling/vapourFlux)
+        //~conductance == 0.0
+        //~vapourFlux == 0.0
+        //~gain == 0.0
+      }
+      vg::Sum energyFlux { //amended // #60
+        .inputs = (given/energyFlux[value] controlled/cooling/energyFlux[value] controlled/heating/energyFlux[value])
+        //~value == 0.0
+      }
+    }
+    vg::IndoorsLight light { //amended // #62
+      .sunlightPhotonCoef = outdoors[sunlightPhotonCoef]
+      .sunlightDiffuse = construction/shelter[diffuseLightTransmitted]
+      .sunlightDirect = construction/shelter[directLightTransmitted]
+      .growthLigthtsDirect = growthLights[shortWaveIntensity]
+      .growthLigthtsParIntensity = growthLights[parIntensity]
+      //~direct == 0.0
+      //~diffuse == 0.0
+      //~total == 0.0
+      //~parDirect == 0.0
+      //~parDiffuse == 0.0
+      //~parTotal == 0.0
+    }
+    vg::IndoorsTemperature temperature { //amended // #63
+      .resetValue = 20.0
+      .energyFlux = total/energyFlux[value]
+      .baseTemperature = .[value]
+      .height = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~value == 0.0
+    }
+    vg::IndoorsHumidity humidity { //amended // #64
+      .conductance = indoors/total/vapourFlux[conductance]
+      .vapourFlux = indoors/total/vapourFlux[vapourFlux]
+      .gain = indoors/total/vapourFlux[gain]
+      .temperature = indoors/temperature[value]
+      .height = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~rh == 0.0
+      //~ah == 0.0
+      //~ahEq == 0.0
+      //~timeConstant == 0.0
+      //~surplusAh == 0.0
+      //~netVapourFlux == 0.0
+    }
+    vg::IndoorsCo2 co2 { //amended // #65
+      .outdoorsCo2 = outdoors[co2]
+      .airFlux = total/airFlux[value]
+      .injectionRate = controllers/co2[signal]
+      .assimilation = crop/growth/Pg[value]
+      .averageHeight = geometry[indoorsAverageHeight]
+      .timeStep = calendar[timeStepSecs]
+      //~value == 0.0
+    }
+    vg::IndoorsWindSpeed windSpeed { //amended // #66
+      .ventilation = indoors/total/airFlux[value]
+      .constructionWidth = geometry[width]
+      //~value == 0.0
+    }
+  }
+  Box allSetpoints { // #120
+    PrioritySignal heatingTemperatureAtLowRh { // #70
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #68
+        +signal = 22.0
+      }
+      vg::DateTimeSignal  { // #69
+        .signalReset = 0.0
+        .maxChange = inf
+        .timeStepSecs = calendar[timeStepSecs]
+        .beginDate = 2019/1/1
+        .endDate = 2019/12/31
+        .beginTime = 08:00:00
+        .endTime = 18:00:00
+        .day = calendar[dayOfYear]
+        .time = calendar[time]
+        .signalInside = 25.0
+        .signalOutside = 0.0
+        .signalOutsideTimeOnly = 0.0
+        .circadian = TRUE
+        //~signal == 0.0
+        //~flag == FALSE
+        //~flagUp == FALSE
+        //~flagDown == FALSE
+        //~value == 0.0
+      }
+    }
+    PrioritySignal ventilationTemperatureMargin { // #73
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #71
+        +signal = 1.0
+      }
+      vg::DateTimeSignal  { // #72
+        .signalReset = 0.0
+        .maxChange = inf
+        .timeStepSecs = calendar[timeStepSecs]
+        .beginDate = 2019/1/1
+        .endDate = 2019/12/31
+        .beginTime = 06:00:00
+        .endTime = 12:00:00
+        .day = calendar[dayOfYear]
+        .time = calendar[time]
+        .signalInside = 5.0
+        .signalOutside = 0.0
+        .signalOutsideTimeOnly = 0.0
+        .circadian = TRUE
+        //~signal == 0.0
+        //~flag == FALSE
+        //~flagUp == FALSE
+        //~flagDown == FALSE
+        //~value == 0.0
+      }
+    }
+    PrioritySignal rhMax { // #75
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #74
+        +signal = 90.0
+      }
+    }
+    PrioritySignal heatingTemperatureMargin { // #77
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #76
+        +signal = 2.0
+      }
+    }
+    PrioritySignal ventilationTemperatureRhMargin { // #79
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #78
+        +signal = 2.0
+      }
+    }
+    PrioritySignal ventilationThresholdBand { // #81
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #80
+        +signal = 1.0
+      }
+    }
+    PrioritySignal co2Min { // #83
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #82
+        +signal = 400.0
+      }
+    }
+    PrioritySignal co2Max { // #85
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #84
+        +signal = 900.0
+      }
+    }
+    PrioritySignal chalk { // #87
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #86
+        +signal = 0.0
+      }
+    }
+    PrioritySignal growthLightThresholdLow { // #89
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #88
+        +signal = 40.0
+      }
+    }
+    PrioritySignal growthLightThresholdHigh { // #91
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #90
+        +signal = 600.0
+      }
+    }
+    PrioritySignal growthLightActive { // #93
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #92
+        +signal = 0.0
+      }
+    }
+    PrioritySignal rhMaxBand { // #95
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #94
+        +signal = 3.0
+      }
+    }
+    PrioritySignal dawnThreshold { // #97
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #96
+        +signal = 0.2
+      }
+    }
+    PrioritySignal duskThreshold { // #99
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #98
+        +signal = 0.3
+      }
+    }
+    PrioritySignal crackVentilation { // #101
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #100
+        +signal = 5.0
+      }
+    }
+    PrioritySignal crackVentilationTemperatureMin { // #103
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #102
+        +signal = -5.0
+      }
+    }
+    PrioritySignal crackVentilationTemperatureMinBand { // #105
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #104
+        +signal = 1.0
+      }
+    }
+    PrioritySignal screenEnergyThreshold { // #107
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #106
+        +signal = 5.0
+      }
+    }
+    PrioritySignal screenEnergyThresholdBand { // #109
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #108
+        +signal = 5.0
+      }
+    }
+    PrioritySignal screenShadeThreshold { // #111
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #110
+        +signal = 500.0
+      }
+    }
+    PrioritySignal screenShadeThresholdBand { // #113
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #112
+        +signal = 50.0
+      }
+    }
+    PrioritySignal screenBlackoutFromTimeFloat { // #115
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #114
+        +signal = 0.5
+      }
+    }
+    PrioritySignal screenBlackoutToTimeFloat { // #117
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #116
+        +signal = 0.791667
+      }
+    }
+    PrioritySignal screenMaxAtHighRh { // #119
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .reverseOrder = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box default { // #118
+        +signal = 90.0
+      }
+    }
+  }
+  vg::Setpoints setpoints { // #132
+    .heatingTemperatureAtLowRh = allSetpoints/heatingTemperatureAtLowRh[value]
+    .heatingTemperatureMargin = allSetpoints/heatingTemperatureMargin[value]
+    .ventilationTemperatureMargin = allSetpoints/ventilationTemperatureMargin[value]
+    .ventilationTemperatureRhMargin = allSetpoints/ventilationTemperatureRhMargin[value]
+    .rhMax = allSetpoints/rhMax[value]
+    .rhMaxBand = allSetpoints/rhMaxBand[value]
+    .co2Min = allSetpoints/co2Min[value]
+    .co2Max = allSetpoints/co2Max[value]
+    .dawnThreshold = allSetpoints/dawnThreshold[value]
+    .duskThreshold = allSetpoints/duskThreshold[value]
+    //~ventilationTemperatureAtLowRh == 0.0
+    //~ventilationTemperatureAtHighRh == 0.0
+    //~heatingTemperatureAtHighRh == 21.0
+    vg::DaylightLevel daylightLevel { //amended // #121
+      .dawnThreshold = setpoints[dawnThreshold]
+      .duskThreshold = setpoints[duskThreshold]
+      .outdoorsRadiation = outdoors[radiation]
+      .time = calendar[time]
+      //~isDay == FALSE
+      //~isNight == FALSE
+      //~day == 0
+      //~night == 0
+    }
+    Box temperature { //amended // #128
+      Accumulator ventilation { //amended // #124
+        .initial = ./controller/target[maxSignal]
+        .change = ./controller[controlVariable]
+        .minValue = -1.79769e+308
+        .maxValue = 1.79769e+308
+        //~value == 0.0
+        PidController controller { //amended // #123
+          .sensedValue = ..[value]
+          .desiredValue = ./target[signal]
+          .controlVariableReset = 0.0
+          .Kprop = 0.1
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+          vg::ProportionalSignal target { //amended // #122
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .input = indoors/humidity[rh]
+            .threshold = setpoints[rhMax]
+            .thresholdBand = setpoints[rhMaxBand]
+            .minSignal = setpoints[ventilationTemperatureAtHighRh]
+            .maxSignal = setpoints[ventilationTemperatureAtLowRh]
+            .increasingSignal = FALSE
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+        }
+      }
+      Accumulator heating { //amended // #127
+        .initial = ./controller/target[maxSignal]
+        .change = ./controller[controlVariable]
+        .minValue = -1.79769e+308
+        .maxValue = 1.79769e+308
+        //~value == 0.0
+        PidController controller { //amended // #126
+          .sensedValue = ..[value]
+          .desiredValue = ./target[signal]
+          .controlVariableReset = 0.0
+          .Kprop = 0.1
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+          vg::ProportionalSignal target { //amended // #125
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .input = indoors/humidity[rh]
+            .threshold = setpoints[rhMax]
+            .thresholdBand = setpoints[rhMaxBand]
+            .minSignal = setpoints[heatingTemperatureAtHighRh]
+            .maxSignal = setpoints[heatingTemperatureAtLowRh]
+            .increasingSignal = TRUE
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+        }
+      }
+    }
+    Box co2 { //amended // #131
+      Box minimum { //amended // #129
+        +signal = 650.0
+      }
+      Box maximum { //amended // #130
+        +signal = 650.0
+      }
+    }
+  }
+  vg::Controllers controllers { // #156
+    .ventilationThresholdBand = allSetpoints/ventilationThresholdBand[value]
+    .crackVentilation = allSetpoints/crackVentilation[value]
+    .crackVentilationTemperatureMin = allSetpoints/crackVentilationTemperatureMin[value]
+    .crackVentilationTemperatureMinBand = allSetpoints/crackVentilationTemperatureMinBand[value]
+    .screenMaxAtHighRh = allSetpoints/screenMaxAtHighRh[value]
+    .screenEnergyThreshold = allSetpoints/screenEnergyThreshold[value]
+    .screenEnergyThresholdBand = allSetpoints/screenEnergyThresholdBand[value]
+    .screenShadeThreshold = allSetpoints/screenShadeThreshold[value]
+    .screenShadeThresholdBand = allSetpoints/screenShadeThresholdBand[value]
+    .screenBlackoutFromTimeFloat = allSetpoints/screenBlackoutFromTimeFloat[value]
+    .screenBlackoutToTimeFloat = allSetpoints/screenBlackoutToTimeFloat[value]
+    .chalk = allSetpoints/chalk[value]
+    //~screenBlackoutFromTime == 00:00:00
+    //~screenBlackoutToTime == 00:00:00
+    ProportionalSignal ventilation { //amended // #135
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .input = indoors/temperature[value]
+      .threshold = setpoints/temperature/ventilation[value]
+      .thresholdBand = controllers[ventilationThresholdBand]
+      .minSignal = ./crack[value]
+      .maxSignal = 1.0
+      .increasingSignal = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      ProportionalSignal crack { //amended // #134
+        .signalReset = 0.0
+        .maxChange = inf
+        .timeStepSecs = calendar[timeStepSecs]
+        .input = indoors/humidity[rh]
+        .threshold = setpoints[rhMax]
+        .thresholdBand = setpoints[rhMaxBand]
+        .minSignal = 0.0
+        .maxSignal = ./minsMax[value]
+        .increasingSignal = TRUE
+        //~signal == 0.0
+        //~flag == FALSE
+        //~flagUp == FALSE
+        //~flagDown == FALSE
+        //~value == 0.0
+        ProportionalSignal minsMax { //amended // #133
+          .signalReset = 0.0
+          .maxChange = inf
+          .timeStepSecs = calendar[timeStepSecs]
+          .input = outdoors[temperature]
+          .threshold = controllers[crackVentilationTemperatureMin]
+          .thresholdBand = controllers[crackVentilationTemperatureMinBand]
+          .minSignal = 0.0
+          .maxSignal = controllers[crackVentilation]
+          .increasingSignal = TRUE
+          //~signal == 0.0
+          //~flag == FALSE
+          //~flagUp == FALSE
+          //~flagDown == FALSE
+          //~value == 0.0
+        }
+      }
+    }
+    Accumulator heating { //amended // #137
+      .initial = 0.0
+      .change = ./controller[controlVariable]
+      .minValue = 0.0
+      .maxValue = 1.0
+      //~value == 0.0
+      PidController controller { //amended // #136
+        .sensedValue = indoors/temperature[value]
+        .desiredValue = setpoints/temperature/heating[value]
+        .controlVariableReset = 0.0
+        .Kprop = 0.1
+        .Kint = 0.0
+        .Kderiv = 0.0
+        .minimum = -1.79769e+308
+        .maximum = 1.79769e+308
+        .minSlope = -1.79769e+308
+        .maxSlope = 1.79769e+308
+        .timeStep = calendar[timeStepSecs]
+        //~controlVariable == 0.0
+        //~controlVariableSlope == 0.0
+        //~error == 0.0
+        //~errorIntegral == 0.0
+        //~errorDerivative == 0.0
+      }
+    }
+    Box screens { //amended // #152
+      Accumulator maxDrawn { //amended // #140
+        .initial = 1.0
+        .change = ./controller[controlVariable]
+        .minValue = 0.0
+        .maxValue = 1.0
+        //~value == 0.0
+        PidController controller { //amended // #139
+          .sensedValue = ..[value]
+          .desiredValue = ./target[signal]
+          .controlVariableReset = 0.0
+          .Kprop = 0.02
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+          vg::ThresholdSignal target { //amended // #138
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .threshold = setpoints[rhMax]
+            .input = indoors/humidity[rh]
+            .signalBelow = 1.0
+            .signalAbove = controllers[screenMaxAtHighRh]
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+        }
+      }
+      Minimum energy { //amended // #143
+        .values = ./signals/*[signal]
+        //~value == 0.0
+        Box signals { //amended // #142
+          vg::ProportionalSignal radiation { //amended // #141
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .input = outdoors[radiation]
+            .threshold = controllers[screenEnergyThreshold]
+            .thresholdBand = controllers[screenEnergyThresholdBand]
+            .minSignal = 0.0
+            .maxSignal = controllers/screens/maxDrawn[value]
+            .increasingSignal = FALSE
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+        }
+      }
+      Maximum shade { //amended // #147
+        .values = ./signals/*[signal]
+        //~value == 0.0
+        Box signals { //amended // #146
+          vg::ProportionalSignal radiation { //amended // #144
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .input = outdoors[radiation]
+            .threshold = controllers[screenShadeThreshold]
+            .thresholdBand = controllers[screenShadeThresholdBand]
+            .minSignal = 0.0
+            .maxSignal = controllers/screens/maxDrawn[value]
+            .increasingSignal = TRUE
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+          Box asEnergy { //amended // #145
+            +signal = controllers/screens/energy[value]
+          }
+        }
+      }
+      Maximum blackout { //amended // #151
+        .values = ./signals/*[signal]
+        //~value == 0.0
+        Box signals { //amended // #150
+          vg::DateTimeSignal time { //amended // #148
+            .signalReset = 0.0
+            .maxChange = inf
+            .timeStepSecs = calendar[timeStepSecs]
+            .beginDate = 2001/1/1
+            .endDate = 2001/12/31
+            .beginTime = controllers[screenBlackoutFromTime]
+            .endTime = controllers[screenBlackoutToTime]
+            .day = calendar[dayOfYear]
+            .time = calendar[time]
+            .signalInside = setpoints/daylightLevel[day]
+            .signalOutside = 0.0
+            .signalOutsideTimeOnly = 0.0
+            .circadian = TRUE
+            //~signal == 0.0
+            //~flag == FALSE
+            //~flagUp == FALSE
+            //~flagDown == FALSE
+            //~value == 0.0
+          }
+          Box asEnergy { //amended // #149
+            +signal = controllers/screens/energy[value]
+          }
+        }
+      }
+    }
+    vg::GrowthLightController growthLight { //amended // #153
+      .signalReset = 0.0
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .isActive = allSetpoints/growthLightActive[value]
+      .lightThresholdLow = allSetpoints/growthLightThresholdLow[value]
+      .lightThresholdHigh = allSetpoints/growthLightThresholdHigh[value]
+      .lightOutdoors = outdoors[radiation]
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+    }
+    vg::Co2Controller co2 { //amended // #155
+      .minCo2 = setpoints/co2/minimum[signal]
+      .maxCo2 = setpoints/co2/maximum[signal]
+      .indoorsCo2 = indoors/co2[value]
+      .timeStep = calendar[timeStepSecs]
+      .injectionRate = ./injectionRate[signal]
+      //~signal == 0.0
+      vg::ProportionalSignal injectionRate { //amended // #154
+        .signalReset = 0.0
+        .maxChange = inf
+        .timeStepSecs = calendar[timeStepSecs]
+        .input = indoors/total/airFlux[value]
+        .threshold = 6.0
+        .thresholdBand = 1.0
+        .minSignal = 0.0
+        .maxSignal = 4.5
+        .increasingSignal = FALSE
+        //~signal == 0.0
+        //~flag == FALSE
+        //~flagUp == FALSE
+        //~flagDown == FALSE
+        //~value == 0.0
+      }
+    }
+  }
+  vg::Actuators actuators { // #172
+    GrowthLights growthLights { // #158
+      //~shortWaveProp == ./*<GrowthLight>[shortWaveProp]
+      //~longWaveProp == ./*<GrowthLight>[longWaveProp]
+      //~heatProp == ./*<GrowthLight>[heatProp]
+      //~powerUsage == ./*<GrowthLight>[powerUsage]
+      //~totalIntensity == ./*<GrowthLight>[totalIntensity]
+      //~shortWaveIntensity == ./*<GrowthLight>[shortWaveIntensity]
+      //~longWaveIntensity == ./*<GrowthLight>[longWaveIntensity]
+      //~heatIntensity == ./*<GrowthLight>[heatIntensity]
+      //~parIntensity == ./*<GrowthLight>[parIntensity]
+      //~currentlyOn == ./*<GrowthLight>[on]
+      vg::GrowthLight growthLight { // #157
+        .type = "HPS"
+        .intensity = 50.0
+        .parPhotonCoef = 1.611
+        .minPeriodOn = 0.0
+        .age = 0.0
+        .lifeTime = 12000.0
+        .on = controllers/growthLight[signal]
+        .timeStep = calendar[timeStepSecs]
+        //~shortWaveProp == 0.0
+        //~longWaveProp == 0.0
+        //~heatProp == 0.0
+        //~powerUsage == 0.0
+        //~totalIntensity == 0.0
+        //~shortWaveIntensity == 0.0
+        //~longWaveIntensity == 0.0
+        //~heatIntensity == 0.0
+        //~parIntensity == 0.0
+        //~currentlyOn == FALSE
+        //~currentPeriod == 0.0
+        //~totalPeriod == 0.0
+      }
+    }
+    ProportionalSignal heating { // #162
+      .signalReset = indoors/temperature[value]
+      .maxChange = inf
+      .timeStepSecs = calendar[timeStepSecs]
+      .input = controllers/heating[value]
+      .threshold = 0.0
+      .thresholdBand = 1.0
+      .minSignal = indoors/temperature[value]
+      .maxSignal = 60.0
+      .increasingSignal = TRUE
+      //~signal == 0.0
+      //~flag == FALSE
+      //~flagUp == FALSE
+      //~flagDown == FALSE
+      //~value == 0.0
+      Box pipes { // #161
+        vg::Pipe pipe { // #159
+          .material = "carbon steel"
+          .density = 1.88
+          .diameter = 13.0
+          .flowRate = 5.0
+          .minTemperature = 20.0
+          .maxTemperature = 80.0
+          //~a == 0.0154
+          //~b == 1.253
+          //~emissivity == 0.8
+        }
+        vg::Pipe pipe { // #160
+          .material = "carbon steel"
+          .density = 2.0
+          .diameter = 32.0
+          .flowRate = 5.0
+          .minTemperature = 20.0
+          .maxTemperature = 80.0
+          //~a == 0.0154
+          //~b == 1.253
+          //~emissivity == 0.8
+        }
+      }
+    }
+    Box screens { //amended // #169
+      Accumulator energy { //amended // #164
+        .initial = 0.0
+        .change = ./controller[controlVariable]
+        .minValue = 0.0
+        .maxValue = 1.0
+        //~value == 0.0
+        PidController controller { //amended // #163
+          .sensedValue = ..[value]
+          .desiredValue = controllers/screens/energy[value]
+          .controlVariableReset = 0.0
+          .Kprop = 0.05
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+        }
+      }
+      Accumulator shade { //amended // #166
+        .initial = 0.0
+        .change = ./controller[controlVariable]
+        .minValue = 0.0
+        .maxValue = 1.0
+        //~value == 0.0
+        PidController controller { //amended // #165
+          .sensedValue = ..[value]
+          .desiredValue = controllers/screens/shade[value]
+          .controlVariableReset = 0.0
+          .Kprop = 0.05
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+        }
+      }
+      Accumulator blackout { //amended // #168
+        .initial = 0.0
+        .change = ./controller[controlVariable]
+        .minValue = 0.0
+        .maxValue = 1.0
+        //~value == 0.0
+        PidController controller { //amended // #167
+          .sensedValue = ..[value]
+          .desiredValue = controllers/screens/blackout[value]
+          .controlVariableReset = 0.0
+          .Kprop = 0.05
+          .Kint = 0.0
+          .Kderiv = 0.0
+          .minimum = -1.79769e+308
+          .maximum = 1.79769e+308
+          .minSlope = -1.79769e+308
+          .maxSlope = 1.79769e+308
+          .timeStep = calendar[timeStepSecs]
+          //~controlVariable == 0.0
+          //~controlVariableSlope == 0.0
+          //~error == 0.0
+          //~errorIntegral == 0.0
+          //~errorDerivative == 0.0
+        }
+      }
+    }
+    Accumulator vents { //amended // #171
+      .initial = controllers/ventilation/crack[value]
+      .change = ./controller[controlVariable]
+      .minValue = 0.0
+      .maxValue = 1.0
+      //~value == 0.0
+      PidController controller { //amended // #170
+        .sensedValue = ..[value]
+        .desiredValue = controllers/ventilation[value]
+        .controlVariableReset = 0.0
+        .Kprop = 0.1
+        .Kint = 0.01
+        .Kderiv = 0.2
+        .minimum = -1.79769e+308
+        .maximum = 1.79769e+308
+        .minSlope = -1.79769e+308
+        .maxSlope = 1.79769e+308
+        .timeStep = calendar[timeStepSecs]
+        //~controlVariable == 0.0
+        //~controlVariableSlope == 0.0
+        //~error == 0.0
+        //~errorIntegral == 0.0
+        //~errorDerivative == 0.0
+      }
+    }
+  }
+  vg::Crop crop { // #219
+    .density = 3.9
+    Box lai { // #173
+      +value = 1
+      +fractionPlantArea = 1
+    }
+    Box periods { //amended // #175
+      DateTimeSignal  { //amended // #174
+        .signalReset = 0.0
+        .maxChange = inf
+        .timeStepSecs = calendar[timeStepSecs]
+        .beginDate = 2001/1/1
+        .endDate = 2001/12/31
+        .beginTime = 00:00:00
+        .endTime = 23:59:59
+        .day = calendar[dayOfYear]
+        .time = calendar[time]
+        .signalInside = 1.0
+        .signalOutside = 0.0
+        .signalOutsideTimeOnly = 0.0
+        .circadian = FALSE
+        //~signal == 0.0
+        //~flag == FALSE
+        //~flagUp == FALSE
+        //~flagDown == FALSE
+        //~value == 0.0
+      }
+    }
+    DayDegrees physTime { //amended // #176
+      .T = indoors/temperature[value]
+      .timeStepDays = calendar[timeStepDays]
+      .resetTotal = ../periods/*[flagDown]
+      .isTicking = ../periods/*[flag]
+      .T0 = 0.0
+      .Topt = 100.0
+      .Tmax = 100.0
+      //~step == 0.0
+      //~total == 0.0
+    }
+    Box layers { //amended // #204
+      vg::LeafLayer top { //amended // #185
+        .xGaussUpperside = 0.0
+        .wGaussUpperside = 0.0
+        .xGaussLowerside = 0.0
+        .wGaussLowerside = 0.0
+        LeafWindSpeed windSpeed { //amended // #177
+          .k = 0.6
+          .indoorsWindSpeedMinimum = 0.025
+          .indoorsWindSpeed = indoors/windSpeed[value]
+          .xGauss = ..[xGaussUpperside]
+          .lai = crop/lai[value]
+          //~value == 0.0
+        }
+        vg::StomatalResistanceRose rs { //amended // #178
+          .co2 = indoors/co2[value]
+          .rh = indoors/humidity[rh]
+          .Pn = ../photosynthesis[Pn]
+          .rbCO2 = ../rb[rbCo2]
+          .lai = crop/lai[value]
+          //~rsH2O == 0.0
+          //~rsCo2 == 0.0
+        }
+        vg::BoundaryLayerResistanceStanghellini rb { //amended // #179
+          .leafDimension = 0.025
+          .leafWindSpeed = ../windSpeed[value]
+          .leafTemperature = ../temperature[value]
+          .indoorsTemperature = indoors/temperature[value]
+          //~rbH2O == 0.0
+          //~rbCo2 == 0.0
+        }
+        vg::LeafRadiationAbsorbed radiationAbsorbed { //amended // #180
+          .kLw = 0.8
+          .emissivity = 0.8
+          .xGaussLowerside = ..[xGaussLowerside]
+          .wGaussLowerside = ..[wGaussLowerside]
+          .xGaussUpperside = ..[xGaussUpperside]
+          .wGaussUpperside = ..[wGaussUpperside]
+          .lai = crop/lai[value]
+          .indoorsLight = indoors/light[total]
+          .lightAbsorptivity = ../photosynthesis[absorptivity]
+          .growthLightLw = actuators/growthLights[longWaveIntensity]
+          .growthLightViewFactor = 1.0
+          .floorTemperature = energyFlux/floor[temperature]
+          .floorEmissivity = energyFlux/floor[emissivity]
+          .leafTemperature = ../temperature[value]
+          .coverTemperature = given/energyFlux/shelter[coverTemperature]
+          .screensTemperature = given/energyFlux/shelter[screensTemperature]
+          .screensMaxState = construction/shelter[screensMaxState]
+          .shelterOutgoingLwAbsorptivity = construction/shelter[outgoingLwAbsorptivity]
+          .coverPerGroundArea = construction/geometry[coverPerGroundArea]
+          .pipeInflowTemperature = actuators/heating[value]
+          //~lightAbsorbed == 0.0
+          //~heatingAbsorbed == 0.0
+          //~growthLightLwAbsorbed == 0.0
+          //~floorLwAbsorbed == 0.0
+          //~shelterLoss == 0.0
+          //~value == 0.0
+        }
+        vg::LeafTranspiration transpiration { //amended // #181
+          .lai = crop/lai[value]
+          .fractionPlantArea = crop/lai[fractionPlantArea]
+          .indoorsAh = indoors/humidity[ah]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          .leafTemperature = ../temperature[value]
+          .rbH2O = ../rb[rbH2O]
+          .rsH2O = ../rs[rsH2O]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+          //~leafAh == 0.0
+        }
+        vg::LeafTemperature temperature { //amended // #182
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsRh = indoors/humidity[rh]
+          .rsH2O = ../rs[rsH2O]
+          .rbH2O = ../rb[rbH2O]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          //~value == 0.0
+        }
+        vg::LeafPhotosynthesis photosynthesis { //amended // #184
+          .sunlightPhotonCoef = outdoors[sunlightPhotonCoef]
+          .parDiffuse = indoors/light[parDiffuse]
+          .parDirect = indoors/light[parDirect]
+          .kDiffuse = crop/radiation[kDiffuse]
+          .kDirect = crop/radiation[kDirect]
+          .kDirectDirect = crop/radiation[kDirectDirect]
+          .scattering = crop/radiation[scattering]
+          .diffuseReflectivity = crop/radiation[diffuseReflectivity]
+          .directReflectivity = crop/radiation[directReflectivity]
+          .lai = crop/lai[value]
+          .sinb = calendar[sinb]
+          .LUE = ./lightResponse[LUE]
+          .Pgmax = ./lightResponse[Pgmax]
+          .Rd = ./lightResponse[Rd]
+          .xGauss = ..[xGaussUpperside]
+          .wGauss = ..[wGaussUpperside]
+          //~absorptivity == 0.0
+          //~parAbsorbed == 0.0
+          //~Pn == 0.0
+          //~Pg == 0.0
+          LeafLightResponse lightResponse { //amended // #183
+            .rsCO2 = ../../rs[rsCo2]
+            .rbCO2 = ../../rb[rbCo2]
+            .Tleaf = ../../temperature[value]
+            .co2Air = indoors/co2[value]
+            .rhoChl = 0.45
+            .theta = 0.7
+            .frParAbs = 0.3
+            .concEnzyme = 87.0
+            //~LUE == 0.0
+            //~Pnmax == 0.0
+            //~Pgmax == 0.0
+            //~Rd == 0.0
+            //~rtCO2 == 0.0
+          }
+        }
+      }
+      vg::LeafLayer middle { //amended // #194
+        .xGaussUpperside = 0.0
+        .wGaussUpperside = 0.0
+        .xGaussLowerside = 0.0
+        .wGaussLowerside = 0.0
+        LeafWindSpeed windSpeed { //amended // #186
+          .k = 0.6
+          .indoorsWindSpeedMinimum = 0.025
+          .indoorsWindSpeed = indoors/windSpeed[value]
+          .xGauss = ..[xGaussUpperside]
+          .lai = crop/lai[value]
+          //~value == 0.0
+        }
+        vg::StomatalResistanceRose rs { //amended // #187
+          .co2 = indoors/co2[value]
+          .rh = indoors/humidity[rh]
+          .Pn = ../photosynthesis[Pn]
+          .rbCO2 = ../rb[rbCo2]
+          .lai = crop/lai[value]
+          //~rsH2O == 0.0
+          //~rsCo2 == 0.0
+        }
+        vg::BoundaryLayerResistanceStanghellini rb { //amended // #188
+          .leafDimension = 0.025
+          .leafWindSpeed = ../windSpeed[value]
+          .leafTemperature = ../temperature[value]
+          .indoorsTemperature = indoors/temperature[value]
+          //~rbH2O == 0.0
+          //~rbCo2 == 0.0
+        }
+        vg::LeafRadiationAbsorbed radiationAbsorbed { //amended // #189
+          .kLw = 0.8
+          .emissivity = 0.8
+          .xGaussLowerside = ..[xGaussLowerside]
+          .wGaussLowerside = ..[wGaussLowerside]
+          .xGaussUpperside = ..[xGaussUpperside]
+          .wGaussUpperside = ..[wGaussUpperside]
+          .lai = crop/lai[value]
+          .indoorsLight = indoors/light[total]
+          .lightAbsorptivity = ../photosynthesis[absorptivity]
+          .growthLightLw = actuators/growthLights[longWaveIntensity]
+          .growthLightViewFactor = 1.0
+          .floorTemperature = energyFlux/floor[temperature]
+          .floorEmissivity = energyFlux/floor[emissivity]
+          .leafTemperature = ../temperature[value]
+          .coverTemperature = given/energyFlux/shelter[coverTemperature]
+          .screensTemperature = given/energyFlux/shelter[screensTemperature]
+          .screensMaxState = construction/shelter[screensMaxState]
+          .shelterOutgoingLwAbsorptivity = construction/shelter[outgoingLwAbsorptivity]
+          .coverPerGroundArea = construction/geometry[coverPerGroundArea]
+          .pipeInflowTemperature = actuators/heating[value]
+          //~lightAbsorbed == 0.0
+          //~heatingAbsorbed == 0.0
+          //~growthLightLwAbsorbed == 0.0
+          //~floorLwAbsorbed == 0.0
+          //~shelterLoss == 0.0
+          //~value == 0.0
+        }
+        vg::LeafTranspiration transpiration { //amended // #190
+          .lai = crop/lai[value]
+          .fractionPlantArea = crop/lai[fractionPlantArea]
+          .indoorsAh = indoors/humidity[ah]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          .leafTemperature = ../temperature[value]
+          .rbH2O = ../rb[rbH2O]
+          .rsH2O = ../rs[rsH2O]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+          //~leafAh == 0.0
+        }
+        vg::LeafTemperature temperature { //amended // #191
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsRh = indoors/humidity[rh]
+          .rsH2O = ../rs[rsH2O]
+          .rbH2O = ../rb[rbH2O]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          //~value == 0.0
+        }
+        vg::LeafPhotosynthesis photosynthesis { //amended // #193
+          .sunlightPhotonCoef = outdoors[sunlightPhotonCoef]
+          .parDiffuse = indoors/light[parDiffuse]
+          .parDirect = indoors/light[parDirect]
+          .kDiffuse = crop/radiation[kDiffuse]
+          .kDirect = crop/radiation[kDirect]
+          .kDirectDirect = crop/radiation[kDirectDirect]
+          .scattering = crop/radiation[scattering]
+          .diffuseReflectivity = crop/radiation[diffuseReflectivity]
+          .directReflectivity = crop/radiation[directReflectivity]
+          .lai = crop/lai[value]
+          .sinb = calendar[sinb]
+          .LUE = ./lightResponse[LUE]
+          .Pgmax = ./lightResponse[Pgmax]
+          .Rd = ./lightResponse[Rd]
+          .xGauss = ..[xGaussUpperside]
+          .wGauss = ..[wGaussUpperside]
+          //~absorptivity == 0.0
+          //~parAbsorbed == 0.0
+          //~Pn == 0.0
+          //~Pg == 0.0
+          LeafLightResponse lightResponse { //amended // #192
+            .rsCO2 = ../../rs[rsCo2]
+            .rbCO2 = ../../rb[rbCo2]
+            .Tleaf = ../../temperature[value]
+            .co2Air = indoors/co2[value]
+            .rhoChl = 0.45
+            .theta = 0.7
+            .frParAbs = 0.3
+            .concEnzyme = 87.0
+            //~LUE == 0.0
+            //~Pnmax == 0.0
+            //~Pgmax == 0.0
+            //~Rd == 0.0
+            //~rtCO2 == 0.0
+          }
+        }
+      }
+      vg::LeafLayer bottom { //amended // #203
+        .xGaussUpperside = 0.0
+        .wGaussUpperside = 0.0
+        .xGaussLowerside = 0.0
+        .wGaussLowerside = 0.0
+        LeafWindSpeed windSpeed { //amended // #195
+          .k = 0.6
+          .indoorsWindSpeedMinimum = 0.025
+          .indoorsWindSpeed = indoors/windSpeed[value]
+          .xGauss = ..[xGaussUpperside]
+          .lai = crop/lai[value]
+          //~value == 0.0
+        }
+        vg::StomatalResistanceRose rs { //amended // #196
+          .co2 = indoors/co2[value]
+          .rh = indoors/humidity[rh]
+          .Pn = ../photosynthesis[Pn]
+          .rbCO2 = ../rb[rbCo2]
+          .lai = crop/lai[value]
+          //~rsH2O == 0.0
+          //~rsCo2 == 0.0
+        }
+        vg::BoundaryLayerResistanceStanghellini rb { //amended // #197
+          .leafDimension = 0.025
+          .leafWindSpeed = ../windSpeed[value]
+          .leafTemperature = ../temperature[value]
+          .indoorsTemperature = indoors/temperature[value]
+          //~rbH2O == 0.0
+          //~rbCo2 == 0.0
+        }
+        vg::LeafRadiationAbsorbed radiationAbsorbed { //amended // #198
+          .kLw = 0.8
+          .emissivity = 0.8
+          .xGaussLowerside = ..[xGaussLowerside]
+          .wGaussLowerside = ..[wGaussLowerside]
+          .xGaussUpperside = ..[xGaussUpperside]
+          .wGaussUpperside = ..[wGaussUpperside]
+          .lai = crop/lai[value]
+          .indoorsLight = indoors/light[total]
+          .lightAbsorptivity = ../photosynthesis[absorptivity]
+          .growthLightLw = actuators/growthLights[longWaveIntensity]
+          .growthLightViewFactor = 1.0
+          .floorTemperature = energyFlux/floor[temperature]
+          .floorEmissivity = energyFlux/floor[emissivity]
+          .leafTemperature = ../temperature[value]
+          .coverTemperature = given/energyFlux/shelter[coverTemperature]
+          .screensTemperature = given/energyFlux/shelter[screensTemperature]
+          .screensMaxState = construction/shelter[screensMaxState]
+          .shelterOutgoingLwAbsorptivity = construction/shelter[outgoingLwAbsorptivity]
+          .coverPerGroundArea = construction/geometry[coverPerGroundArea]
+          .pipeInflowTemperature = actuators/heating[value]
+          //~lightAbsorbed == 0.0
+          //~heatingAbsorbed == 0.0
+          //~growthLightLwAbsorbed == 0.0
+          //~floorLwAbsorbed == 0.0
+          //~shelterLoss == 0.0
+          //~value == 0.0
+        }
+        vg::LeafTranspiration transpiration { //amended // #199
+          .lai = crop/lai[value]
+          .fractionPlantArea = crop/lai[fractionPlantArea]
+          .indoorsAh = indoors/humidity[ah]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          .leafTemperature = ../temperature[value]
+          .rbH2O = ../rb[rbH2O]
+          .rsH2O = ../rs[rsH2O]
+          //~conductance == 0.0
+          //~vapourFlux == 0.0
+          //~gain == 0.0
+          //~leafAh == 0.0
+        }
+        vg::LeafTemperature temperature { //amended // #200
+          .indoorsTemperature = indoors/temperature[value]
+          .indoorsRh = indoors/humidity[rh]
+          .rsH2O = ../rs[rsH2O]
+          .rbH2O = ../rb[rbH2O]
+          .radiationAbsorbed = ../radiationAbsorbed[value]
+          //~value == 0.0
+        }
+        vg::LeafPhotosynthesis photosynthesis { //amended // #202
+          .sunlightPhotonCoef = outdoors[sunlightPhotonCoef]
+          .parDiffuse = indoors/light[parDiffuse]
+          .parDirect = indoors/light[parDirect]
+          .kDiffuse = crop/radiation[kDiffuse]
+          .kDirect = crop/radiation[kDirect]
+          .kDirectDirect = crop/radiation[kDirectDirect]
+          .scattering = crop/radiation[scattering]
+          .diffuseReflectivity = crop/radiation[diffuseReflectivity]
+          .directReflectivity = crop/radiation[directReflectivity]
+          .lai = crop/lai[value]
+          .sinb = calendar[sinb]
+          .LUE = ./lightResponse[LUE]
+          .Pgmax = ./lightResponse[Pgmax]
+          .Rd = ./lightResponse[Rd]
+          .xGauss = ..[xGaussUpperside]
+          .wGauss = ..[wGaussUpperside]
+          //~absorptivity == 0.0
+          //~parAbsorbed == 0.0
+          //~Pn == 0.0
+          //~Pg == 0.0
+          LeafLightResponse lightResponse { //amended // #201
+            .rsCO2 = ../../rs[rsCo2]
+            .rbCO2 = ../../rb[rbCo2]
+            .Tleaf = ../../temperature[value]
+            .co2Air = indoors/co2[value]
+            .rhoChl = 0.45
+            .theta = 0.7
+            .frParAbs = 0.3
+            .concEnzyme = 87.0
+            //~LUE == 0.0
+            //~Pnmax == 0.0
+            //~Pgmax == 0.0
+            //~Rd == 0.0
+            //~rtCO2 == 0.0
+          }
+        }
+      }
+    }
+    vg::CropRadiation radiation { //amended // #205
+      .kDiffuse = 0.8
+      .scattering = 0.2
+      .sinb = calendar[sinb]
+      .lightDiffuse = indoors/light[diffuse]
+      .lightDirect = indoors/light[direct]
+      .absorptivityTop = layers/top/photosynthesis[absorptivity]
+      .absorptivityMiddle = layers/middle/photosynthesis[absorptivity]
+      .absorptivityBottom = layers/bottom/photosynthesis[absorptivity]
+      //~kDirect == 0.0
+      //~kDirectDirect == 0.0
+      //~diffuseReflectivity == 0.0
+      //~directReflectivity == 0.0
+      //~reflectivity == 0.0
+    }
+    vg::Average temperature { //amended // #206
+      .inputs = (../layers/*/temperature[value])
+      //~value == 0.0
+    }
+    vg::Sum lightAbsorbed { //amended // #207
+      .inputs = (../layers/*/radiationAbsorbed[lightAbsorbed])
+      //~value == 0.0
+    }
+    vg::Sum heatingAbsorbed { //amended // #208
+      .inputs = (../layers/*/radiationAbsorbed[heatingAbsorbed])
+      //~value == 0.0
+    }
+    vg::Sum growthLightLwAbsorbed { //amended // #209
+      .inputs = (../layers/*/radiationAbsorbed[growthLightLwAbsorbed])
+      //~value == 0.0
+    }
+    vg::Sum radiationAbsorbed { //amended // #210
+      .inputs = (../layers/*/radiationAbsorbed[lightAbsorbed])
+      //~value == 0.0
+    }
+    vg::Average conductance { //amended // #211
+      .inputs = (../layers/*/transpiration[conductance])
+      //~value == 0.0
+    }
+    vg::Average vapourFlux { //amended // #212
+      .inputs = (../layers/*/transpiration[vapourFlux])
+      //~value == 0.0
+    }
+    vg::Average gain { //amended // #213
+      .inputs = (../layers/*/transpiration[gain])
+      //~value == 0.0
+    }
+    vg::CropGrowth growth { //amended // #215
+      .respRoot = 0.03
+      .respStem = 0.03
+      .respLeaf = 0.015
+      .respFruit = 0.01
+      .massRoot = ../mass[root]
+      .massStem = ../mass[stem]
+      .massLeaf = ../mass[leaf]
+      .massFruit = ../mass[fruit]
+      .Tcrop = ../temperature[value]
+      .Pg = ./Pg[value]
+      .timeStepSecs = calendar[timeStepSecs]
+      //~grossGrowthRate == 0.0
+      //~netGrowthRate == 0.0
+      //~maintenanceRespirationRate == 0.0
+      //~netGrowthAllocation == 0.0
+      vg::Sum Pg { //amended // #214
+        .inputs = (../../layers/*/photosynthesis[Pg])
+        //~value == 0.0
+      }
+    }
+    vg::FruitCropMass mass { //amended // #217
+      .establishCrop = ../periods/*[flagUp]
+      .removeCrop = ../periods/*[flagDown]
+      .timeStep = calendar[timeStepSecs]
+      .grossGrowthRate = ../growth[grossGrowthRate]
+      .initMass = 10.0
+      .propRoot = 0.0
+      .propStem = 0.5
+      .propLeaf = 0.5
+      .propFruit = 0.0
+      .costRoot = 0.39
+      .costStem = 0.45
+      .costLeaf = 0.39
+      .costFruit = 0.35
+      .vegPropRoot = 0.0
+      .vegPropStem = 0.4
+      .vegPropLeaf = 0.6
+      .vegPropFruit = 0.0
+      .reproPropRoot = 0.0
+      .reproPropStem = 0.05
+      .reproPropLeaf = 0.1
+      .reproPropFruit = 0.85
+      .tempSumReproductive = 900.0
+      .tempMaxReproductive = 45.0
+      .fruitFactor = ./fruitFactor[value]
+      .indoorsTemperature = indoors/temperature[value]
+      .tempSum = ../physTime[total]
+      .lai = ../lai[value]
+      //~root == 0.0
+      //~stem == 0.0
+      //~leaf == 0.0
+      //~fruit == 0.0
+      //~total == 0.0
+      //~rootGrowthRate == 0.0
+      //~stemGrowthRate == 0.0
+      //~leafGrowthRate == 0.0
+      //~fruitGrowthRate == 0.0
+      //~totalGrowthRate == 0.0
+      vg::FruitFactor fruitFactor { //amended // #216
+        .minDensity = 3.9
+        .maxValue = 1.044
+        .plantDensity = ../..[density]
+        //~value == 0.0
+      }
+    }
+    vg::CropYield yield { //amended // #218
+      .produceMass = ../mass[fruit]
+      .fractionPlantArea = crop/lai[fractionPlantArea]
+      .fractionDryWeight = 0.045
+      //~freshWeight == 0.0
+      //~dryWeight == 0.0
+    }
+  }
+  vg::Budget budget { // #220
+    .heatingPowerUsage = controlled/heating/energyFlux[value]
+    .growthLightsPowerUsage = actuators/growthLights[powerUsage]
+    .co2Flux = controllers/co2[signal]
+    .dt = calendar[timeStepSecs]
+    .energyUnit = "GJ"
+    //~heatingEnergyTotal == 0.0
+    //~growthLightsEnergyTotal == 0.0
+    //~co2Total == 0.0
+  }
+  OutputR output { // #225
+    .begin = "scripts/begin.R"
+    .end = "scripts/end.R"
+    .outputFileNameVariable = "output_file_name"
+    .keepPages = FALSE
+    .keepVariables = FALSE
+    .popUp = FALSE
+    .width = 7.0
+    .height = 7.0
+    //~numPages == 0
+    Box p { // #221
+      +outdoorsCo2 = outdoors[co2]
+      +outdoorsT = outdoors[temperature]
+      +soilT = outdoors[soilTemperature]
+      +outdoorsRh = outdoors[rh]
+      +outdoorsWindSpeed = outdoors[windSpeed]
+      +outdoorsLight = outdoors[radiation]
+      +indoorsCo2 = indoors/co2[value]
+      +indoorsT = indoors/temperature[value]
+      +indoorsRh = indoors/humidity[rh]
+      +indoorsLight = indoors/light[total]
+      +growthLightPower = actuators/growthLights[powerUsage] 
+      +heatingPower = controlled/heating/energyFlux[value] 
+      +coolingPower = controlled/cooling/energyFlux[value]
+      +growthLightIntensity = actuators/growthLights[parIntensity]
+      +totalLightIntensity = indoors/light[parTotal]
+      +leafNetPhotosynthesis = crop/growth[netGrowthRate]
+      +leafLightUseEfficiencyTop = crop/layers/top/photosynthesis/lightResponse[LUE]
+      +leafLightUseEfficiencyMiddle = crop/layers/middle/photosynthesis/lightResponse[LUE]
+      +leafLightUseEfficiencyBottom = crop/layers/bottom/photosynthesis/lightResponse[LUE]
+      +leafTemperatureTop = crop/layers/top/temperature[value]
+      +leafTemperatureMiddle = crop/layers/middle/temperature[value]
+      +leafTemperatureBottom = crop/layers/bottom/temperature[value]
+      +setpointVentilation = setpoints/temperature/ventilation[value]
+      +setpointHeating = setpoints/temperature/heating[value]
+      +setpointCo2Minimum = setpoints/co2/minimum[signal]
+      +setpointCo2Maximum = setpoints/co2/maximum[signal]
+      +ventsOpening = actuators/vents[value]
+      +growthLightOn = controllers/growthLight[value]
+      +vapourFluxTranspiration = indoors/given/vapourFlux/transpiration[vapourFlux]
+      +vapourFluxCondensationCover = indoors/given/vapourFlux/condensationCover[vapourFlux]
+      +vapourFluxCondensationsScreens = indoors/given/vapourFlux/condensationScreens[vapourFlux]
+      +vapourFluxLeakage = indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]
+      +vapourFluxVents = cooling/vapourFlux[vapourFlux]
+    }
+    PageR  { // #223
+      .xAxis = (calendar[dateTime])
+      .ncol = -1
+      .nrow = -1
+      .title = ""
+      .width = ancestors::*<OutputR>[width]
+      .height = ancestors::*<OutputR>[height]
+      PlotR  { // #222
+      .ports = (indoors/co2[value] indoors/humidity[rh] indoors/temperature[value] 
+                 growthLights[powerUsage] heating/energyFlux[energyFlux]
+                 crop/growth[netGrowthRate])
+        .hide = FALSE
+        .layout = "facetted"
+        .guideTitle = ""
+        .fontSize = 0
+        .ggplot = "geom_line(size=1.1)"
+        .transform = ""
+        .end = ""
+        .endCode = ""
+        .ncol = 4
+        .nrow = -1
+        .iteration = /*[iteration]
+      }
+    }
+  }
+}

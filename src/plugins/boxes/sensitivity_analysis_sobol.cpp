@@ -1,3 +1,7 @@
+#include <cmath>
+#include <QMessageBox>
+#include <QPushButton>
+#include <base/dialog.h>
 #include <base/distribution.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -74,6 +78,43 @@ void SensitivityAnalysisSobol::fillMatrices() {
             C(row, col) = B(row, col);
             ++col;
         }
+    }
+}
+
+void SensitivityAnalysisSobol::reviewNumberOfSamples() {
+    // Compute alternative ideal sample sizes
+//    int n = static_cast<int>(floor(log2(N*(2+k)))),
+//        iter1 = pow(2, n),
+//        iter2 = pow(2, n+1),
+    int n = static_cast<int>(floor(log2(N))),
+        N1 = pow(2, n),
+        N2 = pow(2, n+1),
+        iter1 = N1*(2+k),
+        iter2 = N2*(2+k);
+    // Adjust sample size if it is not already ideal
+    if (N!=N1 && N!=N2) {
+        QMessageBox msgBox;
+        QString label = "N = %1 (%2 iterations)";
+        msgBox.setText("Additional information needed to generate the Sobol' sequence of quasi-random numbers.");
+        msgBox.setInformativeText("Sample size must be a power of 2. Choose your sample size (N):");
+        QPushButton *buttonA = msgBox.addButton(label.arg(N1).arg(iter1), QMessageBox::ActionRole),
+                    *buttonB = msgBox.addButton(label.arg(N2).arg(iter2), QMessageBox::ActionRole);
+        msgBox.addButton(QMessageBox::Cancel);
+        msgBox.exec();
+        QString dialogMsg = "Sample size adjusted to %1.";
+        if (msgBox.clickedButton() == buttonA) {
+            N = N1;
+            dialogMsg = dialogMsg.arg(N1);
+        }
+        else if (msgBox.clickedButton() == buttonB) {
+            N = N2;
+            dialogMsg = dialogMsg.arg(N2);
+        }
+        else {
+            N = 1;
+            dialogMsg = "Sensitivity analysis will be aborted.";
+        }
+        dialog().information(dialogMsg);
     }
 }
 

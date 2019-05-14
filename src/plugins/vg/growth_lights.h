@@ -16,6 +16,7 @@ class GrowthLights : public GrowthLightBase
 {
 public:
     GrowthLights(QString name, QObject *parent);
+    void amend();
 };
 } //namespace
 

@@ -245,8 +245,6 @@ Simulation sim {
     } // aphid
   } // maker
   
-  
-  
   Biocontrol biocontrol {
     .aphidDaysUncontrolled = withoutFungus/diagnostics/aphidDays[value] 
     .aphidDaysControlled = withFungus/diagnostics/aphidDays[value] 

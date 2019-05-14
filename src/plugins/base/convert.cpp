@@ -15,22 +15,32 @@ template<> bool convert(char source)            { return source!=0; }
 template<> bool convert(int source)             { return source!=0; }
 template<> bool convert(long int source)        { return source!=0; }
 template<> bool convert(long long int source)   { return source!=0; }
-template<> bool convert(float source)           { return source!=0; }
-template<> bool convert(double source)          { return source!=0; }
-template<> bool convert(long double source)     { return source!=0; }
+template<> bool convert(float source)           { return static_cast<int>(source)!=0; }
+template<> bool convert(double source)          { return static_cast<int>(source)!=0; }
+template<> bool convert(long double source)     { return static_cast<int>(source)!=0; }
 
 //
 // Numerical conversions to String
 //
+
+static QString withPeriod(QString s) {
+    return (s.contains(".") || s.contains("e") || s.contains("inf")) ? s : s + ".0";
+}
 
 template<> QString convert(bool source)         { return source ? "TRUE" : "FALSE";}
 template<> QString convert(char source)         { return QString(source); }
 template<> QString convert(int source)          { return QString::number(source); }
 template<> QString convert(long int source)     { return QString::number(source); }
 template<> QString convert(long long int source){ return QString::number(source); }
-template<> QString convert(float source)        { return QString::number(source); }
-template<> QString convert(double source)       { return QString::number(source); }
-template<> QString convert(long double source)  { return QString::fromStdString(lexical_cast<std::string>(source)); }
+template<> QString convert(float source)  {
+    return withPeriod( QString::number(static_cast<double>(source)) );
+}
+template<> QString convert(double source) {
+    return withPeriod( QString::number(source) );
+}
+template<> QString convert(long double source) {
+    return withPeriod( QString::fromStdString(lexical_cast<std::string>(source)) );
+}
 
 //
 // Numerical conversions to Date
@@ -50,7 +60,7 @@ template<> QDate convert(long double)   { CANNOT_CONVERT(Date, LongDouble); }
 //
 
 #define TIME_CONVERT(sourceT) \
-QTime time = QTime(source, 0, 0); \
+QTime time = QTime(static_cast<int>(source), 0, 0); \
 if (!time.isValid()) \
     CANNOT_CONVERT(QTime, sourceT); \
 return time
@@ -88,7 +98,6 @@ template<> bool convert(QString source) {
         return false;
     else
         ThrowException("Cannot convert String to Bool. Must be T, F, TRUE or FALSE").value(source);
-    return false;
 }
 
 template<> char convert(QString source) {
@@ -96,7 +105,6 @@ template<> char convert(QString source) {
         return source.at(0).toLatin1();
     else
         ThrowException("Cannot convert String to Char. String must contain exactly one character").value(source);
-    return 0;
 }
 
 template<> QString convert(QString source) {

@@ -4,7 +4,7 @@ Simulation sim {
   .steps = 35
   .silent = TRUE
   SensitivityAnalysisSobol sa {
-    .sampleSize = 5000
+    .sampleSize = 1024
     .bootstrapSize = 3000
   }
   Box butterfly {
@@ -28,7 +28,6 @@ Simulation sim {
     }
   }
   OutputR {
-    .end = "scripts/end.R"
     PageR {
       .xAxis =  *<Distribution>/..<Port>
       PlotR {
