@@ -14,6 +14,7 @@ using namespace base;
 using std::cout;
 
 void TestTrack::testScalar() {
+    bool excepted(false);
     Box *sim;
     try {
         sim = TestBoxCases::case3a();
@@ -30,6 +31,7 @@ void TestTrack::testScalar() {
 }
 
 void TestTrack::testVector() {
+    bool excepted(false);
     Box *sim;
     try {
         sim = TestBoxCases::case4();
@@ -48,6 +50,7 @@ void TestTrack::testVector() {
 }
 
 void TestTrack::testTrackPtr() {
+    bool excepted(false);
     QVector<int>
         output1, output2,
         expected1, expected2;
@@ -184,11 +187,10 @@ void TestTrack::testParseOk() {
 }
 
 void TestTrack::testParseError() {
+    bool excepted(false);
     QVector<QString> s;
-    bool excepted;
 
     s.clear();
-    excepted = false;
     try {
         s << "|a[x]" << "b[y]";
         Track::parseTrackPaths(s);
@@ -196,7 +198,6 @@ void TestTrack::testParseError() {
     EXPECTED
 
     s.clear();
-    excepted = false;
     try {
         s << "a[x]" << "b[y]|";
         Track::parseTrackPaths(s);
@@ -204,7 +205,6 @@ void TestTrack::testParseError() {
     EXPECTED
 
     s.clear();
-    excepted = false;
     try {
         s << "a[x]" << "||" << "b[y]";
         Track::parseTrackPaths(s);

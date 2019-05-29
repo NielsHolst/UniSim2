@@ -17,7 +17,7 @@
 
 4. In the student source remove day_scale and weather files.
 
-5. If the Qt installation has been updated, check that QTENV is set correctly both in build.bat and fill-folders.bat.
+5. If the Qt installation has been updated, check that QTENV is set correctly in build.bat and QT_ROOT, in fill-folders.bat.
 
 6. In fill-folders.bat UNISIM_SHIP must be the correct folder.
 

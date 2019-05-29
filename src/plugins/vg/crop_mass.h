@@ -21,7 +21,7 @@ public:
 protected:
     // Inputs
     bool establishCrop, removeCrop;
-    double timeStep, initMass, grossGrowthRate,
+    double timeStep, initMass, growthRate,
         propRoot, propStem, propLeaf, propFruit,
         costRoot, costStem, costLeaf, costFruit;
     // Outputs

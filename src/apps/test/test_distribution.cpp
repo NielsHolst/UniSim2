@@ -14,7 +14,7 @@ using namespace base;
 using namespace std;
 
 void TestDistribution::testLoad() {
-    cout << "A\n";
+    bool excepted(false);
     int errors = dialog().errorCount();
     Box *sim;
     try {
@@ -25,7 +25,6 @@ void TestDistribution::testLoad() {
     UNEXPECTED
     QCOMPARE(errors, dialog().errorCount());
 
-    cout << "B\n";
     Distribution *uniform(nullptr), *normal(nullptr);
     try {
         uniform = sim->findOne<Distribution>("/sim/a/initial<Port>/*<Distribution>");
@@ -33,7 +32,6 @@ void TestDistribution::testLoad() {
     }
     UNEXPECTED
 
-    cout << "C\n";
     double sample;
     QSet<double> samples;
     for (int i=0; i<30; ++i) {
@@ -47,7 +45,6 @@ void TestDistribution::testLoad() {
     }
     QCOMPARE(samples.size(), 30);
 
-    cout << "D\n";
     samples.clear();
     for (int i=0; i<30; ++i) {
         try {
@@ -63,10 +60,10 @@ void TestDistribution::testLoad() {
     }
     QCOMPARE(samples.size(), 30);
     delete sim;
-    cout << "Z\n";
 }
 
 void TestDistribution::testBlindPort() {
+    bool excepted(false);
     int errors = dialog().errorCount();
     Box *sim;
     try {
@@ -75,7 +72,7 @@ void TestDistribution::testBlindPort() {
         sim->initializeFamily();
     }
     UNEXPECTED
-    QCOMPARE(errors, dialog().errorCount());
+    QVERIFY(dialog().errorCount() <= errors);
 
     OutputFile file;
     std::cout << "*** " << qPrintable(file.filePath()) << " "
@@ -90,6 +87,7 @@ void TestDistribution::testBlindPort() {
 }
 
 void TestDistribution::testBuilder() {
+    bool excepted(false);
     BoxBuilder builder;
     try {
         builder.
@@ -135,6 +133,7 @@ void TestDistribution::testBuilder() {
 }
 
 void TestDistribution::testMonteCarlo() {
+    bool excepted(false);
     Command::submit(QStringList() << "load" << "distribution/monte_carlo.box", nullptr);
     Box *sim = environment().root();
     Box *sa;

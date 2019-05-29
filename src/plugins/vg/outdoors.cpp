@@ -26,9 +26,9 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature").unit("oC");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity").unit("[0;100]");
     Input(radiation).imports("./records[GlobRad]").help("Total sunlight irradiation").unit("W/m2");
-    Input(diffuseRadiation).importsMaybe("./records[DifRad]").help("Diffuse component of sunlight irradiation").unit("W/m2");
+    Input(diffuseRadiation).imports("./diffuseIrradiationEstimate[value]").help("Diffuse component of sunlight irradiation").unit("W/m2");
     Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed").unit("m/s");
-    Input(skyTemperature).importsMaybe("./records[Tsky]").help("Sky temperature").unit("oC");
+    Input(skyTemperature).imports("skyTemperatureEstimate[temperature]").help("Sky temperature").unit("oC");
     Output(directRadiation).help("Direct component of sunlight irradiation").unit("W/m2");
     Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation").unit("[0;1]");
     Output(ah).help("Outdoors absolute humidity").unit("kg/m3");
@@ -43,6 +43,14 @@ void Outdoors::amend() {
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").
             port("ignoreYear").equals(true).
+        endbox();
+    if (!findMaybeOne<Box>("./diffuseIrradiationEstimate"))
+        builder.
+        box("DiffuseIrradiationRE").name("diffuseIrradiationEstimate").
+        endbox();
+    if (!findMaybeOne<Box>("./skyTemperatureEstimate"))
+        builder.
+        box("SkyTemperature").name("skyTemperatureEstimate").
         endbox();
     if (!findMaybeOne<Box>("./soilTemperature"))
         builder.
@@ -62,6 +70,20 @@ void Outdoors::amend() {
                 port("Kprop").equals(0.5e-4).
             endbox().
         endbox();
+}
+
+void Outdoors::initialize() {
+    Box *records = findOne<Box>("./records");
+    bool hasDifRad = records->peakPort("DifRad"),
+         hasTsky = records->peakPort("Tsky");
+    if (hasDifRad) {
+        port("diffuseRadiation")->imports("./records[DifRad]");
+        port("diffuseRadiation")->resolveImportsAgain();
+    }
+    if (hasTsky) {
+        port("skyTemperature")->imports("./records[Tsky]");
+        port("skyTemperature")->resolveImportsAgain();
+    }
 }
 
 void Outdoors::reset() {

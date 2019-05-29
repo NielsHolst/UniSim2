@@ -1,0 +1,35 @@
+Simulation sim {
+  .iterations = 128
+  .steps = 1
+  Box random {
+    RandomiserSobolSequence randomiser {
+      .useFixed = FALSE
+      .doSensitivityAnalysis = FALSE
+    }
+    RandomUniform uniform1 {
+      .drawAtReset = TRUE
+      .drawAtUpdate = TRUE
+      .min = 20
+      .max = 40
+    }
+    RandomUniform uniform2 {
+      .drawAtReset = TRUE
+      .drawAtUpdate = TRUE
+      .min = 20
+      .max = 40
+    }
+    RandomUniform uniform3 {
+      .drawAtReset = TRUE
+      .drawAtUpdate = TRUE
+      .min = 20
+      .max = 40
+    }
+  }
+  OutputR {
+    .end = "random-3D-end.R"
+    .keepPages = TRUE
+    OutputText {
+      .ports = random/*[value]
+    }
+  }
+}

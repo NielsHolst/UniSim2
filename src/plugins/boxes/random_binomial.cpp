@@ -1,5 +1,7 @@
 #include <base/publish.h>
+#include <base/random_order.h>
 #include "random_binomial.h"
+#include "randomiser_base.h"
 
 using namespace base;
 
@@ -8,30 +10,29 @@ namespace boxes {
 PUBLISH(RandomBinomial)
 
 RandomBinomial::RandomBinomial(QString name, QObject *parent)
-    : RandomBase<bool>(name, parent), distribution(0), variate(0)
+    : RandomBaseTyped<bool>(name, parent)
 {
     help("produces random numbers from the binomial distribution");
-    Input(P).equals(0.5).help("Probability of event");
+    // Overwrite P defaults
+    port("P")->equals(0.5).help("Probability of event");
 }
 
-RandomBinomial::~RandomBinomial() {
-    delete distribution;
-    delete variate;
-}
-
-void RandomBinomial::createGenerator() {
-    delete distribution;
-    delete variate;
-    distribution = new Distribution(0, 1);
-    variate = new Variate(*randomGenerator(), *distribution);
-}
-
-bool RandomBinomial::drawValue() {
-    return (*variate)() > P;
-}
-
-void RandomBinomial::nextValue() {
-    value = drawValue();
+void RandomBinomial::updateValue() {
+    if (useFixed) {
+        value = fixed;
+    }
+    else {
+        int stratum = _order->next(),
+            numStrata = _order->size();
+        double pFrom = double(stratum)/numStrata,
+               pTo =   double(stratum+1)/numStrata;
+        if (P < pFrom)
+            value = false;
+        else if (P > pTo)
+            value = true;
+        else
+            value = randomiser()->draw01() < (P-pFrom)/(pTo-pFrom);
+    }
 }
 
 } //namespace

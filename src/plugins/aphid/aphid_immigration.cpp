@@ -24,7 +24,7 @@ void AphidImmigration::reset() {
     exposed.resize(k);
     bool withoutFungus = findOne<Box>("..")->name().contains("withoutFungus");
     if (withoutFungus)
-        propExposedImmigrants = 0.;
+        port("propExposedImmigrants")->equals(0.);
 }
 
 void AphidImmigration::update() {

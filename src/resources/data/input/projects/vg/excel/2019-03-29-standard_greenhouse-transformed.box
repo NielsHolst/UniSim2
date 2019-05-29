@@ -2528,8 +2528,8 @@ Simulation greenhouse { // #226
     .begin = "scripts/begin.R"
     .end = "scripts/end.R"
     .outputFileNameVariable = "output_file_name"
-    .keepPages = FALSE
-    .keepVariables = FALSE
+    .keepPages = TRUE
+    .keepVariables = TRUE
     .popUp = FALSE
     .width = 7.0
     .height = 7.0

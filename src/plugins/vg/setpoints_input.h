@@ -22,7 +22,7 @@ private:
     double heatingTemperatureAtLowRh, heatingTemperatureMargin,
         ventilationTemperatureMargin, ventilationTemperatureRhMargin,
         rhMax, rhMaxBand,
-        co2Min, co2Max,
+        co2Capacity, co2Setpoint, co2VentilationThreshold, co2VentilationBand,
         dawnThreshold, duskThreshold,
         daylightThresholdMorning, daylightThresholdEvening;
     // Outputs

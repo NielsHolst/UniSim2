@@ -7,6 +7,7 @@
 #include <math.h>
 #include <boost/math/distributions/normal.hpp>
 #include <QtGlobal>
+#include "exception.h"
 #include "phys_math.h"
 
 using namespace std;
@@ -320,6 +321,8 @@ double invCumNormal(double p, double m, double sd) {
  * \return mean and standard deviation of the corresponding normal distribution
  */
 QPair<double, double> inferNormal(double xmin, double xmax, double p) {
+    if (p<=0 || p>=1)
+        ThrowException("P must be in the open-ended range (0;1)").value(p);
     double pmax = (1. + p)/2.,
            xsd = invCumNormal(pmax);
     return qMakePair(

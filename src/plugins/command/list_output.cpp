@@ -32,7 +32,7 @@ ListOutput::ListOutput(QVector<Box*> boxes, ListOptionSet options)
         dialog().error(ex.what());
     }
     catch (...) {
-        dialog().error("Something went wrong");
+        dialog().error("Something went wrong in command::ListOutput::ListOutput");
     }
 }
 
@@ -90,12 +90,14 @@ void ListOutput::toString(base::Port *port, int level) {
     if (!_listExportsOnly || !port->exportPorts().isEmpty()) {
         QString prefix = port->isBlind() ? "+" :
                         (port->access()==PortAccess::Input) ? "." : "~",
-                assignment = port->hasImport() ? port->importPath() : port->valueAsString();
+                assignment = port->valueAsString();
         if (port->type() == Char || port->type() == String) {
             if (assignment.size() > 13)
                 assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
         }
+        if (port->hasImport())
+            assignment += " <- " + port->importPath();
         if (!port->unit().isEmpty())
             assignment += " " + port->unit();
         _s += fill +

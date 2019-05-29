@@ -102,12 +102,24 @@ void Crop::amend() {
         box("vg::Average").name("gain").
             port("inputs").equals("../layers/*/transpiration[gain]").
         endbox();
+    if (!findMaybeOne<Box>("./Pg"))
+        builder.
+        box("vg::Sum").name("Pg").
+            port("inputs").equals("../layers/*/photosynthesis[Pg]").
+        endbox();
+    if (!findMaybeOne<Box>("./Pn"))
+        builder.
+        box("vg::Sum").name("Pn").
+            port("inputs").equals("../layers/*/photosynthesis[Pn]").
+        endbox();
+    if (!findMaybeOne<Box>("./Rd"))
+        builder.
+        box("vg::Sum").name("Rd").
+            port("inputs").equals("../layers/*/photosynthesis[Rd]").
+        endbox();
     if (!findMaybeOne<Box>("./growth"))
         builder.
         box("vg::CropGrowth").name("growth").
-            box("vg::Sum").name("Pg").
-                port("inputs").equals("../../layers/*/photosynthesis[Pg]").
-            endbox().
         endbox();
     if (!findMaybeOne<Box>("./mass"))
         builder.

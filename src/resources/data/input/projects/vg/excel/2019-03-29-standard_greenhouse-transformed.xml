@@ -397,7 +397,7 @@
 			<port name="xAxis" value="calendar[dateTime]"/>
 			<box class="PlotR">
 				<port name="ncol" value="4"/>
-				<port name="ports" value="output/p[*]"/>
+				<port name="ports" value="(output/p[*] screens/*[state])"/>
 			</box>
 		</box>
 		<box class="OutputText">

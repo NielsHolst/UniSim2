@@ -36,7 +36,7 @@ void Indoors::amend() {
         builder.
         box().name("total").
             box("vg::Sum").name("airFlux").
-                port("inputs").equals("(given/airFlux[value] cooling/airFlux[value])").
+                port("inputs").equals("(given/airFlux[value] cooling/airFluxVents[value])").
             endbox().
             box("vg::VapourFluxSum").name("vapourFlux").
                 port("toAdd").equals("(given/vapourFlux cooling/vapourFlux)").

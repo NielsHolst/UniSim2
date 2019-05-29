@@ -1,5 +1,9 @@
+#include <base/exception.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
+#include <base/random_order.h>
 #include "random_lognormal.h"
+#include "randomiser_base.h"
 
 using namespace base;
 
@@ -8,27 +12,27 @@ namespace boxes {
 PUBLISH(RandomLognormal)
 
 RandomLognormal::RandomLognormal(QString name, QObject *parent)
-    : RandomBase<double>(name, parent), distribution(0), variate(0)
+    : RandomBaseTyped<double>(name, parent)
 {
     help("produces random numbers from the log-normal distribution");
-    Input(mean).equals(10);
-    Input(sd).equals(2);
 }
 
-RandomLognormal::~RandomLognormal() {
-    delete distribution;
-    delete variate;
-}
-
-void RandomLognormal::createGenerator() {
-    delete distribution;
-    delete variate;
-    distribution = new Distribution(mean, sd);
-    variate = new Variate(*randomGenerator(), *distribution);
-}
-
-double RandomLognormal::drawValue() {
-    return (*variate)();
+void RandomLognormal::updateValue() {
+    if (useFixed) {
+        value = fixed;
+    }
+    else {
+        int stratum = _order->next(),
+            numStrata = _order->size();
+        if (min<=0.)
+            ThrowException("Minimum value must be positive").value(min).context(this);
+        if (max<=0.)
+            ThrowException("Maximum value must be positive").value(max).context(this);
+        double u = randomiser()->draw01(),
+               w = 1./numStrata,
+               u2 = (stratum + u)*w;
+        value = exp( phys_math::invNormalRange(u2, log(min), log(max), P) );
+    }
 }
 
 } //namespace

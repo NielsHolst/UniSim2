@@ -44,6 +44,7 @@ void Setpoints::amend() {
                 port("desiredValue").imports("./target[signal]").
                 port("sensedValue").imports("..[value]").
                 port("Kprop").equals(0.1).
+//                port("Kint").equals(0.001).
                 box("vg::ProportionalSignal").name("target").
                     port("input").imports("indoors/humidity[rh]").
                     port("threshold").imports("setpoints[rhMax]").
@@ -72,17 +73,6 @@ void Setpoints::amend() {
             endbox().
         endbox().
     endbox();
-
-    if (!findMaybeOne<Box>("./co2"))
-      builder.
-     box().name("co2").
-         box().name("minimum").
-             newPort("signal").equals(650.).
-         endbox().
-         box().name("maximum").
-             newPort("signal").equals(650.).
-         endbox().
-     endbox();
 }
 
 } //namespace

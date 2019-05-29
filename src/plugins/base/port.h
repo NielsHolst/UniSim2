@@ -86,6 +86,7 @@ public:
 
     // Change
     void resolveImports();
+    void resolveImportsAgain();
     void addExportPort(Port *port);
     void reset();
     void copyFromImport();

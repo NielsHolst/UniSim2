@@ -10,6 +10,7 @@
 using namespace base;
 
 void TestBlindPort::testFormat() {
+    bool excepted(false);
     Box *sim;
     try {
         Command::submit(QStringList() << "run" << "blind-port-format.box", nullptr);

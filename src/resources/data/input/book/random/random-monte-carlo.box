@@ -1,0 +1,38 @@
+Simulation sim {
+  .iterations = 30
+  .steps = 1
+  Box random {
+    RandomiserMonteCarlo randomiser {
+      .useFixed = FALSE
+      .doSensitivityAnalysis = FALSE
+    }
+    RandomBinomial binomial {
+      .P = 0.8
+    }
+    RandomLognormal lognormal {
+      .min = 100
+      .max = 10000
+      .P = 0.95
+    }
+    RandomNormal normal {
+      .min = 20
+      .max = 40
+      .P = 0.95
+    }
+    RandomUniform uniform {
+      .min = 20
+      .max = 40
+    }
+    RandomUniformInt uniformInt {
+      .min = 20
+      .max = 40
+    }
+  }
+  OutputR {
+    .end = "random-end.R"
+    .keepPages = TRUE
+    OutputText {
+      .ports = random/*[value]
+    }
+  }
+}

@@ -28,7 +28,7 @@ HEADERS +=  \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
     chalk.h \
-    co2_controller.h \
+#    co2_controller.h \
     controlled.h \
 #    controller_vent_max.h \
     controllers.h \
@@ -145,7 +145,7 @@ SOURCES += \
 #    controller_vent_max.cpp \
     controllers.cpp \
     controllers_input.cpp \
-    co2_controller.cpp \
+#    co2_controller.cpp \
     cover.cpp \
     crop.cpp \
     crop_development.cpp \

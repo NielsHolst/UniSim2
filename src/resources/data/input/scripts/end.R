@@ -5,6 +5,14 @@ if (!exists("output_skip_formats")) {
 }
 
 if (exists("sobol_N")) {
+  # library(GGally)
+
+  colnames(sim)[input_columns()] = input_names() # Remove ".end" from input column names
+
+  # open_plot_window(9,9)
+  # M = sim[1:(2*sobol_N), input_names()]
+  # print(ggpairs(M))
+
   n_outputs = length(output_names())
   open_plot_window(9,4)
   print( plot_against_sample_size() )
@@ -15,6 +23,9 @@ if (exists("sobol_N")) {
   print(S)
  
   list_of_plot_effects = dlply(S, .(Output), plot_effects)
-  open_plot_window(9,9)
-  print( grid.arrange(grobs=list_of_plot_effects) )
+  l_ply(list_of_plot_effects, function(x) { open_plot_window(14,9); print(x) } )
+  
+  # open_plot_window(9,9)
+  # print( grid.arrange(grobs=list_of_plot_effects) )  
 }
+

@@ -1,5 +1,8 @@
+#include <base/phys_math.h>
 #include <base/publish.h>
+#include <base/random_order.h>
 #include "random_normal.h"
+#include "randomiser_base.h"
 
 using namespace base;
 
@@ -8,27 +11,24 @@ namespace boxes {
 PUBLISH(RandomNormal)
 
 RandomNormal::RandomNormal(QString name, QObject *parent)
-    : RandomBase<double>(name, parent), distribution(nullptr), variate(nullptr)
+    : RandomBaseTyped<double>(name, parent)
 {
     help("produces random numbers from the normal distribution");
-    Input(mean).equals(10);
-    Input(sd).equals(2);
 }
 
-RandomNormal::~RandomNormal() {
-    delete distribution;
-    delete variate;
-}
 
-void RandomNormal::createGenerator() {
-    delete distribution;
-    delete variate;
-    distribution = new Distribution(mean, sd);
-    variate = new Variate(*randomGenerator(), *distribution);
-}
-
-double RandomNormal::drawValue() {
-    return (*variate)();
+void RandomNormal::updateValue() {
+    if (useFixed) {
+        value = fixed;
+    }
+    else {
+        int stratum = _order->next(),
+            numStrata = _order->size();
+        double u = randomiser()->draw01(),
+               w = 1./numStrata,
+               u2 = (stratum + u)*w;
+        value = phys_math::invNormalRange(u2, min, max, P);
+    }
 }
 
 } //namespace

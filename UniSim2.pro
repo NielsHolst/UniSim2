@@ -93,10 +93,10 @@ unisim.depends = aphid
 #io.depends = base
 #unisim.depends = io
 
-SUBDIRS += MusselBed
-MusselBed.subdir = src/plugins/MusselBed
-MusselBed.depends = base
-unisim.depends = MusselBed
+#SUBDIRS += MusselBed
+#MusselBed.subdir = src/plugins/MusselBed
+#MusselBed.depends = base
+#unisim.depends = MusselBed
 
 #SUBDIRS += PestTox
 #PestTox.subdir = src/plugins/PestTox

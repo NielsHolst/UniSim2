@@ -134,15 +134,22 @@ void Controllers::amend() {
 
     if (!findMaybeOne<Box>("./co2"))
         builder.
-        box("vg::Co2Controller").name("co2").
-            port("injectionRate").imports("./injectionRate[signal]").
-            box("vg::ProportionalSignal").name("injectionRate").
-                port("input").imports("indoors/total/airFlux[value]").
-                port("threshold").equals(6).
-                port("thresholdBand").equals(1).
-                port("increasingSignal").equals(false).
+        box("Accumulator").name("co2").
+            port("change").imports("./controller[controlVariable]").
+            port("minValue").equals(0).
+            port("maxValue").imports("./co2Capacity[value]").
+            box("PidController").name("controller").
+                port("sensedValue").imports("indoors/co2[value]").
+                port("desiredValue").imports("setpoints[co2Setpoint]").
+                port("Kprop").equals(0.1).
+            endbox().
+            box("vg::ProportionalSignal").name("co2Capacity").
+                port("input").imports("actuators/vents[value]").
+                port("threshold").imports("setpoints[co2VentilationThreshold]").
+                port("thresholdBand").imports("setpoints[co2VentilationBand]").
+                port("maxSignal").imports("setpoints[co2Capacity]").
                 port("minSignal").equals(0).
-                port("maxSignal").equals(4.5).
+                port("increasingSignal").equals(false).
             endbox().
         endbox();
 

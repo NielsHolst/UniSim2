@@ -13,6 +13,7 @@ QT += testlib
 # Our project source code
 HEADERS +=  \
     autotest.h \
+    exception_expectation.h \
     output_file.h \
     test_any_year.h \
     test_assign.h \
@@ -47,6 +48,7 @@ HEADERS +=  \
     test_port_type.h \
     test_port_value_op.h \
     test_random.h \
+    test_random_order.h \
     test_savanna.h \
     test_save_grammar.h \
     test_scenarios.h \
@@ -95,6 +97,7 @@ SOURCES +=  \
     test_port_type.cpp \
     test_port_value_op.cpp \
     test_random.cpp \
+    test_random_order.cpp \
     test_savanna.cpp \
     test_save_grammar.cpp \
     test_scenarios.cpp \

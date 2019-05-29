@@ -19,13 +19,13 @@ public:
 
 private:
     // Inputs
-    double Tcrop, Pg, timeStepSecs,
-        massRoot, massStem, massLeaf, massFruit,
-        respRoot, respStem, respLeaf, respFruit,
-        grossGrowthRate, netGrowthRate, maintenanceRespirationRate,
-        netGrowthAllocation;
+    double Pn, timeStepSecs;
+    // Outputs
+    double netGrowthRate, netGrowthAllocation;
+//        massRoot, massStem, massLeaf, massFruit,
+//        respRoot, respStem, respLeaf, respFruit,
     // Methods
-    double _maintenanceRespirationRate();
+//    double _maintenanceRespirationRate();
 };
 } //namespace
 

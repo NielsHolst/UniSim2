@@ -3,33 +3,25 @@ cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
 
 rem Set up version
 set MAJOR=2
-set MINOR=2
-set SUB=5
+set MINOR=3
+set SUB=0
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
 echo = Set path to Qt build environment =
 
+set QTENV="C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
+set QTENV="C:\Qt\5.11.2\mingw53_32\bin\qtenv2.bat"
+if exist %QTENV% goto :ok_qt
 set QTENV="C:\Qt\5.12.1\mingw73_64\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.9.2\mingw53_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.9.1\mingw53_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.7\mingw53_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.4\mingw491_32\bin\qtenv2.bat"
 if exist %QTENV% goto :ok_qt
 echo .
 echo Could not find %QTENV%
 echo .
 goto :end_fail
-:ok_qt 
 
+:ok_qt 
 echo = Set path to InstallBuilder =
 set INSTALL_BUILDER_PATH="C:\Program Files (x86)\BitRock InstallBuilder for Qt 17.7.0\bin"
 if exist %INSTALL_BUILDER_PATH% goto :ok_builder

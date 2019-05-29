@@ -56,7 +56,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
 
     Input(LUE).imports("./lightResponse[LUE]").unit("mg CO2/J");
     Input(Pgmax).imports("./lightResponse[Pgmax]").unit("mg CO2/leaf m2/s");
-    Input(Rd).imports("./lightResponse[Rd]").unit("mg CO2/leaf m2/s");
+    Input(RdLeaf).imports("./lightResponse[Rd]").unit("mg CO2/leaf m2/s");
     Input(xGauss).imports("..[xGaussUpperside]").unit("[0;1]");
     Input(wGauss).imports("..[wGaussUpperside]").unit("[0;1]");
 
@@ -64,6 +64,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     Output(parAbsorbed).help("Proportion of indoors PAR captured by this leaf layer").unit("[0;1]");
     Output(Pn).help("Net assimilation rate").unit("g CO2/ground m2/h");
     Output(Pg).help("Gross assimilation rate").unit("g CO2/ground m2/h");
+    Output(Rd).help("Dark respiration rate").unit("g CO2/ground m2/h");
 }
 
 void LeafPhotosynthesis::amend() {
@@ -105,11 +106,12 @@ void LeafPhotosynthesis::update() {
 
     // [mg CO2 / m2 ground / s] = [mg CO2 / m2 leaf / s * m2 leaf / m2 ground]
     Pg = PgTotal*integrationWeight;
-    Pn = Pg - Rd*integrationWeight;
+    Pn = Pg - RdLeaf*integrationWeight;
 
     // Convert to [g CO2 m-2 h-1]
     Pg *= 3.6;
     Pn *= 3.6;
+    Rd = Pg - Pn;
 }
 
 double LeafPhotosynthesis::absorbedByShadedLeaves() const {

@@ -24,6 +24,7 @@ Accumulator::Accumulator(QString name, QObject *parent)
     Input(minValue).equals(std::numeric_limits<double>::lowest()).help("Minimum possible value");
     Input(maxValue).equals(std::numeric_limits<double>::max()).help("Maximum possible value");
     Output(value).help("Accumulated value");
+    NamedOutput("signal", value).help("Synonym for 'value'");
 }
 
 void Accumulator::reset() {

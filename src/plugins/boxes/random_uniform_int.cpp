@@ -1,5 +1,8 @@
+#include <cmath>
 #include <base/publish.h>
+#include <base/random_order.h>
 #include "random_uniform_int.h"
+#include "randomiser_base.h"
 
 using namespace base;
 
@@ -8,28 +11,22 @@ namespace boxes {
 PUBLISH(RandomUniformInt)
 
 RandomUniformInt::RandomUniformInt(QString name, QObject *parent)
-    : RandomBase<int>(name, parent), distribution(0), variate(0)
+    : RandomBaseTyped<int>(name, parent)
 {
     help("produces random integer numbers from the uniform distribution");
-    // Replace default bounds
-    port("minValue")->equals(0);
-    port("maxValue")->equals(1);
 }
 
-RandomUniformInt::~RandomUniformInt() {
-    delete distribution;
-    delete variate;
-}
-
-void RandomUniformInt::createGenerator() {
-    delete distribution;
-    delete variate;
-    distribution = new Distribution(minValue, maxValue);
-    variate = new Variate(*randomGenerator(), *distribution);
-}
-
-int RandomUniformInt::drawValue() {
-    return (*variate)();
+void RandomUniformInt::updateValue() {
+    if (useFixed) {
+        value = fixed;
+    }
+    else {
+        int stratum = _order->next(),
+            numStrata = _order->size();
+        double u = randomiser()->draw01(),
+               w = double(max-min+1)/numStrata;
+        value = static_cast<int>( min + std::floor((stratum + u)*w) );
+    }
 }
 
 } //namespace

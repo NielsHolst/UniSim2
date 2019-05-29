@@ -78,6 +78,7 @@ HEADERS +=  \
 #    progress_indicator_base.h \
 #    progress_indicator_progress_bar.h \
     random_generator.h \
+    random_order.h \
     save_grammar_atom.h \
     save_grammar_base.h \
     save_grammar_notepad.h \
@@ -147,6 +148,7 @@ SOURCES +=  \
 #    progress_indicator_base.cpp \
 #    progress_indicator_progress_bar.cpp \
     random_generator.cpp \
+    random_order.cpp \
     save_grammar_atom.cpp \
     save_grammar_base.cpp \
     save_grammar_notepad.cpp \

@@ -230,7 +230,6 @@ void Port::resolveImports() {
     // Only resolve once
     if (_importsResolved)
         return;
-//        ThrowException("Unexpected: Imports already resolved").context(this);
     _importsResolved = true;
 
     // No imports; nothing to do
@@ -271,6 +270,11 @@ void Port::resolveImports() {
         if (_valueType == Null)
             ThrowException("Unexpected error: Type of imported value is Null");
     }
+}
+
+void Port::resolveImportsAgain() {
+    _importsResolved = false;
+    resolveImports();
 }
 
 void Port::addExportPort(Port *port) {
@@ -390,7 +394,7 @@ QString Port::valueAsString() const {
 }
 
 void Port::verifyValue() const {
-    if (valueAsString() == "nan") {
+    if (valueAsString().startsWith("nan")) {
         ThrowException("Value is not a number").context(this);
     }
 }

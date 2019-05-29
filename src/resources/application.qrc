@@ -62,6 +62,15 @@
     <file>data/input/book/phys-dev-appl-8.box</file>
     <file>data/input/book/phys-dev-scale-end.R</file>
     <file>data/input/book/phys-dev-scale.box</file>
+    <file>data/input/book/random/random-3D-end.R</file>
+    <file>data/input/book/random/random-end.R</file>
+    <file>data/input/book/random/random-monte-carlo-SA.box</file>
+    <file>data/input/book/random/random-monte-carlo.box</file>
+    <file>data/input/book/random/random-sobol-3D.box</file>
+    <file>data/input/book/random/random-sobol-SA.box</file>
+    <file>data/input/book/random/random-sobol.box</file>
+    <file>data/input/book/random/random-stratified-SA.box</file>
+    <file>data/input/book/random/random-stratified.box</file>
     <file>data/input/book/scenarios/braunschweig 2009 Tavg.txt</file>
     <file>data/input/book/scenarios/end-analysis.R</file>
     <file>data/input/book/scenarios/end-locations.R</file>
@@ -79,6 +88,7 @@
     <file>data/input/book/sensitivity5.box</file>
     <file>data/input/book/sensitivity5.R</file>
     <file>data/input/book/sobol1.box</file>
+    <file>data/input/book/sobol2.box</file>
     <file>data/input/book/student-weather.box</file>
     <file>data/input/book/syntax-error.box</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
@@ -183,7 +193,30 @@
     <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.box</file>
     <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.xml</file>
     <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-dark-screens-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-dark-screens.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-no-screen-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-no-screen.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed-no-screens.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed-roof-screens.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-14-standard.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
+    <file>data/input/projects/vg/excel/obh/alt1_glashus-transformed.xml</file>
+    <file>data/input/projects/vg/excel/obh/alt1_glashus.xml</file>
+    <file>data/input/projects/vg/excel/obh/alt2_5lags_poly-transformed.xml</file>
+    <file>data/input/projects/vg/excel/obh/alt2_5lags_poly.xml</file>
+    <file>data/input/projects/vg/excel/obh/data flere.xlsx</file>
+    <file>data/input/projects/vg/excel/obh/debug.txt</file>
+    <file>data/input/projects/vg/excel/obh/excel-to-vg.bat</file>
+    <file>data/input/projects/vg/excel/obh/ti-rapp_alt1-transformed.xml</file>
+    <file>data/input/projects/vg/excel/obh/ti-rapp_alt1.xml</file>
+    <file>data/input/projects/vg/excel/obh/ti-rapp_alt2-transformed.xml</file>
+    <file>data/input/projects/vg/excel/obh/ti-rapp_alt2.xml</file>
+    <file>data/input/projects/vg/excel/obh/Udklip TIrapp1.JPG</file>
+    <file>data/input/projects/vg/excel/obh/Udklip TiRapp2.JPG</file>
     <file>data/input/projects/vg/excel/test.box</file>
     <file>data/input/projects/vg/excel/ud.xml</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
@@ -191,6 +224,7 @@
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
     <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
+    <file>data/input/projects/vg/input/sel_dk_missing_columns.txt</file>
     <file>data/input/projects/vg/pid-controller-plot.R</file>
     <file>data/input/projects/vg/pid-controller.box</file>
     <file>data/input/projects/vg/proportional-signal.box</file>

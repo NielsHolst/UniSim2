@@ -8,10 +8,14 @@ colour_first_order = "#66c2a5"
 colour_total       = "#fc8d62"
 colour_effects = c(colour_first_order, colour_total)
 
+input_columns = function() {
+  2:(sobol_k+1)
+}
+
 input_names = function() {
-  input_columns = 2:(sobol_k+1)
-  s = colnames(sim)[input_columns]
-  str_replace(s, "\\.end", "")
+  s = colnames(sim)[input_columns()]
+  s = str_replace(s, "\\.end", "")
+  str_replace(s, "\\.value", "")
 }
 
 output_column = function(ix_output) {

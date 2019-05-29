@@ -891,14 +891,24 @@
         <xsl:with-param name="climateSetpointName" select="'ventilationsThresholdBand'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="co2Min">
+    <box class="PrioritySignal" name="co2Capacity">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MinCO2'"/>
+        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Capacity'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="co2Max">
+    <box class="PrioritySignal" name="co2Setpoint">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxCO2'"/>
+        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Setpoint'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="co2VentilationThreshold">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationThreshold'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="co2VentilationBand">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationBand'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="chalk">
@@ -1008,10 +1018,10 @@
       <xsl:with-param name="setpointName" select="'rhMaxBand'"/>
     </xsl:call-template>
     <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Min'"/>
+      <xsl:with-param name="setpointName" select="'co2Capacity'"/>
     </xsl:call-template>
     <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Max'"/>
+      <xsl:with-param name="setpointName" select="'co2Setpoint'"/>
     </xsl:call-template>
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'dawnThreshold'"/>
@@ -1087,10 +1097,36 @@
   </box>
        
   <xsl:comment> *** Crop *** </xsl:comment>
+  <xsl:variable name="laiName" select="'LAI'"/>
+  <xsl:variable name="laiSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$laiName]/Value" as="node()"/>
+  <xsl:variable name="laiValue" select="number(replace($laiSrc, ',', '.'))"/>
+  <xsl:variable name="fractionPlantAreaName" select="'propAreaCultured'"/>
+  <xsl:variable name="fractionPlantAreaSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$fractionPlantAreaName]/Value" as="node()"/>
+  <xsl:variable name="fractionPlantAreaValue" select="number(replace($fractionPlantAreaSrc, ',', '.'))"/>
   <box class="vg::Crop" name="crop">
     <box name="lai">
-      <newPort name="value" externalName="None" source="Fixed" value="1"/>
-      <newPort name="fractionPlantArea" externalName="None" source="Fixed" value="1"/>
+      <newPort name="value">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$laiName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($laiSrc)"/>
+          </xsl:attribute>
+          <xsl:attribute name="value">
+            <xsl:value-of select="$laiValue"/>
+          </xsl:attribute>
+      </newPort>
+      <newPort name="fractionPlantArea">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$fractionPlantAreaName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($fractionPlantAreaSrc)"/>
+          </xsl:attribute>
+          <xsl:attribute name="value">
+            <xsl:value-of select="$fractionPlantAreaValue"/>
+          </xsl:attribute>
+      </newPort>
     </box>
   </box>
   <box class="vg::Budget" name="budget"/>
@@ -1112,7 +1148,10 @@
       <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
       <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
       <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
-      <newPort name="leafNetPhotosynthesis" ref="crop/growth[netGrowthRate]"/>
+      <newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
+      <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
+      <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
+      <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
       <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
       <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
       <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
@@ -1121,15 +1160,23 @@
       <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
       <newPort name="setpointVentilation" ref="setpoints/temperature/ventilation[value]"/>
       <newPort name="setpointHeating" ref="setpoints/temperature/heating[value]"/>
-      <newPort name="setpointCo2Minimum" ref="setpoints/co2/minimum[signal]"/>
-      <newPort name="setpointCo2Maximum" ref="setpoints/co2/maximum[signal]"/>
-      <newPort name="ventsOpening" ref="actuators/vents[value]"/>
+      <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
+      <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
+			<newPort name="co2Injection" ref="controllers/co2[value]"/>
+			<newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
       <newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
       <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
       <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
       <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
       <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
       <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
+      <newPort name="screenEnergySetpoint" ref="controllers/screens/energy[value]"/>
+      <newPort name="screenShadeSetpoint" ref="controllers/screens/shade[value]"/>
+      <newPort name="screenBlackoutSetpoint" ref="controllers/screens/blackout[value]"/>
+      <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
+      <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
+      <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
+      <newPort name="ventsOpening" ref="actuators/vents[value]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

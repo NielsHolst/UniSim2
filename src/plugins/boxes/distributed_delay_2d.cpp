@@ -9,6 +9,7 @@
 #include "distributed_delay_2d.h"
 
 #include <iostream>
+#include <QMessageBox>
 
 using namespace base;
 
@@ -112,12 +113,18 @@ void DistributedDelay2D::updateAsymmetric() {
 }
 
 DistributedDelay2D::FlowParameters DistributedDelay2D::computeFlowParameters(double L, int k, double dt, double fgr) const {
+    if (L<=0.)
+        ThrowException("L<=0").value(L).context(parent);
+    if (fgr<=0.)
+        ThrowException("fgr<=0").value(fgr).context(parent);
     FlowParameters p;
     double del = L*pow(fgr, -1./k);
     double atr = k*(1./L - 1./del);
     p.b = 1. + atr*del/k;
     p.idt = (int) floor(1.5 + 2.*p.b*dt*k/del);
     p.a = k/del*dt;
+//    QString s = "L:%1 k:%2 dt:%3 fgr:%4 del:%5 atr:%6 p.b:%7 p.idt:%8 p.a:%9";
+//    QMessageBox::information(0, "TEST", s.arg(L).arg(k).arg(dt).arg(fgr).arg(del).arg(atr).arg(p.b).arg(p.idt).arg(p.a));
     return p;
 }
 

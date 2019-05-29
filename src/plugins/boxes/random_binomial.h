@@ -1,29 +1,15 @@
 #ifndef RANDOM_BINOMIAL_H
 #define RANDOM_BINOMIAL_H
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <base/random_generator.h>
-#include "random_base.h"
+#include "random_base_typed.h"
 
 namespace boxes {
 
-class RandomBinomial : public RandomBase<bool>
+class RandomBinomial : public RandomBaseTyped<bool>
 {
 public: 
-    RandomBinomial(QString name, QObject *parent=0);
-    ~RandomBinomial();
-    void createGenerator();
+    RandomBinomial(QString name, QObject *parent);
 private:
-    // Inputs
-    double P;
-    // Methods
-    bool drawValue();
-    void nextValue();
-    // Random number generation
-    typedef boost::uniform_real<double> Distribution;
-    typedef boost::variate_generator<base::RandomGenerator::Generator&, Distribution> Variate;
-    Distribution *distribution;
-    Variate *variate;
+    void updateValue();
 };
 
 } //namespace

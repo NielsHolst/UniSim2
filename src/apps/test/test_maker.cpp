@@ -11,7 +11,7 @@ using namespace base;
 
 void TestMaker::testScript() {
     int errors = dialog().errorCount();
-    Command::submit(QStringList() << "load" << "maker/maker.box", 0);
+    Command::submit(QStringList() << "load" << "maker/maker.box", nullptr);
     QCOMPARE(errors, dialog().errorCount());
 
     Box *sim = environment().root();

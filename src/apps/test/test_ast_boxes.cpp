@@ -25,6 +25,7 @@ void TestAstBoxes::cleanup(){
 }
 
 void TestAstBoxes::testSimple() {
+    bool excepted(false);
     Box *root;
     try {
         reader->parse(inputFilePath("ast_simple.box"));
@@ -36,6 +37,7 @@ void TestAstBoxes::testSimple() {
 }
 
 void TestAstBoxes::testComments() {
+    bool excepted(false);
     Box *root;
     try {
         reader->parse(inputFilePath("ast_comments.box"));
@@ -47,6 +49,7 @@ void TestAstBoxes::testComments() {
 }
 
 void TestAstBoxes::testWhitespaceInVector() {
+    bool excepted(false);
     Box *root;
     try {
         reader->parse(inputFilePath("ast_whitespace_in_vector.box"));
@@ -68,6 +71,7 @@ void TestAstBoxes::testWhitespaceInVector() {
 }
 
 void TestAstBoxes::testWhitespaceInPath() {
+    bool excepted(false);
     Box *root;
     Port *x, *y, *z;
     try {
@@ -86,6 +90,7 @@ void TestAstBoxes::testWhitespaceInPath() {
 }
 
 void TestAstBoxes::testTransform() {
+    bool excepted(false);
     Box *root;
     Port *input1, *input2,
          *total, *mean, *min, *max, *any, *all, *all2;
@@ -116,6 +121,7 @@ void TestAstBoxes::testTransform() {
 }
 
 void TestAstBoxes::testDistribution() {
+    bool excepted(false);
     Box *root;
     Port *input1, *input2;
     try {

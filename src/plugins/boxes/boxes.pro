@@ -34,22 +34,32 @@ HEADERS +=  \
     page_r.h \
     plot_r.h \
     population.h \
+    randomiser_base.h \
+    randomiser_monte_carlo.h \
+    randomiser_sobol_sequence.h \
+    randomiser_stratified.h \
     random_base.h \
+    random_base_typed.h \
     random_binomial.h \
     random_lognormal.h \
     random_normal.h \
-    random_poisson.h \
+#    random_poisson.h \
     random_uniform.h \
     random_uniform_int.h \
     records.h \
-#    replicator.h \
     sandy.h \
     scenarios.h \
+    select_file.h \
     sensitivity_analysis_base.h \
     sensitivity_analysis_simple.h \
     sensitivity_analysis_sobol.h \
     sequence.h \
     simulation.h \
+#    sobol_sequence_binomial.h \
+#    sobol_sequence_lognormal.h \
+#    sobol_sequence_normal.h \
+#    sobol_sequence_uniform.h \
+#    sobol_sequence_uniform_int.h \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
@@ -80,21 +90,32 @@ SOURCES +=  \
     page_r.cpp \
     plot_r.cpp \
     population.cpp \
+    randomiser_base.cpp \
+    randomiser_monte_carlo.cpp \
+    randomiser_sobol_sequence.cpp \
+    randomiser_stratified.cpp \
+    random_base.cpp \
     random_binomial.cpp \
     random_lognormal.cpp \
     random_normal.cpp \
-    random_poisson.cpp \
+#    random_poisson.cpp \
     random_uniform.cpp \
     random_uniform_int.cpp \
     records.cpp \
 #    replicator.cpp \
     sandy.cpp \
     scenarios.cpp \
+    select_file.cpp \
     sensitivity_analysis_base.cpp \
     sensitivity_analysis_simple.cpp \
     sensitivity_analysis_sobol.cpp \
     sequence.cpp \
     simulation.cpp \
+#    sobol_sequence_binomial.cpp \
+#    sobol_sequence_lognormal.cpp \
+#    sobol_sequence_normal.cpp \
+#    sobol_sequence_uniform.cpp \
+#    sobol_sequence_uniform_int.cpp \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \

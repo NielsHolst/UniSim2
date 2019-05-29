@@ -21,7 +21,7 @@ IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
     Input(outdoorsCo2).imports("outdoors[co2]").unit("ppm");
     Input(airFlux).imports("total/airFlux[value]").unit("m3/m3/h");
     Input(injectionRate).imports("controllers/co2[signal]").unit("g/m2/h");
-    Input(assimilation).imports("crop/growth/Pg[value]").unit("[g CO2/m2/h]");
+    Input(assimilation).imports("crop/Pg[value]").unit("[g CO2/m2/h]");
     Input(averageHeight).imports("geometry[indoorsAverageHeight]").unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Output(value).help("Indoors CO2 concentration [ppm]").unit("ppm");

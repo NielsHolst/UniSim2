@@ -18,7 +18,7 @@ CropMass::CropMass(QString name, QObject *parent)
     Input(establishCrop).imports("../periods/*[flagUp]").transform(Any).unit("y|n");
     Input(removeCrop).imports("../periods/*[flagDown]").transform(Any).unit("y|n");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
-    Input(grossGrowthRate).imports("../growth[grossGrowthRate]").unit("g/m2/h");
+    Input(growthRate).imports("../growth[netGrowthRate]").unit("g/m2");
     Input(initMass).equals(10).help("Initial total crop dry mass").unit("g/m2");
     Input(propRoot).equals(0.).help("Initial proportion of crop dry mass in root").unit("[0;1]");
     Input(propStem).equals(0.5).help("Initial proportion of crop dry mass in stem").unit("[0;1]");
@@ -70,23 +70,17 @@ void CropMass::establish() {
 
 void CropMass::allocate() {
     // Compute growth increments
-    rootGrowthRate = propRoot*grossGrowthRate/(1+costRoot);
-    stemGrowthRate = propStem*grossGrowthRate/(1+costStem);
-    leafGrowthRate = propLeaf*grossGrowthRate/(1+costLeaf);
-    fruitGrowthRate = propFruit*grossGrowthRate/(1+costFruit);
+    rootGrowthRate = propRoot*growthRate/(1+costRoot);
+    stemGrowthRate = propStem*growthRate/(1+costStem);
+    leafGrowthRate = propLeaf*growthRate/(1+costLeaf);
+    fruitGrowthRate = propFruit*growthRate/(1+costFruit);
     totalGrowthRate = rootGrowthRate + stemGrowthRate + leafGrowthRate + fruitGrowthRate;
     // Add growth increments
-    root += rootGrowthRate;
-    stem += stemGrowthRate;
-    leaf += leafGrowthRate;
-    fruit += fruitGrowthRate;
-    total += totalGrowthRate;
-    // Convert growth increments to rates per hour
-    rootGrowthRate *= 3600/timeStep;
-    stemGrowthRate *= 3600/timeStep;
-    leafGrowthRate *= 3600/timeStep;
-    fruitGrowthRate *= 3600/timeStep;
-    totalGrowthRate *= 3600/timeStep;
+    root += rootGrowthRate*3600;
+    stem += stemGrowthRate*3600;
+    leaf += leafGrowthRate*3600;
+    fruit += fruitGrowthRate*3600;
+    total += totalGrowthRate*3600;
 }
 
 } //namespace

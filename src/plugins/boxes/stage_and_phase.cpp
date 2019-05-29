@@ -29,6 +29,10 @@ StageAndPhase::StageAndPhase(QString name, QObject *parent)
 
 void StageAndPhase::createDistributedDelay() {
     DistributedDelay2D::FixedParameters p;
+    if (duration <= 0.)
+        ThrowException("duration <= 0").value(duration).context(this);
+    if (phaseDuration  <= 0.)
+        ThrowException("phaseDuration <= 0").value(phaseDuration).context(this);
     p.L1 = duration;
     p.L2 = phaseDuration;
     p.k1 = k;

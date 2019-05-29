@@ -1,5 +1,7 @@
 #include <base/publish.h>
+#include <base/random_order.h>
 #include "random_uniform.h"
+#include "randomiser_base.h"
 
 using namespace base;
 
@@ -8,28 +10,22 @@ namespace boxes {
 PUBLISH(RandomUniform)
 
 RandomUniform::RandomUniform(QString name, QObject *parent)
-    : RandomBase<double>(name, parent), distribution(0), variate(0)
+    : RandomBaseTyped<double>(name, parent)
 {
     help("produces random numbers from the uniform distribution");
-    // Replace default bounds
-    port("minValue")->equals(0);
-    port("maxValue")->equals(1);
 }
 
-RandomUniform::~RandomUniform() {
-    delete distribution;
-    delete variate;
-}
-
-void RandomUniform::createGenerator() {
-    delete distribution;
-    delete variate;
-    distribution = new Distribution(minValue, maxValue);
-    variate = new Variate(*randomGenerator(), *distribution);
-}
-
-double RandomUniform::drawValue() {
-    return (*variate)();
+void RandomUniform::updateValue() {
+    if (useFixed) {
+        value = fixed;
+    }
+    else {
+        int stratum = _order->next(),
+            numStrata = _order->size();
+        double u = randomiser()->draw01(),
+               w = (max-min)/numStrata;
+        value = min + (stratum + u)*w;
+    }
 }
 
 } //namespace

@@ -27,9 +27,12 @@ Sum::Sum(QString name, QObject *parent)
 
 void Sum::initialize() {
     ports.clear();
-    for (QString input : inputs)
-        ports << findMany<Port>(input);
-//        ports << Path(input).resolveMany<Port>();
+    for (QString input : inputs) {
+        QVector<base::Port*> foundPorts = findMany<Port>(input);
+        if (foundPorts.isEmpty())
+            ThrowException("Input port not found").value(input).context(this);
+        ports << foundPorts;
+    }
 }
 
 void Sum::update() {
