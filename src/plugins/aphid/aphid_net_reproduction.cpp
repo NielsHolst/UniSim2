@@ -24,6 +24,8 @@ AphidNetReproduction::AphidNetReproduction(QString name, QObject *parent)
     Input(exposureCost).help("Relative reduction in reproduction when exposed").unit("[0;1]");
     Output(apterous).help("Net reproduction for apterous aphids").unit("per capita");
     Output(alate).help("Net reproduction for alate aphids").unit("per capita");
+    Output(apterousExposed).help("Net reproduction for infected apterous aphids").unit("per capita");
+    Output(alateExposed).help("Net reproduction for infected alate aphids").unit("per capita");
 } 
 
 void AphidNetReproduction::update() {

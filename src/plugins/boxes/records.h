@@ -19,8 +19,8 @@ public:
     ~Records();
     // standard methods
     void amend();
-    void reset();
     void initialize();
+    void reset();
     void update();
     void cleanup();
 
@@ -28,7 +28,7 @@ private:
     // inputs
     QString fileName, dateColumnName, timeColumnName;
     QDateTime calendarDateTime;
-    bool cycle, ignoreYear;
+    bool cycle, overrideCalendarYear;
 
     // outputs
     QDateTime currentDateTime, nextDateTime, firstDateTime, lastDateTime;
@@ -49,7 +49,7 @@ private:
     void extrapolateValues();
     void advanceTime();
     QDateTime alignDateTime(QDateTime dt, int yearOffset) const;
-    void ignoreYearMaybe();
+    void doOverrideCalendarYear();
 
     // data
     QFile _file;

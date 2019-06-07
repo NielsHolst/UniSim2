@@ -9,7 +9,7 @@
 #include <base/vector_op.h>
 #include "distributed_delay_2d.h"
 #include "stage_and_phase.h"
-	
+
 using namespace base;
 
 namespace boxes {
@@ -43,11 +43,11 @@ void StageAndPhase::createDistributedDelay() {
 
 void StageAndPhase::myReset() {
     content = initial;
-    if (inflow.isEmpty())
-        inflow.resize(phaseK);
+    inflow.resize(phaseK);
     outflow.resize(phaseK);
     outflow.fill(0.);
     _firstUpdate = true;
+    _dd->resize(k, phaseK);
     update();   // Otherwise, outflow will be one simulation step late
 }
 

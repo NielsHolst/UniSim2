@@ -21,7 +21,7 @@ public:
     DistributedDelay(const DistributedDelay &dd);
     void update(double inflow, double dt, double fgr);
     State state() const;
-
+    void resize(int k);
 
 private:
     // data

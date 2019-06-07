@@ -26,21 +26,22 @@ RandomiserSobolSequence::~RandomiserSobolSequence() {
 void RandomiserSobolSequence::inializeGenerator() {
     delete sobol;
     delete variate;
-    sobol = new boost::random::sobol(static_cast<unsigned int>(numVariables));
+    sobol = new boost::random::sobol(static_cast<unsigned int>(2*numVariables));
     variate = new Variate(*sobol, distribution);
 }
 
 void RandomiserSobolSequence::checkIterations(int iterations) {
+    int &k(numVariables);
     if (doSensitivityAnalysis) {
-        int N = static_cast<int>(floor(log2(iterations/double(2+numVariables))));
+        int N = static_cast<int>(floor(log2(iterations/double(2+k))));
         if (N<2)
             N = 2;
-        int N1 = (2<<(N-1))*(2+numVariables),
-            N2 = (2<<N)*(2+numVariables);
+        int N1 = (2<<(N-1))*(2+k),
+            N2 = (2<<N)*(2+k);
         QString msg("Simulation iterations must equal (2+k)*N (k=%1, N=2^i) to run a sensitivity analysis with a Sobol' sequence for random numbers"),
                 hint("Use instead, for example, %1 or %2 iterations");
         if (iterations!=N1 && iterations!=N2) {
-            ThrowException(msg.arg(numVariables)).
+            ThrowException(msg.arg(k)).
                     value(iterations).
                     hint(hint.arg(N1).arg(N2)).
                     context(this);
@@ -48,8 +49,8 @@ void RandomiserSobolSequence::checkIterations(int iterations) {
     }
     else {
         int n = static_cast<int>(floor(log2(iterations)));
-        if (n<4)
-            n = 4;
+        if (n<32)
+            n = 32;
         int N1 = 2<<(n-1),
             N2 = 2<<n;
         QString hint("Use instead, for example, %1 or %2 iterations %3");

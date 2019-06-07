@@ -18,7 +18,7 @@ PlotR::PlotR(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
     help("produces an R plot");
-    Input(hide).equals(false).help("If hidden will still figure in output file");
+    Input(hide).equals(false).help("Hide this plot?");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
     Input(guideTitle).help("Title of guide legends");
     Input(fontSize).help("Used for axes and panels; zero yields default font size");

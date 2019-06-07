@@ -12,6 +12,7 @@ CropIsGrowing::CropIsGrowing(QString name, QObject *parent)
 {
     help("computes if the crop has started to grow");
     Input(temperature).help("Daily average temperature").unit("oC");
+    Input(T0).equals(5.).help("Threshold that triggers crop growth").unit("oC");
     Output(value);
 }
 
@@ -25,7 +26,7 @@ void CropIsGrowing::reset() {
 
 void CropIsGrowing::update() {
     if (!value) {
-        value = (temperature>0 && temperature_2>0 && temperature_3>0 && temperature_4>0 && temperature_5>0) ;
+        value = (temperature>T0 && temperature_2>T0 && temperature_3>T0 && temperature_4>T0 && temperature_5>T0) ;
         temperature_5 = temperature_4;
         temperature_4 = temperature_3;
         temperature_3 = temperature_2;

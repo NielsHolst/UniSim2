@@ -3,8 +3,8 @@
 	<port name="steps" ref="./period[steps]"/>
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
-		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-08-2019"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="05-08-2019"/>
+		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2019"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="04-01-2019"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
@@ -22,7 +22,6 @@
 	<box class="vg::Outdoors" name="outdoors">
 		<box class="Records" name="records">
 			<port name="fileName" externalName="None" source="/DVV_SETUP/Weather/File" value="../input/sel_dk.txt"/>
-			<port name="ignoreYear" externalName="None" source="Fixed" value="TRUE"/>
 		</box>
 	</box>
 	<!-- *** Construction *** -->
@@ -39,58 +38,58 @@
 		<box class="vg::Shelter" name="shelter">
 			<box class="vg::ShelterFace" name="roof1">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens"/>
 			</box>
 			<box class="vg::ShelterFace" name="roof2">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens"/>
 			</box>
 			<box class="vg::ShelterFace" name="side1">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens">
 					<box class="vg::Screen" name="energy">
 						<port name="orientation" externalName="No name" source="Fixed" value="cover"/>
-						<port name="transmissivityLight" externalName="Transmission" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.007"/>
-						<port name="energyLossReduction" externalName="InsulationRatio" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.0045"/>
-						<port name="transmissivityAir" externalName="Porosity" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.0003"/>
+						<port name="transmissivityLight" externalName="Transmission" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.7"/>
+						<port name="energyLossReduction" externalName="InsulationRatio" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.45"/>
+						<port name="transmissivityAir" externalName="Porosity" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.03"/>
 						<port name="state" ref="actuators/screens/energy[value]"/>
 					</box>
 				</box>
 			</box>
 			<box class="vg::ShelterFace" name="side2">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens">
 					<box class="vg::Screen" name="energy">
 						<port name="orientation" externalName="No name" source="Fixed" value="cover"/>
-						<port name="transmissivityLight" externalName="Transmission" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.007"/>
-						<port name="energyLossReduction" externalName="InsulationRatio" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.0045"/>
-						<port name="transmissivityAir" externalName="Porosity" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.0003"/>
+						<port name="transmissivityLight" externalName="Transmission" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.7"/>
+						<port name="energyLossReduction" externalName="InsulationRatio" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.45"/>
+						<port name="transmissivityAir" externalName="Porosity" source="/DVV_SETUP/Greenhouse/Screens/Screen/Constants/Parameters/Value" value="0.03"/>
 						<port name="state" ref="actuators/screens/energy[value]"/>
 					</box>
 				</box>
 			</box>
 			<box class="vg::ShelterFace" name="end1">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens"/>
 			</box>
 			<box class="vg::ShelterFace" name="end2">
 				<box class="vg::Cover" name="cover">
-					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0089"/>
+					<port name="transmissivity" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="U4" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
 				</box>
 				<box class="vg::Screens" name="screens"/>
@@ -387,7 +386,6 @@
 			<newPort name="indoorsCo2" ref="indoors/co2[value]"/>
 			<newPort name="indoorsT" ref="indoors/temperature[value]"/>
 			<newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
-			<newPort name="indoorsLight" ref="indoors/light[total]"/>
 			<newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
 			<newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
 			<newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
@@ -432,7 +430,7 @@
 		</box>
 		<box class="OutputText">
 			<port name="skipInitialRows" value="360"/>
-			<port name="averageN" value="15"/>
+			<!-- <port name="averageN" value="15"/> -->
 		</box>
 	</box>
 </box>

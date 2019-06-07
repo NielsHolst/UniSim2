@@ -60,6 +60,8 @@ void Cover::reset() {
 void Cover::update() {
     double directLightfactor = interpolate(*dirTransTable, latitude, azimuth),
            tr = (1-greenhouseReflection)*(1-chalk);
+    // Override direct reflectance correction; it is not well estimated
+    directLightfactor = 1.;
     set( SurfaceRadiation().asCover(tr*transmissivity, tr*transmissivity*directLightfactor,
                                     absorptivity, emissivity) );
     double k = (windSpeed <= 4) ? (2.8 + 1.2*windSpeed)/7.6 : pow(windSpeed,0.8)/pow(4.,0.8);

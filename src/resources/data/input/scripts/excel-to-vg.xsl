@@ -76,7 +76,7 @@
       <xsl:attribute name="source">
         <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
       </xsl:attribute>
-      <xsl:call-template name="pct-value">
+      <xsl:call-template name="float-value">
         <xsl:with-param name="value" select="$transmissivitySrc"/>
       </xsl:call-template>
     </port>
@@ -107,7 +107,7 @@
     <xsl:variable name="transmissivityAirName" select="'Porosity'"/>
     <xsl:variable name="transmissivityAirSrc" select="Constants/Parameters[ParameterName=$transmissivityAirName]/Value" as="node()"/>
     
-        <box class="vg::Screen" name="MISSING">
+    <box class="vg::Screen" name="MISSING">
       <xsl:attribute name="name">
         <xsl:value-of select="$name"/>
       </xsl:attribute>
@@ -119,7 +119,7 @@
         <xsl:attribute name="source">
           <xsl:value-of select="ecolmod:generateXPath($transmissivityLightSrc)"/>
         </xsl:attribute>
-        <xsl:call-template name="pct-value">
+        <xsl:call-template name="float-value">
           <xsl:with-param name="value" select="$transmissivityLightSrc"/>
         </xsl:call-template>
       </port>
@@ -130,7 +130,7 @@
         <xsl:attribute name="source">
           <xsl:value-of select="ecolmod:generateXPath($energyLossReductionSrc)"/>
         </xsl:attribute>
-        <xsl:call-template name="pct-value">
+        <xsl:call-template name="float-value">
           <xsl:with-param name="value" select="$energyLossReductionSrc"/>
         </xsl:call-template>
       </port>
@@ -141,7 +141,7 @@
         <xsl:attribute name="source">
           <xsl:value-of select="ecolmod:generateXPath($transmissivityAirSrc)"/>
         </xsl:attribute>
-        <xsl:call-template name="pct-value">
+        <xsl:call-template name="float-value">
           <xsl:with-param name="value" select="$transmissivityAirSrc"/>
         </xsl:call-template>
       </port>
@@ -615,7 +615,6 @@
           <!-- <xsl:value-of select="$test-weather-file"/> -->
         </xsl:attribute>
       </port>
-      <port name="ignoreYear" externalName="None" source="Fixed" value="TRUE"/>
     </box>
   </box>
   <xsl:comment> *** Construction *** </xsl:comment>
@@ -1142,7 +1141,6 @@
       <newPort name="indoorsCo2" ref="indoors/co2[value]"/>
       <newPort name="indoorsT" ref="indoors/temperature[value]"/>
       <newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
-      <newPort name="indoorsLight" ref="indoors/light[total]"/>
       <newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
       <newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
       <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>

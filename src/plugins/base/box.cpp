@@ -300,7 +300,7 @@ void Box::resetPorts() {
         port->reset();
 }
 
-void Box::cloneFamily(QString name, QObject *parent) {
+Box* Box::clone(QString name, QObject *parent) {
     Box *myClone = MegaFactory::create<Box>(className(), name, parent);
     for (Port *port : findMany<Port>(".[*]")) {
         QString name = port->objectName();
@@ -319,8 +319,14 @@ void Box::cloneFamily(QString name, QObject *parent) {
         // Copy transform
         myClone->port(name)->transform( port->transform() );
     }
+    return myClone;
+}
+
+Box* Box::cloneFamily(QString name, QObject *parent) {
+    Box *myClone = clone(name, parent);
     for (Box *child : findMany<Box>("./*"))
         child->cloneFamily(child->objectName(), myClone);
+    return myClone;
 }
 
 void Box::debug(bool on) {

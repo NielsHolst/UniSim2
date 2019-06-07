@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double temperature;
+    double temperature, T0;
     // Outputs
     bool value;
     // Data

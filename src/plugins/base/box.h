@@ -77,7 +77,8 @@ public:
     void updateSelfImports();
     void verifyPorts();
 
-    void cloneFamily(QString name, QObject *parent);
+    Box* clone(QString name, QObject *parent);
+    Box* cloneFamily(QString name, QObject *parent);
 
     static void debug(bool on);
 

@@ -1,0 +1,86 @@
+Simulation sim {
+  .iterations =  24576
+  .steps = 2
+  .silent = TRUE
+  Box random {
+    // RandomiserStratified randomiser {
+    RandomiserMonteCarlo randomiser {
+    // RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = TRUE
+      .bootstrapSize = 5000
+    }
+    // sdX = c(1, 1.1, 0.9, 1.2, 0.8)
+    RandomNormal x1 {
+      .min = -3.891
+      .max =  3.891
+      .P = 0.9999
+    }
+    RandomNormal x2 {
+      .min = -4.280
+      .max =  4.280
+      .P = 0.9999
+    }
+    RandomNormal x3 {
+      .min = -3.502
+      .max =  3.502
+      .P = 0.9999
+    }
+    RandomNormal x4 {
+      .min = -4.669
+      .max =  4.669
+      .P = 0.9999
+    }
+    RandomNormal x5 {
+      .min = -3.112
+      .max =  3.112
+      .P = 0.9999
+    }
+    RandomNormal omega1 {
+      .min = -2.723
+      .max =  2.723
+      .P = 0.9999
+    }
+    RandomNormal omega2 {
+      .min = -5.058
+      .max =  5.058
+      .P = 0.9999
+    }
+    RandomNormal omega3 {
+      .min = -5.447
+      .max =  5.447
+      .P = 0.9999
+    }
+    RandomNormal omega4 {
+      .min = -2.334
+      .max =  2.334
+      .P = 0.9999
+    }
+    RandomNormal omega5 {
+      .min = -3.696
+      .max =  3.696
+      .P = 0.9999
+    }
+  }
+  B b {
+    .x1 = random/x1[value]
+    .x2 = random/x2[value]
+    .x3 = random/x3[value]
+    .x4 = random/x4[value]
+    .x5 = random/x5[value]
+    .omega2 = random/omega2[value]
+    .omega1 = random/omega1[value]
+    .omega3 = random/omega3[value]
+    .omega4 = random/omega4[value]
+    .omega5 = random/omega5[value]
+  }
+  OutputR {
+    PageR {
+      .xAxis = random/*[value]
+      .hide = TRUE
+      PlotR {
+        .ports = b[value]|end
+        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+      }
+    }
+  }
+}

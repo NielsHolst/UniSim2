@@ -21,6 +21,7 @@ public:
     QVector<base::Track::Order> xAxisOrders() const;
 private:
     // Inputs
+    bool hide;
     QVector<QString> xAxis;
     double width, height;
     int ncol, nrow;

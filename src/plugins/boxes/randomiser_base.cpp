@@ -4,6 +4,8 @@
 #include "randomiser_base.h"
 #include "random_base.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 
 namespace boxes {
@@ -46,6 +48,45 @@ namespace {
     }
 }
 
+RandomBase* RandomiserBase::variableB(RandomBase *A) {
+    RandomBase *variableB = A->findMaybeOne<RandomBase>("./B");
+    return variableB ? variableB : A;
+}
+
+void RandomiserBase::fillMatrices() {
+    int &k(numVariables);
+    A.resize(N, k);
+    B.resize(N, k);
+    C.resize(N, k);
+    for (RandomBase *variable : randomVariables) {
+        variable->port("drawAtReset")->equals(true);
+        variable->port("useFixed")->equals(false);
+    }
+    for (int row = 0; row < N; ++row) {
+        for (int col = 0; col < k; ++col) {
+            RandomBase *variable = randomVariables.at(col),
+                       *variableB_ = variableB(variable);
+            variable->reset();
+            A(row, col) = variable->port("value")->value<double>();
+            variableB_->reset();
+            B(row, col) =
+            C(row,col) = variableB_->port("value")->value<double>();
+        }
+    }
+//    RandomOrder shuffle(2*N, nullptr);
+//    for (int row = 0; row < N; ++row) {
+//        for (int col = 0; col<k; ++col) {
+//            A(row, col) = AB.at(shuffle.at(row), col);
+//            B(row, col) = C(row, col) = AB.at(shuffle.at(row+N), col);
+//        }
+//    }
+    for (RandomBase *variable : randomVariables) {
+        variable->port("useFixed")->equals(true);
+        variableB(variable)->port("useFixed")->equals(true);
+    }
+    matricesFilled = true;
+}
+
 void RandomiserBase::reset() {
     int &k(numVariables);
     if (!doSensitivityAnalysis) return;
@@ -80,40 +121,13 @@ void RandomiserBase::reset() {
     }
 }
 
-void RandomiserBase::fillMatrices() {
-    int &k(numVariables);
-    Matrix<double> AB;
-    AB.resize(2*N, k);
-    A.resize(N, k);
-    B.resize(N, k);
-    C.resize(N, k);
-    for (RandomBase *variable : randomVariables) {
-        variable->port("drawAtReset")->equals(true);
-        variable->port("useFixed")->equals(false);
-    }
-    for (int row = 0; row < 2*N; ++row) {
-        int col = 0;
-        for (RandomBase *variable : randomVariables) {
-            variable->reset();
-            AB(row, col) = variable->port("value")->value<double>();
-            ++col;
-        }
-    }
-    RandomOrder shuffle(2*N, nullptr);
-    for (int row = 0; row < N; ++row) {
-        for (int col = 0; col<k; ++col) {
-            A(row, col) = AB.at(shuffle.at(row), col);
-            B(row, col) = C(row, col) = AB.at(shuffle.at(row+N), col);
-        }
-    }
-    for (RandomBase *variable : randomVariables) {
-        variable->port("useFixed")->equals(true);
-    }
-    matricesFilled = true;
-}
-
 void RandomiserBase::findRandomVariables(){
-    randomVariables = findMany<RandomBase>("../*<RandomBase>");
+    randomVariables.clear();
+    QVector<RandomBase*> candidates = findMany<RandomBase>("../*<RandomBase>");
+    for (RandomBase *candidate : candidates) {
+        if (!candidate->port("useFixed")->value<bool>())
+            randomVariables << candidate;
+    }
     numVariables = randomVariables.size();
     if (numVariables == 0)
         ThrowException("You must have at least one Random box as a sibling of a Randomiser").context(this);

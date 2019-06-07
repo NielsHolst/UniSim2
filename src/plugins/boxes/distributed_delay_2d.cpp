@@ -26,12 +26,7 @@ DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, QObject *paren
     : DistributedDelayBase(parent_), p(p_), policy(policy_)
 //! Create distributed delay from parameters
 {
-    x.resize(p.k1*p.k2);
-    s.rates.resize(p.k1*p.k2);
-    s.outflow1.resize(p.k2);
-    s.outflow2.resize(p.k1);
-    s.outflow1.resize(p.k2);
-    s.outflow2.resize(p.k1);
+    resize(p.k1, p.k2);
 }
 
 DistributedDelay2D::DistributedDelay2D(const DistributedDelay2D &dd)
@@ -40,6 +35,17 @@ DistributedDelay2D::DistributedDelay2D(const DistributedDelay2D &dd)
 {
     x = dd.x;
     xSum = dd.xSum;
+}
+
+void DistributedDelay2D::resize(int k1, int k2) {
+    p.k1 = k1;
+    p.k2 = k2;
+    x.resize(p.k1*p.k2);
+    s.rates.resize(p.k1*p.k2);
+    s.outflow1.resize(p.k2);
+    s.outflow2.resize(p.k1);
+    s.outflow1.resize(p.k2);
+    s.outflow2.resize(p.k1);
 }
 
 void DistributedDelay2D::update(const UpdateParameters &up) {

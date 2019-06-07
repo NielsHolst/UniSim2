@@ -10,11 +10,13 @@ class SelectFile : public base::Box
 public:
     SelectFile(QString name, QObject *parent);
     void amend();
+    void initialize();
     void reset();
 private:
     // Input
     QString folder, filter;
     int selectFileNumber, fileNumberOffset;
+    bool showFileNames;
     // Output
     int numFiles;
     QString fileName, fileNamePath;

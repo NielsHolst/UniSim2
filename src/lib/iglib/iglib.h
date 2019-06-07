@@ -1,4 +1,4 @@
-// Version 2.2.5
+// Version 2.3.1
 
 #ifndef IGLIB_H
 #define IGLIB_H
@@ -209,6 +209,10 @@ struct Response {
 
 // Compute response variables from query
 extern "C" Response __declspec(IGLIB_DLL) compute(const Query &q);
+
+// Tests
+extern "C" Response __declspec(IGLIB_DLL) testConstant(const Query &q);
+extern "C" Response __declspec(IGLIB_DLL) testMultiplum(const Query &q);
 
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);

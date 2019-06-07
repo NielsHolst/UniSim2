@@ -1,6 +1,6 @@
 Simulation sim {
-  .iterations = 5005
-  .steps =  273 // end of september
+  .iterations = 6
+  .steps =  10 // end of september
   .silent = TRUE
   SelectFile weatherFiles {
     .folder = "weather"
@@ -9,8 +9,8 @@ Simulation sim {
   Box random {
     RandomiserMonteCarlo randomiser {
       .useFixed = FALSE
-      .doSensitivityAnalysis = TRUE
-      .bootstrapSize = 5000
+      .doSensitivityAnalysis = FALSE
+      .bootstrapSize = 1000
     }
     RandomUniformInt fileNumber {
       .min = 1
@@ -20,22 +20,22 @@ Simulation sim {
     RandomNormal cropAtStart {
       .min = 10
       .fixed = 20
-      .max = 27
+      .max = 30 // 27
     }
     RandomNormal cropHalfways {
-      .min = 747
+      .min = 750 // 747
       .fixed = 800
-      .max = 843
+      .max = 850 // 843
     }
     RandomNormal sporulationOn {
-      .min = 90
+      .min = 80 //90
       .fixed = 92.5
-      .max = 95
+      .max = 99 // 95?
     }
     RandomNormal cadaverDuration {
-      .min = 54
+      .min = 32 // 54
       .fixed = 112
-      .max = 130
+      .max = 112 //130
     }
     RandomNormal propExposedImmigrants {
       .min = 0.1
@@ -45,22 +45,37 @@ Simulation sim {
     RandomNormal transmissionEfficiency {
       .min = 0.05
       .fixed = 0.1728
-      .max = 0.1728
+      .max = 0.5 //0.1728
     }
+	
+	// we can simplify and have only one lethal time value for nymphs and adults
     RandomNormal lethalTimeNymph {
-      .min = 60
+      .min = 50 // 50
       .fixed = 73
-      .max = 180
+      .max = 115 // 180
     }
     RandomNormal lethalTimeAdult {
-      .min = 60
+      .min = 50 // 60
       .fixed = 72
-      .max = 180
+      .max = 115 // 180
     }
+	
+	// NEW
+	RandomNormal immunityCost{
+	.min = 0
+	.fixed = 0.2
+	.max = 0.4
+	}
+	
+	RandomNormal timeAcceleration {
+	.min=1
+	.fixed=2.33
+	.max=3.5
+	}
   }
   Box param {
-    +juvenileApterousDuration = 178.5
-    +juvenileAlateDuration = 203.6
+    +juvenileApterousDuration = 172 // 178.5
+    +juvenileAlateDuration = 195 //203.6
     +adultDuration = 300
     +k = 15
     +fecundityDuration = 100
@@ -70,11 +85,12 @@ Simulation sim {
   Calendar calendar {
     .timeStep=1
     .timeUnit="d" 
-    .initialDateTime = 1/1/2017
+    .initialDateTime = 1/1/2017 // maybe this will change with weather file
   }
-  
+
   Records weather {
-    .fileName =  ./files[fileNamePath]   //"weather/Rygge_2017.txt"
+    .fileName = ./files[fileNamePath] //"weather/Rygge_2016.txt" // ./files[fileNamePath]   //"weather/Rygge_2017.txt"
+    .overrideCalendarYear = TRUE
     SelectFile files {
       .folder = "weather"
       .filter = "*.txt"
@@ -90,7 +106,7 @@ Simulation sim {
     CropGrowthStage cropGrowthStage {
       .valueAtStart=  random/cropAtStart[value]
       .dayDegrees = ./time[total]
-      .dayDegreesHalfways = 720
+      .dayDegreesHalfways = random/cropHalfways[value] //720
       CropIsGrowing isGrowing {
         .temperature = weather[Tavg] 
       }
@@ -140,8 +156,8 @@ Simulation sim {
         .temperature = weather[Tavg]
         .cropGrowthStage = cropGrowthStage[value]
         .aphidDensity = ../density[total]
-        .aphidDensityThreshold = 40
-        .exposureCost = 0.3
+        .aphidDensityThreshold = 40 
+        .exposureCost = random/immunityCost[value] //0.3
       }
       AphidOffspring offspring {
         .offspringFromSusceptible|sum = ../susceptible/adult/*/fecundity[outflow] 
@@ -207,8 +223,8 @@ Simulation sim {
         }
       } // susceptible
       Box exposed {
-        +lethalTimeNymph = 73
-        +lethalTimeAdult = 72
+        // +lethalTimeNymph = 73 
+        // +lethalTimeAdult = 72 
         Box nymph {
           StageAndPhase apterous {
             .timeStep = .../time[step]
@@ -245,7 +261,7 @@ Simulation sim {
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[alate]  // reduce this
+              .growthFactor = .../netReproduction[apterousExposed] // .../netReproduction[alate]
               .phaseInflow = .../susceptible/adult/apterous/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = param[k]
@@ -265,7 +281,7 @@ Simulation sim {
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[apterous] // reduce this
+              .growthFactor = .../netReproduction[alateExposed] // .../netReproduction[apterous]
               .phaseInflow = .../susceptible/adult/alate/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = param[k]
@@ -284,12 +300,12 @@ Simulation sim {
         OnOff isSporulating {
           .x = weather[RHmax]
           .xOn = random/sporulationOn[value]
-          .xOff = 100
+          .xOff = 100 // ? why not 0 when it is off?
         }
         CadaverTime time {
           .isSporulating = ../isSporulating[isOn]
           .timeStep = .../fungusTime[step]
-          .rhAccelaration = 2.33
+          .rhAccelaration = random/timeAcceleration[value] //2.33
         }
         Stage cadavers {
           .inflow = .../exposed/succumbed[cadavers]
@@ -343,10 +359,9 @@ Simulation sim {
   
   OutputR {
     PageR {
-      .xAxis = random/*[value]
+      .xAxis = calendar[date]
       PlotR {
-        .ports = (biocontrol[aphidDaysImprovement]|end biocontrol[yieldImprovement]|end)
-        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+        .ports = (weather[Tavg] weather[RHmax] weather[fileName])
       }
     }
   }

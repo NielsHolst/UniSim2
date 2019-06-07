@@ -32,7 +32,7 @@ void RandomiserStratified::checkIterations(int iterations) {
 }
 
 int RandomiserStratified::numStrata() const {
-    return doSensitivityAnalysis ? 2*N : iterations;
+    return doSensitivityAnalysis ? N : iterations;
 }
 
 double RandomiserStratified::draw01() {

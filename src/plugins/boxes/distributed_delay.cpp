@@ -17,7 +17,7 @@ DistributedDelay::DistributedDelay(const Parameters &p_, QObject *parent)
     : DistributedDelayBase(parent), p(p_)
 //! Create distributed delay from parameters
 {
-    x.resize(p.k);
+    resize(p.k);
 }
 
 DistributedDelay::DistributedDelay(const DistributedDelay &dd)
@@ -26,6 +26,11 @@ DistributedDelay::DistributedDelay(const DistributedDelay &dd)
 {
     x = dd.x;
     xSum = dd.xSum;
+}
+
+void DistributedDelay::resize(int k) {
+    p.k = k;
+    x.resize(p.k);
 }
 
 void DistributedDelay::update(double inflow, double dt, double fgr) {

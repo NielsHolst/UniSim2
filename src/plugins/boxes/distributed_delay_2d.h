@@ -36,6 +36,7 @@ public:
     DistributedDelay2D(const DistributedDelay2D &dd);
     void update(const UpdateParameters &up);
     const State& state() const;
+    void resize(int k1, int k2);
 
     int ix(int i, int j) const;
     inline double val(int i, int j) const;

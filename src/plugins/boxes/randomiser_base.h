@@ -49,6 +49,7 @@ protected:
     int N;
     // Methods
     void checkIterationsSimple(int iterations);
+    RandomBase* variableB(RandomBase *A);
 };
 
 }

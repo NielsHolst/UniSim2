@@ -33,7 +33,7 @@
 cd /c/users/au152367/Documents/QDev/UniSim2
 
 > git commit -F "../commit-msg.txt"
-> git tag 2.2.n
+> git tag 2.3.n
 > git push origin master --tags
 - Note this pushes both source code changes and tags
 

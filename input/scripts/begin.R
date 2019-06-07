@@ -24,6 +24,11 @@ open_plot_window = function(width, height) {
   }
 }
 
+remove_endings = function(ids) {
+  s = str_replace(ids, "\\.end", "")
+  str_replace(s, "\\.value", "")
+}
+
 read_output = function(file_path) {
 
   column_info = function(file_path) {
@@ -164,7 +169,6 @@ plot_facetted_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow
   M = meltxy(df, id_x, id_iteration, cols)
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   hasIterations = has_iterations(M)
-
   color = if (hasIterations) "iter" else "Response"
   ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
     xlab("") + ylab("") +
@@ -186,7 +190,10 @@ plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) 
 }
 
 plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
+  print("plot_facetted_filtered")
   M = meltxy(df, id_x, NULL, cols)
+  levels(M$Response) = remove_endings(levels(M$Response))
+  levels(M$xVariable) = remove_endings(levels(M$xVariable))
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
     xlab("") + ylab("") +
@@ -203,6 +210,7 @@ plot_merged_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
 }
 
 plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
+  print("plot_facetted")
   if (!is.null(id_iteration) && id_iteration == "iteration.end")
     plot_facetted_filtered(df, id_x, cols, ytrans, ncol, nrow) else
     if (length(id_x) == 1) 

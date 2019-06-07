@@ -25,7 +25,7 @@ Records::Records(QString name, QObject *parent)
     Input(timeColumnName).help("Name of column with time").equals("Time");
     Input(cycle).equals(false).help("Cycle back to start at end of file? File must begin on 1 January and end on 31 December");
     Input(calendarDateTime).imports("calendar[dateTime]");
-    Input(ignoreYear).equals(false).help("Ignore year when synchronizing calendar and records date?");
+    Input(overrideCalendarYear).equals(false).help("Let first date in records determine calendar year?");
 
     Output(currentDateTime).help("Date-time stamp of the current outputs");
     Output(nextDateTime).help("Date-time stamp of the next outputs");
@@ -119,15 +119,20 @@ void Records::initialize() {
     readLineItems(); // skip labels
     advanceFirstLine();
     firstDateTime = currentDateTime;
+//    dialog().information("firstDateTime    A "   + convert<QString>(firstDateTime) +
+//                         "\ncurrentDateTime  A " + convert<QString>(currentDateTime) +
+//                         "\ncalendarDateTime A " + convert<QString>(calendarDateTime));
     while (!_pastLastLine)
         advanceLine();
     lastDateTime = currentDateTime;
     _file.close();
     cycle = saveCycle;
+    doOverrideCalendarYear();
 }
 
 void Records::reset() {
     ExceptionContext(this);
+    initialize();
     readToFirstLine();
     _yearOffset = calendarDateTime.date().year() - currentDate.year();
     _extraYearOffset = 0;
@@ -135,9 +140,10 @@ void Records::reset() {
 }
 
 void Records::readToFirstLine() {
-    currentDate = nextDate = QDate(2000,1,1);
-    currentTime = nextTime = QTime(0,0,0);
-    currentDateTime = nextDateTime = QDateTime(currentDate, currentTime, Qt::UTC);
+    currentDateTime = firstDateTime;
+    currentDate = nextDate = firstDateTime.date();
+    currentTime = nextTime = firstDateTime.time();
+    nextDateTime = currentDateTime;
 
     openFile();
     readLineItems(); // skip labels
@@ -207,12 +213,20 @@ void Records::update() {
     }
 }
 
-void Records::ignoreYearMaybe() {
-    if (ignoreYear) {
-        QDate date = QDate(firstDateTime.date().year(),
-                           calendarDateTime.date().month(),
-                           calendarDateTime.date().day());
-        calendarDateTime.setDate(date);
+void Records::doOverrideCalendarYear() {
+    if (overrideCalendarYear) {
+        Box *calendar = findOne<Box>("calendar");
+        Port *calendarInitialDateTimePort = calendar->port("initialDateTime");
+        QDateTime calendarInitialDateTime = calendarInitialDateTimePort->value<QDateTime>();
+        calendarInitialDateTime.setDate(
+            QDate(firstDateTime.date().year(),
+                  calendarInitialDateTime.date().month(),
+                  calendarInitialDateTime.date().day()
+            )
+        );
+        calendarInitialDateTimePort->equals(calendarInitialDateTime);
+        calendar->reset();
+        calendarDateTime = calendarInitialDateTime;
     }
 }
 

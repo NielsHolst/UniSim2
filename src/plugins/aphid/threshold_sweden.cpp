@@ -16,13 +16,13 @@ ThresholdSweden::ThresholdSweden(QString name, QObject *parent)
 void ThresholdSweden::update() {
     const double &GS(cropGrowthStage);
     if (!exceeded) {
-        if (GS<41)
+        if (GS<59) //41
             exceeded = false;
-        else if (GS<49)
+        else if (GS<69) //59
             exceeded = (aphids > 1);
-        else if (GS<69) //
+        else if (GS<75) // 69
             exceeded = (aphids > 4);
-        else if (GS<82)
+        else if (GS<77) //82
             exceeded = (aphids > 7);
         else
             exceeded = false;

@@ -7,6 +7,8 @@ set QT_ROOT=C:\Qt\5.11.2\mingw53_32
 if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\5.12.1\mingw73_64
 if exist %QT_ROOT% goto :ok_qt
+set QT_ROOT=C:\Qt\5.9.2\mingw53_32
+if exist %QT_ROOT% goto :ok_qt
 echo .
 echo Could not find %QT_ROOT%
 echo .

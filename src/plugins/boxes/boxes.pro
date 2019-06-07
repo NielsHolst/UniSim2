@@ -11,6 +11,7 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 QT += widgets
 
 HEADERS +=  \
+    b.h \
     briere.h \
     buffer.h \
     calendar.h \
@@ -67,6 +68,7 @@ HEADERS +=  \
     vector_sum.h
 	
 SOURCES +=  \
+    b.cpp \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \

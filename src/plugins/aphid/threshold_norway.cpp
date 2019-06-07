@@ -28,9 +28,9 @@ void ThresholdNorway::update() {
             exceeded = false;
         else if (GS<49)
             exceeded = (aphids > 3);
-        else if (GS<69) //
+        else if (GS<69)
             exceeded = (aphids > 10);
-        else if (GS<82)
+        else if (GS<77) //82
             exceeded = (aphids > 15);
         else
             exceeded = false;

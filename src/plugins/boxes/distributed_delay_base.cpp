@@ -1,5 +1,5 @@
 #include "distributed_delay_base.h"
-	
+
 namespace boxes {
 
 DistributedDelayBase::DistributedDelayBase(QObject *parent_)

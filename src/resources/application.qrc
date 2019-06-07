@@ -62,6 +62,9 @@
     <file>data/input/book/phys-dev-appl-8.box</file>
     <file>data/input/book/phys-dev-scale-end.R</file>
     <file>data/input/book/phys-dev-scale.box</file>
+    <file>data/input/book/random/b.box</file>
+    <file>data/input/book/random/b1-end.R</file>
+    <file>data/input/book/random/b1.box</file>
     <file>data/input/book/random/random-3D-end.R</file>
     <file>data/input/book/random/random-end.R</file>
     <file>data/input/book/random/random-monte-carlo-SA.box</file>
@@ -203,6 +206,7 @@
     <file>data/input/projects/vg/excel/2019-05-14-standard.xml</file>
     <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop-transformed.xml</file>
     <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop.xml</file>
+    <file>data/input/projects/vg/excel/2019-05-15-test.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus-transformed.xml</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus.xml</file>

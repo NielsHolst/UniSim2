@@ -14,7 +14,6 @@
 #include "distributed_delay.h"
 #include "stage.h"
 
-//#include <QMessageBox>
 using namespace base;
 
 namespace boxes {
@@ -43,6 +42,7 @@ void Stage::myReset() {
     content = initial;
     outflow = 0.;
     _firstUpdate = true;
+    _dd->resize(k);
     update();   // Otherwise, outflow will be one simulation step late
 }
 
@@ -92,7 +92,6 @@ void Stage::update() {
             ThrowException(msg).value(phaseOutflowProportion).context(this);
         }
         phaseOutflow = _dd->take(phaseOutflowProportion);
-        phaseOutflowSum = accum(phaseOutflow);
         phaseOutflowTotal += accum(phaseOutflow);
     }
 

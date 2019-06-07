@@ -636,7 +636,7 @@ Response compute(const Query &q) {
     base::DataFrame data;
     data.read(":/iglib/simulation-1440-minutes.txt", base::DataFrame::ColumnLabelled);
     r.timeStamp = q.timeStamp;
-    int minute = std::max(static_cast<int>(q.timeStamp.timeOfDay)*60, 24*60-1),
+    int minute = 12*60, //std::max(static_cast<int>(q.timeStamp.timeOfDay)*60, 24*60-1),
         indoorsCo2 = data.ixCol("indoorsCo2"),
         indoorsRh = data.ixCol("indoorsRh"),
         indoorsTemperature = data.ixCol("indoorsTemperature"),
@@ -649,6 +649,27 @@ Response compute(const Query &q) {
     r.growthLight = data.at<double>(minute, growthLight);
     r.heating = data.at<double>(minute, heating);
     r.photosynthesis = data.at<double>(minute, photosynthesis);
+    return r;
+}
+
+Response testConstant(const Query &q) {
+    Response r;
+    r.timeStamp = q.timeStamp;
+    r.indoorsCo2 = 3.5;
+    r.indoorsRh = 7.11;
+    r.indoorsTemperature = 13.17;
+    r.growthLight = 19.23;
+    r.heating = 29.31;
+    r.photosynthesis = 37.41;
+    r.costEfficiency = 43.47;
+    return r;
+}
+
+Response testMultiplum(const Query &q) {
+    Response r;
+    r.timeStamp = q.timeStamp;
+    r.indoorsCo2 = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
+    r.indoorsRh = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
     return r;
 }
 
