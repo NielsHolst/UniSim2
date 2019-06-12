@@ -633,24 +633,31 @@ double wave(double avg, double amplitude, double hour) {
 
 Response compute(const Query &q) {
     Response r;
-    base::DataFrame data;
-    data.read(":/iglib/simulation-1440-minutes.txt", base::DataFrame::ColumnLabelled);
     r.timeStamp = q.timeStamp;
-    int minute = 12*60, //std::max(static_cast<int>(q.timeStamp.timeOfDay)*60, 24*60-1),
-        indoorsCo2 = data.ixCol("indoorsCo2"),
-        indoorsRh = data.ixCol("indoorsRh"),
-        indoorsTemperature = data.ixCol("indoorsTemperature"),
-        growthLight = data.ixCol("growthLight"),
-        heating = data.ixCol("heating"),
-        photosynthesis = data.ixCol("photosynthesis");
-    r.indoorsCo2 = data.at<double>(minute, indoorsCo2);
-    r.indoorsRh = data.at<double>(minute, indoorsRh);
-    r.indoorsTemperature = data.at<double>(minute, indoorsTemperature);
-    r.growthLight = data.at<double>(minute, growthLight);
-    r.heating = data.at<double>(minute, heating);
-    r.photosynthesis = data.at<double>(minute, photosynthesis);
+    r.photosynthesis = 1.59*(1. - exp(-0.00801*q.outdoors.irradiation.value));
     return r;
 }
+
+//Response compute(const Query &q) {
+//    Response r;
+//    base::DataFrame data;
+//    data.read(":/iglib/simulation-1440-minutes.txt", base::DataFrame::ColumnLabelled);
+//    r.timeStamp = q.timeStamp;
+//    int minute = 12*60, //std::max(static_cast<int>(q.timeStamp.timeOfDay)*60, 24*60-1),
+//        indoorsCo2 = data.ixCol("indoorsCo2"),
+//        indoorsRh = data.ixCol("indoorsRh"),
+//        indoorsTemperature = data.ixCol("indoorsTemperature"),
+//        growthLight = data.ixCol("growthLight"),
+//        heating = data.ixCol("heating"),
+//        photosynthesis = data.ixCol("photosynthesis");
+//    r.indoorsCo2 = data.at<double>(minute, indoorsCo2);
+//    r.indoorsRh = data.at<double>(minute, indoorsRh);
+//    r.indoorsTemperature = data.at<double>(minute, indoorsTemperature);
+//    r.growthLight = data.at<double>(minute, growthLight);
+//    r.heating = data.at<double>(minute, heating);
+//    r.photosynthesis = data.at<double>(minute, photosynthesis);
+//    return r;
+//}
 
 Response testConstant(const Query &q) {
     Response r;

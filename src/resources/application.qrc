@@ -119,6 +119,89 @@
     <file>data/input/papers/2012-photosynthesis-pending/reference.txt</file>
     <file>data/input/papers/2013-Inachis-pending/reference.txt</file>
     <file>data/input/papers/2014-Rift-Valley-fever-pending/reference.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/aphid-fungus-sensitivity-analysis.box</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2004.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2005.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2006.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2012.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2013.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2014.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2015.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2016.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2017.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2018.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2004.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2005.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2006.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2012.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2013.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2014.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2015.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2016.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2017.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2018.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2004.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2005.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2006.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2012.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2013.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2014.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2015.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2016.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2017.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2018.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2004.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2005.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2006.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2012.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2013.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2014.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2015.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2016.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2017.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2018.txt</file>
+    <file>data/input/papers/2019-musselbed/data/AD1.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ADw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/apparencycal.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BRw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BRz.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BR_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BSn.txt</file>
+    <file>data/input/papers/2019-musselbed/data/Bso.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BSp.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BSw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BZn.txt</file>
+    <file>data/input/papers/2019-musselbed/data/BZ_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/Dbo.txt</file>
+    <file>data/input/papers/2019-musselbed/data/DB_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/GSn.txt</file>
+    <file>data/input/papers/2019-musselbed/data/GS_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/IN_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/KW_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/LW_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/MRo.txt</file>
+    <file>data/input/papers/2019-musselbed/data/MRw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/SO2.txt</file>
+    <file>data/input/papers/2019-musselbed/data/SOK.txt</file>
+    <file>data/input/papers/2019-musselbed/data/SO_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/STp.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ST_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/Tim.txt</file>
+    <file>data/input/papers/2019-musselbed/data/TS_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/TX2.txt</file>
+    <file>data/input/papers/2019-musselbed/data/TXw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/VJG.txt</file>
+    <file>data/input/papers/2019-musselbed/data/VLn.txt</file>
+    <file>data/input/papers/2019-musselbed/data/VLz.txt</file>
+    <file>data/input/papers/2019-musselbed/data/VVG.txt</file>
+    <file>data/input/papers/2019-musselbed/data/Waa.txt</file>
+    <file>data/input/papers/2019-musselbed/data/WK_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/WM_.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ZOR.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ZWo.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ZWw.txt</file>
+    <file>data/input/papers/2019-musselbed/data/ZW_.txt</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel.box</file>
     <file>data/input/projects/bph/bph-rice-1.box</file>
     <file>data/input/projects/bph/bph-rice-2.box</file>
     <file>data/input/projects/bph/bph-rice-end.R</file>
@@ -192,21 +275,10 @@
     <file>data/input/projects/vg/example1/3-pid-controller.box</file>
     <file>data/input/projects/vg/example1/4-pid-controller.box</file>
     <file>data/input/projects/vg/example1/pid-controller.box</file>
-    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-example.box</file>
-    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.box</file>
-    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-03-29-standard_greenhouse.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-dark-screens-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-dark-screens.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-no-screen-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-no-screen.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed-no-screens.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed-roof-screens.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-standard-transformed.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-14-standard.xml</file>
     <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop-transformed.xml</file>
     <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop.xml</file>
-    <file>data/input/projects/vg/excel/2019-05-15-test.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-04-standard-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-04-standard.xml</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus-transformed.xml</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus.xml</file>
@@ -221,12 +293,14 @@
     <file>data/input/projects/vg/excel/obh/ti-rapp_alt2.xml</file>
     <file>data/input/projects/vg/excel/obh/Udklip TIrapp1.JPG</file>
     <file>data/input/projects/vg/excel/obh/Udklip TiRapp2.JPG</file>
+    <file>data/input/projects/vg/excel/regress photosynthesis.R</file>
     <file>data/input/projects/vg/excel/test.box</file>
     <file>data/input/projects/vg/excel/ud.xml</file>
     <file>data/input/projects/vg/given-air-flux-auto.box</file>
     <file>data/input/projects/vg/given-air-flux-fixed.box</file>
     <file>data/input/projects/vg/given-air-flux-sa.box</file>
     <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
+    <file>data/input/projects/vg/input/DNK_Dry.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
     <file>data/input/projects/vg/input/sel_dk_missing_columns.txt</file>
     <file>data/input/projects/vg/pid-controller-plot.R</file>

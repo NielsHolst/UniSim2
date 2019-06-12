@@ -19,6 +19,7 @@ int main(int, char **)
     QueryReaderJson reader;
     try {
         Query q = reader.parse(filePath);
+        q.outdoors.irradiation.value = 100.;
         Response r = compute(q);
         if (r.hasError) {
             cout << "\n\nError in iglib:\n" << r.error << "\n";

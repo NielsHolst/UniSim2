@@ -25,7 +25,7 @@
 
 8.Execute batch file ***as administrator***.
 
-(9). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb).
+(9). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb) med FileZilla.
 
 (10). Update ecolmod.org/download.html.
 
