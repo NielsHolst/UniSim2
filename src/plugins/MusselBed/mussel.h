@@ -23,7 +23,8 @@ private:
     int day;
 
     // Outputs
-    double abundance, biomass, size, LD, LD50;
+    double abundance, biomass, size, LD;
+    int LD50;
 };
 
 } //namespace

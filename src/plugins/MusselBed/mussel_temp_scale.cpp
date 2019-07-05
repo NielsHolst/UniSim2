@@ -20,17 +20,19 @@ PUBLISH(MusselTempScale)
 MusselTempScale::MusselTempScale(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    Input(a).equals(0.408).help("Regression coefficient");
+    Input(b).equals(-4.157).help("Regression coefficient");
     Input(temperature).equals(12).help("current step temperature in degree Celsius");
     Output(value).help("scaling parameter at current temperature");
 }
 
 void MusselTempScale::reset() {
-    value = 1;
+    update();
 }
 
 void MusselTempScale::update() {
-
-    value =(exp(0.40831*temperature - 4.15734)/(1+exp(0.40831*temperature - 4.15734)));
+//    value =(exp(0.40831*temperature - 4.15734)/(1+exp(0.40831*temperature - 4.15734)));
+    value = exp(a*temperature + b)/(1.+exp(a*temperature + b));
     }
 
 

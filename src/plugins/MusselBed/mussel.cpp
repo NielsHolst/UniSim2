@@ -23,8 +23,8 @@ Mussel::Mussel(QString name, QObject *parent)
     Input(lossAbundance).help("losses in mussel numbers as g/m2");
     Input(growth).equals(0.3).help("mussel growth rate (only in biomass)");
     Input(day).help("current step");
-    Output(abundance).help("current density at step, numbers/m2");
     Output(biomass).help("current density at step, g/m2");
+    Output(abundance).help("current density at step, numbers/m2");
     Output(size).help("mean mussel size at step (g)");
     Output(LD).help("remaining percentage mussel biomass");
     Output(LD50).help("day 50% losses reached");
@@ -35,24 +35,18 @@ void Mussel::reset() {
     biomass = initBiomass;
     abundance = initAbundance;
     size = initBiomass/initAbundance;
-    LD = 0;
-    LD50 = 61;
-
 }
 
 void Mussel::update() {
-
     biomass = biomass + growth - lossBiomass;
     abundance = abundance - lossAbundance;
 
-    if (biomass <0) /* to avoid problems if density gets below 0, temporal fix*/
-        biomass=0;
-
-    size = biomass/abundance;
+    if (biomass < 0)
+        biomass = abundance = size = 0.;
 
     LD = biomass/initBiomass;
 
-    if (LD <= 0.5 && day<LD50)
+    if (LD <= 0.5 && LD50==0)
         LD50 = day;
 }
 } //namespace

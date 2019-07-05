@@ -5,6 +5,8 @@ library(plyr)
 library(reshape2)
 library(scales)
 library(splines)
+library(stringr)
+
 
 if (!keepPages) graphics.off ()
 if (!keepVariables) {

@@ -55,7 +55,7 @@ void run::doRun() {
     msg += messageTime();
     msg += msgIteration;
     if (msgIteration.isEmpty())
-        msg += message("finalStep", "steps", "step");
+        msg += message((noError ? "finalStep" : "step"), "steps", "step");
 
     if (noError)
         dialog().information(msg);

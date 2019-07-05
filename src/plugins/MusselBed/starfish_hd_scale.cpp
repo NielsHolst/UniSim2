@@ -20,6 +20,8 @@ PUBLISH(StarfishHdScale)
 StarfishHdScale::StarfishHdScale(QString name, QObject *parent)
     : Box(name, parent)
 {
+    Input(a).equals(3.873).help("Regression coefficient");
+    Input(b).equals(-0.0961).help("Regression coefficient");
     Input(vmax).equals(70).help("maximum flow velocity at location (cm/s)");
     Input(mBiomass).equals(1).help("current mussel biomass, mussel biomass reduce HD's effect");
     Output(scale).help("scaling factor for current hydrodynamics with a density of 1000g/mussel");
@@ -27,26 +29,21 @@ StarfishHdScale::StarfishHdScale(QString name, QObject *parent)
 }
 
 void StarfishHdScale::reset() {
-
-    double a=3.87297;
-    double b=-0.09605;
-
     for (int t=0; t<=180; t++) {
         double x = exp(a+(b*vmax*sin(M_PI*t/360)));
         scale += x/(1+x);
-        }
-        scale = (scale/180);
-
     }
+    scale = (scale/180);
+    update();
+}
 
 
 
 void StarfishHdScale::update() {
-
     if (mBiomass<=5000)
-        value=scale+(((mBiomass-1000)/5000)*(1-scale));
+        value = scale + (1-scale)*(mBiomass-1000)/5000;
     else
-        value=1;
+        value = 1;
 }
 }
 //namespace

@@ -24,20 +24,18 @@ StarfishSearchRate::StarfishSearchRate(QString name, QObject *parent)
 }
 
 void StarfishSearchRate::initialize() {
-    scales = findMany<Box>("stscale");
+    scales = findMany<Box>("scales/*");
 }
 
 void StarfishSearchRate::reset() {
-//    value = 1;        //NH
-    value = 0;          //NH
+    update();
 }
 
 void StarfishSearchRate::update() {
-    value = s; //NH oops!
+    value = s;
     for (int i = 0; i < scales.size(); ++i) {
         value *= scales[i]->port("value")->value<double>();
     }
-//    value = value*s;  // NH
 }
 
 } //namespace

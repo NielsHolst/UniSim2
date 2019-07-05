@@ -37,9 +37,8 @@ double SlidingSignal::computeSignal() {
     else if (input >= x1)
         res = y1;
     else {
-        Q_ASSERT(thresholdBand != 0.);
         double gap = input - x0;
-        res = y0 + slide(gap/fabs(thresholdBand))*(y1 - y0);
+        res = (thresholdBand != 0.) ? y0 + slide(gap/fabs(thresholdBand))*(y1 - y0) : y0;
     }
     return res;
 }

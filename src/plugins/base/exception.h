@@ -45,6 +45,7 @@ private:
     static const QObject *_fallbackContext;
     // methods
     template <class T> QString asString(T v);
+    QDateTime dateTime() const;
 };
 
 template <class T> Exception& Exception::value(T v) {

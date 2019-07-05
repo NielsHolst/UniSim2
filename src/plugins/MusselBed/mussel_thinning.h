@@ -14,14 +14,15 @@ class MusselThinning : public base::Box
 {
 public:
     MusselThinning(QString name, QObject *parent);
+    void reset();
     void update();
 
 private:
     // Inputs
-    double biomass, abundance, size, supply;
+    double a, b, biomass, abundance, size, supply;
 
     // Outputs
-    double lossBiomass, lossAbundance;
+    double maxAbundance, lossBiomass, lossAbundance;
 };
 
 } //namespace

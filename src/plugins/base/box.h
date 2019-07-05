@@ -93,7 +93,7 @@ private:
     Timer *_timer;
     static Box *_currentRoot, *_savedCurrentRoot;
     static int _count;
-    static bool _debugOn;
+    static bool _debugOn, _traceOn;
     // Methods
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);

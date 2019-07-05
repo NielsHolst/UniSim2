@@ -7,7 +7,7 @@
 		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2019"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
-		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="2"/>
+		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
 		<port name="timeUnit" value="m" externalName="None" source="Fixed"/>
 	</box>
 	<!-- *** Calendar *** -->
@@ -376,14 +376,13 @@
 	<!-- *** Crop *** -->
 	<box class="vg::Crop" name="crop">
 		<box name="lai">
-			<newPort name="value" externalName="LAI" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="1"/>
+			<newPort name="value" externalName="LAI" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="10"/>
 			<newPort name="fractionPlantArea" externalName="propAreaCultured" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="0.9"/>
 		</box>
 	</box>
 	<box class="vg::Budget" name="budget"/>
 	<!-- *** Output *** -->
 	<box class="OutputR" name="output">
-    <port name="keepPages" value="FALSE"/>
 		<box name="p">
 			<newPort name="outdoorsCo2" ref="outdoors[co2]"/>
 			<newPort name="outdoorsT" ref="outdoors[temperature]"/>
@@ -398,18 +397,6 @@
 			<newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
 			<newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
 			<newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
-        <!-- <newPort name="leafPgTop" ref="crop/layers/top/photosynthesis/lightResponse[Pgmax]"/> -->
-        <!-- <newPort name="leafPgMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[Pgmax]"/> -->
-        <!-- <newPort name="leafPgBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[Pgmax]"/> -->
-        <!-- <newPort name="leafPnTop" ref="crop/layers/top/photosynthesis/lightResponse[Pnmax]"/> -->
-        <!-- <newPort name="leafPnMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[Pnmax]"/> -->
-        <!-- <newPort name="leafPnBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[Pnmax]"/> -->
-        <!-- <newPort name="leafRdTop" ref="crop/layers/top/photosynthesis/lightResponse[Rd]"/> -->
-        <!-- <newPort name="leafRdMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[Rd]"/> -->
-        <!-- <newPort name="leafRdBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[Rd]"/> -->
-        <!-- <newPort name="leafLueTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/> -->
-        <!-- <newPort name="leafLueMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/> -->
-        <!-- <newPort name="leafLueBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/> -->
 			<newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
 			<newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
 			<newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
@@ -444,13 +431,14 @@
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
 			<box class="PlotR">
-				<port name="ncol" value="3"/>
+				<port name="ncol" value="4"/>
 				<port name="ports" value="output/p[*]"/>
 			</box>
 		</box>
 		<box class="OutputText">
-			<port name="skipInitialRows" value="720"/>
-			<port name="averageN" value="30"/>
+			<port name="skipFormats" value="TRUE"/>
+			<port name="skipInitialRows" value="360"/>
+			<port name="averageN" value="15"/>
 		</box>
 	</box>
 </box>

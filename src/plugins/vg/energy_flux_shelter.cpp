@@ -39,11 +39,12 @@ EnergyFluxShelter::EnergyFluxShelter(QString name, QObject *parent)
     Input(radiationFluxCropMiddle).imports("crop/layers/middle/radiationAbsorbed[shelterLoss]").unit("W/m2");
     Input(radiationFluxCropBottom).imports("crop/layers/bottom/radiationAbsorbed[shelterLoss]").unit("W/m2");
 
-    Output(heatFluxOutsideToCover).help("Energy flux from inside to cover").unit("W/m2");
-    Output(heatFluxInsideToCover).help("Energy flux from inside to cover").unit("W/m2");
-    Output(radiationFluxSkyToCover).help("Energy flux from sky to cover (negative)").unit("W/m2");
-    Output(radiationFluxSunToCover).help("Energy flux from sun to cover (positive)").unit("W/m2");
-    Output(radiationFluxSunToScreens).help("Energy flux from sun to screens (positive)").unit("W/m2");
+    Output(heatFluxOutsideToCover).help("Convergent flux from outside to cover").unit("W/m2");
+    Output(heatFluxInsideToCover).help("Convergent flux from inside to cover").unit("W/m2");
+    Output(radiationFluxOutsideToCover).help("Radiation flux from sky to cover (negative)").unit("W/m2");
+    Output(radiationFluxInsideToCover).help("Radiation flux from inside to cover (negative)").unit("W/m2");
+    Output(radiationFluxSunToCover).help("Radiation flux from sun to cover (positive)").unit("W/m2");
+    Output(radiationFluxSunToScreens).help("Radiation flux from sun to screens (positive)").unit("W/m2");
     Output(coverTemperature).help("Temperature of cover").unit("oC");
     Output(screensTemperature).help("Temperature of screens").unit("oC");
 }
@@ -66,27 +67,29 @@ void EnergyFluxShelter::update() {
         screensTemperature = (coverTemperature + indoorsTemperature2)/2;
         // W/m2 ground = W/m2 cover * m2 cover / m2 ground
         heatFluxOutsideToCover = U*(outdoorsTemperature - coverTemperature)*coverPerGroundArea;;
-        heatFluxInsideToCover = U*(indoorsTemperature2 - coverTemperature)*coverPerGroundArea;;
-        radiationFluxSkyToCover = incomingLwAbsorptivity*Sigma*(p4K(skyTemperature) - p4K(coverTemperature))*coverPerGroundArea;
+        heatFluxInsideToCover  = U*(indoorsTemperature2 - coverTemperature)*coverPerGroundArea;;
+        radiationFluxOutsideToCover = incomingLwAbsorptivity*Sigma*(p4K(skyTemperature) - p4K(coverTemperature))*coverPerGroundArea;
+        radiationFluxInsideToCover  = incomingLwAbsorptivity*Sigma*(p4K(indoorsTemperature2) - p4K(coverTemperature))*coverPerGroundArea;
 
         radiationFluxSunToCover = lightAbsorbedCover;
         radiationFluxSunToScreens = lightAbsorbedScreens;
 
         double radiationFluxCropToShelter =
             radiationFluxCropTop + radiationFluxCropMiddle + radiationFluxCropBottom;
-        double radiationFluxToShelter =
+        double energyFluxToShelter =
                 heatFluxOutsideToCover +
                 heatFluxInsideToCover +
-                radiationFluxSkyToCover +
+                radiationFluxOutsideToCover +
+                radiationFluxInsideToCover +
                 radiationFluxSunToCover +
                 radiationFluxSunToScreens +
                 radiationFluxCropToShelter;
-        double radiationFluxToInside =
-                -heatFluxInsideToCover;
+        double energyFluxToInside =
+                -heatFluxInsideToCover-radiationFluxInsideToCover;
 
-        value += radiationFluxToInside;
-        coverTemperature += radiationFluxToShelter*dt/(heatCapacityCover+heatCapacityScreens);
-        indoorsTemperature2 += radiationFluxToInside*dt/Cair;
+        value += energyFluxToInside;
+        coverTemperature += energyFluxToShelter*dt/(heatCapacityCover+heatCapacityScreens);
+        indoorsTemperature2 += energyFluxToInside*dt/Cair;
     }
     value /= n;
 }

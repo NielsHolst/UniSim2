@@ -201,6 +201,15 @@
     <file>data/input/papers/2019-musselbed/data/ZWo.txt</file>
     <file>data/input/papers/2019-musselbed/data/ZWw.txt</file>
     <file>data/input/papers/2019-musselbed/data/ZW_.txt</file>
+    <file>data/input/papers/2019-musselbed/scenarios.txt</file>
+    <file>data/input/papers/2019-musselbed/scenarios3.txt</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel(0).box</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-SA(0).box</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-SA-1-end.R</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-SA-1.box</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-SA.box</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-scenarios-1.box</file>
+    <file>data/input/papers/2019-musselbed/starfish-mussel-scenarios-2.box</file>
     <file>data/input/papers/2019-musselbed/starfish-mussel.box</file>
     <file>data/input/projects/bph/bph-rice-1.box</file>
     <file>data/input/projects/bph/bph-rice-2.box</file>
@@ -259,16 +268,6 @@
     <file>data/input/projects/resist/resist-sa-end.R</file>
     <file>data/input/projects/resist/sample-scenarios.R</file>
     <file>data/input/projects/resist/scenarios.txt</file>
-    <file>data/input/projects/vg/01-construction.box</file>
-    <file>data/input/projects/vg/02-screen-U.box</file>
-    <file>data/input/projects/vg/03-given-ventilation.box</file>
-    <file>data/input/projects/vg/04-greenhouse.box</file>
-    <file>data/input/projects/vg/angot.box</file>
-    <file>data/input/projects/vg/crops.xml</file>
-    <file>data/input/projects/vg/diffuse-irradiation-validation-end.R</file>
-    <file>data/input/projects/vg/diffuse-irradiation-validation.box</file>
-    <file>data/input/projects/vg/diffuse-irradiation.box</file>
-    <file>data/input/projects/vg/DiffuseIrradiationRE.R</file>
     <file>data/input/projects/vg/example1/1-max-ventilation.box</file>
     <file>data/input/projects/vg/example1/2-desired-ventilation.box</file>
     <file>data/input/projects/vg/example1/2a-desired-ventilation.box</file>
@@ -279,6 +278,12 @@
     <file>data/input/projects/vg/excel/2019-05-15-standard-with-crop.xml</file>
     <file>data/input/projects/vg/excel/2019-06-04-standard-transformed.xml</file>
     <file>data/input/projects/vg/excel/2019-06-04-standard.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-19-NaN-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-19-NaN.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-21-NaN-transformed.xml</file>
+    <file>data/input/projects/vg/excel/2019-06-21-Nan.xml</file>
+    <file>data/input/projects/vg/excel/cover-U.R</file>
+    <file>data/input/projects/vg/excel/end-june.R</file>
     <file>data/input/projects/vg/excel/excel-to-vg.bat</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus-transformed.xml</file>
     <file>data/input/projects/vg/excel/obh/alt1_glashus.xml</file>
@@ -296,25 +301,24 @@
     <file>data/input/projects/vg/excel/regress photosynthesis.R</file>
     <file>data/input/projects/vg/excel/test.box</file>
     <file>data/input/projects/vg/excel/ud.xml</file>
-    <file>data/input/projects/vg/given-air-flux-auto.box</file>
-    <file>data/input/projects/vg/given-air-flux-fixed.box</file>
-    <file>data/input/projects/vg/given-air-flux-sa.box</file>
+    <file>data/input/projects/vg/exp/01-construction.box</file>
+    <file>data/input/projects/vg/exp/02-screen-U.box</file>
+    <file>data/input/projects/vg/exp/03-given-ventilation.box</file>
+    <file>data/input/projects/vg/exp/04-greenhouse.box</file>
+    <file>data/input/projects/vg/exp/angot.box</file>
+    <file>data/input/projects/vg/exp/crops.xml</file>
+    <file>data/input/projects/vg/exp/diffuse-irradiation-validation-end.R</file>
+    <file>data/input/projects/vg/exp/diffuse-irradiation-validation.box</file>
+    <file>data/input/projects/vg/exp/diffuse-irradiation.box</file>
+    <file>data/input/projects/vg/exp/DiffuseIrradiationRE.R</file>
+    <file>data/input/projects/vg/exp/vg-demo-end.R</file>
+    <file>data/input/projects/vg/exp/vg-demo.box</file>
+    <file>data/input/projects/vg/exp/vv_to_unisim.xsl</file>
     <file>data/input/projects/vg/input/direct_transmission_single.txt</file>
+    <file>data/input/projects/vg/input/DNK_Copenhagen.txt</file>
     <file>data/input/projects/vg/input/DNK_Dry.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
     <file>data/input/projects/vg/input/sel_dk_missing_columns.txt</file>
-    <file>data/input/projects/vg/pid-controller-plot.R</file>
-    <file>data/input/projects/vg/pid-controller.box</file>
-    <file>data/input/projects/vg/proportional-signal.box</file>
-    <file>data/input/projects/vg/temp/2019-03-29-standard_greenhouse.xml</file>
-    <file>data/input/projects/vg/TestOKO1.xml</file>
-    <file>data/input/projects/vg/TestOKO1_tr_2018.xml</file>
-    <file>data/input/projects/vg/transform1.bat</file>
-    <file>data/input/projects/vg/transform_all.bat</file>
-    <file>data/input/projects/vg/transform_OKO1.bat</file>
-    <file>data/input/projects/vg/vg-demo-end.R</file>
-    <file>data/input/projects/vg/vg-demo.box</file>
-    <file>data/input/projects/vg/vv_to_unisim.xsl</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>

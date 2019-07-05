@@ -74,12 +74,12 @@ void FunctionalResponseGB::update() {
 }
 
 double FunctionalResponseGB::f(double demand, double resource) {
-    return (demand==0) ? 0 : demand*(1. - exp(-resource/demand));
+    return (demand==0.) ? 0. : demand*(1. - exp(-resource/demand));
 }
 
 // Safe floating point division with bound on result
 double FunctionalResponseGB::divBounded(double x, double y, double bound) {
-    if (y==0)
+    if (y==0.)
         return bound;
     bool positive_xy = (x>0. && y>0.) || (x<0. && y<0.);
     if (positive_xy) {

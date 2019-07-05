@@ -228,8 +228,6 @@ Simulation sim {
         }
       } // susceptible
       Box exposed {
-        // +lethalTimeNymph = 73 
-        // +lethalTimeAdult = 72 
         Box nymph {
           StageAndPhase apterous {
             .timeStep = .../time[step]
@@ -263,10 +261,11 @@ Simulation sim {
             .phaseK = random/k[value]
             .phaseDuration = random/lethalTimeAdult[value]
             StageAndPhase fecundity {
+               // no inflow because exposed/nymphs don't reproduce as adults
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[apterousExposed] // .../netReproduction[alate]
+              .growthFactor = .../netReproduction[apterousExposed] 
               .phaseInflow = .../susceptible/adult/apterous/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]
@@ -283,10 +282,11 @@ Simulation sim {
             .phaseK = random/k[value]
             .phaseDuration = random/lethalTimeAdult[value]
             StageAndPhase fecundity {
+              // no inflow: Don't exposed immigrants reproduce after arriving?
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[alateExposed] // .../netReproduction[apterous]
+              .growthFactor = .../netReproduction[alateExposed] 
               .phaseInflow = .../susceptible/adult/alate/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]

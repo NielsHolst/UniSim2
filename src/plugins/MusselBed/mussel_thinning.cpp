@@ -26,17 +26,23 @@ PUBLISH(MusselThinning)
 MusselThinning::MusselThinning(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(biomass).equals(1).help("current mussel density biomass g/m2");
-    Input(abundance).equals(1).help("current mussel density numbers n/m2");
-    Input(size).equals(1).help("current mussel size at step in g");
-    Input(supply).help("biomass of mussesl consumed by starfish g/m2");
-    Output(lossAbundance).help("mussel loss as numbers n/m2");
-    Output(lossBiomass).help("mussel loss as biomass g/m2");
+    Input(a).equals(3300.).help("Regression coefficient");
+    Input(b).equals(-0.871).help("Regression coefficient");
+    Input(biomass).equals(1).help("Mussel density in biomass").unit("g/m2");
+    Input(abundance).equals(1).help("Mussel density in numbers").unit("m-2");;
+    Input(size).equals(1).help("Mussel size").unit("g");;
+    Input(supply).help("Biomass of mussels consumed by starfish").unit("g/m2");;
+    Output(maxAbundance).help("Maximum density of mussels for the current mussel size").unit("m-2");
+    Output(lossAbundance).help("Mussel loss in numbers").unit("m-2");
+    Output(lossBiomass).help("Mussel loss in biomass").unit("g/m2");
+}
+
+void MusselThinning::reset() {
+    update();
 }
 
 void MusselThinning::update() {
-
-        double maxAbundance =(3300*pow(size,-0.87)); /* this function calculate the maximum number of mussels per m2 for the current mussel size*/
+        maxAbundance = a*pow(size, b);
         double thinning = (maxAbundance - abundance)* size; /*this compare the max number with the current abundance and calculate the amount of mussels
                                                             that died in this step due to intraspecific competition */
 

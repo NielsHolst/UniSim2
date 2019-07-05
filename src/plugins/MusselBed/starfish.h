@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double initBiomass, initAbundance, supply, respiration;
+    double initBiomass, initAbundance, conversionEfficiency, supply, respiration;
 
     // Outputs
     double biomass, abundance, size;

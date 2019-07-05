@@ -34,23 +34,14 @@ Port::Port(QString name, QObject *parent)
 }
 
 Port& Port::equals(const char *value) {
-//  Check with vg::GrowthLights
-//    if (access() == PortAccess::Output)
-//        ThrowException("Cannot set value of output port").context(this);
     return equals(QString(value));
 }
 
 Port& Port::equals(QStringList value) {
-//  Check with vg::GrowthLights
-//    if (access() == PortAccess::Output)
-//        ThrowException("Cannot set value of output port").context(this);
     return equals(value.toVector());
 }
 
 Port& Port::imports(QString pathToPort) {
-//  Check with vg::GrowthLights
-//    if (access() == PortAccess::Output)
-//        ThrowException("Cannot set value of output port").context(this);
     if (_notReferenced)
         return equals(pathToPort);
     _mode = PortMode::Referenced;
@@ -62,9 +53,6 @@ Port& Port::imports(QString pathToPort) {
 }
 
 Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
-//  Check with vg::GrowthLights
-//    if (access() == PortAccess::Output)
-//        ThrowException("Cannot set value of output port").context(this);
     if (_notReferenced)
         return equals(pathToPort);
     _mode = PortMode::MaybeReferenced;
@@ -78,8 +66,6 @@ Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
 
 void Port::checkValueOverridden() {
     Box *boxParent = dynamic_cast<Box*>(parent());
-//    if (!boxParent)
-//        ThrowException("Parent of Box class expected").context(this);
     _valueOverridden =  boxParent && !boxParent->underConstruction();
 }
 
@@ -270,6 +256,19 @@ void Port::resolveImports() {
         if (_valueType == Null)
             ThrowException("Unexpected error: Type of imported value is Null");
     }
+}
+
+PortType Port::commonType(const QVector<Port*> &ports) {
+    ports.at(0)->resolveImports();
+    PortType commonType = ports.at(0)->_valueType;
+    QStringList msg;
+    for (Port *port : ports) {
+        port->resolveImports();
+        msg << (port->importPath() +  " has type " + nameOf(port->_valueType));
+        if (port->_valueType != commonType)
+            ThrowException("Imported ports must have same type:\n" + msg.join("\n"));
+    }
+    return commonType;
 }
 
 void Port::resolveImportsAgain() {
@@ -478,17 +477,6 @@ void Port::toText(QTextStream &text, int indentation) const {
          << postfix
 //         << " // " << convert<QString>(_portValueStep)
          << "\n";
-}
-
-PortType Port::commonType(const QVector<Port*> &ports) {
-    PortType commonType = ports.at(0)->_valueType;
-    for (Port *port : ports) {
-        if (port->_valueType != commonType) {
-            commonType = Null;
-            break;
-        }
-    }
-    return commonType;
 }
 
 void Port::clearIndex() {

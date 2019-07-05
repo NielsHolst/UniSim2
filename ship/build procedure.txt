@@ -44,15 +44,15 @@ cd /c/users/au152367/Documents/QDev/UniSim2
 
 1. In Finder go to nielsholst/dev and delete UniSim2 folder.
 
-2. In Chrome go to Github and copy clone path.
+2. In Chrome go to Github and copy clone path. (cmd+C)
  
 3. In Terminal: 
-- go to ~/dev
-- type >git clone <paste clone path>
+- cd ~/dev  (~ er Alt+^)
+- type >git clone <paste clone path> (cmd+V)
 
-4. Edit ~/qdev/UniSim2/ship/cmd/osx/build.sh.
+4. Edit ~/dev/UniSim2/ship/cmd/osx/build.sh.
 - Update SUB version number.
-- Launch build.sh.
+- Launch build.sh from Terminal >./build.sh
 
 5. Open InstallBuilder and build the installer.
 
@@ -60,6 +60,8 @@ cd /c/users/au152367/Documents/QDev/UniSim2
 - run clean.sh
 - open UniSim2.pro in QtCreator and build.
 
-6. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb) via Dropbox. The installer is a zip file.
+7. Compress UniSim2.app folder to a zip file: Right-click UniSim2.app and compress.
 
-7. Update ecolmod.org/download.html.
+8. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb) via Dropbox. The installer is a zip file.
+
+9. Update ecolmod.org/download.html.

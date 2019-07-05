@@ -5,9 +5,9 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <stdlib.h>
+#include <base/publish.h>
 #include "general.h"
 #include "leaf_light_response.h"
-#include <base/publish.h>
 
 using namespace std;
 using namespace base;
@@ -67,6 +67,8 @@ void LeafLightResponse::update() {
     }
     Rd = darkRespirationRate();
     Pgmax = Pnmax + Rd;    // maximum gross assimilation [mg CO2/m2 leaf/s]
+    if (Rd > 1e10 || Pgmax > 1e10)
+        ThrowException("Infinite light response variables").value(Rd).value2(Pgmax).context(this);
 }
 
 void LeafLightResponse::MichaelisMenten::update(double x25) {

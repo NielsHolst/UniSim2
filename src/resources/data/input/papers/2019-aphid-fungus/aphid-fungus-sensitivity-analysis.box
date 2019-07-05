@@ -266,7 +266,7 @@ Simulation sim {
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[apterousExposed] // .../netReproduction[alate]
+              .growthFactor = .../netReproduction[apterousExposed] 
               .phaseInflow = .../susceptible/adult/apterous/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]
@@ -286,7 +286,7 @@ Simulation sim {
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
-              .growthFactor = .../netReproduction[alateExposed] // .../netReproduction[apterous]
+              .growthFactor = .../netReproduction[alateExposed] 
               .phaseInflow = .../susceptible/adult/alate/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]
@@ -305,7 +305,7 @@ Simulation sim {
         OnOff isSporulating {
           .x = weather[RHmax]
           .xOn = random/sporulationOn[value]
-          .xOff = 100 // ? why not 0 when it is off?
+          .xOff = 100
         }
         CadaverTime time {
           .isSporulating = ../isSporulating[isOn]

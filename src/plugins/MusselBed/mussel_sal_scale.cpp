@@ -19,17 +19,19 @@ PUBLISH(MusselSalScale)
 MusselSalScale::MusselSalScale(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(smean).equals(24.).help("mean salinity");
+    Input(a).equals(0.498).help("Regression coefficient");
+    Input(b).equals(-11.798).help("Regression coefficient");
+    Input(salinity).equals(24.).help("mean salinity");
     Output(value).help("mussel growth scaling factor");
 }
 
 void MusselSalScale::reset() {
-    value = 1;
-
+    update();
 }
 
 void MusselSalScale::update() {
-    value = exp(0.24113*smean-3.484087)/(1+exp(0.24113*smean-3.484087));
+//    value = exp(0.24113*salinity-3.484087)/(1+exp(0.24113*salinity-3.484087));
+    value = exp(a*salinity + b)/(1.+exp(a*salinity + b));
 }
 
 } //namespace

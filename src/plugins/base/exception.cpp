@@ -4,11 +4,13 @@
 ** See www.gnu.org/copyleft/gpl.html.
 */
 #include <iostream>
+#include <QDateTime>
 #include <QObject>
 #include "box.h"
 #include "convert.h"
 #include "exception.h"
 #include "general.h"
+#include "path.h"
 
 namespace base {
 
@@ -73,6 +75,8 @@ QString Exception::what() const {
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
+    if (!dateTime().isNull())
+        text += "\nCalendar time: " + convert<QString>(dateTime());
     return text;
 }
 
@@ -112,6 +116,22 @@ template <> QString Exception::asString(QDateTime v) {
     return convert<QString>(v);
 }
 
+QDateTime Exception::dateTime() const {
+    QDateTime result;
+    try {
+        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
+        if (calendar) {
+            Port *port = calendar->peakPort("dateTime");
+            if (port) {
+                result = port->value<QDateTime>();
+            }
+        }
+    }
+    catch (...) {
+        result = QDateTime();
+    }
+    return result;
+}
 
 }
 

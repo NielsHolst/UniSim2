@@ -19,18 +19,18 @@ PUBLISH(StarfishSalScale)
 StarfishSalScale::StarfishSalScale(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Input(smean).equals(28).help("current salinity");
+    Input(a).equals(-16.831).help("Regression coefficient");
+    Input(b).equals(0.743).help("Regression coefficient");
+    Input(salinity).equals(28).help("current salinity");
     Output(value).help("scaling factor for feeding rate");
 }
 
 void StarfishSalScale::reset() {
-    value = 1;
+    update();
 }
 
 void StarfishSalScale::update() {
-    const double a = 16.83070,
-                 b =  0.74301;
-    value = exp(-a + b*smean)/(1+exp(-a + b*smean));
+    value = exp(a + b*salinity)/(1+exp(-a + b*salinity));
 }
 
 } //namespace

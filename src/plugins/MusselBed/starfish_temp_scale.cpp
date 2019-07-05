@@ -21,18 +21,18 @@ PUBLISH(StarfishTempScale)
 StarfishTempScale::StarfishTempScale(QString name, QObject *parent)
     : Box(name, parent)
 {
+    Input(a).equals(0.528).help("Regression coefficient");
+    Input(b).equals(-3.967).help("Regression coefficient");
     Input(temperature).equals(11).help("current temperature degree celsius");
     Output(value).help("scaling factor for feeding rate");
 }
 
 void StarfishTempScale::reset() {
-    value = 1;
+    update();
 }
 
 void StarfishTempScale::update() {
-    const double a = 0.52777,
-                 b = 3.96623;
-    value =(exp(a*temperature - b)/(1 + exp(a*temperature - b)));
+    value = exp(a*temperature + b)/(1. + exp(a*temperature + b));
 }
 
 } //namespace

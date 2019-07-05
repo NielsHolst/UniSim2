@@ -24,7 +24,9 @@ void Timer::reset() {
 }
 
 void Timer::start(QString name) {
-    Q_ASSERT(_lookup.contains(name));
+    if (!_lookup.contains(name))
+        ThrowException("No timer with that name").value(name)
+                .value2(QStringList(_lookup.keys()).join(", ")).context(this);
     _lookup[name].first.start();
 }
 

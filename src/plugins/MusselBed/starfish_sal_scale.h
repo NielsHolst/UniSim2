@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double smean;
+    double a, b, salinity;
 
     // Outputs
     double value;

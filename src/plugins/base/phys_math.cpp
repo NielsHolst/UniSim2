@@ -333,7 +333,7 @@ QPair<double, double> inferNormal(double xmin, double xmax, double p) {
 
 //! Produce a value from normal distribution re-scaled to x-range
 /*!
- * \param the probability of an outcome <= value
+ * \param u the probability of an outcome <= value
  * \param xmin the minimum allowed x value
  * \param xmax the maximum allowed x value
  * \param p the probability that x falls in the [xmin,xmax] range

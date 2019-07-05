@@ -15,12 +15,13 @@ Box *Box::_currentRoot = nullptr;
 Box *Box::_savedCurrentRoot = nullptr;
 int Box::_count = 0;
 bool Box::_debugOn = false;
+bool Box::_traceOn = false;
 
 Box::Box(QString name, QObject *parent)
     : QObject(parent), _name(name), _order(0), _amended(false)
 {
     Class(Box);
-    help("is a generic box with no behaviour");
+    help("has yet undocumented functionality");
     setObjectName(name);
     _currentRoot = this;
     _timer = new Timer(this);
@@ -69,7 +70,8 @@ void Box::help(QString s) {
 }
 
 QString Box::help() const {
-    return _help;
+    // Use help text only in derived classes
+    return (className()=="Box") ? "is just as a container box" : _help;
 }
 
 void Box::sideEffects(QString s) {
@@ -143,7 +145,7 @@ void Box::amendFamily() {
             if (box)
                 box->amendFamily();
         }
-        if (_debugOn)
+        if (_traceOn)
             dialog().information("amend " + fullName());
         amend();
         _count = 0;
@@ -191,7 +193,7 @@ void Box::initializeFamily() {
     }
     resolvePortImports();
     updateImports();
-    if (_debugOn)
+    if (_traceOn)
         dialog().information("initialize " + fullName());
     initialize();
     updateSelfImports();
@@ -207,7 +209,7 @@ void Box::resetFamily() {
     }
     resetPorts();
     updateImports();
-    if (_debugOn)
+    if (_traceOn)
         dialog().information("reset " + fullName());
     reset();
     verifyPorts();
@@ -227,7 +229,7 @@ void Box::updateFamily() {
     _timer->stop("update-updateImports");
 
     _timer->start("update-update");
-    if (_debugOn)
+    if (_traceOn)
         dialog().information("update " + fullName());
     update();
     verifyPorts();
@@ -246,7 +248,7 @@ void Box::cleanupFamily() {
             box->cleanupFamily();
     }
     updateImports();
-    if (_debugOn)
+    if (_traceOn)
         dialog().information("cleanup " + fullName());
     cleanup();
     verifyPorts();
@@ -262,7 +264,7 @@ void Box::debriefFamily() {
             box->debriefFamily();
     }
     updateImports();
-    if (_debugOn)
+    if (_traceOn)
         dialog().information("debrief " + fullName());
     debrief();
     verifyPorts();
@@ -330,7 +332,7 @@ Box* Box::cloneFamily(QString name, QObject *parent) {
 }
 
 void Box::debug(bool on) {
-    _debugOn = on;
+    _traceOn = _debugOn = on;
 }
 
 void Box::toText(QTextStream &text, int indentation) const {

@@ -23,6 +23,7 @@ Starfish::Starfish(QString name, QObject *parent)
 {
     Input(initBiomass).help("Starfish density at t0 (g/m2");
     Input(initAbundance).help("Starfish density at t0 in numbers");
+    Input(conversionEfficiency).help("Efficiency turning mussel prey into starfish biomass").unit("[0;1]");
     Input(supply).help("consumed food under current environmental condtions this supply have to be used for respiration and growth");
     Input(respiration).help("food necessary to cover for maintenance costs");
     Output(abundance).help("starfish density in numbers");
@@ -33,13 +34,14 @@ void Starfish::reset() {
     biomass = initBiomass;
     abundance = initAbundance;
     size=initBiomass/initAbundance;
+//    update();
 }
 
 void Starfish::update() {
      /*this function calculates the growth rate as a conversion factor of the food available after covering
        maintenance costs. Growth rate can be negative if supply doesn't cover maintenance costs, in that case
        starfish population shrink in biomass not in numbers */
-    double growthrate = 0.848*((supply) - respiration);
+    double growthrate = conversionEfficiency*((supply) - respiration);
 
     // growth rate can be negative, although respiration costs tend to zero as biomass decrease, to ensure
     // apropiate model behavior, this function avoid negative densities.

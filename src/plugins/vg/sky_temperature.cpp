@@ -28,6 +28,8 @@ SkyTemperature::SkyTemperature(QString name, QObject *parent)
 }
 
 void SkyTemperature::reset() {
+    airTemperature = 0.;
+    rh = 60.;
     update();
 }
 
@@ -36,6 +38,9 @@ void SkyTemperature::update() {
     emissivity = intercept + slope*dewTemp;
     if (emissivity>1) emissivity = 1;
     temperature = pow(emissivity*p4(dewTemp+T0), 0.25) - T0;
+//    QString s("%1 \n%2 \n%3 \n%4 \n%5 \n%6 \n%7");
+//    s = s.arg(intercept).arg(slope).arg(airTemperature).arg(rh).arg(temperature).arg(emissivity).arg(dewTemp);
+//    dialog().information("\nSkyTemperature::update()\n" + s);
 }
 
 } //namespace

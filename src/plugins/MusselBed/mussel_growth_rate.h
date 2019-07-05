@@ -20,7 +20,7 @@ public:
 
 private:
     // Inputs
-    double carryingCapacity, size, biomass;
+    double a, b, carryingCapacity, size, biomass;
 
     // Outputs
     double value;

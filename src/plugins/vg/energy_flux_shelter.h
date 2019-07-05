@@ -31,7 +31,7 @@ private:
     // Outputs
     double coverTemperature, screensTemperature,
         heatFluxOutsideToCover, heatFluxInsideToCover,
-        radiationFluxSkyToCover,
+        radiationFluxOutsideToCover, radiationFluxInsideToCover,
         radiationFluxSunToCover, radiationFluxSunToScreens;
 
 };

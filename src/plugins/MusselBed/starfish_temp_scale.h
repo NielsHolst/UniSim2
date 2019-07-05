@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double temperature;
+    double a, b, temperature;
 
     // Outputs
     double value;

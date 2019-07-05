@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double vmax, mBiomass;
+    double a, b, vmax, mBiomass;
 
     // Outputs
     double scale, value;

@@ -18,6 +18,8 @@ PUBLISH(MusselGrowthRate)
 MusselGrowthRate::MusselGrowthRate(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    Input(a).equals(0.0159).help("Regression coefficient");
+    Input(b).equals(-0.486).help("Regression coefficient");
     Input(carryingCapacity).equals(15000).help("Carrying capacity (g/m2), obtained from field observations");
     Input(biomass).equals(3000).help("current mussel density at step(g/m2)");
     Input(size).equals(1).help("average individual size in g");
@@ -25,20 +27,21 @@ MusselGrowthRate::MusselGrowthRate(QString name, QObject *parent)
 }
 
 void MusselGrowthRate::initialize() {
-    scales = findMany<Box>("scale");
+    scales = findMany<Box>("scales/*");
 }
 
 void MusselGrowthRate::reset() {
-    value =0.;
+    update();
 }
 
 void MusselGrowthRate::update() {
-    value = (0.0197*pow(size,-0.232));
+//    value = (0.0197*pow(size,-0.232));
+    value = a*pow(size,b);
     for (int i = 0; i < scales.size(); ++i) {
         value *= scales[i]->port("value")->value<double>();
     }
 
-    value = value*biomass*(1-(biomass/carryingCapacity));
+    value = value*biomass*(1.-(biomass/carryingCapacity));
 }
 
 

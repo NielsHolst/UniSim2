@@ -7,6 +7,33 @@ Simulation musselBed {
     .fileName = "data/BR_.txt"
     .dateColumnName = "date"
   }
+  Mussel mussel {
+    .initAbundance = 5096
+    .initBiomass = 3666
+    .growth = ./growth[value]
+    .lossBiomass = ./thinning[lossBiomass]
+    .lossAbundance = ./thinning[lossAbundance]
+    .day = musselBed[step]
+    
+    MusselGrowthRate growth {
+      .biomass =..[biomass]
+      .size = ..[size]
+      .carryingCapacity = 15000
+      MusselTempScale scale {
+        .temperature = ocean[tmean]
+      }
+      MusselSalScale scale {
+        .smean = ocean[smean]
+      }
+    }
+    MusselThinning thinning {
+      .biomass = ..[biomass]
+      .abundance =..[abundance]
+      .size = ..[size]
+      .supply =  funcresp[totalSupply]
+    }
+  }
+
   Starfish starfish {
     .initAbundance = 3.13
     .initBiomass = 26.2
@@ -38,76 +65,29 @@ Simulation musselBed {
     }
   }
   
-  Mussel mussel {
-    .initAbundance = 5096
-    .initBiomass = 3666
-    .growth = ./growth[value]
-    .lossBiomass = ./thinning[lossBiomass]
-    .lossAbundance = ./thinning[lossAbundance]
-    .day = musselBed[step]
-    
-    MusselGrowthRate growth {
-      .biomass =..[biomass]
-      .size = ..[size]
-      .carryingCapacity = 15000
-      MusselTempScale scale {
-        .temperature = ocean[tmean]
-      }
-      MusselSalScale scale {
-        .smean = ocean[smean]
-      }
-    }
-    MusselThinning thinning {
-      .biomass = ..[biomass]
-      .abundance =..[abundance]
-      .size = ..[size]
-      .supply =  funcresp[totalSupply]
-    }
-  }
   OutputR {
     PageR {
       .xAxis = calendar[date]
+      .title = "Starfish functional response"
       PlotR {
         .ports = (funcresp[supply] funcresp[demand] funcresp[apparency] funcresp[respiration])
-        .ggplot = "geom_line() + geom_point() + labs(title='Starfish functional response')"
       }
     }  
     PageR {
       .xAxis = calendar[date]
+      .title = "Ocean environment"
       PlotR {
         .ports = (ocean[tmean] ocean[smean])
-        .ggplot = "geom_line() + geom_point() + labs(title='Ocean variables')"
+      }
+    }
+    PageR {
+      .ncol = 2
+      .title = "Mussels & Starfish"
+      PlotR {
+        .ports = (mussel[size] mussel[biomass] mussel[abundance])
       }
       PlotR {
-        .ports = starfish[size]
-        .ggplot = "geom_line() + geom_point() + labs(title='Starfish size validation')"
-        // add obs
-      }
-      PlotR {
-        .ports = starfish[biomass]
-        .ggplot = "geom_line() + geom_point() + labs(title='Starfish biomass validation')"
-        // add obs
-      }
-      PlotR {
-        .ports = starfish[abundance]
-        .ggplot = "geom_line() + geom_point() + labs(title='Starfish abundance validation')"
-        // add obs
-      }
-
-      PlotR {
-        .ports = mussel[size]
-        .ggplot = "geom_line() + geom_point() + labs(title='Mussel size validation')"
-        // add obs
-      }
-      PlotR {
-        .ports = mussel[biomass]
-        .ggplot = "geom_line() + geom_point() + labs(title='Mussel biomass validation')"
-        // add obs
-      }
-      PlotR {
-        .ports = mussel[abundance]
-        .ggplot = "geom_line() + geom_point() + labs(title='Mussel abundance validation')"
-        // add obs
+        .ports = (starfish[size] starfish[biomass] starfish[abundance])
       }
     }
   }

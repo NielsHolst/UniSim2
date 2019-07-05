@@ -14,18 +14,16 @@ class StarfishDemand : public base::Box
 {
 public:
     StarfishDemand(QString name, QObject *parent);
-    void reset();
     void update();
 
 private:
     // Inputs
-    double size;
-    double temperature;
-    double biomass;
+    double
+        aGrowth, bGrowth, aResp, bResp,
+        size, temperature, biomass;
 
     // Outputs
-    double netDemand;
-    double Respiration;
+    double netDemand, respiration;
 
 };
 
