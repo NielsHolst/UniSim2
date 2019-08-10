@@ -52,12 +52,12 @@
 </xsl:template>
 
 <xsl:function name="ecolmod:generateXPath" >
-  <xsl:param name="pNode" as="node()"/>
+  <xsl:param name="pNode"/> <!--as="node()"/>-->
 
   <xsl:for-each select="$pNode/ancestor::*">    
     <xsl:value-of select="concat('/', name())" />    
   </xsl:for-each>    
-  <xsl:value-of select="concat('/', name($pNode))" />     
+    <xsl:value-of select="concat('/', name($pNode[1]))" />     
 </xsl:function>
 
 <xsl:template name="extract-cover">

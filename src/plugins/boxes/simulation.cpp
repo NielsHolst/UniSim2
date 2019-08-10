@@ -80,11 +80,11 @@ void Simulation::run() {
             {
                 show(time);
                 updateFamily();
-                Track::updateAll();
+//                Track::updateAll();
             }
             environment().computationStep(ComputationStep::Cleanup);
             cleanupFamily();
-            Track::cleanupAll();
+//            Track::cleanupAll();
         }
         environment().computationStep(ComputationStep::Debrief);
         debriefFamily();

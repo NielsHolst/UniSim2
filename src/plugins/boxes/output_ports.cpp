@@ -18,7 +18,11 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
 }
 
 void OutputPorts::amend() {
-    placeOrders();
+    Box *page = findMaybeOne<Box>("ancestors::*<PageR>");
+    bool doPlaceOrders = !page ||
+                         (page && page->port("show")->value<bool>());
+    if (doPlaceOrders)
+        placeOrders();
 }
 
 void OutputPorts::placeOrders() {

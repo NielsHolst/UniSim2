@@ -23,7 +23,7 @@ RandomiserBase::RandomiserBase(QString name, QObject *parent)
     Input(drawAtInitialize).equals(false).help("Draw a value when a box is initialized?");
     Input(drawAtReset).equals(true).help("Draw a value when a box is reset?");
     Input(drawAtUpdate).equals(false).help("Draw a value when a box is updated?");
-    Output(numVariables).noReset().help("Number of variables which are randomised").unit("[0;inf]");
+    Output(numVariables).noReset().help("Number of variables which are randomised").unit("[0;inf)");
 }
 
 void RandomiserBase::initialize() {

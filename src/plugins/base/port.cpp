@@ -448,12 +448,6 @@ void Port::toText(QTextStream &text, int indentation) const {
     QString prefix =
             (access() == PortAccess::Input) ?
                 (isBlind() ? "+" : "." ) : "//~";
-//    if (access() == PortAccess::Input) {
-//        prefix = (constructionStep() == ComputationStep::Amend) ? "//." : ".";
-//    }
-//    else{
-//        prefix = "//>";
-//    }
     bool showAmended = false;
     if (constructionStep() == ComputationStep::Amend) {
         Box *myBox = dynamic_cast<Box*>(parent());

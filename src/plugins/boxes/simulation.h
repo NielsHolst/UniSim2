@@ -31,13 +31,7 @@ private:
     bool hasError;
     QString errorMsg;
     // Methods
-    void collectTrackedPorts();
-    void removeObsoletePorts();
-    void makePortLabelsUnique();
     void show(QTime time);
-    void writeDataFrame();
-    void openFileStream(QString extension);
-    static bool valuesAreEqual(const base::Port *port);
 };
 
 }

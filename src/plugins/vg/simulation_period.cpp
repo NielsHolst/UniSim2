@@ -32,14 +32,12 @@ SimulationPeriod::SimulationPeriod(QString name, QObject *parent)
 void SimulationPeriod::reset() {
     // Begin one day before to warm up model
     beginDateTime = QDateTime(alignYear(beginDate), beginTime, Qt::UTC).addDays(-1);
+    // Compute steps
     steps = secsInterval() / secsTimeStep() + 1;
     if (steps < 1) {
         ThrowException("Wrong time interval: beginDate must be before endDate").
                 value(beginDate).value2(endDate).context(this);
     }
-    // If end is at midnight then assume that it's at the end of the day
-    if (endTime == QTime(0,0,0))
-        endDate = endDate.addDays(1);
 }
 
 QDate SimulationPeriod::alignYear(QDate date) {
@@ -49,8 +47,11 @@ QDate SimulationPeriod::alignYear(QDate date) {
 }
 
 int SimulationPeriod::secsInterval() {
-    QDateTime end(alignYear(endDate), endTime);
-    return static_cast<int>(beginDateTime.secsTo(end)) + 3600;
+    QDateTime endDateTime(alignYear(endDate), endTime, Qt::UTC);
+    // If end is at midnight then assume that it's at the end of the day
+    if (endTime == QTime(0,0,0))
+        endDateTime = endDateTime.addDays(1);
+    return static_cast<int>(beginDateTime.secsTo(endDateTime));
 }
 
 int SimulationPeriod::secsTimeStep() {

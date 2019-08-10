@@ -20,7 +20,7 @@ PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("produces a page of plots for R");
-    Input(hide).equals(false).help("Hide this plot?");
+    Input(show).equals(true).help("Show this page?");
     Input(xAxis).equals("/*[step]").notReferenced();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
@@ -78,7 +78,7 @@ QString PageR::toScript() {
     QString string;
     QTextStream s(&string);
     s << functionName() << " <- function(df, ...) {\n";
-    if (!hide) {
+    if (show) {
         if (_popUp) {
           s << "  open_plot_window("
             << port("width")->value<int>()

@@ -38,28 +38,8 @@ uint qHash(Track::Order order) {
 
 Track::Track(Port *port, PortFilter filter)
     : QObject(port),
-      _port(port), _filter(filter),
-      _buffer(port),
-      _filteredValuePtr(0),
-      _count(0), _allocated(false)
+      _port(port), _filter(filter)
 {
-}
-
-void Track::allocateBuffer() {
-    if (_allocated) return;
-    Box *parent = _port->boxParent();
-    Q_ASSERT(parent);
-    Port *iterations = parent->findMaybeOne<Port>("/*[iterations]"),
-         *steps = parent->findMaybeOne<Port>("/*[steps]");
-    int numIterations = iterations ? iterations->value<int>() : 1,
-        numSteps = steps ? steps->value<int>() : 1,
-        numTotal = (_filter == PortFilter::None) ? numIterations*numSteps : numIterations;
-    _buffer.reserve(numTotal);
-    _allocated = true;
-}
-
-Track::~Track() {
-    port_value_op::deallocate(_type, _filteredValuePtr);
 }
 
 Track::Order Track::takeOrder(Port *port, PortFilter filter) {
@@ -107,53 +87,14 @@ void Track::replaceUnfilteredOrders() {
     }
 }
 
-
 void Track::reset() {
-    _count = 1;
     _type = _port->type();
     _valuePtr = _port->valuePtr<void>();
     if (isFiltered()){
         if (isVector(_type))
             ThrowException("You cannot apply a filter to a vector port output")
                     .value(convert<QString>(_filter)).context(_port);
-        if (!_filteredValuePtr)
-            _filteredValuePtr = port_value_op::allocate(_type);
     }
-
-    allocateBuffer();
-
-    if (isFiltered())
-       base::assign(_type, _filteredValuePtr, _type, _valuePtr, PortTransform::Identity, this);
-    else
-        _buffer.append(_valuePtr);
-}
-
-void Track::update() {
-    ++_count;
-    switch (_filter) {
-        case PortFilter::None:
-            _buffer.append(_valuePtr);
-            break;
-        case PortFilter::Sum:
-        case PortFilter::Mean:
-            port_value_op::accumulate(_type, _filteredValuePtr, _valuePtr);
-            break;
-        case PortFilter::Min:
-            port_value_op::min(_type, _filteredValuePtr, _filteredValuePtr, _valuePtr);
-            break;
-        case PortFilter::Max:
-            port_value_op::max(_type, _filteredValuePtr, _filteredValuePtr, _valuePtr);
-            break;
-        case PortFilter::End:
-            base::assign(_type, _filteredValuePtr, _type, _valuePtr, PortTransform::Identity, this);
-    }
-}
-
-void Track::cleanup() {
-    if (_filter == PortFilter::Mean)
-        port_value_op::divide(_type, _filteredValuePtr, _count);
-    if (_filter != PortFilter::None)
-        _buffer.append(_filteredValuePtr);
 }
 
 Port* Track::port() {
@@ -162,10 +103,6 @@ Port* Track::port() {
 
 PortFilter Track::filter() const {
     return _filter;
-}
-
-const Vector* Track::buffer() const {
-    return &_buffer;
 }
 
 void Track::uniqueName(QString name) {
@@ -187,10 +124,6 @@ QStringList Track::uniqueNameExpanded() {
             names << (_uniqueName + "_" + QString::number(i));
     }
     return names;
-}
-
-QString Track::toString(int row) {
-    return _buffer.toString(row);
 }
 
 QList<Track *> Track::all() {
@@ -217,17 +150,6 @@ void Track::resetAll() {
         track->reset();
 }
 
-void Track::updateAll() {
-    for (Track *track : all())
-        track->update();
-}
-
-void Track::cleanupAll() {
-    for (Track *track : all())
-        track->cleanup();
-}
-
-
 bool Track::isFiltered() const {
     return _filter != PortFilter::None;
 }
@@ -238,24 +160,6 @@ Track* Track::find(Order order) {
     if (it == _tracks.end() && order.filter==PortFilter::None)
         it = _tracks.find(Order{order.portId, PortFilter::End});
     if (it == _tracks.end()) {
-//        QString s;
-//        QTextStream t(&s);
-//        t << "Unexpected. No track found matching order: "
-//          << order.portId << "." << convert<QString>(order.filter)<< "\n";
-//        t << "Tracks present:\n";
-//        t << dumpTracks();
-
-//        t << "Browse tracks:\n";
-//        QMapIterator<Order, Track*> it(_tracks);
-//        while (it.hasNext()) {
-//            it.next();
-//            Order key = it.key();
-//            t << "Key: " << key.portId << "." << convert<QString>(key.filter)
-//              << (key == order) << "\n";
-//        }
-
-//        t << "Map contains order: " << _tracks.contains(order) << "\n";
-
         ThrowException("Unexpected. No track found matching order").
                 value(Port::find(order.portId)->fullName()).
                 value2(convert<QString>(order.filter));

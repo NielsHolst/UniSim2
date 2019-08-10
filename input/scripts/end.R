@@ -1,17 +1,14 @@
 sim = read_output(output_file_name)
 
 if (!exists("output_skip_formats")) {
-  plot_all(sim)
+  if (exists("sobol_N"))
+    plot_all(sim[1:sobol_N,])
+  else
+    plot_all(sim)
 }
 
 if (exists("sobol_N")) {
-  # library(GGally)
-
   colnames(sim)[input_columns()] = input_names() # Remove ".end" from input column names
-
-  # open_plot_window(9,9)
-  # M = sim[1:(2*sobol_N), input_names()]
-  # print(ggpairs(M))
 
   n_outputs = length(output_names())
   open_plot_window(9,4)
@@ -23,9 +20,16 @@ if (exists("sobol_N")) {
   print(S)
  
   list_of_plot_effects = dlply(S, .(Output), plot_effects)
-  l_ply(list_of_plot_effects, function(x) { open_plot_window(14,9); print(x) } )
+  list_of_plot_effects_no_sum = dlply(subset(S, Input!="Sum"), .(Output), plot_effects)
+
+  l_ply(list_of_plot_effects_no_sum, function(x) { open_plot_window(14,9); print(x) } )
   
-  # open_plot_window(9,9)
-  # print( grid.arrange(grobs=list_of_plot_effects) )  
+  setwd(box_script_folder)
+  pdf("sobol-indices.pdf", paper="a4")
+  l_ply(list_of_plot_effects, print )
+  dev.off()
+  pdf("sobol-indices-no-sum.pdf", paper="a4")
+  l_ply(list_of_plot_effects_no_sum, print )
+  dev.off()
 }
 

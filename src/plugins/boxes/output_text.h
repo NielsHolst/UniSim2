@@ -16,24 +16,25 @@ class OutputText : public OutputPorts
 public:
     OutputText(QString name, QObject *parent);
     void initialize();
+    void reset();
+    void update();
+    void cleanup();
     void debrief();
 private:
     // Inputs
     bool skipFormats;
     int skipInitialRows, averageN;
     // Data
+    bool _isCondensed;
+    int _rowCount;
+    QVector<double> _tracksRunningSum, _tracksSum, _tracksMin, _tracksMax;
     QFile _file;
     QTextStream _stream;
     // Methods
-    void openFileStream(QString extension);
-    void writeDataFrame();
-    void checkBufferSizes();
+    void openFileStream();
     void writeColumnLabels();
     void writeColumnFormats();
-    void writeColumnValues();
-    QStringList getRowValues(int row);
-    QStringList getAverageRowValues(int firstRow);
-    QString getAverageTrackValue(base::Track *track, int firstRow);
+    void processValues();
 };
 
 } // boxes

@@ -82,7 +82,7 @@ public:
 
     static void debug(bool on);
 
-    void toText(QTextStream &text, int indentation = 0) const;
+    void toText(QTextStream &text, QString options = "", int indentation = 0) const;
 private:
     // Data
     QString _name, _help, _sideEffects;

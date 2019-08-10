@@ -1,18 +1,27 @@
 Simulation sim {
-  .iterations = 2560 //20480
+  .iterations = 1
   .steps =  273 // end of september
-  .silent = TRUE
+  .silent = FALSE
   SelectFile weatherFiles {
     .folder = "weather"
     .filter = "*.txt"
     .showFileNames = FALSE
   }
+  Box param {
+    +juvenileApterousDuration = 172 
+    +juvenileAlateDuration = 195 
+    +adultDuration = 300
+    +fecundityDuration = 100
+    +fecundity_k = 1
+  }
   Box random {
-    RandomiserSobolSequence randomiser {
-      .useFixed = FALSE
-      .doSensitivityAnalysis = TRUE
-      .bootstrapSize = 10000
+    RandomiserStratified randomiser {
+      .doSensitivityAnalysis = FALSE
     }
+    // RandomiserSobolSequence randomiser {
+      // .doSensitivityAnalysis = TRUE
+      // .bootstrapSize = 2000
+    // }
     RandomUniformInt fileNumber {
       .min = 1
       .fixed = 1
@@ -21,79 +30,63 @@ Simulation sim {
     RandomNormal cropAtStart {
       .min = 10
       .fixed = 20
-      .max = 30 // 27
+      .max = 30 
     }
-    RandomNormal sporulationOn {
-      .min = 80 //90
-      .fixed = 92.5
-      .max = 99 // 95?
+    RandomNormal cropHalfways {
+      .min = 750 
+      .fixed = 800
+      .max = 850 
     }
-    RandomNormal cadaverDuration {
-      .min = 32 // 54
-      .fixed = 112
-      .max = 112 //130
+    RandomUniformInt k {
+      .min = 15
+      .fixed = 15
+      .max = 30
     }
     RandomNormal propExposedImmigrants {
       .min = 0.1
       .fixed = 0.5
       .max = 0.7
     }
-    RandomNormal transmissionEfficiency {
-      .min = 0.05
-      .fixed = 0.1728
-      .max = 0.5 //0.1728
-    }
-    RandomNormal lethalTimeNymph {
-      .min = 50 // 50
+    RandomNormal lethalTime {
+      // 2019/08/06: Lethal time for nymphs and adults are the same
+      .min = 50 
       .fixed = 73
-      .max = 115 // 180
-    }
-    RandomNormal timeAcceleration {
-      .min=1
-      .fixed=2.33
-      .max=3.5
-    }
-    RandomNormal cropHalfways {
-      .useFixed = TRUE
-      .min = 750 // 747
-      .fixed = 800
-      .max = 850 // 843
-    }
-    RandomNormal lethalTimeAdult {
-      .useFixed = TRUE
-      .min = 50 // 60
-      .fixed = 72
-      .max = 115 // 180
+      .max = 115
     }
     RandomNormal immunityCost{
-      .useFixed = TRUE
       .min = 0
       .fixed = 0.2
       .max = 0.4
     }
-    RandomUniformInt k {
-      .useFixed = TRUE
-      .min = 15
-      .fixed = 15
-      .max = 30
+    RandomNormal cadaverDuration {
+      .min = 48 
+      .fixed = 80
+      .max = 112 
     }
-  }
-  Box param {
-    +juvenileApterousDuration = 172 // 178.5
-    +juvenileAlateDuration = 195 //203.6
-    +adultDuration = 300
-    +fecundityDuration = 100
-    +fecundity_k = 1
+    RandomNormal timeAcceleration {
+      .min=1
+      .fixed=2
+      .max=3
+    }
+    RandomNormal sporulationOn {
+      .min = 80 
+      .fixed = 90
+      .max = 99 
+    }
+    RandomNormal transmissionEfficiency {
+      .min = 0.05
+      .fixed = 0.1728
+      .max = 0.5 
+    }
   }
 
   Calendar calendar {
     .timeStep=1
     .timeUnit="d" 
-    .initialDateTime = 1/1/2017 // maybe this will change with weather file
   }
 
   Records weather {
-    .fileName =  ./files[fileNamePath]   //"weather/Rygge_2017.txt"
+    .fileName =  ./files[fileNamePath]   
     .overrideCalendarYear = TRUE
     SelectFile files {
       .folder = "weather"
@@ -127,7 +120,7 @@ Simulation sim {
   // Aphid
   //
   
-  Maker maker {
+  Maker system {
     .names = ("withoutFungus" "withFungus")
     Box aphid {
       DayDegrees time{
@@ -149,7 +142,7 @@ Simulation sim {
       }
       AphidImmigration immigration {
         .cropGrowthStage = cropGrowthStage[value]
-        .immigrationRate = 0.015
+        .immigrationRate = 0.02
         .propExposedImmigrants = random/propExposedImmigrants[value]
         .k = random/k[value]
       }
@@ -160,9 +153,13 @@ Simulation sim {
         .R0opt = 51.6
         .temperature = weather[Tavg]
         .cropGrowthStage = cropGrowthStage[value]
+        .optimumCropGrowthStageFrom = 59
+        .optimumCropGrowthStageTo   = 73
+        .optimumCropFactor = 1.6
         .aphidDensity = ../density[total]
         .aphidDensityThreshold = 40 
-        .exposureCost = random/immunityCost[value] //0.3
+        .alateFactor = 0.67
+        .exposureCost = random/immunityCost[value] 
       }
       AphidOffspring offspring {
         .offspringFromSusceptible|sum = ../susceptible/adult/*/fecundity[outflow] 
@@ -228,8 +225,6 @@ Simulation sim {
         }
       } // susceptible
       Box exposed {
-        // +lethalTimeNymph = 73 
-        // +lethalTimeAdult = 72 
         Box nymph {
           StageAndPhase apterous {
             .timeStep = .../time[step]
@@ -239,7 +234,7 @@ Simulation sim {
             .phaseInflow = .../susceptible/nymph/apterous[phaseOutflow]
             .phaseTimeStep = .../fungusTime[step]
             .phaseK = random/k[value]
-            .phaseDuration = random/lethalTimeNymph[value]
+            .phaseDuration = random/lethalTime[value]
           }
           StageAndPhase alate {
             .timeStep = .../time[step]
@@ -249,7 +244,7 @@ Simulation sim {
             .phaseInflow = .../susceptible/nymph/alate[phaseOutflow]
             .phaseTimeStep = .../fungusTime[step]
             .phaseK = random/k[value]
-            .phaseDuration = random/lethalTimeNymph[value]
+            .phaseDuration = random/lethalTime[value]
           }
         } // nymph
         Box adult {
@@ -261,8 +256,9 @@ Simulation sim {
             .phaseInflow = .../susceptible/adult/apterous[phaseOutflow]
             .phaseTimeStep = .../fungusTime[step]
             .phaseK = random/k[value]
-            .phaseDuration = random/lethalTimeAdult[value]
+            .phaseDuration = random/lethalTime[value]
             StageAndPhase fecundity {
+               // no inflow because exposed/nymphs don't reproduce as adults
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
@@ -270,7 +266,7 @@ Simulation sim {
               .phaseInflow = .../susceptible/adult/apterous/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]
-              .phaseDuration = random/lethalTimeAdult[value]
+              .phaseDuration = random/lethalTime[value]
             }
           }
           StageAndPhase alate {
@@ -281,8 +277,10 @@ Simulation sim {
             .phaseInflow = .../susceptible/adult/alate[phaseOutflow]
             .phaseTimeStep = .../fungusTime[step]
             .phaseK = random/k[value]
-            .phaseDuration = random/lethalTimeAdult[value]
+            .phaseDuration = random/lethalTime[value]
             StageAndPhase fecundity {
+              // 2019/08/06: Exposed immigrants reproduce after arriving
+              .inflow = .../immigration[exposed]
               .timeStep = .../time[step]
               .duration = param[fecundityDuration]
               .k = param[fecundity_k]
@@ -290,7 +288,7 @@ Simulation sim {
               .phaseInflow = .../susceptible/adult/alate/fecundity[phaseOutflow]
               .phaseTimeStep = .../fungusTime[step]
               .phaseK = random/k[value]
-              .phaseDuration = random/lethalTimeAdult[value]
+              .phaseDuration = random/lethalTime[value]
             }
           }
         } // adult
@@ -305,7 +303,7 @@ Simulation sim {
         OnOff isSporulating {
           .x = weather[RHmax]
           .xOn = random/sporulationOn[value]
-          .xOff = 100
+          .xOff = 100 // ? why not 0 when it is off?
         }
         CadaverTime time {
           .isSporulating = ../isSporulating[isOn]
@@ -349,7 +347,7 @@ Simulation sim {
         }
       } // diagnostics
     } // aphid
-  } // maker
+  } // system
   
   Biocontrol biocontrol {
     .aphidDaysUncontrolled = withoutFungus/diagnostics/aphidDays[value] 
@@ -357,26 +355,30 @@ Simulation sim {
     .yieldUncontrolled = withoutFungus/diagnostics/yield[yield] 
     .yieldControlled = withFungus/diagnostics/yield[yield] 
   }
-  
-  //
-  // Output
-  //
-  
+   
   OutputR {
-    PageR {
-      .xAxis = (
-        random/fileNumber[value]
-        random/cropAtStart[value]
-        random/sporulationOn[value]
-        random/cadaverDuration[value]
-        random/propExposedImmigrants[value]
-        random/transmissionEfficiency[value]
-        random/lethalTimeNymph[value]
-        random/timeAcceleration[value] )
+    .end = "end-example.R"
+    PageR example {
+      .xAxis = calendar[date] 
       PlotR {
-        .ports = biocontrol[*]|end
-        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+        .ports = (system/*/density[total] cadavers[content] cropGrowthStage[value] yield[loss])
       }
     }
-  }
+
+    // .end = "end-uncertainty.R"
+    // PageR uncertainty {
+      // .xAxis = calendar[date] 
+      // PlotR {
+        // .ports = (system/*/density[total] cadavers[content] cropGrowthStage[value] yield[loss])
+      // }
+    // }
+
+    // PageR sobolIndices {
+      // .xAxis = random/*[value]
+      // PlotR {
+        // .ports = biocontrol[*]|end
+        // .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+      // }
+    // }
+  }  
 }

@@ -42,7 +42,7 @@ void Outdoors::amend() {
         builder.
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").
-            port("ignoreYear").equals(true).
+//            port("ignoreYear").equals(true). // NH 2019/07/11
         endbox();
     if (!findMaybeOne<Box>("./diffuseIrradiationEstimate"))
         builder.

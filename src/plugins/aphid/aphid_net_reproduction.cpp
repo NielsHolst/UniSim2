@@ -18,7 +18,11 @@ AphidNetReproduction::AphidNetReproduction(QString name, QObject *parent)
     Input(Tmax).equals(30).help("Maximum temperature over which no reproduction occur anymore").unit("oC");
     Input(Topt).equals(16.1).help("Optimum temperature for reproduction").unit("oC");
     Input(temperature).equals(0).help("Daily average temperature").unit("oC");
-    Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");;
+    Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");
+    Input(optimumCropGrowthStageFrom).help("The crop is optimal for reproduction from this growth stage ").unit("Zadoks");
+    Input(optimumCropGrowthStageTo).help("The crop is optimal for reproduction until this growth stage ").unit("Zadoks");
+    Input(optimumCropFactor).help("Fecundity increased by this factor when crop is optimal").unit("unitless");
+    Input(alateFactor).help("Factor to correct alate relative to apterous fecundity").unit("unitless");
     Input(aphidDensity).help("Aphid density").unit("per tiller");
     Input(aphidDensityThreshold).help("Density threshold when net reproduction is zero").unit("per tiller");
     Input(exposureCost).help("Relative reduction in reproduction when exposed").unit("[0;1]");
@@ -52,8 +56,8 @@ void AphidNetReproduction::update() {
         apterous = 0.;
 
     // WHEAT PHENOLOGY EFFECT ON LIFETIME FECUNBITY
-    if (cropGrowthStage>=59 && cropGrowthStage<=73)
-        apterous *= 1.6;
+    if (cropGrowthStage>=optimumCropGrowthStageFrom && cropGrowthStage<=optimumCropGrowthStageTo)
+        apterous *= optimumCropFactor;
     else if (cropGrowthStage>80)
         apterous = 0.;
 
@@ -64,8 +68,7 @@ void AphidNetReproduction::update() {
     }
 
     // THE CASE OF THE ALATES NOW
-    // In Duffy et al. 2017 the maximum daily nymph production per alates=2/3 of the max fec of apterous
-    alate = apterous*2./3.;
+    alate = apterous*alateFactor;
 
     // Reduction when exposed
     apterousExposed = (1.-exposureCost)*apterous;

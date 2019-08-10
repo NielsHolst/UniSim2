@@ -26,24 +26,19 @@ public:
     };
 
     Track(Port *port, PortFilter filter);
-    ~Track();
     void reset();
-    void update();
-    void cleanup();
+
     Port* port();
     PortFilter filter() const;
-    const Vector* buffer() const;
+    bool isFiltered() const;
     void uniqueName(QString name);
     QString uniqueName() const;
     QStringList uniqueNameExpanded();
-    QString toString(int row);
 
     static void clearOrders();
     static Order takeOrder(Port *port, PortFilter filter=PortFilter::None);
     static void effectuateOrders();
     static void resetAll();
-    static void updateAll();
-    static void cleanupAll();
 
     static QList<Track*> all();
     static Track* find(Order order);
@@ -61,14 +56,9 @@ private:
     PortFilter _filter;
     QString _uniqueName;
     PortType _type;
-    Vector _buffer;
     const void *_valuePtr;
-    void *_filteredValuePtr;
     int _count;
-    bool _allocated;
     // Methods
-    bool isFiltered() const;
-    void allocateBuffer();
     static bool areAnyOrdersFiltered();
     static void replaceUnfilteredOrders();
     static void setUniqueNames();

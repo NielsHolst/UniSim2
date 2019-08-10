@@ -365,7 +365,7 @@ int DialogWidget::cursorLine() {
         if (cursorPosition() > linePosition(i))
             return i;
     }
-    Q_ASSERT(false);
+    // Rarely, we end here
     return 0;
 }
 

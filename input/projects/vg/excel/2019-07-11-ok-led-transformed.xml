@@ -4,7 +4,7 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2019"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2019"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="03-01-2019"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
@@ -21,7 +21,7 @@
 	<!-- *** Outdoors *** -->
 	<box class="vg::Outdoors" name="outdoors">
 		<box class="Records" name="records">
-			<port name="fileName" externalName="None" source="/DVV_SETUP/Weather/File" value="C:\Virtual Greenhouse Development\DVV Weather\DNK_Dry.txt"/>
+			<port name="fileName" externalName="None" source="/DVV_SETUP/Weather/File" value="..\input\DNK_Dry.txt"/>
 		</box>
 	</box>
 	<!-- *** Construction *** -->
@@ -124,6 +124,20 @@
 			<box name="default">
 				<newPort name="signal" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="20.0"/>
 			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2019"/>
+				<port name="endDate" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToDay" value="31-12-2019"/>
+				<port name="beginTime" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromTime" value="06:00"/>
+				<port name="endTime" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToTime" value="19:00"/>
+				<port name="signalInside" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/Value" value="25.0"/>
+			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2019"/>
+				<port name="endDate" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToDay" value="31-12-2019"/>
+				<port name="beginTime" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromTime" value="19:00"/>
+				<port name="endTime" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToTime" value="23:59"/>
+				<port name="signalInside" externalName="Cli_HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/Value" value="20.0"/>
+			</box>
 		</box>
 		<box class="PrioritySignal" name="ventilationTemperatureMargin">
 			<port name="reverseOrder" value="TRUE"/>
@@ -182,7 +196,7 @@
 		<box class="PrioritySignal" name="chalk">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" externalName="Cli_ShadingAgentReduction" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+				<newPort name="signal" externalName="Cli_ShadingAgentReduction" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.01"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="growthLightThresholdLow">
@@ -200,7 +214,21 @@
 		<box class="PrioritySignal" name="growthLightActive">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
-				<newPort name="signal" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="1.0"/>
+				<newPort name="signal" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2019"/>
+				<port name="endDate" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToDay" value="31-12-2019"/>
+				<port name="beginTime" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromTime" value="06:00"/>
+				<port name="endTime" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToTime" value="19:00"/>
+				<port name="signalInside" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/Value" value="1.0"/>
+			</box>
+			<box class="vg::DateTimeSignal">
+				<port name="beginDate" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2019"/>
+				<port name="endDate" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToDay" value="31-12-2019"/>
+				<port name="beginTime" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromTime" value="19:00"/>
+				<port name="endTime" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/ToTime" value="23:59"/>
+				<port name="signalInside" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/Value" value="0.0"/>
 			</box>
 		</box>
 		<box class="PrioritySignal" name="rhMaxBand">
@@ -314,10 +342,10 @@
 	<box class="vg::Actuators" name="actuators">
 		<box class="GrowthLights" name="growthLights">
 			<box class="vg::GrowthLight" name="growthLight">
-				<port name="intensity" externalName="LightCapacityPerSqm" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="50"/>
-				<port name="parPhotonCoef" externalName="MicromolParPerWatt" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="1.611"/>
+				<port name="intensity" externalName="LightCapacityPerSqm" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="35"/>
+				<port name="parPhotonCoef" externalName="MicromolParPerWatt" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="2.3"/>
 				<port name="age" externalName="UsedHours" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="0"/>
-				<port name="lifeTime" externalName="LifeTime" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="12000"/>
+				<port name="lifeTime" externalName="LifeTime" source="/DVV_SETUP/Greenhouse/Lamps/Lamp/Constants/Parameters/Value" value="70000"/>
 			</box>
 		</box>
 		<box class="ProportionalSignal" name="heating">

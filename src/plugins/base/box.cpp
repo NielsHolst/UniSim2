@@ -335,7 +335,13 @@ void Box::debug(bool on) {
     _traceOn = _debugOn = on;
 }
 
-void Box::toText(QTextStream &text, int indentation) const {
+void Box::toText(QTextStream &text, QString options, int indentation) const {
+    if (options.isEmpty())
+        options = "io";
+    bool writeOverriddenInputs = options.contains("I"),
+         writeAllInputs = options.contains("i") && !writeOverriddenInputs,
+         writeOutputs = options.contains("o");
+
     Box *me = const_cast<Box*>(this);
     QString fill;
     fill.fill(' ', indentation);
@@ -348,17 +354,23 @@ void Box::toText(QTextStream &text, int indentation) const {
          << "\n";
 
     for (Port *port : me->findMany<Port>(".[*]")) {
-        if (port->access() == PortAccess::Input)
+        bool isInput = port->access() == PortAccess::Input,
+             isOverridden = port->isValueOverridden(),
+             doWrite = isInput &
+                       (writeAllInputs || (writeOverriddenInputs && isOverridden));
+        if (doWrite)
             port->toText(text, indentation+2);
     }
 
     for (Port *port : me->findMany<Port>(".[*]")) {
-        if (port->access() == PortAccess::Output)
+        bool isOutput = port->access() == PortAccess::Output,
+             doWrite = writeOutputs && isOutput;
+        if (doWrite)
             port->toText(text, indentation+2);
     }
 
     for (Box *box : me->findMany<Box>("./*")) {
-        box->toText(text, indentation+2);
+        box->toText(text, options, indentation+2);
     }
     text << fill << "}\n";
 }
