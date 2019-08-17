@@ -11,7 +11,7 @@ class StageBase : public base::Box
 {
 public:
     StageBase(QString name, QObject *parent);
-    ~StageBase();
+    virtual ~StageBase();
     void reset() final;
     virtual void myReset() = 0;
 

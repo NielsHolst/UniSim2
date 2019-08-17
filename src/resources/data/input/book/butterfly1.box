@@ -1,6 +1,6 @@
 // butterfly1.box
 Simulation sim {
-  .steps = 180
+  .steps = 273
   Calendar calendar {
     .initialDateTime = 1/5/2009
   }

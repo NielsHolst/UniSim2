@@ -23,9 +23,9 @@ private:
     int iteration, seed, bootstrapSize;
     bool
         useFixed,
-        drawAtInitialize, drawAtUserInitialize,
-        drawAtReset, drawAtUserReset,
-        drawAtUpdate, drawAtUserUpdate;
+        drawAtInitialize,
+        drawAtReset,
+        drawAtUpdate;
     // Data
     QVector<RandomBase*> randomVariables;
     base::Matrix<double> A, B, C;

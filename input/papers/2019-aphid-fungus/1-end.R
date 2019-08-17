@@ -20,8 +20,8 @@ Y = sim[,c("iteration",
            "withoutFungus.diagnostics.yield.loss",
            "withFungus.diagnostics.yield.loss")]
 colnames(Y) = c("Iteration", "CropGrowthStage", "Without fungus", "With fungus")
-Y$'Without fungus' = 250*Y$'Without fungus'
-Y$'With fungus'    = 250*Y$'With fungus'
+Y$'Without fungus' = 200*Y$'Without fungus'
+Y$'With fungus'    = 200*Y$'With fungus'
 Y = melt(Y, id.vars = c("Iteration", "CropGrowthStage"), value.name="YieldLoss", variable.name="Fungus")
 
 print(
@@ -32,6 +32,6 @@ print(
     scale_linetype_manual(values=2:1, name="Yield loss") + 
     labs(x="Crop growth stage (Zadoks scale)", y="Aphid density (per tiller)") +
     scale_x_continuous(breaks = 10*(3:9), limits=c(30,90)) +
-    scale_y_continuous(sec.axis = sec_axis(~.*1, name="Yield loss (%)")) +
+    scale_y_continuous(sec.axis = sec_axis(~.*0.5, name="Yield loss (%)")) +
     theme_classic() 
 )

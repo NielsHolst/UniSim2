@@ -34,6 +34,7 @@ public:
 
     DistributedDelay2D(const FixedParameters &p, QObject *parent, Policy policy = Flexible);
     DistributedDelay2D(const DistributedDelay2D &dd);
+    ~DistributedDelay2D();
     void update(const UpdateParameters &up);
     const State& state() const;
     void resize(int k1, int k2);

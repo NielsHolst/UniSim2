@@ -20,9 +20,6 @@ RandomBase::RandomBase(QString name, QObject *parent)
     Input(drawAtInitialize).imports("ancestors::*/*<RandomiserBase>[drawAtInitialize]");
     Input(drawAtReset).imports("ancestors::*/*<RandomiserBase>[drawAtReset]");
     Input(drawAtUpdate).imports("ancestors::*/*<RandomiserBase>[drawAtUpdate]");
-//    Input(drawAtUserUpdate).equals(false).imports("ancestors::*<RandomiserBase>[drawAtUserUpdate]");
-//    Input(drawAtUserInitialize).imports("ancestors::*<RandomiserBase>[drawAtUserInitialize]");
-//    Input(drawAtUserReset).equals(false).imports("ancestors::*<RandomiserBase>[drawAtUserReset]");
 }
 
 void RandomBase::amend() {
@@ -40,26 +37,27 @@ void RandomBase::initialize() {
     // Get number of strata
     _order->resize(_randomiser->numStrata());
     // Potential first draw
-    if (drawAtInitialize)
+    if (drawAtInitialize) {
+        checkInputs();
         updateValue();
+    }
 }
 
 void RandomBase::reset() {
-    if (drawAtReset) updateValue();
+    if (drawAtReset) {
+        checkInputs();
+        updateValue();
+    }
 }
 
 void RandomBase::update() {
-    if (drawAtUpdate) updateValue();
+    if (drawAtUpdate) {
+        checkInputs();
+        updateValue();
+    }
 }
 
 void RandomBase::import() {
-//    base::ComputationStep step = base::environment().computationStep();
-//    if (drawAtUserInitialize && step==base::ComputationStep::Initialize)
-//        updateValue(_order->next(), _order->size());
-//    else if (drawAtUserReset && step==base::ComputationStep::Reset)
-//        updateValue(_order->next(), _order->size());
-//    else if (drawAtUserUpdate && step==base::ComputationStep::Update)
-//        updateValue(_order->next(), _order->size());
 }
 
 RandomiserBase* RandomBase::randomiser() {

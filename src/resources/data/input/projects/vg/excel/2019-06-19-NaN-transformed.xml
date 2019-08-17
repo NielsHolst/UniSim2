@@ -21,7 +21,7 @@
 	<!-- *** Outdoors *** -->
 	<box class="vg::Outdoors" name="outdoors">
 		<box class="Records" name="records">
-			<port name="fileName" externalName="None" source="/DVV_SETUP/Weather/File" value="..\input\DNK_Dry.txt"/>
+			<port name="fileName" externalName="None" source="/DVV_SETUP/Weather/File" value="C:\Virtual Greenhouse Development\DVV Weather\DNK_Dry.txt"/>
 		</box>
 	</box>
 	<!-- *** Construction *** -->
@@ -421,9 +421,8 @@
 				<port name="ports" value="output/p[*]"/>
 			</box>
 		</box>
-    
 		<box class="OutputText">
-			<!-- <port name="skipFormats" value="TRUE"/> -->
+			<port name="skipFormats" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>
 		</box>

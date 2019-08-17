@@ -24,9 +24,10 @@ public:
     void addRCode(QString s);
 private:
     // Input
-    QString begin, end, outputFileNameVariable;
+    QString begin, outputFileNameVariable;
     bool popUp, keepPages, keepVariables;
     double width, height;
+    QVector<QString> end;
 
     // Output
     int numPages;
@@ -43,6 +44,7 @@ private:
     void writeScript();
     void copyToClipboard();
     QString makeClipboardOutput();
+    QStringList endScripts();
 };
 
 } // boxes

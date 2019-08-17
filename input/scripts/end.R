@@ -8,7 +8,7 @@ if (!exists("output_skip_formats")) {
 }
 
 if (exists("sobol_N")) {
-  colnames(sim)[input_columns()] = input_names() # Remove ".end" from input column names
+  colnames(sim) = unique_col_names(colnames(sim))
 
   n_outputs = length(output_names())
   open_plot_window(9,4)
@@ -25,11 +25,15 @@ if (exists("sobol_N")) {
   l_ply(list_of_plot_effects_no_sum, function(x) { open_plot_window(14,9); print(x) } )
   
   setwd(box_script_folder)
+
   pdf("sobol-indices.pdf", paper="a4")
   l_ply(list_of_plot_effects, print )
   dev.off()
+
   pdf("sobol-indices-no-sum.pdf", paper="a4")
   l_ply(list_of_plot_effects_no_sum, print )
   dev.off()
 }
+
+ 
 

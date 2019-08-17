@@ -20,13 +20,17 @@ GrowthLightController::GrowthLightController(QString name, QObject *parent)
 {
     help("compounds on and off signals");
     Input(isActive).imports("allSetpoints/growthLightActive[value]").help("Could light be on?").unit("y|n");
-    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]").help("Not used").unit("W/m2");
-    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]").unit("W/m2");
+    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]")
+            .help("Light is off below this threshold for outdoors light").unit("W/m2");
+    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]")
+            .help("Light is off above this threshold for outdoors light").unit("W/m2");
     Input(lightOutdoors).imports("outdoors[radiation]").unit("W/m2");
 }
 
 double GrowthLightController::computeSignal() {
-    return isActive && (lightOutdoors < lightThresholdHigh);
+    return isActive &&
+           (lightOutdoors > lightThresholdLow) &&
+           (lightOutdoors < lightThresholdHigh);
 }
 
 } //namespace

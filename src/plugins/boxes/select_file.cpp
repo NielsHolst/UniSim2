@@ -32,6 +32,8 @@ void SelectFile::amend() {
     dir.cd(folder);
     _files = dir.entryList(QStringList() << filter, QDir::Files);
     numFiles = _files.size();
+    if (numFiles == 0)
+        ThrowException("No files found").value(folder).value2(filter).context(this);
     reset(1);
 }
 
@@ -51,8 +53,6 @@ void SelectFile::reset() {
 
 void SelectFile::reset(int fileNumber) {
     int i = fileNumber - fileNumberOffset;
-    if (i > numFiles)
-        ThrowException("No files found").value(folder).value2(filter).context(this);
     fileName = _files.at(i);
     fileNamePath = folder + "/" + fileName;
 }

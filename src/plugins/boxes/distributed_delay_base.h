@@ -9,6 +9,7 @@ class DistributedDelayBase
 {
 public:
     DistributedDelayBase(QObject *parent);
+    virtual ~DistributedDelayBase();
     void scale(double factor);
     const QVector<double>& take(double proportion);
     void put(const QVector<double> &addition);

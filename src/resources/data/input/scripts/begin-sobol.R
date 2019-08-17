@@ -134,7 +134,10 @@ plot_against_sample_size = function() {
     data.frame(Effect=sum(m$Effect))
   }
 
-  combinations = expand.grid(ix_output=1:length(output_names()), N=sobol_N/10*(1:10))
+  power2 = log2(sobol_N)
+  from2 = max(power2-3,3)
+  breaks = 2^(from2:power2)
+  combinations = expand.grid(ix_output=1:length(output_names()), N=breaks)
   M = adply(combinations, 1, f)[,-1]
 
   Msum = ddply(M, .(Output, Measure, N), g)
@@ -148,7 +151,9 @@ plot_against_sample_size = function() {
   M$Input = reorder_levels(M$Input, effect_ordering)
 
   ggplot(M, aes(x=N, y=Effect, colour=Measure)) +
-    geom_line(size=1) +
+    geom_line() +
+    geom_point() +
+    scale_x_continuous(trans="log2") +
     ylim(-0.05,NA) +
     geom_hline(yintercept=0, colour="grey") +
     geom_hline(yintercept=1, colour="grey", size=1) +
@@ -165,19 +170,21 @@ plot_effects = function(stats) {
   dodge = position_dodge(width = 0.9)
   ggplot(stats, aes(x=Input, y=EffectMean, fill=Measure)) +
     geom_bar(alpha=0.3, stat="identity", position=dodge) +
-    geom_hline(yintercept=0:1, colour="grey", size=1) +  
+    geom_hline(yintercept=0, colour="grey", size=1) +  
     geom_errorbar(aes(ymin=LowerPercentile, ymax=HigherPercentile, colour=Measure), 
                   size=2, width=0,
                   position=dodge) +
     scale_fill_manual(values=colour_effects) +
     scale_colour_manual(values=colour_effects) +
     guides(colour = guide_legend(reverse=T), fill = guide_legend(reverse=T)) +
-    scale_y_continuous("Effect", breaks=(0:8)/4) +
+    scale_y_continuous("Sobol' index") + #, breaks=(0:8)/4) +
     theme_classic() +
     theme(
       axis.ticks.y = element_blank(),
       axis.line.y = element_blank(),
-      axis.text.y = element_text(size=12)
+      axis.text.y = element_text(size=12),
+      legend.position = "bottom",
+      legend.title = element_blank()
     ) +
     labs(x="", title=paste("Sensitivity of", unique(stats$Output))) +
     coord_flip() 

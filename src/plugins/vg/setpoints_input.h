@@ -23,8 +23,7 @@ private:
         ventilationTemperatureMargin, ventilationTemperatureRhMargin,
         rhMax, rhMaxBand,
         co2Capacity, co2Setpoint, co2VentilationThreshold, co2VentilationBand,
-        dawnThreshold, duskThreshold,
-        daylightThresholdMorning, daylightThresholdEvening;
+        dawnThreshold, duskThreshold;
     // Outputs
     double ventilationTemperatureAtLowRh, ventilationTemperatureAtHighRh,
         heatingTemperatureAtHighRh;

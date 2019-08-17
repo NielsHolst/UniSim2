@@ -24,10 +24,9 @@ void Yield::reset() {
 }
 
 void Yield::update() {
-    const double &GS(cropGrowthStage); // Create a shorthand name
+    const double &GS(cropGrowthStage); // create a shorthand name
     double Ei;
     if (aphidIndex > 0) {
-        //index of damage per aphid unit day depending on wheat growth stage by Entwistle & Dixon 1987
         if (GS<53)
             Ei = 0.075;
         else if (GS<69)
@@ -40,7 +39,7 @@ void Yield::update() {
             Ei = 0.037;
         else
             Ei = 0.012;
-        // daily yield lossdue to aphids
+        // daily yield loss due to aphids
         lossRate = aphidIndex*Ei/100.;
         // accumulated yield
         yield *= (1. - lossRate);

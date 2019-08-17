@@ -11,17 +11,17 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimates biocontrol effects");
-    Input(aphidDaysUncontrolled).help("Pest pressure when uncontrolled").unit("aphid-days");
-    Input(aphidDaysControlled).help("Pest pressure when controlled").unit("aphid-days");
-    Input(yieldUncontrolled).help("Relative yield when uncontrolled").unit("[0;1]");
-    Input(yieldControlled).help("Relative yield when controlled").unit("[0;1]");
-    Output(aphidDaysImprovement).help("Improvement in pest control").unit("aphid-days");
-    Output(yieldImprovement).help("Improvement in relative yield when controlled").unit("[0;1]");
+    Input(aphidPressureWithoutF).help("Aphid pressure without fungus").unit("aphid-days");
+    Input(aphidPressureWithF).help("Aphid pressure with fungus").unit("aphid-days");
+    Input(yieldWithoutF).help("Relative yield without fungus").unit("[0;1]");
+    Input(yieldWithF).help("Relative yield witt fungus").unit("[0;1]");
+    Output(aphidPressureDifference).help("Difference in aphid pressure caused by fungus").unit("aphid-days");
+    Output(yieldDifference).help("Improvement in relative yield when controlled").unit("[0;1]");
 }
 
 void Biocontrol::update() {
-    aphidDaysImprovement = aphidDaysUncontrolled - aphidDaysControlled;
-    yieldImprovement = yieldControlled - yieldUncontrolled;
+    aphidPressureDifference = aphidPressureWithoutF - aphidPressureWithF;
+    yieldDifference = yieldWithF - yieldWithoutF;
 }
 
 }

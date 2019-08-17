@@ -22,8 +22,6 @@ private:
     double slope, intercept, airTemperature, rh;
     // Output
     double temperature, emissivity;
-    // Data
-    int tick;
 };
 } //namespace
 

@@ -95,25 +95,6 @@ QByteArray DataGrid::keyToSubIndex(const QList<int> &keyColumns) const {
     return subIndex;
 }
 
-void DataGrid::createSubIndex(const QList<int> &keyColumns) {
-    Index *subIndex = new Index;
-    //subIndices[ keyToSubIndex(keyColumns) ] = subIndex;
-
-    QStringList keys;
-    int nrow = data.rows.size();
-    int nkey = keyColumns.size();
-    for (int row = 0; row < nrow; ++row) {
-        QStringList aRow = data.rows.value(row);
-        for (int k = 0; k < nkey; ++k) {
-            int col = keyColumns.value(k);
-            QString keyValue = aRow.value(col);
-            keys << keyValue;
-        }
-        (*subIndex)[joinKeys(keys)] = row;
-    }
-}
-
-
 QString DataGrid::cell(const QStringList &rowKeys, QString colKey) const {
     if (!data.columnIndex.contains(colKey)) {
         QString msg("No column with key value '%1' exists in file '%2'");

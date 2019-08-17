@@ -44,7 +44,6 @@ HEADERS +=  \
     random_binomial.h \
     random_lognormal.h \
     random_normal.h \
-#    random_poisson.h \
     random_uniform.h \
     random_uniform_int.h \
     records.h \
@@ -56,11 +55,6 @@ HEADERS +=  \
     sensitivity_analysis_sobol.h \
     sequence.h \
     simulation.h \
-#    sobol_sequence_binomial.h \
-#    sobol_sequence_lognormal.h \
-#    sobol_sequence_normal.h \
-#    sobol_sequence_uniform.h \
-#    sobol_sequence_uniform_int.h \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
@@ -100,11 +94,9 @@ SOURCES +=  \
     random_binomial.cpp \
     random_lognormal.cpp \
     random_normal.cpp \
-#    random_poisson.cpp \
     random_uniform.cpp \
     random_uniform_int.cpp \
     records.cpp \
-#    replicator.cpp \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \
@@ -113,11 +105,6 @@ SOURCES +=  \
     sensitivity_analysis_sobol.cpp \
     sequence.cpp \
     simulation.cpp \
-#    sobol_sequence_binomial.cpp \
-#    sobol_sequence_lognormal.cpp \
-#    sobol_sequence_normal.cpp \
-#    sobol_sequence_uniform.cpp \
-#    sobol_sequence_uniform_int.cpp \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \

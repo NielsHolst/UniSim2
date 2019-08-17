@@ -1,10 +1,16 @@
 #include "distributed_delay_base.h"
+#include <base/dialog.h>
 
 namespace boxes {
 
 DistributedDelayBase::DistributedDelayBase(QObject *parent_)
     : xSum(0), parent(parent_)
 {
+//    base::dialog().information("Create DistributedDelayBase");
+}
+
+DistributedDelayBase::~DistributedDelayBase() {
+//    base::dialog().information("Destruct DistributedDelayBase");
 }
 
 void DistributedDelayBase::scale(double factor) {

@@ -31,6 +31,46 @@ remove_endings = function(ids) {
   str_replace(s, "\\.value", "")
 }
 
+unique_col_names = function(col_names) {
+
+  f = function(x) {
+    n = nrow(x)
+    if (n>0) x[n,1] else NA
+  }
+  
+  g = function(x) {
+    if (is.na(x$LastDot)) {
+      name = col_names[x$Row]
+      suffix = NA
+    } else {
+      name = substring(col_names[x$Row], 1, x$LastDot-1)
+      suffix = substring(col_names[x$Row], x$LastDot+1)
+    }
+    data.frame(Name=name, Suffix=suffix)
+  }
+
+  h = function(x) {
+    data.frame(Count = sum(x$Name==M$Name))
+  }
+  
+  F = function(x) {
+    data.frame(
+      UniqueName = 
+        if (x$Count==1 | is.na(x$Suffix)) x$Name else paste(x$Name, x$Suffix, sep=".")
+    )
+  }
+  
+  locations = str_locate_all(col_names, "[.]")
+  M = ldply(locations, f)
+  colnames(M) = "LastDot"
+  M$Row = 1:nrow(M)
+  M = adply(M, 1, g)
+  M = adply(M, 1, h)
+  M = adply(M, 1, F)
+  changed = any(as.character(col_names) != as.character(M$UniqueName))
+  if (changed) unique_col_names(M$UniqueName) else M$UniqueName
+}
+
 read_output = function(file_path) {
 
   column_info = function(file_path) {

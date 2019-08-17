@@ -1,6 +1,10 @@
 // egg1.box
 Simulation sim {
-  .steps = 14
+  .iterations = 30000
+  .steps = 2
+  .silent = TRUE
+  Calendar calendar {
+  }
   Stage egg {
     .initial = 100 
     .duration = 7

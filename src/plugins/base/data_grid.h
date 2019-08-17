@@ -50,11 +50,9 @@ private:
         QStringList rowKeysInOrder, columnNamesInOrder;
         int numKeys;
     } data;
-    //QHash<QByteArray, Index*> subIndices;
 
     // methods
     QByteArray keyToSubIndex(const QList<int> &keyColumns) const;
-    void createSubIndex(const QList<int> &keyColumns);
     QString joinKeys(QStringList keys) const;
     void readData();
     void openFile();

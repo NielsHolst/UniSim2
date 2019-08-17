@@ -9,7 +9,7 @@
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += debug
-VERSION = 2.3.3
+VERSION = 2.3.4
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 
@@ -53,6 +53,9 @@ macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
 
 # Compiler options to speed up code
 QMAKE_CXXFLAGS += -ffast-math -O3
+
+# Compiler option that would have saved me some days' work
+QMAKE_CXXFLAGS += -Wdelete-non-virtual-dtor
 
 # Compiler flags for gcc / gdb version incompatibility
 # https://stackoverflow.com/questions/16611678/how-to-make-the-locals-and-expressions-debugging-window-operational-with-gcc-4

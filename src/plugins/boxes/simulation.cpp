@@ -9,6 +9,9 @@
 #include <base/track.h>
 #include "simulation.h"
 
+#include <QFile>
+#include <QTextStream>
+
 using namespace base;
 
 namespace boxes {
@@ -67,6 +70,15 @@ void Simulation::run() {
              (!useStopIterations && iteration<=iterations);                     // apply count only
               ++iteration)
         {
+            if (iteration == 1 || iteration > 13300) {
+                QFile file;
+                QTextStream stream;
+                environment().openOutputFile(file, "log");
+                stream.setDevice(&file);
+                stream << "iteration = " << iteration << "<n";
+                file.close();
+             }
+
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
             Track::resetAll();

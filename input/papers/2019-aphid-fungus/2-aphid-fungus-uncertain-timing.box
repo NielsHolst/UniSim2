@@ -1,5 +1,5 @@
 Simulation sim {
-  .iterations = 832 
+  .iterations = 30 
   .steps =  273 // end of september
   .silent = TRUE
   SelectFile weatherFiles {
@@ -15,12 +15,8 @@ Simulation sim {
     +fecundity_k = 1
   }
   Box random {
-    // RandomiserStratified randomiser {
-      // .doSensitivityAnalysis = FALSE
-    // }
-    RandomiserSobolSequence randomiser {
-      .doSensitivityAnalysis = TRUE
-      .bootstrapSize = 2000
+    RandomiserStratified randomiser {
+      .doSensitivityAnalysis = FALSE
     }
     RandomUniformInt fileNumber {
       .min = 1
@@ -350,36 +346,16 @@ Simulation sim {
   } // system
   
   Biocontrol biocontrol {
-    .aphidDaysUncontrolled = withoutFungus/diagnostics/aphidDays[value] 
-    .aphidDaysControlled = withFungus/diagnostics/aphidDays[value] 
-    .yieldUncontrolled = withoutFungus/diagnostics/yield[yield] 
-    .yieldControlled = withFungus/diagnostics/yield[yield] 
+    .aphidPressureWithoutF = withoutFungus/diagnostics/aphidDays[value] 
+    .aphidPressureWithF = withFungus/diagnostics/aphidDays[value] 
+    .yieldWithoutF = withoutFungus/diagnostics/yield[yield] 
+    .yieldWithF = withFungus/diagnostics/yield[yield] 
   }
    
   OutputR {
-    // .end = "end-example.R"
-    // PageR example {
-      // .xAxis = calendar[date] 
-      // PlotR {
-        // .ports = (system/*/density[total] cadavers[content] cropGrowthStage[value] yield[loss])
-      // }
-    // }
-
-    // .end = "end-uncertainty.R"
-    // PageR uncertainty {
-      // .xAxis = calendar[date] 
-      // PlotR {
-        // .ports = (system/*/density[total] cadavers[content] cropGrowthStage[value] yield[loss])
-      // }
-    // }
-
-    PageR sobolIndices {
-      .xAxis = random/*[value]
-      PlotR {
-        +cadaverDays = withFungus/diagnostics/cadaverDays[value]
-        .ports = (biocontrol[*]|end .[cadaverDays]|end) 
-        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
-      }
+    .end = "2-end.R"
+    OutputText uncertainty {
+      .ports = (calendar[date] cropGrowthStage[value] system/*/density[total] cadavers[content] )
     }
-  }  
+ }  
 }

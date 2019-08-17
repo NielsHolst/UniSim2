@@ -95,7 +95,7 @@ void OutputText::writeColumnFormats() {
     _stream << list.join("\t") << "\n";
 }
 
-inline isNumber(Track *track) {
+inline bool isNumber(Track *track) {
     QString format = track->port()->format();
     return format.isEmpty() || format=="NA";
 }

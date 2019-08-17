@@ -26,15 +26,16 @@ protected:
     double P;
     bool
         useFixed,
-        drawAtInitialize, drawAtUserInitialize,
-        drawAtReset, drawAtUserReset,
-        drawAtUpdate, drawAtUserUpdate;
+        drawAtInitialize,
+        drawAtReset,
+        drawAtUpdate;
     // Data
     base::RandomOrder *_order;
 private:
     RandomiserBase *_randomiser;
     bool _setNumStrata;
     // Methods
+    virtual void checkInputs() = 0;
     virtual void updateValue() = 0;
     void setNumStrata();
 };

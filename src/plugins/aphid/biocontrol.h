@@ -11,10 +11,10 @@ public:
     void update();
 private:
     // Inputs
-    double aphidDaysUncontrolled, aphidDaysControlled,
-        yieldUncontrolled, yieldControlled;
+    double aphidPressureWithoutF, aphidPressureWithF,
+        yieldWithoutF, yieldWithF;
     // Outputs
-    double aphidDaysImprovement, yieldImprovement;
+    double aphidPressureDifference, yieldDifference;
 };
 
 }

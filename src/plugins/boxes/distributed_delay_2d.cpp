@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <QMessageBox>
+#include <base/dialog.h>
 
 using namespace base;
 
@@ -24,17 +25,21 @@ void show(QString s, const QVector<double> &v) {
 
 DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, QObject *parent_, Policy policy_)
     : DistributedDelayBase(parent_), p(p_), policy(policy_)
-//! Create distributed delay from parameters
 {
+//    base::dialog().information("Create DistributedDelay2D");
     resize(p.k1, p.k2);
 }
 
 DistributedDelay2D::DistributedDelay2D(const DistributedDelay2D &dd)
     : DistributedDelayBase(dd.parent), p(dd.p), policy(dd.policy), s(dd.s)
-//! Create distributed delay as a copy of existing distributed delay
 {
+//    base::dialog().information("Copy DistributedDelay2D");
     x = dd.x;
     xSum = dd.xSum;
+}
+
+DistributedDelay2D::~DistributedDelay2D() {
+//    base::dialog().information("Destruct DistributedDelay2D");
 }
 
 void DistributedDelay2D::resize(int k1, int k2) {
