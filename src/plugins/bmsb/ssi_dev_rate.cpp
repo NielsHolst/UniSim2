@@ -1,3 +1,9 @@
+/* Copyright 2018-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Byju N. Govindan, University of Minnesota [ngbyju at umn.edu].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/publish.h>
 #include "ssi_dev_rate.h"
 
@@ -11,13 +17,13 @@ SSIDevRate::SSIDevRate(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimate the stage-specific daily developmental rate using SSI model; later replace daily rate to hourly rate");
-    Input(TPhi).equals(12).help("Development rate at the intrinsic optimum temperature TΦ (1/day) assuming no enzyme inactivation (days -1)");
-	Input(dailytempC).equals(12).help("Absolute temperature (K) (237.15° K = 0°C)");
+    Input(TPhi).equals(12).help("Development rate at the intrinsic optimum temperature TÎ¦ (1/day) assuming no enzyme inactivation (days -1)");
+	Input(dailytempC).equals(12).help("Absolute temperature (K) (237.15Â° K = 0Â°C)");
 	Input(rhoPhi).equals(12).help("Length of day (hours)");
 	Input(HA).equals(12).help("Enthalpy of activation of the reaction that is catalyzed by the enzyme (cal/mol)");
 	Input(HL).equals(12).help("Change in enthalpy associated with low-temperature inactivation of the enzyme (cal/mol)");
 	Input(HH).equals(12).help("Change in enthalpy associated with high-temperature inactivation of the enzyme (cal/mol)");
-	Input(TL).equals(12).help("Temperature at which the enzyme is ½ active and ½ low-temperature inactive (Kelvin)");
+	Input(TL).equals(12).help("Temperature at which the enzyme is Â½ active and Â½ low-temperature inactive (Kelvin)");
 	Input(TH).equals(12).help("Intrinsic optimum temperature at which the probability of enzyme being in the active state is maximal (K)");
 	Input(R).equals(1.987).help("Gas constant (1.987 cal/deg/mol)");
     Output(numerator);

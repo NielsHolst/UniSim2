@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef FUNCTIONAL_RESPONSE
 #define FUNCTIONAL_RESPONSE
 #include <base/box.h>
@@ -8,12 +12,13 @@ class FunctionalResponse : public base::Box
 {
 public: 
     FunctionalResponse(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // Inputs
-    double demand, attacker, resource, attackRate, timeStep;
+    double attacker, prey, attackRate, demandGross, timeStep;
     // Outputs
-    double searchRate, resourceAcquired, resourceMortality;
+    double supplyGross, propPreyAttacked, searchEfficacy, sdRatioGross;
 };
 
 } //namespace

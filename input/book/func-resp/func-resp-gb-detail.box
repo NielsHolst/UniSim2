@@ -1,0 +1,6 @@
+// func-resp-gb-detail.box
+Simulation {
+  OutputR {
+    .end = "func-resp-gb-detail-end.R"
+  }
+}

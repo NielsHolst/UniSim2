@@ -1,0 +1,73 @@
+\documentclass [a4paper, 11pt, openany]  {memoir}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section{Multiple predator-prey functional response}
+We will use the Gutierrez-Baumg{\"a}rtner functional response for one prey and one predator as a basis to derive a many prey-many predators functional response model. The predation outcome, or supply ($\Delta S$; kg prey), is calculated from current predator demand ($\Delta D$; kg prey), the search efficiency of the predator ($s$; kg predator per kg prey) and prey density ($X$; kg prey):
+
+\begin{equation}
+\Delta S = \Delta D \left[1-exp\left(\frac{-sX}{\Delta D}\right)\right].
+\end{equation}
+The demand is a product of the demand rate ($d$, kg prey per kg predator per h), predator density ($Y$; kg predator) and the time step ($\Delta t$; h):
+
+\[ \Delta D = dY\Delta t .\]
+The functional response (eq.1) forms a saturation curve defined by its initial slope ($s$) at low prey density and its saturation ($\Delta D$) at high prey density:
+
+\[  \Delta S \rightarrow sX\ \text{for}\ sX/\Delta D  \rightarrow 0 \]
+\[  \Delta S \rightarrow \Delta D\ \text{for}\ sX/\Delta D \rightarrow \infty .\]
+This means that at low prey density, the functional response (eq. 1) is equivalent to the Lotka-Volterra functional response which is linear at all prey densities.
+
+Logically, the search efficiency ($s$) should increase with the duration of the time step ($\Delta t$). Moreover, the inequality $s \leq 1$ should be obeyed since $\Delta S \rightarrow sX$ at low prey density; the predator cannot kill more than the present prey density. Hence we get
+
+\begin{equation}
+s = 1 - exp(-\alpha \Delta t),
+\end{equation}
+which has the limits
+\[  s \rightarrow \alpha\Delta t\ \text{for}\  \alpha\Delta t \rightarrow 0 \]
+\[  s \rightarrow 1\ \text{for}\  \alpha\Delta t \rightarrow \infty ,\]
+where $\alpha$ denotes the attack rate.
+
+To extend eq. 1 we consider multiple prey ($X_i$) attacked by multiple predators ($Y_j$) with demands $D_j$. The search rates are defined specifically for each predator-prey interaction in an interaction matrix with entries $s_{ij}$.
+
+First we define the total supply over all prey for the $j$'th predator ($\Delta S_{*j}$):
+
+\begin{equation}
+\Delta S_{*j} = \Delta D_j \left[1-exp\left(\frac{-\sum_i s_{ij} X_i}{\Delta D_j}\right)\right]
+\end{equation}
+\[ \Delta D_j = d_jY_j\Delta t ,\]
+which accumulates the predation process as $\sum_i s_{ij} X_i$, whereby the prey most easily attacked  by the predator (large $s_{ij}$) or having the largest density ($X_i$) will contribute most to the resulting supply ($\Delta S_{*j}$).
+
+Next the supply is split among the predator's prey in proportion to the $s_{ij} X_i$ term:
+
+\begin{equation}
+\Delta S_{ij} = \frac{s_{ij}X_i}{\sum_i s_{ij}X_i} \Delta S_{\ast j}.
+\end{equation}
+After having calculated the supplies for all predators according to eq. 3, the total kill of each prey($\Delta S_{i*}$) is found by summation across all predators:
+
+\begin{equation}
+\Delta S_{i*} = \sum_j \Delta S_{ij}
+\end{equation}
+
+We did not yet define the search efficiencies ($s_{ij}$) but return to that now, as we must make sure that the total predation on a prey does not exceed its density, i.e. the inequality $\Delta S_{i*} \leq X_i$ must hold. This we  ensure by forcing the sum of all search efficiences for each predator not to exceed 1, i.e. $s_{i*} \leq 1$, where
+
+\[ s_{i*} = \sum_j s_{ij} \]
+We define a first approximation of search efficiency ($\widetilde{s}_{ij}$) on par with eq. 2:
+
+\begin{equation}
+\widetilde{s}_{ij} = 1 - exp(-\alpha_{ij} Y_j \Delta t)
+\end{equation}
+\[ \widetilde{s}_{i*} = \sum_j \widetilde{s}_{ij} \]
+The search efficiencies ($s_{ij}$) are equal to $\widetilde{s}_{ij}$ if the sum pertaining to the prey ($\widetilde{s}_{i*}$) does not exceed one; otherwise the $\widetilde{s}_{ij}$ values are scaled down to yield $s_{i*} = 1$:
+
+\begin{equation}
+s_{ij}=\begin{cases}
+               \widetilde{s}_{ij}\ \text{for}\ \widetilde{s}_{i*} < 1\\
+               \widetilde{s}_{ij} / \widetilde{s}_{i*}\ \text{otherwise}
+            \end{cases}
+\end{equation}
+
+
+
+
+\end{document}

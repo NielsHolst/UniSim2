@@ -1,7 +1,8 @@
-/* Copyright (C) 2009-2016 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2016-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include "surface_water_degradation.h"
 #include <cmath>
@@ -22,7 +23,7 @@ SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent
     Input(inflow).equals(0.).help("Runoff from the field (g/ha)");
     Input(inflow2).equals(0.).help("Spray drift off-field edge (g/ha)");
     Input(DT50).equals(4.5).help("Biodegradation half-life (days)");
-    Input(Tw).imports("soilTemperature[value]").help("Actual water temperature (°C). Same as soil temperature");
+    Input(Tw).imports("soilTemperature[value]").help("Actual water temperature (Â°C). Same as soil temperature");
     Input(pondWidth).equals(1.).help("Width of the pond or channel (m)");
     Input(pondHeight).equals(1.).help("Height of the pond or channel (m)");
     Input(pondLength).equals(1.).help("Length of the pond or channel (m)");

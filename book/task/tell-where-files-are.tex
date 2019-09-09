@@ -1,0 +1,48 @@
+\US\ reads and writes files in folders relative to the \concept{work folder}. The location of files are defined in various standard folders according to their purpose. The standard folders for \US\ are called
+\begin{compactitem}
+\item work
+\item input
+\item output
+\item atom
+\item notepad
+\end{compactitem}
+
+You can get a list of the current folder settings at the \US\ prompt. Just type: \uscom{set folder}.
+
+\section{Work folder (\protect\ushome)}
+To see the current \US\ work folder, type the command: \uscom{set folder work}. By default the work folder is named \filename{UniversalSimulatorHome}. This folder is created inside your home folder the first time you run a new \US\ installation. At the same time it is filled with a selection of default files (such as those found in ths book) in the \filename{input} folder. 
+
+The location of your home folder is determined by the operating system. Typically, your \US\ work folder will be located in \filename{C:/Users/\textit{user-name}/UniversalSimulatorHome} on Windows, or in \filename{\mytilde/UniversalSimulatorHome} on Linux or OS X. In this book your \US\ work folder is denoted by the cup symbol (\ushome). 
+
+You can change the work folder by the command \uscom{set folder work \textit{my-folder-path}}. If you use a relative path (\ie\ a path begining with a single or double dot) then it will be relative to the folder where the \US\ executable file is located.
+
+The work folder is used as a basis for alle the other standard folders in \US. So, if for example, you set the input folder like this \uscom{set folder input input/savanna} and keep the default setting of the work folder, then \US\ will read box scripts from \filename{C:/Users/user-name/UniversalSimulatorHome/input/savanna} on Windows and from \filename{\mytilde/UniversalSimulatorHome/input/savanna} on Linux or OS X, all depending on the exact location of your home folder.
+
+You can use the \uscom{set folder work} command to base your \US\ files anywhere you like. To reset the work folder back to its default location in your home folder, type \uscom{set folder work HOME}.
+
+\section{Input and output folder}
+You can see the current location of the input and output folder, together with that of the other folders used by \US, by the command \uscom{set folder}. You can change the input and output folder individually by
+\begin{itemize}
+\item \uscom{set folder input \textit{my-folder-path}}
+\item \uscom{set folder output \textit{my-folder-path}}
+\end{itemize}
+
+If you set a relative path (\ie\ a path begining with a single or double dot), it will be relative to the work directory. For convenience, you can omit the single dot in a relative path. For instance, these two commands are equivalent: \uscom{set folder output ./course/output} and \uscom{set folder output course/output}.
+
+The input and output folders are set to \filename{input} and \filename{output} by default, which resolves to the paths \filename{\ushome/input} and \filename{\ushome/output}.
+
+You use the input folder to keep box scripts and their related input files, such as weather files. In the output folder you will find the output files produced by \US, including column-based text files (for easy import into R as data frames) and files with R code to read and display the output data (\iref{ch:view-model-output}).
+
+\section{Text editor folders}
+Two text editors can be especially customised to work with box script files. These are Atom (Linux, OS X and Windows) and \NPP\ (Windows only). To enable the customisation, you must tell \US\ in which folder Atom or \NPP\ (or both) were installed. To be precise, you must tell where the executable file of the text editor is located.
+
+\US\ will do its best to locate these folders automatically but otherwise you will have to locate and set them manually:
+\begin{itemize}
+\item \uscom{set folder atom \textit{my-atom-path}}
+\item \uscom{set folder notepad \textit{my-notepad++-path}}
+\end{itemize}
+Note that for \NPP, the command is \uscom{set folder notepad} and not \uscom{set folder \NPP}. 
+
+After setting the text editor folder, you should issue the \uscom{save grammar} command to include the box script language among the text editor's grammars.
+
+You can always check that the text editor folder has been set correctly by updating its \US\ grammar file. Type the command \uscom{save grammar}. If you do not get an error message, you have set the text editor folder(s) correctly. For more information on the grammar file, see \iref{ch:use-text-editor}.

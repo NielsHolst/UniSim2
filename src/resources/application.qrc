@@ -127,10 +127,6 @@
     <file>data/input/papers/2019-aphid-fungus/3-end.R</file>
     <file>data/input/papers/2019-aphid-fungus/4-aphid-fungus-sobol-indices.box</file>
     <file>data/input/papers/2019-aphid-fungus/4-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/S.Rdata</file>
-    <file>data/input/papers/2019-aphid-fungus/sim.Rdata</file>
-    <file>data/input/papers/2019-aphid-fungus/sobol-indices-no-sum.pdf</file>
-    <file>data/input/papers/2019-aphid-fungus/sobol-indices.pdf</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2004.txt</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2005.txt</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2006.txt</file>
@@ -341,6 +337,7 @@
     <file>data/input/projects/vg/input/DNK_Dry.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
     <file>data/input/projects/vg/input/sel_dk_missing_columns.txt</file>
+    <file>data/input/scripts/begin copy.R</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end.R</file>

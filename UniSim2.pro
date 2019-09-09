@@ -10,10 +10,10 @@ TEMPLATE = subdirs
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
-unisim.depends = aphid
+ SUBDIRS += aphid
+ aphid.subdir = src/plugins/aphid
+ aphid.depends = base
+ unisim.depends = aphid
 
 SUBDIRS += base
 base.subdir = src/plugins/base
@@ -24,10 +24,10 @@ boxes.subdir = src/plugins/boxes
 boxes.depends = base
 unisim.depends = boxes
 
-SUBDIRS += cmbp
-cmbp.subdir = src/plugins/cmbp
-cmbp.depends = base
-unisim.depends = cmbp
+ SUBDIRS += cmbp
+ cmbp.subdir = src/plugins/cmbp
+ cmbp.depends = base
+ unisim.depends = cmbp
 
 SUBDIRS += command
 command.subdir = src/plugins/command
@@ -38,11 +38,6 @@ SUBDIRS += demo
 demo.subdir = src/plugins/demo
 demo.depends = base
 unisim.depends = demo
-
-SUBDIRS += distribution
-distribution.subdir = src/plugins/distribution
-distribution.depends = base
-unisim.depends = distribution
 
 SUBDIRS += eq
 eq.subdir = src/plugins/eq
@@ -122,6 +117,11 @@ unisim.depends = vg
 #resist.subdir = src/plugins/resist
 #resist.depends = base
 #unisim.depends = resist
+
+SUBDIRS += rvf
+rvf.subdir = src/plugins/rvf
+rvf.depends = base
+unisim.depends = rvf
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

@@ -1,0 +1,61 @@
+
+We use the search rates $s_{ij}$ to calculate the total amount acquired by each attacker $-\Delta X_+$ in \cref{eq:supplymany}. For attacker $i$ we get the total acquisition from all resources ($j$):
+
+\begin{equation}
+-\Delta N_{i+} = \Delta D_i \left[1-exp\left(-\frac{\sum\limits_{j} s_{ij} N_{ij}}{\Delta D_i}\right)\right] \label{eq:websupplymany}
+\end{equation}
+
+\noindent In R, this is calculated as \code{mDX_pooled}, here shown together with the demands (\code{D}) for comparison:
+
+\begin{rscript}
+> round(mDX_pooled_with_D,3)
+     mDX   D
+Y1 2.487 3.0
+Y2 5.901 8.0
+Y3 0.772 0.8
+X1 0.000 0.0
+X2 0.000 0.0
+\end{rscript}
+\noindent If you compare the amounts acquired ($-\Delta N_{i+}) the population demands ($D_i$), you can check that $-\Delta N_{i+} < D_i$ holds for all $i$; \ie\ no attacker acquires resources above its demand.
+
+Next we calculate the approximate acquisitions rates, $-\widetilde{\Delta X}_j$ in \cref{eq:supplyapprox}, for each attacker ($i$): 
+
+\begin{equation}
+-\widetilde{\Delta N}_{ij} = \Delta D_i \left[1-exp\left(-\frac{s_{ij} N_{ij}}{\Delta D_i}\right)\right] \label{eq:websupplyapprox}
+\end{equation}
+
+\noindent This results in a matrix showing the first approximation of the amount acquired by each attacker. We add a column to show the total approximate acquisition by each attacker:
+\begin{rscript}
+> round(mDX_approx_with_sum, 3)
+   Y1 Y2 Y3    X1    X2   Sum
+Y1  0  0  0 1.616 1.888 3.504
+Y2  0  0  0 4.426 3.301 7.728
+Y3  0  0  0 0.217 0.762 0.979
+X1  0  0  0 0.000 0.000 0.000
+X2  0  0  0 0.000 0.000 0.000
+\end{rscript}
+\noindent We notice that from this we get a total acquisition for each attacker, that exceeds the proper pooled resource acquisition ($-\Delta N_{i+}$) above. 
+
+We hurry to fix this in the final and sixth step of the procedure, calculating $-\Delta X_j$ in \cref{eq:supplyprop} for all predators ($i$):
+
+\begin{equation}
+-\Delta N_{ij} = -\frac{\widetilde{\Delta N}_{ij}} {\sum\limits_{j} \widetilde{\Delta N}_j} \Delta N_{i+} \label{eq:websupplyprop}
+\end{equation}
+
+Here, the $5\times5 -\Delta N_{ij}$  matrix has been extended with sums, demands, and population densities:
+\begin{rscript}
+> round(mDX,3)
+    Y1 Y2 Y3     X1     X2   Sum   D
+Y1   0  0  0  1.147  1.340 2.487 3.0
+Y2   0  0  0  3.380  2.521 5.901 8.0
+Y3   0  0  0  0.171  0.601 0.772 0.8
+X1   0  0  0  0.000  0.000 0.000 0.0
+X2   0  0  0  0.000  0.000 0.000 0.0
+Sum  0  0  0  4.699  4.461    NA  NA
+N    5 10  2 15.000 20.000    NA  NA
+\end{rscript}
+
+\noindent We can now check the logic. Reading row by row, we can see that the total resource acquisition (\code{Sum} column) per attacker does not exceed the attacker demand (\code{D} column). And, reading column by column, that the total  acquisition (\code{Sum} row) per resource does not exceed the resource density (\code{N} row). In a simulation, the amount of resource acquired in each of the six $(Y1, Y2, Y3)\times (X1, X2))$ interactions would be subtracted from the resource populations and provided as supply to the attacker populations.
+
+\subsection {Implementation in \code{FoodWeb} class} 
+The total acquired resource for each predator can now be seen to match

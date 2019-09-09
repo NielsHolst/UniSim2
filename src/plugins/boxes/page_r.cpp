@@ -1,9 +1,14 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <QTextStream>
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/port_filter.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "layout_r.h"
 #include "page_r.h"
 #include "plot_r.h"
@@ -48,10 +53,12 @@ void PageR::initialize() {
     _popUp = outputR->port("popUp")->value<bool>();
     int numPages = outputR->findMany<Box>("./*<PageR>").size();
     bool keepPages = outputR->port("keepPages")->value<bool>();
+    bool showPages = (numPages>1 || keepPages);
+    bool dimChanged = (TestNum::ne(width, 7.) || TestNum::ne(height, 7.));
 
     // Raise pop-up anyway?
     if (!_popUp)
-        _popUp = !environment().isMac() && (numPages>1 || keepPages);
+        _popUp = !environment().isMac() && (showPages || dimChanged);
 
     // Find plots on this page
     _plots = findMany<PlotR>("./*<PlotR>");
@@ -72,7 +79,6 @@ QString PageR::dim(QString portName) {
     int value = port(portName)->value<int>();
     return (value == -1) ? QString("NULL") : QString::number(value);
 }
-
 
 QString PageR::toScript() {
     QString string;
@@ -100,7 +106,6 @@ QString PageR::toScript() {
           << "    ncol = " << dim("ncol") << "\n  )";
     }
     s << "\n}\n";
-    s << PlotR::variablesScript();
     return string;
 }
 

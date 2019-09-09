@@ -7,13 +7,14 @@ Simulation sim {
     .initialDateTime = 1/5/2009
   }
   Stage egg {
-    .timeStep = 1
     .initial = 100 
     .duration = 7
   }
   OutputR {
     PageR {
       .xAxis = calendar[date]
+      .width = 5
+      .height = 2.5
       PlotR {
         .ports = (egg[content] egg[outflowTotal])   
         .ncol = 2

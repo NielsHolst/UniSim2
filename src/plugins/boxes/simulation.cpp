@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -70,15 +74,6 @@ void Simulation::run() {
              (!useStopIterations && iteration<=iterations);                     // apply count only
               ++iteration)
         {
-            if (iteration == 1 || iteration > 13300) {
-                QFile file;
-                QTextStream stream;
-                environment().openOutputFile(file, "log");
-                stream.setDevice(&file);
-                stream << "iteration = " << iteration << "<n";
-                file.close();
-             }
-
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
             Track::resetAll();

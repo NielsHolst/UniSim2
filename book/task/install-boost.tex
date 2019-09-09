@@ -1,0 +1,26 @@
+The Boost library comprises a selection of highly usefull C++ classes and functions (\eg\ random number generators). Boost does not come as an installer but as one (huge) zip file.
+
+\section{Installation}
+Download the latest version as a zip file from \url{www.boost.org}. The file is version-numbered as \eg\ \filename{boost_1_55_0.zip}. Move the zip file to your \devhomefolderexplained\ folder where you unpack it and rename the resulting folder to \filename{boost} (see \iref{fig:unisim-versions}).
+
+Finally, check that a \filename{boost} sub-folder is found directly under \filename{\devhome/boost} \ie\ as \filename{\devhome/boost/boost} and not one level deeper as \eg\ \filename{\devhome/boost/boost_1_55_0/boost}. In the latter case, move the contents of the superflous \filename{boost_1_55_0} one level up and delete \filename{boost_1_55_0}.
+
+\section{Re-installation}
+There is no need to keep Boost updated with the latest version (it undergoes rather rapid development). However, to update Boost, just follow the procedure above and replace your \filename{boost} folder. 
+
+\section{Alternative location of Boost (Windows only)}
+On Windows you are free to put the Boost folder in another location; however, this necessitates setting a so-called \concept{environment variable} (\code{BOOST_ROOT}) to point to the location of the Boost folder.
+
+You follow these steps to set the \code{BOOST_ROOT} environment variable:
+\begin{enumerate}
+\item Right-click \gui{Computer} and click on \gui{Properties} in the pop-up menu.
+\item Click on the \gui{Advanced system settings} menu item.
+\item Click on the \gui{Environment Variables} button.
+\item In the \gui{User variables} section click on the \gui{New...} button.
+\item Enter the name of the variable, in this case enter \code{BOOST_ROOT}.
+\item Enter the value of the variable, in this case enter the path to the Boost folder, \eg\ \filename{C:/users/\textit{user-name}/boost_1_55_0}.
+\item Click OK button. In \iref{fig:set-system-path-1} you can see an example, where \code{BOOST_ROOT} has been set to \filename{C:/boost_1_55_0}.
+\item Re-start Qt Creator if you left it running while you set \code{BOOST_ROOT}
+\end{enumerate}
+
+If the \code{BOOST_ROOT} environment variable has been defined, it will be used by Qt Creator to locate the Boost library. If Qt Creator was open when you set the value of \code{BOOST_ROOT}, you must close and re-open Qt Creator for it to take effect. If \code{BOOST_ROOT} is not defined then Qt Creator will look for Boost in its default location at \filename{\devhome/boost}.

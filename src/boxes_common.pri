@@ -9,7 +9,7 @@
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += debug
-VERSION = 2.3.4
+VERSION = 2.3.5a
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 

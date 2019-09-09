@@ -1,0 +1,414 @@
+Simulation rvf {
+  .steps = 9125 // 18250 //9125 // 1825
+  Box param {
+    +k = 15
+    +larvaSurvival = 0.1
+    +pupaSurvival = 0.1
+    +mosquitoAttackRate = 0.05
+    +mosquitoDemandRate = 0.05  // Instead use life time demand for blood meals
+    +resistentHosts = 500.
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/1994
+  }
+  Records weather {
+    .fileName = "weather/weather_ngorongoro_narok.txt"
+    .cycle = TRUE
+  }
+  WaterLevel water {
+    .rainfall = weather[Rainfall]
+    .lossRate = 0.1
+  }
+  Box total {
+    +vectors|sum = aedes/*/adult[content] | culex/*/adult[content]
+    +hosts|sum   = sheep/*/lamb[content]  | sheep/*/adult[content] | param[resistentHosts]
+    +lamb|sum = sheep/*/lamb[content]
+    +adultSheep|sum = sheep/*/adult[content]
+  }
+  Box aedes {
+    +eggDuration = 50
+    +larvaDuration = 250
+    +pupaDuration = 98
+    +adultDuration = 40
+    +eggsPerBloodMeal = 20
+    +eggMaturationDuration = 50
+    DayDegrees time {
+      .T0 = 8
+      .T = weather[Temperature]
+    }
+    OnOff eggTime {
+      +step = .[value]
+      .xOn = 0.2
+      .xOff = 1e6 // no upper water level threshold
+      .x = water[level]
+      .valueOn = ../time[step]
+      .valueOff = 0
+    }
+    Box S {
+      SuperFunctionalResponse funcResp {
+        .attacker = ../adult[content]
+        .host = total[hosts]
+        .demandRate = param[mosquitoDemandRate]
+        .attackRate = param[mosquitoAttackRate]
+      }
+      MosquitoFecundity fecundity {
+        .numBloodMeals = ../funcResp[attacks]
+        .eggsPerBloodMeal = ../..[eggsPerBloodMeal]
+        // Add signal for water level response
+      }
+      TransmissionToVector transmission {
+        .infectiousHosts|sum   = sheep/I/lamb[content] | sheep/I/adult[content]
+        .allHosts              = total[hosts]
+        .propAttackersAttacked = ../funcResp[propAttackersAttacked]
+      }
+      Stage eggMaturation {  // How many maturing eggs can a female hold at maximum?
+        .inflow|sum = aedes/S/fecundity[uninfectedEggs] | aedes/I/fecundity[uninfectedEggs]
+        .duration = ../..[eggMaturationDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+      }
+      Stage egg {
+        .initial = 100
+        .inflow = ../eggMaturation[outflow]
+        .duration = ../..[eggDuration]
+        .k = param[k]
+        .timeStep = ../../eggTime[step]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = ../..[larvaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+        .growthFactor = param[larvaSurvival]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = ../..[pupaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+        .growthFactor = param[pupaSurvival]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .duration = ../..[adultDuration]
+        .k = param[k]
+        .timeStep = 1
+        .phaseOutflowProportion = ../transmission[proportion]
+      }
+    }
+    Box I {
+      SuperFunctionalResponse funcResp {
+        .attacker = ../adult[content]
+        .host = total[hosts]
+        .demandRate = param[mosquitoDemandRate]
+        .attackRate = param[mosquitoAttackRate]
+      }
+      MosquitoFecundity fecundity {
+        .numBloodMeals = ../funcResp[attacks]
+        .eggsPerBloodMeal = ../..[eggsPerBloodMeal]
+        .propInfectedEggs = 0.5 // transovarial transmission
+        // Add signal for water level response
+      }
+      Stage eggMaturation {  // How many maturing eggs can a female hold at maximum?
+        .inflow = aedes/I/fecundity[infectedEggs]
+        .duration = ../..[eggMaturationDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+      }
+      Stage egg {
+        .initial = 1
+        .inflow = ../eggMaturation[outflow]
+        .duration = ../..[eggDuration]
+        .k = param[k]
+        .timeStep = ../../eggTime[step]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = ../..[larvaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+        .growthFactor = param[larvaSurvival]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = ../..[pupaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+        .growthFactor = param[pupaSurvival]
+      }
+      Stage adult {
+        .inflow = ../pupa[outflow]
+        .duration = ../..[adultDuration]
+        .k = param[k]
+        .timeStep = 1
+        .phaseInflow = ../../S/adult[phaseOutflow]
+      }
+    }
+  }
+  Box culex {
+    +eggDuration = 50
+    +larvaDuration = 250
+    +pupaDuration = 98
+    +adultDuration = 50
+    +eggsPerBloodMeal = 20
+    +eggMaturationDuration = 50
+    DayDegrees time {
+      .T0 = 8
+      .T = weather[Temperature]
+    }
+    Box S {
+      SuperFunctionalResponse funcResp {
+        .attacker = ../adult[content]
+        .host = total[hosts]
+        .demandRate = param[mosquitoDemandRate]
+        .attackRate = param[mosquitoAttackRate]
+      }
+      MosquitoFecundity fecundity {
+        .numBloodMeals = ../funcResp[attacks]
+        .eggsPerBloodMeal = ../..[eggsPerBloodMeal]
+      }
+      TransmissionToVector transmission {
+        .infectiousHosts|sum   = sheep/I/lamb[content] | sheep/I/adult[content]
+        .allHosts              = total[hosts]
+        .propAttackersAttacked = ../funcResp[propAttackersAttacked]
+      }
+      Stage eggMaturation {  // How many maturing eggs can a female hold at maximum?
+        .inflow|sum = culex/*/fecundity[uninfectedEggs]
+        .duration = ../..[eggMaturationDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+      }
+      Stage egg {
+        .initial = 100
+        .inflow = ../eggMaturation[outflow]
+        .duration = ../..[eggDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+      }
+      Stage larva {
+        .inflow = ../egg[outflow]
+        .duration = ../..[larvaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+        .growthFactor = param[larvaSurvival]
+      }
+      Stage pupa {
+        .inflow = ../larva[outflow]
+        .duration = ../..[pupaDuration]
+        .k = param[k]
+        .timeStep = ../../time[step]
+      }
+      Stage adult {
+        .initial = 50
+        .inflow = ../pupa[outflow]
+        .duration = ../..[adultDuration]
+        .k = param[k]
+        .timeStep = 1
+        .phaseOutflowProportion = ../transmission[proportion]
+      }
+    }
+    Box I {
+      SuperFunctionalResponse funcResp {
+        .attacker = ../adult[content]
+        .host = total[hosts]
+        .demandRate = param[mosquitoDemandRate]
+        .attackRate = param[mosquitoAttackRate]
+      }
+      MosquitoFecundity fecundity {
+        .numBloodMeals = ../funcResp[attacks]
+        .eggsPerBloodMeal = ../..[eggsPerBloodMeal]
+      }
+      Stage adult {
+        .duration = ../..[adultDuration]
+        .k = param[k]
+        .timeStep = 1
+        .phaseInflow = ../../S/adult[phaseOutflow]
+      }
+    }
+  }
+  Box sheep {
+    +foetusDuration = 152
+    +lambDuration = 365
+    +adultDuration = 2010
+    LambSlaughter slaughter {
+      .maleMortality = 0.06
+    }
+    SheepFecundity fecundity {
+      .lambDensity = total[lamb]
+      .adultDensity = total[adultSheep]
+      .sexRatio = ../slaughter[sexRatio]
+      .birthRate = 3
+      .carryingCapacity = 200
+    }
+    Box S {
+      Stage lamb {
+        .initial = 30
+        .inflow = ../foetus[outflow]
+        .duration = sheep[lambDuration]
+        .k = param[k]
+        .phaseInflow = sheep/R/lamb[value]
+        .growthFactor = ../../slaughter[survival]
+        .phaseOutflowProportion = ./transmission[proportion] 
+        TransmissionToHost transmission {
+          .infectiousAttacks|sum = aedes/I/funcResp[attacks] | culex/I/funcResp[attacks]
+          .allAttacks|sum        = aedes/*/funcResp[attacks] | culex/*/funcResp[attacks]
+          .susceptibleHosts      = ..[content]
+          .allHosts              = total[hosts]
+        }
+      }
+      Stage adult {
+        .initial = 150
+        .inflow = ../lamb[outflow]
+        .duration = sheep[adultDuration]
+        .k = param[k]
+        .phaseInflow = sheep/R/adult[value]
+        .phaseOutflowProportion = ./transmission[proportion] 
+        TransmissionToHost transmission {
+          .infectiousAttacks|sum = aedes/I/funcResp[attacks] | culex/I/funcResp[attacks]
+          .allAttacks|sum        = aedes/*/funcResp[attacks] | culex/*/funcResp[attacks]
+          .susceptibleHosts      = ..[content]
+          .allHosts              = total[hosts]
+      }
+      }
+      Stage foetus {
+        .inflow = sheep/fecundity[value]
+        .duration = sheep[foetusDuration]
+        .k = param[k]
+        .phaseInflow = sheep/R/foetus[value]
+        .phaseOutflowProportion = ../adult/transmission[proportion] 
+      }
+    }
+    Box E {
+      +phaseDuration = 5
+      StageAndPhase lamb {
+        .duration = sheep[lambDuration]
+        .k = param[k]
+        .phaseInflow = sheep/S/lamb[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+      StageAndPhase adult {
+        .inflow = ../lamb[outflow]
+        .duration = sheep[adultDuration]
+        .k = param[k]
+        .phaseInflow = sheep/S/adult[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+      StageAndPhase foetus {
+        .duration = sheep[foetusDuration]
+        .k = param[k]
+        .phaseInflow = sheep/S/foetus[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+    }
+    Box I {
+      +phaseDuration = 5
+      StageAndPhase lamb {
+        .duration = sheep[lambDuration]
+        .k = param[k]
+        .phaseInflow = sheep/E/lamb[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+        }
+      StageAndPhase adult {
+        .inflow = ../lamb[outflow]
+        .duration = sheep[adultDuration]
+        .k = param[k]
+        .phaseInflow = sheep/E/adult[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+      StageAndPhase foetus {
+        .duration = sheep[foetusDuration]
+        .k = param[k]
+        .phaseInflow = sheep/E/foetus[phaseOutflow]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+    }
+    Box R {
+      VectorScaled lamb {
+        .vector = sheep/I/lamb[phaseOutflow]
+        .factor = 0.2
+      }
+      VectorScaled adult {
+        .vector = sheep/I/adult[phaseOutflow]
+        .factor = 0.5
+      }
+      VectorScaled foetus {
+        .vector = sheep/I/foetus[phaseOutflow]
+        .factor = 0.1
+      }
+    }
+  }
+  OutputR {
+    .skipSteps = 0
+    PageR aedes {
+      .title = "Aedes"
+      .xAxis = calendar[date]
+      .nrow = 2
+      PlotR {
+        .ports = aedes/S/*[content]
+        .ncol = 5
+      }
+      PlotR {
+        .ports = aedes/I/*[content]
+        .ncol = 5
+      }
+    }
+    // PageR culex {
+      // .title = "Culex"
+      // .xAxis = calendar[date]
+      // .nrow = 2
+      // PlotR {
+        // .ports = culex/S/*[content]
+        // .ncol = 5
+      // }
+      // PlotR {
+        // .ports = culex/I/*[content]
+        // .ncol = 5
+      // }
+    // }
+    // PageR sheep {
+      // .title = "Sheep"
+      // .xAxis = calendar[date]
+      // .nrow = 3
+      // PlotR {
+        // .ports = sheep/S/*[content]
+        // .ncol = 3
+      // }
+      // PlotR {
+        // .ports = sheep/E/*[content]
+        // .ncol = 3
+      // }
+      // PlotR {
+        // .ports = sheep/I/*[content]
+        // .ncol = 3
+      // }
+    // }
+    // PageR {
+      // .xAxis = calendar[date]
+      // .ncol = 2
+      // PlotR {
+        // .ports = (weather[Temperature] weather[Rainfall] water[level] eggTime[value])
+      // }
+      // PlotR {
+        // .ports = (total[*] sheep/fecundity[value])
+      // }
+    // }
+    // PageR {
+      // .xAxis = calendar[date]
+      // PlotR {
+        // .ports = (foraging[sdRatio] foraging[resourceMortality] infectiousAttacks[proportion] infectiousHosts[proportion])
+      // }
+    // }
+    // PageR {
+      // .xAxis = calendar[date]
+      // PlotR {
+        // .ports = demand[value]
+      // }
+    // }
+   }
+}

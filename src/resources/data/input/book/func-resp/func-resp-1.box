@@ -4,31 +4,36 @@ Simulation {
   .iterations = 3
   Sequence predator {
     .by = "reset"
-    .values = (0.5 1 20)
+    .values = (1 2 5)
   }
   Sequence prey {
     .by = "update"
     .min = 0
     .max = 100
   }
-  FunctionalResponse kill {
+  FunctionalResponse funcresp {
     .attacker = predator[value]
-    .resource = prey[value]
-    .demand = 10
+    .prey = prey[value]
+    .demandRate = 10
     .attackRate = 0.8
   }
   OutputR {
-    PageR {
-      .xAxis = prey[value]
-      .title = "Functional response at predator density = 0.5, 1 and 20"
-      PlotR {
-        .layout = "merged"
-        .ports = (kill[demand] kill[resourceAcquired])
-        .ggplot = "geom_line(size=1.1) + labs(x='Prey density', y='Prey killed')"
-      }
+    .end = "func-resp-1-end.R"
+    OutputText {
+      .ports = funcresp[*]
     }
+    // PageR {
+      // .xAxis = prey[value]
+      // .title = "Functional response at predator density = 0.5, 1 and 20"
+      // PlotR {
+        // .layout = "merged"
+        // .ports = (kill[demand] kill[preyAttacked])
+        // .ggplot = "geom_line(size=1.1) + labs(x='Prey density', y='Prey killed')"
+      // }
+    // }
+  // }
+  // OutputText { // Add output (not shown in plot)
+    // .ports = kill[searchRate]
+  // }
   }
-  OutputText { // Add output (not shown in plot)
-    .ports = kill[searchRate]
-  }
- }
+}

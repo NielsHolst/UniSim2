@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef OUTPUT_R_H
 #define OUTPUT_R_H
 #include <QFile>
@@ -28,6 +32,7 @@ private:
     bool popUp, keepPages, keepVariables;
     double width, height;
     QVector<QString> end;
+    int skipSteps;
 
     // Output
     int numPages;
@@ -44,6 +49,7 @@ private:
     void writeScript();
     void copyToClipboard();
     QString makeClipboardOutput();
+    QString toFigureListElement(PageR *page);
     QStringList endScripts();
 };
 

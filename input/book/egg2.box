@@ -8,6 +8,8 @@ Simulation sim {
   OutputR {
     PageR {
       .xAxis = sim[step]
+      .width = 5
+      .height = 2.5
       PlotR {
         .ports = (egg[content] egg[outflowTotal])
         .ncol = 2

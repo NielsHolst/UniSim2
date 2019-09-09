@@ -1,7 +1,8 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2016-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Antonio Agüera García [antonio.aguera at gmail.com].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #ifndef FUNCTIONAL_RESPONSE_G_B
 #define FUNCTIONAL_RESPONSE_G_B

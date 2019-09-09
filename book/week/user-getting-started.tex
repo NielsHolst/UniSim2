@@ -1,0 +1,49 @@
+\section{Installation}
+To get ready to run \US\ models, you will need to install
+\begin{itemize}
+\item \US\ (\iref{ch:install-us}) to run models
+\item R software (\iref{ch:install-r}) to see model output
+\item a text editor (\iref{ch:install-text-editor}) to edit models.
+\end{itemize}
+You can use \US\ and R on computers with any of these three operating systems: Linux, OS X (\eg\ Mac) or Windows. Use Atom as the text editor on Linux and OS X. Use \NPP\ (or Atom, if you prefer) on Windows.
+                                         
+\section{Running a model: the basics}
+First of all, launch all three applications:
+\begin{itemize}
+\item \US\
+\item R
+\item text editor (Atom or \NPP)
+\end{itemize}
+
+To run a model use the \uscom{run} command. Here are some examples:
+\lstset{numbers=left, escapechar=\%}
+\begin{usdialog}
+>run book/egg1.box
+>run book %\textcolor{black}\autofillkey%
+>run papers %\textcolor{black}\autofillkey%
+>run %\textcolor{black}\autofillkey% 
+\end{usdialog}
+\lstset{numbers=none}
+
+To run a model, you select a box script, \ie\ a file with a \filename{.box} suffix (\aka\ extension or file type). In line 1, the full path is typed directly. The box script in \filenameexplained{book/butterfly/egg.box} will then run immediately.
+
+In lines 2 and 3, only part of the file path is given, followed by the \autofillkey\ key combination. This brings up the familiar file browser, from which you can navigate to the file you want. Line 2 will bring you to the folder with all box scripts found in this book. Line 3 will bring you to the folder with all published models. Line 4 brings up the file panel in the folder from where you last ran (or loaded, see \iref{commands:load}) a box script.
+
+When \US\ runs, it fills the clipboard with code that will display the simulation output in R. After you have run the model, you shift to R where you paste the clipboard contents (using \pastekey). The output plots will then pop up in R.
+
+To edit the parameter settings of the model, type \uscom{edit} at the \US\ prompt. This will open the box script in your text editor. First time you will be asked, which program to user as a text editor. Choose either Atom (on OS X or Linux) or \NPP\ (on Windows). 
+
+\section{Running a published model}
+You can run several models, published since 1998, with \US. The earlier models pre-date \US\ but as they were based on the same design principles, they have been straightforward to upgrade to modern \US\ format. The process of making older models available for \US\ is ongoing. This list shows the models that will ultimately be available:
+
+\begin{enumerate}
+\item Meikle WG, Holst N, Scholz D, Markham RH (1998). A simulation model of \emph{Prostephanus truncatus} (Horn) (Coleoptera: Bostrichidae) in rural maize stores in the Republic of Benin. Environmental Entomology 27: 59-69.
+\item Meikle WG, Holst N, Markham RH (1999). Population simulation model of \emph{Sitophilus zeamais} (Coleoptera: Curculionidae) in grain stores in West Africa. Environmental Entomology 28: 836-844.
+\item Skovg\aa{}rd, H, Holst N Nielsen PS (1999). Simulation model of the Mediterranean flour moth (Lepidoptera: Pyralidae) in Danish flour mills. Environmental Entomology 28: 1060-1066
+\item Holst N, Meikle WG (2003). \emph{Teretrius nigrescens} against larger grain borer \emph{Prostephanus truncatus} in African maize stores: biological control at work? Journal of Applied Ecology 40: 307-319. 
+\item Ozturk I, Holst N, Ottosen C (2012). Simulation of leaf photosynthesis of C3 plants under fluctuating light and different temperatures. Acta Physiologiae Plantarum, DOI 10.1007/s11738-012-1033-8.
+\item Holst N, Lang A, L\"{o}vei G, Otto M (2013). Increased mortality is predicted of \emph{Inachis io} larvae caused by Bt-maize pollen in European farmland. Ecological Modelling 250: 126-133.
+\item Mweya CN, Holst N,  Mboera LEG, Kimera SI (2014). Simulation modelling of population dynamics of mosquito vectors for rift valley fever virus in a disease epidemic setting. PLOS ONE DOI: 10.1371/journal.pone.0108430.
+\end{enumerate}
+
+To find which published models are available, type \uscom{run papers} followed by \autofillkey\ at the \US\ prompt. A navigation pane will pop up with a folder for each model. Pick a folder. The folder holds box script files that are named according to the figures in the original publication.

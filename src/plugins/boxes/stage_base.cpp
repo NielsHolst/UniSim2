@@ -1,13 +1,11 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #include <iostream>
 #include <cmath>
 #include <QString>
 #include <QTextStream>
-#include <base/test_num.h>
 #include <base/exception.h>
 #include <base/test_num.h>
 #include "stage_base.h"
@@ -69,9 +67,11 @@ void StageBase::resetOutputsToZero() {
 }
 
 void StageBase::applyInstantMortality(double mortality) {
-    if (mortality < 0 || mortality > 1.)
-       ThrowException("Mortality must be in the range [0;1]").value(mortality).context(this);
     double survival = 1. - mortality;
+    TestNum::snapToZero(mortality);
+    TestNum::snapTo(mortality, 1.);
+    if (survival < 0 || survival > 1.)
+       ThrowException("Mortality must be in the range [0;1]").value(mortality).context(this);
     _ddBase->scale(survival);
 }
 

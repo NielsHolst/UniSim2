@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <QDir>
 #include <QMap>
 #include <QMapIterator>
@@ -32,6 +36,7 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
+    Input(skipSteps).help("Number of steps to skip in the output");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
@@ -48,6 +53,7 @@ void OutputR::amend() {
     // Create text output if not present
     if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
         Box *textOutput = MegaFactory::create<>("OutputText", "", this);
+        textOutput->port("skipInitialRows")->equals(skipSteps);
         textOutput->amend();
     }
 }
@@ -83,7 +89,30 @@ QString OutputR::toScript() {
         s += "  " + page->functionName() + "(df)\n";
     }
     s += "}\n";
+
+    s += "\nfigures <- function(df) {\n  Pages = list(";
+    bool first = true;
+    for (PageR *page : _pages) {
+        if (skipDefaultPage && page->objectName()=="default")
+            continue;
+        if (!first)
+            s += ", ";
+        first = false;
+        s += toFigureListElement(page);
+    }
+    s += ")\n}\n";
+
     return s;
+}
+
+QString OutputR::toFigureListElement(PageR *page) {
+    QString s = "Page = list(";
+    s += "Grob=" + page->functionName() + "(df), ";
+    s += "Width=" + QString::number(page->port("width")->value<double>()) + ", ";
+    s += "Height=" + QString::number(page->port("height")->value<double>());
+    s += ")";
+    return s;
+
 }
 
 void OutputR::addRCode(QString s) {
@@ -129,7 +158,6 @@ QString OutputR::makeClipboardOutput() {
     s += "source(\""+_filePathR+"\")\n";
     s += outputFileNameVariable + " = \"" + environment().outputFilePath(".txt") + "\"\n";
     if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
-//    s += "source(\"" + environment().inputFileNamePath(end) + "\")\n";
     s += endScripts().join("");
     return s;
 }

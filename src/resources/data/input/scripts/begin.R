@@ -26,12 +26,7 @@ open_plot_window = function(width, height) {
   }
 }
 
-remove_endings = function(ids) {
-  s = str_replace(ids, "\\.end", "")
-  str_replace(s, "\\.value", "")
-}
-
-unique_col_names = function(col_names) {
+unique_names = function(col_names) {
 
   f = function(x) {
     n = nrow(x)
@@ -46,7 +41,7 @@ unique_col_names = function(col_names) {
       name = substring(col_names[x$Row], 1, x$LastDot-1)
       suffix = substring(col_names[x$Row], x$LastDot+1)
     }
-    data.frame(Name=name, Suffix=suffix)
+    data.frame(Name=name, Suffix=as.character(suffix))
   }
 
   h = function(x) {
@@ -54,9 +49,11 @@ unique_col_names = function(col_names) {
   }
   
   F = function(x) {
+    do_shorten = is.na(x$Suffix) | 
+                 (x$Count==1 & x$Suffix %in% c("end", "value", "content"))  
     data.frame(
       UniqueName = 
-        if (x$Count==1 | is.na(x$Suffix)) x$Name else paste(x$Name, x$Suffix, sep=".")
+        if (do_shorten) x$Name else paste(x$Name, x$Suffix, sep=".")
     )
   }
   
@@ -65,10 +62,11 @@ unique_col_names = function(col_names) {
   colnames(M) = "LastDot"
   M$Row = 1:nrow(M)
   M = adply(M, 1, g)
+  
   M = adply(M, 1, h)
   M = adply(M, 1, F)
   changed = any(as.character(col_names) != as.character(M$UniqueName))
-  if (changed) unique_col_names(M$UniqueName) else M$UniqueName
+  if (changed) unique_names(M$UniqueName) else M$UniqueName
 }
 
 read_output = function(file_path) {
@@ -160,6 +158,7 @@ plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
   if (ytrans=="log10") M$Value = Log10(M$Value)
   hasIterations = has_iterations(M)
   onlyOneVariable = (length(cols) == 1)
+  levels(M$Variable)  = unique_names(levels(M$Variable))
 
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
   P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
@@ -169,7 +168,7 @@ plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
   }
   
   if (hasIterations) {
-    P + facet_grid(iter~Variable, scales="free_y") #, labeller = as_labeller(facet_labels))
+    P + facet_grid(iter~Variable, scales="free_y") 
   } else if (!onlyOneVariable) { 
     P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
   } else {
@@ -182,6 +181,7 @@ plot_merged_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
   if (ytrans=="log10") M$Value = Log10(M$Value)
   hasIterations = has_iterations(M)
   onlyOneVariable = (length(cols) == 1)
+  levels(M$Variable)  = unique_names(levels(M$Variable))
 
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
   P = ggplot(M, aes_string(x=id_x, y="Value", color=color))
@@ -211,6 +211,8 @@ plot_facetted_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow
   M = meltxy(df, id_x, id_iteration, cols)
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   hasIterations = has_iterations(M)
+  levels(M$Response)  = unique_names(levels(M$Response))
+
   color = if (hasIterations) "iter" else "Response"
   ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
     xlab("") + ylab("") +
@@ -223,6 +225,7 @@ plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) 
   hasIterations = has_iterations(M)
   onlyOneVariable = (length(cols) == 1)
   useIter = (hasIterations & onlyOneVariable) 
+  levels(M$Response)  = unique_names(levels(M$Response))
 
   color = if (useIter) "iter" else "Response"
   p = ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
@@ -232,10 +235,9 @@ plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) 
 }
 
 plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
-  print("plot_facetted_filtered")
   M = meltxy(df, id_x, NULL, cols)
-  levels(M$Response) = remove_endings(levels(M$Response))
-  levels(M$xVariable) = remove_endings(levels(M$xVariable))
+  levels(M$Response)  = unique_names(levels(M$Response))
+  levels(M$xVariable) = unique_names(levels(M$xVariable))
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
     xlab("") + ylab("") +
@@ -246,14 +248,15 @@ plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
 plot_merged_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
   M = meltxy(df, id_x, NULL, cols)
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
+  levels(M$Response)  = unique_names(levels(M$Response))
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
     xlab("") + ylab("") +
     facet_wrap(~xVariable, scales="free")
 }
 
 plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  print("plot_facetted")
-  if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  # if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
     plot_facetted_filtered(df, id_x, cols, ytrans, ncol, nrow) else
     if (length(id_x) == 1) 
       plot_facetted_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else
@@ -261,7 +264,8 @@ plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
 }
 
 plot_merged = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  # if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
     plot_merged_filtered(df, id_x, cols, ncol, nrow) else
     if (length(id_x) == 1) 
       plot_merged_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else

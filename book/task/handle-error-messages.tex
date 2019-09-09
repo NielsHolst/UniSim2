@@ -1,0 +1,42 @@
+If you are an experienced programmer, you will have a pragmatic, maybe even relaxed, attitude towards error messages. Error messages come from many sources, and when you become a model developer those sources proliferate. Soon enough, you will see error messages that you wrote yourself. 
+
+This chapter deals with the error messages that you will get at the \US\ prompt. Other scenes of frequent errors are Qt Creator (when programming in \CPP) and at the R prompt (when programming in R).
+
+\US\ error messages vary in extent. Some parts contain specific information:
+\begin{itemize}
+\item \codenobox{Error:} A diagnosis of the problem
+\item \codenobox{Value:} The offending value of some variable
+\item \codenobox{Source code:} The location in the \CPP\ source code at which the error occured
+\item \codenobox{Hint:} A suggestion how to solve the problem.
+\end{itemize}
+
+Here is an example on trying to load a non-existing box script:
+\begin{userror}
+> load x.box
+%\usinfo{construct...}%
+Load failed
+Error: Could not open file for reading
+Value: 'C:/data/qdev/UniSim2/input/x.box'
+Source code: ..\..\..\..\UniSim2\src\plugins\%\brk%base\box_reader_boxes.cpp, line 28
+\end{userror}
+
+From the initial status message, we can see that \US\ failed during the \code{construct} phase.. In this case the \code{Value} information gives you the full path to the problematic (non-existing) file. 
+
+The \code{Source code} information is only useful if you suspect that the error message is wrong (there shouldn't be any error) or misleading (you have no clue what the message means in the context). If the source code is your own then you can go back and check what is going on. Otherwise, if you have downloaded the \US\ source code, you can check that. 
+
+In this case, we must find the \filename{box_reader_boxes.cpp} found in the \filename{base} plugin. We are told that the error message emanates from its line 28. Here it is
+\lstset{numbers=left, firstnumber=24}
+\begin{cpp}
+void BoxReaderBoxes::openFile(QString filePath) {
+    _file.open(filePath.toStdString(), std::ios_base::in);
+    if (!_file) {
+        QString msg("Could not open file for reading");
+        ThrowException(msg).value(filePath);
+    }
+    // No white space skipping
+    _file.unsetf(std::ios::skipws);
+}
+\end{cpp}
+\lstset{numbers=none, firstnumber=1}
+
+This inspection of the source code should satisfy us that, indeed, the cause of the error was failure to open the specified file.

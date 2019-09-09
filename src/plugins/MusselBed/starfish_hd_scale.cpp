@@ -1,11 +1,12 @@
-/* Copyright (C) 2009-2012 by Niels Holst [niels.holst@agrsci.dk] and Antonio Aguera [antonio.aguera@gmail.com].
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2016-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Antonio Agüera García [antonio.aguera at gmail.com].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 
 /* ##STARFISH FEEDING HYDRODYNAMICS SCALING: this function scales starfish mussel biomass demand to the location Hydrodynamic Regime.
-** Function yielded from Antonio Agüera, et al. 2014
+** Function yielded from Antonio AgÃ¼era, et al. 2014
 */
 
 #include <base/publish.h>

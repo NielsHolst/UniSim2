@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <iostream>
 #include <cmath>
 #include <QMessageBox>
@@ -61,10 +65,7 @@ void StageAndPhase::update() {
         ThrowException(msg.arg(phaseInflow.size()).arg(k)).context( this);
     }
 
-    if (content < zeroLimit)
-        applyInstantMortality(1.);
-    else
-        applyInstantMortality(instantLossRate);
+    applyInstantMortality(instantLossRate);
 
     inflowSum = accum(inflow);
     inflowTotal += inflowSum;
@@ -105,6 +106,10 @@ void StageAndPhase::update() {
     if (_firstUpdate) {
         inflow[0] -= initial;
         _firstUpdate = false;
+    }
+    if (content>0. && content<zeroLimit) {
+        applyInstantMortality(1.);
+        content = _dd->content();
     }
 }
 

@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/environment.h>
 #include <base/path.h>
 #include <base/publish.h>
@@ -11,8 +15,8 @@ namespace boxes {
 
 PUBLISH(PlotR)
 
-const QString defaultGgplot = "geom_line(size=1.1)";
-QString PlotR::_variablesScript;
+//const QString defaultGgplot = "geom_line(size=1.1)";
+const QString defaultGgplot = "";
 
 PlotR::PlotR(QString name, QObject *parent)
     : OutputPorts(name, parent)
@@ -104,14 +108,7 @@ QString PlotR::toScript() {
     if (fontSize > 0)
         s << "+ggplot_theme(" << fontSize << ")";
     s << ",\n";
-
-    // Side effect: Build list
-    _variablesScript += "# X=" + xLabels.join(", ") + " Y=" + xLabels.join(", ") +"\n";
     return string;
-}
-
-QString PlotR::variablesScript() {
-    return _variablesScript;
 }
 
 QVector<Track*> PlotR::xAxisTracks() {
@@ -129,10 +126,12 @@ QString PlotR::dim(QString portName) {
 }
 
 void PlotR::appendGgplot(QTextStream &s) {
+    if (ggplot.isEmpty())
+        return;
     if (!ggplot.simplified().startsWith("+"))
         ggplot.prepend("+");
-    if (!ggplot.contains("geom_"))
-        ggplot.prepend("+" + defaultGgplot);
+//    if (!ggplot.contains("geom_"))
+//        ggplot.prepend("+" + defaultGgplot);
     if (!guideTitle.isEmpty())
         ggplot.prepend("+labs(colour=\"" + guideTitle + "\")");
     s << ggplot;

@@ -1,0 +1,38 @@
+To find out what the purpose of a class is and to get a complete list of its
+input and output ports, use the \code{help} command together with the class
+name, for instance, to see the impressive list of \code{Calendar} ports:
+\begin{usdialog}
+> help Calendar
+Calendar keeps check on date, time and %\brk%other sun-earth relations
+
+Input:
+.latitude        double    Latitude (degrees)
+.longitude       double    Longitiude (degrees)
+.timeZone        int       Time zone (h)
+.initialDateTime QDateTime %\brk%Date and time when calendar starts
+.timeStep        int       %\brk%Time step in units of timeUnit
+.timeUnit        char      %\brk%Unit of time step (y,d,h,m,s
+.sample          int       %\brk%The frequency at which output is sampled
+
+Output:
+.date            QDate     Current date
+.time            QTime     %\brk%Current time of the day
+.trueSolarTime   QTime     %\brk%Current true solar time of the day
+.dateTime        QDateTime %\brk%Current date and time
+.timeStepSecs    double    %\brk%Time step duration (s)
+.timeStepDays    double    %\brk%Time step duration (d)
+.totalTimeSteps  int       %\brk%Total number of time steps since calendar%\brk%was reset
+.totalTime       int       %\brk%Total time since calendar was reset; in units%\brk%of timeUnit
+.totalDays       double    %\brk%Total time since calendar was reset (d)
+.dayOfYear       int       Julian day
+.dayLength       double    %\brk%Astronomic day length
+.sinb            double    %\brk%Sine of solar height over the horizon
+.azimuth         double    %\brk%The compass direction of the sun relative to%\brk%north [-180;180]
+.sunrise         QTime     %\brk%Time of sunrise
+.sunset          QTime     %\brk%Time of sunset
+.solarConstant   double    %\brk%The irradiation at the top of the atmosphere%\brk%(MJ/m^2/d)
+.angot           double    %\brk%The irradiation at Earth surface under optimal%\brk%atmospheric conditions (MJ/m^2/d)
+\end{usdialog}
+Note that class names (like all other names in \CPP, R and box scripts) are case-sensitive.
+
+For each port its name and type is given. Here we see \code{int}, \code{double}, \code{QDate} and \code{QDateTime}. The type of a port is defined in the \CPP\ code for the box class.

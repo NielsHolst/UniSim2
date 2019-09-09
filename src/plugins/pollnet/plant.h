@@ -1,3 +1,9 @@
+/* Copyright 2017-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Kayla Sale, University of Arizona [kayla.sale at email.arizona.edu].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 // Description: plant class--floral rewards a separate class?
 #ifndef PLANT_H
 #define PLANT_H

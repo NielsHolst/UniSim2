@@ -1,5 +1,4 @@
 sim = read_output(output_file_name)
-colnames(sim) = unique_col_names(colnames(sim))
 
 sim$iteration = factor(sim$iteration)
 sim$yieldLossWithoutF = 100*(1 - sim$yieldWithoutF)

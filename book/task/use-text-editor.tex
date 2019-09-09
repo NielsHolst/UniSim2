@@ -1,0 +1,10 @@
+You can use any text editor to edit box scripts. However, as described in \iref{ch:install-text-editor} you should install one of the text editors for which \US\ provides integration: Atom (for Linux, OS X and Windows) or \NPP\ (for Windows, recommended).
+
+The \US\ \rcom{save grammmar} command will update the grammar file of your installed text editor(s) (Atom, \NPP\ or both) (\iref{ch:install-text-editor}). The command will take the currently available plug-ins, with their defined box classes and ports, and use them as a basis to construct the grammar file. This means that, if you are developping your own plug-in, your names for box classes and ports will only get highligthed in the text editor after you have run the \rcom{save grammmar} command. 
+
+Note that, if the text editor was running while you issued the \rcom{save grammmar} command, you will need to close and re-open the text editor for the saved grammar to take effect.
+
+If any of the box objects in a box script creates ports dynamically (in the \code{amend} step, see \iref{ch:computations}), these ports will only appear in the grammar file if you first load the box script file and then save the grammar file.
+
+Blind ports, (\ie\ ports that you define in the box script with the plus (\code{+}) syntax will never be saved to the grammar file and, hence, cannot be highlighted in the text editor.
+

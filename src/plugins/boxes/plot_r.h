@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef PLOT_R_H
 #define PLOT_R_H
 #include <QTextStream>
@@ -19,15 +23,12 @@ public:
     void initialize();
     QString toString();
     QString toScript();
-    static QString variablesScript();
 private:
     // Inputs
     bool hide;
     QVector<QString> ports;
     QString layout, guideTitle, end, endCode, ggplot, transform;
     int ncol, nrow, iteration, fontSize;
-    // Data
-    static QString _variablesScript;
     // Methods
     QVector<base::Track*> xAxisTracks();
     QString dim(QString portName);

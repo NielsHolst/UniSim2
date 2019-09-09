@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef BASE_PORT_VALUE_OP_H
 #define BASE_PORT_VALUE_OP_H
 #include "port_type.h"

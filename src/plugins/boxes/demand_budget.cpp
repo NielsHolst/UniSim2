@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/exception.h>
 #include <base/publish.h>
 #include "demand_budget.h"
@@ -9,12 +13,12 @@ PUBLISH(DemandBudget)
 
 DemandBudget::DemandBudget(QString name, QObject *parent)
     : Box(name, parent) {
-    help("demand energy budget");
-    Input(netDemand).help("Net demand (growth, reproduction)");
-    Input(respirationDemand).help("Demand for respiration");
-    Input(egested).help("Egested or unused fraction of resource (prey) [0;1]");
-    Input(conversionCost).help("Cost of converting resource into consumer [0;1]");
-    Output(demand).help("Total demand of the whole energy budget");
+    help("computes gross demand from energy budget");
+    Input(demandNet).help("Net demand").unit("#prey");
+    Input(demandResp).help("Respiration demand").unit("#prey");
+    Input(egested).help("Egested or unused fraction of prey").unit("[0;1]");
+    Input(conversionCost).help("Cost of converting prey into consumer)").unit("[0;1]");
+    Output(demandGross).help("Gross demand including all expenditures").unit("#prey");
 }
 
 void DemandBudget::reset() {
@@ -22,7 +26,7 @@ void DemandBudget::reset() {
 }
 
 void DemandBudget::update() {
-    demand = (netDemand/(1. - conversionCost) + respirationDemand)/(1. - egested);
+    demandGross = (demandNet/(1. - conversionCost) + demandResp)/(1. - egested);
 }
 
 } //namespace

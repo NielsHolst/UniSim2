@@ -1,0 +1,680 @@
+\commandsection{clear}       
+Type \code{clear} to clear the \US\ command window. You can still browse the commands that you typed in earlier with the \upkey\ and  \downkey\ keys. You can also clear the windows with the <Ctrl>+L shortcut (this same shortcut works in R too).
+
+\commandsection{clip}
+The \code{run} command (\iref{commands:run}) will copy an R snippet into the clipboard which you are then supposed to paste at the R prompt. However, especially, if a run takes a long time, you may want to do other work while your script is running. Alas, when you at last return to the \US\ prompt to find that, indeed, now the run has finished, you also realise that you have used the clipboard for other purposes, and that R code snippet is gone.
+
+This is when you are saved by clip:
+\begin{usdialog}
+> clip
+Executable R script copied to clipboard
+>
+\end{usdialog}
+The \code{clip} command copies the R code snippet to the clipboard again. You can now proceed pasting the clipboard at the R prompt. If you also lost trace of which box script you ran, use the \code{what} command (\iref{commands:what}).
+
+\commandsection{edit}
+Typing \code{edit} will open the text editor with the box script that is currently loaded into \US. If the command does not work, it is likely because you forgot to associate the \filename{.box} suffix with the text editor. See in \iref{ch:install-text-editor} how to fix that.
+
+\commandsection{find}
+The \code{find} command is used together with the \code{go} command (\iref{commands:go}) to navigate the hierarchy of boxes and ports defined in a box script. \code{find} is always followed by a path expression. In \iref{ch:path-expressions} you can find many examples, how to use \code{find}.
+
+\commandsection{go}
+When you have loaded a box script, the \concept{current box} is set at the root (usually a \code{Simulation} box). With \code{go} you can change the current box:
+\begin{usdialog}
+> go butterfly/pupa
+\end{usdialog}
+You can use \code{go} together with the \code{find} (\iref{commands:find}) and \code{list} (\iref{commands:list}) commands to explore the hierachy of your model. 
+
+If you use \code{find} together with a relative path, \ie\ one that does not begin with a slash (\code{/}), then the current box sets the reference point. Thus the command
+\begin{usdialog}
+> find ./*
+\end{usdialog}
+will find all the boxes that are children of the current box.
+
+You can use any path expression (\iref{ch:path-expressions}) with \code{go}. Here you go to the box of class \code{OutputR}:
+\begin{usdialog}
+> go *<OutputR>
+\end{usdialog}
+
+When you use \code{go} the path must have exactly one match. If more than one class matches the path, you will get an error message. You can always check where you would go by using the \code{find} command first. The box you find with \code{find} is where you will go with \code{go}. For example:
+\begin{usdialog}
+> find io
+Box sim/io
+> go io
+Now at Box sim/io
+\end{usdialog}
+
+You will find plenty more examples in \iref{ch:path-expressions}.
+
+\commandsection{help}                            
+You use the \code{help} either on its own or followed by a box class name:
+\begin{usdialog}
+> help 
+clear                  -clears console window
+edit                   -opens box script in editor
+find <path expression%>% -finds objects matching path %\brk% expression
+:
+:
+write                  -writes box script
+> help Sequence
+Sequence produces a sequence of numbers in a [min,max]%\brk% range
+
+Input:
+.by        |update|The sequence value can either be %\brk% updated at 'reset' or 'update'
+.min       |     0|Minimum value in sequence
+.max       |     1|Maximum value in sequence
+
+Output:
+.counter   |      |Current counter in sequence
+.counterMax|      |Number of values in sequence
+.offset    |      |First value of counter, e.g. 0 or 1
+.value     |      |Current value in sequence 
+>
+\end{usdialog}
+If you just type \code{help}, you will get a list of all the commands available. With a class name (remember names are case-sensitive), you will get a short description of the class and its input and output ports. For the inputs you will get their default values. 
+
+If you want to see the port values for a specific object of a class, use the \code{list} command(\iref{commands:list});
+
+\commandsection{list} 
+The \code{list} command has much in common with the \code{find} command (\iref{commands:run}). Both take a path expression (\iref{ch:path-expressions}) as an argument but \code{list} in addition takes a range of one-letter options:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> find egg
+Stage /sim/butterfly/egg
+> list egg
+Stage egg
+  DayDegrees time
+> list egg ri
+Stage egg
+  .k = 30
+  .duration = 140
+  .growthFactor = 1
+  .instantLossRate = 0
+  .phaseInflow = ()
+  .timeStep = ./time[step]
+  .inflow = 0
+  .initial = 100
+  .phaseOutflowProportion = 0
+  DayDegrees time
+    .T0 = 5
+    .Topt = 100
+    .Tmax = 100
+    .T = weather[Tavg]
+    .timeStepDays = 1
+    .resetTotal = FALSE
+    .isTicking = TRUE
+>
+\end{usdialog}
+\lstset{numbers=none}
+
+In line 6 the path expression (\code{egg}) is followed by the options \code{r} and \code{i}, which cause \code{list} to show, recursively (\code{r}), all boxes inside \code{egg} and to include the input ports (\code{i}) as well. 
+
+These are the available options:
+\begin{description}
+\item[p] shows \textbf{p}orts
+\item[i] shows \textbf{i}nput ports only
+\item[o] shows \textbf{o}utput ports only
+\item[m] shows i\textbf{m}ported ports only
+\item[x] shows e\textbf{x}ported ports only
+\item[b] shows \textbf{b}oxes (default)
+\item[r] shows boxes \textbf{r}ecursively (default)
+\end{description}
+
+The default options are \code{br}, as exemplified in line 3 above. Just like \code{find}, the \code{list} command works together with \code{go} (\iref{commands:go}). To continue the example above:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go pupa
+Now at Stage /sim/butterfly/pupa
+> list . rm
+Stage pupa
+  .timeStep = ./time[step]
+  .inflow = ../larva[outflow]
+  DayDegrees time
+    .T = weather[Tavg]
+>
+\end{usdialog}
+\lstset{numbers=none}
+
+Here, we went to the \code{pupa} box (line 1) where we listed recursively all imported ports (line 3). 
+
+Input and output ports are listed with an initial dot (\code{.}) and tilde (\code{\mytilde}), respectively:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> list pupa/time p
+DayDegrees time
+  .T0 = 10
+  .Topt = 100
+  .Tmax = 100
+  .T = weather[Tavg]
+  .timeStepDays = 1
+  .resetTotal = FALSE
+  .isTicking = TRUE
+  %\mytilde step = 0 %
+  %\mytilde total = 0 %
+>
+\end{usdialog}
+\lstset{numbers=none}
+
+Exported ports are marked by \code{>{}>}:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> list weather x
+Records weather
+  %\mytilde Tavg = 10.4%
+    %\textcolor{blue}{>{}> /sim/butterfly/egg/time[T]}%
+    %\textcolor{blue}{>{}> /sim/butterfly/larva/time[T]}%
+    %\textcolor{blue}{>{}> /sim/butterfly/pupa/time[T]}%
+>
+\end{usdialog}
+\lstset{numbers=none}
+
+Here we asked for all ports exported from \code{weather}. Only its \code{Tavg} output port is exported; it is imported by three different \code{T} ports (lines 4-6).
+
+
+\commandsection{load}                            
+Box scripts contain recipes that tell \US\ how to construct models. They describe which boxes a model is composed of, how the boxes are connected, which values box inputs should take, and which outputs you want to see resulting from a simulation. Technically, box scripts are plain text files with a \filename{.box} suffix; your operating system may tell you that such a file is of 'box' type. 
+
+When you want to run a box script, the first step is to load the script. For ease of use, however, the \code{run} command (\iref{commands:run}) will always load the script first. Hence, you do not need to type \code{load} before \code{run}; \code{run} alone will do.
+
+Still, you may want to use the \code{load} command. For example, if you just want to check that the box script syntax is correct, or if you want to explore the model with the \code{find} (\iref{commands:find}), \code{go} (\iref{commands:go}) and \code{list} (\iref{commands:list}) commands. Anyway, it is all right to use the \code{run} command after the \code{load} command.
+
+\subsection{How do I load a box script?}
+You can only have one box script loaded at a time in \US. When you load a box script, any script already loaded is discarded. The \code{load} command can be used in three different ways, as explained below.
+
+\subsubsection{Spell out the name}
+
+To load a specific box script by name, type the path and file name after \code{load}. For example, type
+\begin{usdialog}
+> load book/butterfly1.box
+\end{usdialog}
+
+This will cause \US\ to load the file found in \filenameexplained{book/butterfly1.box}.
+
+\subsubsection{Load again}
+If you just type \code{load} on its own. \US\ will load the most recently loaded (or run) box script again:
+\begin{usdialog}
+> load 
+\end{usdialog}
+
+If you type \code{load} just after you started \US\ then the last loaded (or run) box script from your previous session with \US\ will be loaded. The name of this latest box script is shown on the screen when you start \US, well, except when you run \US\ for the very first time on the computer.
+
+\subsubsection{Load interactively}
+You can choose a file interactively by invoking the file browser with the \keyfont{<Ctrl>+<Space>} shortcut. This shortcut works similarly in many text editors to invoke a browser with fill-in options.
+
+If you use the shortcut in combination with \code{load}, as in
+\begin{usdialog}
+> load %\textcolor{black}{\keyfont{<Ctrl>+<Space>}}%
+\end{usdialog}
+\noindent then you will start out browsing in the same folder as your latest loaded (or run) box script.
+
+If you use the shortcut in combination with \code{load} and a folder path, as in
+\begin{usdialog}
+> load book %\textcolor{black}{\keyfont{<Ctrl>+<Space>}}%
+\end{usdialog}
+\noindent then you will start out browsing in the given folder (here \filename{\inputfolder/book}).
+
+\subsection{What happens during load?}
+A successful load looks this:
+
+\begin{usdialog}
+> load book/butterfly1.box
+Construct...
+Amend...
+16 boxes created
+> 
+\end{usdialog}
+
+\US\ reports the computation steps it runs through. Loading a box script entails two of these steps. In the \concept{Construct} step, all boxes declared in the box script are constructed as objects in computer memory. The code actually being carried out is the \CPP\ constructor for each object. In the \concept{Amend} step, the \code{amend} function (defined in \CPP) of each object is carried out. See \iref{ch:computations-us-computations} for an explanation of the construct, amend and following steps of box computation. Finally, the number of boxes created is reported.
+
+\subsection{Syntax errors in box script}
+The \filename{\inputfolder/book/syntax-error.box} script contains an error in line 3 where a surplus equal sign occurs:
+
+\lstset{numbers=left}
+\begin{boxscript}
+// syntax-error.box
+Simulation sim {
+  .steps == 180
+  Calendar calendar {
+    .initialDateTime = 1/5/2009
+  }
+:
+:
+}
+\end{boxscript}
+\lstset{numbers=none}
+
+When you load this script, you get a long error message. The informative parts are at the beginning and at the end:
+
+\lstset{numbers=left}
+\begin{userror}
+> load book/syntax-error.box
+%\usinfo{Construct...}%
+Error! Expecting "}" here: "180
+  Calendar calendar {
+    .initialDateTime = 1/5/2009
+  }
+:
+:
+"
+Parse failure
+%\usinfo{Amend...}%
+Load failed
+Error: Construction failed
+Source code: ..\..\..\..\UniSim2\src\plugins\%\brk%base\box_builder.cpp, line 200
+>
+\end{userror}
+\lstset{numbers=none}
+
+In line 3 of the error message you are told that a curly brace (\code{\}}) was expected. It says 'here' and then quotes the script from where the error occured to the very end of the script; hence the many lines in the error message. The closing apostrophe in the abbreviated output above occurs in line 9. The important information lies in where the quote starts. In this case, it starts at '180' (as seen in line 3 of the error message). If you check the box script, you will find that that is exactly where the extra equal sign occured. Your next step will be to fix this error, save the box script and then try loading it again.
+
+Syntax errors can be difficult to pinpoint. Always edit your box scripts a little at a time and keep a copy of the latest good version. Otherwise, it may get very laborious to find your way back to the code you had working just before.
+
+The final lines of the error message report from which line in the \US\ source code, the error was issued. This is useful only if you believe that your box script is correct, and that it is \US\ that is wrong in reporting the error.
+
+\subsection{Semantic errors in box script}
+Semantic errors may occur during loading or running a box script, \ie\ a script may load all right but not run.
+
+A common error during load occurs when you have used a class name that does not exist, \eg\ forgetting about capitalisation and writing \code{stage} in stead of \code{Stage} in the box script. This particular error shows like this
+
+\lstset{numbers=left}
+\begin{userror}
+> load book/wrong-class.box
+%\usinfo{Construct...}%
+Load failed
+Error: Unknown class
+Value: 'stage'
+Source code: ..\..\..\..\UniSim2\src\plugins\%\brk%base\mega_factory.cpp, line 81
+>
+\end{userror}
+\lstset{numbers=none}
+
+The error messages for semantic errors are quite short. Here you are told that the error is due to an unknown class (line 4) with the value 'stage' (line 5). Again, the source code reference is only useful if you want to check the origin of the error in the \US\ source code.
+
+\subsection{Where are the box scripts shown in this book?}
+First time you run \US\ after having installed (or re-installed it), it will automatically create a folder called \filename{UniversalSimulatorHome} inside your personal home folder, conventionally referred to by a tilde (\filename{\mytilde}). If you somehow lost the \filename{UniversalSimulatorHome} folder, you can always use the \code{reconfigure} command (\iref{commands:reconfigure}) to reestablish the folder.
+
+By default \filename{\mytilde/UniversalSimulatorHome} will be the user work folder (\ushome) and \filename{\mytilde/UniversalSimulatorHome/input} the input folder (\inputfolder), which is why you can load box scripts like this
+
+\begin{usdialog}
+> load book/butterfly1.box
+\end{usdialog}
+
+\noindent to open the file found in \filename{\mytilde/UniversalSimulatorHome/input/book/butterfly1.box}. See in \iref{commands:set-folder} how to manage folders.
+
+
+\subsection{Where do I put my own box scripts?}
+First of all, it is a good idea to keep all your box scripts neatly organized in a folder structure, together with the input files that your box scripts may rely on, such as weather and scenario files and R scripts (\iref{fig:layout-input-folder}). For this purpose, create sub-folders inside you input folder (\inputfolder), which by default resides in the \filename{\ushome/input} folder (see \iref{commands:set-folder}).
+
+\begin {figure} [ht]
+\centering
+\tikzstyle{every node}=[draw=black,anchor=west]
+\begin{tikzpicture}[%
+  grow via three points={one child at (0.5,-0.7) and
+  two children at (0.5,-0.7) and (0.5,-1.4)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+  \node {\ushome}
+   child {node {input (\inputfolder)}
+     child {node {\textcolor{red}{ant}}
+      child {node {\textcolor{red}{scenarios}}}
+     }
+     child [missing] {}
+     child {node {book}
+      child {node {scenarios}}
+     }
+     child [missing] {}
+     child {node {papers}}
+     child {node {\textcolor{red}{lion}}}
+     child {node {scripts}}
+   }
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child {node {output}}
+ ;
+\end{tikzpicture}
+\caption{A possible layout of your input folder (\inputfolder) located in \filename{\ushome/input}}. Folder names in red have been added to the default hierarchy of folders with names in black.
+\label{fig:layout-input-folder}
+\end{figure}
+
+In the example  (\iref{fig:layout-input-folder}), you have added the \filename{ant} and \filename{lion} folders to hold box scripts for two different modelling projects. Moreover, you have put a \filename{scenarios} sub-folder inside \filename{ant}. The reason, why you should put your folders inside the \inputfolder\ folder, is that \inputfolder\ holds the \filename{scripts} folder which contains default R scripts (\filename{begin.R} and \filename{end.R}) used by \code{OutputR} boxes.
+
+If you upgrade \US\ to a new version then the existing \ushome\ folder will be reconfigured (as described for the \code{reconfigure} command in \iref{commands:reconfigure}). In effect, the old \ushome\ folder will be backed up, including the folders you may have added. To re-establish your folders you must copy them from the backup to the new \ushome\ folder. Here (\iref{fig:layout-input-folder}) you would need to copy the \filename{ant} and \filename{lion} folders. If you find that you add many sub-folders to \filename{input}, you could ease the migration to new \US\ versions by collection them in one folder (\iref{fig:layout-input-folder-2})
+
+\begin {figure} [ht]
+\centering
+\tikzstyle{every node}=[draw=black,anchor=west]
+\begin{tikzpicture}[%
+  grow via three points={one child at (0.5,-0.7) and
+  two children at (0.5,-0.7) and (0.5,-1.4)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+  \node {\ushome}
+   child {node {input (\inputfolder)}
+     child {node {book}
+      child {node {scenarios}}
+     }
+     child [missing] {}
+     child {node {\textcolor{red}{mine}}
+       child {node {\textcolor{red}{ant}}
+        child {node {\textcolor{red}{scenarios}}}
+       }
+       child [missing] {}
+       child {node {\textcolor{red}{lion}}}
+     }
+     child [missing] {}
+     child [missing] {}
+     child [missing] {}
+     child {node {papers}}
+     child {node {scripts}}
+   }
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child {node {output}}
+ ;
+\end{tikzpicture}
+\caption{An alternative layout of your input folder (\inputfolder), where all new folders (in red) have been put inside one folder called \filename{mine}}.
+\label{fig:layout-input-folder-2}
+\end{figure}
+
+If you have downloaded the \US\ source code package, you can find a copy of the \inputfolder\ folder in the \devhomeexplained{input} folder. This is the original location of the input files packed into the \US\ installer file. To lessen the possible reasons for confusion, you will be better off not putting your own input files inside \filename{\devhome/input}.
+
+\commandsection{profile}         
+
+This is an experimental command. It will write a list of the time spent in all computation steps of all boxes during the latest simulation run:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> run
+:
+:
+> profile
+Profile information written to 'C:/data/QDev/UniSim2/%\brk%output/butterfly1_0012.txt'
+> 
+\end{usdialog}
+\lstset{numbers=none}
+
+There is yet no support to handle the output file. You must decipher it yourself using R or a spreadsheet.
+                
+\commandsection{quit}
+
+Type \code{quit} to close \US.
+                            
+\commandsection{reconfigure}
+
+Type \code{reconfigure} to re-establish the default contents of the user home folder (\ushome). The previous content of this folder will be backed up (given a running number and put next to \ushome\ in a sibling folder) before \ushome\ is re-established with its default contents, \ie\ what you would find there just after a fresh installation of \US. 
+
+In addition all folder paths, which you may have changed with \code{set folder} (\iref{commands:set-folder}) will be reset to their defaults.
+
+You may want to \code{reconfigure}, \eg\ if you have lost or corrupted the sample box scripts found in \filename{\ushome/input}.
+
+If you are accessing one of the files in you home folder while trying to reconfigure it, you will get an error message:
+\lstset{numbers=left}
+\begin{userror}
+> reconfigure
+Error: Cannot rename folder
+Value: 'C:/Users/au152367/UniversalSimulatorHome %->\brk% C:/Users/au152367/UniversalSimulatorHome_7'
+Hint: Close all programs then try again
+Source code: ..\..\..\..\UniSim2\src\plugins\base\%\brk%copy_folder.cpp, line 45
+>
+\end{userror}
+\lstset{numbers=none}
+If this happens then follow the hint given above (line 4): Close all programs (including \US) and try again.
+
+
+\commandsection{run}                             
+You can run the latest box script simply by typing
+\begin{usdialog}
+> run
+:
+:
+>
+\end{usdialog}
+Alternatively, you can provide the name of the box script too:
+\begin{usdialog}
+> run book/week01/egg.box
+:
+:
+>
+\end{usdialog}
+To bring up the interactive file picker, hit \keyfont{<Ctrl>+<Space>} after \code{run}:
+\begin{usdialog}
+> load %\textcolor{black}{\keyfont{<Ctrl>+<Space>}}%
+\end{usdialog}
+
+In any case, the run command will always, automatically invoke the \code{load} command (\iref{commands:load}) command before actually running the box script. Hence, whether you load a box script before you run it, or not, makes no difference.
+
+\subsection{The successful run}
+After the run command has been committed, there will be a pause while the simulation is running. Should it take more than two seconds, a progress bar will appear at the bottom of the screen. Finally, you will see output like this:
+\lstset{numbers=left}
+\begin{usdialog}
+> run book/egg1.box
+Construct...
+Amend...
+6 boxes created
+Initialize...
+Reset...
+Update...
+Cleanup...
+Debrief...
+Data frame written to 'C:/Users/au152367/%\brk%UniversalSimulatorHome/output/egg1_0002.txt'
+R script written to 'C:/Users/au152367/%\brk%UniversalSimulatorHome/output/egg1_0002.R'
+Executable R script copied to clipboard
+Finished after 72 msecs in step 14/14
+\end{usdialog}
+\lstset{numbers=none}
+
+The progress of the load step is reported in lines 2-4. The following lines 5-9, report the sequence of computation steps as they are carried out (initialize, reset, update, cleanup and debrief). The computation steps are explained in more detail in \iref{ch:computations}.
+
+Two files are written to the output folder:
+\begin{itemize}
+\item a text file with simulation data that can be read as a data frame in R (line 10) 
+\item an R script with code to show figures of said simulation data (line 11)
+\end{itemize}
+The files are given the same name as the box script file, except for a running number. In this case, the files are from the second run of the \filename{egg1.box} script file, as evident from the filename suffix \filename{_0002} (lines 10-11). 
+
+You are always free to clean up your output folder and get rid of obsolete files. You may also choose to change the location of the output folder (\iref{commands:set-folder}) for different projects.
+
+A third side effect of a run is also reported on screen (line 12). That's a snippet of R code copied to the clipboard. After the run has completed, you are supposed to switch to R and paste the clipboard into the R command window. Maybe you need to hit Enter to let it sink into R (on Windows this is necessary if you run R Studio but not so, if you run the classic R GUI). When the snippet of code is executed in R, the simulation output is plotted in the R output window. See \iref{ch:view-model-output} to learn how to change what is shown.
+
+\subsection{Where is the output?}
+\label{ch:where-is-the-output}
+You will find the output of all your previous runs in the output folder (\outputfolder, see \iref{commands:set-folder}). The output files bear the same name as the box script file, that was run to generate the them, with the addition of a running number. You should find two output files for every run that you have executed:
+\begin{itemize}
+\item a text file (with file name suffix \filename{.txt}) with column-based output data, separated by tab characters, one column for each port selected for output and $n+1$ rows, where $n$ is the number of simulation steps
+\item an R file (with file name suffix \filename{.R}) with a function to read the text file and functions to show each and all plots
+\end{itemize}
+The details of these files are described in \iref{ch:view-model-output}.
+
+
+\commandsectionlabel{set folder}{set-folder}
+
+With the \code{set folder} command you can set the three \US\ standard folders: user work folder (\ushome), input folder (\inputfolder) and output folder (\outputfolder).
+
+\subsection{Set the user work folder (\ushome)}
+\US\ works with files (\eg\ box scripts, input files and output files) inside the \concept{user work folder} (\ushome). You can find its current location with the \code{set folder work} command:
+
+\begin{usdialog}
+> set folder work
+absolute path 'C:/Users/nho/UniversalSimulatorHome'
+> 
+\end{usdialog}
+
+You can change the \ushome\ location by typing, in addition, a folder path. It is recommended that you type an absolute path, \ie\ one including the drive (if applicable on your computer) and root:
+
+\begin{usdialog}
+> set folder work c:/data/UniSim2
+absolute path 'c:/data/UniSim2'
+> 
+\end{usdialog}
+
+The special folder designation \code{HOME} leads you back to the standard user work folder:
+
+\begin{usdialog}
+> set folder work HOME
+absolute path 'C:/Users/nho/UniversalSimulatorHome'
+> 
+\end{usdialog}
+
+\subsection{Set the input folder (\inputfolder)}
+\US\ reads input files (\eg\ box scripts) from the \concept{input folder} (\inputfolder). You can find its current location with the \code{set folder input} command:
+
+\begin{usdialog}
+> set folder input
+relative path 'input' resolves to %\brk%'C:/Users/nho/UniversalSimulatorHome/input'
+> \end{usdialog}
+
+You can change the \inputfolder\ location by typing, in addition, a folder path. It is recommended that you type a relative path. For example, you may want to change the input folder to point directly to the folder, where the box scripts used in this book are found:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> set folder input 
+relative path 'input' resolves to %\brk%'C:/Users/nho/UniversalSimulatorHome/input'
+> load book/butterfly1.box
+Construct...
+Amend...
+16 boxes created
+> set folder input input/book
+relative path 'input/book' resolves to %\brk%'C:/Users/nho/UniversalSimulatorHome/input/book'
+> load butterfly1.box
+Construct...
+Amend...
+16 boxes created
+> 
+\end{usdialog}
+\lstset{numbers=none}
+
+Here, we first check the current location of the \inputfolder\ folder (line 1), before we load the \filename{butterfly1.box} script found in \filename{\inputfolder/book} (line 3). Then we change the \inputfolder\ folder to point to \filename{\ushome/input/book} (line 7) which allows us to load the \filename{butterfly1.box} script without having to specify the \filename{book} folder (line 9).
+
+Notice that the relative path that you specify for the input folder (line 7) is automatically appended to the absolute path of the \ushome\ folder (line 8).
+
+\subsection{Set the output folder (\outputfolder)}
+\US\ writes output files (\eg\ text files and R scripts resulting from a model run) to the \concept{output folder} (\outputfolder). You can find its current location with the \code{set folder output} command:
+
+\begin{usdialog}
+> set folder output
+relative path 'output' resolves to %\brk%'C:/Users/nho/UniversalSimulatorHome/output'
+> 
+\end{usdialog}
+
+You can change the \outputfolder\ location by typing, in addition, a folder path. It is recommended that you type a relative path:
+
+\begin{usdialog}
+> set folder output projects/butterfly
+relative path 'projects/butterfly' resolves to %\brk%'C:/Users/nho/UniversalSimulatorHome/projects/butterfly'
+  'C:/Users/nho/UniversalSimulatorHome/projects/butterfly' %\brk%will be created when needed
+\end{usdialog}
+
+As noted in the response following the command above, it is all right to specify a yet non-existing folder; if needed, it will be created first time output is written to it.
+
+\commandsectionlabel{set font}{set-font}
+Use \code{set font} to change the font family and size used in \US. You can query the current setting with the \code{set font} command:
+
+\begin{usdialog}
+> set font
+Font set to InputMonoCompressed Light 12pt
+>\end{usdialog}
+
+Change the font family by including the family name. Put it in apostrophes, if the font name contains spaces:
+
+\begin{usdialog}
+> set font "lucida console"
+Font set to lucida console 12pt %\brk%(was InputMonoCompressed Light 12pt)
+> 
+\end{usdialog}
+
+If you wonder about the fonts available, you can get a complete list by using \code{ALL} as the font name:
+
+\begin{usdialog}
+> set font ALL
+Agency FB
+Aharoni
+Algerian
+Andale Mono
+:
+:
+Wingdings
+Wingdings 2
+Wingdings 3
+> 
+\end{usdialog}
+
+To change font size, supply it as an integer number:
+
+\begin{usdialog}
+> set font 14
+Font set to lucida console 14pt (was lucida console 12pt)
+>
+\end{usdialog}
+
+Finally, you can change both at the same time by supplying the font name followed by the size:
+
+\begin{usdialog}
+> set font "Andale Mono" 11
+Font set to Andale Mono 11pt (was lucida console 14pt)
+> 
+\end{usdialog}
+
+To change the font size used by \code{PlotR} (maybe desperation brought you here to look for that information), set its \code{fontSize} input. You could have gotten this information by using the help command (\iref{commands:help}): \code{help PlotR}.
+
+\commandsection{what}
+If you want to be reminded what box script is currently loaded, just ask for it:
+\begin{usdialog}
+> what
+Current script is 'book/egg1.box'
+found in your work folder 'C:/Users/au152367/%\brk%UniversalSimulatorHome'
+>\end{usdialog}
+
+\commandsection{write}
+The \code{write} command will write the currently loaded model as a box script to \outputfolderexplained:
+
+\begin{usdialog}
+> load book/butterfly1.box
+Construct...
+Amend...
+16 boxes created
+> write
+Box script written to %\brk%'C:/Users/nho/UniversalSimulatorHome/output/%\brk%butterfly1_0014.box'
+>\end{usdialog}
+
+This at first does not seem very useful, as you can easily see your original box script by way of the \code{edit} command (\iref{commands:edit}).
+
+However, a box script does not tell you exactly what will be loaded into \US. First of all, you can only see the values of those ports that you mention in the script. You cannot see the full complement of ports defined for each box. For a box such as \code{Records}, the port are created dynamically. Second, some boxes may create additional boxes on their own. For instance, an \code{OutputR} box will always create a \code{TextOutput} box; and a \code{Maker} box can produce any number of additional boxes.
+
+The box script produced by the \code{write} command will contain all the ports and boxes actually present when you run script. Often you want to take a look right away at the generated script. For that you use the \code{write edit} command:
+
+\begin{usdialog}
+> write edit
+Box script written to %\brk%'C:/Users/nho/UniversalSimulatorHome/output/%\brk%butterfly1_0015.box'
+> 
+\end{usdialog}
+
+This will show you the generated script in the text editor immediately. In contrast to an ordinary box script, the output ports will be shown as well. They are marked by a tilde (\mytilde) and, furthermore, have been commented out to make clear that they are not part of a proper box script.
+
+\commandsectionlabel{Shortcuts}{short-cuts}
+
+A few keys have special meaning at the \US\ prompt. They are all meant to make it easier to use \US.
+
+\subsection{\keyfont{<Ctrl>+L}}
+This is a shortcut to clear the screen (\iref{commands:clear}).
+
+\subsection{\autofillkey}
+This shortcut is used after typing \code{load} (\iref{commands:load}) or \code{run} (\iref{commands:run}). It brings up a filer browser to let you choose the file interactively.
+
+\subsection{\upkey\ and \downkey}
+These keys let you browse and re-use past commands.
+
+\subsection{\esckey}
+This key takes you to the end of the dialog. Useful when your cursor have somehow gone lost, or when you want to abandon the command you are currently typing.

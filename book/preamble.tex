@@ -1,0 +1,199 @@
+%
+% Load packages
+%
+
+\usepackage{amsmath}
+\usepackage[export]{adjustbox}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{afterpage}
+\usepackage{xcolor}
+\usepackage{xcolor-solarized} % http://ethanschoonover.com/solarized
+\usepackage{fontawesome}
+% \usepackage{gensymb}
+\usepackage{graphicx}
+%\usepackage{helvet}
+%\usepackage{inconsolata}
+\usepackage{charter}
+\usepackage{keystroke}
+\usepackage{lmodern}
+\usepackage{natbib}
+\usepackage{paralist}
+\usepackage{placeins}
+\usepackage[T1]{fontenc}
+\usepackage{siunitx}
+\usepackage[normalem]{ulem}
+\usepackage{underscore}
+\usepackage{url}
+
+\usepackage{varioref}
+
+\usepackage{listings}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, shadows, arrows}
+\usetikzlibrary{trees}
+
+% Load after fonts
+\usepackage{microtype}
+
+% These should be the last two packages to be loaded:
+\usepackage {hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = {solarized-orange},
+    citecolor = {solarized-magenta}
+}
+\usepackage{cleveref}
+
+% Further setup instructions
+\crefname{equation}{equation}{equations}
+\crefname{subequation}{equation}{equations}
+\newtheorem{theorem}{Theorem}[section]
+% \numberwithin{equation}{section}
+
+
+
+\setlength\beforechapskip{-\baselineskip}
+
+%
+% Define commands
+%
+\newcommand{\front}[1]{\label{ch:#1}\input{front/#1}}
+\newcommand{\week}[1]{\label{ch:#1}\input{week/#1}}
+\newcommand{\task}[1]{\label{ch:#1}\input{task/#1}}
+\newcommand{\uschapter}[1]
+  {\chapter{#1}\label{us:#1}\input{reference/us/#1}}
+\newcommand{\xuschapter}[1]
+  {\chapter{#1}\label{us:#1}}
+\newcommand{\cppchapter}[1]
+  {\label{cpp:#1}\input{reference/cpp/#1}}
+\newcommand{\xchapter}[1]{\chapter{#1 (missing)}}
+
+\newcommand{\xtask}[1]{\label{ch:#1}To be written.}
+\newcommand{\xmyref}[1]{\label{ch:#1}To be written.}
+
+\newcommand{\iref}[1]{\textit{\autoref{#1}}}
+
+\newcommand{\mytilde}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}} 
+\newcommand{\US}{Universal Simulator}
+\newcommand{\USI}{Universal Simulator Installer}
+\newcommand{\USS}{Universal Simulator Support}
+\newcommand{\CPP}{\nolinebreak[4]{C\texttt{++}}}
+\newcommand{\NPP}{Note\nolinebreak[4]{pad\texttt{++}}}
+\newcommand{\GB}{Gutierrez-Baumg{\"a}rtner}
+\newcommand{\cf}{\textit{cf.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\eg}{\textit{e.g.,}} 
+\newcommand{\etc}{\textit{etc.}}
+\newcommand{\vs}{\textit{vs.}}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\aka}{\textit{aka}}
+\newcommand{\brk}{\newline \-\ \quad \(\hookrightarrow\)}
+\newcommand{\ushome}{\faHome}
+\newcommand{\inputfolder}{\faSignIn}
+\newcommand{\outputfolder}{\faSignOut}
+\newcommand{\devhome}{\faWrench}
+\newcommand{\xaxis}{$x$-axis}
+\newcommand{\yaxis}{$y$-axis}
+\newcommand{\matr}[1]{\mathbf{#1}} % matrix notation; use as $\matr{A}$
+
+
+\newcommand{\inputfolderexplained}{{\protect\inputfolder}\footnote{\protect\inputfolder\ is your \protect\US\ input folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\filenameexplained}[1]{{\protect\filename{\protect\inputfolder/#1}}\footnote{\protect\inputfolder\ is your \protect\US\ input folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\ushomeexplained}{{\protect\ushome}\footnote{\protect\ushome\ is the user work folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\devhomefolderexplained}{{\protect\devhome}\footnote{\protect\devhome\ is the developer's work folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\devhomeexplained}[1]{{\protect\filename{\protect\devhome/#1}}\footnote{\protect\devhome\ is the developer's work folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\outputfolderexplained}{\protect\outputfolder \footnote{\protect\outputfolder\ is your \protect\US\ output folder (see \protect\iref{commands:set-folder})}}
+
+\newcommand{\filename}[1]{\hbox{\texttt{#1}}}
+\newcommand{\codenobox}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\hbox{\texttt{#1}}}
+\newcommand{\concept}[1]{\textbf{#1}}
+\newcommand{\gui}[1]{\textbf{#1}}
+\newcommand{\litt}[1]{\uwave{#1}}
+\newcommand{\rcom}[1]{\texttt{#1}}
+\newcommand{\uscom}[1]{\texttt{#1}}
+
+\newcommand{\commandsection}[1]{\section{#1}\label{commands:#1}}
+\newcommand{\commandsectionlabel}[2]{\section{#1}\label{commands:#2}}
+
+
+% Keys
+\newcommand{\keyfont}[1]{\texttt{#1}}
+\newcommand{\autofillkey}{\keyfont{<Ctrl>+<Space>}}
+\newcommand{\downkey}{\keyfont{<Down>}}
+\newcommand{\pastekey}{\keyfont{<Ctrl>+V} or \keyfont{<Right-click>} menu}
+\newcommand{\upkey}{\keyfont{<Up>}}
+\newcommand{\esckey}{\keyfont{<Esc>}}
+\newcommand{\returnkey}{\keyfont{<Return>}}
+
+\newcommand{\todo}[1]{\uwave{#1}}
+\newcommand{\usinfo}[1]{\textcolor{blue}{#1}}
+
+  
+%
+% Define listings
+%
+
+\lstset{basicstyle=\ttfamily\small, 
+         tabsize=2, 
+         xleftmargin=17pt,
+         numberstyle=\sffamily\color{solarized-orange}\scriptsize,
+         escapeinside=\%\%
+        }
+
+\lstdefinelanguage{prompted}
+	{morecomment=[l]{>}
+	}
+
+\lstnewenvironment{boxscript}
+  {\lstset{escapeinside=\%\%}}
+  {}
+
+\lstnewenvironment{rscript}
+  {\lstset{escapeinside=\%\%}}
+  {}
+
+\lstnewenvironment{cpp}
+  {\lstset{escapeinside=\%\%}}
+  {}
+
+\lstnewenvironment{usoutput}{}{}
+
+\lstnewenvironment{textfile}{}{}
+
+\lstnewenvironment{usdialog}
+	{ \lstset{basicstyle=\ttfamily\small\color{blue},
+		      commentstyle=\ttfamily\small\color{black},
+		      language=prompted}
+	}
+	{}
+
+\lstnewenvironment{rdialog}
+	{ \lstset{basicstyle=\ttfamily\small\color{black},
+		      commentstyle=\ttfamily\small\color{blue},
+		      language=prompted,
+          escapeinside=\%\%}
+	}
+	{}
+
+ \lstnewenvironment{userror}
+	{ \lstset{basicstyle=\ttfamily\small\color{red},
+		      commentstyle=\ttfamily\small\color{black},
+		      language=prompted,
+          escapeinside=\%\%}
+	}
+	{}
+
+
+\lstnewenvironment{us}{}{}
+  
+\lstnewenvironment{uscmd}{}{}
+

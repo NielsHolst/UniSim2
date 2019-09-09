@@ -1,0 +1,17 @@
+The handling of dates and times (\ie\ the time of the day) often cause headaches in modelling and in programming in general. To begin with they are not an a decimal scale. Furthermore they have got quirks like leap years and, for time of the day, circularity. In addition, date and time can be written in a large number of formats according to the particular purpose, regional fashion and personal preference.
+
+In \US\ dates and times occur as values of input and output ports. A date-time port contains both a date and the time of day, while a date port and a time port contain either. In box scripts, there are three alternative date formats, which can be used interchangeably:
+\begin{itemize}
+\item \textit{day/month/year}
+\item \textit{year/month/day} 
+\item \textit{/month/day/year}
+\end{itemize}
+
+Note, how the American date format is marked by an initial slash (\eg\ \code{/7/4/1967}). In the other two date formats, the slashes may be replaced by periods (\eg\ \code{4.7.1967} or \code{1967.7.4}) or hyphens (\eg\ \code{4-7-1967} or \code{1967-7-4}). 
+
+The year cannot be abbreviated (\eg\ write \code{4/7/1967}, not \code{4/7/67}). You can write the year as a joker, as in \code{1/5/*}, which means 1 May in no particular year
+
+The time format is \textit{hour:minute:second}. The \textit{second} part is optional. Time \code{0:0:0} is at the beginning of the day while \code{24:0:0} is at the end of the day. In a date-time value, the date and the time value is separated by a blank. Like this: \code{4/7/1967 14:30}.
+
+When you connect ports, dates are only compatible with strings and with date-times (a date is simply the date part of a date-time value). Times are also compatible with strings and date-times and with numerical types too; a number is interpreted as hours.
+

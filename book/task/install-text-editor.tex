@@ -1,0 +1,30 @@
+You need a text editor to edit box scripts. Any text editor will do but if you want syntax-colouring of class names, port names and other common elements of box scripts, you should choose one of these two open-source text editors:
+\begin{itemize}
+\item Atom (for Linux and OS X)
+\item \NPP\ (for Windows)
+\end{itemize}
+Both editors can be used to edit R and \CPP\ files as well, which sometimes can be handy.
+
+\section{Install Atom}
+Visit \url{www.atom.io} and follow the instructions. On Windows, Atom is an alternative to \NPP\ but most Windows users will find it easier to work with \NPP.
+
+Next you should set up Atom as the default editor for box scripts. You can do this most easily by opening \US, loading a box script (\iref{commands:load}) and then type \code{edit} (\iref{commands:edit}) at the prompt. In the next pop-up window, click the grey triangle to select \gui{Open With}. Next pick \gui{Atom} from the list of applications. Finally push the \gui{Change All} button.
+
+Alternatively, use Finder to find one of the box scripts included with \US, for example, \filenameexplained{book/butterfly1.box}. Right-click it and  choose \gui{File|Get Info} on the pop-up menu. You will get the same pop-up window as just described and can follow the same procedure.
+
+With Atom set as the default box script editor, you can open a box script simply by double-clicking it in Finder. Moreover, you can open a file for editing from the \US\ through the \uscom{edit} command (\iref{commands:edit}).
+
+\section{Install \protect\NPP}
+Visit \url{www.notepad-plus-plus.org} and follow the instructions. \NPP\ only works on Windows.
+
+Next you should set up \NPP\ as the default editor for box scripts. You can do this most easily by opening \US, loading a box script (\iref{commands:load}) and then type \code{edit} (\iref{commands:edit}) at the prompt. On the pop-up menu, select \gui{Choose default program}. From here on it varies how many steps you need to go through, before you are presented with a choice that includes \NPP. On the next pop-up if \NPP\ is not among the \gui{Recommended Programs} then unfold the \gui{Other Programs} pane. If \NPP\ does not yet present itself hit the \gui{Browse} button. Find the \NPP\ application in one of the folders called \gui{Program Files}, \gui{Program Files (x86)} or the like. Before you finally hit the \gui{OK} button, remember to \gui{check} the box saying 'Always use the selected program'.
+
+Alternatively, use File Explorer to find one of the box scripts included with \US, for example, \filename{\inputfolder/book/butterfly1.box}. Right-click that file and select \gui{Open with} on the pop-up menu. You will now get the same pop-up window as just described and can follow the same procedure.
+
+With \NPP\ set as the default box script editor, you can open a box script simply by double-clicking it in File Explorer. Moreover, you can open a file for editing from the \US\ through the \uscom{edit} command (\iref{commands:edit}).
+
+
+\section{Updating text editor grammar} 
+Every time you launch \US, it will update a grammar file with the names of all classes and ports and other keywords that can be used in box scripts. This grammar file is what provides syntax-colouring of class names and port names and other elements in the text editor.
+
+When you start to code your own classes and ports in \CPP, these will be included in the grammar file too, next time you launch \US. It is always reassuring to see your own names for things colourfully highlighted in the text editor.

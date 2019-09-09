@@ -15,8 +15,10 @@ Simulation {
     .thresholdBand = 4
   }
   OutputR {
-    +dottedLine = "geom_line(size=1.1) + geom_point(size=3.5)"
+    +dottedLine = "geom_point(size=2)"
     PageR {
+      .width = 4
+      .height = 2.5
       .xAxis = dayLength[value]
       PlotR {
         .ports = fecundity[signal]
@@ -24,6 +26,8 @@ Simulation {
       }
     }
     PageR {
+      .width = 4
+      .height = 2.5
       .xAxis = dayLength[dayLength]
       PlotR {
         .ports = fecundity[eggsPerDay]

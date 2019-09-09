@@ -1,0 +1,59 @@
+\section{Who this book is for}
+
+This book is for students and users of \US. If you just want to run existing \US\ models, \iref{ch:user-getting-started} will get you started. To learn how to build your own models with the model building blocks available in \US, read on through the other chapters of \concept{Part I. User Manual}.
+
+Advanced users who want to develop new model building blocks (in \CPP) must study \concept{Part II. Developer Manual}. How to carry out various recurring tasks are explained in \concept{Part III. How to}. 
+
+\section{Conventions}
+
+\subsection{User work folder (\ushome)}
+When you install \US, a \concept{user work folder} will automatically be created. The user work folder comes with an input folder containing the input files needed to run the \US\ models found in literature, including those presented in this book. The user work folder is denoted by the \ushome\ symbol. To find its current location, type \uscom{set folder work} at the \US\ prompt. Find out more about the user work folder in \iref{commands:set-folder}.  
+
+\subsection{Input folder (\inputfolder)}
+All inputs (models, parameters, scripts, \etc) to \US\ are provided as text files. \US\ looks for input files in the \concept{input folder}. The input folder is denoted by the \inputfolder\ symbol and by default is found in \filename{\ushome/input}. To find its current location, type \uscom{set folder input} at the \US\ prompt. Find out more about the input folder in \iref{commands:set-folder}.  
+
+File paths often refer to the input folder, as in \filename{\inputfolder/book/butterfly1.box}. To load that file, type \uscom{load book/butterfly1.box} at the \US\ prompt; or simply type \uscom{load book} followed by \autofillkey\ to choose the file interactively. 
+
+\subsection{Output folder (\outputfolder)}
+The default location of the \concept{output} folder is beside the input folder, \ie\ \filename{\ushome/output}. The output folder is denoted by the \outputfolder\ symbol. To find its current location, type the command \uscom{set folder output}. For a start, however, you do not need to think about the output folder.  
+
+\subsection{Developer work folder (\devhome)}
+The \concept{developer work folder} is not part of the \US\ installation. If you choose to download the \US\ source code, the developer work folder is where you unzip the source code zip file. The developer work folder contains the \filename{src} sub-folder (among others) which holds the \CPP\ source code for \US\ and all its plug-in models. The developer work folder is denoted by the \devhome\ symbol.
+
+\subsection{Line breaks (\(\hookrightarrow\) and \code{:})}
+If lines are too long to be shown in a single line in the book, they are broken by an arrow (\(\hookrightarrow\)). For example:
+
+\begin{usdialog}
+> set font "lucida console"
+Font set to lucida console 12pt %\brk%(was InputMonoCompressed Light 12pt)
+> 
+\end{usdialog}
+
+Lines that have been left out are shown by one or more colons in the margin. For example:
+
+\begin{usdialog}
+> set font ALL
+Agency FB
+Aharoni
+Algerian
+Andale Mono
+:
+:
+Wingdings
+Wingdings 2
+Wingdings 3
+> 
+\end{usdialog}
+
+\section{Support}
+For questions on the use of \US\ or for reporting bugs, send an e-mail to \USS\ (niels.holst at agro.au.dk). With any request, remember always to include the files (box script, R code, \CPP\ code, other input files) necessary to reproduce the problem. If the problem involves your own plug-in, zip and include the \CPP\ source code folder holding your project. You'll find it in \filename{\devhome/src/plugins/\em{your-plugin}}.
+
+\section{Printing the book}
+You are welcome to print the book but beware that its contents are bound for frequent updates. 
+
+\section{Suggestions}
+Suggestions how to improve \US\ are always welcome! Just send an e-mail to  \USS\ (niels.holst at agro.au.dk).
+
+
+\section{Copyrights}
+This book is made available under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (\url{https://creativecommons.org/licenses/by-nc-sa/4.0/}).

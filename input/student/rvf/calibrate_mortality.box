@@ -1,0 +1,29 @@
+Simulation calibration {
+  .steps = 20
+  Box param {
+    +k =  15
+  }
+  Box sheep {
+    +foetusDuration = 152
+    +lambDuration = 365
+    +adultDuration = 2010
+    Box E {
+      +phaseDuration = 5
+      StageAndPhase lamb {
+        .initial = 100
+        .duration = sheep[lambDuration]
+        .k = param[k]
+        .phaseDuration = ..[phaseDuration]
+        .phaseK = param[k]
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (lamb[outflowTotal] lamb[phaseOutflowTotal])
+      }
+    }
+  }
+}
+  

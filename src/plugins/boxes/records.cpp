@@ -1,3 +1,7 @@
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <iostream>
 #include <QtAlgorithms>
 #include <QDir>
@@ -243,7 +247,7 @@ void Records::advanceLine() {
     readLineItems();
 
     if (_pastLastLine) {
-        _extraYearOffset = 1;
+        _extraYearOffset = lastDateTime.date().year() -  firstDateTime.date().year() + 1;
         if (cycle) {
             _file.close();
             openFile();
@@ -256,9 +260,9 @@ void Records::advanceLine() {
         }
     }
     else {
-        if (_extraYearOffset == 1) {
+        if (_extraYearOffset > 0) {
+            _yearOffset += _extraYearOffset;
             _extraYearOffset = 0;
-            ++_yearOffset;
         }
         extractValues();
     }

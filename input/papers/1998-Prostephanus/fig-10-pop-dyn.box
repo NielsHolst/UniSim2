@@ -1,6 +1,6 @@
 Simulation sim {
   .steps = 250
-  .iterations = 3
+  // .iterations = 3
   
   Scenarios scenarios {
     .fileName = "scenarios.txt"

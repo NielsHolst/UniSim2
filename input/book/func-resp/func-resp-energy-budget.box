@@ -1,0 +1,51 @@
+// func-resp-energy-budget.box
+Simulation {
+  .steps = 100
+  .iterations = 3
+  Sequence predator {
+    .by = "reset"
+    .values = (1 2 5)
+  }
+  Sequence demand {
+    .by = "reset"
+    .values = (10 20 50)
+  }
+  Sequence respiration {
+    .by = "reset"
+    .values = (1 2 5)
+  }
+  Sequence prey {
+    .by = "update"
+    .min = 0
+    .max = 100
+  }
+  Box param {
+    +conversionCost = 0.15
+    +egested = 0.2
+  }
+  DemandBudget demandBudget {
+    .demandNet = demand[value]
+    .demandResp = respiration[value]
+    .conversionCost = param[conversionCost]
+    .egested = param[egested]
+  }
+  FunctionalResponse funcResp {
+    .attacker = predator[value]
+    .prey = prey[value]
+    .demandGross = demandBudget[demandGross]
+    .attackRate = 0.8
+  }
+  SupplyBudget supplyBudget {
+    .supplyGross = funcResp[supplyGross]
+    .demandNet = demand[value]
+    .demandResp = respiration[value]
+    .conversionCost = param[conversionCost]
+    .egested = param[egested]
+  }
+  OutputR {
+    .end = "func-resp-energy-budget-end.R"
+    OutputText {
+      .ports = (funcResp[attacker] funcResp[prey] funcResp[demandGross] supplyBudget[*])
+    }
+  }
+}

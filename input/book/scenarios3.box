@@ -45,8 +45,8 @@ Simulation sim {
     }
   }
   OutputR {
-    .end = "scenarios/end-analysis.R" //!
-    OutputText { //!
+    .end = "scenarios/end-analysis.R"
+    OutputText { 
       .ports = (calendar[date] adult[outflowTotal])
     }
   }

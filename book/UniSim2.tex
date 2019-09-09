@@ -1,0 +1,97 @@
+\documentclass [a4paper, 11pt, openany]  {memoir}
+\input{preamble}
+\begin{document}
+\midsloppy
+\pagestyle{ruled}
+\frontmatter
+\include{title}
+\include{contents}
+\chapter{Preface}
+\front{preface}
+\mainmatter
+
+% === USER ===
+\part{User Manual}
+
+\chapter{Getting started}
+\week{user-getting-started}
+
+\chapter{Your first model}
+\week{your-first-model}
+
+\chapter{Basic population dynamics}
+\week{basic-population-dynamics}
+
+\chapter{Trophic interactions}
+\week{trophic}
+
+\chapter{Physiological development}
+\week{physiological-development}
+
+\chapter{Model scenarios}
+\week{scenarios}
+
+% \chapter{Sensitivity analysis}
+% \week{sensitivity-analysis}
+
+\chapter{Commands}
+\week{commands}
+
+\chapter{Path expressions}
+\week{path-expressions}
+
+% \chapter{Virtual greenhouse}
+% \week{vg}
+
+% === DEVELOPER ===
+\part{Developer Manual}
+
+\chapter{Developer's workflow}
+\week{workflow}
+
+\chapter{Computations in Universal Simulator}
+\week{computations}
+
+\chapter{Basic \protect\CPP\ with Universal Simulator}
+\week{basic-cpp}
+
+\chapter{Meta-populations and migration (under revision)}
+\week{migration}
+
+\chapter{Random numbers}
+\week{random}
+
+% === How to ===
+\part{How to}
+
+\chapter{Install \protect\US}
+\task{install-us}
+
+\chapter{Install R}
+\task{install-r}
+
+\chapter{Install text editor}
+\task{install-text-editor}
+
+\chapter{Install Qt Creator}
+\task{install-qt}
+
+\chapter{Install Boost library}
+\task{install-boost}
+
+\chapter{Build \protect\US}
+\task{build-us}
+
+\chapter{View model output}
+\task{view-model-output}
+
+\chapter{Type dates and times}
+\task{type-dates-times}
+
+\chapter{Handle error messages}
+
+\task{handle-error-messages}
+
+\bibliographystyle{plainnat}
+\bibliography{nielsholst}
+\end {document}

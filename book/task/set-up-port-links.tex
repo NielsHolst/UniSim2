@@ -1,0 +1,64 @@
+In some cases you my have a box which depends on a variable number of inputs. Let's say a \code{Competition} box needs the density and competition coefficient of every \code{Plant} box present in the model:
+
+Simulation {
+  Competition {
+  }
+  Box community {
+    SoilNitrogen {
+    }
+    Plant aster {
+      .a = 0.8
+    }
+    Plant poppy {
+      .a = 0.2
+    }
+    Plant violet {
+      .a = 0.1
+    }
+  }
+}
+
+Here, the \code{Plant} has been coded with \code{a} as an input for the competition coefficient. Moreover, it maintains an output called \code{density} (\CPP\ code not shown).
+
+We need to code the \code{Competition} class to look up the \code{Plant} boxes present inside the \code{community} class and to build a vector referring to those \code{Plant} boxes. There are two solutions to this. Either keep a vector of pointers to all \code{Plant} objects, or keep one vector of pointers to \code{a} values and another one with pointers to \code{density} values. Which to choose depends mostly on what you find most convenient. The second method will execute slight faster.
+
+\subsection{Vector to \protect\code{Box}objects}
+You declare the vector in the \code{private} section of your class:
+
+#include <QVector>
+#include <base/box>
+
+namespace meadow {
+	class Community : public base:Box {
+	public:
+	Community();
+	void initialize();
+	void update();
+	private:
+	// Inputs
+	QVector<double> a, density;
+	// Outputs
+	double aAll;
+	};
+}
+
+Here, \code{aValues} is a vector of pointers to variables of type \code{double}. The \code{const} keyword signifies that you intention is to read these values not to change them. In fact, the compiler will disallow code that changes any of the values pointed to.
+
+The right place to fill the \code{aValues} vector is in the \code{initialize} method, which will be called only once after you have executed the \uscom{run} command:
+
+Input(a).imports("community/*<Plant>[a]");
+Input(density).imports("community/*<Plant>[density]");
+
+Here, we apply one of the advanced features of box paths. The \code{<Plant>} notation means 'of class \code<Plant>'. In effect, we will find any box that is a child of the box named \code{community} and in that find the port named \code{a} (line 1) or \code{density} (line 2).
+
+int n1 = a.size(), 
+    n2 = density.size();
+if (n1 != n2) 
+	ThrowException("Vector sizes for a and density do not match").value1(n1).value2(n2).context(this);
+aAll = 0;
+double sum = 0;
+for (int i=0; i<n1; ++i) {
+	aAll += a[i]*density[i];
+	sum += density[i];
+}
+aAll /= sum;

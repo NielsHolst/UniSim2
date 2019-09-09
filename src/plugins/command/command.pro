@@ -11,6 +11,7 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 QT += widgets
 
 HEADERS +=  \
+    batch.h \
     clear.h \
     clip.h \
     debug.h \
@@ -41,6 +42,7 @@ HEADERS +=  \
     quit.h
 	
 SOURCES +=  \
+    batch.cpp \
     clear.cpp \
     clip.cpp \
     debug.cpp \

@@ -1,7 +1,8 @@
-/* Copyright (C) 2009-2016 by Niels Holst [niels.holst@agrsci.dk] and co-authors.
-** Copyrights reserved.
-** Released under the terms of the GNU General Public License version 3.0 or later.
-** See www.gnu.org/copyleft/gpl.html.
+/* Copyright 2016-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
 */
 #ifndef SOIL_TEMPERATURE_H
 #define SOIL_TEMPERATURE_H

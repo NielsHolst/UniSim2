@@ -1,0 +1,819 @@
+\section{Path expressions}
+In \US\ paths work in many ways like file paths. File paths lead you to certain folders or files. \US\ paths lead you to certain boxes or ports.
+
+We use paths both in box scripts and in \CPP\ code. Besides, at the \US\ prompt, you can use the \code{find} (\iref{commands:find}), \code{go} (\iref{commands:go}) and \code{list} (\iref{commands:list}) commands to orientate yourself in larger box scripts or simply to experiment with different path expressions to understand how they work.
+
+This box script (\filenameexplained{book/insect.box}) makes simple use of paths:
+
+\lstset{numbers=left}
+\begin{boxscript}
+// insect.box
+Simulation sim {
+  .steps = 70
+  Stage egg {
+    .initial = 100 
+    .duration = 7
+  }
+  Stage larva {
+    .inflow = ../egg[outflow]
+    .duration = 15
+  }
+  Stage pupa {
+    .inflow = ../larva[outflow]
+    .duration = 7
+  }
+  Stage adult {
+    .inflow = ../pupa[outflow]
+    .duration = 30
+  }
+  OutputR {
+    PageR {
+      .xAxis = sim[step]
+      PlotR {
+        .ports = *[content]
+      }
+    }
+  }
+}
+\end{boxscript}
+\lstset{numbers=none}
+
+Paths are commonly used to connect input ports to output ports (lines 9, 13 and 17) and to tell which ports to show in the output (line 24).
+
+In \CPP, paths are used to set up default connections to input ports,
+\begin{cpp}
+Input(temperature).import("weather[temperature]");
+\end{cpp}
+
+\noindent
+and for more sophisticated programming in \CPP:
+\begin{cpp}
+QVector<Box*> herbivores = 
+  findMany<Box>("*<Herbivore>");
+Port *temperaturePort = 
+  findOne<Box>("weather")->port("temperature");
+\end{cpp}
+
+If you load the \filename{\inputfolder/box/insect.box}, here are a few searches to try out finding zero, one or more matches:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> find egg
+Stage /sim/egg
+> find egg[content]
+Port double /sim/egg[content]
+> find .
+Simulation /sim
+> go pupa
+Now at Stage /sim/pupa
+> find .
+Stage /sim/pupa
+> find .[content]
+Port double /sim/pupa[content]
+> find *[content]
+Port double /sim/egg[content]
+Port double /sim/larva[content]
+Port double /sim/pupa[content]
+Port double /sim/adult[content]
+> find *<Stage>
+Stage /sim/egg
+Stage /sim/larva
+Stage /sim/pupa
+Stage /sim/adult
+> find ../*
+Stage /sim/egg
+Stage /sim/larva
+Stage /sim/pupa
+Stage /sim/adult
+OutputR /sim/unnamed
+> find ape
+No matches
+> find Egg
+No matches
+> find /
+Simulation /sim
+> find .[*]
+Port int     /sim[iterations]
+Port int     /sim[steps]
+Port int     /sim[iteration]
+Port int     /sim[step]
+Port int     /sim[executionTime]
+Port bool    /sim[hasError]
+Port QString /sim[errorMsg]
+\end{usdialog}
+\lstset{numbers=none}
+
+Box names are strung together by slashes. Optionally, a path may end with a port name in brackets. A star plays the role of a joker, a dot refers to the current box and a double-dot to the parent box. An initial slash refers to the root box. Questions marks cannot be used as jokers. All names are case-sensitive. Whitespace (such as spaces and tab stops) can be put inside paths to ease the reading.
+
+When you use the \code(find) command (\iref{commands:find}) and search for boxes, you will get a line for each box found in the format \textit{class full-name}. If you search for ports, you will get a line for each box found in the format \textit{Port type full-name}.
+
+In the \US\ dialog above, we searched for 
+\begin{compactitem}
+\item any box named \code{egg} (1)
+\item any port named \code{content} inside a box named \code{egg} (3)
+\item the current box (5) and again (8) after going to the box named \code{pupa}
+\item any port named \code{content} in the current box (11)
+\item any port named \code{content} inside a any box (13)
+\item any port of class \code{Stage} (18)
+\item my siblings and me (23)
+\item any box named \code{ape} (29)
+\item forgetting about case-sensitivity, any box named \code{Egg} (31)
+\item the root box (33)
+\item any port of the current box (35)
+\end{compactitem}
+Details and more examples are given below.
+
+\section{Search anywhere}
+Unless you start the path with a slash or one or more dots, you are searching globally in the box script. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> find pupa[content]
+Port double /sim/hero/pupa[content]
+Port double /sim/io/pupa[content]
+> find io/pupa[content]
+Port double /sim/io/pupa[content]
+> find io/*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find io/*[content]
+Port double /sim/io/egg[content]
+Port double /sim/io/larva[content]
+Port double /sim/io/pupa[content]
+Port double /sim/io/adult[content]
+> find pupa<Stage>
+Stage /sim/hero/pupa
+Stage /sim/io/pupa
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item any port named \code{content} inside a box named \code{pupa} (1)
+\item any port named \code{content} inside a box named \code{pupa}, which is inside a box named \code{io} (4)
+\item any box that is a child of a box named \code{io} (6)
+\item any port named \code{content} inside a box (of any name), which is inside a box named \code{io} (11)
+\item any box named \code{pupa} which is of class \code{Stage} (16)
+\end{compactitem}
+
+\section{Search with jokers}
+\label{ch:path-expressions-jokers}
+The star (\code{*}) acts like a joker that matches any name. It can be used where you would put the name of a box or a port. Question marks cannot be used as jokers.   Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go hero
+Now at Box /sim/hero
+> find ./*
+Stage /sim/hero/egg
+Stage /sim/hero/larva
+Stage /sim/hero/pupa
+Stage /sim/hero/adult
+> find ../*/larva
+Stage /sim/hero/larva
+Stage /sim/io/larva
+> find io/*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find sim[*]
+Port int     /sim[iterations]
+Port int     /sim[steps]
+Port bool    /sim[stopIterations]
+Port bool    /sim[stopSteps]
+Port int     /sim[iteration]
+Port int     /sim[step]
+Port int     /sim[finalStep]
+Port int     /sim[executionTime]
+Port bool    /sim[hasError]
+Port QString /sim[errorMsg]
+> find hero/*<Stage>
+Stage /sim/hero/egg
+Stage /sim/hero/larva
+Stage /sim/hero/pupa
+Stage /sim/hero/adult
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+Here we first set \code{hero} as the current box (1) and then searched for 
+\begin{compactitem}
+\item any child box of the current box (3)
+\item any cousin or child box (i.e., you parent's grandchildren) named \code{larva} (8)
+\item any box that has a parent named \code{io} (11)
+\item any port of boxes named \code{sim} (16)
+\item any box of class \code{Stage} that is a child of a box names \code{hero} (27)
+\end{compactitem}
+
+\section{Search from root}
+Sometimes you may want to assert that a path begins right from the root. For this you simply start the path wish a slash (\code{/}). A root box is a box that is not contained within another box. In \US\ you can only have one root box, the one a the root of the box script, usually a \code{Simulation} box. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go hero
+Now at Box /sim/hero
+> find /
+Simulation /sim
+> find /*
+Simulation /sim
+> find /*[step]
+Port int /sim[step]
+> find /sim
+Simulation /sim
+> find /*/*
+Box     /sim/hero
+Box     /sim/io
+OutputR /sim/unnamed
+> find /*/*<OutputR>
+OutputR /sim/unnamed
+> find /*/io/adult[content]
+Port double /sim/io/adult[content]
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+Here we first set \code{hero} as the current box (1) and then searched for 
+\begin{compactitem}
+\item the root box (3, 5)
+\item any port named \code{ste } of the root box (which can have any name) (7)
+\item the root box named \code{sim} (9)
+\item any grandchild box of the root box (11)
+\item any grandchild box of class \code{OutputR} of the root box (15)
+\item any port named content in a box named \code{adult}, child of a box named \code{io}, that is a child box of the root, that can have any name (17)
+\end{compactitem}
+
+\section{Search from here (dot)}
+\label{ch:path-expressions-dot}
+Putting a dot (\code{.}) at the very beginning, makes the search local to the current box. Use this or the double-dot whereever you can, instead of searching globally. It will make your code easier to read and more robust. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go /
+Now at Simulation /sim
+> find .
+Simulation /sim
+> go hero
+Now at Box /sim/hero
+> find .
+Box /sim/hero
+> find ./*
+Stage /sim/hero/egg
+Stage /sim/hero/larva
+Stage /sim/hero/pupa
+Stage /sim/hero/adult
+> find ./egg[content]
+Port double /sim/hero/egg[content]
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent 
+Here we changed the current box along the way, setting it first to the root (1) and then to \code{hero} (5). We searched for 
+ \begin{compactitem}
+\item the current box (3, 7)
+\item any child box of the current box (9)
+\item any port named \code{content} in a child box, named \code{egg}, of the current box (14)
+\end{compactitem}
+
+\section{Search from parent (double-dot)}
+\label{ch:path-expressions-double-dot}
+Putting a double-dot (\code{..}) at the very beginning, makes the search local to the parent of the current box. This is a highly useful feature, as it delimits the search locally. Both the dot and double-dot are commonly used. In the \filename{\ushome/book/butterflies.box} script you can see how double-dots are used to pick out life stages belonging to the same butterfly. The line
+
+\begin{boxscript}
+.inflow = ../larva[outflow]
+\end{boxscript}
+will pick up the \code{hero/larva[outflow]} port when used inside the \code{hero/pupa} box and the \code{io/larva[outflow]} port when used inside the \code{io/pupa} box. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go hero
+Now at Box /sim/hero
+> find ..
+Simulation /sim
+> find ../*
+Box     /sim/hero
+Box     /sim/io
+OutputR /sim/unnamed
+> go hero/egg
+Now at Stage /sim/hero/egg
+> find ../pupa
+Stage /sim/hero/pupa
+> find ../pupa[outflow]
+Port double /sim/hero/pupa[outflow]
+\end{usdialog}
+\lstset{numbers=none}
+\noindent
+
+Here we changed the current box along the way, setting it first to \code{hero} (1) and then to \code{hero/egg} (9). We searched for 
+\begin{compactitem}
+\item the parent box (3)
+\item my parent's child boxes (i.e. me and my sibling boxes) (5)
+\item any sibling box (or myself) named \code{pupa} (11)
+\item any port named \code{outflow} in a box named \code{pupa}, that is a child of my parent (13)
+\end{compactitem}
+
+\section{Search from here and up (triple-dot)}
+Triple-dots (\code{...}) offer what programmers know as 'scope'. It causes a search first in the current box then in the parent, then in the grandparent and so forth. The search stops first time it is successful, or else at the root box. In other words, \code{find .../path} behaves like this sequence of commands:
+
+\begin{uscmd}
+> find ./path
+> find ../path
+> find ../../path
+> find ../../../path
+> %\textit{etc.}%
+\end{uscmd}
+
+Unless you are already a programmer, you might find it difficult to imagine how this scoping could ever be useful.
+
+You can load the \filename{\ushome/demo/butterflies-common-k.box} script which illustrates a probable use of triple-dots. In this script, the life stages of the two butterflies all have
+
+\begin{boxscript}
+.k = ...[common_k]
+\end{boxscript}
+
+To take an example, for the \code{hero/egg} stage this leads to a sequence of searches; first \code{.[common_k]} then \code{..[common_k]} and then \code{../..[common_k]}, at which point it stops because \code{sim[common_k]} was found. For \code{io/egg} the search stops one step earlier at \code{/sim/io[common_k]}. The whole set-up was created to allow easy setting of the \code{k} port for one or both species.
+
+ Now,  load the \filename{butterflies-common-k.box} script and verify that the triple-dots work as just described:
+ 
+\lstset{numbers=left}
+\begin{usdialog}
+> go hero/egg
+Now at Stage /sim/hero/egg
+> find ...[common_k]
+Port int /sim[common_k]
+> go io/egg
+Now at Stage /sim/io/egg
+> find ...[common_k]
+Port int /sim/io[common_k]
+\end{usdialog}
+\lstset{numbers=none}
+
+\section{Combine searches}
+You can combine two or more searches into one with the union operator (\code{|}). Its use is straightforward as long as you remember that the final result is the union of all the searches combined, \ie\ duplicates are automatically removed.  Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> find larva | pupa
+Stage /sim/hero/larva
+Stage /sim/io/larva
+Stage /sim/hero/pupa
+Stage /sim/io/pupa
+> find larva[content] | pupa[inflow]
+Port double /sim/hero/larva[content]
+Port double /sim/io/larva[content]
+Port double /sim/hero/pupa[inflow]
+Port double /sim/io/pupa[inflow]
+> find io/* | io/egg
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find larva[content] | pupa
+Port double /sim/hero/larva[content]
+Port double /sim/io/larva[content]
+Stage       /sim/hero/pupa
+Stage       /sim/io/pupa
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item any box named \code{larva} or \code{pupa} (1)
+\item any \code{content} port in \code{larva} boxes, together with any \code{inflow} port in \code{pupa} boxes (6)
+\item any child box of boxes named \code{io}, together with the \code{egg } child box of  \code{io} (the latter ignored as a duplicate) (11)
+\item any \code{content} port in \code{larva} boxes together with \code{pupa} boxes (16); the resulting mix of ports and boxes can hardly be useful (17-20)
+\end{compactitem}
+
+\section{Search by class}
+You can optionally specify the class of a box together with its name (or a joker). You write the class name in sharp parentheses following the box name, for example, \code{egg<Stage>}. If you had several boxes named \code{egg}, this path would only match boxes of the \code{Stage} class. 
+
+To promote simplicity in your model designs, it is not possible to include the plug-in namespace in the class name, \eg\ \code{*<student::Weather>} is not legal. You must put it more simply as \code{*<Weather>}.
+
+The class name used in paths refer directly to the class name in the \CPP\ source code. Moreover, the \CPP\ class hiearchy is also in effect in the paths. This means that the path \code{*<Box>} will match all boxes, since they are all (by the rules of the \US\ programming framework) derived from the \code{Box} base class. 
+
+Load the \filename{\ushome/book/butterflies.box} script to try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> find io/*<Box>
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find io/*<Stage>
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find *<OutputR>[end]
+Port QString /sim/*[end]
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item any box of class \code{Box} inside a box named \code{io} (1)
+\item any box of class \code{Stage} inside a box named \code{io} (6); same as above, since \code{Box} is the base class for \code{Stage}
+\item any \code{end} port inside a box of class \code{OutputR} (11)
+\end{compactitem}
+
+\section{Search by directive}
+Directives allow you specify family relations in paths. Usually you won't need them because the most common relations (self, parent, children) are easily expressed with dots and jokers. To express these and other relations, you have these 10 \textbf{directives} at hand:
+
+\begin{compactitem}
+\item self
+\item parent
+\item children
+\item selfOrDescendants
+\item descendants
+\item ancestors
+\item allSiblings
+\item otherSiblings
+\item preceedingSibling
+\item followingSibling
+\end{compactitem}
+
+You can apply a directive one or several times in a path, once to every box in the path. To recognize a directive it must be followed by a double-colon (\code{::}).
+
+You can build monstrous paths! Should you end up with a monster path, take this as a sign that your code (your box script and maybe \CPP\ code too) should be refactored. With proper organisation of your box hierarchy, your paths should always turn out quite straightforward.
+
+%
+% self
+%
+\subsection{The \code{self} directive}
+Finding yourself might not be the most challenging task in this context. Anyway, with \filename{\inputfolder/book/butterflies.box} loaded, here are different ways to achieve it, or fail:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io
+Now at Box /sim/io
+> find .
+Box /sim/io
+> find self::*
+Box /sim/io
+> find self::io
+Box /sim/io
+> find self::hero
+No matches
+> go ./pupa
+Now at Stage /sim/io/pupa
+> find self::*<Stage>
+Stage /sim/io/pupa
+> find self::*<Simulation>
+No matches
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the current box (3, 5)
+\item the current box named \code{io}; found (7)
+\item the current box named \code{hero}; not found (9)
+\item the current box o class \code{Stage}; found (13)
+\item the current box o class \code{Stage}; not found (15)
+\end{compactitem}
+
+Thus, the path \code{self::*} directive is equivalent to the single dot(\code{.}). However, with \code{self::\em{name}} you can supply a name, and with \code{self::\em{name<class>}},  a class as well.
+
+%
+% parent 
+%
+\subsection{The \code{parent} directive}
+The parent box is one level up in the hierarchy. Here are different ways to find the parent of the current box in the \filename{\ushome/book/butterflies.box} script:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io
+Now at Box /sim/io
+> find ..
+Simulation /sim
+> find parent::*
+Simulation /sim
+> find parent::sim
+Simulation /sim
+> find parent::egg
+No matches
+> find parent::*<Simulation>
+Simulation /sim
+> find parent::*<Stage>
+No matches
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the parent (3, 5)
+\item the parent named \code{sim} (7)
+\item the parent named \code{egg}; not found (9)
+\item the parent of class \code{Simulation} (11)
+\item the parent of class \code{Stage}; not found (13)
+\end{compactitem}
+
+The path \code{parent::*}  is equivalent to the double-dot(\code{..}). However, with \code{parent::\em{name}} you can supply a name, and with \code{parent::\em{name<class>}},  a class as well.
+
+%
+% children
+%
+\subsection{The \code{children} directive}
+Child boxes are all the boxes one level down in the hierarchy. Load the \filename{\ushome/book/butterflies.box} script to follow the examples below.
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io
+Now at Box /sim/io
+> find ./*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find children::*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find ./pupa
+Stage /sim/io/pupa
+> find children::pupa
+Stage /sim/io/pupa
+> go sim
+Now at Simulation /sim
+> find ./*<OutputR>
+OutputR /sim/unnamed
+> find children::*<OutputR>
+OutputR /sim/unnamed
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item all children (3, 8)
+\item the children named \code{pupa} (13, 15)
+\item the children of class \code{OutputR} (19, 21)
+\end{compactitem}
+
+%
+% selfOrDescendants
+%
+\subsection{The \code{selfOrDescendants} directive}
+This directive allows you to look for the path in the current box and in all its descendant boxes (i.e., its children, grandchildren and so forth). Load the \filename{\ushome/book/butterfly1.box} script to  try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go butterfly
+Now at Box /sim/butterfly
+> find selfOrDescendants::*
+Box        /sim/butterfly
+Stage      /sim/butterfly/egg
+DayDegrees /sim/butterfly/egg/time
+Stage      /sim/butterfly/larva
+DayDegrees /sim/butterfly/larva/time
+Stage      /sim/butterfly/pupa
+DayDegrees /sim/butterfly/pupa/time
+Stage      /sim/butterfly/adult
+> find selfOrDescendants::*<DayDegrees>
+DayDegrees /sim/butterfly/egg/time
+DayDegrees /sim/butterfly/larva/time
+DayDegrees /sim/butterfly/pupa/time
+> go /
+Now at Simulation /sim
+> find selfOrDescendants::*[timeStep]
+Port int    /sim/calendar[timeStep]
+Port double /sim/butterfly/egg[timeStep]
+Port double /sim/butterfly/larva[timeStep]
+Port double /sim/butterfly/pupa[timeStep]
+Port double /sim/butterfly/adult[timeStep]
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item The current box and all boxes inside (3)
+\item Of the current box and all boxes inside, those of class \code{DayDegrees} (12)
+\item Any port named \code{timeStep} in the current box and all boxes inside (18)
+\end{compactitem}
+
+You may want to compare the results with those obtained by the, similar but not identical, \code{descendants} directive below.
+
+%
+% descendants
+%
+\subsection{The \code{descendants} directive}
+This directive works just like the \code{selfOfDescendants} directive above, except that this directive excludes the current box. Load the \filename{\ushome/book/butterfly1.box} script to try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go butterfly
+Now at Box /sim/butterfly
+> find descendants::*
+Stage      /sim/butterfly/egg
+DayDegrees /sim/butterfly/egg/time
+Stage      /sim/butterfly/larva
+DayDegrees /sim/butterfly/larva/time
+Stage      /sim/butterfly/pupa
+DayDegrees /sim/butterfly/pupa/time
+Stage      /sim/butterfly/adult
+> find descendants::*<DayDegrees>
+DayDegrees /sim/butterfly/egg/time
+DayDegrees /sim/butterfly/larva/time
+DayDegrees /sim/butterfly/pupa/time
+> go /
+Now at Simulation /sim
+> find descendants::*[timeStep]
+Port int    /sim/calendar[timeStep]
+Port double /sim/butterfly/egg[timeStep]
+Port double /sim/butterfly/larva[timeStep]
+Port double /sim/butterfly/pupa[timeStep]
+Port double /sim/butterfly/adult[timeStep]
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item All boxes inside the current box (3)
+\item All boxes of class \code{DayDegrees} inside the current box (11)
+\item Any port named \code{timeStep} in boxes inside the current box (17)
+\end{compactitem}
+
+You may want to compare the results with those obtained by the, similar but not identical, \code{selfOrDescendants} directive above.
+
+%
+% ancestors
+%
+\subsection{The \code{ancestors} directive}
+This directive will look for the path in the parent box, grandparent box, and so forth. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go *<PageR>
+Now at PageR /sim/unnamed/unnamed
+> find ancestors::*
+OutputR    /sim/unnamed
+Simulation /sim
+> find ancestors::sim
+Simulation /sim
+> find ancestors::*[steps]
+Port int /sim[steps]
+> find ancestors::*<OutputR>
+OutputR /sim/unnamed
+> find ancestors::*<Stage>
+No matches
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item any ancestor box (3)
+\item any ancestor box named \code{sim} (6)
+\item any port named \code{steps} in an ancestor box (8)
+\item any ancestor box of the class \code{OutputR} (10)
+\item any ancestor box of the class \code{Stage}; not found(12)
+an ancestor box
+\end{compactitem}
+
+%
+% allSiblings
+%
+\subsection{The \code{allSiblings} directive}
+This directive looks into the current box and all its sibling boxes. The path \code{allSiblings::*} is equivalent to the shorthand \code{../*}. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io/larva
+Now at Stage /sim/io/larva
+> find allSiblings::*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find ../*
+Stage /sim/io/egg
+Stage /sim/io/larva
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find allSiblings::*[content]
+Port double /sim/io/egg[content]
+Port double /sim/io/larva[content]
+Port double /sim/io/pupa[content]
+Port double /sim/io/adult[content]
+> go io
+Now at Box /sim/io
+> find allSiblings::*/pupa
+Stage /sim/hero/pupa
+Stage /sim/io/pupa
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the current box and all its siblings (3, 8)
+\item any port named \code{content} in the current box or its siblings
+\item any box named \code{pupa} which is the child box of the current box or its siblings, \ie\ find children and nephews names \code{pupa} (20)
+\end{compactitem}
+
+You may want to compare the results with those obtained by the, similar but not identical, \code{otherSiblings} directive below.
+
+%
+% otherSiblings
+%
+\subsection{The \code{otherSiblings} directive}
+This directive works just like the \code{allSiblings} directive, except that \code{otherSiblings} excludes the current box. There is no shorthand notation which matches the \code{otherSiblings} directive. Load the \filename{\ushome/book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io/larva
+Now at Stage /sim/io/larva
+> find otherSiblings::*
+Stage /sim/io/egg
+Stage /sim/io/pupa
+Stage /sim/io/adult
+> find otherSiblings::*[content]
+Port double /sim/io/egg[content]
+Port double /sim/io/pupa[content]
+Port double /sim/io/adult[content]
+> go io
+Now at Box /sim/io
+> find otherSiblings::*/pupa
+Stage /sim/hero/pupa
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the sibling boxes (3)
+\item any port named \code{content} in the sibling boxes (7)
+\item any box named \code{pupa} which is the child box of a sibling box, \ie\ find nephews named \code{pupa} (13)
+\end{compactitem}
+
+You may want to compare the results with those obtained by the, similar but not identical, \code{allSiblings} directive above.
+
+%
+% preceedingSibling
+%
+\subsection{The \code{preceedingSibling} directive}
+The \code{preceedingSibling} directive finds the sibling box preceeding the current one. Load the \filename{book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io/pupa
+Now at Stage /sim/io/pupa
+> find preceedingSibling::*
+Stage /sim/io/larva
+> find preceedingSibling::*[content]
+Port double /sim/io/larva[content]
+> go io/egg
+Now at Stage /sim/io/egg
+> find preceedingSibling::*
+No matches
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the preceeding sibling box (3)
+\item any port named \code{content} in the preceeding sibling box (5)
+\item the preceeding sibling box; not found (9)
+\end{compactitem}
+
+%
+% followingSibling
+%
+\subsection{The \code{followingSibling} directive}
+The \code{followingSibling} directive finds the sibling box preceeding the current one. Load the \filename{book/butterflies.box} script and try the following:
+
+\lstset{numbers=left}
+\begin{usdialog}
+> go io/pupa
+Now at Stage /sim/io/pupa
+> find followingSibling::*
+Stage /sim/io/adult
+> find followingSibling::*[content]
+Port double /sim/io/adult[content]
+> go io/adult
+Now at Stage /sim/io/adult
+> find followingSibling::*
+No matches
+\end{usdialog}
+\lstset{numbers=none}
+
+\noindent
+We searched for 
+\begin{compactitem}
+\item the following sibling box (3)
+\item any port named \code{content} in the following sibling box (5)
+\item the following sibling box; not found (9)
+\end{compactitem}
+

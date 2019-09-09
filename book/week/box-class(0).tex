@@ -1,0 +1,80 @@
+\section{Computation model}
+
+When you run a box script, you wil notice from the feedback on the screen, that \US\ goes through a number of steps:
+\begin{enumerate}
+\item Construct
+\item Amend
+\item Initialize
+\item Reset
+\item Update
+\item Cleanup
+\item Debrief
+\end{enumerate}
+
+These steps each correspond to a method in the \code{Box} base class. The first one is the constructor while the following ones are virtual methods, all defined empty in the \code{Box} base class (\filename{DEV/src/base/box.h}):
+
+\begin{cpp}
+virtual void amend() {}
+virtual void run() {}
+virtual void initialize() {}
+virtual void reset() {}
+virtual void update() {}
+virtual void cleanup() {}
+virtual void debrief() {}
+\end{cpp}
+
+Thus for any class you derive from \code{Box}, you imbue it with its characteristics by defining its ports in the constructor and, with its behaviour through re-defining any of these seven virtual methods.
+
+\subsection{Stepping through the boxes}
+Since a box script usually will consist of more than one box, \US\ must have a rule whereby to step through them, when carrying out a step such as construct, amend, \etc. The order is determined by just two rules:
+
+\begin{enumerate}
+\item Top to bottom
+\item Children first
+\end{enumerate}
+
+This means that boxes will be handled (created, amended, and so forth) in the order, in which they are written in the box script, which is as expected (rule 1). However, if a box holds child boxes inside, these will be handled first (rule 2). 
+
+
+\subsection{The construct step}
+In the first step all the boxes are constructed, which means that \code{Box} objects are created and thereby constructors executed. The constructor of a \code{Box} class is where the input and output ports are created, and the help texts are written. This is shows the constructor of the \code{DayDegree} class found in \filename{DEV/src/plugins/boxes/day_degrees.cpp}:
+
+\lstset{numbers=left}
+\begin{cpp}
+DayDegrees::DayDegrees(QString name, QObject *parent)
+    : Box(name, parent) {
+	help("computes linear day-degrees");
+	Input(T0).equals(0).help("Lower temperature threshold");
+	Input(Topt).equals(100).help("Optimum temperate");
+	Input(Tmax).equals(100).help("Upper temperature threshold");
+	Input(T).imports("weather[Tavg]");
+	Output(step).help("Increment in day-degrees");
+	Output(total).help("Total day-degrees since reset");
+}
+\end{cpp}
+\lstset{numbers=none}
+
+\US\ will see to that the \code{name} of the \code{DayDegree} and a pointer to its \code{parent} box (lines 1-2) both are carried over from the box script. Next, the help text for the \code{DayDegree} class is set by the \code{help} method (line 3). Input and output ports are created (lins 4-9) with default values set by \code{equals} and default references set by \code{imports}; these values and references will reman in effect unless there are set in the box script. Ports have their own \code{help} method.
+
+\subsection{The amend step}
+This is only necessary if the box contains dynamically defined sub-boxes or ports. One example is the \code{Records} class which creates output ports based on the input text file; it creates one output port for each column found in the file. This is a rather involved process, let over and sub-tasked to three other methods (\filename{DEV/src/plugins/boxes/records.cpp}):
+
+\begin{cpp}
+void Records::amend() {
+	readColumnNames();
+	createColumnOutputs();
+	readFromFirstToLastLine();
+}
+\end{cpp}
+
+The amend step is your last chance to create ports or boxes dynamically in the \CPP\ code. In the following steps, you can assume that all boxes and ports have been created.
+
+\subsection{The run step}
+This is the most powerful step. In the standard \US\ classes, it is only defined by the \code{Simulation} class. When you type in the \uscom{run} command, you are asking for the \code{run} method of the outermost to executed after the construct and amend steps.
+
+\subsection{The initialize step}
+
+\subsection{The reset step}
+\subsection{The update step}
+\subsection{The cleanup step}
+\subsection{The debrief step}

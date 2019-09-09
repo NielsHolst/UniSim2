@@ -1,6 +1,4 @@
-/* Copyright 2005-2018 by
-** Niels Holst, Aarhus University [niels.holst@agro.au.dk] and
-** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner@igzev.de].
+/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -303,7 +301,7 @@ double invCumNormal(double p, double m, double sd) {
     return quantile(s, p);
     /* From Shore, H (1982). Simple Approximations for the Inverse Cumulative Function,
      * the Density Function and the Loss Integral of the Normal Distribution.
-     * Journal of the Royal Statistical Society. Series C (Applied Statistics). 31: 108–114.
+     * Journal of the Royal Statistical Society. Series C (Applied Statistics). 31: 108â€“114.
      * doi:10.2307/2347972
      */
 //    bool flip = p<0.5;

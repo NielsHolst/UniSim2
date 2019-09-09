@@ -1,0 +1,105 @@
+There are many possible uses of random numbers in \US. You need them if you are developing a stochastic model, and they are an integral part of sensitivity analysis.
+
+\section {Boxes to generate random numbers}
+There are five \code{Box} classes which provides an easy access to random numbers with different statistical distributions:
+\begin{itemize}
+\item \codenobox{RandomBinomial : RandomBase<bool>}
+\item \codenobox{RandomLognormal : RandomBase<double>}
+\item \codenobox{RandomNormal : RandomBase<double>}
+\item \codenobox{RandomUniform : RandomBase<double>}
+\item \codenobox{RandomUniformInt : RandomBase<int>}
+\end{itemize}
+They are all derived from the \code{RandomBase<T>} base class which provides one output \code{value} of the class \code{T}. The derived classes each set the value type appropriate to their distribution as shown above.
+
+The shape of the distribution is determined by three input ports. Since they are defined in the \code{RandomBase<T>} base class, they are the same for all derived classes:
+\begin{itemize}
+\item \codenobox{minValue} (default 0)
+\item \codenobox{maxValue} (default 1)
+\item \codenobox{P} (default 1)
+\end{itemize}
+
+For \code{RandomBinomial}, \code{P} sets the probability for drawing a true \code{value}. The boundaries (\code{minValue} and \code{maxValue}) are ignored.
+
+For \code{RandomUniform} \code{RandomUniformInt}, the boundaries sets the limits (inclusive) for the values drawn. All values inside the boundaries are equally probable.
+
+For \code{RandomNormal}, the boundaries define a truncated normal distribution with the mean centred between the boundaries and a standard deviation that will yield a normal distribution with the area \code{P} inside the boundaries. For \code{RandomNormal}, the default is \code{P=0.95}. You can gauge the effect of P from \todo{Fig. x}.
+
+For \code{RandomNormal}, the boundaries are first log-transformed. Otherwise, the logic of \code{RandomNormal} applies. The drawn value will be  backtransformed and will thus be inside the boundaries. Note, that the boundaries should both be positive. 
+
+The frequency at which a new \code{value} is drawn depends on six flags which are the remaining inputs defined in \code{RandomBase<T>}. You must set at least one of them to true. Usually it makes sense to set only one of them true:
+\begin{itemize}
+\item \codenobox{drawAtInitialize} to draw once for the whole simulation
+\item \codenobox{drawAtReset} to draw once for each iteration
+\item \codenobox{drawAtUpdate} to draw one for each step
+\end{itemize}
+As above but ensuring that the \code{value} is drawn before any user makes use of it. Users are any boxes importing the \code{value}. Usually this is not a worry because you naturally put any of these random boxes in the top of the script, ensuring that values will be drawn before they are used. But in more convoluted cases, you find out you need these:
+\begin{itemize}
+\item \codenobox{drawAtUserInitialize} 
+\item \codenobox{drawAtUserReset}
+\item \codenobox{drawAtUserUpdate}
+\end{itemize}
+The flags refer to the computation step (\iref{fig:computation-steps}), in which a new \code{value} is drawn.
+
+\section{Implementation details}
+All random numbers in a simulation are coming from the same source which is accessed by the function call \code{RandomGenerator::RandomGenerator()}. This function is declared in the \code{base/random_generator.h} header file. The call returns a pointer to an object of type \code{RandomGenerator::Generator}. Inspection of the code will reveal that this type is defined as \code{boost::mt19937}, \ie\ it is a Mersenne twister random number generator. The seed for the generator will be random, unless you have set it through \code{Simulation}'s \code{randomSeed} input port.
+
+The generator is defined in the Boost libraries. To use it you must define from which statistical distribution you would like to draw a number. The same generator can be used several times in combinations with any distribution; the generator provides the raw material from which numbers with the desired statistical distributions can be drawn. The code to achieve this gets pretty convoluted, so it is worth spelling out how it is done.
+
+For the \code{RandomBinomial} class, we define two \code{typedef}s and declare two pointers. They can be found in the header file (\filename{random_binomial.h}):
+\lstset{numbers=left}
+\begin{cpp}
+typedef boost::uniform_real<double> Distribution;
+typedef boost::variate_generator
+  <base::RandomGenerator::Generator&, 
+   Distribution> Variate;
+Distribution *distribution;
+Variate *variate;
+\end{cpp}
+\lstset{numbers=none}
+The two objects \code{distribution} and \code{variate} are created once and for all in \code{RandomBinomial::initialise()} (in \filename{random_binomial.cpp}):
+\lstset{numbers=left}
+\begin{cpp}
+distribution = new Distribution(0, 1);
+variate = new Variate(*randomGenerator(), *distribution);
+\end{cpp}
+\lstset{numbers=none}
+So, the distribution will be uniform in the interval 0 to 1 using \code{randomGenerator()}. That's the Mersenne twister declared in \code{base/random_generator.h}. 
+
+Drawing a number from the \code{variate} object is short and mysterious: \code{(*variate)()}. This is exemplified in the \code{drawValue} method which must be defined by any class derived from \code{RandomBase<T>}:
+\lstset{numbers=left}
+\begin{cpp}
+void RandomBinomial::update() {
+    value = (*variate)() < P;
+}
+\end{cpp}
+\lstset{numbers=none}
+In this case, we can update the value (of type \code{bool}) by comparing it against \code{P} to achieve binomially distributed values.
+
+The other classes derived from \code{RandomBase<T>} are designed in the same manner.
+
+\section{Stratified sampling}
+The \code{RandomBase<T>} class has one more input which makes it possible to stratify the sampling of random numbers:
+\begin{itemize}
+\item \codenobox{numStrata} (default 1)
+\end{itemize}
+With the default value of 1 stratum, every random number is drawn from the full statistical distribution. No surprises there. However, if you know that you will draw, say 100, random numbers, you could optionally set \code{numStrata} = 100. This would cause the \code{RandomBase<T>} object to divide the distribution into 100 intervals, each of equal area under the distribution curve, adding up to a total area of 1. These 100 intervals would be shuffled at random when the object is reset. Every time a number is chosen, it is taken from each interval in turn, drawing a random number within the interval. 
+
+The stratified random sampling technique (\code{numStrata}>1) more quickly explores the territory of the variable and than the more simple Monte Carlo technique (\code{numStrata}=1). However, each \code{RandomBase<T>} object carries out its own stratification independently of others. Thus you are not ensured an exploration of the whole many-dimensional landscape. For that you need Sobol' Sequences are explained next.
+
+\section{Sobol' sequences}
+To get the best coverage in many dimensions of random numbers, we use Sobol' sequences. Just like in stratified random sampling, you must know the sample size from the start. Moreover, you must know the number of variables for which you want to generate random numbers. So, for \code{SobolSequenceBase<T>}, we need all the inputs and the output of \code{RandomBase<T>} plus an additional input:
+\begin{itemize}
+\item \codenobox{numVariables} (default 1)
+\end{itemize}
+Because of the way Sobol' sequences are generated, the number of strata must be power of 2, \eg\ 128 or 1024. There are five box classes for Sobol' sequences corresponding to those above for random numbers:
+\begin{itemize}
+\item \codenobox{SobolSequenceBinomial : SobolSequenceBase<bool>}
+\item \codenobox{SobolSequenceLognormal : SobolSequenceBase<double>}
+\item \codenobox{SobolSequenceNormal : SobolSequenceBase<double>}
+\item \codenobox{SobolSequenceUniform : SobolSequenceBase<double>}
+\item \codenobox{SobolSequenceUniformInt : SobolSequenceBase<int>}
+\end{itemize}
+The Sobol' sequences take no seed. For given values of \code{numStrata} and \code{numVariables}, you will always get the same sequence of numbers. Hence, Sobol' sequences are considers \concept{quasi-random} rather than pseudo-random. The point of the Sobol' sequences are that they ensure a maximal exploration of the joint distribution of all variables.
+
+Since the  \code{RandomBase<T>} and \code{SobolSequenceBase<T>} share many features they both derived from a common base class \code{NumberGeneratorBase<T>}. This class hierarchy involving both template classes and a class hierarcy of five levels is the most complicated \CPP\ design found in \US. As an example, for \code{RandomBinomial} the class hierarchy goes \code{QObject} $\rightarrow$ \code{Box} $\rightarrow$ \code{NumberGeneratorBase<double>} $\rightarrow$ \code{RandomBase<double>} $\rightarrow$ \code{RandomBinomial}.
+

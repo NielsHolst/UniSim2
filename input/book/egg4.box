@@ -10,19 +10,22 @@ Simulation sim {
     .fileName = "weather/flakkebjerg 2009.txt"
   }
   Stage egg {
-    .timeStep = 1
     .initial = 100 
     .duration = 7
   }
   OutputR {
     PageR {
       .xAxis = calendar[date]
+      .width = 7
+      .height = 7
       PlotR {
         .ports = (egg[content] egg[outflowTotal])   
         .ncol = 2
+        .fontSize = 13    
       }
       PlotR {
         .ports = weather[Tavg]
+        .fontSize = 13
       }
     }
   }

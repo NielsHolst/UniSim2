@@ -46,6 +46,7 @@ HEADERS +=  \
     random_normal.h \
     random_uniform.h \
     random_uniform_int.h \
+    ratio.h \
     records.h \
     sandy.h \
     scenarios.h \
@@ -58,7 +59,9 @@ HEADERS +=  \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
+    super_functional_response.h \
     supply_budget.h \
+    vector_scaled.h \
     vector_sum.h
 	
 SOURCES +=  \
@@ -96,6 +99,7 @@ SOURCES +=  \
     random_normal.cpp \
     random_uniform.cpp \
     random_uniform_int.cpp \
+    ratio.cpp \
     records.cpp \
     sandy.cpp \
     scenarios.cpp \
@@ -108,7 +112,9 @@ SOURCES +=  \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \
+    super_functional_response.cpp \
     supply_budget.cpp \
+    vector_scaled.cpp \
     vector_sum.cpp
 
 

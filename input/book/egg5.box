@@ -23,13 +23,17 @@ Simulation sim {
   OutputR {
     PageR {
       .xAxis = calendar[date]
+      .width = 8
+      .height = 8
       PlotR {
         .ports = (egg[content] egg[outflowTotal])   
         .ncol = 2
+        .fontSize = 13
       }
       PlotR {
         .ports = (weather[Tavg] egg/time[total])   
         .ncol = 2
+        .fontSize = 13
       }
     }
   }
