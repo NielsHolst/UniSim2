@@ -1,0 +1,30 @@
+// func-resp-gb.box
+Simulation {
+  .steps = 100
+  .iterations = 3
+  Sequence predator {
+    .by = "reset"
+    .values = (1 2 5)
+  }
+  Sequence demand {
+    .by = "reset"
+    .values = (10 20 50)
+  }
+  Sequence prey {
+    .by = "update"
+    .min = 0
+    .max = 100
+  }
+  FunctionalResponse funcResp {
+    .attacker = predator[value]
+    .prey = prey[value]
+    .demandGross = demand[value]
+    .attackRate = 0.8
+  }
+  OutputR {
+    .end = "func-resp-gb-end.R"
+    OutputText {
+      .ports = funcResp[*]
+    }
+  }
+}

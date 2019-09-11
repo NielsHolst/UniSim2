@@ -1,0 +1,353 @@
+{
+  "NurseryId": 2,
+  "DatasetTimeStamp": "2019-08-21T14:06:29.8312833+02:00",
+  "OutdoorClimate": {
+    "Temperature": {
+      "Value": 20.28130531311035,
+      "Origin": 1,
+      "TimeStamp": "2019-08-21T13:50:50"
+    },
+    "Irradiation": {
+      "Value": 200.5844268798828,
+      "Origin": 1,
+      "TimeStamp": "2019-08-21T13:51:54"
+    },
+    "RelativeHumidity": {
+      "Value": 0,
+      "Origin": 1,
+      "TimeStamp": "2019-08-08T14:19:18"
+    },
+    "Co2": null,
+    "WindSpeed": {
+      "Value": 2.7283308506011963,
+      "Origin": 1,
+      "TimeStamp": "2019-08-21T13:51:42"
+    },
+    "WindDirection": {
+      "Value": 48.15254592895508,
+      "Origin": 1,
+      "TimeStamp": "2019-08-21T13:51:38"
+    }
+  },
+  "CompartmentDatas": [
+    {
+      "CompartmentId": 10,
+      "IndoorClimate": {
+        "Temperature": {
+          "Value": 23.367826461791992,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:00"
+        },
+        "LightIntensity": {
+          "Value": 17.855060577392578,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:00"
+        },
+        "RelativeHumidity": {
+          "Value": 38.385005950927734,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:00"
+        },
+        "Co2": {
+          "Value": 420.41656494140625,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:00"
+        }
+      },
+      "HeatPipes": [
+        {
+          "HeatPipeId": 17,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:48"
+          },
+          "TemperatureInFlow": {
+            "Value": 25.492647171020508,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:00"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        },
+        {
+          "HeatPipeId": 18,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:48"
+          },
+          "TemperatureInFlow": {
+            "Value": 30.87285041809082,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:00"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        }
+      ],
+      "Vents": [
+        {
+          "VentId": 17,
+          "Opening": {
+            "Value": 0.45,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:03:19"
+          }
+        },
+        {
+          "VentId": 20,
+          "Opening": {
+            "Value": 0.9504000091552735,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:39:39"
+          }
+        }
+      ],
+      "ActiveLampSteps": [
+        {
+          "LampStepId": 1
+        }
+      ],
+      "Screens": [
+        {
+          "ScreenId": 11,
+          "Effect": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:00"
+          }
+        },
+        {
+          "ScreenId": 12,
+          "Effect": {
+            "Value": 0.8802100372314453,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T12:43:03"
+          }
+        }
+      ],
+      "Dehumidifiers": null,
+      "Co2Dispenser": null
+    },
+    {
+      "CompartmentId": 12,
+      "IndoorClimate": {
+        "Temperature": {
+          "Value": 23.817567825317383,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:38"
+        },
+        "LightIntensity": {
+          "Value": 13.88232135772705,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:51"
+        },
+        "RelativeHumidity": {
+          "Value": 31.071674346923828,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:51"
+        },
+        "Co2": {
+          "Value": 451.41131591796875,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:52:03"
+        }
+      },
+      "HeatPipes": [
+        {
+          "HeatPipeId": 21,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:33"
+          },
+          "TemperatureInFlow": {
+            "Value": 32.0098876953125,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:38"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        },
+        {
+          "HeatPipeId": 22,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:33"
+          },
+          "TemperatureInFlow": {
+            "Value": 44.46141052246094,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:51"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        }
+      ],
+      "Vents": [
+        {
+          "VentId": 21,
+          "Opening": {
+            "Value": 0.16079999923706054,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:49:53"
+          }
+        },
+        {
+          "VentId": 22,
+          "Opening": {
+            "Value": 0.12539999961853027,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:51"
+          }
+        }
+      ],
+      "ActiveLampSteps": [
+        {
+          "LampStepId": 5
+        }
+      ],
+      "Screens": [
+        {
+          "ScreenId": 15,
+          "Effect": {
+            "Value": 0.6,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:31:22"
+          }
+        },
+        {
+          "ScreenId": 16,
+          "Effect": {
+            "Value": 0.6883999633789063,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:51"
+          }
+        }
+      ],
+      "Dehumidifiers": null,
+      "Co2Dispenser": null
+    },
+    {
+      "CompartmentId": 11,
+      "IndoorClimate": {
+        "Temperature": {
+          "Value": 23.197446823120117,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:52"
+        },
+        "LightIntensity": {
+          "Value": 13.020183563232422,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:52"
+        },
+        "RelativeHumidity": {
+          "Value": 41.89699935913086,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:52"
+        },
+        "Co2": {
+          "Value": 350.3355712890625,
+          "Origin": 1,
+          "TimeStamp": "2019-08-21T13:51:52"
+        }
+      },
+      "HeatPipes": [
+        {
+          "HeatPipeId": 19,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:45"
+          },
+          "TemperatureInFlow": {
+            "Value": 29.67264747619629,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:52"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        },
+        {
+          "HeatPipeId": 20,
+          "FlowRate": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-08T14:19:45"
+          },
+          "TemperatureInFlow": {
+            "Value": 31.69404411315918,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:51:52"
+          },
+          "TemperatureOutFlow": {
+            "Value": 0,
+            "Origin": 3,
+            "TimeStamp": null
+          }
+        }
+      ],
+      "Vents": [
+        {
+          "VentId": 18,
+          "Opening": {
+            "Value": 0.47759998321533204,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:48:44"
+          }
+        },
+        {
+          "VentId": 19,
+          "Opening": {
+            "Value": 0.597599983215332,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:48:44"
+          }
+        }
+      ],
+      "ActiveLampSteps": [
+        {
+          "LampStepId": 3
+        }
+      ],
+      "Screens": [
+        {
+          "ScreenId": 13,
+          "Effect": {
+            "Value": 0.9696800231933593,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T12:20:13"
+          }
+        },
+        {
+          "ScreenId": 14,
+          "Effect": {
+            "Value": 0,
+            "Origin": 1,
+            "TimeStamp": "2019-08-21T13:45:49"
+          }
+        }
+      ],
+      "Dehumidifiers": null,
+      "Co2Dispenser": null
+    }
+  ]
+}
+

@@ -20,11 +20,15 @@ A = ddply(sim, .(Location), stats)
 print(A)
 
 P = ggplot(A) +
-  geom_point(aes(y=Location, x=Median, colour=Location), size=3) +
+  geom_point(aes(y=Location, x=Median, colour=Location), size=4) +
   geom_errorbarh(aes(y=Location, x=Median, xmin=From, xmax=To, 
                      height=0, colour=Location), size=1.3) +
   xlab("Butterflies flying") + ylab("") +
   theme(legend.position="none")
 
+x11(5,3)
 print(P)
-  
+
+figures <- function(df) {
+  Pages = list(Page = list(Grob=P, Width=5, Height=3))
+}

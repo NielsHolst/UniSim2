@@ -44,8 +44,10 @@ void ShelterFace::amend() {
     BoxBuilder builder(this);
     if (!findMaybeOne<Box>("./cover"))
         builder.box("Cover").name("cover").endbox();
-    if (objectName().contains("roof") && !findMaybeOne<Box>("./vent"))
-        builder.box("Vent").name("vent").endbox();
+    if (objectName().contains("roof") && !findMaybeOne<Box>("./vent")) {
+        QString name = "vent"; // + objectName().back();
+        builder.box("Vent").name(name).endbox();
+    }
 }
 
 void ShelterFace::initialize() {

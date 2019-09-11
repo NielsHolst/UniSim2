@@ -1,0 +1,36 @@
+// func-resp-gb-fg.box
+Simulation {
+  .steps = 200
+  .iterations = 3
+  Sequence attacker {
+    .by = "reset"
+    .values = (1 2 5)
+  }
+  Sequence demand {
+    .by = "reset"
+    .values = (10 20 50)
+  }
+  Sequence resource {
+    .by = "update"
+    .min = 0
+    .max = 200
+  }
+  FunctionalResponse gb {
+    .attacker = attacker[value]
+    .prey = resource[value]
+    .demandGross = demand[value]
+    .attackRate = 0.8
+  }
+  SuperFunctionalResponse fg {
+    .attacker = attacker[value]
+    .host = resource[value]
+    .demand = demand[value]
+    .attackRate = 0.8
+  }
+  OutputR {
+    .end = "func-resp-gb-fg-end.R"
+    OutputText {
+      .ports = (gb[*] fg[*])
+    }
+  }
+}

@@ -42,8 +42,8 @@ void IndoorsLight::update() {
     direct = sunlightDirect + growthLigthtsDirect;
     total = direct + diffuse;
 
-    parDiffuse = sunlightPhotonCoef*diffuse;
-    parDirect = sunlightPhotonCoef*direct + growthLigthtsParIntensity;
+    parDiffuse = sunlightPhotonCoef*sunlightDiffuse;
+    parDirect = sunlightPhotonCoef*sunlightDirect + growthLigthtsParIntensity;
     parTotal = parDiffuse + parDirect;
 }
 

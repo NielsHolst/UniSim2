@@ -180,6 +180,8 @@
 
 <xsl:template name="extract-vent">
   <xsl:param name="position"/>
+  <!-- <xsl:variable name="ventName" select="concat('vent', $position)"/> -->
+  <xsl:variable name="ventName" select="'vent'"/>
   <xsl:variable name="lengthName" select="'Length'"/>
   <xsl:variable name="lengthSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$lengthName]/Value"/>
   <xsl:variable name="lengthValue" select="number(replace($lengthSrc, ',', '.'))"/>
@@ -194,6 +196,9 @@
   <xsl:variable name="transmissivityValue" select="number(replace($transmissivitySrc, ',', '.'))"/>
 
   <box class="vg::Vent" name="vent">
+    <xsl:attribute name="name">
+      <xsl:value-of select="$ventName"/>
+    </xsl:attribute>
     <port name="length">
       <xsl:attribute name="externalName">
         <xsl:value-of select="$lengthName"/>
@@ -1160,8 +1165,8 @@
       <newPort name="setpointHeating" ref="setpoints/temperature/heating[value]"/>
       <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
       <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
-			<newPort name="co2Injection" ref="controllers/co2[value]"/>
-			<newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
+      <newPort name="co2Injection" ref="controllers/co2[value]"/>
+      <newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
       <newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
       <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
       <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
@@ -1175,16 +1180,26 @@
       <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
       <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
       <newPort name="ventsOpening" ref="actuators/vents[value]"/>
+      <newPort name="screenEnergy" ref="actuators/screens/energy[value]"/>
+      <newPort name="screenShade" ref="actuators/screens/shade[value]"/>
+      <newPort name="screenBlackout" ref="actuators/screens/blackout[value]"/>
+      <newPort name="ventilationSetpoint" ref="ventilation/controller/target[value]"/>
+      <newPort name="heatingSetpoint" ref="heating/controller/target[value]"/>
+      <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
+      <newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
+      <newPort name="ventTempSetpointAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
+      <newPort name="ventTempSetpointAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
     </box>
-    <box class="PageR">
-      <port name="xAxis" value="calendar[dateTime]"/>
-      <box class="PlotR">
-        <port name="ncol" value="4"/>
-        <port name="ports" value="output/p[*]"/>
-      </box>
-    </box>
+    <!-- <box class="PageR"> -->
+      <!-- <port name="xAxis" value="calendar[dateTime]"/> -->
+      <!-- <box class="PlotR"> -->
+        <!-- <port name="ncol" value="4"/> -->
+        <!-- <port name="ports" value="output/p[*]"/> -->
+      <!-- </box> -->
+    <!-- </box> -->
     <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
     <box class="OutputText">
+      <port name="ports" value="output/p[*]"/>
       <port name="skipFormats" value="TRUE"/>
       <port name="skipInitialRows">
         <xsl:attribute name="value">

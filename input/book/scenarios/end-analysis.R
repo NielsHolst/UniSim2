@@ -26,8 +26,6 @@ P = ggplot(A) +
   xlab("Butterflies flying") + ylab("") +
   theme(legend.position="none")
 
-print(P)
-  
 x11(5,3)
 print(P)
 

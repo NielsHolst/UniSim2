@@ -1,16 +1,14 @@
 // egg1.box
 Simulation sim {
-  .iterations = 30000
-  .steps = 2
-  .silent = TRUE
-  Calendar calendar {
-  }
+  .steps = 14
   Stage egg {
     .initial = 100 
     .duration = 7
   }
   OutputR {
     PageR {
+      .width = 4
+      .height = 2.5
       .xAxis = sim[step]
       PlotR {
         .ports = egg[content]

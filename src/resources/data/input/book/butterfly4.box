@@ -1,21 +1,19 @@
 // butterfly4.box
 Simulation sim {
-  .steps = 1085
+  .steps = 365
   Calendar calendar {
-    .initialDateTime = 1/1/2009 
+    .initialDateTime = 1/1/2009  //!
   }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"
-    .cycle = TRUE 
   }
-  
   Box butterfly {
     Stage egg {
       .initial = 100 
-      .inflow = ../adult/oviposition[outflow] 
+      .inflow = ../adult/oviposition[outflow]  //!
       .duration = 140
-      .timeStep = ./time[value]
-      OnOff time { 
+      .timeStep = ./time[value] //!
+      OnOff time { //!
         .x = calendar[dayOfYear]
         .xOn = 107    // 17 April
         .xOff = 152   //  1 June
@@ -64,27 +62,25 @@ Simulation sim {
       }
     }
   }
-  
-
   OutputR {
     PageR {
       .xAxis = calendar[date]
-      .ncol = 2 //! 
-      +monthBreaks = "geom_line(size=1.1) + 
-                      scale_x_datetime(
-                        breaks = date_breaks('4 months'), 
+      .ncol = 3 //!
+      +monthBreaks = "scale_x_datetime(
+                        breaks = date_breaks('3 months'),
                         labels = date_format('%b')
-                      ) + 
-                      ylim(0,NA)" //!
+                      )" //!
       PlotR {
         .ports = *[content]
         .ggplot = ..[monthBreaks]
-        .transform = "log10"
       }
       PlotR {
         .ports = *[outflowTotal]
         .ggplot = ..[monthBreaks]
-        .transform = "log10"
+      }
+      PlotR { //!
+        .ports = (calendar[dayOfYear] weather[Tavg] egg/time/dayDegrees[step] egg/time[isOn] egg[timeStep])
+        .ggplot = ..[monthBreaks]
       }
     }
   }

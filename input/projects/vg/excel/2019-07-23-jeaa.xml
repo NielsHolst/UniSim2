@@ -14,7 +14,7 @@
 	<XMLVersion>1.3</XMLVersion>
 	<XMLDate>23-07-2019 11:50:04</XMLDate>
 	<Weather>
-		<File>C:\Virtual Greenhouse Development\DVV Weather\DNK_Dry.txt</File>
+		<File>..\input\DNK_Dry.txt</File>
 	</Weather>
 	<Greenhouse>
 		<Name></Name>

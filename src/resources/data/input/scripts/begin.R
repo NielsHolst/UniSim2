@@ -18,6 +18,32 @@ if (!keepVariables) {
 is_rstudio = function() !is.na(Sys.getenv("RSTUDIO", unset = NA))
 skip_formats = exists("output_skip_formats")
 
+# See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
+unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999')  
+scale_colour_discrete = function(...) {
+  scale_colour_manual(..., values = rep(unisim_colours, 2))
+}
+
+scale_linetype_discrete = function(...) {
+  n = length(unisim_colours)
+  scale_linetype_manual(..., values = c(rep(1, n), rep(7, n)))
+}
+
+check_num_colours = function(list_of_names) {
+  unique_names = unique(unlist(list_of_names))
+  n = length(unique_names)
+  nmax = length(unisim_colours)
+  if (n > nmax) {
+    stop(paste0("Too many variables in plot(",n," > ", nmax, ")\n", unique_names))
+  }
+}
+
+update_geom_defaults("line", list(size=1))
+
+reorder_levels = function(the_factor, new_order) {
+  factor(the_factor,levels(the_factor)[new_order])
+}
+
 open_plot_window = function(width, height) {
   is_windows = (.Platform$OS.type == "windows")
   if (!is_rstudio()) {
@@ -25,6 +51,7 @@ open_plot_window = function(width, height) {
     X11(width=width, height=height, type="cairo") 
   }
 }
+
 
 unique_names = function(col_names) {
 
@@ -161,7 +188,9 @@ plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
   levels(M$Variable)  = unique_names(levels(M$Variable))
 
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
+  check_num_colours(M[color])
   P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
+    geom_line() +
     theme(legend.position="none")
   if (hasIterations | !onlyOneVariable) {
     P = P + xlab("") + ylab("")
@@ -184,7 +213,9 @@ plot_merged_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
   levels(M$Variable)  = unique_names(levels(M$Variable))
 
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
-  P = ggplot(M, aes_string(x=id_x, y="Value", color=color))
+  check_num_colours(M[color])
+  P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
+    geom_line() +
   if (onlyOneVariable) {
     P = P + xlab(id_x) + ylab(cols)
   } else {
@@ -214,7 +245,9 @@ plot_facetted_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow
   levels(M$Response)  = unique_names(levels(M$Response))
 
   color = if (hasIterations) "iter" else "Response"
+  check_num_colours(M[color])
   ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
+    geom_line() +
     xlab("") + ylab("") +
     facet_grid(Response~xVariable, scales="free") 
 }
@@ -228,7 +261,9 @@ plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) 
   levels(M$Response)  = unique_names(levels(M$Response))
 
   color = if (useIter) "iter" else "Response"
+  check_num_colours(M[color])
   p = ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
+    geom_line() +
     xlab("")  + ylab("")
   p = p + if (useIter) facet_grid(Response~xVariable, scales="free") else facet_wrap(~xVariable, scales="free") 
   p
@@ -239,7 +274,9 @@ plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
   levels(M$Response)  = unique_names(levels(M$Response))
   levels(M$xVariable) = unique_names(levels(M$xVariable))
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
+  check_num_colours(M$Response)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
+    geom_line() +
     xlab("") + ylab("") +
     theme(legend.position="none") +
     facet_grid(Response~xVariable, scales="free")
@@ -249,14 +286,16 @@ plot_merged_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
   M = meltxy(df, id_x, NULL, cols)
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   levels(M$Response)  = unique_names(levels(M$Response))
+  check_num_colours(M$Response)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
+    geom_line() +
     xlab("") + ylab("") +
     facet_wrap(~xVariable, scales="free")
 }
 
 plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  # if (!is.null(id_iteration) && id_iteration == "iteration.end")
-  if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
+  if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  # if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
     plot_facetted_filtered(df, id_x, cols, ytrans, ncol, nrow) else
     if (length(id_x) == 1) 
       plot_facetted_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else
@@ -264,8 +303,8 @@ plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
 }
 
 plot_merged = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  # if (!is.null(id_iteration) && id_iteration == "iteration.end")
-  if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
+  if (!is.null(id_iteration) && id_iteration == "iteration.end")
+  # if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
     plot_merged_filtered(df, id_x, cols, ncol, nrow) else
     if (length(id_x) == 1) 
       plot_merged_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else

@@ -427,15 +427,18 @@
 			<newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
 			<newPort name="airFluxTotal" ref="total/airFlux[value]"/>
 			<newPort name="ventsOpening" ref="actuators/vents[value]"/>
-		</box>
-		<box class="PageR">
-			<port name="xAxis" value="calendar[dateTime]"/>
-			<box class="PlotR">
-				<port name="ncol" value="4"/>
-				<port name="ports" value="output/p[*]"/>
-			</box>
+			<newPort name="screenEnergy" ref="actuators/screens/energy[value]"/>
+			<newPort name="screenShade" ref="actuators/screens/shade[value]"/>
+			<newPort name="screenBlackout" ref="actuators/screens/blackout[value]"/>
+			<newPort name="ventilationSetpoint" ref="ventilation/controller/target[value]"/>
+			<newPort name="heatingSetpoint" ref="heating/controller/target[value]"/>
+			<newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
+			<newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
+			<newPort name="ventTempSetpointAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
+			<newPort name="ventTempSetpointAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
 		</box>
 		<box class="OutputText">
+			<port name="ports" value="output/p[*]"/>
 			<port name="skipFormats" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>

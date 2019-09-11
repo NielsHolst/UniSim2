@@ -11,10 +11,10 @@
     <file>data/input/book/butterfly1.box</file>
     <file>data/input/book/butterfly2.box</file>
     <file>data/input/book/butterfly3.box</file>
-    <file>data/input/book/butterfly3a.box</file>
-    <file>data/input/book/butterfly3b.box</file>
     <file>data/input/book/butterfly4.box</file>
     <file>data/input/book/butterfly5.box</file>
+    <file>data/input/book/butterfly6.box</file>
+    <file>data/input/book/butterfly7.box</file>
     <file>data/input/book/dist-delay-scenarios.txt</file>
     <file>data/input/book/dist-delay1.box</file>
     <file>data/input/book/dist-delay2.box</file>
@@ -32,11 +32,18 @@
     <file>data/input/book/food-web/food-web-2.box</file>
     <file>data/input/book/food-web/food-web.R</file>
     <file>data/input/book/food-web/gain-matrix.txt</file>
-    <file>data/input/book/func-resp/func-resp-1-end.R</file>
-    <file>data/input/book/func-resp/func-resp-1.box</file>
-    <file>data/input/book/func-resp/func-resp-2.box</file>
-    <file>data/input/book/func-resp/func-resp-3.box</file>
-    <file>data/input/book/func-resp/func-resp-4.box</file>
+    <file>data/input/book/func-resp/func-resp-energy-budget-end.R</file>
+    <file>data/input/book/func-resp/func-resp-energy-budget.box</file>
+    <file>data/input/book/func-resp/func-resp-fg-end.R</file>
+    <file>data/input/book/func-resp/func-resp-fg.box</file>
+    <file>data/input/book/func-resp/func-resp-gb-detail-end.R</file>
+    <file>data/input/book/func-resp/func-resp-gb-detail.box</file>
+    <file>data/input/book/func-resp/func-resp-gb-end.R</file>
+    <file>data/input/book/func-resp/func-resp-gb-fg-end.R</file>
+    <file>data/input/book/func-resp/func-resp-gb-fg.box</file>
+    <file>data/input/book/func-resp/func-resp-gb.box</file>
+    <file>data/input/book/func-resp/func-resp-para-host.box</file>
+    <file>data/input/book/func-resp/func-resp-pred-prey.box</file>
     <file>data/input/book/honeybee1.box</file>
     <file>data/input/book/honeybee2.box</file>
     <file>data/input/book/insect.box</file>
@@ -238,12 +245,16 @@
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
+    <file>data/input/projects/ig/read-json.R</file>
     <file>data/input/projects/ig/simulation-1440-minutes.txt</file>
     <file>data/input/projects/ig/simulation.txt</file>
     <file>data/input/projects/ig/sun_height.box</file>
+    <file>data/input/projects/ig/ud.json</file>
+    <file>data/input/projects/ig/Unisim-input-21-08-2019.json</file>
     <file>data/input/projects/ig/UniSimData.json</file>
     <file>data/input/projects/ig/UnisimInputData-1-day.json</file>
     <file>data/input/projects/ig/UnisimInputData-3-months.json</file>
+    <file>data/input/projects/ig/UnisimInput_2019-28-05_ 2019-06-04-2019.json</file>
     <file>data/input/projects/potato/generate-scenarios.R</file>
     <file>data/input/projects/potato/potato-end.R</file>
     <file>data/input/projects/potato/potato1.box</file>
@@ -337,9 +348,9 @@
     <file>data/input/projects/vg/input/DNK_Dry.txt</file>
     <file>data/input/projects/vg/input/sel_dk.txt</file>
     <file>data/input/projects/vg/input/sel_dk_missing_columns.txt</file>
-    <file>data/input/scripts/begin copy.R</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
+    <file>data/input/scripts/end-batch.R</file>
     <file>data/input/scripts/end.R</file>
     <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>
