@@ -1,8 +1,8 @@
 sim = read_output(output_file_name)
 
 sim$iteration = factor(sim$iteration)
-sim$yieldLossWithoutF = 100*(1 - sim$yieldWithoutF)
-sim$yieldLossWithF   = 100*(1 - sim$yieldWithF)
+sim$yieldLossWithoutF = 100*(1 - sim$yieldWithoutF.end)
+sim$yieldLossWithF   = 100*(1 - sim$yieldWithF.end)
 
 # Colourblind-safe from http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=4
 col_fill = c('#33a02c', '#b2df8a', '#a6cee3')
@@ -49,8 +49,8 @@ simple_density_plot = function(column, x_label) {
 
 print(
   grid.arrange(
-    simple_density_plot("cadaverPressure", "Fungus pressure (cadaver-days)"),
-    density_plot("aphidPressureWithoutF", "aphidPressureWithF", "Aphid pressure (aphid-days)"),
+    simple_density_plot("cadaverPressure.end", "Fungus pressure (cadaver-days)"),
+    density_plot("aphidPressureWithoutF.end", "aphidPressureWithF.end", "Aphid pressure (aphid-days)"),
     density_plot("yieldLossWithoutF", "yieldLossWithF", "Yield loss (%)"),
     ncol=1
   )

@@ -10,11 +10,6 @@ TEMPLATE = subdirs
 SUBDIRS += unisim
 unisim.subdir = src/apps/unisim
 
- SUBDIRS += aphid
- aphid.subdir = src/plugins/aphid
- aphid.depends = base
- unisim.depends = aphid
-
 SUBDIRS += base
 base.subdir = src/plugins/base
 unisim.depends = base
@@ -24,10 +19,10 @@ boxes.subdir = src/plugins/boxes
 boxes.depends = base
 unisim.depends = boxes
 
- SUBDIRS += cmbp
- cmbp.subdir = src/plugins/cmbp
- cmbp.depends = base
- unisim.depends = cmbp
+SUBDIRS += cmbp
+cmbp.subdir = src/plugins/cmbp
+cmbp.depends = base
+unisim.depends = cmbp
 
 SUBDIRS += command
 command.subdir = src/plugins/command
@@ -57,6 +52,11 @@ unisim.depends = vg
 #
 # Optional plug-ins
 #
+
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
 
 #SUBDIRS += apis
 #apis.subdir = src/plugins/apis
@@ -88,10 +88,10 @@ unisim.depends = vg
 #io.depends = base
 #unisim.depends = io
 
-#SUBDIRS += MusselBed
-#MusselBed.subdir = src/plugins/MusselBed
-#MusselBed.depends = base
-#unisim.depends = MusselBed
+SUBDIRS += MusselBed
+MusselBed.subdir = src/plugins/MusselBed
+MusselBed.depends = base
+unisim.depends = MusselBed
 
 #SUBDIRS += PestTox
 #PestTox.subdir = src/plugins/PestTox

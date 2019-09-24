@@ -4,6 +4,8 @@
 */
 #ifndef PLOT_R_H
 #define PLOT_R_H
+#include <QString>
+#include <QStringList>
 #include <QTextStream>
 #include <base/track.h>
 #include "output_ports.h"
@@ -25,14 +27,22 @@ public:
     QString toScript();
 private:
     // Inputs
-    bool hide;
+    bool hide, showDistributions;
     QVector<QString> ports;
-    QString layout, guideTitle, end, endCode, ggplot, transform;
+    QString layout, guideTitle, end, endCode, type, ggplot, transform;
     int ncol, nrow, iteration, fontSize;
+    double width, height;
+    // Outputs
+    bool plotAsList;
     // Methods
     QVector<base::Track*> xAxisTracks();
-    QString dim(QString portName);
+    QString dim(QString portName) const;
     void appendGgplot(QTextStream &s);
+    QString scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const;
+    QString scriptForDensityPlot(QStringList yLabels) const;
+    QString scriptForHistogramPlot(QStringList yLabels, QString type) const;
+    QString scriptForSobolConvergencePlot() const;
+    QString scriptForSobolIndicesPlot();
 };
 
 }

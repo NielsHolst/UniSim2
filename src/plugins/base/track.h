@@ -61,7 +61,6 @@ private:
     QString _uniqueName;
     PortType _type;
     const void *_valuePtr;
-    int _count;
     // Methods
     static bool areAnyOrdersFiltered();
     static void replaceUnfilteredOrders();

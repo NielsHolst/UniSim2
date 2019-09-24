@@ -15,8 +15,6 @@ namespace boxes {
 
 PUBLISH(PlotR)
 
-//const QString defaultGgplot = "geom_line(size=1.1)";
-const QString defaultGgplot = "";
 
 PlotR::PlotR(QString name, QObject *parent)
     : OutputPorts(name, parent)
@@ -24,15 +22,19 @@ PlotR::PlotR(QString name, QObject *parent)
     help("produces an R plot");
     Input(hide).equals(false).help("Hide this plot?");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
+    Input(type).equals("default").help("Type of plot").unit("default|density|histogram(nbins)|SobolConvergence|SobolIndices");
     Input(guideTitle).help("Title of guide legends");
     Input(fontSize).help("Used for axes and panels; zero yields default font size");
-    Input(ggplot).equals(defaultGgplot).help("R code that will be added to the ggplot");
+    Input(ggplot).help("R code that will be added to the ggplot");
     Input(transform).help("Transformation of y-axis; only 'log10' available");
     Input(end).help("Deprecated");
     Input(endCode).help("Deprecated");
     Input(ncol).equals(-1).help("Number of columns in arrangement of plots; -1 keeps default");
     Input(nrow).equals(-1).help("Number of rows in arrangement of plots; -1 keeps default");
     Input(iteration).imports("/*[iteration]");
+    Input(width).imports("..[width]").help("May be used to spawn additional pages");
+    Input(height).imports("..[height]").help("May be used to spawn additional pages");
+    Output(plotAsList).noReset().help("Is the plot a list of plots?");
 }
 
 void PlotR::initialize() {
@@ -41,6 +43,8 @@ void PlotR::initialize() {
     if (transform!="" && transform!="log10")
         ThrowException("Only valid value for 'transform' is 'log10'")
                 .value(transform).context(this);
+    // Set flag for list output
+    plotAsList = (type.toLower()=="sobolindices");
 }
 
 void PlotR::reset() {
@@ -84,6 +88,35 @@ QString PlotR::toScript() {
     if (isFiltered) iterationLabel += ".end";
 
     // Write function call
+    QString string,
+            typeId = type.toLower();
+    QTextStream s(&string);
+    if (typeId=="default")
+        s << scriptForDefaultPlot(xLabels, yLabels, iterationLabel);
+    else if (typeId=="density")
+        s << scriptForDensityPlot(yLabels);
+    else if (typeId.startsWith("histogram"))
+        s << scriptForHistogramPlot(yLabels, type);
+    else if (typeId=="sobolconvergence")
+        s << scriptForSobolConvergencePlot();
+    else if (typeId=="sobolindices")
+        s << scriptForSobolIndicesPlot();
+    else
+        ThrowException("Invalid value for 'type'. Must be one of " + port("type")->unit()).value(type).context(this);
+
+    // Append code
+    appendGgplot(s);
+    if (!end.isEmpty())
+        s << "+" << environment().inputFileContent(end).trimmed();
+    if (!endCode.isEmpty())
+        s << "+" << endCode;
+    if (fontSize > 0 && !plotAsList )
+        s << "+ggplot_theme(" << fontSize << ")";
+    s << ",\n";
+    return string;
+}
+
+QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const {
     QString string;
     QTextStream s(&string);
     s << "    "
@@ -100,14 +133,64 @@ QString PlotR::toScript() {
       << ", "
       << "nrow=" << dim("nrow")
       << ")";
-    appendGgplot(s);
-    if (!end.isEmpty())
-        s << "+" << environment().inputFileContent(end).trimmed();
-    if (!endCode.isEmpty())
-        s << "+" << endCode;
+    return string;
+}
+
+QString PlotR::scriptForDensityPlot(QStringList yLabels) const {
+    QString string;
+    QTextStream s(&string);
+    s << "    "
+      << "plot_density(df"
+      << ", "
+      << "c(" << yLabels.join(", ") << ")"
+      << ", "
+      << "ncol=" << dim("ncol")
+      << ", "
+      << "nrow=" << dim("nrow")
+      << ")";
+    return string;
+}
+
+QString PlotR::scriptForHistogramPlot(QStringList yLabels, QString geom) const {
+    // Parse geom
+    int left = geom.indexOf("("),
+        right = geom.indexOf(")");
+    if (left==-1 || right==-1 || right-left<1)
+        ThrowException("Missing bin number in geom").value(geom).
+                hint("Write, e.g., histogram(8)").context(this);
+    int bins = geom.mid(left+1, right-left).toInt();
+    if (bins <= 0)
+        bins = 8;
+    // Build script
+    QString string;
+    QTextStream s(&string);
+    s << "    "
+      << "plot_histogram(df"
+      << ", "
+      << "c(" << yLabels.join(", ") << ")"
+      << ", "
+      << "bins=" << bins
+      << ", "
+      << "ncol=" << dim("ncol")
+      << ", "
+      << "nrow=" << dim("nrow")
+      << ")";
+    return string;
+}
+
+QString PlotR::scriptForSobolConvergencePlot() const {
+    return "    plot_sobol_convergence()";
+}
+
+QString PlotR::scriptForSobolIndicesPlot() {
+    QString string;
+    QTextStream s(&string);
+    s << "    "
+      << "plot_sobol_indices";
     if (fontSize > 0)
-        s << "+ggplot_theme(" << fontSize << ")";
-    s << ",\n";
+        s << "(ggplot_theme(" << fontSize << "))";
+    else
+        s << "(NULL)";
     return string;
 }
 
@@ -120,7 +203,7 @@ QVector<Track*> PlotR::xAxisTracks() {
     return tracks;
 }
 
-QString PlotR::dim(QString portName) {
+QString PlotR::dim(QString portName) const {
     int value = port(portName)->value<int>();
     return (value == -1) ? QString("NULL") : QString::number(value);
 }

@@ -67,10 +67,10 @@ void StageBase::resetOutputsToZero() {
 }
 
 void StageBase::applyInstantMortality(double mortality) {
-    double survival = 1. - mortality;
     TestNum::snapToZero(mortality);
     TestNum::snapTo(mortality, 1.);
-    if (survival < 0 || survival > 1.)
+    double survival = 1. - mortality;
+    if (survival < 0. || survival > 1.)
        ThrowException("Mortality must be in the range [0;1]").value(mortality).context(this);
     _ddBase->scale(survival);
 }

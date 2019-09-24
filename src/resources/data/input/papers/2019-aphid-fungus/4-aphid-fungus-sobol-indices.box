@@ -1,8 +1,8 @@
 Simulation sim {
   // Runs at ~150 iterations per minute
-  // 26624 iterations used in paper
+  // 53248 iterations used in paper
   // 832 iterations for a quicker demonstration
-  .iterations = 53248
+  .iterations = 832
   .steps =  273 // end of september
   .silent = TRUE
   SelectFile weatherFiles {
@@ -23,8 +23,8 @@ Simulation sim {
     // }
     RandomiserSobolSequence randomiser {
       .doSensitivityAnalysis = TRUE
-      // Set bootstrapSize to 2000 for a quick demonstration; a value of 10000 used in paper
-      .bootstrapSize = 10000
+      // Set bootstrapSize to 1000 for a quick demonstration; a value of 10000 used in paper
+      .bootstrapSize = 1000
     }
     RandomUniformInt fileNumber {
       .min = 1
@@ -361,18 +361,34 @@ Simulation sim {
   }
    
   OutputR {
-     .end = ("scripts/end.R" "4-end.R")
-    PageR sobolIndices {
+    +cadaverPressure = withFungus/diagnostics/cadaverDays[value]
+    PageR {
       .xAxis = random/*[value]
+      .width = 10
+      .height = 4
       PlotR {
-        +cadaverPressure = withFungus/diagnostics/cadaverDays[value]
-        .ports = (biocontrol[aphidPressureWithF]|end 
-                  biocontrol[aphidPressureDifference]|end 
-                  biocontrol[yieldWithF]|end 
-                  biocontrol[yieldDifference]|end 
-                  .[cadaverPressure]|end) 
-        .ggplot = "geom_point(size=2, alpha=0.3) + geom_smooth(colour='yellow',size=1) + theme_classic()"
+        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
+        .ggplot = "geom_smooth(colour='yellow')"
       }
     }
-  }  
+    PageR {
+      .xAxis = random/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
+        .type = "SobolIndices"
+      }
+    }
+  }
 }

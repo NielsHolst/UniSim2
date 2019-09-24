@@ -162,7 +162,7 @@ void RandomiserBase::checkIterationsSimple(int iterations) {
 
 void RandomiserBase::debrief() {
     OutputR *outputR = findMaybeOne<OutputR>("*");
-    if (outputR && doSensitivityAnalysis) {
+    if (outputR &&doSensitivityAnalysis) {
         outputR->addRCode("sobol_k = " + QString::number(numVariables) +
                           "; sobol_N = " + QString::number(N) +
                           "; sobol_B = " + QString::number(bootstrapSize) +"\n" +

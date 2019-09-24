@@ -1190,16 +1190,15 @@
       <newPort name="ventTempSetpointAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
       <newPort name="ventTempSetpointAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
     </box>
-    <!-- <box class="PageR"> -->
-      <!-- <port name="xAxis" value="calendar[dateTime]"/> -->
-      <!-- <box class="PlotR"> -->
-        <!-- <port name="ncol" value="4"/> -->
-        <!-- <port name="ports" value="output/p[*]"/> -->
-      <!-- </box> -->
-    <!-- </box> -->
+    <box class="PageR">
+      <port name="xAxis" value="calendar[dateTime]"/>
+      <box class="PlotR">
+        <port name="ncol" value="4"/>
+        <port name="ports" value="output/p[*]"/>
+      </box>
+    </box>
     <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
     <box class="OutputText">
-      <port name="ports" value="output/p[*]"/>
       <port name="skipFormats" value="TRUE"/>
       <port name="skipInitialRows">
         <xsl:attribute name="value">

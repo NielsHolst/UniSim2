@@ -32,7 +32,7 @@ private:
     // inputs
     QString fileName, dateColumnName, timeColumnName;
     QDateTime calendarDateTime;
-    bool cycle, overrideCalendarYear;
+    bool cycle, overrideCalendarYear, overrideCalendarDateTime;
 
     // outputs
     QDateTime currentDateTime, nextDateTime, firstDateTime, lastDateTime;
@@ -54,6 +54,7 @@ private:
     void advanceTime();
     QDateTime alignDateTime(QDateTime dt, int yearOffset) const;
     void doOverrideCalendarYear();
+    void doOverrideCalendarDateTime();
 
     // data
     QFile _file;

@@ -29,7 +29,8 @@ Records::Records(QString name, QObject *parent)
     Input(timeColumnName).help("Name of column with time").equals("Time");
     Input(cycle).equals(false).help("Cycle back to start at end of file? File must begin on 1 January and end on 31 December");
     Input(calendarDateTime).imports("calendar[dateTime]");
-    Input(overrideCalendarYear).equals(false).help("Let first date in records determine calendar year?");
+    Input(overrideCalendarYear).equals(false).help("Let first date in records determine initial calendar year?");
+    Input(overrideCalendarDateTime).equals(false).help("Let first date-time in records determine initial calendar date-time?");
 
     Output(currentDateTime).help("Date-time stamp of the current outputs");
     Output(nextDateTime).help("Date-time stamp of the next outputs");
@@ -231,6 +232,16 @@ void Records::doOverrideCalendarYear() {
         calendarInitialDateTimePort->equals(calendarInitialDateTime);
         calendar->reset();
         calendarDateTime = calendarInitialDateTime;
+    }
+}
+
+void Records::doOverrideCalendarDateTime() {
+    if (overrideCalendarDateTime) {
+        Box *calendar = findOne<Box>("calendar");
+        Port *calendarInitialDateTimePort = calendar->port("initialDateTime");
+        calendarInitialDateTimePort->equals(firstDateTime);
+        calendar->reset();
+        calendarDateTime = firstDateTime;
     }
 }
 

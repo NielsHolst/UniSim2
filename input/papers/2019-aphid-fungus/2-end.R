@@ -32,7 +32,7 @@ P = grid.arrange(
       labs(x="Date", y="Aphid density (per tiller)") +
       scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b'), limits = c(from_date, to_date)) +
       theme_classic() +
-      theme(legend.position = "none")
+      theme(legend.position = "bottom")
     ,
     ggplot(M2, aes(x=CropGrowthStage, y=Density, colour=Population, group=interaction(Iteration,Population))) +
       # geom_line(alpha=1, size=1.1) +
@@ -41,8 +41,7 @@ P = grid.arrange(
       labs(x="Crop growth stage (Zadoks scale)", y="Aphid density (per tiller)") +
       scale_x_continuous(breaks = 10*(3:9), limits=c(30,90)) +
       theme_classic() +
-      theme(legend.position = "none")
-      # theme(legend.position = "bottom") 
+      theme(legend.position = "bottom") 
     ,
     ncol=1
   )

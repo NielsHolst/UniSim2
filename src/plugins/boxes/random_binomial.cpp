@@ -17,8 +17,8 @@ RandomBinomial::RandomBinomial(QString name, QObject *parent)
     : RandomBaseTyped<bool>(name, parent)
 {
     help("produces random numbers from the binomial distribution");
-    // Overwrite P defaults
     port("P")->equals(0.5).help("Probability of event");
+    port("max")->help("Maximum value (included)");
 }
 
 void RandomBinomial::updateValue() {

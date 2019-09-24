@@ -12,10 +12,7 @@ HEADERS +=  \
     accumulator.h \
     actuators.h \
     air_flux_base.h \
-#    air_flux_cooling_supply.h \
-#    air_flux_cooling_supply_max.h \
     air_flux_given.h \
-#    air_flux_gravitation.h \
     air_flux_infiltration.h \
     air_flux_vents.h \
     any_flag.h \
@@ -28,9 +25,7 @@ HEADERS +=  \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
     chalk.h \
-#    co2_controller.h \
     controlled.h \
-#    controller_vent_max.h \
     controllers.h \
     controllers_input.h \
     cover.h \
@@ -48,12 +43,9 @@ HEADERS +=  \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_condensation.h \
-#    energy_flux_cooling_demand.h \
-#    energy_flux_cooling_supply.h \
     energy_flux_floor.h \
     energy_flux_sunlight.h \
     energy_flux_heating.h \
-#    energy_flux_heating_demand.h \
     energy_flux_shelter.h \
     energy_flux_sum.h \
     energy_flux_transpiration.h \
@@ -69,6 +61,7 @@ HEADERS +=  \
     growth_light.h \
     growth_lights.h \
     hump.h \
+    ig_indoors_humidity.h \
     indoors.h \
     indoors_co2.h \
     indoors_humidity.h \
@@ -116,19 +109,13 @@ HEADERS +=  \
     vapour_flux_sum_base.h \
     vapour_flux_transpiration.h \
     vent.h \
-#    vent_opening.h \
     ventilated_latent_heat_converter.h
-#    ventilation_by_temperature.h \
-#    ventilation_by_wind.h
 
 SOURCES += \
     accumulator.cpp \
     actuators.cpp \
     air_flux_base.cpp \
-#    air_flux_cooling_supply.cpp \
-#    air_flux_cooling_supply_max.cpp \
     air_flux_given.cpp \
-#    air_flux_gravitation.cpp \
     air_flux_infiltration.cpp \
     air_flux_vents.cpp \
     any_flag.cpp \
@@ -142,10 +129,8 @@ SOURCES += \
     budget.cpp \
     chalk.cpp \
     controlled.cpp \
-#    controller_vent_max.cpp \
     controllers.cpp \
     controllers_input.cpp \
-#    co2_controller.cpp \
     cover.cpp \
     crop.cpp \
     crop_development.cpp \
@@ -161,12 +146,9 @@ SOURCES += \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_condensation.cpp \
-#    energy_flux_cooling_demand.cpp \
-#    energy_flux_cooling_supply.cpp \
     energy_flux_floor.cpp \
     energy_flux_sunlight.cpp \
     energy_flux_heating.cpp \
-#    energy_flux_heating_demand.cpp \
     energy_flux_shelter.cpp \
     energy_flux_sum.cpp \
     energy_flux_transpiration.cpp \
@@ -182,6 +164,7 @@ SOURCES += \
     growth_light.cpp \
     growth_lights.cpp \
     hump.cpp \
+    ig_indoors_humidity.cpp \
     indoors.cpp \
     indoors_co2.cpp \
     indoors_humidity.cpp \
@@ -229,7 +212,4 @@ SOURCES += \
     vapour_flux_sum_base.cpp \
     vapour_flux_transpiration.cpp \
     vent.cpp \
-#    vent_opening.cpp \
     ventilated_latent_heat_converter.cpp
-#    ventilation_by_temperature.cpp \
-#    ventilation_by_wind.cpp

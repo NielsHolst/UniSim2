@@ -51,9 +51,6 @@ HEADERS +=  \
     sandy.h \
     scenarios.h \
     select_file.h \
-    sensitivity_analysis_base.h \
-    sensitivity_analysis_simple.h \
-    sensitivity_analysis_sobol.h \
     sequence.h \
     simulation.h \
     stage_base.h \
@@ -104,9 +101,6 @@ SOURCES +=  \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \
-    sensitivity_analysis_base.cpp \
-    sensitivity_analysis_simple.cpp \
-    sensitivity_analysis_sobol.cpp \
     sequence.cpp \
     simulation.cpp \
     stage_base.cpp \

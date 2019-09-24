@@ -7,12 +7,15 @@
 */
 #ifndef SURFACE_RADIATION_H
 #define SURFACE_RADIATION_H
+#include <QObject>
 #include <QString>
 
 namespace vg {
 
 struct SurfaceRadiation {
-    SurfaceRadiation();
+    SurfaceRadiation(const QObject *parent);
+
+    const QObject *_parent;
 
     struct Spectrum {
         Spectrum(double tra_=1) : tra(tra_) {}
@@ -25,9 +28,9 @@ struct SurfaceRadiation {
             void setRef(double tra);
             void setAbs(double tra);
             double abs, ref;
-            void check(double tra, QString name);
+            void check(double tra, QString name, const QObject *context);
         } inner, outer;
-        void check(QString name);
+        void check(QString name, const QObject *context);
     } light, directLight, lw;
 
     // Methods

@@ -1,0 +1,204 @@
+// sensitivity-analysis-pred-prey.box
+Simulation sim {
+  .iterations = 224 // 7168 224 
+  .steps = 365
+  .silent = TRUE
+  Box random {
+    RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = TRUE
+      .bootstrapSize = 1000  // 10000
+    }
+    RandomUniform attackRate {
+      .min = 0.1
+      .max = 1
+    }
+    RandomNormal conversionCost {
+      .min = 0.24
+      .max = 0.26
+    }
+    RandomUniform k {
+      .min = 10
+      .max = 40
+    }
+    RandomUniform fecundityButterfly {
+      .min = 20
+      .max = 80
+    }
+    RandomUniform fecundityPredator {
+      .min = 30
+      .max = 50
+    }
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2009 
+  }
+  Records weather {
+    .fileName = "weather/flakkebjerg 2009.txt"
+  }
+  Box butterfly {
+    Stage egg {
+      .initial = 100 
+      .inflow = ../adult/oviposition[outflow] 
+      .duration = 140
+      .timeStep = ./time[value]
+      .instantLossRate = predation/funcResp[propPreyAttacked]
+      .k = random/k[value]
+      OnOff time { 
+        .x = calendar[dayOfYear]
+        .xOn = 107    
+        .xOff = 152   
+        .valueOn = ./dayDegrees[step]
+        .valueOff = 0
+        DayDegrees dayDegrees {
+          .T0 = 5
+          .T = weather[Tavg]
+        }
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      .k = random/k[value]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      .k = random/k[value]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Box adult {
+      Stage adult {
+        .inflow = ../../pupa[outflow]
+        .duration = 28
+        .timeStep = 1
+        .k = random/k[value]
+      }
+      Stage preOviposition {
+        .inflow = ../../pupa[outflow]
+        .duration = 5
+        .timeStep = 1
+        .k = random/k[value]
+      }
+      Stage oviposition {
+        .inflow = ../preOviposition[outflow]
+        .duration = 10
+        .timeStep = 1
+        .growthFactor = random/fecundityButterfly[value]
+        .k = random/k[value]
+      }
+    }
+  }
+  Box predator {
+    Stage egg {
+      .initial = 100 
+      .inflow = ../predation/supplyBudget[supplyNet]
+      .duration = 140
+      .timeStep = ./time[value]
+      .k = random/k[value]
+      OnOff time { 
+        .x = calendar[dayOfYear]
+        .xOn = 77    // 30 days earlier than prey
+        .xOff = 152  
+        .valueOn = ./dayDegrees[step]
+        .valueOff = 0
+        DayDegrees dayDegrees {
+          .T0 = 5
+          .T = weather[Tavg]
+        }
+      }
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 200
+      .timeStep = ./time[step]
+      .k = random/k[value]
+      DayDegrees time {
+        .T0 = 8
+        .T = weather[Tavg]
+      }
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 100
+      .timeStep = ./time[step]
+      .k = random/k[value]
+      DayDegrees time {
+        .T0 = 10
+        .T = weather[Tavg]
+      }
+    }
+    Stage adult {
+      .inflow = ../pupa[outflow]
+      .duration = 60
+      .k = random/k[value]
+      .timeStep = 1
+    }
+    Stage ovipositionDemand {
+      .inflow = ../pupa[outflow]
+      .duration = 60
+      .timeStep = 1
+      .growthFactor = random/fecundityPredator[value]
+      .k = random/k[value]
+    }
+    Box predation {
+      Box budget {
+        +demandNet = ../../ovipositionDemand[outflow]
+      }
+      DemandBudget demandBudget {
+        .demandNet = ../budget[demandNet]
+        .conversionCost = random/conversionCost[value]
+      }
+      FunctionalResponse funcResp {
+        .attacker = ../../adult[content]
+        .prey = butterfly/egg[content]
+        .demandGross = ../demandBudget[demandGross]
+        .attackRate = random/attackRate[value]
+      }
+      SupplyBudget supplyBudget {
+        .demandNet = ../budget[demandNet]
+        .conversionCost = random/conversionCost[value]
+        .supplyGross = ../funcResp[supplyGross]
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = random/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = */egg[content]|end
+        .ggplot = "geom_smooth(colour='yellow')"
+      }
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = */egg[content]|end
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = */egg[content]|end
+        .type = "SobolIndices"
+      }
+    }
+  }
+}
+

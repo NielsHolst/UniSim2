@@ -95,7 +95,7 @@ void Shelter::initHorizontalScreens() {
 #define AccumulateSr(p) sr.p += info.sr->p * (*info.relativeArea)
 
 void Shelter::update() {
-    SurfaceRadiation sr;
+    SurfaceRadiation sr(this);
     sr.setToZero();
     diffuseLightTransmitted =
     directLightTransmitted =

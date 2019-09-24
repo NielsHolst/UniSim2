@@ -110,7 +110,7 @@ struct GrowthLight {
     GrowthLightType type;
     double 
         intensity,          // W/m2  (installed effect per greenhouse area)
-        ballastCorrection;  // >=1 (>1 if intensity includes ballast
+        ballastCorrection;  // >=1 (>1 if intensity includes ballast)
     Variable
         age,                // h
         lifeTime,           // h

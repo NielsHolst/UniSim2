@@ -18,6 +18,8 @@ RandomUniformInt::RandomUniformInt(QString name, QObject *parent)
     : RandomBaseTyped<int>(name, parent)
 {
     help("produces random integer numbers from the uniform distribution");
+    port("P")->equals(0).help("Not used for this distribution");
+    port("max")->help("Maximum value (included)");
 }
 
 void RandomUniformInt::updateValue() {

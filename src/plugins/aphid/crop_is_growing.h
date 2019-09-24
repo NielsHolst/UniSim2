@@ -4,7 +4,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef CROP_IS_GROWING_
+#ifndef CROP_IS_GROWING_H
 #define CROP_IS_GROWING_H
 #include <base/box.h>
 

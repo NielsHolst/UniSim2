@@ -32,6 +32,8 @@ PageR::PageR(QString name, QObject *parent)
     Input(title).help("Title shown on page");
     Input(width).imports("ancestors::*<OutputR>[width]");
     Input(height).imports("ancestors::*<OutputR>[height]");
+    Input(plotAsList).imports("./*[plotAsList]").transform(Any).help("Any plot produced as a list of plots?");
+    Input(test).imports("./*[plotAsList]");
 }
 
 void PageR::amend() {
@@ -62,6 +64,11 @@ void PageR::initialize() {
 
     // Find plots on this page
     _plots = findMany<PlotR>("./*<PlotR>");
+
+    // Check for list output
+    if (plotAsList && _plots.size() != 1)
+        ThrowException("Plots of these types cannot be combined in one page")
+                .hint("Show each PlotR in its own PageR").context(this);
 }
 
 void PageR::reset() {
@@ -92,12 +99,18 @@ QString PageR::toScript() {
             << port("height")->value<int>()
             << ")\n";
         }
-        s << "  grid.arrange(\n" ;
-        bool skipDefaultPlot = (_plots.size() > 1);
-        for (PlotR *plot : _plots) {
-            if (skipDefaultPlot && plot->objectName() == "default")
-                continue;
-            s << plot->toScript();
+        if (plotAsList) {
+            s << "  grid.arrange(\ngrobs=    "
+              << _plots.at(0)->toScript();
+        }
+        else {
+            s << "  grid.arrange(\n" ;
+            bool skipDefaultPlot = (_plots.size() > 1);
+            for (PlotR *plot : _plots) {
+                if (skipDefaultPlot && plot->objectName() == "default")
+                    continue;
+                s << plot->toScript();
+            }
         }
         if (!title.isEmpty())
             s << "    top = \"" << title << "\",\n";

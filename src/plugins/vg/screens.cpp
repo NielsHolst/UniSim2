@@ -89,13 +89,12 @@ void Screens::update() {
     haze = 1. - unhazed;
     U = 1./resistance;
 
-    SurfaceRadiation rad;
-    Exception::setContext(this);
+    SurfaceRadiation rad(this);
 //    dialog().information("Screens::update() A");
     for (ScreenInfo si: screenInfos) {
         QString s = "(%1 %2 %3)";
 //        dialog().information(s.arg(*si.transmissivityLightNet).arg(*si.absorptivityLwOuterNet).arg(*si.absorptivityLwInnerNet));
-        SurfaceRadiation &screenRad( SurfaceRadiation().asScreen(*si.transmissivityLightNet, *si.absorptivityLwOuterNet, *si.absorptivityLwInnerNet) );
+        SurfaceRadiation &screenRad( SurfaceRadiation(this).asScreen(*si.transmissivityLightNet, *si.absorptivityLwOuterNet, *si.absorptivityLwInnerNet) );
 //        dialog().information("Screens::update() B");
         rad *= screenRad;
 //        dialog().information("Screens::update() C");

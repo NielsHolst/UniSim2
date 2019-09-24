@@ -24,7 +24,9 @@ namespace vg {
  * Short-waved diffuse (_light_) and direct radiation (_directLight_), and long-waved radiation (_lw_) are considered separately.
  *
 */
-SurfaceRadiation::SurfaceRadiation() {
+SurfaceRadiation::SurfaceRadiation(const QObject *parent)
+    : _parent(parent)
+{
     light =
     directLight =
     lw = Spectrum(1);
@@ -56,8 +58,9 @@ SurfaceRadiation& SurfaceRadiation::asCover(double transmissivity, double direct
 
 //! Initialize from screen characteristics
 SurfaceRadiation& SurfaceRadiation::asScreen(double transmissivity, double absorptivityLwOuter, double absorptivityLwInner) {
-    light.tra = transmissivity;
-    lw.tra = 0.;
+    light.tra =
+    lw.tra = transmissivity;
+
     light.outer.abs =
     lw.outer.abs = absorptivityLwOuter;
     light.outer.setRef(light.tra);
@@ -84,33 +87,37 @@ void SurfaceRadiation::setToZero() {
 void SurfaceRadiation::Spectrum::Direction::setRef(double tra) {
     ref = 1. - abs - tra;
     TestNum::snapToZero(ref);
-    if (ref<0)
-        ThrowException("Absorptivity + Transmission > 1").value1(abs).value2(tra);
+//    if (ref<0)
+//        ThrowException("Absorptivity + Transmission > 1").value1(abs).value2(tra);
 }
 
 //! Set absorptivity from transmissivity (assumes reflectivity already set)
 void SurfaceRadiation::Spectrum::Direction::setAbs(double tra) {
     abs = 1. - ref - tra;
     TestNum::snapToZero(abs);
-    Q_ASSERT(abs>=0.);
+//    Q_ASSERT(abs>=0.);
 }
 
-void SurfaceRadiation::Spectrum::Direction::check(double tra, QString name) {
-    QString context = "SurfaceRadiation::Spectrum::Direction " + name;
+void SurfaceRadiation::Spectrum::Direction::check(double tra, QString name, const QObject *context) {
+    QString where = "SurfaceRadiation::Spectrum::Direction " + name;
     double sum = tra + abs + ref;
+    if (TestNum::eq(abs, 1.))
+        ThrowException("absorption==1 in " + where).context(context);
+    if (TestNum::eq(ref, 1.))
+        ThrowException("reflectance==1 in " + where).context(context);
     if (TestNum::gt(sum, 1.))
-        ThrowException("Light t+a+r>1 in " + context).value(sum);
+        ThrowException("Light t+a+r>1 in " + where).value(sum).context(context);
     if (TestNum::gt(tra, 1.) || TestNum::ltZero(tra))
-        ThrowException("Light transmission not inside [0;1] " + context).value(tra);
+        ThrowException("Light transmission not inside [0;1] " + where).value(tra).context(context);
     if (TestNum::gt(abs, 1.) || TestNum::ltZero(abs))
-        ThrowException("Light absorption not inside [0;1] " + context).value(abs);
+        ThrowException("Light absorption not inside [0;1] " + where).value(abs).context(context);
     if (TestNum::gt(ref, 1.) || TestNum::ltZero(ref))
-        ThrowException("Light reflection not inside [0;1] " + context).value(ref);
+        ThrowException("Light reflection not inside [0;1] " + where).value(ref).context(context);
 }
 
-void SurfaceRadiation::Spectrum::check(QString name) {
-    inner.check(tra, name+".inner");
-    outer.check(tra, name+".outer");
+void SurfaceRadiation::Spectrum::check(QString name, const QObject *context) {
+    inner.check(tra, name+".inner", context);
+    outer.check(tra, name+".outer", context);
 }
 
 //! Obtained combined characteristics of this and another Spectrum object
@@ -143,9 +150,9 @@ SurfaceRadiation& SurfaceRadiation::operator*=(const SurfaceRadiation &s2) {
 
 //! Check that the object holds valid characteristics
 void SurfaceRadiation::check() {
-    light.check("light");
-    directLight.check("directLight");
-    lw.check("kw");
+    light.check("light", _parent);
+    directLight.check("directLight", _parent);
+    lw.check("lw", _parent);
 }
 
 } //namespace

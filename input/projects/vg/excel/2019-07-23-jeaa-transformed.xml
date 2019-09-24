@@ -4,7 +4,7 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2019"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2019"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="05-01-2019"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
@@ -409,8 +409,14 @@
 			<newPort name="ventTempSetpointAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
 			<newPort name="ventTempSetpointAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
 		</box>
+		<box class="PageR">
+			<port name="xAxis" value="calendar[dateTime]"/>
+			<box class="PlotR">
+				<port name="ncol" value="4"/>
+				<port name="ports" value="output/p[*]"/>
+			</box>
+		</box>
 		<box class="OutputText">
-			<port name="ports" value="output/p[*]"/>
 			<port name="skipFormats" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>

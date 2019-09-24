@@ -13,7 +13,7 @@ using namespace base;
 namespace vg {
 
 SurfaceRadiationOutputs::SurfaceRadiationOutputs(QString name, QObject *parent)
-	: Box(name, parent)
+    : Box(name, parent), rad(this)
 {
     Class(SurfaceRadiationOutputs);
     help("base class for surface radiation models");
@@ -35,7 +35,7 @@ SurfaceRadiationOutputs::SurfaceRadiationOutputs(QString name, QObject *parent)
 }
 
 void SurfaceRadiationOutputs::resetRadiationOutputs() {
-    set(SurfaceRadiation());
+    set(SurfaceRadiation(this));
 }
 
 void SurfaceRadiationOutputs::set(const SurfaceRadiation &rad_) {

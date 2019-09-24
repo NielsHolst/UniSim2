@@ -25,7 +25,8 @@ public:
     QVector<base::Track::Order> xAxisOrders() const;
 private:
     // Inputs
-    bool show;
+    bool show, plotAsList;
+    QVector<bool> test;
     QVector<QString> xAxis;
     double width, height;
     int ncol, nrow;

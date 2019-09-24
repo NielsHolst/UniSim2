@@ -1,0 +1,79 @@
+// uncertainty-analysis-set-up.box
+Simulation sim {
+  .iterations = 64
+  .steps = 1
+  .silent = TRUE
+  Box monteCarlo {
+    RandomiserMonteCarlo randomiser {
+    }
+    RandomUniform uniform {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal95 {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal99 {
+      .min = 20
+      .max = 40
+      .P = 0.99
+    }
+  }
+  Box stratified {
+    RandomiserStratified randomiser {
+    }
+    RandomUniform uniform {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal95 {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal99 {
+      .min = 20
+      .max = 40
+      .P = 0.99
+    }
+  }
+  Box sobolSequence {
+    RandomiserSobolSequence randomiser {
+    }
+    RandomUniform uniform {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal95 {
+      .min = 20
+      .max = 40
+    }
+    RandomNormal normal99 {
+      .min = 20
+      .max = 40
+      .P = 0.99
+    }
+  }
+  OutputR {
+    PageR {
+      .width = 8
+      .height = 6
+      PlotR {
+        .ports = monteCarlo/*[value]|end
+        .type = "histogram(8)"
+        .ncol = 3
+      }
+      PlotR {
+        .ports = stratified/*[value]|end
+        .type = "histogram(8)"
+        .ncol = 3
+      }
+      PlotR {
+        .ports = sobolSequence/*[value]|end
+        .type = "histogram(8)"
+        .ncol = 3
+      }
+    }
+  }
+}
+

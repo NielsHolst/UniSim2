@@ -65,7 +65,7 @@ void GrowthLight::update() {
         currentPeriod += timeStep/60.;
         totalPeriod += timeStep/3600.;
 
-        totalIntensity = intensity*exp(_degradationRate*(age+totalPeriod));
+        totalIntensity = intensity; //*exp(_degradationRate*(age+totalPeriod));
         shortWaveIntensity = totalIntensity*shortWaveProp;
         longWaveIntensity = totalIntensity*longWaveProp;
         heatIntensity = totalIntensity*heatProp;

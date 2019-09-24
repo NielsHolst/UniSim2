@@ -24,7 +24,6 @@ RandomNormal::RandomNormal(QString name, QObject *parent)
 
 
 void RandomNormal::updateValue() {
-//    dialog().information(fullName() + " updateValue A");
     if (useFixed) {
         value = fixed;
     }
@@ -36,7 +35,6 @@ void RandomNormal::updateValue() {
                u2 = (stratum + u)*w;
         value = phys_math::invNormalRange(u2, min, max, P);
     }
-//    dialog().information(fullName() + " updateValue Z");
 }
 
 } //namespace

@@ -32,7 +32,7 @@ scale_linetype_discrete = function(...) {
 check_num_colours = function(list_of_names) {
   unique_names = unique(unlist(list_of_names))
   n = length(unique_names)
-  nmax = length(unisim_colours)
+  nmax = 2*length(unisim_colours)
   if (n > nmax) {
     stop(paste0("Too many variables in plot(",n," > ", nmax, ")\n", unique_names))
   }
@@ -158,6 +158,14 @@ has_iterations = function(M) {
   !is.null(M$iter) && length(unique(M$iter))>1
 }
 
+has_end = function(M) {
+  any(endsWith(colnames(M), ".end"))
+}
+
+geom_deduced = function(M) {
+  if (has_end(M)) geom_point() else geom_line()
+}
+
 Log10 = function(x) {
   y = rep(NA, length(x))
    y[x>0] = log10(x[x>0])
@@ -190,7 +198,7 @@ plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
   check_num_colours(M[color])
   P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
-    geom_line() +
+    geom_deduced(df) +
     theme(legend.position="none")
   if (hasIterations | !onlyOneVariable) {
     P = P + xlab("") + ylab("")
@@ -215,7 +223,7 @@ plot_merged_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
   color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
   check_num_colours(M[color])
   P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
-    geom_line() +
+    geom_deduced(df) 
   if (onlyOneVariable) {
     P = P + xlab(id_x) + ylab(cols)
   } else {
@@ -247,7 +255,7 @@ plot_facetted_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow
   color = if (hasIterations) "iter" else "Response"
   check_num_colours(M[color])
   ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
-    geom_line() +
+    geom_deduced(df) +
     xlab("") + ylab("") +
     facet_grid(Response~xVariable, scales="free") 
 }
@@ -263,7 +271,7 @@ plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) 
   color = if (useIter) "iter" else "Response"
   check_num_colours(M[color])
   p = ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
-    geom_line() +
+    geom_deduced(df) +
     xlab("")  + ylab("")
   p = p + if (useIter) facet_grid(Response~xVariable, scales="free") else facet_wrap(~xVariable, scales="free") 
   p
@@ -276,7 +284,7 @@ plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
   if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
   check_num_colours(M$Response)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
-    geom_line() +
+    geom_deduced(df) +
     xlab("") + ylab("") +
     theme(legend.position="none") +
     facet_grid(Response~xVariable, scales="free")
@@ -288,7 +296,7 @@ plot_merged_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
   levels(M$Response)  = unique_names(levels(M$Response))
   check_num_colours(M$Response)
   ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
-    geom_line() +
+    geom_deduced(df) +
     xlab("") + ylab("") +
     facet_wrap(~xVariable, scales="free")
 }
@@ -311,4 +319,42 @@ plot_merged = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
       plot_merged_many_x(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
 }
 
+plot_density = function(df, ports, ncol, nrow) {
+  M = df[ports]
+  colnames(M) = unique_names(colnames(M))
+  M = melt(M, value.name="Value", variable.name="Variable")
+  ggplot(M, aes(x=Value, colour=Variable, fill=Variable)) +
+    geom_density(alpha=0.3) +
+    labs(y="") + 
+    facet_wrap(~Variable, scales="free", ncol=ncol, nrow=nrow) +
+    theme(
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      legend.position="none"
+    )
+}
+
+plot_histogram = function(df, ports, bins, ncol, nrow) {
+  M = df[ports]
+  colnames(M) = unique_names(colnames(M))
+  M = melt(M, value.name="Value", variable.name="Variable")
+  ggplot(M, aes(x=Value, colour=Variable, fill=Variable)) +
+    geom_histogram(alpha=0.3, bins=bins) +
+    labs(y="") + 
+    facet_wrap(~Variable, scales="free", ncol=ncol, nrow=nrow) +
+    theme(legend.position="none")    
+}
+
+plot_sobol_convergence = function() {
+  plot_against_sample_size()
+}
+
+plot_sobol_indices = function(theme=NULL) {
+  n_outputs = length(output_names())
+  print(paste0("Bootstrapping (n=", sobol_B, ")..."))
+  B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
+  S = ddply(B, .(Output), sobol_statistics)
+  print(S)
+  dlply(subset(S, Input!="Sum"), .(Output), plot_effects, theme=theme)
+}
 

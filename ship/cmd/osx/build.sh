@@ -1,10 +1,10 @@
-#!/bin/bash -vx
-
+#!/bin/sh
 MAJOR=2
-MINOR=1
-SUB=16
+MINOR=3
+SUB=7
+VERSION=release
 echo
-echo Building $MAJOR.$MINOR.$SUB
+echo Building $MAJOR.$MINOR.$SUB $VERSION
 echo
 
 echo = Clean out old builds =
@@ -21,10 +21,10 @@ popd
 
 echo = Update Qt resources
 ./update-qt-resources.sh
-../bin/update-qt-resources $MAJOR $MINOR $SUB release
+../bin/update-qt-resources $MAJOR $MINOR $SUB $VERSION
 
 echo = Update Qt project
-../bin/update-qt-project release
+../bin/update-qt-project $MAJOR $MINOR $SUB $VERSION
 
 echo = Build Universal Simulator =
 pushd ../../..
@@ -45,10 +45,10 @@ cp ../../../bin/plugins/*.dylib $target/Contents/MacOS/plugins
 otool -L  $target/Contents/MacOS/unisim$suffix
 
 echo = Set installer version number =
-../bin/update-installer-project $MAJOR $MINOR $SUB
+../bin/update-installer-project $MAJOR $MINOR $SUB $VERSION
 
 echo = Restore to debug version =
-../bin/update-qt-project debug
+../bin/update-qt-project $MAJOR $MINOR $SUB debug
 
 #!/bin/bash +vx
 echo "END"

@@ -52,12 +52,12 @@ void RandomiserSobolSequence::checkIterations(int iterations) {
         }
     }
     else {
-        int n = static_cast<int>(floor(log2(iterations)));
-        if (n<32)
-            n = 32;
-        int N1 = 2<<(n-1),
-            N2 = 2<<n;
-        QString hint("Use instead, for example, %1 or %2 iterations %3");
+        int N = static_cast<int>(floor(log2(iterations)));
+        if (N<2)
+            N = 2;
+        int N1 = 2<<(N-1),
+            N2 = 2<<N;
+        QString hint("Use instead, for example, %1 or %2 iterations");
         if (iterations!=N1 && iterations!=N2) {
             ThrowException("Simulation iterations must be a power of 2 when a Sobol' sequence is used for random numbers").
                     value(iterations).

@@ -125,7 +125,7 @@ sobol_indices = function(y) {
 
 plot_against_sample_size = function() {
 
-  f = function(combi) {
+  f = function(combi) { 
     M = sobol_indices( sobol_inputs(combi$ix_output, combi$N) )
     M$Output = output_names()[combi$ix_output]
     M
@@ -149,24 +149,30 @@ plot_against_sample_size = function() {
   totals = totals[alphabetic_ordering, ]
   effect_ordering = order(totals$Effect, decreasing=TRUE)
   M$Input = reorder_levels(M$Input, effect_ordering)
-
+  M$Output = factor(M$Output)
+  levels(M$Input)  = unique_names(levels(M$Input))
+  levels(M$Output) = unique_names(levels(M$Output))
+  
   ggplot(M, aes(x=N, y=Effect, colour=Measure)) +
     geom_line() +
     geom_point() +
     scale_x_continuous(trans="log2") +
+    labs(y="Sobol' index") +
     ylim(-0.05,NA) +
     geom_hline(yintercept=0, colour="grey") +
     geom_hline(yintercept=1, colour="grey", size=1) +
     facet_grid(Output~Input) +
     guides(color=guide_legend(reverse=TRUE)) +
     scale_colour_manual(values = c(colour_first_order, colour_total)) + 
-    theme_classic() +
+    theme_minimal() +
     theme(
-      strip.background = element_rect(fill="grey90", color=NA)
+      strip.background = element_rect(fill="grey90", color=NA),
+      legend.position = "bottom",
+      legend.title = element_blank()
     ) 
 }
 
-plot_effects = function(stats) {
+plot_effects = function(stats, theme=NULL) {
   dodge = position_dodge(width = 0.9)
   ggplot(stats, aes(x=Input, y=EffectMean, fill=Measure)) +
     geom_bar(alpha=0.3, stat="identity", position=dodge) +
@@ -182,45 +188,13 @@ plot_effects = function(stats) {
     theme(
       axis.ticks.y = element_blank(),
       axis.line.y = element_blank(),
-      axis.text.y = element_text(size=12),
       legend.position = "bottom",
       legend.title = element_blank()
     ) +
-    labs(x="", title=paste("Sensitivity of", unique(stats$Output))) +
-    coord_flip() 
+    labs(x="", title=paste("Sensitivity of", unique_names(unique(stats$Output)))) +
+    coord_flip() +
+    theme
 }
-
-# plot_effects = function(ix_output) {
-
-  # g = function(m) {
-    # data.frame(Effect=sum(m$Effect))
-  # }
-
-  # M = sobol_indices( sobol_inputs(ix_output) )
-  # Msum = ddply(M, .(Measure), g)
-  # Msum$Input = "Sum"
-  # M = rbind(M,Msum)
-
-  # totals = subset(M, Measure=="Total")
-  # alphabetic_ordering = order(totals$Input)
-  # totals = totals[alphabetic_ordering, ]
-  # effect_ordering = order(totals$Effect, decreasing=FALSE)
-  # M$Input = reorder_levels(M$Input, effect_ordering)
-
-  # ggplot() +
-    # geom_segment(aes(x=0, xend=Effect, y=Input, yend=Input), subset(M, Measure=="Total"),      colour=colour_total, size=2) +
-    # geom_segment(aes(x=0, xend=Effect, y=Input, yend=Input), subset(M, Measure=="FirstOrder"), colour=colour_first_order, size=2) +
-    # geom_vline(xintercept=0, colour="grey") +  
-    # geom_vline(xintercept=1, colour="grey", size=1) +  
-    # scale_x_continuous("Effect", breaks=(0:8)/4) +
-    # theme_classic() +
-    # theme(
-      # axis.ticks.y = element_blank(),
-      # axis.line.y = element_blank(),
-      # strip.background = element_rect(fill="grey90", color=NA)
-    # ) +
-    # labs(title=paste("Sensitivity of", output_names()[ix_output]))
-# }
 
 sobol_bootstrap = function(ix_output, n) {
   f = function(i) {

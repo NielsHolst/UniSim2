@@ -7,7 +7,6 @@
     <file>version.txt</file>
     <file>data/input/book/butterflies-common-k.box</file>
     <file>data/input/book/butterflies.box</file>
-    <file>data/input/book/butterfly-sa-4.box</file>
     <file>data/input/book/butterfly1.box</file>
     <file>data/input/book/butterfly2.box</file>
     <file>data/input/book/butterfly3.box</file>
@@ -91,16 +90,11 @@
     <file>data/input/book/scenarios1.box</file>
     <file>data/input/book/scenarios2.box</file>
     <file>data/input/book/scenarios3.box</file>
-    <file>data/input/book/sensitivity1.box</file>
-    <file>data/input/book/sensitivity2.box</file>
-    <file>data/input/book/sensitivity3.box</file>
-    <file>data/input/book/sensitivity4.box</file>
-    <file>data/input/book/sensitivity5.box</file>
-    <file>data/input/book/sensitivity5.R</file>
-    <file>data/input/book/sobol1.box</file>
-    <file>data/input/book/sobol2.box</file>
+    <file>data/input/book/sensitivity-analysis-pred-prey.box</file>
     <file>data/input/book/student-weather.box</file>
     <file>data/input/book/syntax-error.box</file>
+    <file>data/input/book/uncertainty-analysis-pred-prey.box</file>
+    <file>data/input/book/uncertainty-analysis-set-up.box</file>
     <file>data/input/book/weather/braunschweig 2009.txt</file>
     <file>data/input/book/weather/flakkebjerg 2005.txt</file>
     <file>data/input/book/weather/flakkebjerg 2009.txt</file>
@@ -239,22 +233,25 @@
     <file>data/input/projects/conductance/carrot-stellaria.box</file>
     <file>data/input/projects/ig/1-photosynthesis.box</file>
     <file>data/input/projects/ig/extract-simulation.R</file>
+    <file>data/input/projects/ig/first.txt</file>
+    <file>data/input/projects/ig/first.xlsx</file>
     <file>data/input/projects/ig/Ig typer - rettet af Nielsl.xlsx</file>
+    <file>data/input/projects/ig/ig-by-hand.box</file>
     <file>data/input/projects/ig/ig-scenario.box</file>
+    <file>data/input/projects/ig/ig-sensor-records.txt</file>
     <file>data/input/projects/ig/igclient_0000.box</file>
     <file>data/input/projects/ig/input/direct_transmission_single.txt</file>
     <file>data/input/projects/ig/input/sel_dk.txt</file>
     <file>data/input/projects/ig/layers-setup.txt</file>
+    <file>data/input/projects/ig/M0.Rdata</file>
     <file>data/input/projects/ig/read-json.R</file>
     <file>data/input/projects/ig/simulation-1440-minutes.txt</file>
     <file>data/input/projects/ig/simulation.txt</file>
     <file>data/input/projects/ig/sun_height.box</file>
-    <file>data/input/projects/ig/ud.json</file>
-    <file>data/input/projects/ig/Unisim-input-21-08-2019.json</file>
-    <file>data/input/projects/ig/UniSimData.json</file>
-    <file>data/input/projects/ig/UnisimInputData-1-day.json</file>
-    <file>data/input/projects/ig/UnisimInputData-3-months.json</file>
-    <file>data/input/projects/ig/UnisimInput_2019-28-05_ 2019-06-04-2019.json</file>
+    <file>data/input/projects/ig/UnisimInput_2019-08-01_2019-08-31.json</file>
+    <file>data/input/projects/ig/UnisimInput_2019-09-01_2019-09-19.json</file>
+    <file>data/input/projects/ig/UnisimInput_2019-09-10_2019-09-11.json</file>
+    <file>data/input/projects/ig/UnisimInput_2019-28-05_2019-06-04.json</file>
     <file>data/input/projects/potato/generate-scenarios.R</file>
     <file>data/input/projects/potato/potato-end.R</file>
     <file>data/input/projects/potato/potato1.box</file>
