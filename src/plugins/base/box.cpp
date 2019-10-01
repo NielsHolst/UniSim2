@@ -57,15 +57,19 @@ const Port* Box::peakPort(QString name) const {
 
 Port* Box::port(QString name) {
     Port *port = peakPort(name);
-    if (!port)
-        ThrowException("No port of that name in this box").value(name).context(this);
+    if (!port) {
+        QString h = port->isReference() ? "Port must me a reference not a value" :"";
+        ThrowException("No port of that name in this box").value(name).hint(h).context(this);
+    }
     return port;
 }
 
 const Port* Box::port(QString name) const {
     const Port *port = peakPort(name);
-    if (!port)
-        ThrowException("No port of that name in this box").value(name).context(this);
+    if (!port) {
+        QString h = port->isReference() ? "Port must me a reference not a value" :"";
+        ThrowException("No port of that name in this box").value(name).hint(h).context(this);
+    }
     return port;
 }
 

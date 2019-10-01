@@ -44,11 +44,6 @@ student.subdir = src/plugins/student
 student.depends = base
 unisim.depends = student
 
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
-unisim.depends = vg
-
 #
 # Optional plug-ins
 #
@@ -93,10 +88,10 @@ MusselBed.subdir = src/plugins/MusselBed
 MusselBed.depends = base
 unisim.depends = MusselBed
 
-#SUBDIRS += PestTox
-#PestTox.subdir = src/plugins/PestTox
-#PestTox.depends = base
-#unisim.depends = PestTox
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
+unisim.depends = PestTox
 
 #SUBDIRS += pinacate
 #pinacate.subdir = src/plugins/pinacate
@@ -118,20 +113,22 @@ unisim.depends = MusselBed
 #resist.depends = base
 #unisim.depends = resist
 
-SUBDIRS += rvf
-rvf.subdir = src/plugins/rvf
-rvf.depends = base
-unisim.depends = rvf
+#SUBDIRS += rvf
+#rvf.subdir = src/plugins/rvf
+#rvf.depends = base
+#unisim.depends = rvf
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta
 #tuta.depends = base
 #unisim.depends = tuta
 
-#SUBDIRS += vacuum
-#vacuum.subdir = src/plugins/vacuum
-#vacuum.depends = base
-#unisim.depends = vacuum
+SUBDIRS += vacuum
+vacuum.subdir = src/plugins/vacuum
+vacuum.depends = base
+unisim.depends = vacuum
 
-
-
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg

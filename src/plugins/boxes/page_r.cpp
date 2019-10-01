@@ -26,7 +26,7 @@ PageR::PageR(QString name, QObject *parent)
 {
     help("produces a page of plots for R");
     Input(show).equals(true).help("Show this page?");
-    Input(xAxis).equals("/*[step]").notReferenced();
+    Input(xAxis).equals("/*[step]").reference();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
     Input(title).help("Title shown on page");

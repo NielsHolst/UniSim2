@@ -7,8 +7,10 @@
 #include <QDate>
 #include <QDateTime>
 #include <QString>
+#include <QStringList>
 #include <QTime>
 #include <QVector>
+#include "exception.h"
 
 namespace base {
 
@@ -44,7 +46,7 @@ enum PortType {
 };
 
 template <class T> PortType typeOf() { return Null; }
-
+template <> inline PortType typeOf<QStringList>() { ThrowException("Use QVector<QString> instead of QStringList for ports"); }
 #define TYPEOF(X,Y) \
     template <> inline PortType typeOf<X>() { return Y; } \
     template <> inline PortType typeOf<Vector##Y>() { return Y##Vector; }
@@ -61,6 +63,9 @@ TYPEOF(QString, String)
 TYPEOF(QDate, Date)
 TYPEOF(QTime, Time)
 TYPEOF(QDateTime, DateTime)
+
+template<class T> T convert(PortType )  { ThrowException("Can only convert port type  to QString"); }
+template<> QString convert(PortType type);
 
 QString nameOf(PortType type);
 bool isScalar(PortType type);

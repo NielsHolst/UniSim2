@@ -276,9 +276,9 @@ case destPortType##Vector: \
 
 void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourcePtr, PortTransform transform, const QObject *context) {
     _context = context;
-    if (destPtr==0)
+    if (destPtr==nullptr)
         ThrowException("Port data has not been set").context(_context);
-    if (sourcePtr==0)
+    if (sourcePtr==nullptr)
         ThrowException("Port source of import has not been set").context(_context);
 
     // Split
@@ -303,7 +303,6 @@ void assign(PortType destT, void *destPtr, PortType sourceT, const void *sourceP
             CASE_ASSIGN(DateTime, QDateTime);
         case Null:
             ThrowException("Cannot assign to Null");
-            break;
         }
     }
 }

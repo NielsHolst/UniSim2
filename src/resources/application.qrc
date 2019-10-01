@@ -219,6 +219,12 @@
     <file>data/input/papers/2019-musselbed/starfish-mussel-scenarios-1.box</file>
     <file>data/input/papers/2019-musselbed/starfish-mussel-scenarios-2.box</file>
     <file>data/input/papers/2019-musselbed/starfish-mussel.box</file>
+    <file>data/input/papers/2019-PestTox/pesticide-scenarios-bufferzone.box</file>
+    <file>data/input/papers/2019-PestTox/scenarios-bufferzone.txt</file>
+    <file>data/input/papers/2019-PestTox/weather/free_radicals_table.txt</file>
+    <file>data/input/papers/2019-PestTox/weather/Pathumthani.txt</file>
+    <file>data/input/projects/aquaponics/fish-10.box</file>
+    <file>data/input/projects/aquaponics/fish-1000.box</file>
     <file>data/input/projects/bph/bph-rice-1.box</file>
     <file>data/input/projects/bph/bph-rice-2.box</file>
     <file>data/input/projects/bph/bph-rice-end.R</file>
@@ -249,9 +255,7 @@
     <file>data/input/projects/ig/simulation.txt</file>
     <file>data/input/projects/ig/sun_height.box</file>
     <file>data/input/projects/ig/UnisimInput_2019-08-01_2019-08-31.json</file>
-    <file>data/input/projects/ig/UnisimInput_2019-09-01_2019-09-19.json</file>
     <file>data/input/projects/ig/UnisimInput_2019-09-10_2019-09-11.json</file>
-    <file>data/input/projects/ig/UnisimInput_2019-28-05_2019-06-04.json</file>
     <file>data/input/projects/potato/generate-scenarios.R</file>
     <file>data/input/projects/potato/potato-end.R</file>
     <file>data/input/projects/potato/potato1.box</file>

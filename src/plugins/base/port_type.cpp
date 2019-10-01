@@ -21,6 +21,10 @@ namespace base {
         s = "QVector<" #Y ">"; \
         break;
 
+template<> QString convert(PortType type) {
+    return nameOf(type);
+}
+
 QString nameOf(PortType type) {
     QString s;
     switch (type) {

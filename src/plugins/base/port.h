@@ -42,7 +42,7 @@ private:
     QVector<Port *> _importPorts, _exportPorts;
     bool _importPortMustExist, _importsResolved;
     PortAccess _access;
-    bool _notReferenced, _reset, _valueOverridden;
+    bool _isReference, _reset, _valueOverridden;
     bool _isBlind;
     QStringList _warnings;
 
@@ -58,7 +58,7 @@ public:
     Port& imports(QString pathToPort);
     Port& importsMaybe(QString pathToPort, QString fallBackValue=QString());
     Port& access(PortAccess acc);
-    Port& notReferenced();
+    Port& reference();
     Port& zeroAtReset();
     Port& zeroAtInitialize();
     Port& noReset();
@@ -82,6 +82,7 @@ public:
     QString label() const;
     PortTransform transform() const;
     bool isBlind() const;
+    bool isReference() const;
 
     // Names and id
     QString name() const;

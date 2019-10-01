@@ -20,7 +20,7 @@ Port::Port(QString name, QObject *parent)
       _portValueStep(ComputationStep::Start),
       _importPath(""), _importPortMustExist(true), _importsResolved(false),
       _access(PortAccess::Input),
-      _notReferenced(false), _reset(false), _valueOverridden(false),
+      _isReference(false), _reset(false), _valueOverridden(false),
       _isBlind(false)
 {
     Class(Port);
@@ -46,7 +46,7 @@ Port& Port::equals(QStringList value) {
 }
 
 Port& Port::imports(QString pathToPort) {
-    if (_notReferenced)
+    if (_isReference)
         return equals(pathToPort);
     _mode = PortMode::Referenced;
     _portValueStep = environment().computationStep();
@@ -57,7 +57,7 @@ Port& Port::imports(QString pathToPort) {
 }
 
 Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
-    if (_notReferenced)
+    if (_isReference)
         return equals(pathToPort);
     _mode = PortMode::MaybeReferenced;
     _portValueStep = environment().computationStep();
@@ -78,8 +78,8 @@ Port& Port::access(PortAccess acc) {
     return *this;
 }
 
-Port& Port::notReferenced() {
-    _notReferenced = true;
+Port& Port::reference() {
+    _isReference = true;
     return *this;
 }
 
@@ -170,6 +170,10 @@ PortTransform Port::transform() const {
 
 bool Port::isBlind() const {
     return _isBlind;
+}
+
+bool Port::isReference() const {
+    return _isReference;
 }
 
 // Names and id

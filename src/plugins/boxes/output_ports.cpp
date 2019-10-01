@@ -16,7 +16,7 @@ OutputPorts::OutputPorts(QString name, QObject *parent)
     : Box(name, parent)
 {
     Class(OutputPorts);
-    Input(ports).notReferenced().help("Vector of ports to include in plot");
+    Input(ports).reference().help("Vector of ports to include in plot");
 
     _tracks = new TrackCollection("tracks", this);
 }

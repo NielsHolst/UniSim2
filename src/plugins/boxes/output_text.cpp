@@ -147,8 +147,16 @@ void OutputText::processValues() {
             }
         }
         else {
-            for (Track *track : Track::all())
-                values <<  track->port()->value<QString>();
+            for (Track *track : Track::all()) {
+                PortType type = track->port()->type();
+                if (isScalar(type)) {
+                    values <<  track->port()->value<QString>();
+                }
+                else {
+                    QList<QString> valueList = track->port()->value<QVector<QString>>().toList();
+                    values << QStringList(valueList).join("\t");
+                }
+            }
         }
     }
     // Write the value list
