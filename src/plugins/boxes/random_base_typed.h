@@ -14,6 +14,8 @@ template <class T> class RandomBaseTyped : public RandomBase
 {
 public: 
     RandomBaseTyped(QString name, QObject *parent);
+    void update(base::Port *port);
+
 protected:
     // Inputs
     T fixed, min, max;
@@ -36,6 +38,12 @@ template <class ValueType>
 void RandomBaseTyped<ValueType>::checkInputs() {
     if (min >= max)
         ThrowException("Boundaries must obey min<max").value(min).value2(max).context(this);
+}
+
+template <class ValueType>
+void RandomBaseTyped<ValueType>::update(base::Port *port) {
+    updateValue();
+    port->equals(value);
 }
 
 } //namespace

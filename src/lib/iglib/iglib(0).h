@@ -1,4 +1,4 @@
-// Version 2.2.5
+// Version 2.3.1
 
 #ifndef IGLIB_H
 #define IGLIB_H
@@ -59,7 +59,8 @@ struct Construction {
         wallHeight,         // m
         roofInclination,    // 0..360
         internalShading, 	// 0..1
-        infiltration;       // h-1
+        infiltration,       // h-1
+        cultivatedArea;     // 0..1
     CoverMaterial
         end1,
         end2,
@@ -109,12 +110,10 @@ enum GrowthLightType {Hpsl, Led};
 struct GrowthLight {
     GrowthLightType type;
     double 
-        intensity,          // W/m2  (installed effect per greenhouse area)
-        ballastCorrection;  // >=1 (>1 if intensity includes ballast
-    Variable
-        age,                // h
-        lifeTime,           // h
-        on;                 // 0..1
+        lightIntensity,          // W/m2  (installed effect per greenhouse area)
+        parEfficiency,        // >=1 (>1 if intensity includes ballast)
+        powerUsage,
+        ageCorrectedEfficiency;
 };
 struct GrowthLights {
     const GrowthLight *array;
@@ -209,6 +208,10 @@ struct Response {
 
 // Compute response variables from query
 extern "C" Response __declspec(IGLIB_DLL) compute(const Query &q);
+
+// Tests
+extern "C" Response __declspec(IGLIB_DLL) testConstant(const Query &q);
+extern "C" Response __declspec(IGLIB_DLL) testMultiplum(const Query &q);
 
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);

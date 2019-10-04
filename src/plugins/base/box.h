@@ -76,6 +76,7 @@ public:
     void cleanupFamily();
     void debriefFamily();
 
+    virtual void update(Port *) {}
     void resolvePortImports();
     void updateImports();
     void updateSelfImports();

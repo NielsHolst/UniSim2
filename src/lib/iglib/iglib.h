@@ -1,4 +1,4 @@
-// Version 2.3.1
+// Version 2.3.10
 
 #ifndef IGLIB_H
 #define IGLIB_H
@@ -13,17 +13,17 @@ struct Variable {
 };
 
 struct TimeStamp {
-    int dayOfYear;	    // 1..366
+    int dayOfYear;    // 1..366
     double 
-        timeOfDay,	    // 0..24
-  		timeZone;		// -24..24 (relative to UTC)
+        timeOfDay,    // 0..24
+        timeZone;     // -24..24 (relative to UTC)
 };
 
 struct Greenhouse {
-	double 
-		latitude,
-		longitude,
-        direction;		// m
+    double 
+        latitude,
+        longitude,
+        direction;        // m
 };
 
 enum CultureType {PotRose, PotChrysanthemum, Cucumber, Tomato, Lettuce, SweetPepper};
@@ -51,14 +51,14 @@ struct FloorMaterial {
 };
 
 struct Construction {
-	double
-        length,			    // m
+    double
+        length,                // m
         spanWidth;          // m
     int spanCount;          // >0
     double
         wallHeight,         // m
         roofInclination,    // 0..360
-        internalShading, 	// 0..1
+        internalShading,     // 0..1
         infiltration;       // h-1
     CoverMaterial
         end1,
@@ -77,9 +77,7 @@ struct HeatPipe {
     HeatPipeMaterial material;
     Variable 
         flowRate,           // m3/h
-        temperatureInflow,  // oC
-        temperatureOutflow; // oC
-    double
+        flowTemperature,    // oC
         innerDiameter,      // mm
         outerDiameter,      // mm
         length;             // m pipe / m floor area
@@ -108,13 +106,11 @@ struct Vents {
 enum GrowthLightType {Hpsl, Led};
 struct GrowthLight {
     GrowthLightType type;
-    double 
-        intensity,          // W/m2  (installed effect per greenhouse area)
-        ballastCorrection;  // >=1 (>1 if intensity includes ballast)
-    Variable
-        age,                // h
-        lifeTime,           // h
-        on;                 // 0..1
+    double
+        powerUsage, // W/m2(power used)
+        lightintensity,          // W/m2  (resulting light intensity)
+        parEfficiency, // micromole PAR per Joule
+        ageCorrectedEfficiency; //0..1; default = 1 means there is no reduction due to lamp age
 };
 struct GrowthLights {
     const GrowthLight *array;
@@ -184,7 +180,7 @@ struct Query {
     Culture culture;
     Construction construction;
     HeatPipes heatPipes;
-    Vents vents;
+    Vents vents; // Only one vent allowed
     GrowthLights growthLights;
     Co2Dispenser co2Dispenser;
     Screens screens;
@@ -202,22 +198,18 @@ struct Response {
         growthLight = 0,        // Current expenditure (W/m2)
         heating = 0,            // Current expenditure (W/m2)
         photosynthesis = 0,     // Current rate (g/h/m2)
-        costEfficiency = 0;     // Not used
+        costEfficiency = 0,     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
+        grayMoldRisk = 0,       // Not used
+        daysToHarvest = 0;      // Not used
     bool hasError=false;        // Computation unsuccessful?
     const char *error;          // Error message if unsuccessful
 };
 
 // Compute response variables from query
-extern "C" Response __declspec(IGLIB_DLL) compute(const Query &q);
-
-// Tests
-extern "C" Response __declspec(IGLIB_DLL) testConstant(const Query &q);
-extern "C" Response __declspec(IGLIB_DLL) testMultiplum(const Query &q);
+extern "C" ig::Response __declspec(IGLIB_DLL) compute(const Query &q);
 
 // Convert response to a string presentation
 extern "C" const char * __declspec(IGLIB_DLL) responseToString(const Response &r);
 
-
 } // namespace
-
 #endif

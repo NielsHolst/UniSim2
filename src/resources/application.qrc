@@ -223,6 +223,7 @@
     <file>data/input/papers/2019-PestTox/scenarios-bufferzone.txt</file>
     <file>data/input/papers/2019-PestTox/weather/free_radicals_table.txt</file>
     <file>data/input/papers/2019-PestTox/weather/Pathumthani.txt</file>
+    <file>data/input/projects/aquaponics/crash.box</file>
     <file>data/input/projects/aquaponics/fish-10.box</file>
     <file>data/input/projects/aquaponics/fish-1000.box</file>
     <file>data/input/projects/bph/bph-rice-1.box</file>

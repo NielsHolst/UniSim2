@@ -294,6 +294,17 @@ void Port::reset() {
         base::initialize(_valueType, _valuePtr, this);
 }
 
+void Port::update() {
+    // If port is imported then tell the parent of the imported port to update the imported value
+    if (!_importPath.isEmpty()) {
+        PortMode saveMode = _mode;
+        if (_importPorts.size() > 1)
+            ThrowException("Port::update only accepts scalar import").context(this);
+        _importPorts.at(0)->boxParent()->update(this);
+        _mode = saveMode;
+    }
+}
+
 void Port::copyFromImport() {
     if (hasImport())
         assign(_importPorts);

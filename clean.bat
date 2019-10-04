@@ -1,3 +1,4 @@
+for /f %%i in ('dir /S /B src\plugins\*.rc') do del "%%i"
 for /f %%i in ('dir /S /B *.o') do del "%%i"
 for /f %%i in ('dir /S /B object_script.*.*') do del "%%i"
 for /f %%i in ('dir /S /B Makefile.*') do del "%%i"

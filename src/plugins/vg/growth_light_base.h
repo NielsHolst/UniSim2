@@ -17,9 +17,11 @@ class GrowthLightBase : public base::Box
 public:
     GrowthLightBase(QString name, QObject *parent);
 protected:
+    // Inputs
+    double powerUsage;
     // Outputs
     double
-        powerUsage, totalIntensity,
+        totalIntensity,
         shortWaveProp, shortWaveIntensity,
         longWaveProp, longWaveIntensity,
         heatProp, heatIntensity,

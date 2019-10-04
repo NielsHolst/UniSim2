@@ -4,7 +4,7 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2019"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="05-01-2019"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="07-01-2019"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>

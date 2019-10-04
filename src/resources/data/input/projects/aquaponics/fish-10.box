@@ -7,7 +7,7 @@ Simulation sim {
       .min = 0.005
       .max = 0.050
     }
-    RandomBinomial mortality {  // per day
+    RandomBinomial death {  // per day
       .P = 0.005
     }
   }
@@ -18,7 +18,7 @@ Simulation sim {
   Fish fish {
     .initialNumber = 10
     .initialWeight = random/initialWeight[value]
-    .mortality = random/mortality[value]
+    .death = random/death[value]
     .timeStepDays = calendar[timeStepDays]
     .dayOfYear = calendar[dayOfYear]
   }

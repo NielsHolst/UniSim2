@@ -17,6 +17,13 @@ void DialogQuiet::progress(int, int) {
 void DialogQuiet::finished() {
 }
 
+QProgressBar* DialogQuiet::progressBar() {
+    return nullptr;
+}
+
+void DialogQuiet::finishProgress() {
+}
+
 void DialogQuiet::information(QString s) {
     _information = s;
 }

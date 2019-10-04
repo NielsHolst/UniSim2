@@ -94,6 +94,7 @@ public:
     void resolveImportsAgain();
     void addExportPort(Port *port);
     void reset();
+    void update();
     void copyFromImport();
     void copyFromSelfImport(const Box *self);
     void assign(const QVector<Port *> &sources);

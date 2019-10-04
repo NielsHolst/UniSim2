@@ -1,7 +1,7 @@
 #!/bin/sh
 MAJOR=2
 MINOR=3
-SUB=7
+SUB=10
 VERSION=release
 echo
 echo Building $MAJOR.$MINOR.$SUB $VERSION

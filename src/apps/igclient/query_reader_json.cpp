@@ -1,7 +1,7 @@
 #include <iostream>
 #include <QFile>
 #include <QJsonArray>
-#include <QJsonDocument >
+#include <QJsonParseError >
 #include <base/convert.h>
 #include <base/exception.h>
 #include "query_reader_json.h"
@@ -192,11 +192,10 @@ void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     ig::HeatPipe hp;
     hp.material = static_cast<ig::HeatPipeMaterial>(findInt(object, "Material"));
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.temperatureInflow = findVariableFromValue(object, "TemperatureInFlow");
-    hp.temperatureOutflow = NullVariable; //findVariable(object, "TemperatureOutFlow");
-    hp.innerDiameter = findDouble(object, "InnerDiameter");
-    hp.outerDiameter = findDouble(object, "OuterDiameter");
-    hp.length = findDouble(object, "Length");
+    hp.flowTemperature = findVariableFromValue(object, "TemperatureInFlow");
+    hp.innerDiameter = findVariableFromValue(object, "InnerDiameter");
+    hp.outerDiameter = findVariableFromValue(object, "OuterDiameter");
+    hp.length = findVariableFromValue(object, "Length");
     _heatPipes.push_back(hp);
 }
 
@@ -230,11 +229,10 @@ void QueryReaderJson::parseGrowthLights(QJsonArray objects) {
 void QueryReaderJson::parseGrowthLight(QJsonObject object) {
     ig::GrowthLight gl;
     gl.type = static_cast<ig::GrowthLightType>(findInt(object, "Type"));
-    gl.intensity = findDouble(object, "Intensity");
-    gl.ballastCorrection = findDouble(object, "BalactCorrection");
-    gl.age = findVariable(object, "Age");
-    gl.lifeTime = findVariable(object, "LifeTime");
-    gl.on = findVariable(object, "On");
+    gl.lightintensity = findDouble(object, "LightIntensity");
+    gl.parEfficiency = findDouble(object, "ParEfficiency");
+    gl.powerUsage = findDouble(object, "PowerUsage");
+    gl.ageCorrectedEfficiency = findDouble(object, "AgeCorrectedEfficiency");
     _growthLights.push_back(gl);
 }
 

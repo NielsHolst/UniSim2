@@ -48,20 +48,20 @@ void Sensor::reset() {
 }
 
 void Sensor::update() {
+    // Indoors
+    indoorsTemperature = isMissing(indoorsTemperatureIn) ? 20. : indoorsTemperatureIn;
+    indoorsRh = (indoorsRhIn<=0.) ? 80. : indoorsRhIn;
+    indoorsAh = phys_math::ahFromRh(indoorsTemperature, indoorsRh);
+    indoorsCo2 = isMissing(indoorsCo2In) ? 800. : indoorsCo2In;
+    indoorsWindspeed = isMissing(indoorsWindspeedIn) ? 0.1 : indoorsWindspeedIn;
     // Outdoors
-    outdoorsTemperature = isMissing(outdoorsTemperatureIn) ? 15. : outdoorsTemperatureIn;
-    outdoorsRh = isMissing(outdoorsRhIn) ? 60. : outdoorsRhIn;
+    outdoorsTemperature = isMissing(outdoorsTemperatureIn) ? indoorsTemperature : outdoorsTemperatureIn;
+    outdoorsRh = (outdoorsRhIn<=0.) ? indoorsRh : outdoorsRhIn;
     outdoorsCo2 = isMissing(outdoorsCo2In) ? 405. : outdoorsCo2In;
     outdoorsGlobalRadiation = isMissing(outdoorsGlobalRadiationIn) ?
                 estimateGlobalRadiation() : outdoorsGlobalRadiationIn;
     outdoorsWindSpeed = isMissing(outdoorsWindSpeedIn) ? 4. : outdoorsWindSpeedIn;
     soilTemperature = isMissing(soilTemperatureIn) ? 10. : soilTemperatureIn;
-    // Indoors
-    indoorsTemperature = isMissing(indoorsTemperatureIn) ? 20. : indoorsTemperatureIn;
-    indoorsRh = isMissing(indoorsRhIn) ? outdoorsRh : indoorsRhIn;
-    indoorsAh = phys_math::ahFromRh(indoorsTemperature, indoorsRh);
-    indoorsCo2 = isMissing(indoorsCo2In) ? 800. : indoorsCo2In;
-    indoorsWindspeed = isMissing(indoorsWindspeedIn) ? 0.1 : indoorsWindspeedIn;
 }
 
 bool Sensor::isMissing(double value) const {

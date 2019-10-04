@@ -60,6 +60,8 @@ cd /c/users/au152367/Documents/QDev/UniSim2
 - run clean.sh
 - open UniSim2.pro in QtCreator and build.
 
-7. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb) via iCload. The installer is a zip file.
+7. In Finder, right-click and compress the installer (which is a folder) into a zip file.
 
-8. Update ecolmod.org/download.html.
+8. Upload installer from ~/qdev/UniSim2/ship to ecolmod.org/download (~18 Mb) via FileZilla. The installer is a zip file.
+
+9. Update ecolmod.org/download.html.

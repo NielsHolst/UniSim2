@@ -48,10 +48,10 @@ unisim.depends = student
 # Optional plug-ins
 #
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
-unisim.depends = aphid
+#SUBDIRS += aphid
+#aphid.subdir = src/plugins/aphid
+#aphid.depends = base
+#unisim.depends = aphid
 
 #SUBDIRS += apis
 #apis.subdir = src/plugins/apis
@@ -83,15 +83,15 @@ unisim.depends = aphid
 #io.depends = base
 #unisim.depends = io
 
-SUBDIRS += MusselBed
-MusselBed.subdir = src/plugins/MusselBed
-MusselBed.depends = base
-unisim.depends = MusselBed
+#SUBDIRS += MusselBed
+#MusselBed.subdir = src/plugins/MusselBed
+#MusselBed.depends = base
+#unisim.depends = MusselBed
 
-SUBDIRS += PestTox
-PestTox.subdir = src/plugins/PestTox
-PestTox.depends = base
-unisim.depends = PestTox
+#SUBDIRS += PestTox
+#PestTox.subdir = src/plugins/PestTox
+#PestTox.depends = base
+#unisim.depends = PestTox
 
 #SUBDIRS += pinacate
 #pinacate.subdir = src/plugins/pinacate
@@ -103,10 +103,10 @@ unisim.depends = PestTox
 #pollnet.depends = base
 #unisim.depends = pollnet
 
-#SUBDIRS += potato
-#potato.subdir = src/plugins/potato
-#potato.depends = base
-#unisim.depends = potato
+SUBDIRS += potato
+potato.subdir = src/plugins/potato
+potato.depends = base
+unisim.depends = potato
 
 #SUBDIRS += resist
 #resist.subdir = src/plugins/resist
@@ -123,10 +123,10 @@ unisim.depends = PestTox
 #tuta.depends = base
 #unisim.depends = tuta
 
-SUBDIRS += vacuum
-vacuum.subdir = src/plugins/vacuum
-vacuum.depends = base
-unisim.depends = vacuum
+#SUBDIRS += vacuum
+#vacuum.subdir = src/plugins/vacuum
+#vacuum.depends = base
+#unisim.depends = vacuum
 
 SUBDIRS += vg
 vg.subdir = src/plugins/vg

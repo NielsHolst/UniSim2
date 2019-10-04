@@ -10,7 +10,8 @@
 using namespace ig;
 using namespace std;
 
-const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/UnisimInputData-1-day.json";
+const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/"
+                         "UnisimInput_2019-09-10_2019-09-11.json";
 
 
 int main(int, char **)
@@ -18,23 +19,12 @@ int main(int, char **)
     int result = 0;
     QueryReaderJson reader;
     try {
+        cout << "\nmain A\n";
         Query q = reader.parse(filePath);
-        q.outdoors.irradiation.value = 100.;
+        cout << "\nmain B\n";
         Response r = compute(q);
-        if (r.hasError) {
-            cout << "\n\nError in iglib:\n" << r.error << "\n";
-        }
-        else
-            cout << responseToString(r);
-
-        r = testConstant(q);
-        cout << "testConstant\n" << responseToString(r);
-
-        q.timeStamp.dayOfYear = 10;
-        q.timeStamp.timeOfDay = 7;
-        q.timeStamp.timeZone = 3;
-        r = testMultiplum(q);
-        cout << "testMultiplum\n" << responseToString(r);
+        cout << "\nmain C\n";
+        cout << "\nRESPONSE:\n" << responseToString(r) << "\n";
     }
     catch (const base::Exception &ex) {
         cout << qPrintable(ex.what());

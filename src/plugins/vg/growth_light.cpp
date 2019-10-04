@@ -23,8 +23,7 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     Input(intensity).help("Power of installed lamps per greenhouse area").unit("W/m2");
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
     Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
-    Input(age).help("Age of the lamps at simulation start").unit("h");
-    Input(lifeTime).equals(12000.).help("Age at which light output is reduced to 50%").unit("h");
+    Input(ageCorrectedEfficiency).equals(1.).help("Proportion of intensity actually emitted").unit("[0;1]");
     Input(on).imports("controllers/growthLight[signal]").unit("y|n");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
@@ -65,13 +64,14 @@ void GrowthLight::update() {
         currentPeriod += timeStep/60.;
         totalPeriod += timeStep/3600.;
 
-        totalIntensity = intensity; //*exp(_degradationRate*(age+totalPeriod));
+        totalIntensity = intensity*ageCorrectedEfficiency;
         shortWaveIntensity = totalIntensity*shortWaveProp;
         longWaveIntensity = totalIntensity*longWaveProp;
         heatIntensity = totalIntensity*heatProp;
 
         parIntensity = totalIntensity*parPhotonCoef;
-        powerUsage = intensity;
+        if (powerUsage==0.)
+            powerUsage = intensity;
     }
     else
         noLight();

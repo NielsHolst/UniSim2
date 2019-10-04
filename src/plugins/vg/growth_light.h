@@ -21,7 +21,10 @@ private:
     // Inputs
     QString type;
     double timeStep, intensity, parPhotonCoef,
-        minPeriodOn, age, lifeTime;
+        minPeriodOn, age, lifeTime,
+        powerUsage,
+        ageCorrectedEfficiency;
+
     bool on;
     // Outputs
     double

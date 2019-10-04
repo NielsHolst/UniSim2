@@ -40,8 +40,9 @@ private:
     bool _setNumStrata;
     // Methods
     virtual void checkInputs() = 0;
-    virtual void updateValue() = 0;
     void setNumStrata();
+protected:
+    virtual void updateValue() = 0;
 };
 
 } //namespace

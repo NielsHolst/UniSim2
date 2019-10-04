@@ -20,7 +20,6 @@
 #include <base/mega_factory.h>
 #include "iglib.h"
 
-using namespace std;
 using namespace base;
 using namespace phys_math;
 
@@ -31,6 +30,7 @@ static bool _initialized = false;
 // Global objects
 static QCoreApplication *_app = nullptr;
 static DialogBase *_dialog = nullptr;
+static Box *_rnd;
 // Buffers
 static std::string _queryString, _responseString, _errorString;
 static QVector<HeatPipe> _heatPipes;
@@ -41,21 +41,19 @@ static QVector<Screen> _screens;
 // Functions
 
 void init() {
-    const bool test = true;
     static int argc = 1;
     static char ch = 0;
     static char *argv = &ch;
-
     if (!_initialized) {
-        // Create app objcet
         _app = new QCoreApplication(argc, &argv);
         new base::ObjectPool(_app);
-        // Configure dialog
-        if (test)
-            _dialog = new DialogStub(_app);
-        else
-            _dialog = new DialogQuiet(_app);
-        // Only once
+//        _dialog = new DialogQuiet(_app);
+        _dialog = new DialogStub(_app); // TEST
+
+        _rnd = MegaFactory::create<Box>("RandomUniform", "rnd", _dialog);
+        _rnd->port("drawAtUpdate")->equals(true);
+        _rnd->initialize();
+
         _initialized = true;
     }
 }
@@ -63,6 +61,7 @@ void init() {
 static double value(Variable v) {
     return (v.origin == NotAvailable) ? -999. : v.value;
 }
+
 
 #define VAR(X) X.value, X.origin!=NotAvailable
 
@@ -151,15 +150,24 @@ Box* buildControlled() {
 }
 
 void buildGrowthLight(Box *parent, const GrowthLight *g) {
+    double age(0), lifeTime(0);
+    if (g->age.origin!=NotAvailable && g->age.origin!=NotAvailable) {
+        age = g->age.value;
+        lifeTime = g->lifeTime.value;
+    }
+    double on(0);
+    if (g->on.origin!=NotAvailable)
+        on = g->on.value;
+
     BoxBuilder builder(parent);
     builder.
         box("vg::GrowthLight").name("growthLight").
             port("type").equals(toString(g->type)).
-            port("intensity").equals(g->lightintensity).
-            port("parPhotonCoef").equals(g->parEfficiency).
-            port("powerUsage").equals(g->powerUsage).
-            port("ageCorrectedEfficiency").equals(g->ageCorrectedEfficiency).
-            port("on").equals(g->lightintensity>0.).
+            port("intensity").equals(g->intensity).
+            port("ballastCorrection").equals(g->ballastCorrection).
+            port("age").equals(age).
+            port("lifeTime").equals(lifeTime).
+            port("on").equals(on).
         endbox();
 }
 
@@ -185,22 +193,85 @@ void buildPipe(Box *parent, const HeatPipe *pipe) {
     builder.
         box("vg::Pipe").name("pipe").
             port("material").equals(material).
-            port("density").equals(value(pipe->length)).
-            port("diameter").equals(value(pipe->innerDiameter)).
+            port("density").equals(pipe->length).
+            port("diameter").equals(pipe->innerDiameter).
             port("flowRate").equals(value(pipe->flowRate)).
         endbox();
+}
+
+void buildPipes(Box *parent, HeatPipes pipes) {
+    BoxBuilder builder(parent);
+    builder.
+        box("ProportionalSignal").name("heating").
+            box().name("pipes").
+            endbox().
+        endbox();
+    Box *boxWithPipes =  parent->findChild<Box*>("pipes");
+    for (int i=0; i < pipes.size; ++i) {
+        buildPipe(boxWithPipes, &pipes.array[i]);
+    }
 }
 
 void buildActuators(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
     builder.
         box("Actuators").name("actuators").
-            box().name("heating").
-                newPort("value").imports("sensor[indoorsTemperature]").
-            endbox().
         endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
     buildGrowthLights(actuators, q.growthLights);
+    buildPipes(actuators, q.heatPipes);
+}
+
+struct Gauss {
+    double
+      xGaussUpperside,
+      wGaussUpperside,
+      xGaussLowerside,
+      wGaussLowerside;
+};
+
+const Gauss    topGauss = Gauss{0.1127, 0.2778, 0.8873, 0.2778};
+const Gauss middleGauss = Gauss{0.5000, 0.4444, 0.5000, 0.4444};
+const Gauss  lowerGauss = Gauss{0.8873, 0.2778, 0.1127, 0.2778};
+
+Box* buildLayer(QString name, Gauss g) {
+    BoxBuilder builder;
+    builder.
+        box("LeafLayer").name(name).
+            port("xGaussUpperside").equals(g.xGaussUpperside).
+            port("wGaussUpperside").equals(g.wGaussUpperside).
+            port("xGaussLowerside").equals(g.xGaussLowerside).
+            port("wGaussLowerside").equals(g.wGaussLowerside).
+            box("LeafWindSpeed").name("windSpeed").
+                port("k").equals(0.6).
+            endbox().
+            box("StomatalResistanceRose").name("rs").
+            endbox().
+            box("BoundaryLayerResistanceStanghellini").name("rb").
+            endbox().
+            box("LeafRadiationAbsorbed").name("radiationAbsorbed").
+            endbox().
+            box("LeafTranspiration").name("transpiration").
+            endbox().
+            box("LeafTemperature").name("temperature").
+            endbox().
+            box("LeafPhotosynthesis").name("photosynthesis").
+                box("LeafLightResponse").name("lightResponse").
+                endbox().
+            endbox().
+        endbox();
+    return builder.content(BoxBuilder::AmendNone);
+}
+
+Box* buildLayers() {
+    BoxBuilder builder;
+    builder.
+        box().name("layers").
+            box(buildLayer("top", topGauss)).
+            box(buildLayer("middle", middleGauss)).
+            box(buildLayer("bottom", lowerGauss)).
+        endbox();
+    return builder.content(BoxBuilder::AmendNone);
 }
 
 void buildSensor(Box *parent, const Query &q) {
@@ -234,7 +305,7 @@ void buildCalendar(Box *parent, const Query &q) {
             port("longitude").equals(q.greenhouse.longitude).
             port("timeZone").equals(q.timeStamp.timeZone).
             port("initialDateTime").equals(dateTime).
-            port("timeStep").equals(30).
+            port("timeStep").equals(1).
             port("timeUnit").equals("s").
         endbox();
 }
@@ -250,13 +321,10 @@ void buildOutdoors(Box *parent) {
             port("radiation").imports("sensor[outdoorsGlobalRadiation]").
             port("windSpeed").imports("sensor[outdoorsWindSpeed]").
             port("diffuseRadiation").imports("./diffuseIrradiation[value]").
-            port("skyTemperature").imports("./skyTemperatureEstimate[temperature]").
-            box("DiffuseIrradiationRE").name("diffuseIrradiationEstimate").
-                port("globalIrradiation").imports("sensor[outdoorsGlobalRadiation]").
+            port("skyTemperature").imports("./skyTemperature[temperature]").
+            box("DiffuseIrradiationRE").name("diffuseIrradiation").
             endbox().
-            box("SkyTemperature").name("skyTemperatureEstimate").
-                port("airTemperature").imports("sensor[outdoorsTemperature]").
-                port("rh").imports("sensor[indoorsRh]").
+            box("SkyTemperature").name("skyTemperature").
             endbox().
             box().name("records").
             endbox().
@@ -300,11 +368,11 @@ Box* buildScreen(const Screen *s) {
             port("transmissivityLight").equals(transmissivityLight).
             port("emissivityInner").equals(emmisivityInner).
             port("emissivityOuter").equals(emmisivityOuter).
-//            port("U").equals(s->material.U).  // don't trust this
-//            port("acceptZeroU").equals(true).
+            port("U").equals(s->material.U).
+            port("acceptZeroU").equals(true).
             port("energyLossReduction").equals(s->material.energySaving/100.).
             port("haze").equals(haze).
-//            port("specificHeatCapacity").equals(s->material.heatCapacity).  // don't trust this
+            port("specificHeatCapacity").equals(s->material.heatCapacity).
             port("transmissivityAir").equals(transmissivityAir).
             port("state").equals(effect).
         endbox();
@@ -354,16 +422,16 @@ Box* buildVent(const Vents &vents, int i) {
 #define SHELTERFACE(X, Y, N) \
 box("vg::ShelterFace").name(#X). \
     box("vg::Cover").name("cover"). \
+        port("directTransmissionFile").equals(":/iglib/direct_transmission_single.txt"). \
+        port("U4").equals(q.construction.X.U). \
+        port("emissivity").equals(q.construction.X.emissivity). \
+        port("absorptivity").equals(q.construction.X.absorptivity). \
+        port("transmissivity").equals(q.construction.X.transmissivity). \
+        port("haze").equals(q.construction.X.haze). \
+        port("specificHeatCapacity").equals(q.construction.X.heatCapacity). \
     endbox(). \
     box(buildScreens(q.screens, Y)). \
     box(buildVent(q.vents, N))
-// Ignore cover parameters from IG user, until they have been checked
-//        port("U4").equals(q.construction.X.U).
-//        port("emissivity").equals(q.construction.X.emissivity).
-//        port("absorptivity").equals(q.construction.X.absorptivity).
-//        port("transmissivity").equals(q.construction.X.transmissivity).
-//        port("haze").equals(q.construction.X.haze).
-//        port("specificHeatCapacity").equals(q.construction.X.heatCapacity).
 
 void buildConstruction(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
@@ -388,34 +456,18 @@ void buildConstruction(Box *parent, const Query &q) {
         endbox();
 }
 
-void buildGiven(Box *parent, const Query &q) {
-    BoxBuilder builder(parent);
-    builder.
-        box().name("given").
-            box().name("energyFlux").
-                box().name("floor").
-                    newPort("emissivity").equals(q.construction.floor.emissivity).
-                    newPort("temperature").imports("sensor[indoorsTemperature]").
-                endbox().
-                box().name("shelter").
-                    newPort("coverTemperature").imports("sensor[outdoorsTemperature]").
-                    newPort("screensTemperature").imports("sensor[indoorsTemperature]").
-                endbox().
-            endbox().
-        endbox();
-}
-
 void buildIndoors(Box *parent) {
     BoxBuilder builder(parent);
     builder.
-        box("Box").name("indoors").
+        box("Indoors").name("indoors").
             box("vg::IndoorsLight").name("light").
             endbox().
             box().name("temperature").
                 newPort("value").imports("sensor[indoorsTemperature]").
             endbox().
-            box("IgIndoorsHumidity").name("humidity").
-                port("rh").imports("sensor[indoorsRh]").
+            box().name("humidity").
+                newPort("rh").imports("sensor[indoorsRh]").
+                newPort("ah").imports("sensor[indoorsAh]").
             endbox().
             box().name("windSpeed").
                 newPort("value").imports("sensor[indoorsWindspeed]").
@@ -423,14 +475,110 @@ void buildIndoors(Box *parent) {
             box().name("co2").
                 newPort("value").imports("sensor[indoorsCo2]").
             endbox().
+            box("Given").name("given").
+                box("AirFluxGiven").name("airFlux").
+                    box().name("crackVentilation").
+                    endbox().
+                endbox().
+            endbox().
+        endbox();
+}
+
+void buildSetpoints(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+        box().name("allSetpoints").
+            box().name("heatingTemperatureAtLowRh").
+                newPort("value").equals(22.).
+            endbox().
+            box().name("ventilationTemperatureMargin").
+                newPort("value").equals(1.).
+            endbox().
+            box().name("rhMax").
+                newPort("value").equals(90.).
+            endbox().
+            box().name("heatingTemperatureMargin").
+                newPort("value").equals(2.).
+            endbox().
+            box().name("ventilationTemperatureRhMargin").
+                newPort("value").equals(2.).
+            endbox().
+            box().name("ventilationThresholdBand").
+                newPort("value").equals(1.).
+            endbox().
+            box().name("co2Min").
+                newPort("value").equals(400.).
+            endbox().
+            box().name("co2Max").
+                newPort("value").equals(900.).
+            endbox().
+            box().name("chalk").
+                newPort("value").equals(0.).
+            endbox().
+            box().name("growthLightThresholdLow").
+                newPort("value").equals(40.).
+            endbox().
+            box().name("growthLightThresholdHigh").
+                newPort("value").equals(600.).
+            endbox().
+            box().name("growthLightActive").
+                newPort("value").equals(0.).
+            endbox().
+            box().name("rhMaxBand").
+                newPort("value").equals(3.).
+            endbox().
+            box().name("dawnThreshold").
+                newPort("value").equals(0.2).
+            endbox().
+            box().name("duskThreshold").
+                newPort("value").equals(0.3).
+            endbox().
+            box().name("crackVentilation").
+                newPort("value").equals(5.).
+            endbox().
+            box().name("crackVentilationTemperatureMin").
+                newPort("value").equals(-5.).
+            endbox().
+            box().name("crackVentilationTemperatureMinBand").
+                newPort("value").equals(1.).
+            endbox().
+            box().name("screenEnergyThreshold").
+                newPort("value").equals(5.).
+            endbox().
+            box().name("screenEnergyThresholdBand").
+                newPort("value").equals(5.).
+            endbox().
+            box().name("screenShadeThreshold").
+                newPort("value").equals(500.).
+            endbox().
+            box().name("screenShadeThresholdBand").
+                newPort("value").equals(50.).
+            endbox().
+            box().name("screenBlackoutFromTimeFloat").
+                newPort("value").equals(0.5).
+            endbox().
+            box().name("screenBlackoutToTimeFloat").
+                newPort("value").equals(0.792).
+            endbox().
+            box().name("screenMaxAtHighRh").
+                newPort("value").equals(0.9).
+            endbox().
+        endbox().
+        box("vg::Setpoints").name("setpoints").
         endbox();
 }
 
 void buildControllers(Box *parent) {
     BoxBuilder builder(parent);
     builder.
-        box().name("controllers").
-            newPort("chalk").equals(0.).
+        box("Controllers").name("controllers").
+        endbox();
+}
+
+void buildTest(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+        box().name("TestTest").
         endbox();
 }
 
@@ -438,9 +586,6 @@ void buildCrop(Box *parent, const Query &) {
     BoxBuilder builder(parent);
     builder.
         box("vg::Crop").name("crop").
-            box().name("lai").
-                newPort("value").equals(1.).
-                newPort("cultivatedArea").equals(0.9).
         endbox();
 }
 
@@ -460,17 +605,18 @@ Box* build(const Query &q) {
     try {
         builder.
             box("Simulation").name("sim").
-                port("steps").equals(5).
+                port("steps").equals(10).
             endbox();
         sim = builder.content();
         buildCalendar(sim, q);
         buildSensor(sim, q);
         buildOutdoors(sim);
         buildConstruction(sim, q);
-        buildGiven(sim, q);
         buildIndoors(sim);
+        buildSetpoints(sim);
         buildControllers(sim);
         buildActuators(sim, q);
+        buildTest(sim);
         buildCrop(sim, q);
 //        buildOutput(sim);
     }
@@ -480,6 +626,38 @@ Box* build(const Query &q) {
     environment().root(sim);
     return sim;
 }
+
+double wave(double avg, double amplitude, double hour) {
+    return avg + sin(2*3.1412*hour/48)*amplitude;
+}
+
+Response compute(const Query &q) {
+    Response r;
+    r.timeStamp = q.timeStamp;
+    r.photosynthesis = 1.59*(1. - exp(-0.00801*q.outdoors.irradiation.value));
+    return r;
+}
+
+//Response compute(const Query &q) {
+//    Response r;
+//    base::DataFrame data;
+//    data.read(":/iglib/simulation-1440-minutes.txt", base::DataFrame::ColumnLabelled);
+//    r.timeStamp = q.timeStamp;
+//    int minute = 12*60, //std::max(static_cast<int>(q.timeStamp.timeOfDay)*60, 24*60-1),
+//        indoorsCo2 = data.ixCol("indoorsCo2"),
+//        indoorsRh = data.ixCol("indoorsRh"),
+//        indoorsTemperature = data.ixCol("indoorsTemperature"),
+//        growthLight = data.ixCol("growthLight"),
+//        heating = data.ixCol("heating"),
+//        photosynthesis = data.ixCol("photosynthesis");
+//    r.indoorsCo2 = data.at<double>(minute, indoorsCo2);
+//    r.indoorsRh = data.at<double>(minute, indoorsRh);
+//    r.indoorsTemperature = data.at<double>(minute, indoorsTemperature);
+//    r.growthLight = data.at<double>(minute, growthLight);
+//    r.heating = data.at<double>(minute, heating);
+//    r.photosynthesis = data.at<double>(minute, photosynthesis);
+//    return r;
+//}
 
 Response testConstant(const Query &q) {
     Response r;
@@ -502,53 +680,44 @@ Response testMultiplum(const Query &q) {
     return r;
 }
 
-Response compute(const Query &q) {
-    const bool debug = true;
-    const bool run = true;
-
+Response compute0(const Query &q) {
     init();
     Response r;
-    bool excepted(false);
+    bool excepted = false;
 
-    // Build model from root, (write script) and run
     Box *root(nullptr);
     try {
-        cout << "compute A";
+        dialog().information("compute A");
         root = build(q);
-        cout << "compute B";
-        if (debug) {
-            environment().latestLoadArg("igclient.box");
-            Command::submit(QStringList() << "write", nullptr);
-        }
-        if (run) {
-            cout << "compute C";
-            Box::debug(true);
-            root->run();
-            cout << "compute D";
-        }
+        dialog().information("compute B1");
+        environment().latestLoadArg("igclient.box");
+        Command::submit(QStringList() << "write", nullptr);
+        dialog().information("compute B2");
+        root->run();
+        dialog().information("compute C");
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
         excepted = true;
     }
-
-    // Check for error
+    dialog().information("compute D");
     if (excepted || root->port("hasError")->value<bool>()) {
         if (!excepted)
             _errorString = root->port("errorMsg")->value<QString>().toStdString();
         r.hasError = true;
         r.error = _errorString.c_str();
     }
+    dialog().information("compute E");
+
+    environment().latestLoadArg("igclient.box");
+    Command::submit(QStringList() << "write", nullptr);
+
+    dialog().information("compute F");
 
     // Extract response from model state
     try {
         r.timeStamp = q.timeStamp;
-        r.indoorsCo2 = root->findOne<Box>("indoors/co2")->port("value")->value<double>();
-        r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
-        r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
-        r.heating = 0;
-        r.costEfficiency = 0;
-        r.photosynthesis = root->findOne<Box>("crop/Pg")->port("value")->value<double>();
+        r.photosynthesis = root->findOne<Box>("crop/growth")->port("netGrowthRate")->value<double>();
         r.growthLight = root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>();
     }
     catch (Exception &ex) {
@@ -556,6 +725,18 @@ Response compute(const Query &q) {
     }
 
     return r;
+}
+
+const char * queryToString(const Query &q) {
+    Box *sim = build(q);
+
+    QString s;
+    QTextStream text(&s);
+    sim->toText(text);
+
+    delete sim;
+    _queryString = text.string()->toStdString();
+    return _queryString.c_str();
 }
 
 #define RESP(X) text << #X << " = " << r.X << "\n"
