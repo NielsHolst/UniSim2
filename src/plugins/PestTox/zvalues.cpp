@@ -18,7 +18,6 @@ PUBLISH (ZValues)
 ZValues::ZValues(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(MW).equals(169.07);         //molar mass of the pesticide in g/mol
     Input(Pd).equals(0.01);           //penetration depth of 1 cm = 0.01 m
     Input(VP).equals(2.45e-5);        //Pa at 25 degrees celsius
@@ -34,7 +33,6 @@ ZValues::ZValues(QString name, QObject *parent)
     Input(Sp).equals(0.5);            //soil porosity
     Input(farea).equals(100.);
 
-
     Output(Za);                //mol m-3 Pa-1
     Output(Zw);                //mol m-3 Pa-1
     Output(Zs);                //mol m-3 Pa-1
@@ -43,11 +41,9 @@ ZValues::ZValues(QString name, QObject *parent)
     Output(Vw);                //volume of water in the soil volume susceptible for volatilization (m3)
     Output(Va);                //volume of air in the soil volume susceptible for volatilization (m3)
     Output(VZ);
-
 }
 
 void ZValues::update() {
-
     const double Tref = 25.;
     VPTadap = VP * exp((1./10.)*(Tair - Tref));
     Zw = 1000.*Psol/(VPTadap * MW);
@@ -57,8 +53,6 @@ void ZValues::update() {
     Vw = Pd*fw*farea;
     Va = Pd*fa*farea;
     VZ = Va*Za + Vw*Zw + Vs*Zs;
-
-
 }
 
 } //namespace

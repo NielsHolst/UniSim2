@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_TOPSOILDEGRADATIONFINAL_H
-#define PESTTOX_TOPSOILDEGRADATIONFINAL_H
+#ifndef TOPSOIL_DEGRADATION_H
+#define TOPSOIL_DEGRADATION_H
 
 #include <base/box.h>
 
@@ -26,7 +26,6 @@ private:
     // Output
     double concentration, outflow, degradation, volatilization,
     ksd, fsdT, Vsmc, fsm, runoff, macroporeFlow;
-
 };
 
 } //namespace

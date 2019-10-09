@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_LEAFUPTAKE_H
-#define PESTTOX_LEAFUPTAKE_H
+#ifndef LEAF_UPTAKE_H
+#define LEAF_UPTAKE_H
 
 #include "loss_rate.h"
 

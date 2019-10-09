@@ -24,12 +24,10 @@ SoilTemperature::SoilTemperature(QString name, QObject *parent)
 }
 
 void SoilTemperature::reset() {
-
     update();
 }
 
 void SoilTemperature::update() {
-
     value = dayLength/24.*Tmax + (1.- dayLength/24.)*Tmin;
 }
 

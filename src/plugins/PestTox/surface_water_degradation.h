@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_SURFACEWATERDEGRADATION_H
-#define PESTTOX_SURFACEWATERDEGRADATION_H
+#ifndef SURFACE_WATER_DEGRADATION_H
+#define SURFACE_WATER_DEGRADATION_H
 
 #include <base/box.h>
 

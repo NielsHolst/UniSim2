@@ -8,17 +8,15 @@
 #include <cmath>
 #include <base/publish.h>
 
-
 using namespace base;
 
 namespace PestTox {
 
-PUBLISH (TopSoilRunoff)
+PUBLISH (TopsoilRunoff)
 	
-TopSoilRunoff::TopSoilRunoff(QString name, QObject *parent)
+TopsoilRunoff::TopsoilRunoff(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(S).equals(0.01);
     Input(wbz).equals(1.);
     Input(P).equals(1.);              //average  daily rainfall per rainfall event in a given month (mm)
@@ -32,8 +30,7 @@ TopSoilRunoff::TopSoilRunoff(QString name, QObject *parent)
     Output(fsr);
 }
 
-void TopSoilRunoff::update() {
-
+void TopsoilRunoff::update() {
     if (S > 0.2){
         Fslope = 1;
     }
@@ -47,7 +44,6 @@ void TopSoilRunoff::update() {
     F = Fbuffer * Fslope;
     Kd = KocpH * fom;
     fsr = (P > 0) ? (Q/P) * F * (1./ (1. + Kd)) : 0;
-
 }
 
 } //namespace

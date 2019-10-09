@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_LEAFVOLATILIZATION_H
-#define PESTTOX_LEAFVOLATILIZATION_H
+#ifndef LEAF_VOLATILIZATION_H
+#define LEAF_VOLATILIZATION_H
 
 #include "loss_rate.h"
 
@@ -13,7 +13,6 @@ namespace PestTox {
 
 class LeafVolatilization : public LossRate
 {
-
 public:
     LeafVolatilization(QString name, QObject *parent);
 private:

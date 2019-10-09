@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_ORGANICCARBONWATERPARTITIONING_H
-#define PESTTOX_ORGANICCARBONWATERPARTITIONING_H
+#ifndef ORGANIC_CARBON_WATER_PARTITIONING_H
+#define ORGANIC_CARBON_WATER_PARTITIONING_H
 
 #include <base/box.h>
 

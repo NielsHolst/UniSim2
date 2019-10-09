@@ -30,9 +30,7 @@ void TopsoilInSoil::reset() {
 
 
 void TopsoilInSoil::update() {
-
     fr = (VZ > 0) ? V*Z/VZ : 0.;
-
 }
 
 } //namespace

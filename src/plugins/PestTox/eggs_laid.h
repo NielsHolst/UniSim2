@@ -4,18 +4,17 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_EGGSLAID_H
-#define PESTTOX_EGGSLAID_H
+#ifndef EGGSLAID_H
+#define EGGSLAID_H
 
 #include <base/box.h>
 
 namespace PestTox {
 
-class eggslaid : public base::Box
+class EggsLaid : public base::Box
 {
 public:
-    eggslaid(QString name, QObject *parent);
-    void reset();
+    EggsLaid(QString name, QObject *parent);
     void update();
 
 private:
@@ -24,7 +23,6 @@ private:
 
     // Output
     double totalEggs;
-
 };
 
 } //namespace

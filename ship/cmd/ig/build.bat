@@ -1,76 +1,48 @@
-REM pushd ..\win
-REM call build
-REM popd
-
-set VERSION=release
-
-echo = Set release version =
-..\bin\update-qt-project %VERSION%
-if errorlevel 1 goto :end_fail
-
-echo = Set path to Qt build environment =
-set QTENV="C:\Qt\5.9.2\mingw53_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.7\mingw53_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-
-set QTENV="C:\Qt\5.4\mingw491_32\bin\qtenv2.bat"
-if exist %QTENV% goto :ok_qt
-echo .
-echo Could not find %QTENV%
-echo .
-goto :end_fail
-:ok_qt 
-rem Call Qt batch file 
-pushd .
-call %QTENV%
+set IGLIB=iglib_2.3.11 
+set IGLIB_BIN=iglib_2.3.11\bin 
+set IGLIB_BIN_PLUGINS=iglib_2.3.11\bin\plugins 
+set IGLIB_BIN_IMAGEFORMATS=iglib_2.3.11\bin\imageformats
+set IGLIB_BIN_PLATFORMS=iglib_2.3.11\bin\platforms
+mkdir %IGLIB%
+pushd %IGLIB%
+mkdir bin
+pushd bin
+mkdir imageformats
+mkdir platforms
+mkdir plugins
+popd
 popd
 
-pause
+echo = Copy UniSim plug-ins =
+copy ..\..\..\bin\plugins\*.dll %IGLIB_BIN_PLUGINS%
 
-echo = Build ig =
-pushd ..\..\..
-qmake ig.pro
-if errorlevel 1 goto :end_fail
-mingw32-make -B
-if errorlevel 1 goto :end_fail
-popd
+echo = Copy Qt library folders =
+copy C:\Qt\5.9.2\mingw53_32\plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
+copy C:\Qt\5.9.2\mingw53_32\plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
 
-echo = Restore to debug version =
-..\bin\update-qt-project debug
+echo = Copy UniSim libraries =
+copy ..\..\..\bin\iglib.dll %IGLIB_BIN%
+copy ..\..\..\bin\universal_simulator_base.dll %IGLIB_BIN%
 
-echo = Copy ig exe and dll =
-copy ..\..\..\bin\ig*.* ..\..\bin
-copy ..\..\..\bin\libig*.* ..\..\bin
+echo = Copy Qt libraries =
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5Core.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5Gui.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5Network.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5PrintSupport.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5Test.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5Widgets.dll %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\Qt5XmlPatterns.dll %IGLIB_BIN%
 
-echo = Delete unused binary files =
-pushd ..\..\bin
-del /q unisim.exe
-cd plugins
-for %%i in (*.*) do if not "%%i"=="boxes.dll" if not "%%i"=="vg.dll" del /q "%%i"
-cd ..
-popd
+echo = Copy C++ libraries =
+copy C:\Qt\5.9.2\mingw53_32\bin\libgcc_s_dw2-1.dll %IGLIB_BIN%
+copy "C:\Qt\5.9.2\mingw53_32\bin\libstdc++-6.dll" %IGLIB_BIN%
+copy C:\Qt\5.9.2\mingw53_32\bin\libwinpthread-1.dll %IGLIB_BIN%
 
-echo = Replace zip files
-del /q *.zip
-7z a -r -tzip bin ..\..\bin\*.*
+echo = Copy Windows libraries
+copy C:\Windows\System32\atl.dll %IGLIB_BIN%
+copy C:\Windows\System32\comctl32.dll %IGLIB_BIN%
+copy C:\Windows\System32\mfc42u.dll %IGLIB_BIN%
+copy C:\Windows\System32\msvcrt.dll %IGLIB_BIN%
+copy C:\Windows\System32\oleaut32.dll %IGLIB_BIN%
 
-rmdir /s /q src
-mkdir src
-copy ..\..\..\src\apps\igclient\main.cpp src
-copy ..\..\..\src\lib\iglib\iglib.h src
-
-echo = Replace zip files in destination folder =
-rmdir /s /q ..\..\ig
-mkdir ..\..\ig\src
-copy *.zip ..\..\ig
-copy src ..\..\ig\src
-
-echo *** SUCCESS ***
-pause
-exit
-:end_fail
-echo *** BUILD FAILURE ***
-echo on
 pause

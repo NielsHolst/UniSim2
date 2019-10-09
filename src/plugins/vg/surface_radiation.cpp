@@ -58,20 +58,24 @@ SurfaceRadiation& SurfaceRadiation::asCover(double transmissivity, double direct
 
 //! Initialize from screen characteristics
 SurfaceRadiation& SurfaceRadiation::asScreen(double transmissivity, double absorptivityLwOuter, double absorptivityLwInner) {
-    light.tra =
-    lw.tra = transmissivity;
-
-    light.outer.abs =
-    lw.outer.abs = absorptivityLwOuter;
+    double notTransmitted = 1. - transmissivity;
+    light.tra = transmissivity;
+    light.outer.abs = notTransmitted/2.;
     light.outer.setRef(light.tra);
-    lw.outer.setRef(lw.tra);
-
-    lw.inner.abs = absorptivityLwInner;
-    lw.inner.setRef(lw.tra);
-    light.inner.ref = std::min(lw.inner.ref, 1. - light.tra);
-    light.inner.setAbs(light.tra);
+    light.inner.abs = notTransmitted/2.;
+    light.inner.setRef(light.tra);
 
     directLight = light;
+
+    double notReflectedOuter = transmissivity + absorptivityLwOuter;
+    lw.tra = transmissivity;
+    lw.outer.abs = (notReflectedOuter < 1.) ? absorptivityLwOuter : 1.-transmissivity;
+    lw.outer.setRef(lw.tra);
+
+    double notReflectedInner = transmissivity + absorptivityLwInner;
+    lw.inner.abs = (notReflectedInner < 1.) ? absorptivityLwInner : 1.-transmissivity;
+    lw.inner.setRef(lw.tra);
+
     check();
     return *this;
 }
@@ -87,15 +91,12 @@ void SurfaceRadiation::setToZero() {
 void SurfaceRadiation::Spectrum::Direction::setRef(double tra) {
     ref = 1. - abs - tra;
     TestNum::snapToZero(ref);
-//    if (ref<0)
-//        ThrowException("Absorptivity + Transmission > 1").value1(abs).value2(tra);
 }
 
 //! Set absorptivity from transmissivity (assumes reflectivity already set)
 void SurfaceRadiation::Spectrum::Direction::setAbs(double tra) {
     abs = 1. - ref - tra;
     TestNum::snapToZero(abs);
-//    Q_ASSERT(abs>=0.);
 }
 
 void SurfaceRadiation::Spectrum::Direction::check(double tra, QString name, const QObject *context) {

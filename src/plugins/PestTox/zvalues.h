@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_ZVALUES_H
-#define PESTTOX_ZVALUES_H
+#ifndef ZVALUES_H
+#define ZVALUES_H
 
 #include <base/box.h>
 

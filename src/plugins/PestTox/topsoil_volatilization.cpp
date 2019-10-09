@@ -18,7 +18,6 @@ PUBLISH (TopsoilVolatilization)
 TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(Tair).imports("weather[Tavg]");           // degrees celsius
     Input(MV).equals(140.83);         //molar volume; density 1.704 g/cm3, molar mass 169.07 g/mol
     Input(BLair).equals(0.00475);     // m or 4.75 mm as per Mackay (2001)
@@ -47,7 +46,6 @@ TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 }
 
 void TopsoilVolatilization::update() {
-
     Ba = 1./10000. * 1./1000. * (pow((Tair + 273.15), 1.75)*sqrt(((1./MWair) + (1./MW))) / (Pair*pow((pow(MVair, 1./3.) + pow(MV, 1./3.)), 2)));
     ke = Ba / BLair;
     Dbl = 3600. * 24. * ke * farea * Za;
@@ -59,7 +57,6 @@ void TopsoilVolatilization::update() {
     Dw = 3600. * 24. * Bew * farea * Zw / Dpl;
     Dv = 1./((1./Dbl)+(1./(Da + Dw)));
     ksv = Dv/VZ;
-
 }
 
 } //namespace

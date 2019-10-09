@@ -19,7 +19,6 @@ PUBLISH (SurfaceWaterDegradation )
 SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(inflow).equals(0.).help("Runoff from the field (g/ha)");
     Input(inflow2).equals(0.).help("Spray drift off-field edge (g/ha)");
     Input(DT50).equals(4.5).help("Biodegradation half-life (days)");
@@ -38,11 +37,9 @@ SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent
     Output(fieldWater).help("Volume of water runoff from  the field (L)");
     Output(runoff).help("Pesticide concentration in the runoff: from  the field (mg/L)");
     Output(sprayDrift).help("Pesticide concentration: from spray drift (mg/L)");
-
 }
 
 void SurfaceWaterDegradation ::update() {
-
     const double Tref = 25.;
     double k = log(2)/DT50;
     fwdT = (Tw > 0) ? pow(Q10,(Tw - Tref)/10.) : 0;
@@ -53,7 +50,6 @@ void SurfaceWaterDegradation ::update() {
     sprayDrift = inflow2*1000.*fieldArea*1e-4/pondVolume;
     outflow = concentration*kwd;
     concentration += (fieldWater > 0) ? runoff + sprayDrift - concentration: runoff + sprayDrift - outflow;
-
 }
 
 } //namespace

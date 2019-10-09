@@ -17,19 +17,14 @@ PUBLISH (RunoffFraction)
 RunoffFraction::RunoffFraction(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(Q).equals(5.);
     Input(P).equals(1.);      //average  daily rainfall per rainfall event in a given month (mm)
 
-
     Output(frr);
-
 }
 
 void RunoffFraction::update() {
-
     frr = (P > 0) ? Q/P : 0;
-
 }
 
 } //namespace

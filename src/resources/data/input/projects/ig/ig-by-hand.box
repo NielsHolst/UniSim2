@@ -165,7 +165,7 @@ Simulation sim {
       +value = sensors[IndoorsTemperature] // hack
     }
   }
-  Crop crop {
+  vg::Crop crop {
     Box lai {
       +value = 1
       +fractionPlantArea = 0.9 // obs$Construction$CultivatedArea / 100

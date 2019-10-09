@@ -18,7 +18,6 @@ PUBLISH (TopsoilDegradation)
 TopsoilDegradation::TopsoilDegradation(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(inflow).equals(0.);
     Input(DT50).equals(10.);      //biodegradation half-life (days)
     Input(Sp).equals(0.);         //soil porosity
@@ -44,7 +43,6 @@ TopsoilDegradation::TopsoilDegradation(QString name, QObject *parent)
     Output(volatilization); //amount volatilized
     Output(runoff);        //amount runoff
     Output(macroporeFlow);
-
 }
 
 void TopsoilDegradation::update() {
@@ -62,7 +60,6 @@ void TopsoilDegradation::update() {
     volatilization = ksv*(frsa+frsw)*concentration;
     runoff = fsr*concentration;
     macroporeFlow = fmp*concentration;
-
 }
 
 } //namespace

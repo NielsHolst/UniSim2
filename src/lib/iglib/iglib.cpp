@@ -41,7 +41,7 @@ static QVector<Screen> _screens;
 // Functions
 
 void init() {
-    const bool test = true;
+    const bool test = false;
     static int argc = 1;
     static char ch = 0;
     static char *argv = &ch;
@@ -198,6 +198,10 @@ void buildActuators(Box *parent, const Query &q) {
             box().name("heating").
                 newPort("value").imports("sensor[indoorsTemperature]").
             endbox().
+            box().name("screens").
+            endbox().
+            box().name("vents").
+            endbox().
         endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
     buildGrowthLights(actuators, q.growthLights);
@@ -249,7 +253,7 @@ void buildOutdoors(Box *parent) {
             port("rh").imports("sensor[outdoorsRh]").
             port("radiation").imports("sensor[outdoorsGlobalRadiation]").
             port("windSpeed").imports("sensor[outdoorsWindSpeed]").
-            port("diffuseRadiation").imports("./diffuseIrradiation[value]").
+            port("diffuseRadiation").imports("./diffuseIrradiationEstimate[value]").
             port("skyTemperature").imports("./skyTemperatureEstimate[temperature]").
             box("DiffuseIrradiationRE").name("diffuseIrradiationEstimate").
                 port("globalIrradiation").imports("sensor[outdoorsGlobalRadiation]").
@@ -266,7 +270,7 @@ void buildOutdoors(Box *parent) {
 Box* buildScreen(const Screen *s) {
     BoxBuilder builder;
     QString orientation = (s->position==WholeRoof) ? "horizontal" : "cover";
-    double effect = (s->effect.origin!=NotAvailable) ? s->effect.value : 0.,
+    double effect = (s->effect.origin!=NotAvailable) ? s->effect.value/100. : 0.,
            transmissivityLight = s->material.transmissivityLight,
            emmisivityInner = s->material.emmisivityInner,
            emmisivityOuter = s->material.emmisivityOuter,
@@ -440,7 +444,8 @@ void buildCrop(Box *parent, const Query &) {
         box("vg::Crop").name("crop").
             box().name("lai").
                 newPort("value").equals(1.).
-                newPort("cultivatedArea").equals(0.9).
+                newPort("fractionPlantArea").equals(0.9).
+            endbox().
         endbox();
 }
 
@@ -503,7 +508,7 @@ Response testMultiplum(const Query &q) {
 }
 
 Response compute(const Query &q) {
-    const bool debug = true;
+    const bool debug = false;
     const bool run = true;
 
     init();
@@ -513,22 +518,18 @@ Response compute(const Query &q) {
     // Build model from root, (write script) and run
     Box *root(nullptr);
     try {
-        cout << "compute A";
         root = build(q);
-        cout << "compute B";
         if (debug) {
             environment().latestLoadArg("igclient.box");
             Command::submit(QStringList() << "write", nullptr);
         }
         if (run) {
-            cout << "compute C";
-            Box::debug(true);
             root->run();
-            cout << "compute D";
         }
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
+        cout << "\n\nERROR: " << _errorString << "\n";
         excepted = true;
     }
 

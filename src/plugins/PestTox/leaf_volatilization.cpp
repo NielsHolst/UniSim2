@@ -29,12 +29,10 @@ LeafVolatilization::LeafVolatilization(QString name, QObject *parent)
 }
 
 double LeafVolatilization::computeInstantaneous() {
-
     double evaporationRateTref = exp(12.2 + 0.933 * log(VP)) * 1e-6 * 1e4; // g/ha/h = myg/m2/h * g/myg * m2/ha
     Tcorrection = Ea*1000./R*((1./(Tref + T0)) - 1./(Tair + T0)); // 1 = kJ/mol * J/KJ / (J/mol/K) / K
     evaporationRate = evaporationRateTref * exp(Tcorrection) / 3600; // g/ha/s = g/ha/h / (s/h)
     return (load > 0) ? evaporationRate/load : 0.; // s-1 = g/ha/s / (g/ha)
-
   }
 
 } //namespace

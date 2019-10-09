@@ -4,17 +4,17 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_TOPSOILRUNOFF_H
-#define PESTTOX_TOPSOILRUNOFF_H
+#ifndef TOPSOIL_RUNOFF_H
+#define TOPSOIL_RUNOFF_H
 
 #include <base/box.h>
 
 namespace PestTox {
 
-class TopSoilRunoff : public base::Box
+class TopsoilRunoff : public base::Box
 {
 public:
-    TopSoilRunoff(QString name, QObject *parent);
+    TopsoilRunoff(QString name, QObject *parent);
     void update();
 
 private:

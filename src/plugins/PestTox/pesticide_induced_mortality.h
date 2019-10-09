@@ -4,17 +4,17 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_PESTICIDEINDUCEDMORTALITYRATE_H
-#define PESTTOX_PESTICIDEINDUCEDMORTALITYRATE_H
+#ifndef PESTICIDE_INDUCED_MORTALITY_H
+#define PESTICIDE_INDUCED_MORTALITY_H
 
 #include <base/box.h>
 
 namespace PestTox {
 
-class pesticideinducedmortalityrate : public base::Box
+class PesticideInducedMortality : public base::Box
 {
 public:
-    pesticideinducedmortalityrate(QString name, QObject *parent);
+    PesticideInducedMortality(QString name, QObject *parent);
     void reset();
     void update();
 

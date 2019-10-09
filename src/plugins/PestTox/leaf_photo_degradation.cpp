@@ -11,7 +11,6 @@
 #include <base/interpolate.h>
 #include <base/publish.h>
 
-
 using namespace base;
 
 namespace PestTox {
@@ -19,7 +18,7 @@ namespace PestTox {
 PUBLISH (LeafPhotoDegradation)
 	
 LeafPhotoDegradation::LeafPhotoDegradation(QString name, QObject *parent)
-    : LossRate(name, parent), _freeRadicalsTable(0)
+    : LossRate(name, parent), _freeRadicalsTable(nullptr)
 {
     Input(dayOfYear).imports("calendar[dayOfYear]");
     Input(latitude).imports("calendar[latitude]");
@@ -30,7 +29,6 @@ LeafPhotoDegradation::LeafPhotoDegradation(QString name, QObject *parent)
 }
 
 void LeafPhotoDegradation::initialize() {
-
     delete _freeRadicalsTable;
     QString filePath = environment().inputFileNamePath(fileName);
     _freeRadicalsTable = new DataGrid(filePath, this);
@@ -38,7 +36,6 @@ void LeafPhotoDegradation::initialize() {
 }
 
 double LeafPhotoDegradation::computeInstantaneous() {
-
     OHconcentration = interpolate(*_freeRadicalsTable, latitude, dayOfYear)*1e5; // molecules/cm3
     return kOH*OHconcentration/3600.; // s-1 = cm3/molecules/h * molecules/cm3 / (s/h)
 }

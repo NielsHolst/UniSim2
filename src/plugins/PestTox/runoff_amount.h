@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_RUNOFFAMOUNT_H
-#define PESTTOX_RUNOFFAMOUNT_H
+#ifndef RUNOFF_AMOUNT_H
+#define RUNOFF_AMOUNT_H
 
 #include <base/box.h>
 

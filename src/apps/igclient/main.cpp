@@ -19,11 +19,8 @@ int main(int, char **)
     int result = 0;
     QueryReaderJson reader;
     try {
-        cout << "\nmain A\n";
         Query q = reader.parse(filePath);
-        cout << "\nmain B\n";
         Response r = compute(q);
-        cout << "\nmain C\n";
         cout << "\nRESPONSE:\n" << responseToString(r) << "\n";
     }
     catch (const base::Exception &ex) {

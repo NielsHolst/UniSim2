@@ -19,14 +19,14 @@ PUBLISH(Compartment)
 Compartment::Compartment(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(gain).help("Daily gain (g a.i. per ha)");
-    Input(loss).help("Daily loss (g a.i. per ha)");
+    help("manages the current load of active ingredient in a compartment");
+    Input(gain).unit("g a.i. per ha").help("Daily gain");
+    Input(loss).unit("g a.i. per ha").help("Daily loss");
 
-    Output(load).help("Current pesticide load (g a.i. per ha)");
+    Output(load).unit("g a.i. per ha").help("Current pesticide load");
 }
 
 void Compartment::update() {
-
     load += gain - loss;
     TestNum::snapToZero(load, 1e-18);
     if (load < 0.)

@@ -24,7 +24,6 @@ Crop::Crop(QString name, QObject *parent)
 }
 
 void Crop::update() {
-
     sown = equals(sowingDate, date) ? 1 : 0;
 }
 

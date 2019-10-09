@@ -184,6 +184,8 @@ void Box::enumerateBoxes(int &i) {
 }
 
 void Box::initializeFamily() {
+    if (_traceOn)
+        dialog().information("initializeFamily " + fullName());
     if (!_amended) {
         environment().computationStep(ComputationStep::Amend, false);
         amendFamily();

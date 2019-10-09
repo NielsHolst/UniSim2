@@ -8,7 +8,6 @@
 #include <cmath>
 #include <base/publish.h>
 
-
 using namespace base;
 
 namespace PestTox {
@@ -27,7 +26,6 @@ LossRateTotal::LossRateTotal(QString name, QObject *parent)
 void LossRateTotal::amend() {
     // Find input ports
     QVector<Port*> ports = findMany<Port>(path);
-//Niels    QVector<Port*> ports = resolveMany<Port>(path);
 
     // Collect pointers to port values;
     _inputs.clear();
@@ -45,8 +43,6 @@ void LossRateTotal::amend() {
         NamedOutput(name+"Amount", *outputAmount);
         ++outputRate;
         ++outputAmount;
-//Niels        (*new Port(name+"Rate", this)).data(outputRate++).access(Port::Output).zeroAtReset();
-//Niels        (*new Port(name+"Amount", this)).data(outputAmount++).access(Port::Output).zeroAtReset();
     }
 }
 
@@ -69,7 +65,6 @@ void LossRateTotal::update() {
         *outputRate++ = rate;
         *outputAmount++ = rate*amount;
     }
-
 }
 
 

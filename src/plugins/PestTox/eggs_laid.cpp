@@ -11,12 +11,11 @@ using namespace base;
 
 namespace PestTox {
 
-PUBLISH (eggslaid)
+PUBLISH (EggsLaid)
 	
-eggslaid::eggslaid(QString name, QObject *parent)
+EggsLaid::EggsLaid(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(eggsPerFemale).equals(100.);
     Input(population).equals(0.);
     Input(sexRatio).equals(0.5);     //fraction of females in the population
@@ -24,15 +23,7 @@ eggslaid::eggslaid(QString name, QObject *parent)
     Output(totalEggs);
 }
 
-void eggslaid::reset() {
-
-    totalEggs = 0.;
-}
-
-void eggslaid::update() {
-
-    //totalEggs = (population >2) ? sexRatio*eggsPerFemale : 0;
-
+void EggsLaid::update() {
     totalEggs = sexRatio*eggsPerFemale;
 }
 

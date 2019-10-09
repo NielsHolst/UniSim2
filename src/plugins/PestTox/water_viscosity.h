@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_VISCOSITYOFWATER_H
-#define PESTTOX_VISCOSITYOFWATER_H
+#ifndef WATER_VISCOSITY_H
+#define WATER_VISCOSITY_H
 
 #include <base/box.h>
 

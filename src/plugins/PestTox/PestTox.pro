@@ -22,7 +22,6 @@ HEADERS += \
     loss_rate_total.h \
     macropore_flow.h \
     organic_carbon_water_partitioning.h \
-    pesticide_induced_mortality_rate.h \
     primary_distribution_air.h \
     primary_distribution_base.h \
     primary_distribution_leaf.h \
@@ -37,7 +36,8 @@ HEADERS += \
     topsoil_volatilization.h \
     topsoil_runoff.h \
     water_viscosity.h \
-    zvalues.h
+    zvalues.h \
+    pesticide_induced_mortality.h
 
 SOURCES += \
     application.cpp \
@@ -52,7 +52,6 @@ SOURCES += \
     loss_rate_total.cpp \
     macropore_flow.cpp \
     organic_carbon_water_partitioning.cpp \
-    pesticide_induced_mortality_rate.cpp \
     primary_distribution_air.cpp \
     primary_distribution_base.cpp \
     primary_distribution_leaf.cpp \
@@ -67,4 +66,5 @@ SOURCES += \
     topsoil_volatilization.cpp \
     topsoil_runoff.cpp \
     water_viscosity.cpp \
-    zvalues.cpp
+    zvalues.cpp \
+    pesticide_induced_mortality.cpp

@@ -4,8 +4,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PESTTOX_TOPSOILDOSEINSOILSOLIDSAIRANDWATER_H
-#define PESTTOX_TOPSOILDOSEINSOILSOLIDSAIRANDWATER_H
+#ifndef TOPSOIL_IN_SOIL_H
+#define TOPSOIL_IN_SOIL_H
 
 #include <base/box.h>
 

@@ -149,7 +149,7 @@ Simulation sim {
               .VZ = zValues[VZ]
             }
           }
-          PestTox::TopSoilRunoff runoff {
+          PestTox::TopsoilRunoff runoff {
             .S = 0.18
             .wbz = distribution/surroundings[x]
             .P = weather[Rain]
@@ -219,22 +219,22 @@ Simulation sim {
             .inflow2 = distribution/surroundings[doseTaken]
             .DT50 = 4.5
             Box mortality {
-              PestTox::pesticideinducedmortalityrate eggs {
+              PestTox::PesticideInducedMortality eggs {
                 .slope = 2.341
                 .concentration = surface/degradation[concentration]
                 .LC50 = 4.8
               }
-              PestTox::pesticideinducedmortalityrate tadpoles {
+              PestTox::PesticideInducedMortality tadpoles {
                 .slope = mortality/eggs[slope]
                 .concentration = surface/degradation[concentration]
                 .LC50 = 4.8
               }
-              PestTox::pesticideinducedmortalityrate froglets {
+              PestTox::PesticideInducedMortality froglets {
                 .slope = mortality/eggs[slope]
                 .concentration = surface/degradation[concentration]
                 .LC50 = 69
               }
-              PestTox::pesticideinducedmortalityrate adults {
+              PestTox::PesticideInducedMortality adults {
                 .slope = mortality/eggs[slope]
                 .concentration = surface/degradation[concentration]
                 .LC50 = 65.9
@@ -278,7 +278,7 @@ Simulation sim {
         .duration = 21
         .timeStep = 1
         .growthFactor = ./eggs[totalEggs]
-        PestTox::eggslaid eggs {          
+        PestTox::EggsLaid eggs {          
           .sexRatio = 0.5 
           .eggsPerFemale = 70
         }        

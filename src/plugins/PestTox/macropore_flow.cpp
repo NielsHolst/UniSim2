@@ -19,7 +19,6 @@ PUBLISH (MacroporeFlow)
 MacroporeFlow::MacroporeFlow(QString name, QObject *parent)
 	: Box(name, parent)
 {
-
     Input(fsand).equals(0.25);
     Input(fsilt).equals(0.25);
     Input(fclay).equals(0.5);
@@ -44,11 +43,9 @@ MacroporeFlow::MacroporeFlow(QString name, QObject *parent)
     Output(Pi);                //rainfall distribution integrated
     Output(fmp);
     Output(Vporemobile);       //mobile pore volume in topsoil
-
 }
 
 void MacroporeFlow::update() {
-
     fporemobile = 0.72 * fsand + 0.35 * fsilt + 0.14 * fclay;
     Vporemobile = fporemobile * (fw * fa);
     Vporeimmobile = (fw + fa)- Vporemobile;
@@ -58,7 +55,7 @@ void MacroporeFlow::update() {
     Pcapacitymm = 1000. * Cfree;
     Preqh = Pcapacitymm /(1. - frr);
     Preqday = Preqh * 24.;
-    Pi = (P == 0) ? 0 : exp(-tpevent /(24.*P)*Preqday);
+    Pi = (P == 0.) ? 0 : exp(-tpevent /(24.*P)*Preqday);
     fmp = Pi*frsw*(Tf/7.5);
 }
 
