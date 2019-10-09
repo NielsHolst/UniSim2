@@ -1,16 +1,14 @@
 /* Copyright 2005-2019 by
-** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
-** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
-** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk]. 
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef BASE_SIGNAL_H
-#define BASE_SIGNAL_H
+#ifndef BASE_BASE_SIGNAL_H
+#define BASE_BASE_SIGNAL_H
 
-#include <base/box.h>
+#include "box.h"
 
-namespace vg {
+namespace base {
 
 class BaseSignal : public base::Box
 {

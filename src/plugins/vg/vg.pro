@@ -17,7 +17,6 @@ HEADERS +=  \
     air_flux_vents.h \
     any_flag.h \
     average.h \
-    base_signal.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
     boundary_layer_resistance_jones_b.h \
@@ -36,7 +35,6 @@ HEADERS +=  \
     crop_lai.h \
     crop_radiation.h \
     crop_yield.h \
-    date_time_signal.h \
     daylight_level.h \
     diffuse_irradiation_base.h \
     diffuse_irradiation_RE.h \
@@ -80,8 +78,6 @@ HEADERS +=  \
     outdoors.h \
     pid_controller.h \
     pipe.h \
-    priority_signal.h \
-    proportional_signal.h \
     running_average.h \
     screen.h \
     screens.h \
@@ -93,14 +89,12 @@ HEADERS +=  \
     shelter_face.h \
     simulation_period.h \
     sky_temperature.h \
-    sliding_signal.h \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
     stomatal_resistance_tomato.h \
     sum.h \
     surface_radiation.h \
     surface_radiation_outputs.h \
-    threshold_signal.h \
     utilities.h \
     vapour_flux_air.h \
     vapour_flux_base.h \
@@ -120,7 +114,6 @@ SOURCES += \
     air_flux_vents.cpp \
     any_flag.cpp \
     average.cpp \
-    base_signal.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
     boundary_layer_resistance_jones_b.cpp \
@@ -139,7 +132,6 @@ SOURCES += \
     crop_lai.cpp \
     crop_radiation.cpp \
     crop_yield.cpp \
-    date_time_signal.cpp \
     daylight_level.cpp \
     diffuse_irradiation_base.cpp \
     diffuse_irradiation_RE.cpp \
@@ -183,8 +175,6 @@ SOURCES += \
     outdoors.cpp \
     pid_controller.cpp \
     pipe.cpp \
-    priority_signal.cpp \
-    proportional_signal.cpp \
     running_average.cpp \
     screen.cpp \
     screens.cpp \
@@ -196,14 +186,12 @@ SOURCES += \
     shelter_face.cpp \
     simulation_period.cpp \
     sky_temperature.cpp \
-    sliding_signal.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
     stomatal_resistance_tomato.cpp \
     sum.cpp \
     surface_radiation.cpp \
     surface_radiation_outputs.cpp \
-    threshold_signal.cpp \
     utilities.cpp \
     vapour_flux_air.cpp \
     vapour_flux_base.cpp \

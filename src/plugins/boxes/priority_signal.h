@@ -1,18 +1,16 @@
 /* Copyright 2005-2019 by
-** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
-** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
-** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #ifndef PRIORITY_SIGNAL_H
 #define PRIORITY_SIGNAL_H
 
-#include "base_signal.h"
+#include <base/base_signal.h>
 
-namespace vg {
+namespace boxes {
 
-class PrioritySignal : public BaseSignal
+class PrioritySignal : public base::BaseSignal
 {
 public:
     PrioritySignal(QString name, QObject *parent);

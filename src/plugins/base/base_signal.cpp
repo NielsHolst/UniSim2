@@ -1,18 +1,15 @@
 /* Copyright 2005-2019 by
-** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
-** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
-** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/phys_math.h>
-#include <base/test_num.h>
+#include "phys_math.h"
+#include "test_num.h"
 #include "base_signal.h"
 
-using namespace base;
 using phys_math::infinity;
 
-namespace vg {
+namespace base {
 
 BaseSignal::BaseSignal(QString name, QObject *parent)
     : Box(name, parent)
