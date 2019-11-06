@@ -17,10 +17,11 @@ PUBLISH(Crop)
 Crop::Crop(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("manages the fraction of seeds sown");
     Input(sowingDate).equals("1/5/*").help("Date of sowing");
     Input(date).imports("calendar[date]");
 
-    Output(sown).help("Seeds sown today ? (0 or 1)");
+    Output(sown).unit("fraction").help("Seeds sown today ? (0 or 1)");
 }
 
 void Crop::update() {

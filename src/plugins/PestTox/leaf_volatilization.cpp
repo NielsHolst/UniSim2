@@ -18,21 +18,24 @@ PUBLISH(LeafVolatilization)
 LeafVolatilization::LeafVolatilization(QString name, QObject *parent)
     : LossRate(name, parent)
 {
-    Input(VP).imports("applications[vapourPressure]");
-    Input(Ea).imports("applications[activationEnergyVolatilization]");
-    Input(Tref).imports("applications[Tref]");
-    Input(Tair).imports("weather[Tavg]");
-    Input(load).imports("onCrop[load]");
 
-    Output(Tcorrection).help("Temperature correction factor (scalar)");
-    Output(evaporationRate).help("Evaporation rate from leaves (g/ha/h)");
+    help("manages fate of pesticide on crop or leaf surface due to volatilization");
+    Input(VP).unit("Pa").imports("applications[vapourPressure]").help("Vapour pressure of the pesticide at reference temperature");
+    Input(Ea).unit("kJ/mol").imports("applications[activationEnergyVolatilization]").help("Activation energy");
+    Input(Tref).unit("°C").imports("applications[Tref]").help("Reference temperature");
+    Input(Tair).unit("°C").imports("weather[Tavg]").help("Daily average air temperature");
+    Input(load).unit("g a.i/ha").imports("onCrop[load]").help("Current concentration of the pesticide on crop or leaf surface");
+
+    Output(Tcorrection).unit("scalar").help("Temperature correction factor");
+    Output(evaporationRate).unit("g/ha/h").help("Evaporation rate from leaves");
 }
 
 double LeafVolatilization::computeInstantaneous() {
-    double evaporationRateTref = exp(12.2 + 0.933 * log(VP)) * 1e-6 * 1e4; // g/ha/h = myg/m2/h * g/myg * m2/ha
-    Tcorrection = Ea*1000./R*((1./(Tref + T0)) - 1./(Tair + T0)); // 1 = kJ/mol * J/KJ / (J/mol/K) / K
-    evaporationRate = evaporationRateTref * exp(Tcorrection) / 3600; // g/ha/s = g/ha/h / (s/h)
-    return (load > 0) ? evaporationRate/load : 0.; // s-1 = g/ha/s / (g/ha)
+
+    double evaporationRateTref = exp(12.2 + 0.933 * log(VP)) * 1e-6 * 1e4;  // g a.i/ha/h = myg a.i/m2/h * g a.i/myg * m2/ha
+    Tcorrection = Ea*1000./R*((1./(Tref + T0)) - 1./(Tair + T0));           // 1 = kJ/mol * J/KJ / (J/mol/K) / K
+    evaporationRate = evaporationRateTref * exp(Tcorrection) / 3600;        // g a.i/ha/s = g a.i/ha/h / (s/h)
+    return (load > 0) ? evaporationRate/load : 0.;                          // s-1 = g a.i/ha/s / (g a.i/ha)
   }
 
 } //namespace

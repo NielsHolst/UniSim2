@@ -36,6 +36,7 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(outputFileNameVariable).help("Name of the R variable holding the file name of the simulation output").equals("output_file_name");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
+    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Input(skipSteps).help("Number of steps to skip in the output");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
@@ -54,6 +55,7 @@ void OutputR::amend() {
     if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
         Box *textOutput = MegaFactory::create<>("OutputText", "", this);
         textOutput->port("skipInitialRows")->equals(skipSteps);
+        textOutput->port("useLocalDecimalChar")->equals(useLocalDecimalChar);
         textOutput->amend();
     }
 }

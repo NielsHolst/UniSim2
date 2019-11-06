@@ -14,9 +14,11 @@ class ThresholdSignal : public base::BaseSignal
 {
 public:
     ThresholdSignal(QString name, QObject *parent);
-    double computeSignal();
+    bool computeFlag();
+    double computeSignal(bool flag);
 private:
-    double threshold, input, signalBelow, signalAbove;
+    double threshold, input, signalFlagged, signalUnflagged;
+    bool flagAbove;
 };
 
 } //namespace

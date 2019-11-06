@@ -25,6 +25,7 @@ HEADERS +=  \
     assign.h \
     ast_boxes.h \
     ast_common.h \
+    base_signal.h \
     box.h \
     box_builder.h \
     box_reader_base.h \
@@ -103,6 +104,7 @@ SOURCES +=  \
     assign.cpp \
     ast_boxes.cpp \
     ast_common.cpp \
+    base_signal.cpp \
     box.cpp \
     box_builder.cpp \
     box_output.cpp \

@@ -17,6 +17,7 @@ HEADERS +=  \
     calendar.h \
     date.h \
     day_degrees.h \
+    date_time_signal.h \
     demand_budget.h \
     distributed_delay_base.h \
     distributed_delay.h \
@@ -35,6 +36,8 @@ HEADERS +=  \
     page_r.h \
     plot_r.h \
     population.h \
+    priority_signal.h \
+    proportional_signal.h \
     randomiser_base.h \
     randomiser_monte_carlo.h \
     randomiser_sobol_sequence.h \
@@ -53,11 +56,13 @@ HEADERS +=  \
     select_file.h \
     sequence.h \
     simulation.h \
+    sliding_signal.h \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
     super_functional_response.h \
     supply_budget.h \
+    threshold_signal.h \
     vector_scaled.h \
     vector_sum.h
 	
@@ -67,6 +72,7 @@ SOURCES +=  \
     buffer.cpp \
     calendar.cpp \
     date.cpp \
+    date_time_signal.cpp \
     day_degrees.cpp \
     demand_budget.cpp \
     distributed_delay_base.cpp \
@@ -86,6 +92,8 @@ SOURCES +=  \
     page_r.cpp \
     plot_r.cpp \
     population.cpp \
+    priority_signal.cpp \
+    proportional_signal.cpp \
     randomiser_base.cpp \
     randomiser_monte_carlo.cpp \
     randomiser_sobol_sequence.cpp \
@@ -103,11 +111,13 @@ SOURCES +=  \
     select_file.cpp \
     sequence.cpp \
     simulation.cpp \
+    sliding_signal.cpp \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \
     super_functional_response.cpp \
     supply_budget.cpp \
+    threshold_signal.cpp \
     vector_scaled.cpp \
     vector_sum.cpp
 

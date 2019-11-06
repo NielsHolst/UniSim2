@@ -17,11 +17,12 @@ TopsoilInSoil::TopsoilInSoil(QString name, QObject *parent)
 	: Box(name, parent)
 {
 
-    Input(Z).equals(0.);           //mol/m3Pa
-    Input(V).equals(0.);           //volume susceptible for volatilization (m3)
-    Input(VZ).equals(0.);
+    help("manages fraction of pesticide reaching soil air, water, and solids");
+    Input(Z).unit("mol/m3/Pa").equals(0.).help("Z-value of pesticide in air, water, and solid phase");
+    Input(V).unit("m3").equals(0.).help("Volume of air, water, and solids in the soil volume susceptible for volatilization");
+    Input(VZ).equals(0.).help("Sum of VZ-value of all three phase i.e. air, water, and solid phases");
 
-    Output(fr);
+    Output(fr).unit("fraction").help("Fraction of pesticide reaching soil air, water, and solids");
 }
 
 void TopsoilInSoil::reset() {

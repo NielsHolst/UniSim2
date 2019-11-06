@@ -18,31 +18,32 @@ PUBLISH (TopsoilVolatilization)
 TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(Tair).imports("weather[Tavg]");           // degrees celsius
-    Input(MV).equals(140.83);         //molar volume; density 1.704 g/cm3, molar mass 169.07 g/mol
-    Input(BLair).equals(0.00475);     // m or 4.75 mm as per Mackay (2001)
-    Input(Pd).equals(0.01);           //penetration depth of 1 cm = 0.01 m
-    Input(fa).equals(0.25);           //fraction of air in the soil
-    Input(fw).equals(0.25);           //fraction of water in the soil
-    Input(Pair).equals(1.);           //atm
-    Input(farea).equals(100.);        //m2
-    Input(Za).equals(0.);             //mol/m3Pa
-    Input(Zw).equals(0.);             //mol/m3Pa
-    Input(VZ).equals(0.);
-    Input(MW).equals(169.07);         // molecular weight or molar mass of the insecticide in g/mol
-    Input(viscosity).equals(0.);      //viscosity of water (centipoise),between 0 - 50 deg C
+    help("manages topsoil volatilization");
+    Input(Tair).unit("°C").imports("weather[Tavg]").help("Daily average air temperature");
+    Input(MV).unit("cm3/mol").equals(140.83).help("Molar volume of the pesticide");
+    Input(BLair).unit("m").equals(0.00475).help("Thickness of the air boundary layer for the evaporation");
+    Input(Pd).unit("m").equals(0.01).help("Penetration depth");
+    Input(fa).unit("fraction").equals(0.25).help("Fraction of air in the soil");
+    Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");
+    Input(Pair).unit("atm").equals(1.).help("Gas phase pressure of the air");
+    Input(farea).unit("m2").equals(100.).help("Area of the whole field");
+    Input(Za).unit("mol/m3/Pa").equals(0.).help("Z-value of pesticide in air phase");
+    Input(Zw).unit("mol/m3/Pa").equals(0.).help("Z-value of pesticide in water phase");
+    Input(VZ).equals(0.).help("Sum of VZ-value of all three phase i.e. air, water, and solid phases");
+    Input(MW).unit("g/mol").equals(169.07).help("Molar mass of the pesticide");
+    Input(viscosity).unit("centipoise").equals(0.).help("Viscosity of water");
 
-    Output(Ba);
-    Output(Dbl);    
-    Output(Bea);
-    Output(Bew);               //effective diffusivity (m2/s)
-    Output(Da);                //mol/m3day
-    Output(Dw);                //mol/m3day
-    Output(Dv);                //mol/m3day
-    Output(ksv);               //rate constant of pesticide evaporation from the soil (day-1)
-    Output(Bw);                //molecular diffusivity of selected pesticide in water (m2/s)
-    Output(Dpl);               //diffusion path length (m)
-    Output(ke);                //transport velocity through boundary layer (m/s)
+    Output(Ba).unit("m2/s").help("Molecular diffusivity of the pesticide in air");
+    Output(Dbl).unit("mol/m3/day").help("D-value of the pesticide diffusion through the air boundary layer");
+    Output(Bea).unit("m2/s").help("Effective diffusivity of the pesticide in air");
+    Output(Bew).unit("m2/s").help("Effective diffusivity of the pesticide in water");
+    Output(Da).unit("mol/m3/day").help("D-value of the pesticide in air");
+    Output(Dw).unit("mol/m3/day").help("D-value of the pesticide in water");
+    Output(Dv).unit("mol/m3/day").help("Total D-value of the volatilization process");
+    Output(ksv).unit("per day").help("Volatilization rate constant");
+    Output(Bw).unit("m2/s").help("Molecular diffusivity of selected pesticide in water");
+    Output(Dpl).unit("m").help("Diffusion path length");
+    Output(ke).unit("m/s").help("Transport velocity through boundary layer");
 }
 
 void TopsoilVolatilization::update() {

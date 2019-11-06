@@ -7,18 +7,19 @@
 */
 #ifndef VG_GROWTH_LIGHT_CONTROLLER_H
 #define VG_GROWTH_LIGHT_CONTROLLER_H
-#include "base_signal.h"
+#include <base/base_signal.h>
 
 namespace vg {
 
-class GrowthLightController : public BaseSignal
+class GrowthLightController : public base::BaseSignal
 {
 public:
     GrowthLightController(QString name, QObject *parent);
-    double computeSignal();
+    bool computeFlag();
+    double computeSignal(bool flag);
 private:
     // Inputs
-    bool isActive;
+    int setting;
     double lightThresholdLow, lightThresholdHigh, lightOutdoors;
     // Data
     bool _isOn;

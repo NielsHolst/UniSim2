@@ -9,6 +9,8 @@
 #include "help.h"
 #include "help_class.h"
 
+//#include <base/convert.h>
+
 using namespace base;
 
 namespace command {
@@ -23,7 +25,7 @@ help::help(QString name, QObject *parent)
 }
 
 void help::doExecute() {
-    Command *command(0);
+    Command *command(nullptr);
     switch (_args.size()) {
     case 1:
         writeCommands();

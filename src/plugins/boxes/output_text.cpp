@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <iostream>
+#include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/phys_math.h>
@@ -24,11 +25,15 @@ OutputText::OutputText(QString name, QObject *parent)
     Class(OutputText);
     Input(skipFormats).equals(false).help("Skip line with column formats?");
     Input(skipInitialRows).equals(0).help("Skip this number of data frame rows");
+    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Input(averageN).equals(1).help("If N>1 then rows will be averaged for every N rows");
     help("creates an output text file");
 }
 
 void OutputText::initialize() {
+    // Set decimal character
+    if (useLocalDecimalChar)
+        setLocale("local");
     // Allocate track running
     _tracksRunningSum.resize(Track::all().size());
     _tracksSum.resize(Track::all().size());
@@ -115,7 +120,7 @@ void OutputText::processValues() {
             int i = 0;
             for (Track *track : Track::all()) {
                 if (isNumber(track))
-                    values << QString::number(_tracksRunningSum.at(i)/averageN);
+                    values << convert<QString>(_tracksRunningSum.at(i)/averageN);
                 else
                     values <<  track->port()->value<QString>();
                 i++;
@@ -174,13 +179,13 @@ void OutputText::cleanup() {
     for (Track *track : Track::all()) {
         if (isNumber(track)) {
             if (track->filter() == PortFilter::Sum)
-                values << QString::number(_tracksSum.at(i));
+                values << convert<QString>(_tracksSum.at(i));
             else if (track->filter() == PortFilter::Mean)
-                values << QString::number(_tracksSum.at(i)/_rowCount);
+                values << convert<QString>(_tracksSum.at(i)/_rowCount);
             else if (track->filter() == PortFilter::Min)
-                values << QString::number(_tracksMin.at(i));
+                values << convert<QString>(_tracksMin.at(i));
             else if (track->filter() == PortFilter::Max)
-                values << QString::number(_tracksMax.at(i));
+                values << convert<QString>(_tracksMax.at(i));
             else
                 values <<  track->port()->value<QString>();
         }

@@ -18,7 +18,8 @@ public:
     void update();
 private:
     // Inputs
-    double cropGrowthStage, immigrationRate, propExposedImmigrants;
+    double cropGrowthStage, fromCropGrowthStage, toCropGrowthStage,
+           immigrationRate, propExposedImmigrants;
     int k;
     // Outputs
     double total, susceptible;

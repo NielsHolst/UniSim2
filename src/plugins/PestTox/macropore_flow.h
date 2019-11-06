@@ -24,7 +24,7 @@ private:
 
     // Output
     double fporemobile, Vporeimmobile, C, Cused, Cfree,
-    Pcapacitymm, Preqh, Preqday, Pi,
+    Pcapacity, Preqh, Preqday, Pi,
     fmp, Vporemobile;
 };
 

@@ -18,12 +18,14 @@ PUBLISH (PesticideInducedMortality)
 PesticideInducedMortality::PesticideInducedMortality(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(LC50);               //constant LC50 (mg a.i/L)
-    Input(concentration);      //concentration in the water (mg a.i/L)
-    Input(slope).equals(1.);              //scale the specific toxicity of the simulated pesticide or sigmoidal function (volume/amount)
 
-    Output(mortalityRate);         //fraction of eggs, tadpole, ....adult frog dies per day
-    Output(survivalRate);          //fraction of eggs, tadpoles, ...adults frogs survived per day
+    help("manages pesticide-induced mortality rate");
+    Input(LC50).unit("mg a.i/L").equals(0.).help("Lethal concentration that kills 50% of the population");
+    Input(concentration).unit("mg a.i/L").equals(0.).help("Current pesticide concentration in the water");
+    Input(slope).unit("volume/amount").equals(1.).help("Scale the specific toxicity of the simulated pesticide or sigmoidal function");
+
+    Output(mortalityRate).unit("fraction/day").help("Mortality rate");
+    Output(survivalRate).unit("fraction/day").help("Survival rates");
 }
 
 void PesticideInducedMortality::reset() {

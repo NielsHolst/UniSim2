@@ -14,7 +14,7 @@ namespace PestTox {
 
 const double
 //    PI = 3.14159,               //!< Mathematical PI
-    T0 = 273.15,                //!< Absolute zero offset (oC)
+    T0 = 273.15,                //!< Absolute zero offset (°C)
     MWair = 28.966,              //! Molar weight of air (g/mol)
     MVair = 20.1,               //! Molar volume of air (cm3/mol)
     R = 8.314,                  //!< Gas constant (J/mol/K)

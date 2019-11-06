@@ -5,18 +5,19 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_ENERGY_SCREEN_BALANCE_SIGNAL_H
-#define VG_ENERGY_SCREEN_BALANCE_SIGNAL_H
+#ifndef ENERGY_SCREEN_BALANCE_SIGNAL_H
+#define ENERGY_SCREEN_BALANCE_SIGNAL_H
 
-#include "base_signal.h"
+#include <base/base_signal.h>
 
 namespace vg {
 
-class EnergyScreenBalanceSignal : public BaseSignal
+class EnergyScreenBalanceSignal : public base::BaseSignal
 {
 public:
     EnergyScreenBalanceSignal(QString name, QObject *parent);
-    double computeSignal();
+    bool computeFlag();
+    double computeSignal(bool flag);
 private:
     // Inputs
     double indoorsLight, indoorsTemperature, outdoorsTemperature, Ucover;

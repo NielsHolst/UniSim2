@@ -17,9 +17,10 @@ PUBLISH (WaterViscosity)
 WaterViscosity::WaterViscosity(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(temperature).equals(25.);     //average air temperature in the month of application, degrees celsius
+    help("manages viscosity of water");
+    Input(temperature).unit("°C").equals(25.).help("Daily soil temperature");
 
-    Output(value);    //viscosity of water (centipoise), between 0 - 50 degrees celsius
+    Output(value).unit("centipoise").help("Viscosity of water");
 }
 
 void WaterViscosity::reset() {

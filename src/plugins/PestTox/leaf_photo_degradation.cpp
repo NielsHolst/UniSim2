@@ -20,12 +20,13 @@ PUBLISH (LeafPhotoDegradation)
 LeafPhotoDegradation::LeafPhotoDegradation(QString name, QObject *parent)
     : LossRate(name, parent), _freeRadicalsTable(nullptr)
 {
+    help("manages fate of pesticide on crop or leaf surface due to photo-degradation");
     Input(dayOfYear).imports("calendar[dayOfYear]");
     Input(latitude).imports("calendar[latitude]");
     Input(fileName).help("File with table of (Julian day,latitude)-indexed free radicals concentration");
-    Input(kOH).help("Degradation rate (cm3/molecules/h)");
+    Input(kOH).unit("cm3/molecules/h").help("Degradation rate");
 
-    Output(OHconcentration).help("Free OH radical concentration (molecules/cm3)");
+    Output(OHconcentration).unit("molecules/cm3").help("Free OH radical concentration");
 }
 
 void LeafPhotoDegradation::initialize() {

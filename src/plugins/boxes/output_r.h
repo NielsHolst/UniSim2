@@ -29,7 +29,7 @@ public:
 private:
     // Input
     QString begin, outputFileNameVariable;
-    bool popUp, keepPages, keepVariables;
+    bool popUp, keepPages, keepVariables, useLocalDecimalChar;
     double width, height;
     QVector<QString> end;
     int skipSteps;

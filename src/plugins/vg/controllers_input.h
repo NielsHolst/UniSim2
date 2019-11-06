@@ -16,18 +16,18 @@ class ControllersInput : public base::Box
 {
 public:
     ControllersInput(QString name, QObject *parent);
-    void reset();
+//    void reset();
 private:
     // Inputs
     double ventilationThresholdBand,
         crackVentilation, crackVentilationTemperatureMin, crackVentilationTemperatureMinBand,
-        screenMaxAtHighRh,
-        screenEnergyThreshold, screenEnergyThresholdBand,
-        screenShadeThreshold, screenShadeThresholdBand,
-        screenBlackoutFromTimeFloat, screenBlackoutToTimeFloat,
+//        screenMaxAtHighRh,
+//        screenEnergyThreshold, screenEnergyThresholdBand,
+//        screenShadeThreshold, screenShadeThresholdBand,
+//        screenBlackoutFromTimeFloat, screenBlackoutToTimeFloat,
         chalk;
-    // Outputs
-    QTime screenBlackoutFromTime, screenBlackoutToTime;
+//    // Outputs
+//    QTime screenBlackoutFromTime, screenBlackoutToTime;
 };
 } //namespace
 

@@ -27,6 +27,7 @@ HEADERS +=  \
     list_options.h \
     list_output.h \
     load.h \
+    location.h \
     profile.h \
     reconfigure.h \
     reset.h \
@@ -58,6 +59,7 @@ SOURCES +=  \
     list_options.cpp \
     list_output.cpp \
     load.cpp \
+    location.cpp \
     profile.cpp \
     reconfigure.cpp \
     reset.cpp \

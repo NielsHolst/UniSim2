@@ -16,9 +16,10 @@ PUBLISH (EggsLaid)
 EggsLaid::EggsLaid(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(eggsPerFemale).equals(100.);
-    Input(population).equals(0.);
-    Input(sexRatio).equals(0.5);     //fraction of females in the population
+    help("manages the number of eggs laid");
+    Input(eggsPerFemale).equals(100.).help("number of eggs laid per female");
+    Input(population).equals(0.).help("current population");
+    Input(sexRatio).unit("fraction").equals(0.5).help("fraction of females in the population");
 
     Output(totalEggs);
 }

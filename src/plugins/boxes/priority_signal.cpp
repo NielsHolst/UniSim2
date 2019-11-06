@@ -21,21 +21,35 @@ PrioritySignal::PrioritySignal(QString name, QObject *parent)
 void PrioritySignal::initialize() {
     QVector<Box*> children = findMany<Box>("./*");
     for (Box *child : children) {
-        const Port *signal = child->peakPort("signal");
-        if (signal) {
+        const Port *flag = child->peakPort("flagIsUp"),
+                   *signal = child->peakPort("signal");
+        if (flag && signal) {
+            FlaggedSignal fs{flag->valuePtr<bool>(),
+                             signal->valuePtr<double>()};
             if (reverseOrder)
-                _signals.prepend(signal->valuePtr<double>());
+                _flaggedSignals.prepend(fs);
             else
-                _signals.append(signal->valuePtr<double>());
+                _flaggedSignals.append(fs);
         }
     }
 }
 
-double PrioritySignal::computeSignal() {
-    for (const double *signal : _signals) {
-        if (*signal != 0.)
-            return *signal;
+bool PrioritySignal::computeFlag() {
+    for (const FlaggedSignal fs : _flaggedSignals) {
+        if (*fs.flag)
+            return true;
     }
+    return false;
+}
+
+double PrioritySignal::computeSignal(bool flag) {
+    if (!flag)
+        return port("initialSignal")->value<bool>();
+    for (const FlaggedSignal fs : _flaggedSignals) {
+        if (*fs.flag)
+            return *fs.signal;
+    }
+    Q_ASSERT(false);
     return 0.;
 }
 

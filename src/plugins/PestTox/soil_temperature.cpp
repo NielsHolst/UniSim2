@@ -16,11 +16,12 @@ PUBLISH (SoilTemperature)
 SoilTemperature::SoilTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(Tmin).imports("weather[Tmin]");
-    Input(Tmax).imports("weather[Tmax]");
-    Input(dayLength).imports("calendar[dayLength]");
+    help("manages soil temperature");
+    Input(Tmin).unit("°C").imports("weather[Tmin]").help("Daily minimum temperature");
+    Input(Tmax).unit("°C").imports("weather[Tmax]").help("Daily maximum temperature");
+    Input(dayLength).unit("h").imports("calendar[dayLength]").help("Day length");
 
-    Output(value);
+    Output(value).unit("°C").help("Soil temperature");
 }
 
 void SoilTemperature::reset() {

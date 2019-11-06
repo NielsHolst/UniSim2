@@ -16,8 +16,8 @@ CropMass::CropMass(QString name, QObject *parent)
 {
     Class(CropMass);
     help("models crop growth and dry mass");
-    Input(establishCrop).imports("../periods/*[flagUp]").transform(Any).unit("y|n");
-    Input(removeCrop).imports("../periods/*[flagDown]").transform(Any).unit("y|n");
+    Input(establishCrop).imports("../periods/*[flagIsUp]").transform(Any).unit("y|n");
+    Input(removeCrop).imports("../periods/*[flagJustLowered]").transform(Any).unit("y|n");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Input(growthRate).imports("../growth[netGrowthRate]").unit("g/m2");
     Input(initMass).equals(10).help("Initial total crop dry mass").unit("g/m2");

@@ -36,8 +36,8 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
 }
 
 void GrowthLights::amend() {
-    Box *light = findMaybeOne<Box>("./*<GrowthLight>");
-    if (!light) {
+    QVector<Box*> lights = findMany<Box>("./*<GrowthLight>");
+    if (lights.isEmpty()) {
         port("shortWaveProp")->equals(0);
         port("longWaveProp")->equals(0);
         port("heatProp")->equals(0);

@@ -1,5 +1,0 @@
-Simulation sim {
-  .steps = 25
-  .xxx = 10
-}
-

@@ -17,12 +17,13 @@ PUBLISH(Application)
 Application::Application(QString name, QObject *parent)
 	: Box(name, parent)
 {
+    help("manages the dose applied");
     Input(date).imports("calendar[date]");
     Input(applicationDate).equals("1/3/*").help("Date of application");
-    Input(concentration).equals(480.).help("Concentration (g a.i/L)");
-    Input(rate).equals(3.125).help("Application rate (L/ha)");
+    Input(concentration).unit("g a.i./L").equals(480.).help("Concentration");
+    Input(rate).unit("L/ha").equals(3.125).help("Application rate");
 
-    Output(dose).help("Dose applied today (g a.i. per ha");
+    Output(dose).unit("g a.i./ha").help("Dose applied today");
 }
 
 void Application::update() {

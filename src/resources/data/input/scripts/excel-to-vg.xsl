@@ -253,6 +253,7 @@
   <port name="reverseOrder" value="TRUE"/>
 
   <box name="default">
+      <newPort name="flagIsUp" value="TRUE"/>
       <xsl:choose>
         <xsl:when test="string-length($climateSetpointName)=0">
           <newPort name="signal" value="0.0"/>
@@ -287,7 +288,7 @@
                 select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants[Parameters/ParameterName=$climateSetpointName]/ModSetpoint"/>
 
   <xsl:for-each select="$setpointSrc">
-    <box class="vg::DateTimeSignal">
+    <box class="DateTimeSignal">
       <port name="beginDate">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$climateSetpointName"/>
@@ -361,6 +362,8 @@
 </xsl:template>
 
 <xsl:template name="extract-growth-light">
+  <xsl:variable name="position" select="Position"/>
+  <xsl:variable name="growthLightName" select="concat('growthLight', $position)"/>
   <xsl:variable name="typeName" select="'LampType'"/>
   <xsl:variable name="typeSrc" select="Constants/Parameters[ParameterName=$typeName]/Value"/>
   <xsl:variable name="intensityName" select="'LightCapacityPerSqm'"/>
@@ -369,15 +372,15 @@
   <xsl:variable name="parPhotonCoefName" select="'MicromolParPerWatt'"/>
   <xsl:variable name="parPhotonCoefSrc" select="Constants/Parameters[ParameterName=$parPhotonCoefName]/Value"/>
   <xsl:variable name="parPhotonCoefValue" select="number(replace($parPhotonCoefSrc, ',', '.'))"/>
-  <xsl:variable name="ageName" select="'UsedHours'"/>
-  <xsl:variable name="ageSrc" select="Constants/Parameters[ParameterName=$ageName]/Value"/>
-  <xsl:variable name="ageValue" select="number(replace($ageSrc, ',', '.'))"/>
-  <xsl:variable name="lifeTimeName" select="'LifeTime'"/>
-  <xsl:variable name="lifeTimeSrc" select="Constants/Parameters[ParameterName=$lifeTimeName]/Value"/>
-  <xsl:variable name="lifeTimeValue" select="number(replace($lifeTimeSrc, ',', '.'))"/>
+  <xsl:variable name="ageCorrectedEfficiencyName" select="'ageCorrectedEfficiency'"/>
+  <xsl:variable name="ageCorrectedEfficiencySrc" select="Constants/Parameters[ParameterName=$ageCorrectedEfficiencyName]/Value"/>
+  <xsl:variable name="ageCorrectedEfficiencyValue" select="number(replace($ageCorrectedEfficiencySrc, ',', '.'))"/>
 
   <xsl:if test="$intensityValue > 0">
-    <box class="vg::GrowthLight" name="growthLight">
+    <box class="vg::GrowthLight">
+      <xsl:attribute name="name">
+        <xsl:value-of select="$growthLightName"/>
+      </xsl:attribute>
       <xsl:if test="number($typeSrc)=1">
         <port name="type" value="HPS">
           <xsl:attribute name="externalName">
@@ -409,6 +412,12 @@
         </port>
       </xsl:if>
       
+      <port name="on">
+        <xsl:attribute name="ref">
+          <xsl:value-of select="concat('controllers/growthLights/', $growthLightName, '[flagIsUp]')"/>
+        </xsl:attribute>
+      </port> 
+      
       <port name="intensity">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$intensityName"/>
@@ -431,26 +440,15 @@
           <xsl:value-of select="$parPhotonCoefValue"/>
         </xsl:attribute>
       </port>
-      <port name="age">
+      <port name="ageCorrectedEfficiency">
         <xsl:attribute name="externalName">
-          <xsl:value-of select="$ageName"/>
+          <xsl:value-of select="$ageCorrectedEfficiencyName"/>
         </xsl:attribute>
         <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($ageSrc)"/>
+          <xsl:value-of select="ecolmod:generateXPath($ageCorrectedEfficiencySrc)"/>
         </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="$ageValue"/>
-        </xsl:attribute>
-      </port>
-      <port name="lifeTime">
-        <xsl:attribute name="externalName">
-          <xsl:value-of select="$lifeTimeName"/>
-        </xsl:attribute>
-        <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($lifeTimeSrc)"/>
-        </xsl:attribute>
-        <xsl:attribute name="value">
-          <xsl:value-of select="$lifeTimeValue"/>
+          <xsl:value-of select="$ageCorrectedEfficiencyValue"/>
         </xsl:attribute>
       </port>
     </box>
@@ -920,20 +918,58 @@
         <xsl:with-param name="climateSetpointName" select="'Cli_ShadingAgentReduction'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="growthLightThresholdLow">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightOn'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="growthLightThresholdHigh">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightOff'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="growthLightActive">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_AssLightActive'"/>
-      </xsl:call-template>
+    <box name="growthLights">
+      <box name= "growthLight1">
+        <box class="PrioritySignal" name="thresholdLow">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOn1'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="thresholdHigh">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOff1'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="setting">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightActive1'"/>
+          </xsl:call-template>
+        </box>
+      </box>
+      <box name= "growthLight2">
+        <box class="PrioritySignal" name="thresholdLow">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOn2'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="thresholdHigh">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOff2'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="setting">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightActive2'"/>
+          </xsl:call-template>
+        </box>
+      </box>
+      <box name= "growthLight3">
+        <box class="PrioritySignal" name="thresholdLow">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOn3'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="thresholdHigh">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightOff3'"/>
+          </xsl:call-template>
+        </box>
+        <box class="PrioritySignal" name="setting">
+          <xsl:call-template name="extract-setpoints">
+            <xsl:with-param name="climateSetpointName" select="'AssLightActive3'"/>
+          </xsl:call-template>
+        </box>
+      </box>
     </box>
     <box class="PrioritySignal" name="rhMaxBand">
       <xsl:call-template name="extract-setpoints">
@@ -1072,6 +1108,23 @@
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'chalk'"/>
     </xsl:call-template>
+    <box name="growthLights">
+      <box class="GrowthLightController" name="growthLight1">
+        <port name="setting" ref="allSetpoints/growthLights/growthLight1/setting[value]"/>
+        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight1/thresholdLow[value]"/>
+        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight1/thresholdHigh[value]"/>
+      </box>
+      <box class="GrowthLightController" name="growthLight2">
+        <port name="setting" ref="allSetpoints/growthLights/growthLight2/setting[value]"/>
+        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight2/thresholdLow[value]"/>
+        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight2/thresholdHigh[value]"/>
+      </box>
+      <box class="GrowthLightController" name="growthLight3">
+        <port name="setting" ref="allSetpoints/growthLights/growthLight3/setting[value]"/>
+        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight3/thresholdLow[value]"/>
+        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight3/thresholdHigh[value]"/>
+      </box>
+    </box>
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
@@ -1082,7 +1135,7 @@
       </xsl:for-each>
     </box>
     <box class="ProportionalSignal" name="heating">
-      <port name="signalReset" ref="indoors/temperature[value]"/>
+      <port name="initialSignal" ref="indoors/temperature[value]"/>
       <port name="input" ref="controllers/heating[value]"/>
       <port name="threshold" value="0"/>
       <port name="thresholdBand" value="1"/>
@@ -1152,22 +1205,19 @@
       <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
       <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
       <newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
-      <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
-      <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
-      <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-      <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
-      <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
-      <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
-      <newPort name="setpointVentilation" ref="setpoints/temperature/ventilation[value]"/>
-      <newPort name="setpointHeating" ref="setpoints/temperature/heating[value]"/>
-      <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
+      <newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
+      <newPort name="setpointHeating" ref="setpoints[heatingTemperatureAtLowRh]"/>
+      <newPort name="setpointVentilation" ref="setpoints[ventilationTemperatureMargin]"/>
+      <newPort name="setpointHeatingRhIncrement" ref="setpoints[heatingTemperatureMargin]"/>
+      <newPort name="setpointVentilationRhDecrement" ref="setpoints[ventilationTemperatureRhMargin]"/>
+      <newPort name="demandVentilationAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
+      <newPort name="demandVentilationAtLowRh"  ref="setpoints[ventilationTemperatureAtLowRh]"/>
+      <newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/>
+      <newPort name="demandHeatingAtLowRh"  ref="setpoints[heatingTemperatureAtLowRh]"/>
       <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
+      <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
       <newPort name="co2Injection" ref="controllers/co2[value]"/>
       <newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
-      <newPort name="growthLightOn" ref="controllers/growthLight[value]"/>
       <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
       <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
       <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
@@ -1179,16 +1229,23 @@
       <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
       <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
       <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
+      <newPort name="growthLightOn1" ref="actuators/growthLights/growthLight1[on]"/>
+      <newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/>
+      <newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/>
       <newPort name="ventsOpening" ref="actuators/vents[value]"/>
       <newPort name="screenEnergy" ref="actuators/screens/energy[value]"/>
       <newPort name="screenShade" ref="actuators/screens/shade[value]"/>
       <newPort name="screenBlackout" ref="actuators/screens/blackout[value]"/>
-      <newPort name="ventilationSetpoint" ref="ventilation/controller/target[value]"/>
-      <newPort name="heatingSetpoint" ref="heating/controller/target[value]"/>
       <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
-      <newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
-      <newPort name="ventTempSetpointAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
-      <newPort name="ventTempSetpointAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
+      <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
+      <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
+      <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
+      <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
+      <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
+      <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
+      <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>    
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

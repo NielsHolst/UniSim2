@@ -23,6 +23,8 @@ SetpointsInput::SetpointsInput(QString name, QObject *parent)
     Input(ventilationTemperatureRhMargin).equals(2.).help("Decrease ventilationTemperatureMargin by this at high RH").unit("oC");
     Input(rhMax).equals(80).help("Regulate RH below this level").unit("[0;100]");
     Input(rhMaxBand).equals(10).help("Proportional band for max. RH").unit("[0;100]");
+    Input(screenCrackAtHighRh).equals(0.1).help("Crack not covered by screen at high RH").unit("[0;1]");
+    Input(screenCrackAtHighTemperature).equals(0.1).help("Crack not covered by screen at high temperature").unit("[0;1]");
     Input(co2Capacity).equals(10.).help("Max. capacity for CO2 injection").unit("g/m2/h");
     Input(co2Setpoint).equals(900.).help("Desired CO2 concentration").unit("ppm");
     Input(co2VentilationThreshold).equals(0.1).help("Threshold for decreasing CO2 injection").unit("[0;1]");
@@ -32,6 +34,8 @@ SetpointsInput::SetpointsInput(QString name, QObject *parent)
     Output(ventilationTemperatureAtLowRh).help("Ventilate above this temperature at low RH").unit("oC");
     Output(ventilationTemperatureAtHighRh).help("Ventilate above this temperature at high RH").unit("oC");
     Output(heatingTemperatureAtHighRh).equals(21.).help("Heat below this temperature at high RH").unit("oC");
+    Output(maxScreenAtHighRh).help("Max. screen state at high RH").unit("[0;1]");
+    Output(maxScreenAtHighTemperature).help("Max. screen state at high temperature").unit("[0;1]");
 }
 
 void SetpointsInput::reset() {
@@ -39,9 +43,15 @@ void SetpointsInput::reset() {
 }
 
 void SetpointsInput::update() {
+    // At low RH
     ventilationTemperatureAtLowRh = heatingTemperatureAtLowRh + ventilationTemperatureMargin;
-    ventilationTemperatureAtHighRh = ventilationTemperatureAtLowRh - ventilationTemperatureRhMargin;
-    heatingTemperatureAtHighRh = heatingTemperatureAtLowRh + heatingTemperatureMargin;
+    // At high RH
+    heatingTemperatureAtHighRh    = heatingTemperatureAtLowRh + heatingTemperatureMargin;
+    ventilationTemperatureAtHighRh = ventilationTemperatureAtLowRh + heatingTemperatureMargin
+                                     - ventilationTemperatureRhMargin;
+    maxScreenAtHighRh = 1. - screenCrackAtHighRh;
+    // At high temperature
+    maxScreenAtHighTemperature = 1. - screenCrackAtHighTemperature;
 }
 
 } //namespace

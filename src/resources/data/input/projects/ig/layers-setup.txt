@@ -1,4 +1,0 @@
-.[names]
-top
-middle
-bottom

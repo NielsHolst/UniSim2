@@ -26,7 +26,7 @@ public:
     void debrief();
 private:
     // Inputs
-    bool skipFormats;
+    bool skipFormats, useLocalDecimalChar;
     int skipInitialRows, averageN;
     // Data
     bool _isCondensed;

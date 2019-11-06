@@ -19,30 +19,31 @@ PUBLISH (MacroporeFlow)
 MacroporeFlow::MacroporeFlow(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(fsand).equals(0.25);
-    Input(fsilt).equals(0.25);
-    Input(fclay).equals(0.5);
-    Input(fa).equals(0.25);           //fraction of air in the soil
-    Input(fw).equals(0.25);           //fraction of water in the soil
-    Input(fmacropore).equals(0.3);    //fraction of macropore i.e. pore fractions which acts as macropores
-    Input(Flowrate).equals(0.35);
-    Input(frr).equals(0.5);           //fractionrainrunoff
-    Input(tpevent).equals(5.);        //number of hours precipitation occurs on a rainy day
-    Input(P).equals(1.);              //average  daily rainfall per rainfall event in a given month (mm)
-    Input(frsw).equals(0.);           //fraction of pesticide in soil water
-    Input(Tf).equals(0.);            //tillage factor
+    help("manages fate of pesticide due to macropore flow");
+    Input(fsand).unit("fraction").equals(0.25).help("Fraction of sand in the soil");
+    Input(fsilt).unit("fraction").equals(0.25).help("Fraction of silt in the soil");
+    Input(fclay).unit("fraction").equals(0.5).help("Fraction of clay in the soil");
+    Input(fa).unit("fraction").equals(0.25).help("Fraction of air in the soil");
+    Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");
+    Input(fmacropore).unit("fraction").equals(0.3).help("Fraction of macropore i.e. pore fractions which acts as macropores");
+    Input(Flowrate).unit("m/day").equals(0.35).help("Flow rate");
+    Input(frr).unit("fraction").equals(0.5).help("Fraction of rain runoff");
+    Input(tpevent).unit("h").equals(5.).help("Number of hours precipitation occurs on a rainy day");
+    Input(P).unit("mm").equals(1.).help("Daily rainfall");
+    Input(frsw).unit("fraction").equals(0.).help("Fraction of pesticide in soil water");
+    Input(Tf).equals(0.).help("Tillage factor");
 
-    Output(fporemobile);       //mobile pore fraction in topsoil
-    Output(Vporeimmobile);     //immobile pore volume in topsoil
-    Output(C);                 //one hour storage capacity
-    Output(Cused);             //used capacity
-    Output(Cfree);
-    Output(Pcapacitymm);       //mm rain capacity or freecapacity recalculated as the number of mm rain that can be taken up in 1 hour (mm)
-    Output(Preqh);             //rainfall required for macropore flow per hour
-    Output(Preqday);           //rainfall required for macropore flow per day
-    Output(Pi);                //rainfall distribution integrated
-    Output(fmp);
-    Output(Vporemobile);       //mobile pore volume in topsoil
+    Output(fporemobile).unit("fraction").help("Mobile pore fraction in topsoil");
+    Output(Vporeimmobile).unit("m3/m3").help("Immobile pore volume in topsoil");
+    Output(C).unit("m/h").help("Storage capacity");
+    Output(Cused).unit("m/h").help("Used capacity");
+    Output(Cfree).unit("m/h").help("Free capacity");
+    Output(Pcapacity).unit("mm/h").help("Rain capacity or freecapacity recalculated as the amount of rain that can be taken up in 1 hour");
+    Output(Preqh).unit("mm/h").help("Rainfall required before macropore flow starts");
+    Output(Preqday).unit("mm/day").help("Rainfall required before macropore flow starts");
+    Output(Pi).help("Integrated distribution of precipitation");
+    Output(fmp).unit("fraction").help("Fraction of macropore flow");
+    Output(Vporemobile).help("Mobile pore volume in topsoil");
 }
 
 void MacroporeFlow::update() {
@@ -52,8 +53,8 @@ void MacroporeFlow::update() {
     C = Vporeimmobile * 0.01 + ((1. - fmacropore) * Vporemobile *Flowrate/24.);
     Cused = (fw /(fw + fa))* C;
     Cfree = C - Cused;
-    Pcapacitymm = 1000. * Cfree;
-    Preqh = Pcapacitymm /(1. - frr);
+    Pcapacity = 1000. * Cfree;
+    Preqh = Pcapacity /(1. - frr);
     Preqday = Preqh * 24.;
     Pi = (P == 0.) ? 0 : exp(-tpevent /(24.*P)*Preqday);
     fmp = Pi*frsw*(Tf/7.5);

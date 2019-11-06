@@ -22,12 +22,14 @@ private:
     // Inputs
     double heatingTemperatureAtLowRh, heatingTemperatureMargin,
         ventilationTemperatureMargin, ventilationTemperatureRhMargin,
+        screenCrackAtHighRh, screenCrackAtHighTemperature,
         rhMax, rhMaxBand,
         co2Capacity, co2Setpoint, co2VentilationThreshold, co2VentilationBand,
         dawnThreshold, duskThreshold;
     // Outputs
     double ventilationTemperatureAtLowRh, ventilationTemperatureAtHighRh,
-        heatingTemperatureAtHighRh;
+        heatingTemperatureAtHighRh,
+        maxScreenAtHighRh, maxScreenAtHighTemperature;
 };
 } //namespace
 

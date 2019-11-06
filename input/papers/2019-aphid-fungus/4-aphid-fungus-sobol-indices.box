@@ -2,7 +2,7 @@ Simulation sim {
   // Runs at ~150 iterations per minute
   // 53248 iterations used in paper
   // 832 iterations for a quicker demonstration
-  .iterations = 832
+  .iterations = 106496 //832
   .steps =  273 // end of september
   .silent = TRUE
   SelectFile weatherFiles {
@@ -24,7 +24,7 @@ Simulation sim {
     RandomiserSobolSequence randomiser {
       .doSensitivityAnalysis = TRUE
       // Set bootstrapSize to 1000 for a quick demonstration; a value of 10000 used in paper
-      .bootstrapSize = 1000
+      .bootstrapSize = 10000
     }
     RandomUniformInt fileNumber {
       .min = 1

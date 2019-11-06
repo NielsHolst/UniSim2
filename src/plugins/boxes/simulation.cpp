@@ -47,8 +47,8 @@ Simulation::~Simulation() {
 }
 
 void Simulation::amend() {
-//    if (iterations > 1)
-        port("iteration")->track();
+    port("iteration")->track();
+    Track::effectuateOrders();
 }
 
 void Simulation::initialize() {
@@ -64,7 +64,7 @@ void Simulation::run() {
     QTime time;
     try {
         time.start();
-        Track::effectuateOrders();
+//        Track::effectuateOrders();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
 

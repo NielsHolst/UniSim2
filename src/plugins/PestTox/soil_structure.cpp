@@ -17,11 +17,13 @@ PUBLISH (SoilStructure)
 SoilStructure::SoilStructure(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(fa).equals(0.25);     //fraction of air in the soil
-    Input(fw).equals(0.25);     //fraction of water in the soil
 
-    Output(fs);
-    Output(porosity);
+    help("manages soil porosity");
+    Input(fa).unit("fraction").equals(0.25).help("Fraction of air in the soil");
+    Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");
+
+    Output(fs).unit("fraction").help("Fraction of sand in the soil");
+    Output(porosity).help("Soil porosity");
 }
 
 void SoilStructure::reset() {

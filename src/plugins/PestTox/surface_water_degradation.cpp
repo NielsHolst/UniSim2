@@ -19,24 +19,25 @@ PUBLISH (SurfaceWaterDegradation )
 SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(inflow).equals(0.).help("Runoff from the field (g/ha)");
-    Input(inflow2).equals(0.).help("Spray drift off-field edge (g/ha)");
-    Input(DT50).equals(4.5).help("Biodegradation half-life (days)");
-    Input(Tw).imports("soilTemperature[value]").help("Actual water temperature (Â°C). Same as soil temperature");
-    Input(pondWidth).equals(1.).help("Width of the pond or channel (m)");
-    Input(pondHeight).equals(1.).help("Height of the pond or channel (m)");
-    Input(pondLength).equals(1.).help("Length of the pond or channel (m)");
-    Input(fieldArea).imports("field[area]").help("Area of whole field (m2)");
-    Input(RunoffAmount).equals(0.).help("Runoff amount (mm)");
+    help("manages fate of pesticide in surface water");
+    Input(inflow).unit("g a.i/ha").equals(0.).help("Inflow as runoff from the field");
+    Input(inflow2).unit("g a.i/ha").equals(0.).help("Inflow as spray drift off-field edge");
+    Input(DT50).unit("day").equals(4.5).help("Biodegradation half-life");
+    Input(Tw).unit("°C").imports("soilTemperature[value]").help("Water temperature (assumed to be the same as soil temperature)");
+    Input(pondWidth).unit("m").equals(1.).help("Width of the pond or channel");
+    Input(pondHeight).unit("m").equals(1.).help("Height of the pond or channel");
+    Input(pondLength).unit("m").equals(1.).help("Length of the pond or channel");
+    Input(fieldArea).unit("m2").imports("field[area]").help("Area of whole field");
+    Input(RunoffAmount).unit("mm").equals(0.).help("Runoff amount");
 
-    Output(concentration).help("Concetration of the pesticide in the pond or channel(mg/L)");
-    Output(outflow);
+    Output(concentration).unit("mg/L").help("Concetration of the pesticide in the channel or pond");
+    Output(outflow).unit("mg/L").help("Pesticide biodegraded");
     Output(fwdT).help("Temperature correction factor");
-    Output(kwd).help("Temperature corrected biodegradation rate constant (per day)");
-    Output(pondVolume).help("Volume of the pond or channel (L)");
-    Output(fieldWater).help("Volume of water runoff from  the field (L)");
-    Output(runoff).help("Pesticide concentration in the runoff: from  the field (mg/L)");
-    Output(sprayDrift).help("Pesticide concentration: from spray drift (mg/L)");
+    Output(kwd).unit("per day").help("Temperature corrected biodegradation rate constant");
+    Output(pondVolume).unit("L").help("Volume of the channel or pond");
+    Output(fieldWater).unit("L").help("Volume of water runoff from  the field");
+    Output(runoff).unit("mg/L").help("Pesticide concentration in the runoff water from the field");
+    Output(sprayDrift).unit("mg/L").help("Pesticide concentration in the spray drift off-field edge");
 }
 
 void SurfaceWaterDegradation ::update() {

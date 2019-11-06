@@ -15,24 +15,23 @@ if (!keepVariables) {
   rm(list=del)
 }
 
-is_rstudio = function() !is.na(Sys.getenv("RSTUDIO", unset = NA))
 skip_formats = exists("output_skip_formats")
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
 unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999')  
 scale_colour_discrete = function(...) {
-  scale_colour_manual(..., values = rep(unisim_colours, 2))
+  scale_colour_manual(..., values = rep(unisim_colours, 10))
 }
 
 scale_linetype_discrete = function(...) {
   n = length(unisim_colours)
-  scale_linetype_manual(..., values = c(rep(1, n), rep(7, n)))
+  scale_linetype_manual(..., values = rep(c(rep(1, n), rep(7, n)), 5))
 }
 
 check_num_colours = function(list_of_names) {
   unique_names = unique(unlist(list_of_names))
   n = length(unique_names)
-  nmax = 2*length(unisim_colours)
+  nmax = 10*length(unisim_colours)
   if (n > nmax) {
     stop(paste0("Too many variables in plot(",n," > ", nmax, ")\n", unique_names))
   }
@@ -40,8 +39,21 @@ check_num_colours = function(list_of_names) {
 
 update_geom_defaults("line", list(size=1))
 
+last_occurence = function(s, needle) {
+  tail(str_locate_all(s, needle)[[1]], 1)[1]
+}
+
+output_file_folder = function() {
+  last = last_occurence(output_file_name, "/")
+  substr(output_file_name, 1, last-1)
+}
+
 reorder_levels = function(the_factor, new_order) {
   factor(the_factor,levels(the_factor)[new_order])
+}
+
+is_rstudio = function() {
+  !is.na(Sys.getenv("RSTUDIO", unset = NA))
 }
 
 open_plot_window = function(width, height) {
@@ -51,7 +63,6 @@ open_plot_window = function(width, height) {
     X11(width=width, height=height, type="cairo") 
   }
 }
-
 
 unique_names = function(col_names) {
 
@@ -354,7 +365,13 @@ plot_sobol_indices = function(theme=NULL) {
   print(paste0("Bootstrapping (n=", sobol_B, ")..."))
   B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
   S = ddply(B, .(Output), sobol_statistics)
-  print(S)
+  
+  file_name = paste0(output_file_folder(), "/S.Rdata")
+  save(S, file=file_name)
+  print(paste("Sobol statistics data frame saved in ", file_name))
+  
   dlply(subset(S, Input!="Sum"), .(Output), plot_effects, theme=theme)
 }
+
+
 

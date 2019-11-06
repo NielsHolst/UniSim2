@@ -9,7 +9,6 @@
 2. Check that the input folder contains the correct files in
 - book
 - papers
-- projects
 - scripts
 - teaching
 

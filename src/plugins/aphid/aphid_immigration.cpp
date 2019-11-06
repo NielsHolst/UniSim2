@@ -17,7 +17,9 @@ AphidImmigration::AphidImmigration(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes daily immigration");
-    Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");
+    Input(cropGrowthStage).help("Current crop growth stage").unit("Zadoks");
+    Input(fromCropGrowthStage).help("Immigration begins as this growth stage").equals(31).unit("Zadoks");
+    Input(toCropGrowthStage).help("Immigration ends as this growth stage").equals(80).unit("Zadoks");
     Input(immigrationRate).equals(15).help("Immigration rate in the season").unit("per tiller d-1");
     Input(propExposedImmigrants).help("Proportion of infected immigrants").unit("[0;1]");
     Input(k).help("Has to match k of the receiving StageAndPhase box").unit("positive int");
@@ -34,7 +36,7 @@ void AphidImmigration::reset() {
 }
 
 void AphidImmigration::update() {
-    total = (cropGrowthStage>31 && cropGrowthStage<80) ? immigrationRate : 0.;
+    total = (cropGrowthStage>fromCropGrowthStage && cropGrowthStage<toCropGrowthStage) ? immigrationRate : 0.;
     susceptible = total*(1.-propExposedImmigrants);
     // Number followed by all zeros in the rest of the vector
     exposed[0] = total*propExposedImmigrants;

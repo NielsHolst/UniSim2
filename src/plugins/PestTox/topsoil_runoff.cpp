@@ -17,17 +17,18 @@ PUBLISH (TopsoilRunoff)
 TopsoilRunoff::TopsoilRunoff(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(S).equals(0.01);
-    Input(wbz).equals(1.);
-    Input(P).equals(1.);              //average  daily rainfall per rainfall event in a given month (mm)
-    Input(KocpH).equals(5.678e-6);
-    Input(fom).equals(0.09);          //organice matter content in the soil
-    Input(Q).equals(5.);
+    help("manages fate of pesticide due to runoff in the topsoil");
+    Input(S).unit("fraction").equals(0.01).help("Slope of the field");
+    Input(wbz).unit("m").equals(1.).help("Buffer zone");
+    Input(P).unit("mm").equals(1.).help("Daily rainfall");
+    Input(KocpH).unit("L/kg").equals(5.678e-6).help("pH-dependent organic carbon-water partitioning coefficient");
+    Input(fom).unit("fraction").equals(0.09).help("Fraction of organic matter in the soil");
+    Input(Q).unit("mm").equals(5.).help("Runoff amount");
 
-    Output(F);
-    Output(Fslope);
-    Output(Fbuffer);
-    Output(fsr);
+    Output(F).help("Overall correction factor");
+    Output(Fslope).help("Slope correction factor");
+    Output(Fbuffer).help("Buffer zone correction factor");
+    Output(fsr).unit("fraction").help("Runoff fraction in the topsoil");
 }
 
 void TopsoilRunoff::update() {

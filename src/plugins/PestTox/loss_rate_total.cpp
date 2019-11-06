@@ -17,10 +17,11 @@ PUBLISH (LossRateTotal)
 LossRateTotal::LossRateTotal(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("manages total loss rate");
     Input(amount).imports("compartments/crop[load]").help("Amount from which losses are taken");
-    Input(path).equals("../potential/*[finite]").help("Path to loss rates (d-1)");
-    Output(fractionLost).help("Fraction lost calculated from loss rates on path (d-1)");
-    Output(amountLost).help("Amount lost (d-1)");
+    Input(path).equals("../potential/*[finite]").help("Path to loss rates (per day)");
+    Output(fractionLost).help("Fraction lost calculated from loss rates on path (per day)");
+    Output(amountLost).help("Amount lost (per day)");
 }
 
 void LossRateTotal::amend() {

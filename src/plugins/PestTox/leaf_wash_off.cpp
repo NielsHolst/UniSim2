@@ -18,8 +18,9 @@ PUBLISH (LeafWashOff)
 LeafWashOff::LeafWashOff(QString name, QObject *parent)
     : LossRate(name, parent)
 {
-    Input(rainfall).imports("weather[Rain]").help("Daily rainfall (mm)");
-    Input(washOffCoefficient).help("Wash-off coefficient (mm-1)");
+    help("manages fate of pesticide on crop or leaf surface due to washoff");
+    Input(rainfall).unit("mm").imports("weather[Rain]").help("Daily rainfall");
+    Input(washOffCoefficient).unit("per mm").help("Wash-off coefficient");
 }
 
 double LeafWashOff::computeInstantaneous() {

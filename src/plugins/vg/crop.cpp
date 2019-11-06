@@ -38,8 +38,8 @@ void Crop::amend() {
         box("DayDegrees").name("physTime").
             port("T").imports("indoors/temperature[value]").
             port("timeStepDays").imports("calendar[timeStepDays]").
-            port("isTicking").imports("../periods/*[flag]").transform(Any).
-            port("resetTotal").imports("../periods/*[flagDown]").transform(Any).
+            port("isTicking").imports("../periods/*[flagIsUp]").transform(Any).
+            port("resetTotal").imports("../periods/*[flagJustLowered]").transform(Any).
         endbox();
 
     if (!findMaybeOne<Box>("./lai"))

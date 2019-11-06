@@ -8,7 +8,7 @@ Simulation sim {
   SelectFile weatherFiles {
     .folder = "weather"
     .filter = "*.txt"
-    .showFileNames = FALSE
+    .showFileNames = TRUE
   }
   Box param {
     +juvenileApterousDuration = 172 

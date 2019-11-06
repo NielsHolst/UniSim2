@@ -18,31 +18,32 @@ PUBLISH (TopsoilDegradation)
 TopsoilDegradation::TopsoilDegradation(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(inflow).equals(0.);
-    Input(DT50).equals(10.);      //biodegradation half-life (days)
-    Input(Sp).equals(0.);         //soil porosity
-    Input(Tsoil).equals(25.);      //Average air temperature in the month of pesticide application
-    Input(Vrsmc).equals(0.5);     //reference soil moisture content
-    Input(rf).equals(0.7);         //exponential response factor for the influence of moisture content on biodegradation rate
-    Input(fw).equals(0.25);       //fraction of water in the soil
-    Input(Rainfall).equals(0.);   //rainfall (mm)
-    Input(leafWashOff).equals(0.);    //dose washed off from leaves/crops
-    Input(ksv).equals(0.);
-    Input(frsa).equals(0.);
-    Input(frsw).equals(0.);
-    Input(fsr).equals(0.);
-    Input(fmp).equals(0.);
+    help("manages fate of pesticide in the topsoil");
+    Input(inflow).unit("g a.i/ha").equals(0.).help("Inflow as pesticide deposition in the soil");
+    Input(DT50).unit("day").equals(10.).help("Biodegradation half-life");
+    Input(Sp).equals(0.).help("Soil porosity");
+    Input(Tsoil).unit("°C").equals(25.).help("Soil temperature");
+    Input(Vrsmc).equals(0.5).help("Reference soil moisture content");
+    Input(rf).equals(0.7).help("Exponential response factor for the influence of moisture content on biodegradation rate");
+    Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");
+    Input(Rainfall).unit("mm").equals(0.).help("Daily rainfall");
+    Input(leafWashOff).unit("g a.i/ha").equals(0.).help("Pesticide washed off from crop or leaf surface");
+    Input(ksv).unit("per day").equals(0.).help("Volatilization rate constant");
+    Input(frsa).unit("fraction").equals(0.).help("Fraction of pesticide reaching soil air");
+    Input(frsw).unit("fraction").equals(0.).help("Fraction of pesticide reaching soil water");
+    Input(fsr).unit("fraction").equals(0.).help("Runoff fraction in the topsoil");
+    Input(fmp).unit("fraction").equals(0.).help("Macropore fraction");
 
-    Output(concentration);
-    Output(outflow);
-    Output(fsdT);           //temperature correction factor
-    Output(Vsmc);           //moisture content
-    Output(fsm);            //moisture correction factor
-    Output(ksd);            //moisture & temperature corrected biodegradation rate constant (day-1)
-    Output(degradation);    //this goes to metabolite
-    Output(volatilization); //amount volatilized
-    Output(runoff);        //amount runoff
-    Output(macroporeFlow);
+    Output(concentration).unit("g a.i/ha").help("Pesticide concentration in the topsoil");
+    Output(outflow).unit("g a.i/ha").help("Pesticide loss in the topsoil");
+    Output(fsdT).help("Temperature correction factor");
+    Output(Vsmc).help("Soil moisture content");
+    Output(fsm).help("Moisture correction factor");
+    Output(ksd).unit("per day").help("Moisture and temperature-corrected biodegradation rate constant");
+    Output(degradation).unit("g a.i/ha").help("Pesticide loss by biodegration");
+    Output(volatilization).unit("g a.i/ha").help("Pesticide loss by volatilization");
+    Output(runoff).unit("g a.i/ha").help("Pesticide loss by runoff");
+    Output(macroporeFlow).unit("g a.i/ha").help("Pesticide loss by macropore flow");
 }
 
 void TopsoilDegradation::update() {

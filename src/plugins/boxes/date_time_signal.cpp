@@ -23,7 +23,6 @@ DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     Input(time).imports("calendar[time]").unit("h:m:s");
     Input(signalInside).equals(1.).help("Resulting signal when day and time are inside the day and time intervals");
     Input(signalOutside).equals(0.).help("Resulting signal when day and time are outside the day and time intervals");
-    Input(signalOutsideTimeOnly).equals(0.).help("Resulting signal when day is inside its interval but time is outside its interval");
     Input(circadian).equals(true).help("Tells whether signal follows a daily rythm").unit("y|n");
 }
 
@@ -35,7 +34,7 @@ inline QDate date(QDate date) {
     return QDate(2001, date.month(), date.day());
 }
 
-double DateTimeSignal::computeSignal() {
+bool DateTimeSignal::computeFlag() {
     QDate today = date(day);
     beginDate = date(beginDate);
     endDate = date(endDate);
@@ -45,20 +44,21 @@ double DateTimeSignal::computeSignal() {
     bool nowOnTime = (beginTime < endTime) ?
                 (time >= beginTime) && (time <= endTime) :
                 (time >= beginTime) || (time <= endTime);
-    double result;
+    bool flag;
     if (circadian) {
-        result =  nowOnDay ?
-                  (nowOnTime ? signalInside : (signalOutsideTimeOnly))
-                  : signalOutside;
+        flag =  nowOnDay && nowOnTime;
     }
     else {
         QDateTime begin(beginDate, beginTime),
                   end(endDate, endTime),
                   now(today, time);
-        result = (now >= begin && now <= end) ?
-                 signalInside : signalOutside;
+        flag = (now >= begin && now <= end);
     }
-    return result;
+    return flag;
+}
+
+double DateTimeSignal::computeSignal(bool flag) {
+    return flag ? signalInside : signalOutside;
 }
 
 } //namespace

@@ -46,7 +46,7 @@ void Setpoints::amend() {
                 port("sensedValue").imports("..[value]").
                 port("Kprop").equals(0.1).
 //                port("Kint").equals(0.001).
-                box("vg::ProportionalSignal").name("target").
+                box("ProportionalSignal").name("target").
                     port("input").imports("indoors/humidity[rh]").
                     port("threshold").imports("setpoints[rhMax]").
                     port("thresholdBand").imports("setpoints[rhMaxBand]").
@@ -63,7 +63,7 @@ void Setpoints::amend() {
                 port("desiredValue").imports("./target[signal]").
                 port("sensedValue").imports("..[value]").
                 port("Kprop").equals(0.1).
-                box("vg::ProportionalSignal").name("target").
+                box("ProportionalSignal").name("target").
                     port("input").imports("indoors/humidity[rh]").
                     port("threshold").imports("setpoints[rhMax]").
                     port("thresholdBand").imports("setpoints[rhMaxBand]").

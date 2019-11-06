@@ -24,11 +24,9 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
     Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
     Input(ageCorrectedEfficiency).equals(1.).help("Proportion of intensity actually emitted").unit("[0;1]");
-    Input(on).imports("controllers/growthLight[signal]").unit("y|n");
+    Input(on).help("Is light currently switched on?").unit("y|n");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
-
-    Output(currentPeriod).help("Time since last time light went on").unit("m");
-    Output(totalPeriod).help("Total period when light has been on").unit("h");
+    Output(periodOn).help("Time since last time light went on").unit("m");
 }
 
 void GrowthLight::reset() {
@@ -50,19 +48,14 @@ void GrowthLight::reset() {
                 value(shortWaveProp).value2(longWaveProp).context(this);
 
     heatProp = 1. - shortWaveProp - longWaveProp;
-
-    _degradationRate = (lifeTime>0) ? log(0.5)/lifeTime : 0.;
-    currentPeriod = 0.;
-    totalPeriod = age;
     noLight();
 }
 
 void GrowthLight::update() {
     currentlyOn = on ||
-                  ( currentlyOn && (currentPeriod < minPeriodOn) );
+                  ( currentlyOn && (periodOn < minPeriodOn) );
     if (currentlyOn) {
-        currentPeriod += timeStep/60.;
-        totalPeriod += timeStep/3600.;
+        periodOn += timeStep/60.;
 
         totalIntensity = intensity*ageCorrectedEfficiency;
         shortWaveIntensity = totalIntensity*shortWaveProp;
@@ -82,9 +75,9 @@ void GrowthLight::noLight() {
     shortWaveIntensity =
     longWaveIntensity =
     heatIntensity =
-
     parIntensity =
-    powerUsage = 0.;
+    powerUsage =
+    periodOn = 0.;
     currentlyOn = false;
 }
 

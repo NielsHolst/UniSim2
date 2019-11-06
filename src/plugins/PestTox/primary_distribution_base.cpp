@@ -16,10 +16,11 @@ namespace PestTox {
 PrimaryDistributionBase::PrimaryDistributionBase(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(fieldArea).imports("field[area]").help("Area of whole field (m2)");
-    Input(doseApplied).imports("applications[dose]").help("Dose of pesticide (g a.i/ha)");
-    Output(doseTaken).help("Dose taken by this compartment (g a.i/ha)");
-    Output(fractionTaken).help("Fraction of applied dose taken by this compartment [0;1]");
+    help("manages primary distribution");
+    Input(fieldArea).unit("m2").imports("field[area]").help("Area of whole field");
+    Input(doseApplied).unit("g a.i/ha").imports("applications[dose]").help("Dose of pesticide");
+    Output(doseTaken).unit("g a.i/ha").help("Dose taken by this compartment");
+    Output(fractionTaken).unit("fraction").help("Fraction of applied dose taken by this compartment [0;1]");
 }
 
 

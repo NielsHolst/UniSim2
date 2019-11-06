@@ -22,15 +22,11 @@ private:
     QString type;
     double timeStep, intensity, parPhotonCoef,
         minPeriodOn, age, lifeTime,
-        powerUsage,
         ageCorrectedEfficiency;
-
     bool on;
     // Outputs
     double
-        currentPeriod, totalPeriod;
-    // Data
-    double _degradationRate;
+        periodOn;
     // Methods
     void noLight();
 };

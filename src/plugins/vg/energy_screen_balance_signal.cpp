@@ -24,8 +24,12 @@ EnergyScreenBalanceSignal::EnergyScreenBalanceSignal(QString name, QObject *pare
     Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
 }
 
-double EnergyScreenBalanceSignal::computeSignal()  {
-    return (indoorsLight > Ucover*(indoorsTemperature - outdoorsTemperature)) ? 0 : 1;
+double EnergyScreenBalanceSignal::computeSignal(bool flag)  {
+    return flag ? 1. : 0.;
+}
+
+bool EnergyScreenBalanceSignal::computeFlag()  {
+    return (indoorsLight < Ucover*(indoorsTemperature - outdoorsTemperature));
 }
 
 } //namespace

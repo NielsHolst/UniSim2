@@ -6,6 +6,7 @@
 #ifndef PRIORITY_SIGNAL_H
 #define PRIORITY_SIGNAL_H
 
+#include <QVector>
 #include <base/base_signal.h>
 
 namespace boxes {
@@ -15,12 +16,17 @@ class PrioritySignal : public base::BaseSignal
 public:
     PrioritySignal(QString name, QObject *parent);
     void initialize();
-    double computeSignal();
+    bool computeFlag();
+    double computeSignal(bool flag);
 private:
     // Inputs
     bool reverseOrder;
     // Data
-    QVector<const double*> _signals;
+    struct FlaggedSignal {
+        const bool *flag;
+        const double *signal;
+    };
+    QVector<FlaggedSignal> _flaggedSignals;
 };
 
 } //namespace

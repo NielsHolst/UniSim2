@@ -17,13 +17,15 @@ public:
     void reset() final;
     void update() final;
     virtual void localReset() {}
-    virtual double computeSignal() = 0;
+    virtual double computeSignal(bool flag) = 0;
+    virtual bool computeFlag() = 0;
 private:
     // Input
-    double signalReset, maxChange, timeStepSecs;
+    double initialSignal, maxChange, timeStepSecs;
+    bool initialFlag;
     // Output
     double signal;
-    bool flag, flagUp, flagDown;
+    bool flagIsUp, flagJustRaised, flagJustLowered;
     // Data
     double _prevSignal;
     // Methods

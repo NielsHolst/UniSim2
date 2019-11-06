@@ -1,0 +1,62 @@
+Simulation sim {
+  .steps = 365
+  Records water {
+    .fileName = "water.txt"
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2018
+  }
+  Briere time {
+    .a = 7.09e-5
+    .T0 = 11.1
+    .Tmax = 28.8
+    .T = water[Temp]
+  }
+  Box Chironimus {
+    Stage adult {
+      .inflow = ../pupa[outflow]
+      .timeStep = 1
+      .duration = 3
+    }
+    Box fecundity {
+      +eggsLaid = ./reproduction[outflow]
+      Stage reproduction {
+        .inflow = ../../adult[inflow]
+        .timeStep = ../../adult[timeStep]
+        .duration = ../../adult[duration]
+        .growthFactor = 30 // life time fecundity per female times sex ratio 
+      }
+    }
+    Stage egg {
+      .inflow = ../fecundity[eggsLaid]
+      .timeStep = time[step]
+      .duration = 0.167  // = 3.76/22.5
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .initial = 100
+      .timeStep = time[step]
+      .duration = 1
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .timeStep = time[step]
+      .duration = 0.044  // = 1/22.5
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = water[Temp]
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = Chironimus/*[content]
+        .transform = "log10"
+        .ggplot = "scale_y_continuous(limits=c(0,NA), name='Log10(density)')"
+      }
+    }
+  }
+
+}

@@ -19,11 +19,12 @@ PUBLISH (PrimaryDistributionAir)
 PrimaryDistributionAir::PrimaryDistributionAir(QString name, QObject *parent)
     : PrimaryDistributionBase(name, parent)
 {
+    help("manages spray drift");
     Input(a1).help("Wind drift coefficient");
     Input(b1).help("Wind drift coefficient");
     Input(a2).help("Wind drift coefficient");
     Input(b2).help("Wind drift coefficient");
-    Input(x).equals(1.).help("Distance off field edge");
+    Input(x).unit("m").equals(1.).help("Distance off field edge");
 }
 
 

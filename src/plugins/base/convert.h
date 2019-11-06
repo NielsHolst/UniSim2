@@ -7,6 +7,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <QChar>
 #include <QDate>
 #include <QDateTime>
 #include <QString>
@@ -27,6 +28,10 @@ namespace base {
 //
 // Numerical conversions
 //
+
+extern void setLocale(QString localeName);
+extern QChar outputDecimalCharacter();
+extern QString localeName();
 
 #define NUMERIC_CAST(sourceT) \
 try { \

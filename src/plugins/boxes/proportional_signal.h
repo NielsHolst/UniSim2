@@ -6,11 +6,11 @@
 #ifndef PROPORTIONAL_SIGNAL_H
 #define PROPORTIONAL_SIGNAL_H
 
-#include <base/sliding_signal.h>
+#include "sliding_signal.h"
 
 namespace boxes {
 
-class ProportionalSignal : public base::SlidingSignal
+class ProportionalSignal : public SlidingSignal
 {
 public:
     ProportionalSignal(QString name, QObject *parent);

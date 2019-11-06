@@ -197,7 +197,7 @@
 				<newPort name="signal" externalName="Cli_AssLightOff" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="1900.0"/>
 			</box>
 		</box>
-		<box class="PrioritySignal" name="growthLightActive">
+		<box class="PrioritySignal" name="growthSetting">
 			<port name="reverseOrder" value="TRUE"/>
 			<box name="default">
 				<newPort name="signal" externalName="Cli_AssLightActive" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="1.0"/>

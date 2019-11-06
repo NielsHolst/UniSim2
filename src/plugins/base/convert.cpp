@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <QLocale>
 #include <QStringList>
 #include "any_year.h"
 #include "convert.h"
@@ -10,6 +11,24 @@
 ThrowException("Cannot convert " #sourceT " to " #destT)
 
 namespace base {
+
+namespace {
+    QString _localeName;
+    QChar _outputDecimalCharacter = '.';
+}
+
+void setLocale(QString localeName) {
+    _localeName = localeName.toLower();
+    _outputDecimalCharacter = (_localeName=="local") ? QLocale().decimalPoint() : QChar('.');
+}
+
+QString localeName() {
+    return _localeName;
+}
+
+QChar outputDecimalCharacter() {
+    return _outputDecimalCharacter;
+}
 
 //
 // Numerical conversions to Bool
@@ -27,23 +46,39 @@ template<> bool convert(long double source)     { return static_cast<int>(source
 // Numerical conversions to String
 //
 
-static QString withPeriod(QString s) {
-    return (s.contains(".") || s.contains("e") || s.contains("inf")) ? s : s + ".0";
+static QString withDecimal(QString s) {
+    return (s.contains(outputDecimalCharacter()) || s.contains("e") || s.contains("inf")) ? s : s + outputDecimalCharacter() + "0";
 }
 
-template<> QString convert(bool source)         { return source ? "TRUE" : "FALSE";}
-template<> QString convert(char source)         { return QString(source); }
-template<> QString convert(int source)          { return QString::number(source); }
-template<> QString convert(long int source)     { return QString::number(source); }
-template<> QString convert(long long int source){ return QString::number(source); }
+template<> QString convert(bool source) {
+    return source ? "TRUE" : "FALSE";
+}
+template<> QString convert(char source) {
+    return QString(source);
+}
+template<> QString convert(int source) {
+    return QString::number(source);
+}
+template<> QString convert(long int source) {
+    return QString::number(source);
+}
+template<> QString convert(long long int source){
+    return QString::number(source);
+}
 template<> QString convert(float source)  {
-    return withPeriod( QString::number(static_cast<double>(source)) );
+    return withDecimal(
+                _localeName.isEmpty() ? QString::number(static_cast<double>(source)) : QLocale().toString(static_cast<double>(source))
+           );
 }
 template<> QString convert(double source) {
-    return withPeriod( QString::number(source) );
+    return withDecimal(
+                _localeName.isEmpty() ? QString::number(source) : QLocale().toString(source)
+           );
 }
 template<> QString convert(long double source) {
-    return withPeriod( QString::fromStdString(lexical_cast<std::string>(source)) );
+    return withDecimal(
+                QString::fromStdString(lexical_cast<std::string>(source))
+           );
 }
 
 //

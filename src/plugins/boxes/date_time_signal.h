@@ -14,13 +14,14 @@ class DateTimeSignal : public base::BaseSignal
 {
 public:
     DateTimeSignal(QString name, QObject *parent);
-    double computeSignal();
+    bool computeFlag();
+    double computeSignal(bool flag);
 private:
     // Inputs
     QDate beginDate, endDate;
     QTime beginTime, endTime, time;
     int day;
-    double signalInside, signalOutsideTimeOnly, signalOutside;
+    double signalInside, signalOutside;
     bool circadian;
 };
 

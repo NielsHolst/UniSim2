@@ -17,10 +17,12 @@ PUBLISH (RunoffAmount)
 RunoffAmount::RunoffAmount(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(P).equals(1.);     //average  daily rainfall per rainfall event in a given month (mm)
-    Input(fsand).equals(0.5);
 
-    Output(Q);
+    help("manages runoff amount");
+    Input(P).unit("mm").equals(1.).help("Daily rainfall");
+    Input(fsand).unit("fraction").equals(0.5).help("Fraction of sand in the soil");
+
+    Output(Q).unit("mm").help("Runoff amount");
 }
 
 void RunoffAmount::update() {

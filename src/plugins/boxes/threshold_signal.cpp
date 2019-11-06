@@ -15,15 +15,21 @@ PUBLISH(ThresholdSignal)
 ThresholdSignal::ThresholdSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
     help("sets a signal according to a threshold value");
-    Input(threshold).help("Threshold value");
     Input(input).help("Input that is compared to threshold");
-    Input(signalBelow).help("Signal when value is below threshold");
-    Input(signalAbove).equals(1.).help("Signal when value is at or above threshold");
+    Input(threshold).help("Threshold value");
+    Input(flagAbove).equals(true).help("Raise flag when input is at or above threshold?");
+    Input(signalFlagged).equals(1.).help("Signal when flagged");
+    Input(signalUnflagged).help("Signal when not flagged");
 }
 
-double ThresholdSignal::computeSignal() {
-    return (input < threshold) ? signalBelow : signalAbove;
+bool ThresholdSignal::computeFlag() {
+    return flagAbove && (input >= threshold);
 }
+
+double ThresholdSignal::computeSignal(bool flag) {
+    return flag ? signalFlagged : signalUnflagged;
+}
+
 
 } //namespace
 

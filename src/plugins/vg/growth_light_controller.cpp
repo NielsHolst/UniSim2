@@ -5,7 +5,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/path.h>
+#include <base/exception.h>
 #include <base/publish.h>
 #include <base/test_num.h>
 #include "growth_light_controller.h"
@@ -19,17 +19,21 @@ PUBLISH(GrowthLightController)
 GrowthLightController::GrowthLightController(QString name, QObject *parent)
     : BaseSignal(name, parent), _isOn(false)
 {
-    help("compounds on and off signals");
-    Input(isActive).imports("allSetpoints/growthLightActive[value]").help("Could light be on?").unit("y|n");
-    Input(lightThresholdLow).imports("allSetpoints/growthLightThresholdLow[value]")
-            .help("Light is off below this threshold for outdoors light").unit("W/m2");
-    Input(lightThresholdHigh).imports("allSetpoints/growthLightThresholdHigh[value]")
-            .help("Light is off above this threshold for outdoors light").unit("W/m2");
+    help("control lights on/off according to setting");
+    Input(setting).help("Setting; 0=off, 1=sunlight-controlled, 10=on").unit("0|1|10");
+    Input(lightThresholdLow).help("If controlled then light is switched on below this sunlight threshold").unit("W/m2");
+    Input(lightThresholdHigh).help("If controlled then light is switched off above this sunlight threshold").unit("W/m2");
     Input(lightOutdoors).imports("outdoors[radiation]").unit("W/m2");
 }
 
-double GrowthLightController::computeSignal() {
-    if (isActive) {
+bool GrowthLightController::computeFlag() {
+    if (setting == 0) {
+        _isOn = false;
+    }
+    else if (setting == 10) {
+        _isOn = true;
+    }
+    else if (setting == 1) {
         if (_isOn) {
             bool switchOff = (lightOutdoors > lightThresholdHigh);
             _isOn = !switchOff;
@@ -40,9 +44,13 @@ double GrowthLightController::computeSignal() {
         }
     }
     else {
-        _isOn = false;
+        ThrowException("Illegal setting").value(setting).hint(port("setting")->help()).context(this);
     }
     return _isOn;
+}
+
+double GrowthLightController::computeSignal(bool flag) {
+    return flag ? 1. : 0.;
 }
 
 } //namespace

@@ -17,9 +17,10 @@ PUBLISH (PrimaryDistributionLeaf)
 PrimaryDistributionLeaf::PrimaryDistributionLeaf(QString name, QObject *parent)
     : PrimaryDistributionBase(name, parent)
 {
-    Input(fractionTakenAir).imports("../surroundings[fractionTaken]");
-    Input(stageContent).imports("crop/*<Stage>[content]");
-    Input(fractionsByCropStage);
+    help("manages pesticide deposition on crop or leaf surface");
+    Input(fractionTakenAir).unit("g a.i/ha").imports("../surroundings[fractionTaken]").help("Dose taken by wind drift off-field edge");
+    Input(stageContent).imports("crop/*<Stage>[content]").help("Crop stage");
+    Input(fractionsByCropStage).unit("fraction").help("Stage-specific fraction deposition");
 }
 
 void PrimaryDistributionLeaf::update() {

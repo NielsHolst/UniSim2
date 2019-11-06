@@ -43,36 +43,36 @@ unisim.depends = student
 # Published or in-prep paper plug-ins
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
-#
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
+
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp
 #cmbp.depends = base
 #unisim.depends = cmbp
-#
-##SUBDIRS += io
-##io.subdir = src/plugins/io
-##io.depends = base
-##unisim.depends = io
-#
+
+###SUBDIRS += io
+###io.subdir = src/plugins/io
+###io.depends = base
+###unisim.depends = io
+
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed
 #MusselBed.depends = base
 #unisim.depends = MusselBed
-#
+
 #SUBDIRS += PestTox
 #PestTox.subdir = src/plugins/PestTox
 #PestTox.depends = base
 #unisim.depends = PestTox
-#
-##SUBDIRS += rvf
-##rvf.subdir = src/plugins/rvf
-##rvf.depends = base
-##unisim.depends = rvf
-#
+
+###SUBDIRS += rvf
+###rvf.subdir = src/plugins/rvf
+###rvf.depends = base
+###unisim.depends = rvf
+
 #SUBDIRS += vacuum
 #vacuum.subdir = src/plugins/vacuum
 #vacuum.depends = base
