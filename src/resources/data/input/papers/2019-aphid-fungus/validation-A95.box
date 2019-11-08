@@ -1,15 +1,12 @@
 Simulation sim {
-  // Runs at ~150 iterations per minute
-  // 53248 iterations used in paper
-  // 832 iterations for a quicker demonstration
-  .iterations = 106496 //832
+  .iterations = 10 
   .steps =  273 // end of september
   .silent = TRUE
-  SelectFile weatherFiles {
-    .folder = "weather"
-    .filter = "*.txt"
-    .showFileNames = FALSE
-  }
+  // SelectFile weatherFiles {
+    // .folder = "weather"
+    // .filter = "*.txt"
+    // .showFileNames = FALSE
+  // }
   Box param {
     +juvenileApterousDuration = 172 
     +juvenileAlateDuration = 195 
@@ -18,19 +15,14 @@ Simulation sim {
     +fecundity_k = 1
   }
   Box random {
-    // RandomiserStratified randomiser {
-      // .doSensitivityAnalysis = FALSE
+    RandomiserStratified randomiser {
+      .doSensitivityAnalysis = FALSE
+    }
+    // RandomUniformInt fileNumber {
+      // .min = 1
+      // .fixed = 1
+      // .max = weatherFiles[numFiles]
     // }
-    RandomiserSobolSequence randomiser {
-      .doSensitivityAnalysis = TRUE
-      // Set bootstrapSize to 1000 for a quick demonstration; a value of 10000 used in paper
-      .bootstrapSize = 10000
-    }
-    RandomUniformInt fileNumber {
-      .min = 1
-      .fixed = 1
-      .max = weatherFiles[numFiles]
-    }
     RandomNormal cropAtStart {
       .min = 10
       .fixed = 20
@@ -57,7 +49,7 @@ Simulation sim {
       .fixed = 73
       .max = 115
     }
-    RandomNormal immunityCost {
+    RandomNormal immunityCost{
       .min = 0
       .fixed = 0.2
       .max = 0.4
@@ -78,8 +70,9 @@ Simulation sim {
       .max = 99 
     }
     RandomNormal transmissionEfficiency {
+      .useFixed = TRUE
       .min = 0.05
-      .fixed = 0.1728
+      .fixed = 0.07 // 0.1728 CALIBRATED
       .max = 0.5 
     }
   }
@@ -87,17 +80,18 @@ Simulation sim {
   Calendar calendar {
     .timeStep=1
     .timeUnit="d" 
+    .initialDateTime = 1/1/1995
   }
 
   Records weather {
-    .fileName =  ./files[fileNamePath]   
-    .overrideCalendarYear = TRUE
-    SelectFile files {
-      .folder = "weather"
-      .filter = "*.txt"
-      .selectFileNumber = random/fileNumber[value]
-      .showFileNames = FALSE
-    }
+    .fileName =  "validation/A94-95.txt"
+    // .overrideCalendarYear = TRUE
+    // SelectFile files {
+      // .folder = "weather"
+      // .filter = "*.txt"
+      // .selectFileNumber = random/fileNumber[value]
+      // .showFileNames = FALSE
+    // }
   } 
   
   //
@@ -146,6 +140,7 @@ Simulation sim {
       }
       AphidImmigration immigration {
         .cropGrowthStage = cropGrowthStage[value]
+        .fromCropGrowthStage = 50
         .immigrationRate = 0.02
         .propExposedImmigrants = random/propExposedImmigrants[value]
         .k = random/k[value]
@@ -161,7 +156,7 @@ Simulation sim {
         .optimumCropGrowthStageTo   = 73
         .optimumCropFactor = 1.6
         .aphidDensity = ../density[total]
-        .aphidDensityThreshold = 40 
+        .aphidDensityThreshold = 12 // original=40 // CALIBRATED to A95
         .alateFactor = 0.67
         .exposureCost = random/immunityCost[value] 
       }
@@ -361,34 +356,9 @@ Simulation sim {
   }
    
   OutputR {
-    +cadaverPressure = withFungus/diagnostics/cadaverDays[value]
-    PageR {
-      .xAxis = random/*[value]
-      .width = 10
-      .height = 4
-      PlotR {
-        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
-        .ggplot = "geom_smooth(colour='yellow')"
-      }
+    .end = "validation-A95-end.R"
+    OutputText uncertainty {
+      .ports = (calendar[date] cropGrowthStage[value] system/*/density[total] cadavers[content] )
     }
-    PageR {
-      .xAxis = random/*[value]
-      .width = 10
-      .height = 4
-      PlotR {
-        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
-        .type = "SobolConvergence"
-        .fontSize = 11
-      }
-    }
-    PageR {
-      .xAxis = random/*[value]
-      .width = 5
-      .height = 7
-      PlotR {
-        .ports = (biocontrol[*]|end ../..[cadaverPressure]|end)
-        .type = "SobolIndices"
-      }
-    }
-  }
+ }  
 }

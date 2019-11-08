@@ -98,7 +98,8 @@
 
 <xsl:template name="extract-screen">
   <xsl:if test="Constants/Parameters[ParameterName='ScreenProduct']/Value!='No screen'">
-    <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/>
+    <!-- <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/> -->
+    <xsl:variable name="layer" select="Layer"/>
     
     <xsl:variable name="transmissivityLightName" select="'Transmission'"/>
     <xsl:variable name="transmissivityLightSrc" select="Constants/Parameters[ParameterName=$transmissivityLightName]/Value" as="node()"/>
@@ -109,7 +110,7 @@
     
     <box class="vg::Screen" name="MISSING">
       <xsl:attribute name="name">
-        <xsl:value-of select="$name"/>
+        <xsl:value-of select="concat('layer', $layer)"/>
       </xsl:attribute>
       <port name="orientation" externalName="No name" source="Fixed" value="cover"/>
       <port name="transmissivityLight">
@@ -147,8 +148,11 @@
       </port>
       <port name="state">
         <xsl:attribute name="ref">
-          <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/>
+          <xsl:value-of select="concat('actuators/screens/layer', $layer, '[value]')"/>
         </xsl:attribute>
+        <!-- <xsl:attribute name="ref"> -->
+          <!-- <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/> -->
+        <!-- </xsl:attribute> -->
       </port>
     </box>
   </xsl:if>
@@ -534,6 +538,31 @@
   </box>
 </xsl:template>
 
+<xsl:template name="actuator-layer">
+  <xsl:param name="layer"/>
+  <xsl:variable name="model-name" select="concat('screenActive', $layer)"/>
+  <xsl:variable name="model"
+                 select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$model-name]/Value"/>
+  <box class="Accumulator"> 
+    <xsl:attribute name="name">
+      <xsl:value-of select="concat('layer', $layer)"/> 
+    </xsl:attribute>
+    <port name="change" ref="./controller[controlVariable]"/>
+    <port name="minValue" value="0"/>
+    <port name="maxValue" ref="../maxValue[value]"/>
+    <box class="PidController" name="controller">
+      <port name="desiredValue" externalName="screenActive1">
+        <xsl:attribute name="ref">
+          <xsl:value-of select="concat('controllers/screens/', $model, '[value]')"/>
+        </xsl:attribute>
+      </port>
+      <port name="sensedValue" ref="..[value]"/>
+      <port name="Kprop" value="0.05"/>
+    </box>
+  </box>
+</xsl:template>
+
+  
 <!-- MAIN -->
 
 <xsl:template match="/"> <box class="Simulation" name="greenhouse">
@@ -1001,9 +1030,14 @@
         <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="screenEnergyThreshold">
+    <box class="PrioritySignal" name="screenEnergyThreshold1">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold'"/>
+        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold1'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenEnergyThreshold2">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold2'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="screenEnergyThresholdBand">
@@ -1011,9 +1045,14 @@
         <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="screenShadeThreshold">
+    <box class="PrioritySignal" name="screenShadeThreshold1">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold'"/>
+        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold1'"/>
+      </xsl:call-template>
+    </box>
+    <box class="PrioritySignal" name="screenShadeThreshold2">
+      <xsl:call-template name="extract-setpoints">
+        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold2'"/>
       </xsl:call-template>
     </box>
     <box class="PrioritySignal" name="screenShadeThresholdBand">
@@ -1021,19 +1060,19 @@
         <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="screenBlackoutFromTimeFloat">
+    <box class="PrioritySignal" name="screenFixed1">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenBlackoutFromTime'"/>
+        <xsl:with-param name="climateSetpointName" select="'screenFixed1'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="screenBlackoutToTimeFloat">
+    <box class="PrioritySignal" name="screenCrackAtHighRh">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenBlackoutToTime'"/>
+        <xsl:with-param name="climateSetpointName" select="'crackScreenHighHumidity'"/>
       </xsl:call-template>
     </box>
-    <box class="PrioritySignal" name="screenMaxAtHighRh">
+    <box class="PrioritySignal" name="screenCrackAtHighTemperature">
       <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenMaxAtHighRh'"/>
+        <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperature'"/>
       </xsl:call-template>
     </box>
   </box>
@@ -1069,6 +1108,12 @@
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'duskThreshold'"/>
     </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenCrackAtHighRh'"/>
+    </xsl:call-template>
+    <xsl:call-template name="setpoint-reference">
+      <xsl:with-param name="setpointName" select="'screenCrackAtHighTemperature'"/>
+    </xsl:call-template>
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
@@ -1084,27 +1129,27 @@
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMinBand'"/>
     </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenMaxAtHighRh'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenEnergyThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenEnergyThresholdBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenShadeThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenShadeThresholdBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenBlackoutFromTimeFloat'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenBlackoutToTimeFloat'"/>
-    </xsl:call-template>
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenMaxAtHighRh'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenEnergyThreshold'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenEnergyThresholdBand'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenShadeThreshold'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenShadeThresholdBand'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenBlackoutFromTimeFloat'"/> -->
+    <!-- </xsl:call-template> -->
+    <!-- <xsl:call-template name="setpoint-reference"> -->
+      <!-- <xsl:with-param name="setpointName" select="'screenBlackoutToTimeFloat'"/> -->
+    <!-- </xsl:call-template> -->
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'chalk'"/>
     </xsl:call-template>
@@ -1125,10 +1170,71 @@
         <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight3/thresholdHigh[value]"/>
       </box>
     </box>
+    <box name="screens">
+      <box class="ProportionalSignal" name="energy1">
+        <port name="maxSignal" value="1"/>
+        <port name="input" ref="outdoors[radiation]"/>
+        <port name="threshold" ref="allSetpoints/screenEnergyThreshold1[value]"/>
+        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
+      </box>
+      <box class="ProportionalSignal" name="energy2">
+        <port name="maxSignal" value="1"/>
+        <port name="input" ref="outdoors[radiation]"/>
+        <port name="threshold" ref="allSetpoints/screenEnergyThreshold2[value]"/>
+        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
+      </box>
+      <box class="ProportionalSignal" name="shade1">
+        <port name="maxSignal" value="1"/>
+        <port name="input" ref="outdoors[radiation]"/>
+        <port name="threshold" ref="allSetpoints/screenShadeThreshold1[value]"/>
+        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
+      </box>
+      <box class="ProportionalSignal" name="shade2">
+        <port name="maxSignal" value="1"/>
+        <port name="input" ref="outdoors[radiation]"/>
+        <port name="threshold" ref="allSetpoints/screenShadeThreshold2[value]"/>
+        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
+      </box>
+      <box name="fixed1">
+        <newPort name="value" ref="allSetpoints/screenFixed1[value]"/>
+      </box>
+    </box>
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
   <box class="vg::Actuators" name="actuators">
+    <box name="screens">
+      <box class="vg::Minimum" name="maxValue">
+        <port name="values" ref="./*[value]"/>
+        <box class="ProportionalSignal" name="maxAtHighRh">
+          <port name="input" ref="indoors/humidity[rh]"/>
+          <port name="threshold" ref="setpoints[rhMax]"/>
+          <port name="thresholdBand" ref="setpoints[rhMaxBand]"/>
+          <port name="initialSignal" value="1"/>
+          <port name="minSignal" ref="setpoints[maxScreenAtHighRh]"/>
+          <port name="maxSignal" value="1"/>
+          <port name="increasingSignal" value="FALSE"/>
+        </box>
+        <box class="ProportionalSignal" name="maxAtHighTemperature">
+          <port name="input" ref="indoors/temperature[value]"/>
+          <port name="threshold" ref="setpoints[ventilationTemperatureAtLowRh]"/>
+          <port name="thresholdBand" value="1"/>
+          <port name="initialSignal" value="1"/>
+          <port name="minSignal" ref="setpoints[maxScreenAtHighTemperature]"/>
+          <port name="maxSignal" value="1"/>
+          <port name="increasingSignal" value="FALSE"/>
+        </box>
+      </box>
+      <xsl:call-template name="actuator-layer">
+        <xsl:with-param name="layer" select="1"/>
+      </xsl:call-template>
+      <xsl:call-template name="actuator-layer">
+        <xsl:with-param name="layer" select="2"/>
+      </xsl:call-template>
+      <xsl:call-template name="actuator-layer">
+        <xsl:with-param name="layer" select="3"/>
+      </xsl:call-template>
+    </box>
     <box class="GrowthLights" name="growthLights">
       <xsl:for-each select="DVV_SETUP/Greenhouse/Lamps/Lamp">
         <xsl:call-template name="extract-growth-light"/>
@@ -1214,6 +1320,8 @@
       <newPort name="demandVentilationAtLowRh"  ref="setpoints[ventilationTemperatureAtLowRh]"/>
       <newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/>
       <newPort name="demandHeatingAtLowRh"  ref="setpoints[heatingTemperatureAtLowRh]"/>
+			<newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/>
+      <newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/>
       <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
       <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
       <newPort name="co2Injection" ref="controllers/co2[value]"/>
@@ -1223,9 +1331,6 @@
       <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
       <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
       <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
-      <newPort name="screenEnergySetpoint" ref="controllers/screens/energy[value]"/>
-      <newPort name="screenShadeSetpoint" ref="controllers/screens/shade[value]"/>
-      <newPort name="screenBlackoutSetpoint" ref="controllers/screens/blackout[value]"/>
       <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
       <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
       <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
@@ -1233,9 +1338,19 @@
       <newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/>
       <newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/>
       <newPort name="ventsOpening" ref="actuators/vents[value]"/>
-      <newPort name="screenEnergy" ref="actuators/screens/energy[value]"/>
-      <newPort name="screenShade" ref="actuators/screens/shade[value]"/>
-      <newPort name="screenBlackout" ref="actuators/screens/blackout[value]"/>
+      <newPort name="screenEnergyThreshold1" ref="controllers/screens/energy1[threshold]"/>
+      <newPort name="screenEnergyThreshold2" ref="controllers/screens/energy2[threshold]"/>
+      <newPort name="screenShadeThreshold1" ref="controllers/screens/shade1[threshold]"/>
+      <newPort name="screenShadeThreshold2" ref="controllers/screens/shade2[threshold]"/>
+      <newPort name="screenEnergy1" ref="controllers/screens/energy1[value]"/>
+      <newPort name="screenEnergy2" ref="controllers/screens/energy2[value]"/>
+      <newPort name="screenShade1" ref="controllers/screens/shade1[value]"/>
+      <newPort name="screenShade2" ref="controllers/screens/shade2[value]"/>
+      <newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/>
+      <newPort name="screenLayer1" ref="actuators/screens/layer1[value]"/>
+      <newPort name="screenLayer2" ref="actuators/screens/layer2[value]"/>
+      <newPort name="screenLayer3" ref="actuators/screens/layer3[value]"/>
+      <newPort name="screenMax" ref="actuators/screens/maxValue[value]"/>
       <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
       <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
       <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
@@ -1257,6 +1372,7 @@
     <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
     <box class="OutputText">
       <port name="skipFormats" value="TRUE"/>
+      <port name="useLocalDecimalChar" value="TRUE"/>
       <port name="skipInitialRows">
         <xsl:attribute name="value">
           <xsl:value-of select="1440 div number($TimeStep)"/>

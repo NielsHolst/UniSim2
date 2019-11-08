@@ -128,6 +128,14 @@
     <file>data/input/papers/2019-aphid-fungus/3-end.R</file>
     <file>data/input/papers/2019-aphid-fungus/4-aphid-fungus-sobol-indices.box</file>
     <file>data/input/papers/2019-aphid-fungus/4-end.R</file>
+    <file>data/input/papers/2019-aphid-fungus/validation/A94-95.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/validation/A94.Rdata</file>
+    <file>data/input/papers/2019-aphid-fungus/validation/A95.Rdata</file>
+    <file>data/input/papers/2019-aphid-fungus/validation/K94-95.txt</file>
+    <file>data/input/papers/2019-aphid-fungus/validation/K95.Rdata</file>
+    <file>data/input/papers/2019-aphid-fungus/validation A95 - Copy.box</file>
+    <file>data/input/papers/2019-aphid-fungus/validation-A95-end.R</file>
+    <file>data/input/papers/2019-aphid-fungus/validation-A95.box</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2004.txt</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2005.txt</file>
     <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2006.txt</file>

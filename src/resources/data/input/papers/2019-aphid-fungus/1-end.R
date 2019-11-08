@@ -3,6 +3,7 @@ if (exists("use_stored_simulation")) {
   load("fig2.Rdata")
 } else {
   sim = read_output(output_file_name)
+  theme1 = NULL
 }
 sim$iteration = factor(sim$iteration)
 
@@ -43,7 +44,11 @@ make_plot = function(tint_areas, tint_lines, line_size) {
     theme_classic() 
 }
 
-# Write TIFF files
+# Show on screen
+open_plot_window(7,4)
+print(make_plot(col_areas, col_lines, 1))
+
+# Write two graphics files
 if (exists("use_stored_simulation")) {
   # Black and white
   tiff("output/fig-2-bw.tiff", width=86, height=75, units="mm", res=1200, compression="zip")
@@ -58,6 +63,3 @@ if (exists("use_stored_simulation")) {
   print(make_plot(bw_areas, bw_lines, 0.5) + theme1)
 }
 
-# Coloured on screen
-open_plot_window(7,4)
-print(make_plot(col_areas, col_lines, 1))

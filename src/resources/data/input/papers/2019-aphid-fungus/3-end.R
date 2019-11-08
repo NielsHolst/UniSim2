@@ -1,14 +1,19 @@
+# Additional packages needed
+library(ggpubr)
+library(grid)
+
 # Use stored or fresh simulation output
 if (exists("use_stored_simulation")) {
   load("sim-2048.Rdata")
 } else {
   sim = read_output(output_file_name)
+  theme1 = NULL
 }
 
 # Prepare data
 sim$iteration = factor(sim$iteration)
-sim$yieldLossUncontrolled = 100*(1 - sim$yieldUncontrolled.end)
-sim$yieldLossControlled    = 100*(1 - sim$yieldControlled.end)
+sim$yieldLossUncontrolled  = 100*(1 - sim$yieldWithoutF.end)
+sim$yieldLossControlled    = 100*(1 - sim$yieldWithF.end)
 
 col_fill = c('#33a02c', '#b2df8a', '#a6cee3')
 bw_fill = c('darkgray', 'lightgrey', 'white')
@@ -56,7 +61,6 @@ density_plot = function(column_without, column_with, x_label, legend_position, t
     labs(x=x_label, y="") +
     theme1 +
     theme2 +
-    theme2 +
     theme(
       legend.position = legend_position,
       legend.direction = "horizontal",
@@ -68,8 +72,8 @@ density_plot = function(column_without, column_with, x_label, legend_position, t
 
 make_plot = function(tint_fill) {
   P = grid.arrange(
-    simple_density_plot("cadaverDays.end", "Fungus pressure (cadaver-days)", 5, 5, tint_fill),
-    density_plot("aphidDaysUncontrolled.end", "aphidDaysControlled.end", "Aphid pressure (aphid-days)", "none", -1, 11, tint_fill),
+    simple_density_plot("cadaverPressure.end", "Fungus pressure (cadaver-days)", 5, 5, tint_fill),
+    density_plot("aphidPressureWithoutF.end", "aphidPressureWithF.end", "Aphid pressure (aphid-days)", "none", -1, 11, tint_fill),
     density_plot("yieldLossUncontrolled", "yieldLossControlled", "Yield loss (%)", "bottom", -7, 7, tint_fill),
     ncol=1
   )
@@ -81,10 +85,12 @@ open_plot_window(3.2, 5.0)
 make_plot(col_fill)
 
 # Write two graphics files
-tiff("output/fig-4-bw.tiff", width=86, height=134, units="mm", res=1200, compression="zip")
-grid.draw(make_plot(bw_fill))
-dev.off()
+if (exists("use_stored_simulation")) {
+  tiff("output/fig-4-bw.tiff", width=86, height=134, units="mm", res=1200, compression="zip")
+  grid.draw(make_plot(bw_fill))
+  dev.off()
 
-tiff("output/fig-4-col.tiff", width=86, height=134, units="mm", res=1200, compression="zip")
-grid.draw(make_plot(col_fill))
-dev.off()
+  tiff("output/fig-4-col.tiff", width=86, height=134, units="mm", res=1200, compression="zip")
+  grid.draw(make_plot(col_fill))
+  dev.off()
+}

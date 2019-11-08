@@ -1313,14 +1313,6 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>screenShadeThresholdBand2</ParameterName>
-						<Value>50</Value>
-					</Parameters>
-				</Constants>
-			</Setpoint>
-			<Setpoint>
-				<Constants>
-					<Parameters>
 						<ParameterName>screenFixed1</ParameterName>
 						<Value>0</Value>
 					</Parameters>
