@@ -1,0 +1,64 @@
+Simulation sim {
+  .steps = 240
+  Calendar calendar {
+    .initialDateTime = 1/1/2009  
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Records weather {
+    .fileName = "book/weather/flakkebjerg 2009.txt"
+  }
+  SineWaveTemperature sineT {
+  }
+  OutputR out {
+    +ggplot = "geom_hline(yintercept=0, colour='blue') +
+               geom_point(size=2) + 
+               geom_line() + 
+               labs(x='January', y='Sine-interpolated temperature (oC)\n', title='You can interpolate hourly temperature from daily min-max') + 
+               scale_x_datetime(breaks = date_breaks('1 day'), labels = date_format('%d')) +
+               theme_minimal() + 
+               theme(legend.position = 'none',
+                     plot.title = element_text(size=18),
+                     axis.title = element_text(size=14),
+                     axis.text = element_text(size=12))"
+    // PageR {
+      // .xAxis = sim[step]
+      // .ncol = 1
+      // PlotR { 
+        // .layout = "merged"
+        // .ports = (weather[Tmin] weather[Tmax])
+        // .ggplot = out[ggplot]
+      // }
+      // PlotR { 
+        // .layout = "merged"
+        // .ports = (sineT/weather2[Tmin] sineT/weather2[Tmax])
+        // .ggplot = out[ggplot]
+      // }
+      // PlotR { 
+        // .layout = "merged"
+        // .ports = (sineT[ignore] sineT[shift])
+        // .ggplot = out[ggplot]
+      // }
+      // PlotR { 
+        // .layout = "merged"
+        // .ports = (sineT[TmaxYesterday] sineT[TminToday] sineT[TmaxToday] sineT[TminTomorrow])
+        // .ggplot = out[ggplot]
+      // }
+    // }
+    // PageR {
+      // .xAxis = sim[step]
+      // PlotR { 
+        // .ports = (sineT[phase] sineT[proportion] sineT[value])
+        // .ggplot = out[ggplot]
+      // }
+    // }
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR { 
+        .ports = (sineT[value])
+        .ggplot = out[ggplot]
+      }
+    }
+  }
+}
+

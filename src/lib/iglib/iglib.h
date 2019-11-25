@@ -1,4 +1,4 @@
-// Version 2.3.11
+// Version 2.3.17
 
 #ifndef IGLIB_H
 #define IGLIB_H
@@ -71,7 +71,7 @@ struct Construction {
         floor;
 };
 
-enum HeatPipeMaterial {Iron, Plastic, Aluminium};
+enum HeatPipeMaterial {Iron, Plastic, Copper, Aluminium};
 
 struct HeatPipe {
     HeatPipeMaterial material;

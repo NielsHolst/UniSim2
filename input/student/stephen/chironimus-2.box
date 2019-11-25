@@ -1,0 +1,80 @@
+Simulation sim {
+  .steps =  365 
+  Calendar calendar {
+    .initialDateTime = 1/1/2001
+  }
+  Records weather {
+    .fileName =  "Jels Lake.txt"
+  } 
+  Briere time {
+    .a = 7.09e-5
+    .T0 = 11.1
+    .Tmax = 28.8
+    .T = weather[Twater]
+  }
+  Box Chironimus {
+    Stage larva {
+      .initial = 100
+      .timeStep = time[step]
+      .duration = 1
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .timeStep = time[step]
+      .duration = 0.044  // = 1/22.5
+    }
+    Stage adult {
+      .inflow = ../pupa[outflow]
+      .timeStep = 1
+      .duration = 40
+    }
+    Box fecundity {
+      +eggsLaid = ./reproduction[outflow]
+      Stage reproduction {
+        .inflow = ../../adult[inflow]
+        .timeStep = ../../adult[timeStep]
+        .duration = ../../adult[duration]
+        .growthFactor = 30 // life time fecundity per female times sex ratio 
+      }
+    }
+    Stage egg {
+      .inflow = ../fecundity[eggsLaid]
+      .timeStep = time[step]
+      .duration = 0.167  // = 3.76/22.5
+    }
+    Stage larva2 {
+      .inflow = ../egg[outflow]
+      .timeStep = 0
+      .duration = 1
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .nrow = 1
+      PlotR {
+        .layout = "merged"
+        .ports = (weather[Tair] weather[Twater])
+      }
+      PlotR {
+        .ports = (time[step])
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = (adult[content] egg[content] larva[content] pupa[content])
+      }
+    }
+    PageR {
+      .xAxis = calendar[date]
+      +ggplot = "geom_line() +
+                 labs(title='Chironimus', x='Month', y='Density') +
+                 scale_x_datetime(breaks = date_breaks('1 month'), labels = date_format('%m')) +
+                 scale_y_continuous(trans='log10', limits=c(1,NA), breaks=10^(0:5))"
+      PlotR {
+        .layout = "merged"
+        .ports = (larva[content] pupa[content] adult[content] egg[content] larva2[content] pupa2[content])
+        .ggplot = ..[ggplot]
+      }
+    }
+  }
+}

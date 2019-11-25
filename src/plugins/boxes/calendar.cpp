@@ -5,21 +5,21 @@
 /* Day length and solar elevation equations copied from the FORTRAN code of Kroppf &
 ** Laar (1993). Modelling Crop-Weed Interactions. CAB International.
 */
-#include <boost/math/constants/constants.hpp>
-#include <QTextStream>
 #include <cfloat>
 #include <cmath>
+#include <QTextStream>
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include <base/test_num.h>
 #include "calendar.h"
 
 using namespace std;
 using namespace base;
+using namespace phys_math;
 
 namespace boxes {
 
-constexpr double PI = boost::math::constants::pi<double>();
-constexpr double RAD = PI/180;
+constexpr double RAD = PI/180.;
 constexpr double DEGREES = 1./RAD;
 
 PUBLISH(Calendar)
@@ -28,36 +28,36 @@ Calendar::Calendar(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("keeps check on date, time and other sun-earth relations");
-    Input(latitude).equals(52).help("Latitude (degrees)");
-    Input(longitude).equals(11).help("Longitiude (degrees)");
-    Input(timeZone).equals(1).help("Time zone (h)");
-    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts");
-    Input(timeStep).equals(1).help("Time step in units of timeUnit");
-    Input(timeUnit).equals('d').help("Unit of time step (y,d,h,m,s)");
-    Input(sample).equals(1).help("The frequency at which output is sampled");
-    Output(date).help("Current date");
-    Output(time).help("Current time of the day");
-    Output(trueSolarTime).help("Current true solar time of the day");
-    Output(dateTime).help("Current date and time");
-    Output(timeStepSecs).help("Time step duration (s)");
-    Output(timeStepDays).help("Time step duration (d)");
-    Output(totalTimeSteps).help("Total number of time steps since calendar was reset");
-    Output(totalTime).help("Total time since calendar was reset; in units of timeUnit");
-    Output(totalDays).help("Total time since calendar was reset (d)");;
-    Output(dayOfYear).help("Julian day");
-    Output(dayLength).help("Astronomic day length");
-    Output(sinb).help("Sine of solar height over the horizon");
-    Output(azimuth).help("The compass direction of the sun relative to north [-180;180]");
-    Output(sunrise).help("Time of sunrise");
-    Output(sunset).help("Time of sunset");
-    Output(solarConstant).help("The irradiation at the top of the atmosphere (W/m^2)");
-    Output(angot).help("The irradiation on Earth surface under optimal atmospheric conditions (W/m^2)");
-    Output(isDay).help("Tells of its between sunrise and sunset");
-    Output(isNight).help("Tells of its between sunset and sunrise");
+    Input(latitude).equals(52).help("Latitude").unit("[-90,90]");
+    Input(longitude).equals(11).help("Longitiude").unit("[-180,180]");
+    Input(timeZone).equals(1).help("Time zone").unit("h");
+    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts").unit("d/m/y h:m:s");
+    Input(timeStep).equals(1).help("Time step in units of timeUnit").unit("int>0");
+    Input(timeUnit).equals('d').help("Unit of time step").unit("y|d|h|m|s");
+    Input(sample).equals(1).help("The frequency at which output is sampled").unit("int>0");
+    Output(date).help("Current date").unit("d/m/y");
+    Output(time).help("Current time of the day").unit("h:m:s");
+    Output(trueSolarTime).help("Current true solar time of the day").unit("h:m:s");
+    Output(dateTime).help("Current date and time").unit("d/m/y h:m:s");
+    Output(timeStepSecs).help("Time step duration").unit("s");
+    Output(timeStepDays).help("Time step duration").unit("d");
+    Output(totalTimeSteps).help("Total number of time steps since calendar was reset").unit("int");
+    Output(totalTime).help("Total time since calendar was reset; in units of timeUnit").unit("int");
+    Output(totalDays).help("Total time since calendar was reset").unit("d");
+    Output(dayOfYear).help("Julian day").unit("[1;366]");
+    Output(dayLength).help("Astronomic day length").unit("h");;
+    Output(sinb).help("Sine of solar height over the horizon").unit("[-1;1]");
+    Output(azimuth).help("The compass direction of the sun relative to north").unit("[-180;180]");
+    Output(sunrise).help("Time of sunrise").unit("h:m:s");
+    Output(sunset).help("Time of sunset").unit("h:m:s");
+    Output(solarConstant).help("The irradiation at the top of the atmosphere").unit("W/m2");
+    Output(angot).help("The irradiation on Earth surface under optimal atmospheric conditions").unit("W/m2");
+    Output(isDay).help("Tells of it's between sunrise and sunset").unit("bool");
+    Output(isNight).help("Tells of it's between sunset and sunrise").unit("bool");
 }
 
 void Calendar::initialize() {
-    // Some classes may need the outputs already in their initialize phase
+    // Some classes may need the outputs already in their initialize step
     reset();
 }
 

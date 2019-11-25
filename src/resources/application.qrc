@@ -3,7 +3,6 @@
   <qresource>
     <file>boxes_head.cson</file>
     <file>notepad_grammar_template.xml</file>
-    <file>svg_template3.html</file>
     <file>version.txt</file>
     <file>data/input/book/butterflies-common-k.box</file>
     <file>data/input/book/butterflies.box</file>

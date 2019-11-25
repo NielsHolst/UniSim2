@@ -9,6 +9,8 @@
 #include <base/publish.h>
 #include "simulation_period.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 
 namespace vg {
@@ -39,6 +41,7 @@ void SimulationPeriod::reset() {
         ThrowException("Wrong time interval: beginDate must be before endDate").
                 value(beginDate).value2(endDate).context(this);
     }
+    dialog().information("SimulationPeriod::reset " + QString::number(timeStep));
 }
 
 QDate SimulationPeriod::alignYear(QDate date) {

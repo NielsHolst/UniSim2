@@ -42,13 +42,14 @@ void Sequence::amend() {
         ThrowException("'by' must be either 'reset' or 'update'").value(by);
 }
 
-void Sequence::reset() {
+void Sequence::reset () {
     _useValues = !values.isEmpty();
     updateValue();
 }
 
 void Sequence::update() {
-    updateValue();
+    if (by == "update")
+        updateValue();
 }
 
 void Sequence::updateValue() {

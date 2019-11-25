@@ -80,6 +80,7 @@ HEADERS +=  \
     pipe.h \
     running_average.h \
     screen.h \
+    screen_combination.h \
     screens.h \
     sensor.h \
     setpoints.h \
@@ -177,6 +178,7 @@ SOURCES += \
     pipe.cpp \
     running_average.cpp \
     screen.cpp \
+    screen_combination.cpp \
     screens.cpp \
     sensor.cpp \
     setpoints.cpp \

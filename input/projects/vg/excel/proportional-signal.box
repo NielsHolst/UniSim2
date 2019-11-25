@@ -1,0 +1,40 @@
+Simulation sim {
+  .steps = 100
+  Sequence x {
+    .min = 0
+    .max = 100
+  }
+  ProportionalSignal signal1 {
+    .input = x[value]
+    .threshold = 30
+    .thresholdBand = 10
+    .increasingSignal = TRUE
+  }
+  ProportionalSignal signal2 {
+    .input = x[value]
+    .threshold = 30
+    .thresholdBand = 10
+    .increasingSignal = FALSE
+  }
+  ProportionalSignal signal3 {
+    .input = x[value]
+    .threshold = 30
+    .thresholdBand = -10
+    .increasingSignal = TRUE
+  }
+  ProportionalSignal signal4 {
+    .input = x[value]
+    .threshold = 30
+    .thresholdBand = -10
+    .increasingSignal = FALSE
+  }
+  OutputR {
+    PageR {
+      .xAxis = x[value]
+      PlotR {
+        .ports = (*[signal]) 
+        .ggplot = "geom_line() + theme_minimal() + scale_x_continuous(breaks=10*(0:10))"
+      }
+    }
+  }
+}

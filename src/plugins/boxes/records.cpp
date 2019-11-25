@@ -31,7 +31,6 @@ Records::Records(QString name, QObject *parent)
     Input(calendarDateTime).imports("calendar[dateTime]");
     Input(overrideCalendarYear).equals(false).help("Let first date in records determine initial calendar year?");
     Input(overrideCalendarDateTime).equals(false).help("Let first date-time in records determine initial calendar date-time?");
-
     Output(currentDateTime).help("Date-time stamp of the current outputs");
     Output(nextDateTime).help("Date-time stamp of the next outputs");
     Output(firstDateTime).help("Date-time stamp of the first line in the file");
@@ -105,13 +104,18 @@ void Records::readLineItems() {
 
 void Records::createColumnOutputs() {
     int n = _columnNames.size();
-    values.fill(0., n);
+    _values.fill(0., n);
     _currentColumnValues->fill(0., n);
     _nextColumnValues->fill(0., n);
+    // A clone just set the pointer for each port, the ports already exist!
     for (int i = 0; i < n; ++i) {
         QString name = _columnNames[i];
-        if (i != _dateColumn && i != _timeColumn)
-            NamedOutput(name, values[i]);
+        if (i != _dateColumn && i != _timeColumn) {
+            if (cloned())
+                port(name)->data(&(_values[i]));
+            else
+                NamedOutput(name, _values[i]);
+        }
     }
 }
 
@@ -209,12 +213,12 @@ void Records::update() {
         advanceLine();
     }
 
-    for (int i = 0; i < values.size(); ++i) {
+    for (int i = 0; i < _values.size(); ++i) {
         if (i == _dateColumn || i == _timeColumn) continue;
         double dx = currentT.secsTo(nextT);
         double dy = _nextColumnValues->at(i) - _currentColumnValues->at(i);
         double x = currentT.secsTo(calendarDateTime);
-        values[i] = ((dx > 0) ? x*dy/dx : 0.) + _currentColumnValues->at(i);
+        _values[i] = ((dx > 0) ? x*dy/dx : 0.) + _currentColumnValues->at(i);
     }
 }
 

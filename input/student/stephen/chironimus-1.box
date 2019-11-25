@@ -1,0 +1,78 @@
+Simulation sim {
+  .iterations = 4 
+  .steps =  365 
+  Sequence year {
+    .by = "reset"
+    .min = 2005
+    .max = 2008
+  }
+  Calendar calendar {
+    .initialDateTime = ./date[value]
+    Date date {
+      .day = 1
+      .month = 1
+      .year = year[value]
+    }
+  }
+  Records weather {
+    .fileName =  "station3939.txt"
+  }
+  Briere time {
+    .a = 7.09e-5
+    .T0 = 11.1
+    .Tmax = 28.8
+    .T = weather[Twater]
+  }
+  Box Chironimus {
+    Stage adult {
+      .inflow = ../pupa[outflow]
+      .timeStep = 1
+      .duration = 40
+    }
+    Box fecundity {
+      +eggsLaid = ./reproduction[outflow]
+      Stage reproduction {
+        .inflow = ../../adult[inflow]
+        .timeStep = ../../adult[timeStep]
+        .duration = ../../adult[duration]
+        .growthFactor = 30 // life time fecundity per female times sex ratio 
+      }
+    }
+    Stage egg {
+      .inflow = ../fecundity[eggsLaid]
+      .timeStep = time[step]
+      .duration = 0.167  // = 3.76/22.5
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .initial = 100
+      .timeStep = time[step]
+      .duration = 1
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .timeStep = time[step]
+      .duration = 0.044  // = 1/22.5
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[dayOfYear]
+      .nrow = 1
+      PlotR {
+        .layout = "merged"
+        .ports = (weather[Tair] weather[Twater])
+      }
+      PlotR {
+        .ports = (time[step])
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = (adult[content] egg[content] larva[content] pupa[content])
+      }
+    }
+    OutputText {
+      .ports = (year[value])
+    }
+  }
+}

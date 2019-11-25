@@ -425,5 +425,15 @@ double fitSlopePPP(double y0, double y1, double y2) {
     return a*4 + b;
 }
 
+double sineWaveDown(double proportion, double y0, double y1) {
+    double xr = (proportion - 0.5)*PI;
+    return y0 + (y1-y0)*(sin(xr)+1.)/2.;
+}
+
+double sineWaveUp(double proportion, double y0, double y1) {
+    return y0 + y1 - sineWaveDown(proportion, y1, y0);
+}
+
+
 } //namespace
 

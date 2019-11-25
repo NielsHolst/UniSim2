@@ -38,7 +38,7 @@ private:
     QDateTime currentDateTime, nextDateTime, firstDateTime, lastDateTime;
     QDate currentDate, nextDate;
     QTime currentTime, nextTime;
-    QVector<double> values;
+    QVector<double> _values;
 
     // methods
     QString fileNamePath();

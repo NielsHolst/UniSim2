@@ -1,0 +1,33 @@
+Simulation sim {
+  .steps = 240 // 10 days
+  Calendar calendar {
+    .initialDateTime = 1/1/2009  
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Records weather {
+    .fileName = "book/weather/flakkebjerg 2009.txt"
+  }
+  SineWaveTemperature sineT {
+  }
+  OutputR out {
+    +ggplot = "geom_hline(yintercept=0, colour='blue') +
+               geom_point(size=2) + 
+               geom_line() + 
+               labs(x='January', y='Sine-interpolated temperature (oC)\n', title='You can interpolate hourly temperature from daily min-max') + 
+               scale_x_datetime(breaks = date_breaks('1 day'), labels = date_format('%d')) +
+               theme_minimal() + 
+               theme(legend.position = 'none',
+                     plot.title = element_text(size=18),
+                     axis.title = element_text(size=14),
+                     axis.text = element_text(size=12))"
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR { 
+        .ports = (sineT[value])
+        .ggplot = out[ggplot]
+      }
+    }
+  }
+}
+

@@ -178,6 +178,7 @@ void buildPipe(Box *parent, const HeatPipe *pipe) {
     switch (pipe->material) {
         case Iron:      material = "carbon steel"; break;
         case Plastic:   material = "polyethylene"; break;
+        case Copper:    material = "copper"; break;
         case Aluminium: material = "aluminium";
     }
 

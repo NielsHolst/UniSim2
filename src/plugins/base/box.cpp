@@ -22,7 +22,7 @@ bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, QObject *parent)
-    : QObject(parent), _name(name), _order(0), _amended(false)
+    : QObject(parent), _name(name), _order(0), _amended(false), _cloned(false), _ignore(false)
 {
     Class(Box);
     help("has yet undocumented functionality");
@@ -85,6 +85,14 @@ void Box::sideEffects(QString s) {
 
 QString Box::sideEffects() const {
     return _sideEffects;
+}
+
+void Box::ignore(bool doIgnore) {
+    _ignore = doIgnore;
+}
+
+bool Box::ignore() const {
+    return _ignore;
 }
 
 Box* Box::currentRoot() {
@@ -152,7 +160,7 @@ void Box::amendFamily() {
         }
         if (_traceOn)
             dialog().information("amend " + fullName());
-        amend();
+        if (!_ignore) amend();
         _count = 0;
         enumerateBoxes(_count);
         _amended = true;
@@ -202,7 +210,7 @@ void Box::initializeFamily() {
     updateImports();
     if (_traceOn)
         dialog().information("initialize " + fullName());
-    initialize();
+    if (!_ignore) initialize();
     updateSelfImports();
     _timer->stop("initialize");
 }
@@ -218,7 +226,7 @@ void Box::resetFamily() {
     updateImports();
     if (_traceOn)
         dialog().information("reset " + fullName());
-    reset();
+    if (!_ignore) reset();
     verifyPorts();
     updateSelfImports();
     _timer->stop("reset");
@@ -238,7 +246,7 @@ void Box::updateFamily() {
     _timer->start("update-update");
     if (_traceOn)
         dialog().information("update " + fullName());
-    update();
+    if (!_ignore) update();
     verifyPorts();
     updateSelfImports();
     _timer->stop("update-update");
@@ -257,7 +265,7 @@ void Box::cleanupFamily() {
     updateImports();
     if (_traceOn)
         dialog().information("cleanup " + fullName());
-    cleanup();
+    if (!_ignore) cleanup();
     verifyPorts();
     updateSelfImports();
     _timer->stop("cleanup");
@@ -273,7 +281,7 @@ void Box::debriefFamily() {
     updateImports();
     if (_traceOn)
         dialog().information("debrief " + fullName());
-    debrief();
+    if (!_ignore) debrief();
     verifyPorts();
     updateSelfImports();
     _timer->stop("debrief");
@@ -311,12 +319,18 @@ void Box::resetPorts() {
 
 Box* Box::clone(QString name, QObject *parent) {
     Box *myClone = MegaFactory::create<Box>(className(), name, parent);
+    myClone->_cloned = true;
     for (Port *port : findMany<Port>(".[*]")) {
         QString name = port->objectName();
-        // For a blind port, create it in the clone
+        // For a blind port, or a port which the clone hasn't got (because it was created in the original's amend):
+        // create it in the clone
         if (port->isBlind()) {
             Port *blind = new Port(name, myClone);
             blind->access(PortAccess::Input).isBlind(true);
+        }
+        else if (!myClone->peakPort(name)) {
+            Port *newPort = new Port(name, myClone);
+            newPort->access(port->access());
         }
         // Copy either import path or value to clone
         if (port->hasImport()) {
@@ -336,6 +350,10 @@ Box* Box::cloneFamily(QString name, QObject *parent) {
     for (Box *child : findMany<Box>("./*"))
         child->cloneFamily(child->objectName(), myClone);
     return myClone;
+}
+
+bool Box::cloned() const {
+    return _cloned;
 }
 
 void Box::debug(bool on) {

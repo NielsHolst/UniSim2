@@ -17,10 +17,13 @@ public:
     void update();
 private:
     // Inputs
-    double aphidPressureWithoutF, aphidPressureWithF,
+    double
+        cadaverDensity, cropGrowthStage,
+        aphidPressureWithoutF, aphidPressureWithF,
         yieldWithoutF, yieldWithF;
     // Outputs
-    double aphidPressureDifference, yieldDifference;
+    double aphidPressureDifference, yieldDifference,
+        maxCadaverDensity, maxCadaverDensityCropGS;
 };
 
 }

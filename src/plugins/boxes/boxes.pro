@@ -28,6 +28,7 @@ HEADERS +=  \
     layout_r.h \
     maker.h \
     numbered_file.h \
+    offset_date_time.h \
     on_off.h \
     output_buffer.h \
     output_ports.h \
@@ -56,6 +57,7 @@ HEADERS +=  \
     select_file.h \
     sequence.h \
     simulation.h \
+    sine_wave_temperature.h \
     sliding_signal.h \
     stage_base.h \
     stage.h \
@@ -84,6 +86,7 @@ SOURCES +=  \
     layout_r.cpp \
     maker.cpp \
     numbered_file.cpp \
+    offset_date_time.cpp \
     on_off.cpp \
     output_buffer.cpp \
     output_ports.cpp \
@@ -111,6 +114,7 @@ SOURCES +=  \
     select_file.cpp \
     sequence.cpp \
     simulation.cpp \
+    sine_wave_temperature.cpp \
     sliding_signal.cpp \
     stage_base.cpp \
     stage.cpp \

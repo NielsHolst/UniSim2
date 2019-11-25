@@ -45,6 +45,9 @@ public:
     void sideEffects(QString s);
     QString sideEffects() const;
 
+    void ignore(bool doIgnore);
+    bool ignore() const;
+
     static Box* currentRoot();
     static void saveCurrentRoot();
     static void restoreCurrentRoot();
@@ -84,6 +87,7 @@ public:
 
     Box* clone(QString name, QObject *parent);
     Box* cloneFamily(QString name, QObject *parent);
+    bool cloned() const;
 
     static void debug(bool on);
 
@@ -94,7 +98,7 @@ private:
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;
-    bool _amended;
+    bool _amended, _cloned, _ignore;
     Timer *_timer;
     static Box *_currentRoot, *_savedCurrentRoot;
     static int _count;

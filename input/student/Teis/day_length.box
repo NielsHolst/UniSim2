@@ -1,0 +1,12 @@
+Simulation sim {
+  .steps = 365 
+  Calendar calendar {
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (calendar[dayLength])
+      }
+    }
+  }
+}

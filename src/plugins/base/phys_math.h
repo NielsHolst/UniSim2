@@ -4,9 +4,10 @@
 */
 #ifndef VG_GENERAL_H
 #define VG_GENERAL_H
-#include <stdlib.h>
 #include <limits>
 #include <math.h>
+#include <stdlib.h>
+#include <boost/math/constants/constants.hpp>
 #include <QPair>
 
 /*! \file general.h
@@ -15,8 +16,8 @@
 
 namespace phys_math {
 
-const double
-    PI = 3.14159,               //!< Mathematical PI
+constexpr double
+    PI = boost::math::constants::pi<double>(), //!< Mathematical PI
     T0 = 273.15,                //!< Absolute zero offset (oC)
     g = 9.81,                   //!< Gravity (m/s2)
     Sigma = 5.6704e-8,          //!< Stefan-Boltzmann constant (W/m2/K4)
@@ -115,6 +116,10 @@ Parabola fitParabola(double y0, double y1, double y2);
 double fitPointPPS(double y0, double y1, double y2_slope);
 
 double fitSlopePPP(double y0, double y1, double y2);
+
+double sineWaveUp(double proportion, double y0, double y1);
+
+double sineWaveDown(double proportion, double y0, double y1);
 
 } //namespace
 

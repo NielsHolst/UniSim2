@@ -550,12 +550,23 @@
     <port name="change" ref="./controller[controlVariable]"/>
     <port name="minValue" value="0"/>
     <port name="maxValue" ref="../maxValue[value]"/>
-    <box class="PidController" name="controller">
-      <port name="desiredValue" externalName="screenActive1">
-        <xsl:attribute name="ref">
-          <xsl:value-of select="concat('controllers/screens/', $model, '[value]')"/>
+    <box class="ScreenCombination" name="desiredValue">
+      <port name="formula">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$model-name"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$model"/>
         </xsl:attribute>
       </port>
+    </box>
+    <box class="PidController" name="controller">
+      <!-- <port name="desiredValue" externalName="screenActive1"> -->
+        <!-- <xsl:attribute name="ref"> -->
+          <!-- <xsl:value-of select="concat('controllers/screens/', $model, '[value]')"/> -->
+        <!-- </xsl:attribute> -->
+      <!-- </port> -->
+      <port name="desiredValue" ref="../desiredValue[value]"/>
       <port name="sensedValue" ref="..[value]"/>
       <port name="Kprop" value="0.05"/>
     </box>
@@ -1129,27 +1140,6 @@
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMinBand'"/>
     </xsl:call-template>
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenMaxAtHighRh'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenEnergyThreshold'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenEnergyThresholdBand'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenShadeThreshold'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenShadeThresholdBand'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenBlackoutFromTimeFloat'"/> -->
-    <!-- </xsl:call-template> -->
-    <!-- <xsl:call-template name="setpoint-reference"> -->
-      <!-- <xsl:with-param name="setpointName" select="'screenBlackoutToTimeFloat'"/> -->
-    <!-- </xsl:call-template> -->
     <xsl:call-template name="setpoint-reference">
       <xsl:with-param name="setpointName" select="'chalk'"/>
     </xsl:call-template>
@@ -1172,12 +1162,14 @@
     </box>
     <box name="screens">
       <box class="ProportionalSignal" name="energy1">
+        <port name="increasingSignal" value="FALSE"/>
         <port name="maxSignal" value="1"/>
         <port name="input" ref="outdoors[radiation]"/>
         <port name="threshold" ref="allSetpoints/screenEnergyThreshold1[value]"/>
         <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
       </box>
       <box class="ProportionalSignal" name="energy2">
+        <port name="increasingSignal" value="FALSE"/>
         <port name="maxSignal" value="1"/>
         <port name="input" ref="outdoors[radiation]"/>
         <port name="threshold" ref="allSetpoints/screenEnergyThreshold2[value]"/>
@@ -1322,6 +1314,9 @@
       <newPort name="demandHeatingAtLowRh"  ref="setpoints[heatingTemperatureAtLowRh]"/>
 			<newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/>
       <newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/>
+      <newPort name="demandScreenLayer1" ref="actuators/screens/layer1[value]"/>
+      <newPort name="demandScreenLayer2" ref="actuators/screens/layer2[value]"/>
+      <newPort name="demandScreenLayer3" ref="actuators/screens/layer3[value]"/>
       <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
       <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
       <newPort name="co2Injection" ref="controllers/co2[value]"/>
@@ -1347,9 +1342,6 @@
       <newPort name="screenShade1" ref="controllers/screens/shade1[value]"/>
       <newPort name="screenShade2" ref="controllers/screens/shade2[value]"/>
       <newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/>
-      <newPort name="screenLayer1" ref="actuators/screens/layer1[value]"/>
-      <newPort name="screenLayer2" ref="actuators/screens/layer2[value]"/>
-      <newPort name="screenLayer3" ref="actuators/screens/layer3[value]"/>
       <newPort name="screenMax" ref="actuators/screens/maxValue[value]"/>
       <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
       <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
