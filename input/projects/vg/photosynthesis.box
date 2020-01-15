@@ -1,0 +1,25 @@
+Simulation sim {
+  .steps = 1
+  LeafLightResponse response {
+    .rsCO2 = 150
+    .rbCO2 = 200
+    .Tleaf = 25
+    .co2Air = 900
+    .VCmax = 150
+    .Jmax = 2.5
+    .gamma = 50
+    .KM = 100
+    .theta = 0.7
+    .frParAbs = 0.3
+    Box processes {
+    // Anvendes ikke. Kan tilføjes, hvis nogle af følgende skal beregnes:
+    // VCmax, Jmax, gamma, KM
+    }
+  }
+  OutputR {
+    .end = "photosynthesis-end.R"
+    OutputText {
+      .ports = (response[LUE] response[Pnmax] response[Pgmax] response[Rd] response[rtCO2]) 
+    }
+  }
+}

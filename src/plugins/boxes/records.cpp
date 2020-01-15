@@ -137,6 +137,7 @@ void Records::initialize() {
     _file.close();
     cycle = saveCycle;
     doOverrideCalendarYear();
+    doOverrideCalendarDateTime();
 }
 
 void Records::reset() {

@@ -21,7 +21,7 @@ public:
 
 private:
     // Inputs
-    double temperature, rh, sinb;
+    double sinb;
     // Outputs
     int eq;
     double fraction, value;

@@ -1,4 +1,6 @@
-// Version 2.3.17
+// Version 2.3.18
+// To use with iglib.dll, remember to define IGLIB_DLL as follows:
+// #define IGLIB_DLL dllimport
 
 #ifndef IGLIB_H
 #define IGLIB_H
@@ -108,7 +110,6 @@ struct GrowthLight {
     GrowthLightType type;
     double
         powerUsage, // W/m2(power used)
-        lightintensity,          // W/m2  (resulting light intensity)
         parEfficiency, // micromole PAR per Joule
         ageCorrectedEfficiency; //0..1; default = 1 means there is no reduction due to lamp age
 };
@@ -195,6 +196,7 @@ struct Response {
         indoorsCo2 = 0,         // ppm
         indoorsRh = 0,          // 0-100 %
         indoorsTemperature = 0, // Celcius
+        indoorsPar = 0,         // PAR at plant height (micromole/m2/s)
         growthLight = 0,        // Current expenditure (W/m2)
         heating = 0,            // Current expenditure (W/m2)
         photosynthesis = 0,     // Current rate (g/h/m2)

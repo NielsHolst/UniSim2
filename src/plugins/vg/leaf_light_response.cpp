@@ -5,19 +5,18 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
+#include <base/box_builder.h>
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "general.h"
 #include "leaf_light_response.h"
 
-using namespace std;
+using namespace phys_math;
 using namespace base;
 
 namespace vg {
 	
 PUBLISH(LeafLightResponse)
-
-const double O2i = 210;     // [G94, p.80] O2 partial pressure inside stomata [ppm], [mbar], [ml/l]
 
 LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     : Box(name, parent)
@@ -27,15 +26,25 @@ LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     Input(rbCO2).imports("../../rb[rbCo2]").unit("s/m");
     Input(Tleaf).imports("../../temperature[value]").unit("oC");
     Input(co2Air).imports("indoors/co2[value]").unit("ppm");
-    Input(rhoChl).equals(0.45).help("Chlorophyll density").unit("unit?");
+    Input(VCmax).imports("./processes[VCmax]");
+    Input(Jmax).imports("./processes[Jmax]");
+    Input(gamma).imports("./processes[gamma]");
+    Input(KM).imports("./processes[KM]");
     Input(theta).equals(0.7).help("Shape parameter for the light response curve").unit("-");
     Input(frParAbs).equals(0.3).help("Fraction of PAR absorbed [0;1]").unit("[0;1]");
-    Input(concEnzyme).equals(87).help("Enzyme concentration").unit("unit?");
     Output(LUE).help("Light use efficiency").unit("mg CO2/J");
     Output(Pnmax).help("Net assimilation rate").unit("mg CO2/leaf m2/s");
     Output(Pgmax).help("Gross assimilation rate").unit("mg CO2/leaf m2/s");
     Output(Rd).help("Dark respiration rate").unit("mg CO2/leaf m2/s");
     Output(rtCO2).help("Total CO2 resistance against").unit("s/m");
+}
+
+void LeafLightResponse::amend() {
+    BoxBuilder builder(this);
+    if (!findMaybeOne<Box>("./processes"))
+        builder.
+        box("LeafLightResponseProcesses").name("processes").
+        endbox();
 }
 
 void LeafLightResponse::reset() {
@@ -46,17 +55,6 @@ void LeafLightResponse::reset() {
 }
 
 void LeafLightResponse::update() {
-    T25 = 25. + T0;
-    TleafK = Tleaf + T0;
-    x25 = (Tleaf-25.)/(TleafK*R*T25); // [F80, p.83] intermediate variable [mol/J]
-    rhoCo2T = RhoCo2*T0/TleafK;      // [gaslaw] density CO2 at Tleaf [kg/m3], [mg/ml]
-    mm.update(x25);
-
-    VCmax = maxCarboxylationRate();
-    Jmax = maxPhotosyntheticCapacity();
-    KM = RubiscoCarboxylation();
-    gamma = co2CompensationConcentration();
-
     // If CO2a_ppm < gamma: no photosynthesis
     if (co2Air < gamma) {
         LUE = Pnmax = 0.;
@@ -72,15 +70,6 @@ void LeafLightResponse::update() {
         ThrowException("Infinite light response variables").value(Rd).value2(Pgmax).context(this);
 }
 
-void LeafLightResponse::MichaelisMenten::update(double x25) {
-    const double KC25 = 310,    // [G94, p.80] M-M constantRubisco carboxylation (CO2) [ubar]
-                 KO25 = 155,    // [G94, p.80] M-M constant
-                 EC = 59356,    // KC Rubisco carboxylation
-                 EO = 35948;    // KO Rubisco oxygenation
-    KC = KC25*exp(EC*x25);           // [F80, p.83] M-M constant Rubisco carboxylation (CO2) [ubar]
-    KO = KO25*exp(EO*x25);           // [F80, p.83] M-M constant Rubisco oxygenation (O2) [mbar]
-}
-
 double LeafLightResponse::potentialLightUseEfficiency() {
     const double conversion = 4.59;     // [??] conversion factor [umol photons/J]
     double alpha = (1-frParAbs)/2;      // electron yield of absorbed photons at lowlight intensity:
@@ -88,39 +77,6 @@ double LeafLightResponse::potentialLightUseEfficiency() {
     double alpha2 = (MCo2/4)*alpha;     // [mg CO2/umol photons]
     return alpha2*conversion;           // [??] potential light use efficiency in
                                         // absence of oxygen [mg CO2/J]
-}
-
-double LeafLightResponse::maxCarboxylationRate() {
-    const double EVC = 58520,               // maximum carboxylation rate
-                 tc = 2.5;                  // [F80, p.89] (kc) turnover number of RuP2 carboxylase [1/s]
-    double VCmax25 = rhoChl*tc*concEnzyme;  // [F80, p.84] maximum carboxylation rate [umol CO2/m2/s]
-    return VCmax25*exp(EVC*x25);            // [F80, p.83] maximum carboxylation rate [umol e-/m2/s]
-}
-
-double LeafLightResponse::maxPhotosyntheticCapacity() {
-    // [F80, p.88-89] constants for optimum curve temperature dependent electron transport rate
-    const double S = 710,                   // [J/mol/K]
-                 H = 220000,                // [J/mol]
-                 Jmax25 = 467*rhoChl;       // [F80, p.84] maximum electron transport rate
-                                            // (on chlorofylbasis) [umol e-/m2/s]
-    const double EJ = 37000;                // Jmax maximum electron transport rate
-    double D1 = 1 + exp((S - H/TleafK)/R);  // [F82, erratum] intermediate variable [-]
-    double D0 = 1 + exp((S - H/T25)/R);     // [G94, p.VII-5] intermediate variable [-]
-    double D = D1/D0;                       // [G94, p.VII-5] intermediate variable [-]
-
-    double Jmax = Jmax25*exp(EJ*x25)/D;     // [F80, p.84] maximum electron transport rate
-                                            // (on chlorofylbasis) [umol e-/m2/s]
-    return MCo2/4*Jmax;                     // [??  (2.31 at 25 oC)] maximum endogenous
-                                            // photosynthetic capacity [mg CO2/m2/s]
-}
-
-double LeafLightResponse::RubiscoCarboxylation() {
-    return mm.KC*(1+O2i/mm.KO)*rhoCo2T;     // [G94, p.80] M-M constant Rubisco carboxylation (CO2) [mg CO2/m3]
-}
-
-double LeafLightResponse::co2CompensationConcentration() {
-    const double VOC = 0.21;        // [F80, p.81] VOC=VOmax/VCmax=ko/kc=constant
-    return mm.KC*O2i*VOC/(2*mm.KO); // [F80, p.85] CO2 compensation concentration in absence of dark respiration [ppm], [ubar]
 }
 
 double LeafLightResponse::darkRespirationRate() {
@@ -131,8 +87,11 @@ double LeafLightResponse::darkRespirationRate() {
 }
 
 double LeafLightResponse::maxNetAssimilation() {
-    double RcCo2 = KM/VCmax/MCo2;     // carboxylation resistance [s/m]
-    double RCo2 = rsCO2+rbCO2;
+    double RcCo2 = KM/VCmax/MCo2,     // carboxylation resistance [s/m]
+           RCo2 = rsCO2+rbCO2,
+           TleafK = Tleaf + T0,
+           rhoCo2T = RhoCo2*T0/TleafK;      // [gaslaw] density CO2 at Tleaf [kg/m3], [mg/ml]
+
     rtCO2 = RCo2+RcCo2;                  // [G94, p.79] total resistance to CO2 diffusion [s/m]
     double PNC = (co2Air-gamma)*rhoCo2T/rtCO2;
     return (Jmax + PNC - sqrt(sqr(Jmax+PNC) - 4*theta*Jmax*PNC))/(2*theta);

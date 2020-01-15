@@ -1,0 +1,5 @@
+FILENAME
+"WeatherBrazil/weather/CAMINAS.txt"
+"WeatherBrazil/weather/LONDRINA.txt"
+"WeatherBrazil/weather/SAO PAULO.txt"
+ 

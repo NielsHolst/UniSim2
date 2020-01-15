@@ -27,16 +27,16 @@ theme2 = theme(
 
 left_margin = 0
 
-simple_density_plot = function(column, x_label, top_margin, bottom_margin, tint_fill) {
+simple_density_plot = function(column, x_label, xlim, top_margin, bottom_margin, tint_fill) {
   M = data.frame(
     X = sim[,column]
   )
 
   ggplot(M, aes(x=X)) +
     geom_density(alpha=0.5, fill=tint_fill[2]) +
-    geom_vline(xintercept=0) +
+    geom_vline(xintercept=xlim[1]) +
     labs(x=x_label, y="") +
-    xlim(0,220) +
+    scale_x_continuous(limits = xlim) + 
     theme1 +
     theme2 +
     theme(
@@ -71,17 +71,20 @@ density_plot = function(column_without, column_with, x_label, legend_position, t
 }
 
 make_plot = function(tint_fill) {
+  top_margin = 5 - 6*(0:5)
   P = grid.arrange(
-    simple_density_plot("cadaverPressure.end", "Fungus pressure (cadaver-days)", 5, 5, tint_fill),
-    density_plot("aphidPressureWithoutF.end", "aphidPressureWithF.end", "Aphid pressure (aphid-days)", "none", -1, 11, tint_fill),
-    density_plot("yieldLossUncontrolled", "yieldLossControlled", "Yield loss (%)", "bottom", -7, 7, tint_fill),
+    simple_density_plot("maxCadaverDensity.end", "Max. cadaver density (per tiller)", c(0,NA), top_margin[1], 5, tint_fill),
+    simple_density_plot("maxCadaverDensityCropGS.end", "Timing of max. cadaver density (crop GS)", c(60,NA), top_margin[2], 11, tint_fill),
+    simple_density_plot("cadaverPressure.end", "Fungus pressure (cadaver-days)", c(0,220), top_margin[3], 20, tint_fill),
+    density_plot("aphidPressureWithoutF.end", "aphidPressureWithF.end", "Aphid pressure (aphid-days)", "none", top_margin[4], 20, tint_fill),
+    density_plot("yieldLossUncontrolled", "yieldLossControlled", "Yield loss (%)", "bottom", top_margin[5], 7, tint_fill),
     ncol=1
   )
   annotate_figure(P, left=text_grob("          Density distribution of simulation outcomes", size=10, rot=90))
 }
 
 # Show on screen
-open_plot_window(3.2, 5.0)
+open_plot_window(3.2, 9)
 make_plot(col_fill)
 
 # Write two graphics files
@@ -94,3 +97,25 @@ if (exists("use_stored_simulation")) {
   grid.draw(make_plot(col_fill))
   dev.off()
 }
+
+# colnames(sim) = unique_names(colnames(sim))
+
+# M = sim
+# M$YieldImprovement = M$yieldLossUncontrolled - M$yieldLossControlled
+# M$AphidReduction = M$aphidPressureWithoutF - M$aphidPressureWithF
+
+# palette = colorRampPalette(c("#0072B2", "#999999", "#D55E00"))(7)
+
+# ggplot(subset(M, maxCadaverDensity>1), aes(x=maxCadaverDensityCropGS, y=maxCadaverDensity)) +
+  # geom_point(aes(fill=YieldImprovement), shape=21, size=4) +
+  # geom_smooth(colour="red", se=FALSE) +
+  # scale_fill_gradientn(colours=palette) +
+  # theme_minimal()
+# windows() 
+# P = ggplot(subset(M, maxCadaverDensity>1), aes(x=maxCadaverDensityCropGS, y=maxCadaverDensity)) +
+  # geom_point(aes(fill=AphidReduction), shape=21, size=4) +
+  # geom_smooth(colour="red", se=FALSE) +
+  # scale_fill_gradientn(colours=palette) +
+  # theme_minimal()
+# print(P)
+

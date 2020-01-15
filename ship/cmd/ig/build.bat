@@ -1,7 +1,8 @@
-set IGLIB=iglib_2.3.17 
-set IGLIB_BIN=iglib_2.3.17\bin 
-set IGLIB_BIN_IMAGEFORMATS=iglib_2.3.17\bin\imageformats
-set IGLIB_BIN_PLATFORMS=iglib_2.3.17\bin\platforms
+set IGLIB=iglib_2.3.18 
+set IGLIB_BIN=iglib_2.3.18\bin 
+set IGLIB_BIN_IMAGEFORMATS=iglib_2.3.18\bin\imageformats
+set IGLIB_BIN_PLATFORMS=iglib_2.3.18\bin\platforms
+
 mkdir %IGLIB%
 pushd %IGLIB%
 mkdir bin
@@ -11,12 +12,17 @@ mkdir platforms
 popd
 popd
 
+echo = Copy iglib.h =
+copy ..\..\..\src\lib\iglib\iglib.h %IGLIB%
+copy ..\..\..\src\lib\iglib\libiglib.a %IGLIB%
+
 echo = Copy UniSim plug-ins =
 copy ..\..\..\bin\plugins\*.dll %IGLIB_BIN%
 
 echo = Copy Qt library folders =
-copy C:\Qt\5.11.2\mingw53_32\plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
-copy C:\Qt\5.11.2\mingw53_32\plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
+copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
+copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
+pause
 
 echo = Copy UniSim libraries =
 copy ..\..\..\bin\iglib.dll %IGLIB_BIN%

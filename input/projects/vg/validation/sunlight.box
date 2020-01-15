@@ -1,0 +1,24 @@
+Simulation sim {
+  .steps = 149760  // 104 days
+  Calendar calendar {
+    .latitude = 55.51
+    .longitude = 10.10
+    .timeStep = 1
+    .timeUnit = "m"
+  }
+  Records weather {
+    .fileName = "sunlight-input-to-unisim.txt"
+    .overrideCalendarDateTime = TRUE
+    DiffuseIrradiationRE diffuse {
+      .globalIrradiation = weather[Sunlight]
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ports = (calendar[azimuth] calendar[sinb] diffuse[fraction])
+      }
+    }
+  }
+}

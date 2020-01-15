@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <QString>
+#include <base/command.h>
+#include <base/environment.h>
 #include <base/exception.h>
 #include <iglib/iglib.h>
 #include "query_reader_json.h"
@@ -11,8 +13,10 @@ using namespace ig;
 using namespace std;
 
 const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/"
-                         "UnisimInput_2019-09-10_2019-09-11.json";
+                         "UnisimInput_growth_light.json";
+//                         "UnisimInput_2019-09-10_2019-09-11.json";
 
+using namespace base;
 
 int main(int, char **)
 {
@@ -23,7 +27,7 @@ int main(int, char **)
         Response r = compute(q);
         cout << "\nRESPONSE:\n" << responseToString(r) << "\n";
     }
-    catch (const base::Exception &ex) {
+    catch (const Exception &ex) {
         cout << qPrintable(ex.what());
         result = 1;
     }
@@ -31,7 +35,10 @@ int main(int, char **)
         cout << ex.what();
         result = 2;
     }
-    cout << "\n\nDone!\nHit <Enter>";
+    Command::submit(QStringList() << "write", nullptr);
+    cout << "Box script written to file:\n"
+         << qPrintable(environment().outputFilePath(".box"))
+         << "\n\nDone!\nHit <Enter>";
     char s[8];
     cin.getline(s,7);
     return result;

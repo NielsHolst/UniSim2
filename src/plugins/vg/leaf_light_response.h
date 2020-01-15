@@ -17,30 +17,20 @@ class LeafLightResponse : public base::Box
 {
 public:
     LeafLightResponse(QString name, QObject *parent);
+    void amend();
     void reset();
     void update();
 
 private:
     // Inputs
     double rsCO2, rbCO2, Tleaf, co2Air,
-           rhoChl, theta, frParAbs, concEnzyme;
+           theta, frParAbs,
+           VCmax, Jmax, KM, gamma;
     // Outputs
     double rtCO2, Pnmax, Pgmax, LUE, Rd;
-    // Data
-    double x25, TleafK, T25, rhoCo2T,
-        VCmax, Jmax, KM, gamma;
-    struct MichaelisMenten {
-        double KC, KO;
-        void update(double x25);
-    };
-    MichaelisMenten mm;
     // Methods
     double darkRespirationRate();
-    double maxCarboxylationRate();
-    double maxPhotosyntheticCapacity();
-    double potentialLightUseEfficiency();
-    double RubiscoCarboxylation();
-    double co2CompensationConcentration();
+    double potentialLightUseEfficiency();    
     double maxNetAssimilation();
 };
 } //namespace

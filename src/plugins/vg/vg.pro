@@ -68,6 +68,7 @@ HEADERS +=  \
     indoors_wind_speed.h \
     leaf_layer.h \
     leaf_light_response.h \
+    leaf_light_response_processes.h \
     leaf_photosynthesis.h \
     leaf_radiation_absorbed.h \
     leaf_temperature.h \
@@ -166,6 +167,7 @@ SOURCES += \
     indoors_wind_speed.cpp \
     leaf_layer.cpp \
     leaf_light_response.cpp \
+    leaf_light_response_processes.cpp \
     leaf_photosynthesis.cpp \
     leaf_radiation_absorbed.cpp \
     leaf_temperature.cpp \

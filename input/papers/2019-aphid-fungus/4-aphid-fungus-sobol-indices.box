@@ -2,7 +2,7 @@ Simulation sim {
   // Runs at ~150 iterations per minute
   // 53248 iterations used in paper
   // 832 iterations for a quicker demonstration
-  .iterations = 106496 //832
+  .iterations = 832
   .steps =  273 // end of september
   .silent = TRUE
   SelectFile weatherFiles {

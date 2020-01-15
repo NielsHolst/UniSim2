@@ -22,8 +22,6 @@ DiffuseIrradiationRE::DiffuseIrradiationRE(QString name, QObject *parent)
     : DiffuseIrradiationBase(name, parent)
 {
     help("computes diffuse fraction of global irradiation");
-    Input(temperature).imports("outdoors[temperature]").unit("oC");
-    Input(rh).imports("outdoors[rh]").unit("[0;100]");
     Input(sinb).imports("calendar[sinb]").unit("[-1;1]");
     Output(value).help("Diffuse irradiation").unit("W/m2");
     Output(fraction).help("Diffuse fraction of global irradiation [0;1]").unit("[0;1]");

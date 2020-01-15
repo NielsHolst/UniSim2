@@ -87,7 +87,6 @@ bool writeQrc() {
             "  <qresource>\n"
             "    <file>boxes_head.cson</file>\n"
             "    <file>notepad_grammar_template.xml</file>\n"
-            "    <file>svg_template3.html</file>\n"
             "    <file>version.txt</file>\n",
             tail =
             "  </qresource>\n"

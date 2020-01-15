@@ -653,56 +653,60 @@
 			<newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
 			<newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
 			<newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
-			<newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
-			<newPort name="setpointHeating" ref="setpoints[heatingTemperatureAtLowRh]"/>
-			<newPort name="setpointVentilation" ref="setpoints[ventilationTemperatureMargin]"/>
-			<newPort name="setpointHeatingRhIncrement" ref="setpoints[heatingTemperatureMargin]"/>
-			<newPort name="setpointVentilationRhDecrement" ref="setpoints[ventilationTemperatureRhMargin]"/>
-			<newPort name="demandVentilationAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
-			<newPort name="demandVentilationAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/>
-			<newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/>
-			<newPort name="demandHeatingAtLowRh" ref="setpoints[heatingTemperatureAtLowRh]"/>
-			<newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/>
-			<newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/>
-			<newPort name="demandScreenLayer1" ref="actuators/screens/layer1[value]"/>
-			<newPort name="demandScreenLayer2" ref="actuators/screens/layer2[value]"/>
-			<newPort name="demandScreenLayer3" ref="actuators/screens/layer3[value]"/>
-			<newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
-			<newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
-			<newPort name="co2Injection" ref="controllers/co2[value]"/>
-			<newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
-			<newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
-			<newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
-			<newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
-			<newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
-			<newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
-			<newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
-			<newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
-			<newPort name="airFluxTotal" ref="total/airFlux[value]"/>
-			<newPort name="growthLightOn1" ref="actuators/growthLights/growthLight1[on]"/>
-			<newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/>
-			<newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/>
-			<newPort name="ventsOpening" ref="actuators/vents[value]"/>
-			<newPort name="screenEnergyThreshold1" ref="controllers/screens/energy1[threshold]"/>
-			<newPort name="screenEnergyThreshold2" ref="controllers/screens/energy2[threshold]"/>
-			<newPort name="screenShadeThreshold1" ref="controllers/screens/shade1[threshold]"/>
-			<newPort name="screenShadeThreshold2" ref="controllers/screens/shade2[threshold]"/>
-			<newPort name="screenEnergy1" ref="controllers/screens/energy1[value]"/>
-			<newPort name="screenEnergy2" ref="controllers/screens/energy2[value]"/>
-			<newPort name="screenShade1" ref="controllers/screens/shade1[value]"/>
-			<newPort name="screenShade2" ref="controllers/screens/shade2[value]"/>
-			<newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/>
-			<newPort name="screenMax" ref="actuators/screens/maxValue[value]"/>
-			<newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
-			<newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
-			<newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
-			<newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-			<newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
-			<newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
-			<newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
+			<!-- <newPort name="rhSetpoint" ref="setpoints[rhMax]"/> -->
+			<!-- <newPort name="setpointHeating" ref="setpoints[heatingTemperatureAtLowRh]"/> -->
+			<!-- <newPort name="setpointVentilation" ref="setpoints[ventilationTemperatureMargin]"/> -->
+			<!-- <newPort name="setpointHeatingRhIncrement" ref="setpoints[heatingTemperatureMargin]"/> -->
+			<!-- <newPort name="setpointVentilationRhDecrement" ref="setpoints[ventilationTemperatureRhMargin]"/> -->
+			<!-- <newPort name="demandVentilationAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/> -->
+			<!-- <newPort name="demandVentilationAtLowRh" ref="setpoints[ventilationTemperatureAtLowRh]"/> -->
+			<!-- <newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/> -->
+			<!-- <newPort name="demandHeatingAtLowRh" ref="setpoints[heatingTemperatureAtLowRh]"/> -->
+			<!-- <newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/> -->
+			<!-- <newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/> -->
+			<!-- <newPort name="demandScreenLayer1" ref="actuators/screens/layer1[value]"/> -->
+			<!-- <newPort name="demandScreenLayer2" ref="actuators/screens/layer2[value]"/> -->
+			<!-- <newPort name="demandScreenLayer3" ref="actuators/screens/layer3[value]"/> -->
+			<!-- <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/> -->
+			<!-- <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/> -->
+			<!-- <newPort name="co2Injection" ref="controllers/co2[value]"/> -->
+			<!-- <newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/> -->
+			<!-- <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/> -->
+			<!-- <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/> -->
+			<!-- <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/> -->
+			<!-- <newPort name="airFluxTotal" ref="total/airFlux[value]"/> -->
+			<!-- <newPort name="growthLightOn1" ref="actuators/growthLights/growthLight1[on]"/> -->
+			<!-- <newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/> -->
+			<!-- <newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/> -->
+			<!-- <newPort name="ventsOpening" ref="actuators/vents[value]"/> -->
+			<!-- <newPort name="screenEnergyThreshold1" ref="controllers/screens/energy1[threshold]"/> -->
+			<!-- <newPort name="screenEnergyThreshold2" ref="controllers/screens/energy2[threshold]"/> -->
+			<!-- <newPort name="screenShadeThreshold1" ref="controllers/screens/shade1[threshold]"/> -->
+			<!-- <newPort name="screenShadeThreshold2" ref="controllers/screens/shade2[threshold]"/> -->
+			<!-- <newPort name="screenEnergy1" ref="controllers/screens/energy1[value]"/> -->
+			<!-- <newPort name="screenEnergy2" ref="controllers/screens/energy2[value]"/> -->
+			<!-- <newPort name="screenShade1" ref="controllers/screens/shade1[value]"/> -->
+			<!-- <newPort name="screenShade2" ref="controllers/screens/shade2[value]"/> -->
+			<!-- <newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/> -->
+			<!-- <newPort name="screenMax" ref="actuators/screens/maxValue[value]"/> -->
+			<!-- <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/> -->
+			<!-- <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/> -->
+			<!-- <newPort name="darkRespirationRate" ref="crop/Rd[value]"/> -->
+			<!-- <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/> -->
+			<!-- <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/> -->
+			<!-- <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/> -->
+			<!-- <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/> -->
 			<newPort name="leafTemperatureTop" ref="crop/layers/top/temperature[value]"/>
 			<newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
 			<newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>
+			<newPort name="VCmax" ref="crop/layers/top/photosynthesis/lightResponse/processes[VCmax]"/>
+			<newPort name="Jmax" ref="crop/layers/top/photosynthesis/lightResponse/processes[Jmax]"/>
+			<newPort name="gamma" ref="crop/layers/top/photosynthesis/lightResponse/processes[gamma]"/>
+			<newPort name="KM" ref="crop/layers/top/photosynthesis/lightResponse/processes[KM]"/>
 		</box>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
@@ -712,7 +716,7 @@
 			</box>
 		</box>
 		<box class="OutputText">
-			<port name="skipFormats" value="TRUE"/>
+			<!-- <port name="skipFormats" value="TRUE"/> -->
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>

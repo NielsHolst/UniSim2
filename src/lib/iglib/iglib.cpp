@@ -155,11 +155,10 @@ void buildGrowthLight(Box *parent, const GrowthLight *g) {
     builder.
         box("vg::GrowthLight").name("growthLight").
             port("type").equals(toString(g->type)).
-            port("intensity").equals(g->lightintensity).
             port("parPhotonCoef").equals(g->parEfficiency).
             port("powerUsage").equals(g->powerUsage).
             port("ageCorrectedEfficiency").equals(g->ageCorrectedEfficiency).
-            port("on").equals(g->lightintensity>0.).
+            port("on").equals(g->powerUsage>0.).
         endbox();
 }
 
@@ -548,6 +547,7 @@ Response compute(const Query &q) {
         r.indoorsCo2 = root->findOne<Box>("indoors/co2")->port("value")->value<double>();
         r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
         r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
+        r.indoorsPar = root->findOne<Box>("indoors/light")->port("parTotal")->value<double>();
         r.heating = 0;
         r.costEfficiency = 0;
         r.photosynthesis = root->findOne<Box>("crop/Pg")->port("value")->value<double>();
@@ -571,6 +571,7 @@ const char * responseToString(const Response &r) {
     RESP(indoorsCo2);
     RESP(indoorsRh);
     RESP(indoorsTemperature);
+    RESP(indoorsPar);
     RESP(growthLight);
     RESP(heating);
     RESP(photosynthesis);

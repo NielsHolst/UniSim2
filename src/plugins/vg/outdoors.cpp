@@ -22,7 +22,7 @@ Outdoors::Outdoors(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("delivers readings of ourdoors weather");
-    Input(sunlightPhotonCoef).equals(4.6).help("Number of PAR photons in sunlight energy").unit("micromole/J");
+    Input(sunlightPhotonCoef).equals(2.3).help("Number of PAR photons in sunlight energy").unit("micromole/J");
     Input(co2).equals(400.).help("Outdoors CO2 concentration").unit("ppm");
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature").unit("oC");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity").unit("[0;100]");

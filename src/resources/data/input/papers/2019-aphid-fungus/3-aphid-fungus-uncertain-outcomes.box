@@ -349,6 +349,8 @@ Simulation sim {
   } // system
   
   Biocontrol biocontrol {
+    .cadaverDensity = withFungus/infectious/cadavers[content]
+    .cropGrowthStage = cropGrowthStage[value]
     .aphidPressureWithoutF = withoutFungus/diagnostics/aphidDays[value] 
     .aphidPressureWithF = withFungus/diagnostics/aphidDays[value] 
     .yieldWithoutF = withoutFungus/diagnostics/yield[yield] 
