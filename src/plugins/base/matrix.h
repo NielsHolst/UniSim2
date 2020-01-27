@@ -18,7 +18,7 @@ template <class T>
 class Matrix : public Table
 {
 public:
-    Matrix(QObject *parent = 0);
+    Matrix(QObject *parent = nullptr);
     void read(QString fileName, Labelling labelling);
     void resize(int rows, int cols);
     int numRow() const;

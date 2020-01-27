@@ -1,0 +1,98 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2009
+    .latitude = 60
+  }
+  Box pop {
+    Hump otherPrey {
+      .x = calendar[dayOfYear]
+      .x0 = 130
+      .x1 = 270
+      .ymax = 10
+    }
+    Hump chironimusAdult {
+      .x = calendar[dayOfYear]
+      .x0 = 165
+      .x1 = 210
+      .ymax = 30
+    }
+    Hump pisaura {
+      .x = calendar[dayOfYear]
+      .x0 = 120
+      .x1 = 300
+      .ymax = 2
+    }
+    Hump pisauraDemand {
+      .x = calendar[dayOfYear]
+      .x0 = 120
+      .x1 = 300
+      .ymax = 0.5
+    }
+  }
+  FoodWeb web {
+    Predator pisaura {
+      .density = pop/pisaura[value]
+      .demand = pop/pisauraDemand[value]
+      Prey chironimusAdult {
+        .density = pop/chironimusAdult[value]
+        .attackRate = 0.01
+        .gainFactor = 1  // Or, of less value: 0.2
+      }
+      Prey otherPrey {
+        .density = pop/otherPrey[value]
+        .attackRate = 0.01
+        .gainFactor = 1
+      }
+    }
+  }
+  Box total {
+    Accumulator chironimusLoss {
+      .change = web/pisaura/chironimusAdult[loss]
+    }
+    Accumulator otherLoss {
+      .change = web/pisaura/otherPrey[loss]
+    }
+    Accumulator supply {
+      .change = web/pisaura[supply]
+    }
+  }
+  OutputR {
+    .keepPages = TRUE
+    PageR {
+      .xAxis = calendar[date]
+      +ggplot = "geom_line() + 
+                  scale_x_datetime( 
+                    breaks = date_breaks('months'), 
+                    labels = date_format('%b') 
+                  )"
+      PlotR {
+        +Chironimus = pop/chironimusAdult[value]
+        +Other = pop/otherPrey[value] 
+        +Pisaura = pop/pisaura[value]
+        .layout = "merged"
+        .ports = (.[Chironimus] .[Other] .[Pisaura])
+        .ggplot = ..[ggplot]
+        .guideTitle = "Density"
+      }
+      PlotR {
+        +ChironimusS = web[supply_pisaura_chironimusAdult]
+        +OtherS = web[supply_pisaura_otherPrey]
+        .layout = "merged"
+        .ports = (.[ChironimusS] .[OtherS])
+        .ggplot = ..[ggplot]
+        .guideTitle = "Supply source"
+      }
+      PlotR {
+        +lossChironimus = total/chironimusLoss[value]
+        +lossOther = total/otherLoss[value]
+        +supplyTotal = total/supply[value]
+        .layout = "merged"
+        .ports = (.[lossChironimus] .[lossOther] .[supplyTotal])
+        .ggplot = ..[ggplot]
+        .guideTitle = "Accumulated"
+      }
+    }
+  }
+}
+

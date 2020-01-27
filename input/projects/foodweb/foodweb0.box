@@ -1,0 +1,71 @@
+Simulation sim {
+  .steps = 1
+  Box pop {
+    Box Y1 {
+      +content = 5.
+    }
+    Box Y2 {
+      +content = 10.
+    }
+    Box Y3 {
+      +content = 2.
+    }
+    Box X1 {
+      +content = 15.
+    }
+    Box X2 {
+      +content = 20.
+    }
+  }
+  FoodWeb web {
+    Predator Y1 {
+      .density = pop/Y1[content]
+      .demand = 3
+      Prey X1 {
+        .density = pop/X1[content]
+        .attackRate = 0.04
+        .gainFactor = 1
+      }
+      Prey X2 {
+        .density = pop/X2[content]
+        .attackRate = 0.04
+        .gainFactor = 1
+      }
+    }
+    Predator Y2 {
+      .density = pop/Y2[content]
+      .demand = 58
+      Prey X1 {
+        .density = pop/X1[content]
+        .attackRate = 0.07
+        .gainFactor = 2.5
+      }
+      Prey X2 {
+        .density = pop/X2[content]
+        .attackRate = 0.03
+        .gainFactor = 4.7
+      }
+    }
+    Predator Y3 {
+      .density = pop/Y3[content]
+      .demand = 4.8
+      Prey X1 {
+        .density = pop/X1[content]
+        .attackRate = 0.01
+        .gainFactor = 2.5
+      }
+      Prey X2 {
+        .density = pop/X2[content]
+        .attackRate = 0.08
+        .gainFactor = 4.7
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = web[*]
+      }
+    }
+  }
+}

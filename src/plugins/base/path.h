@@ -18,14 +18,14 @@ class Box;
 
 class Path {
 public:
-    Path(QString path, const QObject *context = 0);
-    Path(QStringList paths, const QObject *context = 0);
+    Path(QString path, const QObject *context = nullptr);
+    Path(QStringList paths, const QObject *context = nullptr);
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
     template<class T=QObject> T* resolveOne(const QObject* caller);
-    template<class T=QObject> T* resolveMaybeOne(const QObject* caller = 0);
-    template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = 0);
+    template<class T=QObject> T* resolveMaybeOne(const QObject* caller = nullptr);
+    template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = nullptr);
 
     typedef QList<const QObject*> QObjects;
 private:
@@ -47,8 +47,8 @@ private:
     // Methods
     Path(const QObject *context);
     void initDirectives();
-    template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = 0);
-    QObjects _resolve(int number = -1, const QObject* caller = 0);
+    template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = nullptr);
+    QObjects _resolve(int number = -1, const QObject* caller = nullptr);
     void validate(QRegExp rx, QString s);
     QString normaliseFirstBox(QString s);
     QString normaliseBox(QString defaultDirective, QString s);

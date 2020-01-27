@@ -52,6 +52,8 @@ public:
     static void saveCurrentRoot();
     static void restoreCurrentRoot();
 
+    Box* boxParent();
+
     QString className() const;
     QString name() const;
     QString fullName() const;
@@ -94,7 +96,7 @@ public:
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
 private:
     // Data
-    QString _name, _help, _sideEffects;
+    QString _help, _sideEffects;
     QMap<QString,Port*> _ports, _orphanPorts;
     QVector<Port*> _trackedPorts;
     int _order;

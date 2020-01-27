@@ -2,10 +2,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <QSet>
+#include <QStringList>
+#include <QTextStream>
 #include <base/dialog.h>
+#include <base/environment.h>
 #include <base/exception.h>
 #include <base/publish.h>
-#include <base/test_num.h>
 #include "food_web.h"
 using namespace base;
 
@@ -14,296 +17,277 @@ namespace boxes {
 PUBLISH(FoodWeb)
 
 FoodWeb::FoodWeb(QString name, QObject *parent)
-    : Box(name, parent), _attackDf(this), _outputsCreated(false) {
-    help("resolves food web acquisitions among FoodWebBox objects");
-    Input(attackFile).help("Name of file with attack rates matrix");
-    Input(gainFile).help("Name of file with gain rates matrix");
-    Input(attackFileFirst).help("Only needed if attackFile is changed with every iteration; will then be used for first iteration");
-    Input(timeStep).equals(1).help("Time step used to compute search rate");
-    Input(showMatrices).equals(false).help("Show attack matrix in console?");
+    : Box(name, parent), _foodWeb(this), _a(this) {
+    help("resolves food web acquisitions among Predator and Parasite objects");
+    Input(timeStep).equals(1.).help("Simulation time step");
 }
 
 void FoodWeb::amend() {
-    ExceptionContext(this);
-    // Read attack file
-    readAttackDataFrame();
-    _n = _attackDf.numCol();
-
-    // Food web boxes
-    QStringList boxPaths = _attackDf.colNames();
-    _dfColumns.clear();
-    _boxes.clear();
-    int index = 0;
-    for (QString boxPath : boxPaths.toVector()) {
-        QVector<Box*> boxes = findMany<Box>(boxPath);
-        for (Box *box : boxes) {
-            _dfColumns.append(index);
-            _boxes.append(box);
-        }
-        ++index;
-    }
-    // Resize matrices and vectors
-    _a.resize(_n,_n);
-    _g.resize(_n,_n);
-    _sApprox.resize(_n,_n);
-    _s.resize(_n,_n);
-    _acqApprox.resize(_n,_n);
-    _acq.resize(_n,_n);
-    _densities.resize(_n);
-    _demands.resize(_n);
-    _sPooled.resize(_n);
-    _acqPooled.resize(_n);
-    _outcomes.resize(_n);
-
-    fillAttackMatrix();
-
-    // Fill gain matrix
-    _g.fill(1.);
-    if (!gainFile.isEmpty()) {
-        DataFrame df2(this);
-        QString fileNamePath = environment().inputFileNamePath(gainFile);
-        df2.read(fileNamePath, DataFrame::ColumnLabelled);
-        if (_attackDf.colNames() != df2.colNames()) {
-            ThrowException("Column names in attack and gain file do not match")
-                    .value(_attackDf.colNames().join(" ")).value2(df2.colNames().join(" ")).context(this);
-        }
-        // Fill matrix
-        int aColumn(0);
-        for (int dfColumn : _dfColumns) {
-            for (int row=0; row<_n; ++row)
-                _g(row, aColumn) = df2.at<double>(row, dfColumn);
-            ++aColumn;
-        }
-    }
-
-    // Fetch pointers to output ports
-    for (int i=0; i<_n; ++i) {
-        _densities[i] = _boxes.at(i)->port("density")->valuePtr<double>();
-        _demands[i] = _boxes.at(i)->port("demand")->valuePtr<double>();
-    }
-    // Create output ports
+    collectFoodWeb();
+    collectInputs();
     createOutputs();
-    // Show
-    if (showMatrices) {
-        QString s =
-                "Attack matrix:\n" +
-                _a.toString() +
-                "Gain matrix:\n" +
-                _g.toString() +
-                "Food web boxes:\n";
-        for (Box *box: _boxes)
-            s += box->fullName() + "\n";
-        dialog().information(s);
+}
+
+void FoodWeb::reset() {
+    _s.fill(0.);
+    _S.fill(0.);
+    _Stotal.fill(0.);
+    _sdRatio.fill(0.);
+    _Xloss.fill(0.);
+    _XlossTotal.fill(0.);
+    _mortality.fill(0.);
+}
+
+void FoodWeb::update() {
+    computeOutputs();
+    pushOutputs();
+}
+
+inline void info(QString s, int i, double x) {
+    QString msg = s + +"[" + QString::number(i) +"] = " + QString::number(x);
+//    dialog().information(msg);
+}
+
+void FoodWeb::computeOutputs() {
+    _s.fill(0.);
+    // (1) For every resource i, compute the search rates s_ij for all it attackers j by by eq. 8.
+    for (int i=0; i<_nPrey; ++i) {
+        double sum(0);
+        for (int j=0; j<_nPredators; ++j)
+            sum += Y(j)*a(i,j);
+        double s_pooled = 1. - exp(-sum*timeStep);
+        info("s_pooled", i, s_pooled);
+
+        QVector<double> s_specific(_nPredators);
+        sum = 0.;
+        for (int j=0; j<_nPredators; ++j)
+            sum += s_specific[j] = 1. - exp(-Y(j)*a(i,j));
+        for (int j=0; j<_nPredators; ++j) {
+            _s(i,j) = sum==0. ? 0. : s_specific.at(j)/sum*s_pooled;
+            info("_s", j, _s(i,j));
+        }
     }
+    // (2) For every attacker j, compute the supply obtained ΔS_ij from each of its resources i by eq. 12.
+    _Stotal.fill(0.);
+    _sdRatio.fill(0.);
+    for (int j=0; j<_nPredators; ++j) {
+        double D = FoodWeb::D(j);
+        if (D>0.) {
+            double sum(0), g_sum(0);
+            for (int i=0; i<_nPrey; ++i) {
+                sum += g(i,j)*s(i,j)*X(i);
+            }
+            double S_total = D*(1. - exp(-sum/D));
+            info("S_total", j, S_total);
+
+            QVector<double> S_specific(_nPrey);
+            sum = 0.;
+            for (int i=0; i<_nPrey; ++i) {
+                sum += S_specific[i] = D*(1. - exp(-g(i,j)*s(i,j)*X(i)/D));
+                g_sum += g(i,j);
+            }
+            for (int i=0; i<_nPrey; ++i) {
+//                _Stotal[j] += _S(i,j) = S_specific.at(i)/sum*g(i,j)/g_sum*S_total;
+                _Stotal[j] += _S(i,j) = sum==0. ? 0. : S_specific.at(i)/sum*S_total;
+                info("_S", j, _S(i,j));
+            }
+        }
+        else {
+            for (int i=0; i<_nPrey; ++i) {
+                _S(i,j) = 0.;
+            }
+        }
+    }
+    // Updat supply/demand ratios
+    for (int j=0; j<_nPredators; ++j) {
+        double D = FoodWeb::D(j);
+        _sdRatio[j] = D==0. ? 0. : _Stotal.at(j)/D;
+    }
+    //(3) For every attacker j, compute the loss incured -ΔX_ij on each of its resources i by eq. 13.
+    _XlossTotal.fill(0);
+    _mortality.fill(0.);
+    for (int j=0; j<_nPredators; ++j) {
+        info("Predator", j, 0.);
+        for (int i=0; i<_nPrey; ++i) {
+            _XlossTotal[i] += _Xloss(i,j) = g(i,j)==0. ? 0. : S(i,j)/g(i,j);
+            info("_Xloss", i, _Xloss(i,j));
+        }
+    }
+    for (int i=0; i<_nPrey; ++i) {
+        _mortality[i] = X(i)==0. ? 0. : _XlossTotal[i]/X(i);
+        info("_XlossTotal", i, _XlossTotal[i]);
+        info("_mortality", i, _mortality[i]);
+     }
 }
 
-void FoodWeb::readAttackDataFrame() {
-    QString fileName = attackFile.isEmpty() ? attackFileFirst : attackFile;
-    QString fileNamePath = environment().inputFileNamePath(fileName);
-    _attackDf.read(fileNamePath, DataFrame::ColumnLabelled);
+void FoodWeb::pushOutputs() {
+    for (Box *box : _descendents)
+        box->updateImports();
 }
 
-void FoodWeb::fillAttackMatrix() {
-    int aColumn(0);
-    for (int dfColumn : _dfColumns) {
-        for (int row=0; row<_n; ++row)
-            _a(row, aColumn) = _attackDf.at<double>(row, dfColumn);
-        ++aColumn;
+inline QStringList setToList(QSet<QString> set) {
+    QStringList list = QStringList(set.toList());
+    list.sort();
+    return list;
+}
+
+void FoodWeb::collectFoodWeb() {
+    QVector<Box*> predators = findMany<Box>("./*<Predator>"),
+                  prey = findMany<Box>("./*<Predator>/*<Prey>");
+    QSet<QString> predatorNamesUnique, preyNamesUnique;
+    for (Box *box : predators)
+        predatorNamesUnique << box->name();
+    for (Box *box : prey)
+        preyNamesUnique << box->name();
+
+    _predatorNames = setToList(predatorNamesUnique);
+    _preyNames = setToList(preyNamesUnique);
+    _nPredators = _predatorNames.size();
+    _nPrey = _preyNames.size();
+
+    _foodWeb.resize(_nPrey, _nPredators);
+    for (int j=0; j<_nPredators; ++j) {
+        for (int i=0; i<_nPrey; ++i) {
+            QString path = "./" + _predatorNames.at(j) + "<Predator>/"
+                                + _preyNames.at(i) + "<Prey>";
+            _foodWeb(i,j) = findMaybeOne<Box>(path);
+        }
+    }
+
+    _descendents = predators;
+    _descendents.append(prey);
+}
+
+void FoodWeb::collectInputs() {
+    // Allocate input buffers
+    _a.resize(_nPrey, _nPredators);
+    _g.resize(_nPrey, _nPredators);
+    _X.resize(_nPrey);
+    _Y.resize(_nPredators);
+    _D.resize(_nPredators);
+
+    // Collect a and g matrices
+    for (int i=0; i<_nPrey; ++i)
+        for (int j=0; j<_nPredators; ++j) {
+            Box *box = _foodWeb.at(i,j);
+            _a(i,j) = box ? box->port("attackRate")->valuePtr<double>() : nullptr;
+            _g(i,j) = box ? box->port("gainFactor")->valuePtr<double>() : nullptr;
+        }
+    // Collect prey vector
+    for (int i=0; i<_nPrey; ++i) {
+        QVector<Box*> prey = findMany<Box>("./*<Predator>/" + _preyNames.at(i) + "<Prey>");
+        QSet<QString> densityPaths;
+        // Check that prey density paths are identical
+        for (Box *anotherPrey : prey) {
+            QString path = anotherPrey->port("density")->importPath();
+            if (!path.isEmpty())
+                densityPaths << path;
+        }
+        if (densityPaths.size() > 1) {
+            ThrowException("Prey with same name must refer to the same source density").
+                    value(_preyNames.at(i)).
+                    value2(QStringList(densityPaths.toList()).join(",")).
+                    context(this);
+        }
+        Q_ASSERT(!prey.isEmpty());
+        _X[i] = prey[0]->port("density")->valuePtr<double>();
+    }
+    // Collect predator and demand vectors
+    for (int j=0; j<_nPredators; ++j) {
+        QVector<Box*> predators = findMany<Box>("./" + _predatorNames.at(j) + "<Predator>");
+        if (predators.size() > 1) {
+            ThrowException("Predators must have unique names with FoodWeb").
+                    value(_predatorNames.at(j)).
+                    value2(predators.size()).
+                    context(this);
+        }
+        Q_ASSERT(!predators.isEmpty());
+        _Y[j] = predators[0]->port("density")->valuePtr<double>();
+        _D[j] = predators[0]->port("demand")->valuePtr<double>();
     }
 }
 
 void FoodWeb::createOutputs() {
-    if (_outputsCreated) return;
-    _outputsCreated = true;
-    for (int i = 0; i < _n; ++i) {
-        QString lossName   = QString("loss_%1").arg(i),
-                supplyName = QString("supply_%1").arg(i),
-                sdRatioName = QString("sdRatio_%1").arg(i),
-                lossRatioName = QString("lossRatio_%1").arg(i),
-                importLossName   = QString("%1[%2]").arg(fullName()).arg(lossName),
-                importSupplyName = QString("%1[%2]").arg(fullName()).arg(supplyName),
-                importSdRatioName = QString("%1[%2]").arg(fullName()).arg(sdRatioName),
-                importLossRatioName = QString("%1[%2]").arg(fullName()).arg(lossRatioName);
+    // Allocate output buffers
+    _s.resize(_nPrey, _nPredators);
+    _S.resize(_nPrey, _nPredators);
+    _Xloss.resize(_nPrey, _nPredators);
+    _XlossTotal.resize(_nPrey);
+    _mortality.resize(_nPrey);
+    _Stotal.resize(_nPredators);
+    _sdRatio.resize(_nPredators);
 
-        NamedOutput(lossName,   _outcomes[i].loss);
-        NamedOutput(supplyName, _outcomes[i].supply);
-        NamedOutput(sdRatioName, _outcomes[i].sdRatio);
-        NamedOutput(lossRatioName, _outcomes[i].lossRatio);
-        _boxes[i]->port("loss")  ->imports(importLossName);
-        _boxes[i]->port("supply")->imports(importSupplyName);
-        _boxes[i]->port("supplyDemandRatio")->imports(importSdRatioName);
-        _boxes[i]->port("lossRatio")->imports(importLossRatioName);
-//        QString s = "[%1] %2 => %3";
-//        dialog().information(s.arg(i).arg(lossName).arg(_boxes[i]->fullName()));
-//        dialog().information(s.arg(i).arg(supplyName).arg(_boxes[i]->fullName()));
+    // Create predator-prey output ports
+    for (int i=0; i<_nPrey; ++i) {
+        for (int j=0; j<_nPredators; ++j) {
+            QString suffix = "_" + _predatorNames.at(j) + "_" + _preyNames.at(i);
+            NamedOutput("s" + suffix, _s(i,j));
+            NamedOutput("supply" + suffix, _S(i,j));
+            NamedOutput("loss" + suffix, _Xloss(i,j));
+        };
+    }
+
+    // Create predator output ports
+    for (int j=0; j<_nPredators; ++j) {
+        QString suffix = "_" + _predatorNames.at(j);
+        NamedOutput("supply" + suffix, _Stotal[j]);
+        NamedOutput("sdRatio" + suffix, _sdRatio[j]);    }
+
+    // Create prey output ports
+    for (int i=0; i<_nPrey; ++i) {
+        QString suffix = "_" + _preyNames.at(i);
+        NamedOutput("loss" + suffix, _XlossTotal[i]);
+        NamedOutput("mortality" + suffix, _mortality[i]);
     }
 }
 
-void FoodWeb::resetOutcomes() {
-    for (Outcome outcome : _outcomes) {
-        outcome = Outcome{0,0,0,0};
-    }
+inline QString aph(QString s) {
+    return "\"" + s + "\"";
 }
 
-void FoodWeb::reset() {
-    ExceptionContext(this);
-    if (attackFile != _currentAttackFile) {
-        readAttackDataFrame();
-        int n = _attackDf.numCol();
-        if (n!=_n)
-            ThrowException("Attack files must have the same number of columns")
-                    .value(attackFile).value2(_currentAttackFile).context(this);
-        fillAttackMatrix();
-        _currentAttackFile = attackFile;
-    }
-    resetOutcomes();
-}
-
-void FoodWeb::update() {
-    update_sPooled();
-    update_sApprox();
-    update_s();
-    update_acqPooled();
-    update_acqApprox();
-    update_acq();
-    update_losses();
-    update_supplies();
-}
-
-void FoodWeb::update_sPooled() {
-    // Search rate for resource (j) pooled on all attackers
-    for (int j = 0; j < _n; ++j) {
-        double sum = 0.;
-        for (int i = 0; i < _n; ++i)
-            sum += _a.at(i,j)*N(i)*timeStep;
-        _sPooled[j] = 1. - exp(-sum);
-    }
-}
-
-void FoodWeb::update_sApprox() {
-    // Search rate for resource (j) by attacker (i) , first approximation
-    for (int j = 0; j < _n; ++j) {
-        for (int i = 0; i < _n; ++i)
-            _sApprox(i,j) = 1. - exp(-_a.at(i,j)*N(i));
-    }
-}
-
-void FoodWeb::update_s() {
-    // Search rate for resource (j) by attacker (i), final
-    for (int j = 0; j < _n; ++j) {
-        double sum_sApprox = 0;
-        for (int i = 0; i < _n; ++i)
-            sum_sApprox += _sApprox.at(i,j);
-        for (int i = 0; i < _n; ++i)
-            _s(i,j) = (sum_sApprox > 0) ? _sApprox.at(i,j)/sum_sApprox*_sPooled.at(j) : 0.;
-    }
-}
-
-void FoodWeb::update_acqPooled() {
-//    dialog().information("_s");
-    for (int i = 0; i < _n; ++i) {
-        double Di = D(i);
-        // Acquistion by attacker (i) pooled on all resources
-        double sum = 0.;
-        for (int j = 0; j < _n; ++j)
-            sum += _s.at(i,j)*_g.at(i,j)*N(j);
-        double acq = (D(i) > 0.) ? D(i)*(1. - exp(-sum/Di)) : 0.;
-        // Round off error
-        if (acq > Di) acq = Di;
-        if (acq > sum) acq = sum;
-        _acqPooled[i] = acq;
-//        QString s("[%1] %2");
-//        dialog().information(s.arg(i).arg(_acqPooled[i]));
-    }
-}
-
-void FoodWeb::update_acqApprox() {
-//Acquistion by attacker (j) of resource (i), first approximation
-    for (int i = 0; i < _n; ++i) {
-        double Di = D(i);
-//        dialog().information("Di = " + QString::number(Di));
-        // Acquistion by attacker (j) pooled on all resources
-        for (int j = 0; j < _n; ++j) {
-            double Nj = N(j);
-//            dialog().information("  Nj = " + QString::number(N(j)));
-            double acq = (Di > 0.) ? Di*(1. - exp(-_s.at(i,j)*_g.at(i,j)*Nj/Di))  : 0.;
-            // Round off error
-            if (acq > Di) acq = Di;
-            if (acq > Nj) acq = Nj;
-            _acqApprox(i,j) = acq;
+QString FoodWeb::showMatrix(base::Matrix2D<const double*> m) {
+    QStringList rows, rowNames;
+    for (int j=0; j<_nPredators; ++j) {
+        QStringList row;
+        for (int i=0; i<_nPrey; ++i) {
+            double value = m.at(i,j) ? *m.at(i,j) : 0.;
+            row << QString::number(value);
         }
+        QString s = _predatorNames.at(j) + " = c(" + row.join(",") + ")";
+        rows << s;
     }
-//    dialog().information("_acqApprox");
-//    dialog().information(_acqApprox.toString());
+    for (int i=0; i<_nPrey; ++i)
+        rowNames << aph(_preyNames.at(i));
+
+    QString s = QString() +
+        "M = data.frame (\n" +
+        rows.join(",\n") +
+        "\n)\n" +
+        "rownames(M) = " +
+        "c(" + rowNames.join(",") + ")\n" +
+        "M\n";
+    return s;
 }
 
-void FoodWeb::update_acq() {
-    for (int i = 0; i < _n; ++i) {
-        double sum_acqApprox = 0;
-        for (int j = 0; j < _n; ++j)
-            sum_acqApprox += _acqApprox.at(i,j);
-        for (int j = 0; j < _n; ++j) {
-            _acq(i,j) = (sum_acqApprox > 0) ? _acqApprox.at(i,j)/sum_acqApprox*_acqPooled.at(i) : 0.;
-//            QString s("[%1 %2] %3");
-//            dialog().information(s.arg(i).arg(j).arg(_acq(i,j)));
-        }
+QString FoodWeb::showDensities() {
+    QStringList line;
+    for (int j=0; j<_nPredators; ++j) {
+        line << (_predatorNames.at(j) + " = " + QString::number(*_Y.at(j)));
     }
-//    dialog().information("_acq");
-//    dialog().information(_acq.toString());
-}
+    QString y = QString() +
+        "Y = data.frame (\n" +
+        line.join(",\n") +
+        "\n)\n" +
+        "Y\n";
 
-void FoodWeb::update_losses() {
-    for (int j=0; j<_n; ++j) {
-        double sum = 0.;
-        for (int i=0; i<_n; ++i) {
-            double g = _g.at(i,j);
-            sum += (g > 0.) ? _acq.at(i,j)/g : 0.;
-        }
-        // Round off error
-        double Nj = N(j),
-               lossRatio = (Nj>0) ? sum/Nj : 0.;
-        TestNum::snapTo(lossRatio, 1.);
-
-        // HACK!
-        if (lossRatio > 1.) lossRatio = 1.;
-
-        double loss = TestNum::eq(lossRatio, 1.) ? Nj : sum;
-
-        // Put outcomes
-        _outcomes[j].loss = loss;
-        _outcomes[j].lossRatio = lossRatio;
-        if (lossRatio >1. || loss > Nj) {
-            QString s("loss=%1 > density=%2  -  diff=%3 - lossRatio=%4");
-            dialog().information(s.arg(loss).arg(Nj).arg(loss-Nj).arg(lossRatio));
-            dialog().information("_s");
-            dialog().information(_s.toString());
-            dialog().information("_acq");
-            dialog().information(_acq.toString());
-        }
+    line.clear();
+    for (int i=0; i<_nPrey; ++i) {
+        line << QString::number(*_X.at(i));
     }
-}
+    QString x = line.join("\n");
 
-void FoodWeb::update_supplies() {
-    for (int i=0; i<_n; ++i) {
-        double sum = 0.;
-        for (int j=0; j<_n; ++j) {
-            sum += _acq.at(i,j);
-        }
-        // Round off error
-        double Di = D(i);
-        TestNum::snapTo(sum, Di);
-        // Put outcomes
-        _outcomes[i].supply = sum;
-        _outcomes[i].sdRatio = (Di>0) ? sum/Di : 0.;
-        if (sum > D(i)) {
-            QString s("supply=%1 > demand=%2");
-            dialog().information(s.arg(sum).arg(D(i)));
-            dialog().information("_s");
-            dialog().information(_s.toString());
-            dialog().information("_acq");
-            dialog().information(_acq.toString());
-        }
-    }
+
+    return y+x;
 }
 
 } //namespace

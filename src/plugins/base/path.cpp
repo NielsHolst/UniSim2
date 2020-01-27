@@ -427,7 +427,10 @@ void Path::removeDuplicateCandidates() {
 Path::Directive Path::parseDirective(QString s) {
     QString dir = s.toLower();
     if (!_directives.contains(dir))
-        ThrowException("Unknown directive: '" + s + "'").value(_current.originalPath).context(_caller);
+        ThrowException("Unknown directive: '" + s + "'").
+                value(_current.originalPath).
+                value2(QStringList(_directives.keys()).join(", ")).
+                context(_caller);
     return _directives.value(dir);
 }
 

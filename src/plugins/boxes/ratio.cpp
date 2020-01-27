@@ -27,10 +27,14 @@ void Ratio::reset() {
 }
 
 void Ratio::update() {
-    if (!allowInfinityResult && divisor<=zeroTolerance)
-        ThrowException("Divisor too close to zero tolerance")
-                .value(divisor).value1("is <=").value2(zeroTolerance);
-    value = (denominator == 0) ? 0. : denominator/divisor;
+    if (denominator == 0.)
+        value = 0.;
+    else {
+        if (!allowInfinityResult && divisor<=zeroTolerance)
+            ThrowException("Divisor too close to zero tolerance")
+                    .value(divisor).value1("is <=").value2(zeroTolerance);
+        value =  denominator/divisor;
+    }
 }
 
 }

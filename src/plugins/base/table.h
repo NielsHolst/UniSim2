@@ -15,7 +15,7 @@ class Table : public QObject
 {
 public:
     enum Labelling {ColumnLabelled, RowLabelled, BothLabelled, NoLabelling};
-    Table (QObject *parent = 0);
+    Table (QObject *parent = nullptr);
     virtual void read(QString fileName, Labelling labelling) = 0;
     virtual int numRow() const = 0;
     virtual int numCol() const = 0;

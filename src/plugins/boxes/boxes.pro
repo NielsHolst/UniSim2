@@ -23,8 +23,9 @@ HEADERS +=  \
     distributed_delay.h \
     distributed_delay_2d.h \
     food_web.h \
-    food_web_box.h \
+#    food_web_box.h \
     functional_response.h \
+    host.h \
     layout_r.h \
     maker.h \
     numbered_file.h \
@@ -35,8 +36,11 @@ HEADERS +=  \
     output_r.h \
     output_text.h \
     page_r.h \
+    parasite.h \
     plot_r.h \
     population.h \
+    predator.h \
+    prey.h \
     priority_signal.h \
     proportional_signal.h \
     randomiser_base.h \
@@ -81,8 +85,9 @@ SOURCES +=  \
     distributed_delay.cpp \
     distributed_delay_2d.cpp \
     food_web.cpp \
-    food_web_box.cpp \
+#    food_web_box.cpp \
     functional_response.cpp \
+    host.cpp \
     layout_r.cpp \
     maker.cpp \
     numbered_file.cpp \
@@ -93,8 +98,11 @@ SOURCES +=  \
     output_r.cpp \
     output_text.cpp \
     page_r.cpp \
+    parasite.cpp \
     plot_r.cpp \
     population.cpp \
+    predator.cpp \
+    prey.cpp \
     priority_signal.cpp \
     proportional_signal.cpp \
     randomiser_base.cpp \

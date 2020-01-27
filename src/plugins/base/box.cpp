@@ -22,7 +22,7 @@ bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, QObject *parent)
-    : QObject(parent), _name(name), _order(0), _amended(false), _cloned(false), _ignore(false)
+    : QObject(parent), _order(0), _amended(false), _cloned(false), _ignore(false)
 {
     Class(Box);
     help("has yet undocumented functionality");
@@ -114,12 +114,16 @@ void Box::restoreCurrentRoot() {
     _currentRoot = _savedCurrentRoot;
 }
 
+Box* Box::boxParent() {
+    return dynamic_cast<Box*>(parent());
+}
+
 QString Box::className() const {
     return base::className(this);
 }
 
 QString Box::name() const {
-    return _name;
+    return objectName();
 }
 
 QString Box::fullName() const {
