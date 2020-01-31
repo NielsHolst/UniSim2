@@ -183,12 +183,24 @@ void buildPipe(Box *parent, const HeatPipe *pipe) {
 
     BoxBuilder builder(parent);
     builder.
-        box("vg::Pipe").name("pipe").
-            port("material").equals(material).
-            port("density").equals(value(pipe->length)).
-            port("diameter").equals(value(pipe->innerDiameter)).
+        box("vg::PipeForced").name("pipe").
+//            port("material").equals(material).
+            port("innerDiameter").equals(pipe->innerDiameter).
+            port("waterVolume").equals(pipe->waterVolume).
             port("flowRate").equals(value(pipe->flowRate)).
+            port("Tinflow").equals(value(pipe->temperatureInflow)).
+            port("knownToutflow").equals(value(pipe->temperatureOutflow)).
         endbox();
+}
+
+void buildPipes(Box *parent, const HeatPipes pipes) {
+    BoxBuilder builder(parent);
+    builder.
+        box("Box").name("pipes").
+        endbox();
+    Box *pipesBox =  parent->findChild<Box*>("pipes");
+    for (int i=0; i < pipes.size; ++i)
+        buildPipe(pipesBox, &pipes.array[i]);
 }
 
 void buildActuators(Box *parent, const Query &q) {
@@ -205,6 +217,7 @@ void buildActuators(Box *parent, const Query &q) {
         endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
     buildGrowthLights(actuators, q.growthLights);
+    buildPipes(actuators, q.heatPipes);
 }
 
 void buildSensor(Box *parent, const Query &q) {
@@ -548,10 +561,12 @@ Response compute(const Query &q) {
         r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
         r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
         r.indoorsPar = root->findOne<Box>("indoors/light")->port("parTotal")->value<double>();
-        r.heating = 0;
-        r.costEfficiency = 0;
+        QVector<Box*> pipes = root->findMany<Box>("pipes/pipe");
+        r.heating = 0; for (Box *pipe : pipes) r.heating += pipe->port("effect")->value<double>();
         r.photosynthesis = root->findOne<Box>("crop/Pg")->port("value")->value<double>();
         r.growthLight = root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>();
+        double E = r.heating + r.growthLight;
+        r.costEfficiency = (E==0.) ? 0. : r.photosynthesis/E*1000./3600.;
     }
     catch (Exception &ex) {
         std::cout << ex.what().toStdString() << "\n";

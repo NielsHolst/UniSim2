@@ -1,4 +1,4 @@
-// Version 2.3.20
+// Version 2.3.18
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -77,13 +77,12 @@ enum HeatPipeMaterial {Iron, Plastic, Copper, Aluminium};
 
 struct HeatPipe {
     HeatPipeMaterial material;
-    double
+    Variable 
+        flowRate,           // m3/h
+        flowTemperature,    // oC
         innerDiameter,      // mm
-        waterVolume;        // m3
-    Variable
-        flowRate,             // m3/h
-        temperatureInflow,    // oC
-        temperatureOutflow;   // oC
+        outerDiameter,      // mm
+        length;             // m pipe / m floor area
 };
 
 struct HeatPipes {

@@ -191,11 +191,11 @@ void QueryReaderJson::parseHeatPipes(QJsonArray objects) {
 void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     ig::HeatPipe hp;
     hp.material = static_cast<ig::HeatPipeMaterial>(findInt(object, "Material"));
+    hp.innerDiameter = findDouble(object, "InnerDiameter");
+    hp.waterVolume  = findDouble(object, "WaterVolume");
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.flowTemperature = findVariableFromValue(object, "TemperatureInFlow");
-    hp.innerDiameter = findVariableFromValue(object, "InnerDiameter");
-    hp.outerDiameter = findVariableFromValue(object, "OuterDiameter");
-    hp.length = findVariableFromValue(object, "Length");
+    hp.temperatureInflow = findVariable(object, "TemperatureInFlow");
+    hp.temperatureOutflow = findVariable(object, "TemperatureOutFlow");
     _heatPipes.push_back(hp);
 }
 

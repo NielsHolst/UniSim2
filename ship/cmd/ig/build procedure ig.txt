@@ -1,0 +1,12 @@
+(A) Windows 32-bit build
+========================
+1. Run clean.bat.
+2. In Qt Creator:
+- Change CONFIG to release
+- Update the version number
+- Build All
+3. In build.bat
+- Update the UniSim version number.
+- Check the QT path which may differ between computers.
+4. Run build.bat
+5. Zip iglib_2.x.x and upload it to Dropbox.

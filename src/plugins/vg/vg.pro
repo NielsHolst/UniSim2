@@ -79,6 +79,7 @@ HEADERS +=  \
     outdoors.h \
     pid_controller.h \
     pipe.h \
+    pipe_forced.h \
     running_average.h \
     screen.h \
     screen_combination.h \
@@ -178,6 +179,7 @@ SOURCES += \
     outdoors.cpp \
     pid_controller.cpp \
     pipe.cpp \
+    pipe_forced.cpp \
     running_average.cpp \
     screen.cpp \
     screen_combination.cpp \

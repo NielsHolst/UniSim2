@@ -1,52 +1,70 @@
-set IGLIB=iglib_2.3.18 
-set IGLIB_BIN=iglib_2.3.18\bin 
-set IGLIB_BIN_IMAGEFORMATS=iglib_2.3.18\bin\imageformats
-set IGLIB_BIN_PLATFORMS=iglib_2.3.18\bin\platforms
+set VERSION=2.3.20
+set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
+REM set QT_PATH=C:\Qt\5.9.2\mingw53_32
+set PATH=C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig\
 
-mkdir %IGLIB%
-pushd %IGLIB%
+set IGLIB_BIN=iglib\bin
+set IGLIB_BIN_IMAGEFORMATS=iglib\bin\imageformats
+set IGLIB_BIN_PLATFORMS=iglib\bin\platforms
+set IGLIB_BIN_PLUGINS=iglib\bin\plugins
+
+set IGLIB_BIN=%PATH%%IGLIB_BIN%
+set IGLIB_BIN_IMAGEFORMATS=%PATH%%IGLIB_BIN_IMAGEFORMATS%
+set IGLIB_BIN_PLATFORMS=%PATH%%IGLIB_BIN_PLATFORMS%
+set IGLIB_BIN_PLUGINS=%PATH%%IGLIB_BIN_PLUGINS%
+
+rmdir /S /Q iglib
+mkdir iglib
+pushd iglib
 mkdir bin
 pushd bin
 mkdir imageformats
 mkdir platforms
+mkdir plugins
 popd
 popd
 
 echo = Copy iglib.h =
-copy ..\..\..\src\lib\iglib\iglib.h %IGLIB%
-copy ..\..\..\src\lib\iglib\libiglib.a %IGLIB%
+copy ..\..\..\src\lib\iglib\iglib.h iglib
 
 echo = Copy UniSim plug-ins =
-copy ..\..\..\bin\plugins\*.dll %IGLIB_BIN%
-
-echo = Copy Qt library folders =
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
-pause
+copy ..\..\..\bin\plugins\*.dll %IGLIB_BIN_PLUGINS%
 
 echo = Copy UniSim libraries =
 copy ..\..\..\bin\iglib.dll %IGLIB_BIN%
+copy ..\..\..\bin\libiglib.a %IGLIB_BIN%
 copy ..\..\..\bin\universal_simulator_base.dll %IGLIB_BIN%
 
+echo = Copy Qt library folders =
+pushd %QT_PATH%
+copy plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
+copy plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
+
 echo = Copy Qt libraries =
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5Core.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5Gui.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5Network.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5PrintSupport.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5Test.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5Widgets.dll %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\Qt5XmlPatterns.dll %IGLIB_BIN%
+copy bin\Qt5Core.dll %IGLIB_BIN%
+copy bin\Qt5Gui.dll %IGLIB_BIN%
+copy bin\Qt5Network.dll %IGLIB_BIN%
+copy bin\Qt5PrintSupport.dll %IGLIB_BIN%
+copy bin\Qt5Test.dll %IGLIB_BIN%
+copy bin\Qt5Widgets.dll %IGLIB_BIN%
+copy bin\Qt5XmlPatterns.dll %IGLIB_BIN%
 
 echo = Copy C++ libraries =
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libgcc_s_dw2-1.dll %IGLIB_BIN%
-copy "C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libstdc++-6.dll" %IGLIB_BIN%
-copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libwinpthread-1.dll %IGLIB_BIN%
+copy bin\libgcc_s_dw2-1.dll %IGLIB_BIN%
+copy "bin\libstdc++-6.dll" %IGLIB_BIN%
+copy bin\libwinpthread-1.dll %IGLIB_BIN%
+popd
 
 echo = Copy Windows libraries
-copy C:\Windows\System32\atl.dll %IGLIB_BIN%
-copy C:\Windows\System32\comctl32.dll %IGLIB_BIN%
-copy C:\Windows\System32\mfc42u.dll %IGLIB_BIN%
-copy C:\Windows\System32\msvcrt.dll %IGLIB_BIN%
-copy C:\Windows\System32\oleaut32.dll %IGLIB_BIN%
+pushd C:\Windows\System32
+copy atl.dll %IGLIB_BIN%
+copy comctl32.dll %IGLIB_BIN%
+copy mfc42u.dll %IGLIB_BIN%
+copy msvcrt.dll %IGLIB_BIN%
+copy oleaut32.dll %IGLIB_BIN%
+popd
 
+set A=iglib_
+set DIRNAME=%A%%VERSION%
+ren iglib %DIRNAME%
 pause

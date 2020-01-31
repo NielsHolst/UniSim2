@@ -5,29 +5,32 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef SUM_H
-#define SUM_H
-#include <QVector>
-#include <base/box.h>
+#ifndef PIPE_FORCED_H
+#define PIPE_FORCED_H
 
-namespace base {
-    class Port;
-}
+#include <base/box.h>
 
 namespace vg {
 
-class Sum : public base::Box
+class PipeForced : public base::Box
 {
-public: 
-    Sum(QString name, QObject *parent);
-    // standard methods
-    void initialize();
+public:
+    PipeForced(QString name, QObject *parent);
+    void reset();
     void update();
 private:
-    QVector<QString> inputs;
-    double value;
-    QVector<base::Port*> ports;
+    // Inputs
+    double area, Tair, innerDiameter, waterVolume, flowRate, k, b, Tinflow,
+        knownToutflow;
+    // Outputs
+    double transitTime, Toutflow, effect;
+    // Methods
+    void updateToutflow();
+    void updateTransitTime();
+    void updateEffect();
 };
 
 } //namespace
+
+
 #endif

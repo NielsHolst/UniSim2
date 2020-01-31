@@ -36,7 +36,7 @@ If we assume that $T_{air}$ remains constant (\ie\ in a practical setting, it re
 \end{equation}
 where $T(0)$ is the initial pipe temperature at time $t=\SI{0}{s}$, and $T(t)$ is the pipe temperature after the passage of $t$ seconds. 
 
-We now consider the transit time ($\Delta t$) of a small volume of water as it passes through the pipe system. We set the water temperature at the inlet to the initial temperatur $T_{in}=T(0)$ and then compute the temperature of that water volume at the outlet, $T_{out}=T(\Delta T)$. Some typical courses of $T_{out}$ are shown in \cref{fig:vg-heat-pipe-Tout} with $k=\SI{1.7e-4}{\kelvin\per\milli\meter\per\minute}$, $b=1.25$, $d=\SI{37}{\milli\meter}$ and $\Delta t$=\SIrange{0}{30}{\minute}.
+We now consider the transit time ($\Delta t$) of a small volume of water as it passes through the pipe system. We set the water temperature at the inlet to the initial temperatur $T_{in}=T(0)$ and then compute the temperature of that water volume at the outlet, $T_{out}=T(\Delta T)$. Some typical courses of $T_{out}$ are shown in \cref{fig:vg-heat-pipe-Tout} with $k=\SI{2.5e-6}{\kelvin\per\milli\meter\per\minute}$, $b=1.25$, $d=\SI{37}{\milli\meter}$ and $\Delta t$=\SIrange{0}{30}{\minute}.
 
 \begin{figure} [ht]
 \centering
@@ -87,18 +87,18 @@ Of the original observations (top: \num{68062}, bottom: \num{68672}), many remai
 
 To check whether the flow rate ($\dot{V}$), which was not included in the regression equation \cref{eq:vg-regression}, could explain the residual variation, scatter plots were inspected and overlaid with trend curves (\cref{fig:vg-nordlys-regression}, fourth row). Visually it was assessed that the variation in $\dot{V}$ was not important for the model. 
 
-The residuals were increasing with the predictor ($T_{out}$) which, together with the temporal autocorrelation of the data and the procedure for choosing $\Delta t$, make the estimated standard errors on the regression parameters ($k$ and $b$) untrustworthy. Hence they are given only as regression point estimates (\cref{tab:vg-regression}).
+The residuals were increasing with the predictor ($T_{out}$) which, together with the temporal autocorrelation of the data and the procedure for choosing $\Delta t$, make the estimated standard errors on the regression parameters ($k$ and $b$) untrustworthy. Hence they are given only as regression point estimates (\cref{tab:vg-regressions}).
 
 \begin{table} [h]
 \centering
 \caption{Inner pipe diameter ($d$), estimated transit time ($\Delta t$) and coefficients ($k$ and $b$), and sample size ($N$).}
-\label{tab:vg-regression}
+\label{tab:vg-regressions}
 \begin{tabular}{lcccc}
-Data set & $\Delta t$ (\si{\minute}) & $k$ (\si{\kelvin\per\milli\meter\per\minute}) & $b$ & $N$ \\
+Data set & $\Delta t$ (\si{\minute}) & $k$ & $b$ & $N$ \\
 \hline
 \addlinespace[1.0ex]
-Nordlys top    &  \num{15} & \num{1.48e-4} & \num{1.39} & \num{57853} \\
-Nordlys bottom &  \num{23} & \num{1.66e-4} & \num{1.23} & \num{60801} \\
+Nordlys top    &  \num{15} & \num{2.46e-6} & \num{1.39} & \num{57853} \\
+Nordlys bottom &  \num{23} & \num{2.76e-6} & \num{1.23} & \num{60801} \\
 \hline
 \end{tabular}
 \end{table}
@@ -134,17 +134,19 @@ Nordlys bottom & \num{43.5} & \num{5040} & \num{7.490} &
 \end{tabular}
 \end{table}
 
-In the steady-state case, when $T_{in}$ and $T_{air}$ remain constant, so will $T_{out}$ \eqref{eq:vg-regression}. We can then calculate the effect per greenhouse area($P$; \si{\watt\square\meter}) of the pipe as
+\FloatBarrier
+\section{Computation of pipe effect}
+If we consider a system in steady state with a constant temperature of the water inflow, we can calculate the effect ($P$; \si{watt}) of the pipe. For that we need to know the flow velocity ($v$; \si{\meter\per\second}) and the heat capacity per meter of pipe ($C_{pipe}$; \si{\joule\per\kelvin\per\meter}).
+
+The total length of the heat pipe \cref{tab:vg-geometry} is usually split into $n_{pipe}$ parallel pipes. Thus we get
+
 \begin{equation}
-  P = (T_{in} - T_{out})\dot{V}C_w/A\times 60^{-2}\:\si{\hour\per\second}
+  v = \frac{\dot{V}}{\frac{\pi}{4} d^2 n_{pipe}}
 \end{equation}
-where $\dot{V}$ (\si{\cubic\meter\per\hour}), $C_w$=\SI{4184}{\kilo\joule\per\cubic\meter\per\kelvin} is the heat capacity of water and $A$=\SI{3024}{\square\meter} is the area of the greenhouse. Using the parameter values from \cref{tab:vg-regression}, the median flow rate from \cref{tab:vg-geometry} and a $T_{air}$=\SI{20}{\celsius} we can calculate the effect of the pipes at different value of $T_{in}$ as shown in \cref{fig:vg-heat-pipe-effect}.
+where $\dot{V}$ (\si{\cubic\meter\per\second}) is flow rate and $d$ (\si{\meter}) is the inner diameter.
 
-\begin{figure} [ht]
-\centering
-\includegraphics[width=0.67\textwidth]{graphics/vg/heat-pipe-effect.png}
-\caption{Predicted effect (\si{\watt\per\square\meter}) of the top and botton heat pipes specified in \cref{tab:vg-regression,tab:vg-geometry} depending on the inflow temperature ($T_{in}$) at greenhouse temperature $T_{air}$=\SI{20}{\celsius}.}
-\label{fig:vg-heat-pipe-effect}
-\end{figure}
-
-The total estimated effect of the two pipes at \SI{80}{\celsius} is \SI{344}{\watt\per\square\meter}.
+We use the heat capacity of water $C_w$=\SI{4181}{\joule\per\kg\per\kelvin} and of steel $C_s$=\SI{502}{\joule\per\kg\per\kelvin} and their densities, $\rho_w$=\SI{1000}{\kg\per\cubic\meter} and $\rho_s$=\SI{7850}{\kg\per\cubic\meter}, to calculate
+\begin{equation}
+  C_{pipe} = \frac{\pi}{4} \left[ d^2\rho_w C_w + (d_o^2-d^2)\rho_s C_s\right]
+\end{equation}
+where $d_o$ (\si{\meter}) is the outer pipe diameter

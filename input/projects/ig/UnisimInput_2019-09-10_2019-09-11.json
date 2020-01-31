@@ -149,7 +149,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -169,7 +169,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -407,7 +407,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -427,7 +427,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -665,7 +665,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -685,7 +685,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -923,7 +923,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -943,7 +943,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -1181,7 +1181,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -1201,7 +1201,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -1439,7 +1439,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -1459,7 +1459,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -1697,7 +1697,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -1717,7 +1717,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -1955,7 +1955,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -1975,7 +1975,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -2213,7 +2213,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -2233,7 +2233,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -2471,7 +2471,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -2491,7 +2491,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -2729,7 +2729,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -2749,7 +2749,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -2987,7 +2987,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -3007,7 +3007,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -3245,7 +3245,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -3265,7 +3265,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -3503,7 +3503,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -3523,7 +3523,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -3761,7 +3761,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -3781,7 +3781,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -4019,7 +4019,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -4039,7 +4039,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -4277,7 +4277,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -4297,7 +4297,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -4535,7 +4535,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -4555,7 +4555,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -4793,7 +4793,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -4813,7 +4813,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -5051,7 +5051,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -5071,7 +5071,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -5309,7 +5309,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -5329,7 +5329,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -5567,7 +5567,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -5587,7 +5587,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -5825,7 +5825,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -5845,7 +5845,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -6083,7 +6083,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -6103,7 +6103,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -6341,7 +6341,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -6361,7 +6361,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -6599,7 +6599,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -6619,7 +6619,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -6857,7 +6857,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -6877,7 +6877,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -7115,7 +7115,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -7135,7 +7135,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -7373,7 +7373,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -7393,7 +7393,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -7631,7 +7631,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -7651,7 +7651,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -7889,7 +7889,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -7909,7 +7909,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -8147,7 +8147,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -8167,7 +8167,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -8405,7 +8405,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -8425,7 +8425,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -8663,7 +8663,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -8683,7 +8683,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -8921,7 +8921,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -8941,7 +8941,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -9179,7 +9179,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -9199,7 +9199,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -9437,7 +9437,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -9457,7 +9457,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -9695,7 +9695,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -9715,7 +9715,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -9953,7 +9953,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -9973,7 +9973,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -10211,7 +10211,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -10231,7 +10231,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -10469,7 +10469,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -10489,7 +10489,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -10727,7 +10727,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -10747,7 +10747,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -10985,7 +10985,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -11005,7 +11005,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -11243,7 +11243,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -11263,7 +11263,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -11501,7 +11501,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -11521,7 +11521,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -11759,7 +11759,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -11779,7 +11779,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -12017,7 +12017,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -12037,7 +12037,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -12275,7 +12275,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.50,
         "Location": "Top"
       },
@@ -12295,7 +12295,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.25,
         "Location": "Bottom"
       }
@@ -12533,7 +12533,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -12553,7 +12553,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -12791,7 +12791,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -12811,7 +12811,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -13049,7 +13049,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -13069,7 +13069,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -13307,7 +13307,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -13327,7 +13327,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -13565,7 +13565,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -13585,7 +13585,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -13823,7 +13823,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -13843,7 +13843,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -14081,7 +14081,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -14101,7 +14101,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -14339,7 +14339,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -14359,7 +14359,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -14597,7 +14597,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -14617,7 +14617,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -14855,7 +14855,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -14875,7 +14875,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -15113,7 +15113,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -15133,7 +15133,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -15371,7 +15371,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -15391,7 +15391,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -15629,7 +15629,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -15649,7 +15649,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -15887,7 +15887,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -15907,7 +15907,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -16145,7 +16145,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -16165,7 +16165,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -16403,7 +16403,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -16423,7 +16423,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -16661,7 +16661,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -16681,7 +16681,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -16919,7 +16919,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -16939,7 +16939,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -17177,7 +17177,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -17197,7 +17197,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -17435,7 +17435,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -17455,7 +17455,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -17693,7 +17693,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -17713,7 +17713,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -17951,7 +17951,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -17971,7 +17971,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -18209,7 +18209,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -18229,7 +18229,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -18467,7 +18467,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -18487,7 +18487,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -18725,7 +18725,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -18745,7 +18745,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -18983,7 +18983,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -19003,7 +19003,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -19241,7 +19241,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -19261,7 +19261,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -19499,7 +19499,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -19519,7 +19519,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -19757,7 +19757,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -19777,7 +19777,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -20015,7 +20015,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -20035,7 +20035,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -20273,7 +20273,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -20293,7 +20293,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -20531,7 +20531,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -20551,7 +20551,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -20789,7 +20789,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -20809,7 +20809,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -21047,7 +21047,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -21067,7 +21067,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -21305,7 +21305,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -21325,7 +21325,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -21563,7 +21563,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -21583,7 +21583,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -21821,7 +21821,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -21841,7 +21841,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -22079,7 +22079,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -22099,7 +22099,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -22337,7 +22337,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -22357,7 +22357,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -22595,7 +22595,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -22615,7 +22615,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -22853,7 +22853,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -22873,7 +22873,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -23111,7 +23111,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -23131,7 +23131,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -23369,7 +23369,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -23389,7 +23389,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -23627,7 +23627,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -23647,7 +23647,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -23885,7 +23885,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -23905,7 +23905,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -24143,7 +24143,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -24163,7 +24163,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -24401,7 +24401,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -24421,7 +24421,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -24659,7 +24659,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.10,
         "Location": "Top"
       },
@@ -24679,7 +24679,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 1.15,
         "Location": "Bottom"
       }
@@ -24917,7 +24917,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -25155,7 +25155,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -25393,7 +25393,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -25631,7 +25631,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -25869,7 +25869,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -26107,7 +26107,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -26345,7 +26345,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -26583,7 +26583,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -26821,7 +26821,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -27059,7 +27059,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -27297,7 +27297,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -27535,7 +27535,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -27773,7 +27773,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -28011,7 +28011,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -28249,7 +28249,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -28487,7 +28487,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -28725,7 +28725,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -28963,7 +28963,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -29201,7 +29201,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -29439,7 +29439,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -29677,7 +29677,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -29915,7 +29915,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -30153,7 +30153,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -30391,7 +30391,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -30629,7 +30629,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -30867,7 +30867,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -31105,7 +31105,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -31343,7 +31343,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -31581,7 +31581,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -31819,7 +31819,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -32057,7 +32057,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -32295,7 +32295,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -32533,7 +32533,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -32771,7 +32771,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -33009,7 +33009,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -33247,7 +33247,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -33485,7 +33485,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -33723,7 +33723,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -33961,7 +33961,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -34199,7 +34199,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -34437,7 +34437,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -34675,7 +34675,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -34913,7 +34913,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -35151,7 +35151,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -35389,7 +35389,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -35627,7 +35627,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -35865,7 +35865,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }
@@ -36103,7 +36103,7 @@
           "Origin": "NotAvailable"
         },
         "InnerDiameter": 0.0410,
-        "OuterDiameter": 0.0,
+        "TransitTime": 23.0,
         "Length": 0.83,
         "Location": "Top"
       }

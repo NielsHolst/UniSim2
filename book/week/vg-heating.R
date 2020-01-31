@@ -2,44 +2,67 @@ graphics.off()
 rm(list=ls(all=TRUE))
 library(ggplot2)
 library(latex2exp)
-# library(themes)
 
-a = 0.0154
-b = 1.253
-d = 35
-Cw = 4.181
-Vp = pi/4*(d/10)^2*100
-k = a*d/Cw/Vp
-Ta = 20
-L = 6400
-V = pi/4*(d/1000)^2*6400
-Vdot = 5000
-dt = V/Vdot*10^ 6
-A = 40*100
+setwd("C:\\Users\\au152367\\Documents\\QDev\\UniSim2\\book\\graphics\\vg")
 
-dT = function(dt, Tin) {
-  Tin - Ta - (k*(b-1)*dt + (Tin - Ta)^(1-b))^(1/(1-b))
+Tair = 20
+
+Tout = function(k, d, b, Dt, Tin) {
+    Tair + (k*d*(b-1)*Dt + (Tin - Tair)^(1-b))^(1/(1-b))
 }
 
-Tout = function(dt, Tin) {
-  Tin - dT(dt,Tin)
+P = function(k, d, b, Dt, Tin, flowRate) {
+  Cw = 4184
+  DT = Tin - Tout(k, d, b, Dt, Tin)
+  DT*flowRate*Cw/3600  # kW
 }
 
-dT(dt, 60)
-Tout(dt, 60)
+plot_Tout = function() {
+  M = expand.grid(Dt=0:30, Tin=10*(3:8))
+  M$Tout = Tout(1.7e-4, 37, 1.25, M$Dt, M$Tin)
 
-dE = 4.181*V*100^3*dT(dt, 60)
-dE/A/dt
+  windows(4,2.5)
+  ggplot(M, aes(x=Dt, y=Tout, colour=factor(Tin))) +
+    geom_hline(yintercept=20, size=1.1, colour="darkgrey") +
+    geom_line(size=1.1) +
+    labs(x=TeX("$\\Delta t \\, (min)$"),
+         y=expression(paste(T[out], "  ", (degree*C)))) +
+    guides(colour=guide_legend(reverse=TRUE,
+                               title=expression(paste(T['in'], " ", (degree*C))))) +
+    scale_x_continuous(breaks=10*(0:6)) +
+    scale_y_continuous(breaks=10*(2:8)) +
+    theme_bw() 
+}
 
-M = expand.grid(Tin=10*(3:9), dt=0:60)
-M$dT = dT(60*M$dt, M$Tin)
-M$Tout = Tout(60*M$dt, M$Tin)
-ggplot(M, aes(x=dt, y=Tout, colour=factor(Tin))) +
-  geom_hline(yintercept=20, linetype="longdash") +
-  geom_line(size=1.1) +
-  labs(x=TeX("$\\Delta t \\, (minutes)$"),
-       y=expression(paste(T[out], "  ", (degree*C)))) +
-  guides(colour=guide_legend(title=expression(paste(T['in'], " ", (degree*C))))) +
-  theme_bw()
+plot_effect = function() {
+  Tin=20:80
+  A = 3024
+  top = data.frame(
+    Tin = Tin,
+    Effect = P(1.48e-4, 36.7, 1.39, 15, Tin, 25.98)/A*1000
+  )
+  top$Pipe = "Top"
+  bottom = data.frame(
+    Tin = Tin,
+    Effect = P(1.66e-4, 43.5, 1.23, 23, Tin, 20.48)/A*1000
+  )
+  bottom$Pipe = "Bottom"
+  M = rbind(top,bottom)
+  M$Pipe = factor(M$Pipe)
+
+  print(paste("Max. total effect =", max(top$Effect) + max(bottom$Effect)))
   
-  
+  windows(4,2.5)
+  ggplot(M, aes(x=Tin, y=Effect, colour=Pipe)) +
+    geom_line(size=1.1) +
+    labs(x=TeX("$T_{in} \\, (\\degree C)$"),
+         y=TeX("Effect (P; $W/m^2$)")) +
+    guides(colour=guide_legend(reverse=TRUE, title="Pipe system")) +
+    # scale_x_continuous(breaks=10*(0:6)) +
+    # scale_y_continuous(breaks=10*(2:8)) +
+    theme_bw() 
+}
+
+plot_effect()
+
+

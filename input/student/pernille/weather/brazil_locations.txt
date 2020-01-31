@@ -1,0 +1,7 @@
+Area	Year	Latitude	Longitude
+Londrina	2000	-23.333	-51.133
+Sao Paulo	2000	-23.617	-46.65
+Campinas	2000	-23.0	-47.133
+Rondonia	2000	-9.658394	-62.699207
+Itai, Sao Paulo	2000	-23.647995	-49.038752
+Alterosa, minas gerais	2000	-21.265163	-46.054966
