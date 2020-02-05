@@ -2,16 +2,17 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ON_OFF_H
-#define ON_OFF_H
+#ifndef ON_OFF_BY_DATE_H
+#define ON_OFF_BY_DATE_H
+#include <QDate>
 #include "on_off_base.h"
 
 namespace boxes {
 
-class OnOff : public OnOffBase<double>
+class OnOffByDate : public OnOffBase<QDate>
 {
 public:
-    OnOff(QString name, QObject *parent);
+    OnOffByDate(QString name, QObject *parent);
 private:
     // Methods
     void setSwitch();

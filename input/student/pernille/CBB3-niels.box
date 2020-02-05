@@ -1,0 +1,100 @@
+// CBB3.box
+Simulation sim {
+  .steps = 365
+  
+  Calendar calendar {
+    .initialDateTime = 1/8/2018
+  }
+  Records weather {
+    .fileName = "weather/CAMINAS.txt"
+    .cycle = TRUE
+  }
+  Box CBB {
+    DayDegrees time {
+      .T0 = 11.25 // Gutierrez et al., 1998. 14.9 Jaramillo et. at., 2011
+      .Topt = 26 // 23-30 Jaramillo et. at., 2011
+      .Tmax = 32 // Jaramillo et. at., 2011
+      .T = weather[Tavg]
+    }
+    OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/9/*    // 1st of September in any year
+      .xOff =  1/6/*  // 1st of June in any year
+      .valueOn = 0.25
+      .valueOff = 0
+    }
+    Stage adult {
+      .inflow|sum = ../pupae[outflow] | immigration[value]
+      .duration = 124.5 // lifespan 156.6 days (range 82-282 days) Gutierrez et al., 1998. (egg 8.6, larval 15.9, pupal 7.6- 156.6 = 124,5)
+      .timeStep = 1
+    }
+    Stage preOviposition {
+      .inflow = ../adult[inflow]
+      .duration = 8 // range 5-10 days Gutierrez et al., 1998. 
+      .timeStep = 1
+    }
+    Stage oviposition {
+      .inflow = ../preOviposition[outflow]
+      .duration = 20 // 20 days Gutierrez et al., 1998. 
+      .timeStep = 1
+      .growthFactor = 121.5 // R0= 135 eggs. Sex ratio 10:1. (R0= 135*0,1 = 13,5. 13,5-135= 121,5)
+    }
+    Stage egg {
+      .inflow = ../oviposition[outflow]   
+      .duration = 44.15 // 52 Gutierrez et al., 1998 . 44,15 Jaramillo et. at., 2009
+      .timeStep = ../time[step]  
+    }
+    Stage larva1 {
+      .inflow = ../egg[outflow]
+      .duration = 64.92 // 308 Gutierrez et al., 1998. 64,92 Jaramillo et. at., 2009
+      .timeStep = ../time[step]  
+    }
+    Stage larva2 {
+      .inflow = ../larva1[outflow]
+      .duration = 174.98 // 308 Gutierrez et al., 1998. 174.98 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+    }
+    Stage prepupae {
+      .inflow = ../larva2[outflow]
+      .duration =  200.81 // 380 Gutierrez et al., 1998. 200,81 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+    }
+    Stage pupae {
+      .inflow = ../prepupae [outflow]
+      .duration =  262.47 // 380 Gutierrez et al., 1998. 262.47 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+    }
+  }
+  OutputR {
+    Box labels {
+      +immigration = immigration[value]
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 3  
+      +xdate = "scale_x_datetime(
+                  breaks = date_breaks('2 months'),
+                  labels = date_format('%b')
+                 )" 
+      +logy = "scale_x_datetime(
+                  breaks = date_breaks('2 months'),
+                  labels = date_format('%b')
+                 ) +
+                 scale_y_continuous(
+                  trans = 'log1p'
+                 )"  
+      PlotR {
+        .ports = *[content]
+        .ggplot = ..[logy]
+      }
+      PlotR {
+        .ports = *[outflowTotal]
+        .ggplot = ..[logy]
+      }
+      PlotR {  
+        .ports = (labels[immigration] weather[Tavg])
+        .ggplot = ..[xdate]
+      }
+    }
+  }
+}

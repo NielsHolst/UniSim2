@@ -28,9 +28,12 @@ HEADERS +=  \
     host.h \
     layout_r.h \
     maker.h \
+    multiplum.h \
     numbered_file.h \
     offset_date_time.h \
     on_off.h \
+    on_off_base.h \
+    on_off_by_date.h \
     output_buffer.h \
     output_ports.h \
     output_r.h \
@@ -90,9 +93,11 @@ SOURCES +=  \
     host.cpp \
     layout_r.cpp \
     maker.cpp \
+    multiplum.cpp \
     numbered_file.cpp \
     offset_date_time.cpp \
     on_off.cpp \
+    on_off_by_date.cpp \
     output_buffer.cpp \
     output_ports.cpp \
     output_r.cpp \

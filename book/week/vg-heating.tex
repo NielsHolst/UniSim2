@@ -91,7 +91,7 @@ The residuals were increasing with the predictor ($T_{out}$) which, together wit
 
 \begin{table} [h]
 \centering
-\caption{Inner pipe diameter ($d$), estimated transit time ($\Delta t$) and coefficients ($k$ and $b$), and sample size ($N$).}
+\caption{Estimated transit time ($\Delta t$), regression coefficients ($k$ and $b$), and sample size ($N$).}
 \label{tab:vg-regression}
 \begin{tabular}{lcccc}
 Data set & $\Delta t$ (\si{\minute}) & $k$ (\si{\kelvin\per\milli\meter\per\minute}) & $b$ & $N$ \\
@@ -108,8 +108,6 @@ The geometry of the pipe system and the measured flow rate provide an alternativ
 \begin{equation}
   \Delta t_{geom} = \frac{V}{\dot{V}}
 \end{equation}
-
-The resulting transit times can be seen in \cref{tab:vg-geometry} taking into account the variation in the flow rates ($\dot{V}$).
 
 \begin{table} [h]
 \centering
@@ -134,6 +132,8 @@ Nordlys bottom & \num{43.5} & \num{5040} & \num{7.490} &
 \end{tabular}
 \end{table}
 
+The resulting transit times can be seen in \cref{tab:vg-geometry} taking into account the variation in the flow rates ($\dot{V}$). Ideally, the two estimates of transit time would be the same, $\Delta t \approx \Delta t_{geom}$. \todo{Her skal vi have m\aa linger fra flere v\ae ksthuse for at se, hvor godt tingene passer sammen og eventuelt udvide modellen, s\aa\ at det passer bedre samme. Indtil videre passer pengene for bottom $23\approx 21.94$, men ikke for top $15\neq 10.73$}
+
 In the steady-state case, when $T_{in}$ and $T_{air}$ remain constant, so will $T_{out}$ \eqref{eq:vg-regression}. We can then calculate the effect per greenhouse area($P$; \si{\watt\square\meter}) of the pipe as
 \begin{equation}
   P = (T_{in} - T_{out})\dot{V}C_w/A\times 60^{-2}\:\si{\hour\per\second}
@@ -147,4 +147,5 @@ where $\dot{V}$ (\si{\cubic\meter\per\hour}), $C_w$=\SI{4184}{\kilo\joule\per\cu
 \label{fig:vg-heat-pipe-effect}
 \end{figure}
 
-The total estimated effect of the two pipes at \SI{80}{\celsius} is \SI{344}{\watt\per\square\meter}.
+The total estimated effect of the two pipes at \SI{80}{\celsius} is \SI{344}{\watt\per\square\meter}. This capacity for heating is in range of the requirement noted by 
+\citet{Braak95} that a single-glass greenhouse with a setpoint of \SI{20}{\celsius} and an outdoors temperature of \SI{-8}{\celsius} would need a heating effect of \SI{246}{\watt\per\square\meter}.

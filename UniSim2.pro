@@ -43,10 +43,10 @@ unisim.depends = student
 # Published or in-prep paper plug-ins
 #
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
-unisim.depends = aphid
+#SUBDIRS += aphid
+#aphid.subdir = src/plugins/aphid
+#aphid.depends = base
+#unisim.depends = aphid
 
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp
@@ -63,10 +63,10 @@ unisim.depends = aphid
 #MusselBed.depends = base
 #unisim.depends = MusselBed
 
-#SUBDIRS += PestTox
-#PestTox.subdir = src/plugins/PestTox
-#PestTox.depends = base
-#unisim.depends = PestTox
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
+unisim.depends = PestTox
 
 ###SUBDIRS += rvf
 ###rvf.subdir = src/plugins/rvf
