@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_INDOORS_LIGHT_H
-#define VG_INDOORS_LIGHT_H
+#ifndef INDOORS_LIGHT_H
+#define INDOORS_LIGHT_H
 
 #include <base/box.h>
 
@@ -21,7 +21,9 @@ public:
 
 private:
     // Inputs
-    double sunlightDiffuse, sunlightDirect, sunlightPhotonCoef,
+    double
+        greenhouseReflection, chalk,
+        sunlightDiffuse, sunlightDirect, sunlightPhotonCoef,
         growthLigthtsDirect, growthLigthtsParIntensity;
 
     // Outputs

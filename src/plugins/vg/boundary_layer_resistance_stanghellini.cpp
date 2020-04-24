@@ -5,13 +5,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
-#include "boundary_layer_resistance_stanghellini.h"
-#include "general.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
+#include "boundary_layer_resistance_stanghellini.h"
 
 using namespace std;
 using namespace base;
+using phys_math::sqr;
 
 namespace vg {
 
@@ -20,10 +20,9 @@ PUBLISH(BoundaryLayerResistanceStanghellini)
 BoundaryLayerResistanceStanghellini::BoundaryLayerResistanceStanghellini(QString name, QObject *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
-    Class(BoundaryLayerResistanceStanghellini);
     help("computes boundary layer resistance from Stanghellini (1987, p. 32)");
-    Input(leafTemperature).imports("../temperature[value]").unit("oC");
-    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
 }
 
 void BoundaryLayerResistanceStanghellini::setRbH2O() {

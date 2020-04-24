@@ -5,8 +5,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/exception.h>
-#include <base/general.h>
 #include <base/path.h>
 #include <base/publish.h>
 #include <base/port.h>
@@ -30,7 +28,6 @@ void Average::initialize() {
     ports.clear();
     for (QString input : inputs)
         ports << findMany<Port>(input);
-//        ports << Path(input).resolveMany<Port>();
 }
 
 void Average::update() {

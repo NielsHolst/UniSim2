@@ -148,6 +148,18 @@
 						<Value>0.83</Value>
 					</Parameters>
 					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
 						<Value>6.5</Value>
 					</Parameters>
@@ -164,6 +176,18 @@
 					<Parameters>
 						<ParameterName>PaneTransmission</ParameterName>
 						<Value>0.83</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
@@ -184,6 +208,18 @@
 						<Value>0.83</Value>
 					</Parameters>
 					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
 						<Value>6.5</Value>
 					</Parameters>
@@ -200,6 +236,18 @@
 					<Parameters>
 						<ParameterName>PaneTransmission</ParameterName>
 						<Value>0.83</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
@@ -220,6 +268,18 @@
 						<Value>0.83</Value>
 					</Parameters>
 					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
 						<Value>6.5</Value>
 					</Parameters>
@@ -238,6 +298,18 @@
 						<Value>0.83</Value>
 					</Parameters>
 					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
 						<Value>6.5</Value>
 					</Parameters>
@@ -254,6 +326,18 @@
 					<Parameters>
 						<ParameterName>PaneTransmission</ParameterName>
 						<Value>0.83</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneReflection</ParameterName>
+						<Value>0.1</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwTransmission</ParameterName>
+						<Value>0</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>PaneLwReflection</ParameterName>
+						<Value>0.1</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
@@ -319,12 +403,16 @@
 						<Value>ILS 60 Revolux</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>Transmission</ParameterName>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
@@ -343,11 +431,15 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
@@ -365,12 +457,16 @@
 						<Value>ILS 60 Revolux</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>Transmission</ParameterName>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
@@ -388,12 +484,16 @@
 						<Value>ILS 60 Revolux</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>Transmission</ParameterName>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
@@ -411,12 +511,16 @@
 						<Value>ILS 60 Revolux</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>Transmission</ParameterName>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
@@ -434,12 +538,16 @@
 						<Value>ILS 60 Revolux</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>Transmission</ParameterName>
-						<Value>1</Value>
+						<ParameterName>ReflectionOutwards</ParameterName>
+						<Value>0.7</Value>
 					</Parameters>
 					<Parameters>
-						<ParameterName>InsulationRatio</ParameterName>
-						<Value>0</Value>
+						<ParameterName>ReflectionInwards</ParameterName>
+						<Value>0.09</Value>
+					</Parameters>
+					<Parameters>
+						<ParameterName>Transmission</ParameterName>
+						<Value>0.01</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>

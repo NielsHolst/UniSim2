@@ -22,11 +22,11 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors humidity");
-    Input(conductance).imports("indoors/total/vapourFlux[conductance]").unit("m/s");
-    Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]").unit("kg/m2/s");
-    Input(gain).imports("indoors/total/vapourFlux[gain]").unit("kg/m2/s");
-    Input(temperature).imports("indoors/temperature[value]").unit("oC");
-    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(conductance).imports("indoors/total/vapourFlux[conductance]",CA).unit("m/s");
+    Input(vapourFlux).imports("indoors/total/vapourFlux[vapourFlux]",CA).unit("kg/m2/s");
+    Input(gain).imports("indoors/total/vapourFlux[gain]",CA).unit("kg/m2/s");
+    Input(temperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
     Output(rh).help("Indoors relative humidity").unit("[0;100]");

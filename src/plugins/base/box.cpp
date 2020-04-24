@@ -55,17 +55,17 @@ const Port* Box::peakPort(QString name) const {
     return _ports.contains(name) ? _ports.value(name) : nullptr;
 }
 
-Port* Box::port(QString name) {
+Port* Box::port(QString name, Caller caller) {
     Port *port = peakPort(name);
     if (!port)
-        ThrowException("No port of that name in this box").value(name).context(this);
+        ThrowException("No port of that name in this box").value(name).context(this).caller(caller);
     return port;
 }
 
-const Port* Box::port(QString name) const {
+const Port* Box::port(QString name, Caller caller) const {
     const Port *port = peakPort(name);
     if (!port) {
-        ThrowException("No port of that name in this box").value(name).context(this);
+        ThrowException("No port of that name in this box").value(name).context(this).caller(caller);
     }
     return port;
 }

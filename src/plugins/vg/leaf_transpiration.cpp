@@ -23,11 +23,11 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models leaf transpiration");
-    Input(lai).imports("crop/lai[value]").unit("oC");
-    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]").unit("[0;1]");
-    Input(indoorsAh).imports("indoors/humidity[ah]").unit("kg/m3");
-    Input(radiationAbsorbed).imports("../radiationAbsorbed[value]").unit("W/m2");
-    Input(leafTemperature).imports("../temperature[value]").unit("oC");
+    Input(lai).imports("crop[lai]",CA);
+    Input(cropCoverage).imports("crop[coverage]",CA);
+    Input(indoorsAh).imports("indoors/humidity[ah]",CA).unit("kg/m3");
+    Input(radiationAbsorbed).imports("radiationLayers/crop[absorbed]",CA).unit("W/m2");
+    Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
     Input(rbH2O).imports("../rb[rbH2O]").unit("s/m");
     Input(rsH2O).imports("../rs[rsH2O]").unit("s/m");
     Output(leafAh).help("Leaf absolute humidity").unit("kg/m3");
@@ -42,7 +42,7 @@ void LeafTranspiration::update() {
         conductance = vapourFlux = gain = 0.;
     }
     else {
-        double laiNet = lai*fractionPlantArea,
+        double laiNet = lai*cropCoverage,
                s = svpSlope(leafTemperature);
         conductance = 2*laiNet/((1 + s/Psychr)*rbH2O + rsH2O);
         leafAh = sah(leafTemperature) + s/Psychr*rbH2O/2/laiNet*radiationAbsorbed/LHe;

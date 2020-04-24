@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_FLOOR_RADIATION_ABSORBED_H
-#define VG_FLOOR_RADIATION_ABSORBED_H
+#ifndef FLOOR_RADIATION_ABSORBED_H
+#define FLOOR_RADIATION_ABSORBED_H
 
 #include <base/box.h>
 

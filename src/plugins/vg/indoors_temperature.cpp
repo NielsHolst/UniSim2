@@ -5,11 +5,12 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include "general.h"
-#include "indoors_temperature.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
+#include "indoors_temperature.h"
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 	
@@ -22,7 +23,7 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     Input(resetValue).equals(20.).help("Indoors temperature when model is reset").unit("oC");
     Input(energyFlux).help("Energy flux dissipated into greenhouse air").unit("W/m2");
     Input(baseTemperature).imports(".[value]").unit("oC");
-    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Output(value).help("Indoors temperature").unit("oC");
 }

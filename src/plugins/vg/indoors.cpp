@@ -54,7 +54,7 @@ void Indoors::amend() {
     if (!findMaybeOne<Box>("./temperature"))
         builder.
         box("vg::IndoorsTemperature").name("temperature").
-            port("energyFlux").imports("total/energyFlux[value]").
+            port("energyFlux").imports("total/energyFlux[value]",CA).
         endbox();
     if (!findMaybeOne<Box>("./humidity"))
         builder.

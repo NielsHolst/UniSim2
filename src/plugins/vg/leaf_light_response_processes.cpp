@@ -22,7 +22,7 @@ LeafLightResponseProcesses::LeafLightResponseProcesses(QString name, QObject *pa
 	: Box(name, parent)
 {
     help("models various processes of leaf light response");
-    Input(Tleaf).imports("../../../temperature[value]").unit("oC");
+    Input(Tleaf).imports("../../../temperature[value]",CA).unit("oC");
     Input(rhoChl).equals(0.45).help("Chlorophyll density").unit("unit?");
     Input(concEnzyme).equals(87).help("Enzyme concentration").unit("unit?");
     Input(KC25).equals(310.).help("Rubisco carboxylation at 25C").unit("my bar");

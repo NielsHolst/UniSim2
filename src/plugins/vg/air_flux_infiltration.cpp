@@ -19,7 +19,7 @@ AirFluxInfiltration::AirFluxInfiltration(QString name, QObject *parent)
 {
     help("computes air infiltration rate");
     Input(leakage).equals(1).help("Infiltration rate at a wind speed of 4 m/s").unit("m3/m3/h");
-    Input(windSpeed).imports("outdoors[windSpeed]").unit("m/s");
+    Input(windSpeed).imports("outdoors[windSpeed]",CA).unit("m/s");
 }
 
 void AirFluxInfiltration::reset() {

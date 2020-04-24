@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_VENTILATED_LATENT_HEAT_CONVERTER_H
-#define VG_VENTILATED_LATENT_HEAT_CONVERTER_H
+#ifndef VENTILATED_LATENT_HEAT_CONVERTER_H
+#define VENTILATED_LATENT_HEAT_CONVERTER_H
 
 #include "vapour_flux_base.h"
 

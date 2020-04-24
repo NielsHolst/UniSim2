@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_GROWTH_LIGHT_CONTROLLER_H
-#define VG_GROWTH_LIGHT_CONTROLLER_H
+#ifndef GROWTH_LIGHT_CONTROLLER_H
+#define GROWTH_LIGHT_CONTROLLER_H
 #include <base/base_signal.h>
 
 namespace vg {

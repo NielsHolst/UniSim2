@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_STOMATAL_RESISTANCE_BASE_H
-#define VG_STOMATAL_RESISTANCE_BASE_H
+#ifndef STOMATAL_RESISTANCE_BASE_H
+#define STOMATAL_RESISTANCE_BASE_H
 
 #include <base/box.h>
 

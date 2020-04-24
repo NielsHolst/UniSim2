@@ -45,7 +45,7 @@ void AirFluxGiven::amend() {
 //                port("Kprop").equals(0.02).
 //                box("ProportionalSignal").name("desiredVentilation").
 //                    port("input").imports("indoors/humidity[rh]").
-//                    port("threshold").imports("setpoints/humidity/maximumRh[value]").
+//                    port("threshold").imports("setpoints/humidity/maximumRh[value],CA").
 //                    port("thresholdBand").equals(10).
 //                    port("increasingSignal").equals(true).
 //                    port("maxSignal").imports("./maxVentilation[signal]").

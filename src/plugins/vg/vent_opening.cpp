@@ -22,8 +22,8 @@ VentOpening::VentOpening(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes supply of air flux to cool greenhouse");
-    Input(airFluxSupply).imports("../airFlux[value]");
-    Input(airFluxSupplyMax).imports("cooling/airSupplyMax[value]");
+    Input(airFluxSupply).imports("../airFlux[value]",CA);
+    Input(airFluxSupplyMax).imports("cooling/airSupplyMax[value]",CA);
     Input(ventOpeningExponent).equals(2.).help("Exponent converting supply/supplyMax ratio to vent opening [0;1]");
     Output(value).help("Relative vent opening [0;1]");
 }

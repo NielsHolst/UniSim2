@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_LEAF_TEMPERATURE_H
-#define VG_LEAF_TEMPERATURE_H
+#ifndef LEAF_TEMPERATURE_H
+#define LEAF_TEMPERATURE_H
 
 #include <base/box.h>
 

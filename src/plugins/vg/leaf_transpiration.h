@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_LEAF_TRANSPIRATION_H
-#define VG_LEAF_TRANSPIRATION_H
+#ifndef LEAF_TRANSPIRATION_H
+#define LEAF_TRANSPIRATION_H
 
 #include <base/box.h>
 #include "vapour_flux_base.h"
@@ -23,7 +23,7 @@ public:
 private:
     // Inputs
     double radiationAbsorbed, rsH2O, rbH2O,
-        indoorsAh, leafTemperature, lai, fractionPlantArea;
+        indoorsAh, leafTemperature, lai, cropCoverage;
     // Outputs
     double leafAh;
 };

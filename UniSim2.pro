@@ -63,10 +63,10 @@ unisim.depends = student
 #MusselBed.depends = base
 #unisim.depends = MusselBed
 
-SUBDIRS += PestTox
-PestTox.subdir = src/plugins/PestTox
-PestTox.depends = base
-unisim.depends = PestTox
+#SUBDIRS += PestTox
+#PestTox.subdir = src/plugins/PestTox
+#PestTox.depends = base
+#unisim.depends = PestTox
 
 ###SUBDIRS += rvf
 ###rvf.subdir = src/plugins/rvf
@@ -131,6 +131,11 @@ unisim.depends = vg
 #resist.subdir = src/plugins/resist
 #resist.depends = base
 #unisim.depends = resist
+
+#SUBDIRS += saccharina
+#saccharina.subdir = src/plugins/saccharina
+#saccharina.depends = base
+#unisim.depends = saccharina
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

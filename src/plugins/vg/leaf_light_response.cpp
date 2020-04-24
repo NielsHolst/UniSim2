@@ -8,7 +8,6 @@
 #include <base/box_builder.h>
 #include <base/phys_math.h>
 #include <base/publish.h>
-#include "general.h"
 #include "leaf_light_response.h"
 
 using namespace phys_math;
@@ -22,17 +21,17 @@ LeafLightResponse::LeafLightResponse(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes the light response curve");
-    Input(rsCO2).imports("../../rs[rsCo2]").unit("s/m");
-    Input(rbCO2).imports("../../rb[rbCo2]").unit("s/m");
-    Input(Tleaf).imports("../../temperature[value]").unit("oC");
-    Input(co2Air).imports("indoors/co2[value]").unit("ppm");
-    Input(VCmax).imports("./processes[VCmax]");
-    Input(Jmax).imports("./processes[Jmax]");
-    Input(gamma).imports("./processes[gamma]");
-    Input(KM).imports("./processes[KM]");
+    Input(rsCO2).imports("../../rs[rsCo2]",CA).unit("s/m");
+    Input(rbCO2).imports("../../rb[rbCo2]",CA).unit("s/m");
+    Input(Tleaf).imports("../../temperature[value]",CA).unit("oC");
+    Input(co2Air).imports("indoors/co2[value]",CA).unit("ppm");
+    Input(VCmax).imports("./processes[VCmax]",CA);
+    Input(Jmax).imports("./processes[Jmax]",CA);
+    Input(gamma).imports("./processes[gamma]",CA);
+    Input(KM).imports("./processes[KM]",CA);
     Input(theta).equals(0.7).help("Shape parameter for the light response curve").unit("-");
     Input(frParAbs).equals(0.3).help("Fraction of PAR absorbed [0;1]").unit("[0;1]");
-    Output(LUE).help("Light use efficiency").unit("mg CO2/J");
+    Output(lue).help("Light use efficiency").unit("mg CO2/umol photons");
     Output(Pnmax).help("Net assimilation rate").unit("mg CO2/leaf m2/s");
     Output(Pgmax).help("Gross assimilation rate").unit("mg CO2/leaf m2/s");
     Output(Rd).help("Dark respiration rate").unit("mg CO2/leaf m2/s");
@@ -48,7 +47,7 @@ void LeafLightResponse::amend() {
 }
 
 void LeafLightResponse::reset() {
-    LUE = 0.0155;
+    lue = 0.0155;
     Pnmax = 0.8;
     Rd = 0.015;
     Pgmax = Pnmax + Rd;
@@ -57,11 +56,11 @@ void LeafLightResponse::reset() {
 void LeafLightResponse::update() {
     // If CO2a_ppm < gamma: no photosynthesis
     if (co2Air < gamma) {
-        LUE = Pnmax = 0.;
+        lue = Pnmax = 0.;
     }
     // Reduction of light use efficiency by photorespiration, affected by CO2 concentration
     else {
-        LUE = potentialLightUseEfficiency()*(co2Air-gamma)/(co2Air+2*gamma);
+        lue = potentialLightUseEfficiency()*(co2Air-gamma)/(co2Air+2*gamma);
         Pnmax = maxNetAssimilation();
     }
     Rd = darkRespirationRate();
@@ -71,12 +70,9 @@ void LeafLightResponse::update() {
 }
 
 double LeafLightResponse::potentialLightUseEfficiency() {
-    const double conversion = 4.59;     // [??] conversion factor [umol photons/J]
-    double alpha = (1-frParAbs)/2;      // electron yield of absorbed photons at lowlight intensity:
-                                        // 2 electrons per absorbed photon [umol e-/umol photons]
-    double alpha2 = (MCo2/4)*alpha;     // [mg CO2/umol photons]
-    return alpha2*conversion;           // [??] potential light use efficiency in
-                                        // absence of oxygen [mg CO2/J]
+    double alpha = (1-frParAbs)/2;  // Electron yield of absorbed photons at lowlight intensity:
+                                    // 2 electrons per absorbed photon [umol e-/umol photons]
+    return (MCo2/4)*alpha;          // [mg CO2/umol photons]
 }
 
 double LeafLightResponse::darkRespirationRate() {

@@ -5,10 +5,9 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_ENERGY_FLUX_BASE_H
-#define VG_ENERGY_FLUX_BASE_H
+#ifndef ENERGY_FLUX_BASE_H
+#define ENERGY_FLUX_BASE_H
 
-#include <QVector>
 #include <base/box.h>
 
 namespace vg {

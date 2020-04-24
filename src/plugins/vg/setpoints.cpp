@@ -31,8 +31,8 @@ void Setpoints::amend() {
     if (!findMaybeOne<Box>("./daylightLevel"))
         builder.
         box("vg::DaylightLevel").name("daylightLevel").
-            port("dawnThreshold").imports("setpoints[dawnThreshold]").
-            port("duskThreshold").imports("setpoints[duskThreshold]").
+            port("dawnThreshold").imports("setpoints[dawnThreshold]",CA).
+            port("duskThreshold").imports("setpoints[duskThreshold]",CA).
         endbox();
 
     if (!findMaybeOne<Box>("./temperature"))
@@ -47,12 +47,12 @@ void Setpoints::amend() {
                 port("Kprop").equals(0.1).
 //                port("Kint").equals(0.001).
                 box("ProportionalSignal").name("target").
-                    port("input").imports("indoors/humidity[rh]").
-                    port("threshold").imports("setpoints[rhMax]").
-                    port("thresholdBand").imports("setpoints[rhMaxBand]").
+                    port("input").imports("indoors/humidity[rh]",CA).
+                    port("threshold").imports("setpoints[rhMax]",CA).
+                    port("thresholdBand").imports("setpoints[rhMaxBand]",CA).
                     port("increasingSignal").equals(false).
-                    port("minSignal").imports("setpoints[ventilationTemperatureAtHighRh]").
-                    port("maxSignal").imports("setpoints[ventilationTemperatureAtLowRh]").
+                    port("minSignal").imports("setpoints[ventilationTemperatureAtHighRh]",CA).
+                    port("maxSignal").imports("setpoints[ventilationTemperatureAtLowRh]",CA).
                 endbox().
             endbox().
         endbox().
@@ -64,12 +64,12 @@ void Setpoints::amend() {
                 port("sensedValue").imports("..[value]").
                 port("Kprop").equals(0.1).
                 box("ProportionalSignal").name("target").
-                    port("input").imports("indoors/humidity[rh]").
-                    port("threshold").imports("setpoints[rhMax]").
-                    port("thresholdBand").imports("setpoints[rhMaxBand]").
+                    port("input").imports("indoors/humidity[rh]",CA).
+                    port("threshold").imports("setpoints[rhMax]",CA).
+                    port("thresholdBand").imports("setpoints[rhMaxBand],CA").
                     port("increasingSignal").equals(true).
-                    port("minSignal").imports("setpoints[heatingTemperatureAtHighRh]").
-                    port("maxSignal").imports("setpoints[heatingTemperatureAtLowRh]").
+                    port("minSignal").imports("setpoints[heatingTemperatureAtHighRh]",CA).
+                    port("maxSignal").imports("setpoints[heatingTemperatureAtLowRh]",CA).
                 endbox().
             endbox().
         endbox().

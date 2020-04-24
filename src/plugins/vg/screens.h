@@ -5,39 +5,24 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_SCREENS_H
-#define VG_SCREENS_H
+#ifndef SCREENS_H
+#define SCREENS_H
 
-#include "surface_radiation_outputs.h"
+#include <base/box.h>
 
 namespace vg {
 
-class Screens : public vg::SurfaceRadiationOutputs
+class Screens : public base::Box
 {
 public:
     Screens(QString name, QObject *parent);
-    void initialize();
     void reset();
     void update();
 private:
+    // Inputs
+    QVector<double> screenAirTransmissivities;
     // Outputs
-    double U, heatCapacity, haze, airTransmissivity, effectiveArea, maxState;
-    bool areHorizontal;
-
-    // Data
-    struct ScreenInfo {
-        const bool *isHorizontal;
-        const double *transmissivityLightNet,
-            *absorptivityLwInnerNet, *absorptivityLwOuterNet,
-            *state,
-            *unhazed, *airTransmissionNet,
-            *resistance, *heatCapacity, *effectiveArea;
-    };
-    QVector<ScreenInfo> screenInfos;
-
-    // Methods
-    QVector<ScreenInfo> collectScreenInfos(QVector<Box *> screenModels);
-    void updateRadiation();
+    double airTransmissivity;
 };
 
 } //namespace

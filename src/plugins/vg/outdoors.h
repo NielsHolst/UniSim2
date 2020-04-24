@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_OUTDOORS_H
-#define VG_OUTDOORS_H
+#ifndef OUTDOORS_H
+#define OUTDOORS_H
 
 #include <base/box.h>
 
@@ -23,7 +23,8 @@ public:
 private:
     // Inputs
     double temperature, skyTemperature, windSpeed, rh,
-    radiation, diffuseRadiation, sunlightPhotonCoef,
+    radiation, propPar, propUv,
+    diffuseRadiation,
     co2, soilTemperature;
 
     // Outputs

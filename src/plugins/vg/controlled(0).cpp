@@ -37,10 +37,10 @@ void Controlled::amend() {
         builder.
         box().name("heating").
             box("vg::Sum").name("minSupply").
-                port("inputs").equals("actuators/heating/pipes/*[nextEnergyFluxMin]").
+                port("inputs").equals("actuators/heating/pipes/*[nextEnergyFluxMin]",CA).
             endbox().
             box("vg::Sum").name("maxSupply").
-                port("inputs").equals("actuators/heating/pipes/*[nextEnergyFluxMax]").
+                port("inputs").equals("actuators/heating/pipes/*[nextEnergyFluxMax]",CA).
             endbox().
             box("vg::EnergyFluxHeatingDemand").name("demand").
             endbox().
@@ -61,7 +61,7 @@ void Controlled::amend() {
     builder2.
     box("IndoorsTemperature").name("temperature").
         port("energyFlux").imports("./energyFlux[value]").
-        port("baseTemperature").imports("indoors/temperature[value]").
+        port("baseTemperature").imports("indoors/temperature[value]",CA).
         box("vg::Sum").name("energyFlux").
             port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value])").
         endbox().
@@ -88,7 +88,7 @@ void Controlled::amend() {
                     port("maxSlope").equals(1).
                     port("minSlope").equals(-1).
                     box("vg::EnergyFluxCoolingSupply").name("target").
-                        port("airSupplyMax").imports("cooling/airSupplyMax[value]").
+                        port("airSupplyMax").imports("cooling/airSupplyMax[value]",CA).
                     endbox().
                 endbox().
             endbox().
@@ -103,10 +103,10 @@ void Controlled::amend() {
             box("vg::VentOpening").name("ventOpening").
             endbox().
             box("vg::VapourFluxAir").name("vapourFlux").
-                port("airFlux").imports("cooling/airFlux[value]").
+                port("airFlux").imports("cooling/airFlux[value]",CA).
             endbox().
             box("vg::EnergyFluxAir").name("energyFlux").
-                port("airFlux").imports("cooling/airFlux[value]").
+                port("airFlux").imports("cooling/airFlux[value]",CA).
             endbox().
         endbox();
 }

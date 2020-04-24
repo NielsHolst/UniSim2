@@ -18,9 +18,9 @@ Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
-    Input(heatingPowerUsage).imports("controlled/heating/energyFlux[value]").unit("W/m2");
-    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]").unit("W/m2");
-    Input(co2Flux).imports("controllers/co2[signal]").unit("g/m2/h");
+    Input(heatingPowerUsage).imports("controlled/heating/energyFlux[value]",CA).unit("W/m2");
+    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
+    Input(co2Flux).imports("controllers/co2[signal]",CA).unit("g/m2/h");
     Input(dt).imports("calendar[timeStepSecs]").unit("s");
     Input(energyUnit).equals("GJ").help("Energy units for outputs").unit("GJ|kWh");
     Output(heatingEnergyTotal).help("Accumulated energy spent on heating");

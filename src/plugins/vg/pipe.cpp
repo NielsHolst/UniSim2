@@ -5,19 +5,10 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
-#include <QStringList>
 #include <base/exception.h>
-#include <base/general.h>
-#include <base/path.h>
 #include <base/publish.h>
 #include <base/test_num.h>
-#include "general.h"
 #include "pipe.h"
-
-using std::min;
-using std::max;
-using base::bounded;
 
 using namespace base;
 

@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_TRANSMISSION_COVER_H
-#define VG_TRANSMISSION_COVER_H
+#ifndef TRANSMISSION_COVER_H
+#define TRANSMISSION_COVER_H
 
 #include "transmission_base.h"
 

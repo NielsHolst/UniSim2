@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QTextStream>
 #include <QVector>
+#include "caller.h"
 #include "path.h"
 #include "port.h"
 #include "port_access.h"
@@ -36,8 +37,8 @@ public:
     Port* peakPort(QString name);
     const Port* peakPort(QString name) const;
 
-    Port* port(QString name);
-    const Port* port(QString name) const;
+    Port* port(QString name, Caller caller=Caller());
+    const Port* port(QString name, Caller caller=Caller()) const;
 
     void help(QString s);
     QString help() const;

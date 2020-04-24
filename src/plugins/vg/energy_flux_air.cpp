@@ -6,11 +6,12 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
-#include "general.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "energy_flux_air.h"
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 
@@ -21,9 +22,9 @@ EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
 {
     help("models energy flux carried by air from outdoors to indoors");
     Input(airFlux).equals(0).help("Rate of air exchange between outdoors and indoors").unit("m3/m3/h");
-    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
-    Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
-    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(outdoorsTemperature).imports("outdoors[temperature]",CA).unit("oC");
+    Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
     Input(timeStepSecs).imports("calendar[timeStepSecs]").unit("s");
 }
 

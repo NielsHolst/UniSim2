@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_PIPE_H
-#define VG_PIPE_H
+#ifndef PIPE_H
+#define PIPE_H
 
 #include <QMap>
 #include <base/box.h>

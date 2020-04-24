@@ -17,68 +17,47 @@ namespace vg {
 PUBLISH(GrowthLight)
 
 GrowthLight::GrowthLight(QString name, QObject *parent)
-    : GrowthLightBase(name, parent)
+    : RadiationLayer(name, parent)
 {
-    Input(type).equals("HPS").help("Type of lamp").unit("HPS|LED");
+    help("models the radiative emittance from growth lights");
+    Input(on).help("Is light currently switched on?").unit("y|n");
     Input(intensity).help("Power of installed lamps per greenhouse area").unit("W/m2");
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
-    Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
+    Input(propLw).equals(0.1).help("Proportion of power emitted as long-wave radiation").unit("[0;1]");
     Input(ageCorrectedEfficiency).equals(1.).help("Proportion of intensity actually emitted").unit("[0;1]");
-    Input(on).help("Is light currently switched on?").unit("y|n");
+    Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Output(periodOn).help("Time since last time light went on").unit("m");
+    Output(currentlyOn).help("Light remains on for the minimum period").unit("y|n");;
+}
+
+void GrowthLight::initialize() {
+    swReflectivityBottom   = swReflectivityTop =
+    lwReflectivityBottom   = lwReflectivityTop = 0.;
+    swTransmissivityBottom = lwTransmissivityTop = 1.;
+    updateAbsorptivities();
 }
 
 void GrowthLight::reset() {
-    // Set parameters according to type
-    QString key = type.toLower();
-    if (key == "hps" || key == "hpsl") {
-        shortWaveProp = 0.42;
-        longWaveProp = 0.50;
-    }
-    else if (key == "led") {
-        shortWaveProp = 0.05;
-        longWaveProp = 0.82;
-    }
-    else
-        ThrowException("Unknown growth light type").value(type).context(this);
-
-    if (TestNum::gt(shortWaveProp + longWaveProp, 1.))
-        ThrowException("Sum of shortWaveProp and longWaveProp cannot exceed 1").
-                value(shortWaveProp).value2(longWaveProp).context(this);
-
-    heatProp = 1. - shortWaveProp - longWaveProp;
     noLight();
 }
 
 void GrowthLight::update() {
-    currentlyOn = on ||
-                  ( currentlyOn && (periodOn < minPeriodOn) );
+    currentlyOn = on || ( currentlyOn && (periodOn < minPeriodOn) );
     if (currentlyOn) {
         periodOn += timeStep/60.;
-
-        totalIntensity = intensity*ageCorrectedEfficiency;
-        shortWaveIntensity = totalIntensity*shortWaveProp;
-        longWaveIntensity = totalIntensity*longWaveProp;
-        heatIntensity = totalIntensity*heatProp;
-
-        parIntensity = totalIntensity*parPhotonCoef;
-        if (powerUsage==0.)
-            powerUsage = intensity;
+        parFluxDown = intensity*parPhotonCoef;
+        swFluxDown  = intensity*(1. - propLw);
+        lwFluxDown  = intensity*propLw;
     }
     else
         noLight();
 }
 
 void GrowthLight::noLight() {
-    totalIntensity =
-    shortWaveIntensity =
-    longWaveIntensity =
-    heatIntensity =
-    parIntensity =
-    powerUsage =
     periodOn = 0.;
     currentlyOn = false;
+    parFluxDown = swFluxDown = lwFluxDown = 0.;
 }
 
 } //namespace

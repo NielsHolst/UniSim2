@@ -5,9 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include "general.h"
-#include "indoors_co2.h"
 #include <base/publish.h>
+#include "indoors_co2.h"
 
 using namespace base;
 
@@ -19,11 +18,11 @@ IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors CO2 concentration");
-    Input(outdoorsCo2).imports("outdoors[co2]").unit("ppm");
-    Input(airFlux).imports("total/airFlux[value]").unit("m3/m3/h");
-    Input(injectionRate).imports("controllers/co2[signal]").unit("g/m2/h");
-    Input(assimilation).imports("crop/Pg[value]").unit("[g CO2/m2/h]");
-    Input(averageHeight).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(outdoorsCo2).imports("outdoors[co2]",CA).unit("ppm");
+    Input(airFlux).imports("total/airFlux[value]",CA).unit("m3/m3/h");
+    Input(injectionRate).imports("controllers/co2[signal]",CA).unit("g/m2/h");
+    Input(assimilation).imports("crop/Pg[value]",CA).unit("[g CO2/m2/h]");
+    Input(averageHeight).imports("geometry[indoorsAverageHeight]",CA).unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Output(value).help("Indoors CO2 concentration [ppm]").unit("ppm");
 }

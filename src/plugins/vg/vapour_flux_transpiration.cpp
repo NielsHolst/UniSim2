@@ -5,8 +5,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
-#include "general.h"
 #include <base/publish.h>
 #include "vapour_flux_transpiration.h"
 
@@ -20,9 +18,9 @@ VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("computes vapour flux from transpiration");
-    Input(conductanceIn).imports("crop/conductance[value]").unit("s/m");
-    Input(vapourFluxIn).imports("crop/vapourFlux[value]").unit("kg/m2/s");
-    Input(gainIn).imports("crop/gain[value]").unit("kg/m2/s");
+    Input(conductanceIn).imports("crop/conductance[value]",CA).unit("s/m");
+    Input(vapourFluxIn).imports("crop/vapourFlux[value]",CA).unit("kg/m2/s");
+    Input(gainIn).imports("crop/gain[value]",CA).unit("kg/m2/s");
 }
 
 void VapourFluxTranspiration::update() {

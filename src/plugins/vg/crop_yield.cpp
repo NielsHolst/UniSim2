@@ -17,8 +17,8 @@ PUBLISH(CropYield)
 CropYield::CropYield(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    Input(produceMass).imports("../mass[fruit]").unit("g/m2");
-    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]").unit("[0;1]");
+    Input(produceMass).imports("../mass[fruit]",CA).unit("g/m2");
+    Input(fractionPlantArea).imports("crop/lai[fractionPlantArea]",CA).unit("[0;1]");
     Input(fractionDryWeight).equals(0.03).help("Fraction of produce dry weight").unit("[0;1]");
     Output(freshWeight).help("Accumulated fresh weight of harvestable produce [kg per m2 greenhouse area]").unit("kg/m2");
     Output(dryWeight).help("Accumulated dry weight of harvestable produce [kg per m2 greenhouse area]").unit("kg/m2");

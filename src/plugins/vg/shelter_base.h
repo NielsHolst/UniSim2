@@ -5,25 +5,20 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_SHELTER_BASE_H
-#define VG_SHELTER_BASE_H
+#ifndef SHELTER_BASE_H
+#define SHELTER_BASE_H
 
-#include "surface_radiation_outputs.h"
+#include <base/box.h>
 
 namespace vg {
 
-class ShelterBase : public SurfaceRadiationOutputs
+class ShelterBase : public base::Box
 {
 public:
     ShelterBase(QString name, QObject *parent);
-    void reset();
-
 protected:
     // Outputs
-    double diffuseLightTransmitted, directLightTransmitted, totalLightTransmitted,
-        lightAbsorbedCover, lightAbsorbedScreens,
-        haze, U,
-        airTransmissivity;
+    double haze, U;
 };
 } //namespace
 

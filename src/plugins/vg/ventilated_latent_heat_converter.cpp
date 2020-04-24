@@ -5,10 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
-#include "ventilated_latent_heat_converter.h"
-#include "general.h"
 #include <base/publish.h>
+#include "ventilated_latent_heat_converter.h"
 
 using namespace base;
 using std::max;

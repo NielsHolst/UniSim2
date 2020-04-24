@@ -22,11 +22,11 @@ AirFluxGravitation::AirFluxGravitation(QString name, QObject *parent)
     : AirFluxBase(name, parent)
 {
     help("computes gravitational air flux from top to bottom compartment");
-    Input(screensState).imports("construction/shelter[horizontalScreenState]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]");
-    Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Input(indoorsVolume).imports("geometry[indoorsVolume]");
-    Input(groundArea).imports("geometry[groundArea]");
+    Input(screensState).imports("construction/shelter[horizontalScreenState]",CA);
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA);
+    Input(outdoorsTemperature).imports("outdoors[temperature]",CA);
+    Input(indoorsVolume).imports("geometry[indoorsVolume]",CA);
+    Input(groundArea).imports("geometry[groundArea]",CA);
 }
 
 void AirFluxGravitation::update() {

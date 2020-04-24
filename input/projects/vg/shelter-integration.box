@@ -1,0 +1,26 @@
+Simulation sim {
+  .steps = 31
+  Sequence Tsky {
+    .min = -20
+    .max  = 10
+  }
+  ShelterIntegration si {
+    .Tsky = Tsky[value]
+  }
+  OutputR {
+    PageR {
+      .xAxis = Tsky[value]
+      .ncol = 3
+      PlotR {
+        .ports = (si[eqTgo] si[eqTgi] si[eqTs])
+        .ggplot = "geom_point()"
+      }
+      PlotR {
+        .ports = (si[Qcond_to_go_from_gi] si[Qconv_to_go_from_o] si[Qradi_to_go_from_sky])
+      }
+      PlotR {
+        .ports = (si[steps])
+      }
+    }
+  }
+}

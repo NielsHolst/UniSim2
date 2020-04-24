@@ -63,34 +63,120 @@
 <xsl:template name="extract-cover">
   <xsl:param name="cover"/>
 
-  <xsl:variable name="transmissivityName" select="'PaneTransmission'"/>
-  <xsl:variable name="transmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
-  <xsl:variable name="U4Name" select="'PaneUValue'"/>
-  <xsl:variable name="U4Src" select="$cover/Constants/Parameters[ParameterName=$U4Name]/Value" as="node()"/>
+  <xsl:variable name="swReflectivityName" select="'PaneReflection'"/>
+  <xsl:variable name="swReflectivitySrc" select="$cover/Constants/Parameters[ParameterName=$swReflectivityName]/Value" as="node()"/>
+  <xsl:variable name="swTransmissivityName" select="'PaneTransmission'"/>
+  <xsl:variable name="swTransmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$swTransmissivityName]/Value" as="node()"/>
+  
+  <xsl:variable name="lwReflectivityName" select="'PaneLwReflection'"/>
+  <xsl:variable name="lwReflectivitySrc" select="$cover/Constants/Parameters[ParameterName=$lwReflectivityName]/Value" as="node()"/>
+  <xsl:variable name="lwTransmissivityName" select="'PaneLwTransmission'"/>
+  <xsl:variable name="lwTransmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$swTransmissivityName]/Value" as="node()"/>
+  
+  <xsl:variable name="UwindMinimumName" select="'PaneUValue'"/>
+  <xsl:variable name="UwindMinimumSrc" select="$cover/Constants/Parameters[ParameterName=$UwindMinimumName]/Value" as="node()"/>
 
   <box class="vg::Cover" name="cover">
-    <port name="transmissivity">
+    <port name="swReflectivityTop">
       <xsl:attribute name="externalName">
-        <xsl:value-of select="$transmissivityName"/>
+        <xsl:value-of select="$swReflectivityName"/>
       </xsl:attribute>
       <xsl:attribute name="source">
-        <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        <xsl:value-of select="ecolmod:generateXPath($swReflectivitySrc)"/>
       </xsl:attribute>
       <xsl:call-template name="float-value">
-        <xsl:with-param name="value" select="$transmissivitySrc"/>
+        <xsl:with-param name="value" select="$swReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swReflectivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swReflectivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swReflectivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swTransmissivityTop">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swTransmissivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swTransmissivitySrc"/>
       </xsl:call-template>
     </port>
 
-    <port name="U4">
+    <port name="lwReflectivityTop">
       <xsl:attribute name="externalName">
-        <xsl:value-of select="$U4Name"/>
+        <xsl:value-of select="$lwReflectivityName"/>
       </xsl:attribute>
       <xsl:attribute name="source">
-        <xsl:value-of select="ecolmod:generateXPath($U4Src)"/>
+        <xsl:value-of select="ecolmod:generateXPath($lwReflectivitySrc)"/>
       </xsl:attribute>
       <xsl:call-template name="float-value">
-        <xsl:with-param name="value" 
-          select="$cover/Constants/Parameters[ParameterName='PaneUValue']/Value"/>
+        <xsl:with-param name="value" select="$lwReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="lwReflectivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwReflectivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwReflectivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="lwTransmissivityTop">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="lwTransmissivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    
+    
+    <port name="UwindMinimum">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$UwindMinimumName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($UwindMinimumSrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$UwindMinimumSrc"/>
       </xsl:call-template>
     </port>
     </box>
@@ -101,10 +187,12 @@
     <!-- <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/> -->
     <xsl:variable name="layer" select="Layer"/>
     
-    <xsl:variable name="transmissivityLightName" select="'Transmission'"/>
-    <xsl:variable name="transmissivityLightSrc" select="Constants/Parameters[ParameterName=$transmissivityLightName]/Value" as="node()"/>
-    <xsl:variable name="energyLossReductionName" select="'InsulationRatio'"/>
-    <xsl:variable name="energyLossReductionSrc" select="Constants/Parameters[ParameterName=$energyLossReductionName]/Value" as="node()"/>
+    <xsl:variable name="reflectivityTopName" select="'ReflectionOutwards'"/>
+    <xsl:variable name="reflectivityTopSrc" select="Constants/Parameters[ParameterName=$reflectivityTopName]/Value" as="node()"/>
+    <xsl:variable name="reflectivityBottomName" select="'ReflectionInwards'"/>
+    <xsl:variable name="reflectivityBottomSrc" select="Constants/Parameters[ParameterName=$reflectivityBottomName]/Value" as="node()"/>
+    <xsl:variable name="transmissivityName" select="'Transmission'"/>
+    <xsl:variable name="transmissivitySrc" select="Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
     <xsl:variable name="transmissivityAirName" select="'Porosity'"/>
     <xsl:variable name="transmissivityAirSrc" select="Constants/Parameters[ParameterName=$transmissivityAirName]/Value" as="node()"/>
     
@@ -112,29 +200,97 @@
       <xsl:attribute name="name">
         <xsl:value-of select="concat('layer', $layer)"/>
       </xsl:attribute>
-      <port name="orientation" externalName="No name" source="Fixed" value="cover"/>
-      <port name="transmissivityLight">
+      
+      <port name="swTransmissivityTop">
         <xsl:attribute name="externalName">
-          <xsl:value-of select="$transmissivityLightName"/>
+          <xsl:value-of select="$transmissivityName"/>
         </xsl:attribute>
         <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($transmissivityLightSrc)"/>
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
         </xsl:attribute>
         <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="$transmissivityLightSrc"/>
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
         </xsl:call-template>
       </port>
-      <port name="energyLossReduction">
+      <port name="swTransmissivityBottom">
         <xsl:attribute name="externalName">
-          <xsl:value-of select="$energyLossReductionName"/>
+          <xsl:value-of select="$transmissivityName"/>
         </xsl:attribute>
         <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($energyLossReductionSrc)"/>
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
         </xsl:attribute>
         <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="$energyLossReductionSrc"/>
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
         </xsl:call-template>
       </port>
+      <port name="swReflectivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityTopName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityTopSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityTopSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="swReflectivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityBottomName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityBottomSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityBottomSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwTransmissivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwTransmissivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
+        </xsl:call-template>
+      </port>
+
+      <port name="lwReflectivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityTopName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityTopSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityTopSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwReflectivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityBottomName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityBottomSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityBottomSrc"/>
+        </xsl:call-template>
+      </port>
+      
       <port name="transmissivityAir">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$transmissivityAirName"/>
@@ -146,6 +302,7 @@
           <xsl:with-param name="value" select="$transmissivityAirSrc"/>
         </xsl:call-template>
       </port>
+      
       <port name="state">
         <xsl:attribute name="ref">
           <xsl:value-of select="concat('actuators/screens/layer', $layer, '[value]')"/>
@@ -154,6 +311,9 @@
           <!-- <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/> -->
         <!-- </xsl:attribute> -->
       </port>
+      <box class="vg::AirSpaceScreened" name="airSpace">
+        <port name="depth" value="0.1"/>
+      </box>
     </box>
   </xsl:if>
 </xsl:template>
@@ -801,6 +961,7 @@
         </xsl:call-template>
       </box>
     </box>
+    <box class="vg::AirSpaceNet" name="airSpaceNet"/>
   </box>
   <xsl:comment> *** Indoors *** </xsl:comment>
   <xsl:variable name="leakageName" select="'leakage'"/>
@@ -838,6 +999,7 @@
           </port>
         </box>      
       </box>
+      <!--
       <box class="vg::EnergyFluxSum" name="energyFlux">
         <box class="vg::EnergyFluxFloor" name="floor">
           <port name="Uindoors">
@@ -898,7 +1060,7 @@
             </port>
           </box>      
         </box>      
-      </box>
+      </box> -->
     </box>
   </box>
   <xsl:comment> *** allSetpoints *** </xsl:comment>
@@ -1250,39 +1412,37 @@
       </box>
     </box>
   </box>
-       
+  
   <xsl:comment> *** Crop *** </xsl:comment>
   <xsl:variable name="laiName" select="'LAI'"/>
   <xsl:variable name="laiSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$laiName]/Value" as="node()"/>
   <xsl:variable name="laiValue" select="number(replace($laiSrc, ',', '.'))"/>
-  <xsl:variable name="fractionPlantAreaName" select="'propAreaCultured'"/>
-  <xsl:variable name="fractionPlantAreaSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$fractionPlantAreaName]/Value" as="node()"/>
-  <xsl:variable name="fractionPlantAreaValue" select="number(replace($fractionPlantAreaSrc, ',', '.'))"/>
+  <xsl:variable name="coverageName" select="'propAreaCultured'"/>
+  <xsl:variable name="coverageSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$coverageName]/Value" as="node()"/>
+  <xsl:variable name="coverageValue" select="number(replace($coverageSrc, ',', '.'))"/>
   <box class="vg::Crop" name="crop">
-    <box name="lai">
-      <newPort name="value">
-          <xsl:attribute name="externalName">
-            <xsl:value-of select="$laiName"/>
-          </xsl:attribute>
-          <xsl:attribute name="source">
-            <xsl:value-of select="ecolmod:generateXPath($laiSrc)"/>
-          </xsl:attribute>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$laiValue"/>
-          </xsl:attribute>
-      </newPort>
-      <newPort name="fractionPlantArea">
-          <xsl:attribute name="externalName">
-            <xsl:value-of select="$fractionPlantAreaName"/>
-          </xsl:attribute>
-          <xsl:attribute name="source">
-            <xsl:value-of select="ecolmod:generateXPath($fractionPlantAreaSrc)"/>
-          </xsl:attribute>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$fractionPlantAreaValue"/>
-          </xsl:attribute>
-      </newPort>
-    </box>
+    <port name="lai">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$laiName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($laiSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$laiValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="coverage">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$coverageName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($coverageSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$coverageValue"/>
+        </xsl:attribute>
+    </port>
   </box>
   <box class="vg::Budget" name="budget"/>
   <xsl:comment> *** Output *** </xsl:comment>

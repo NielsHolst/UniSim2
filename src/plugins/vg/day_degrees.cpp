@@ -20,7 +20,7 @@ DayDegrees::DayDegrees(QString name, QObject *parent)
     Input(T0).equals(0);
     Input(Topt).equals(100);
     Input(Tmax).equals(100);
-    Input(T).imports("weather[Tavg]");
+    Input(T).imports("weather[Tavg]",CA);
 }
 
 double DayDegrees::calcDailyTimeStep()

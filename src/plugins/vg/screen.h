@@ -5,43 +5,30 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_SCREEN_H
-#define VG_SCREEN_H
-
+#ifndef SCREEN_H
+#define SCREEN_H
+#include "radiation_layer.h"
 #include <base/box.h>
 
 namespace vg {
 
-class Screen : public base::Box
+class Screen : public RadiationLayer
 {
 public:
     Screen(QString name, QObject *parent);
     void reset();
     void initialize();
     void update();
-    enum Orientation{Cover, Horizontal};
 private:
     friend class Screens;
 
     // Inputs
-    QString orientation;
-    double shelterArea,
-           transmissivityLight,
-           emissivityInner, emissivityOuter,
-           specificHeatCapacity,
-           energyLossReduction, U, haze,
-           transmissivityAir, transmissivityAirExponent, state;
-    bool acceptZeroU;
+    double haze, transmissivityAir, transmissivityAirExponent, state;
     // Outputs
     int layer;
     double
-        transmissivityLightNet,
-        absorptivityLwInnerNet, absorptivityLwOuterNet,
         unhazed, transmissivityAirNet, effectiveArea,
-        resistance, heatCapacity;
-    bool isHorizontal;
-    // Data
-    Orientation _orientation;
+        heatCapacity;
     // Methods
     void updateByState(double state);
 };

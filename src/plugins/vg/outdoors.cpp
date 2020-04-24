@@ -22,16 +22,17 @@ Outdoors::Outdoors(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("delivers readings of ourdoors weather");
-    Input(sunlightPhotonCoef).equals(2.3).help("Number of PAR photons in sunlight energy").unit("micromole/J");
     Input(co2).equals(400.).help("Outdoors CO2 concentration").unit("ppm");
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature").unit("oC");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity").unit("[0;100]");
     Input(radiation).imports("./records[GlobRad]").help("Total sunlight irradiation").unit("W/m2");
-    Input(diffuseRadiation).imports("./diffuseIrradiationEstimate[value]").help("Diffuse component of sunlight irradiation").unit("W/m2");
+    Input(propPar).equals(0.45).help("Proportion of PAR in radiation").unit("[0;1]");
+    Input(propUv).equals(0.07).help("Proportion of UV in radiation").unit("[0;1]");
+//    Input(diffuseRadiation).imports("./diffuseIrradiationEstimate[value]").help("Diffuse component of sunlight irradiation").unit("W/m2");
     Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed").unit("m/s");
     Input(skyTemperature).imports("skyTemperatureEstimate[temperature]").help("Sky temperature").unit("oC");
-    Output(directRadiation).help("Direct component of sunlight irradiation").unit("W/m2");
-    Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation").unit("[0;1]");
+//    Output(directRadiation).help("Direct component of sunlight irradiation").unit("W/m2");
+//    Output(propDirectRadiation).help("Proportion of direct component of sunlight irradiation").unit("[0;1]");
     Output(ah).help("Outdoors absolute humidity").unit("kg/m3");
     Output(sh).help("Outdoors specific humidity").unit("kg/kg");
     Output(soilTemperature).imports("./soilTemperature[value]").unit("oC");
@@ -45,10 +46,10 @@ void Outdoors::amend() {
             port("fileName").equals("input/sel_dk.txt").
 //            port("ignoreYear").equals(true). // NH 2019/07/11
         endbox();
-    if (!findMaybeOne<Box>("./diffuseIrradiationEstimate"))
-        builder.
-        box("DiffuseIrradiationRE").name("diffuseIrradiationEstimate").
-        endbox();
+//    if (!findMaybeOne<Box>("./diffuseIrradiationEstimate"))
+//        builder.
+//        box("DiffuseIrradiationRE").name("diffuseIrradiationEstimate").
+//        endbox();
     if (!findMaybeOne<Box>("./skyTemperatureEstimate"))
         builder.
         box("SkyTemperature").name("skyTemperatureEstimate").
@@ -67,7 +68,7 @@ void Outdoors::amend() {
             endbox().
             box("PidController").name("controller").
                 port("sensedValue").imports("..[value]").
-                port("desiredValue").imports("outdoors[temperature]").
+                port("desiredValue").imports("outdoors[temperature]",CA).
                 port("Kprop").equals(0.5e-4).
             endbox().
         endbox();
@@ -75,12 +76,12 @@ void Outdoors::amend() {
 
 void Outdoors::initialize() {
     Box *records = findOne<Box>("./records");
-    bool hasDifRad = records->peakPort("DifRad"),
+    bool //hasDifRad = records->peakPort("DifRad"),
          hasTsky = records->peakPort("Tsky");
-    if (hasDifRad) {
-        port("diffuseRadiation")->imports("./records[DifRad]");
-        port("diffuseRadiation")->resolveImportsAgain();
-    }
+//    if (hasDifRad) {
+//        port("diffuseRadiation")->imports("./records[DifRad]");
+//        port("diffuseRadiation")->resolveImportsAgain();
+//    }
     if (hasTsky) {
         port("skyTemperature")->imports("./records[Tsky]");
         port("skyTemperature")->resolveImportsAgain();

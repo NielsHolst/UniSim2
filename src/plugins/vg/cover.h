@@ -5,19 +5,14 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_COVER_H
-#define VG_COVER_H
-
+#ifndef COVER_H
+#define COVER_H
 #include <base/box.h>
-#include "surface_radiation_outputs.h"
-
-namespace base {
-    class DataGrid;
-}
+#include "radiation_layer.h"
 
 namespace vg {
 
-class Cover : public vg::SurfaceRadiationOutputs
+class Cover : public RadiationLayer
 {
 public:
     Cover(QString name, QObject *parent);
@@ -26,19 +21,8 @@ public:
     void update();
 private:
     // Inputs
-    QString directTransmissionFile;
     double
-        greenhouseReflection, chalk,
-        latitude, azimuth, area,
-        U4, windSpeed, emissivity, absorptivity, transmissivity,
-        specificHeatCapacity, haze;
-
-    // Outputs
-    double U, heatCapacity;
-
-    // Data
-    base::DataGrid *dirTransTable;
-    bool _isInitialized;
+        UwindMinimum, UwindSlope, windSpeed, haze;
 };
 } //namespace
 

@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_LEAF_LIGHT_RESPONSE_H
-#define VG_LEAF_LIGHT_RESPONSE_H
+#ifndef LEAF_LIGHT_RESPONSE_H
+#define LEAF_LIGHT_RESPONSE_H
 
 
 #include <base/box.h>
@@ -27,7 +27,7 @@ private:
            theta, frParAbs,
            VCmax, Jmax, KM, gamma;
     // Outputs
-    double rtCO2, Pnmax, Pgmax, LUE, Rd;
+    double rtCO2, Pnmax, Pgmax, lue, Rd;
     // Methods
     double darkRespirationRate();
     double potentialLightUseEfficiency();    

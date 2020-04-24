@@ -11,6 +11,7 @@
 #include <QTextStream>
 #include <QVector>
 #include "assign.h"
+#include "caller.h"
 #include "construction_step.h"
 #include "convert.h"
 #include "enum_functions.h"
@@ -41,6 +42,7 @@ private:
     QString _importPath, _fallBackValue;
     QVector<Port *> _importPorts, _exportPorts;
     bool _importPortMustExist, _importsResolved;
+    Caller _importCaller;
     PortAccess _access;
     bool _isReference, _reset, _valueOverridden;
     bool _isBlind;
@@ -55,8 +57,8 @@ public:
     template <class T> Port& equals(T value);
     Port& equals(const char *value);
     Port& equals(QStringList value);
-    Port& imports(QString pathToPort);
-    Port& importsMaybe(QString pathToPort, QString fallBackValue=QString());
+    Port& imports(QString pathToPort, Caller caller=Caller());
+    Port& importsMaybe(QString pathToPort, QString fallBackValue=QString(), Caller caller=Caller());
     Port& access(PortAccess acc);
     Port& reference();
     Port& zeroAtReset();

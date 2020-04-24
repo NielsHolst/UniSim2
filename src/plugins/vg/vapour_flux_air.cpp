@@ -6,7 +6,6 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
-#include "general.h"
 #include <base/publish.h>
 #include "vapour_flux_air.h"
 
@@ -21,9 +20,9 @@ VapourFluxAir::VapourFluxAir(QString name, QObject *parent)
 {
     help("models vapour flux through air exchange");
     Input(airFlux).help("Rate of air exchange with outdoors").unit("m3/m3/h");
-    Input(indoorsAh).imports("indoors/humidity[ah]").unit("kg/m3");
-    Input(outdoorsAh).imports("outdoors[ah]").unit("kg/m3");
-    Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
+    Input(indoorsAh).imports("indoors/humidity[ah]",CA).unit("kg/m3");
+    Input(outdoorsAh).imports("outdoors[ah]",CA).unit("kg/m3");
+    Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
 }
 
 void VapourFluxAir::update() {

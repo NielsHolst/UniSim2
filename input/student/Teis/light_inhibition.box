@@ -1,0 +1,12 @@
+Simulation sim {
+  .steps = 3 
+  LightInhibition inhibition {
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (inhibition[*])
+      }
+    }
+  }
+}

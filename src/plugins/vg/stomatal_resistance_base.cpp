@@ -5,10 +5,11 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include "general.h"
+#include <base/phys_math.h>
 #include "stomatal_resistance_base.h"
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 

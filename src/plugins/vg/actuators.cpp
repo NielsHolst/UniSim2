@@ -35,13 +35,13 @@ void Actuators::amend() {
     if (!findMaybeOne<Box>("./vents"))
         builder.
         box("Accumulator").name("vents").
-            port("initial").imports("controllers/ventilation/crack[value]").
-            port("change").imports("./controller[controlVariable]").
+            port("initial").imports("controllers/ventilation/crack[value]",CA).
+            port("change").imports("./controller[controlVariable]",CA).
             port("minValue").equals(0.).
             port("maxValue").equals(1.).
             box("PidController").name("controller").
                 port("sensedValue").imports("..[value]").
-                port("desiredValue").imports("controllers/ventilation[value]").
+                port("desiredValue").imports("controllers/ventilation[value]",CA).
                 port("Kprop").equals(0.1).
                 port("Kderiv").equals(0.2).
                 port("Kint").equals(0.01).
@@ -58,12 +58,12 @@ void Actuators::amendScreen(QString name) {
     BoxBuilder builder(findOne<Box>("./screens"));
     builder.
         box("Accumulator").name(name).
-            port("change").imports("./controller[controlVariable]").
+            port("change").imports("./controller[controlVariable]",CA).
             port("minValue").equals(0.).
             port("maxValue").equals(1.).
             box("PidController").name("controller").
                 port("sensedValue").imports("..[value]").
-                port("desiredValue").imports("controllers/screens/"+name+"[value]").
+                port("desiredValue").imports("controllers/screens/"+name+"[value]",CA).
                 port("Kprop").equals(0.05).
             endbox().
         endbox();

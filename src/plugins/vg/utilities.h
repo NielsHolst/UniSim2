@@ -11,13 +11,13 @@
 #include <limits>
 #include <QDir>
 #include <QObject>
-#include "general.h"
+#include <base/phys_math.h>
 
 using std::numeric_limits;
 
 namespace vg {
 
-const double RAD = PI/180.;
+const double RAD = phys_math::PI/180.;
 const double DEGREES = 1./RAD;
 const double DEG_TO_RAD = DEGREES;
 const double MAX_EXP = -log(numeric_limits<double>::epsilon());

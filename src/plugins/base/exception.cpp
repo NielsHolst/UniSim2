@@ -17,7 +17,7 @@ int Exception::_count = 0;
 const QObject *Exception::_fallbackContext = nullptr;
 
 Exception::Exception(QString message)
-    : _message(message)
+    : _message(message), _caller(Caller())
 {
     ++_count;
 }
@@ -42,6 +42,11 @@ Exception& Exception::context(const QObject *object) {
         if (box)
             _contextDescription += QString(" (#%1)").arg(box->order());
     }
+    return *this;
+}
+
+Exception& Exception::caller(Caller c) {
+    _caller = c;
     return *this;
 }
 
@@ -74,6 +79,9 @@ QString Exception::what() const {
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
+    if (_caller.caller())
+        text += QString("\nCalled by %1\n in %2, line %3").
+                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
     if (!dateTime().isNull())
         text += "\nCalendar time: " + convert<QString>(dateTime());
     return text;

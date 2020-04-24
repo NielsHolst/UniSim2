@@ -45,18 +45,19 @@ Port& Port::equals(QStringList value) {
     return equals(value.toVector());
 }
 
-Port& Port::imports(QString pathToPort) {
+Port& Port::imports(QString pathToPort, Caller caller) {
     if (_isReference)
         return equals(pathToPort);
     _mode = PortMode::Referenced;
     _portValueStep = environment().computationStep();
     _importPath = pathToPort;
     _importPortMustExist = true;
+    _importCaller = caller;
     checkValueOverridden();
     return help("Defaults to " + pathToPort);
 }
 
-Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
+Port& Port::importsMaybe(QString pathToPort, QString fallBackValue, Caller caller) {
     if (_isReference)
         return equals(pathToPort);
     _mode = PortMode::MaybeReferenced;
@@ -64,6 +65,7 @@ Port& Port::importsMaybe(QString pathToPort, QString fallBackValue) {
     _importPath = pathToPort;
     _fallBackValue = fallBackValue;
     _importPortMustExist = false;
+    _importCaller = caller;
     checkValueOverridden();
     return help("Defaults to " + pathToPort + " (if it exists)");
 }
@@ -242,7 +244,7 @@ void Port::resolveImports() {
     // Missing import ports may be an error, otherwise accept and clear the import path
     if (_importPorts.isEmpty()) {
         if (_importPortMustExist)
-            ThrowException("No matching import ports found").value(_importPath).context(this);
+            ThrowException("No matching import ports found").value(_importPath).context(this).caller(_importCaller);
         else {
             _importPath.clear();
             if (!_fallBackValue.isEmpty()) {
@@ -256,13 +258,13 @@ void Port::resolveImports() {
     // Import port must have a type
     _importType = commonType(_importPorts);
     if (_importType == Null)
-        ThrowException("Import port is of unknown type").value(_importPath).context(this);
+        ThrowException("Import port is of unknown type").value(_importPath).context(this).caller(_importCaller);
 
     // Deduce value type from import type (this happens of port is an extra, added port)
     if (_valueType == Null) {
         _valueType = deduceTypeFromImportType(_importType, transform());
         if (_valueType == Null)
-            ThrowException("Unexpected error: Type of imported value is Null");
+            ThrowException("Unexpected error: Type of imported value is Null").value(_importPath).context(this).caller(_importCaller);
     }
 }
 

@@ -15,6 +15,9 @@ HEADERS +=  \
     air_flux_given.h \
     air_flux_infiltration.h \
     air_flux_vents.h \
+    air_space_base.h \
+    air_space_net.h \
+    air_space_screened.h \
     any_flag.h \
     average.h \
     boundary_layer_resistance_base.h \
@@ -33,28 +36,19 @@ HEADERS +=  \
     crop_mass.h \
     crop_growth.h \
     crop_lai.h \
-    crop_radiation.h \
     crop_yield.h \
     daylight_level.h \
     diffuse_irradiation_base.h \
     diffuse_irradiation_RE.h \
     energy_flux_air.h \
     energy_flux_base.h \
-    energy_flux_condensation.h \
-    energy_flux_floor.h \
-    energy_flux_sunlight.h \
     energy_flux_heating.h \
-    energy_flux_shelter.h \
-    energy_flux_sum.h \
-    energy_flux_transpiration.h \
-    energy_screen_balance_signal.h \
     floor_radiation_absorbed.h \
     fruit_crop_lai.h \
     fruit_crop_mass.h \
     fruit_factor.h \
     geometry.h \
     given.h \
-    growth_light_base.h \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
@@ -66,11 +60,9 @@ HEADERS +=  \
     indoors_light.h \
     indoors_temperature.h \
     indoors_wind_speed.h \
-    leaf_layer.h \
     leaf_light_response.h \
     leaf_light_response_processes.h \
     leaf_photosynthesis.h \
-    leaf_radiation_absorbed.h \
     leaf_temperature.h \
     leaf_transpiration.h \
     leaf_wind_speed.h \
@@ -80,6 +72,17 @@ HEADERS +=  \
     pid_controller.h \
     pipe.h \
     pipe_forced.h \
+    radiation_layer.h \
+    radiation_layer_cover.h \
+    radiation_layer_crop.h \
+    radiation_layer_floor.h \
+    radiation_layer_pipe.h \
+    radiation_layer_screen1.h \
+    radiation_layer_screen2.h \
+    radiation_layer_screen3.h \
+    radiation_layer_shelter.h \
+    radiation_layer_sky.h \
+    radiation_layers.h \
     running_average.h \
     screen.h \
     screen_combination.h \
@@ -90,14 +93,15 @@ HEADERS +=  \
     shelter.h \
     shelter_base.h \
     shelter_face.h \
+    shelter_integration.h \
     simulation_period.h \
     sky_temperature.h \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
     stomatal_resistance_tomato.h \
     sum.h \
-    surface_radiation.h \
-    surface_radiation_outputs.h \
+#    surface_radiation.h \
+#    surface_radiation_outputs.h \
     utilities.h \
     vapour_flux_air.h \
     vapour_flux_base.h \
@@ -115,6 +119,9 @@ SOURCES += \
     air_flux_given.cpp \
     air_flux_infiltration.cpp \
     air_flux_vents.cpp \
+    air_space_base.cpp \
+    air_space_net.cpp \
+    air_space_screened.cpp \
     any_flag.cpp \
     average.cpp \
     boundary_layer_resistance_base.cpp \
@@ -133,28 +140,19 @@ SOURCES += \
     crop_mass.cpp \
     crop_growth.cpp \
     crop_lai.cpp \
-    crop_radiation.cpp \
     crop_yield.cpp \
     daylight_level.cpp \
     diffuse_irradiation_base.cpp \
     diffuse_irradiation_RE.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
-    energy_flux_condensation.cpp \
-    energy_flux_floor.cpp \
-    energy_flux_sunlight.cpp \
     energy_flux_heating.cpp \
-    energy_flux_shelter.cpp \
-    energy_flux_sum.cpp \
-    energy_flux_transpiration.cpp \
-    energy_screen_balance_signal.cpp \
     floor_radiation_absorbed.cpp \
     fruit_crop_lai.cpp \
     fruit_crop_mass.cpp \
     fruit_factor.cpp \
     geometry.cpp \
     given.cpp \
-    growth_light_base.cpp \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
@@ -166,11 +164,9 @@ SOURCES += \
     indoors_light.cpp \
     indoors_temperature.cpp \
     indoors_wind_speed.cpp \
-    leaf_layer.cpp \
     leaf_light_response.cpp \
     leaf_light_response_processes.cpp \
     leaf_photosynthesis.cpp \
-    leaf_radiation_absorbed.cpp \
     leaf_temperature.cpp \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
@@ -180,6 +176,17 @@ SOURCES += \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \
+    radiation_layer.cpp \
+    radiation_layer_cover.cpp \
+    radiation_layer_crop.cpp \
+    radiation_layer_floor.cpp \
+    radiation_layer_pipe.cpp \
+    radiation_layer_screen1.cpp \
+    radiation_layer_screen2.cpp \
+    radiation_layer_screen3.cpp \
+    radiation_layer_shelter.cpp \
+    radiation_layer_sky.cpp \
+    radiation_layers.cpp \
     running_average.cpp \
     screen.cpp \
     screen_combination.cpp \
@@ -190,14 +197,15 @@ SOURCES += \
     shelter.cpp \
     shelter_base.cpp \
     shelter_face.cpp \
+    shelter_integration.cpp \
     simulation_period.cpp \
     sky_temperature.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
     stomatal_resistance_tomato.cpp \
     sum.cpp \
-    surface_radiation.cpp \
-    surface_radiation_outputs.cpp \
+#    surface_radiation.cpp \
+#    surface_radiation_outputs.cpp \
     utilities.cpp \
     vapour_flux_air.cpp \
     vapour_flux_base.cpp \

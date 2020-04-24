@@ -10,6 +10,7 @@
 #include <QDateTime>
 #include <QString>
 #include <QTime>
+#include "caller.h"
 #include "exception_context_class.h"
 
 #define ThrowException(X) \
@@ -25,6 +26,7 @@ public:
     Exception& file(const char *s);
     Exception& line(int i);
     Exception& context(const QObject *object);
+    Exception& caller(Caller c);
     Exception& hint(QString s);
     Exception& id(QString s);
     template <class T> Exception& value(T v);
@@ -39,6 +41,7 @@ private:
     // data
     QString _message, _contextDescription,
             _value, _value1, _value2, _hint, _fullName, _file, _id;
+    Caller _caller;
     int _line;
     static int _count;
     static const QObject *_fallbackContext;

@@ -16,9 +16,9 @@ namespace base {
 
     template <class Functor>
     QPair<double, double> minimise(Functor f, double xMin, double xMax, double precision, int maxIter, QObject *caller) {
-        int bits = std::ceil(1. - std::log(precision)/std::log(2));
+        int bits = static_cast<int>( std::ceil(1. - std::log(precision)/std::log(2.)) );
         std::pair<double, double> minimum;
-        boost::uintmax_t _maxIter = maxIter;
+        boost::uintmax_t _maxIter = static_cast<boost::uintmax_t>( maxIter );
 
         try {
             minimum = brent_find_minima<Functor, double>(f, xMin, xMax, bits, _maxIter);
@@ -29,7 +29,7 @@ namespace base {
         }
 
         if (int(_maxIter) == maxIter)
-            ThrowException("Cannot minimise function. Max. iterations reached").value(maxIter);
+            ThrowException("Cannot minimise function. Max. iterations reached").value(maxIter).context(caller);
 
         return qMakePair(minimum.first, minimum.second);
     }

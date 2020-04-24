@@ -5,13 +5,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <stdlib.h>
-#include "general.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
 #include "stomatal_resistance_rose.h"
 
 using std::max;
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 
@@ -21,11 +21,11 @@ StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance of rose");
-    Input(co2).imports("indoors/co2[value]").unit("ppm");
-    Input(rh).imports("indoors/humidity[rh]").unit("[0;100]");
-    Input(Pn).imports("../photosynthesis[Pn]").unit("g CO2/ground m2/h");
-    Input(rbCO2).imports("../rb[rbCo2]").unit("s/m");
-    Input(lai).imports("crop/lai[value]").unit("m2/m2");
+    Input(co2).imports("indoors/co2[value]",CA).unit("ppm");
+    Input(rh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
+    Input(Pn).imports("../photosynthesis[Pn]",CA).unit("g CO2/ground m2/h");
+    Input(rbCO2).imports("../rb[rbCo2]",CA).unit("s/m");
+    Input(lai).imports("crop[lai]",CA).unit("m2/m2");
 }
 
 double StomatalResistanceRose::resetRsH2O() {

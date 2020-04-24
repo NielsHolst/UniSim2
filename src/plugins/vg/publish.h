@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_PUBLISH_H
-#define VG_PUBLISH_H
+#ifndef PUBLISH_H
+#define PUBLISH_H
 //#include <usbase/product_base.h>
 #include <usbase/product.h>
 

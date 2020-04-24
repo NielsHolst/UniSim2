@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_BOUNDARY_LAYER_RESISTANCE_H
-#define VG_BOUNDARY_LAYER_RESISTANCE_H
+#ifndef BOUNDARY_LAYER_RESISTANCE_H
+#define BOUNDARY_LAYER_RESISTANCE_H
 
 #include <base/box.h>
 

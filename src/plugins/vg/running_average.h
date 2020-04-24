@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_RUNNING_AVERAGE_H
-#define VG_RUNNING_AVERAGE_H
+#ifndef RUNNING_AVERAGE_H
+#define RUNNING_AVERAGE_H
 
 #include <QVector>
 #include <base/box.h>

@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_BOUNDARY_LAYER_RESISTANCE_MONTEITH_UNSWORTH_H
-#define VG_BOUNDARY_LAYER_RESISTANCE_MONTEITH_UNSWORTH_H
+#ifndef BOUNDARY_LAYER_RESISTANCE_MONTEITH_UNSWORTH_H
+#define BOUNDARY_LAYER_RESISTANCE_MONTEITH_UNSWORTH_H
 
 #include "boundary_layer_resistance_base.h"
 

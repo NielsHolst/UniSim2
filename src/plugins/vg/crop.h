@@ -17,10 +17,9 @@ class Crop : public base::Box
 public:
     Crop(QString name, QObject *parent);
     void amend();
-
 private:
-    double density;
-    void amendLayer(QString level);
+    // Inputs
+    double lai, coverage;
 };
 } //namespace
 

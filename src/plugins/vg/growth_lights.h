@@ -5,20 +5,21 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_GROWTH_LIGHTS_H
-#define VG_GROWTH_LIGHTS_H
+#ifndef GROWTH_LIGHTS_H
+#define GROWTH_LIGHTS_H
 
-#include <QVector>
-#include "growth_light_base.h"
+#include "radiation_layer.h"
 
 namespace vg {
 
-class GrowthLights : public GrowthLightBase
-{
+class GrowthLights : public RadiationLayer {
 public:
     GrowthLights(QString name, QObject *parent);
-    void amend();
+private:
+    // Inputs
+    bool currentlyOn;
 };
+
 } //namespace
 
 

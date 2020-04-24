@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_LEAF_WIND_SPEED_H
-#define VG_LEAF_WIND_SPEED_H
+#ifndef LEAF_WIND_SPEED_H
+#define LEAF_WIND_SPEED_H
 
 #include <base/box.h>
 
@@ -21,8 +21,7 @@ public:
 
 protected:
     // Inputs
-    double k ,indoorsWindSpeedMinimum, indoorsWindSpeed,
-        xGauss, lai;
+    double indoorsWindSpeedMinimum, indoorsWindSpeed, lai;
     // Outputs
     double value;
 };

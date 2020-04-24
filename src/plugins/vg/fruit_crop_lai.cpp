@@ -21,8 +21,8 @@ FruitCropLai::FruitCropLai(QString name, QObject *parent)
 {
     help("models LAI of fruit crops");
     Input(maxLai).equals(3.5).help("Max. LAI in cropped area").unit("m2/m2");
-    Input(cropDensity).imports("..[density]").unit("/m2");
-    Input(tempSum).imports("../physTime[total]").unit("DD");
+    Input(cropDensity).imports("..[density]",CA).unit("/m2");
+    Input(tempSum).imports("../physTime[total]",CA).unit("DD");
     Input(cropPresent).imports("../periods/*[flag]").transform(Any).unit("y|n");
     Output(maxLaiReached).help("Tells whether max. LAI has been reached").unit("y|n");
 }

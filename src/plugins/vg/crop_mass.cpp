@@ -19,7 +19,7 @@ CropMass::CropMass(QString name, QObject *parent)
     Input(establishCrop).imports("../periods/*[flagIsUp]").transform(Any).unit("y|n");
     Input(removeCrop).imports("../periods/*[flagJustLowered]").transform(Any).unit("y|n");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
-    Input(growthRate).imports("../growth[netGrowthRate]").unit("g/m2");
+    Input(growthRate).imports("../growth[netGrowthRate]",CA).unit("g/m2");
     Input(initMass).equals(10).help("Initial total crop dry mass").unit("g/m2");
     Input(propRoot).equals(0.).help("Initial proportion of crop dry mass in root").unit("[0;1]");
     Input(propStem).equals(0.5).help("Initial proportion of crop dry mass in stem").unit("[0;1]");

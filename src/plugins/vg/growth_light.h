@@ -5,28 +5,29 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_GROWTH_LIGHT_H
-#define VG_GROWTH_LIGHT_H
+#ifndef GROWTH_LIGHT_H
+#define GROWTH_LIGHT_H
 
-#include "growth_light_base.h"
+#include "radiation_layer.h"
 
 namespace vg {
 
-class GrowthLight : public GrowthLightBase {
+class GrowthLight : public RadiationLayer {
 public:
     GrowthLight(QString name, QObject *parent);
+    void initialize();
     void reset();
     void update();
 private:
     // Inputs
-    QString type;
-    double timeStep, intensity, parPhotonCoef,
-        minPeriodOn, age, lifeTime,
-        ageCorrectedEfficiency;
+    double intensity, parPhotonCoef, propLw,
+        ageCorrectedEfficiency,
+        timeStep, minPeriodOn;
     bool on;
     // Outputs
     double
         periodOn;
+    bool currentlyOn;
     // Methods
     void noLight();
 };

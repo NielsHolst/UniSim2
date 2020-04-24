@@ -22,8 +22,8 @@ SkyTemperature::SkyTemperature(QString name, QObject *parent)
     help("computes sky temperature from temperature and RH");
     Input(intercept).equals(0.732).help("Emissivity intercept on dew point temperature").unit("[0;1]");
     Input(slope).equals(0.00635).help("Emissivity slope on dew point temperature").unit("/K");
-    Input(airTemperature).imports("outdoors[temperature]").unit("oC");
-    Input(rh).imports("outdoors[rh]").unit("[0;100]");
+    Input(airTemperature).imports("outdoors[temperature]",CA).unit("oC");
+    Input(rh).imports("outdoors[rh]",CA).unit("[0;100]");
     Output(temperature).help("Sky temperature").unit("oC");
     Output(emissivity).help("Sky emmisivity").unit("[0;1]");
 }

@@ -27,9 +27,9 @@ EnergyFluxHeating::EnergyFluxHeating(QString name, QObject *parent)
     Input(a).imports("actuators/heating/pipes/*[a]").unit("W/m/mm");
     Input(b).imports("actuators/heating/pipes/*[b]").unit("!=1");
 
-    Input(inflowTemperature).imports("actuators/heating[value]").unit("oC");
-    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
-    Input(groundArea).imports("geometry[groundArea]").unit("m2");
+    Input(inflowTemperature).imports("actuators/heating[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(groundArea).imports("geometry[groundArea]",CA).unit("m2");
 
     Output(pipeLength).help("Total length of each pipe").unit("m");
     Output(pipeVolume).help("Total volume of each pipe").unit("m3");

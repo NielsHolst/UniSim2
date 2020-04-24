@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_CROP_YIELD_H
-#define VG_CROP_YIELD_H
+#ifndef CROP_YIELD_H
+#define CROP_YIELD_H
 
 #include <base/box.h>
 

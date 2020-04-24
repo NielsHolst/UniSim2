@@ -17,18 +17,15 @@ class Geometry : public base::Box
 public:
     Geometry(QString name, QObject *parent);
     void reset();
-    void update();
 private:
     // Input
-    double orientation, spanWidth, length, height, roofPitch, reflection, horizontalScreenState;
+    double orientation, spanWidth, length, height, roofPitch, reflection;
     int numSpans;
-
     // Output
     double width, groundArea,
-        roofArea, sideWallsArea, endWallsArea, gablesArea,
+        roofHeight, roofArea, sideWallsArea, endWallsArea, gablesArea,
         coverArea, coverPerGroundArea,
-        indoorsVolume, indoorsVolumeTotal, indoorsAverageHeight;
-
+        indoorsVolumeTotal, indoorsAverageHeight;
     // Data
     double roofVolume;
 };

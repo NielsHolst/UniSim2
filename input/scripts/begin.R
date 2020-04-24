@@ -18,7 +18,16 @@ if (!keepVariables) {
 skip_formats = exists("output_skip_formats")
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
-unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999')  
+unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999') 
+
+unisim_colour = function(i) { 
+  strtoi(c(
+    paste0("0X", substr(unisim_colours[i], 2,3)),
+    paste0("0X", substr(unisim_colours[i], 4,5)),
+    paste0("0X", substr(unisim_colours[i], 6,7))
+  ))
+}
+
 scale_colour_discrete = function(...) {
   scale_colour_manual(..., values = rep(unisim_colours, 10))
 }

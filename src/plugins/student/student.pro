@@ -13,11 +13,13 @@ HEADERS +=  \
     fish.h \
     food_web_population.h \
     jump.h
+#    light_inhibition.h
     
 SOURCES +=  \
     fibonacci.cpp \
     fish.cpp \
     food_web_population.cpp \
     jump.cpp
+#    light_inhibition.cpp
 
 

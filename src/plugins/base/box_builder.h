@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QStack>
 #include <QString>
+#include "caller.h"
 #include "distribution.h"
 #include "exception.h"
 #include "port.h"
@@ -32,8 +33,8 @@ public:
     // Port
     BoxBuilder& port(QString name);
     BoxBuilder& newPort(QString name);
-    BoxBuilder& imports(QString pathToPort);
-    BoxBuilder& importsMaybe(QString pathToPort, QString fallBackValue);
+    BoxBuilder& imports(QString pathToPort, Caller caller=Caller());
+    BoxBuilder& importsMaybe(QString pathToPort, QString fallBackValue, Caller caller=Caller());
     BoxBuilder& track(PortFilter filter=PortFilter::None);
     // Distribution
     BoxBuilder& rnd(QString name);

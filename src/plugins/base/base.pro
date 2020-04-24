@@ -32,6 +32,7 @@ HEADERS +=  \
     box_reader_boxes.h \
     box_reader_xml.h \
     box_output.h \
+    caller.h \
     circular_buffer.h \
     command.h  \
     command_help.h  \
@@ -112,6 +113,7 @@ SOURCES +=  \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \
+    caller.cpp \
     command.cpp \
     command_help.cpp  \
     computation_step.cpp \

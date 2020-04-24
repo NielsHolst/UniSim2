@@ -5,8 +5,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_FRUIT_FACTOR_H
-#define VG_FRUIT_FACTOR_H
+#ifndef FRUIT_FACTOR_H
+#define FRUIT_FACTOR_H
 
 #include <base/box.h>
 
