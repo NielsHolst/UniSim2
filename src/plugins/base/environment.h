@@ -50,6 +50,9 @@ public:
     void isSilent(bool silent);
     bool isSilent() const;
 
+    void isUnattended(bool unattended);
+    bool isUnattended() const;
+
     QString latestOutputFilePath(QString fileExtension) const;
     void latestLoadArg(QString arg);
     QString latestLoadArg() const;
@@ -86,7 +89,7 @@ private:
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;
-    bool _isFirstInstallation, _isSilent;
+    bool _isFirstInstallation, _isSilent, _isUnattended;
     QMap<QString, QVariant> _options;
     // Singleton
     static Environment *_environment;

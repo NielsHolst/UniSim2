@@ -1,0 +1,17 @@
+Layer	Radiation	a	r	t	a_	r_	t_
+Sky	ShortWave	1	0	0	1	0	0
+Glass	ShortWave	0.03	0.08	0.89	0.03	0.08	0.89
+ThermalScreen	ShortWave	0.07	0.92	0.01	0.9	0.09	0.01
+ShadeScreen	ShortWave	0.55	0.05	0.4	0.55	0.05	0.4
+GrowthLight	ShortWave	0	0	1	0	0	1
+Heating	ShortWave	0	0	1	0	0	1
+Plant	ShortWave	0.92	0.06	0.03	0.92	0.06	0.03
+Floor	ShortWave	0.6	0.4	0	0.6	0.4	0
+Sky	LongWave	1	0	0	1	0	0
+Glass	LongWave	0.9	0.1	0	0.9	0.1	0
+ThermalScreen	LongWave	0.07	0.92	0.01	0.9	0.09	0.01
+ShadeScreen	LongWave	0.55	0.05	0.4	0.55	0.05	0.4
+GrowthLight	LongWave	0	0	1	0	0	1
+Heating	LongWave	0	0	1	0	0	1
+Plant	LongWave	0.97	0.01	0.02	0.97	0.01	0.02
+Floor	LongWave	0.6	0.4	0	0.6	0.4	0

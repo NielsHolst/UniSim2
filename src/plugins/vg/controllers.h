@@ -8,11 +8,11 @@
 #ifndef CONTROLLERS_H
 #define CONTROLLERS_H
 
-#include "controllers_input.h"
+#include <base/box.h>
 
 namespace vg {
 
-class Controllers : public ControllersInput
+class Controllers : public base::Box
 {
 public:
     Controllers(QString name, QObject *parent);

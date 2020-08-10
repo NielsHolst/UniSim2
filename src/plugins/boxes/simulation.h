@@ -29,7 +29,7 @@ private:
     int iterations, steps;
     bool stopIterations, stopSteps,
         useStopIterations, useStopSteps,
-        silent;
+        silent, unattended;
     // Outputs
     int iteration, step, finalStep, executionTime;
     bool hasError;

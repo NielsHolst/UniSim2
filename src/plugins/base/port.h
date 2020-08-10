@@ -157,6 +157,7 @@ template <class T> void Port::deducePortType(T value) {
 template <class T> Port& Port::equals(T value)
 {
     ExceptionContext(this);
+    _isReference = false;
     _mode = PortMode::Fixed;
     _portValueStep = environment().computationStep();
     // Deduce the value type as necessary

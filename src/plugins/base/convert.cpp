@@ -15,11 +15,14 @@ namespace base {
 namespace {
     QString _localeName;
     QChar _outputDecimalCharacter = '.';
+    QLocale _locale;
 }
 
 void setLocale(QString localeName) {
     _localeName = localeName.toLower();
     _outputDecimalCharacter = (_localeName=="local") ? QLocale().decimalPoint() : QChar('.');
+    _locale = QLocale();
+    _locale.setNumberOptions(QLocale::OmitGroupSeparator);
 }
 
 QString localeName() {
@@ -47,7 +50,8 @@ template<> bool convert(long double source)     { return static_cast<int>(source
 //
 
 static QString withDecimal(QString s) {
-    return (s.contains(outputDecimalCharacter()) || s.contains("e") || s.contains("inf")) ? s : s + outputDecimalCharacter() + "0";
+    return s.startsWith("nan") ? "NA" :
+           (s.contains(outputDecimalCharacter()) || s.contains("e") || s.contains("inf")) ? s : s + outputDecimalCharacter() + "0";
 }
 
 template<> QString convert(bool source) {
@@ -67,12 +71,12 @@ template<> QString convert(long long int source){
 }
 template<> QString convert(float source)  {
     return withDecimal(
-                _localeName.isEmpty() ? QString::number(static_cast<double>(source)) : QLocale().toString(static_cast<double>(source))
+                _localeName.isEmpty() ? QString::number(static_cast<double>(source)) : _locale.toString(static_cast<double>(source))
            );
 }
 template<> QString convert(double source) {
     return withDecimal(
-                _localeName.isEmpty() ? QString::number(source) : QLocale().toString(source)
+                _localeName.isEmpty() ? QString::number(source) : _locale.toString(source)
            );
 }
 template<> QString convert(long double source) {

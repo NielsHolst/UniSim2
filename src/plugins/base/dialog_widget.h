@@ -23,6 +23,7 @@ public:
     DialogWidget(QMainWindow *parent);
     ~DialogWidget() override;
     void init();
+    void restoreFont();
     QProgressBar* progressBar();
     void finished();
     void message(QString s);
@@ -31,6 +32,7 @@ public:
     void errorImpl(QString s);
     void setFont(QString family, int pt);
     QFont font();
+    void loadWithFilePicker();
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -51,7 +53,6 @@ private:
     bool fontExists(QString family);
     QString preferredFamily();
     void saveFont();
-    void restoreFont();
     QTextCursor getCursor();
     void writeWelcome();
     void insertText(QString text, QColor color = QColor("black"));
@@ -66,6 +67,7 @@ private:
     QStringList lineItems();
     void handleCtrlKey(QKeyEvent *event);
     void handleNormalKey(QKeyEvent *event);
+    void handleEscKey();
     QString selectFile();
 };
 

@@ -30,7 +30,7 @@ private:
     bool hide, showDistributions;
     QVector<QString> ports;
     QString layout, guideTitle, end, endCode, type, ggplot, transform;
-    int ncol, nrow, iteration, fontSize;
+    int maxData, ncol, nrow, iteration, fontSize;
     double width, height;
     // Outputs
     bool plotAsList;

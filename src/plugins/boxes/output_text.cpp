@@ -83,6 +83,7 @@ void OutputText::debrief() {
 }
 
 void OutputText::openFileStream() {
+    _file.close();
     environment().openOutputFile(_file, "txt");
     _stream.setDevice(&_file);
 }
@@ -119,10 +120,10 @@ void OutputText::processValues() {
         if (_rowCount > skipInitialRows && (_rowCount-skipInitialRows) % averageN == 0) {
             int i = 0;
             for (Track *track : Track::all()) {
-                if (isNumber(track))
-                    values << convert<QString>(_tracksRunningSum.at(i)/averageN);
-                else
-                    values <<  track->port()->value<QString>();
+                QString value = isNumber(track) ?
+                                convert<QString>(_tracksRunningSum.at(i)/averageN) :
+                                track->port()->value<QString>();
+                values << value;
                 i++;
             }
             _tracksRunningSum.fill(0.);

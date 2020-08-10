@@ -24,6 +24,11 @@ QTextEdit* Dialog::textEdit() {
     return _widget;
 }
 
+void Dialog::loadWithFilePicker() {
+    if (_widget)
+        _widget->loadWithFilePicker();
+}
+
 void Dialog::setFont(QString family, int pt) {
     _widget->setFont(family, pt);
 }

@@ -9,15 +9,7 @@ BOXES_PLUGIN_NAME = vg
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
-    accumulator.h \
     actuators.h \
-    air_flux_base.h \
-    air_flux_given.h \
-    air_flux_infiltration.h \
-    air_flux_vents.h \
-    air_space_base.h \
-    air_space_net.h \
-    air_space_screened.h \
     any_flag.h \
     average.h \
     boundary_layer_resistance_base.h \
@@ -29,7 +21,6 @@ HEADERS +=  \
     chalk.h \
     controlled.h \
     controllers.h \
-    controllers_input.h \
     cover.h \
     crop.h \
     crop_development.h \
@@ -37,9 +28,9 @@ HEADERS +=  \
     crop_growth.h \
     crop_lai.h \
     crop_yield.h \
-    daylight_level.h \
     diffuse_irradiation_base.h \
     diffuse_irradiation_RE.h \
+    energy_budget.h \
     energy_flux_air.h \
     energy_flux_base.h \
     energy_flux_heating.h \
@@ -48,10 +39,21 @@ HEADERS +=  \
     fruit_crop_mass.h \
     fruit_factor.h \
     geometry.h \
-    given.h \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
+    heat_transfer_layer_base.h \
+    heat_transfer_layer_parameters.h \
+    heat_transfer_cover.h \
+    heat_transfer_crop.h \
+    heat_transfer_floor.h \
+    heat_transfer_pipe.h \
+    heat_transfer_screen1.h \
+    heat_transfer_screen2.h \
+    heat_transfer_screen3.h \
+    heat_transfer_shelter.h \
+    heat_transfer_sky.h \
+    heat_transfer_volume.h \
     hump.h \
     ig_indoors_humidity.h \
     indoors.h \
@@ -66,62 +68,48 @@ HEADERS +=  \
     leaf_temperature.h \
     leaf_transpiration.h \
     leaf_wind_speed.h \
-    maximum.h \
-    minimum.h \
     outdoors.h \
     pid_controller.h \
     pipe.h \
     pipe_forced.h \
-    radiation_layer.h \
-    radiation_layer_cover.h \
-    radiation_layer_crop.h \
-    radiation_layer_floor.h \
-    radiation_layer_pipe.h \
-    radiation_layer_screen1.h \
-    radiation_layer_screen2.h \
-    radiation_layer_screen3.h \
-    radiation_layer_shelter.h \
-    radiation_layer_sky.h \
-    radiation_layers.h \
-    running_average.h \
     screen.h \
+    screen_roof.h \
+    screen_wall.h \
     screen_combination.h \
     screens.h \
+    screens_air_transmissivity.h \
     sensor.h \
     setpoints.h \
-    setpoints_input.h \
+    setpoint_heating.h \
+    setpoint_ventilation.h \
     shelter.h \
     shelter_base.h \
     shelter_face.h \
+    shelter_face_area.h \
     shelter_integration.h \
     simulation_period.h \
     sky_temperature.h \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
     stomatal_resistance_tomato.h \
-    sum.h \
-#    surface_radiation.h \
-#    surface_radiation_outputs.h \
     utilities.h \
-    vapour_flux_air.h \
     vapour_flux_base.h \
-    vapour_flux_condensation.h \
-    vapour_flux_sum.h \
-    vapour_flux_sum_base.h \
+    vapour_flux_condensation_cover.h \
+    vapour_flux_condensation_crop.h \
+    vapour_flux_condensation_screen_base.h \
+    vapour_flux_condensation_screen1.h \
+    vapour_flux_condensation_screen2.h \
+    vapour_flux_condensation_screen3.h \
     vapour_flux_transpiration.h \
+    vapour_flux_ventilation.h \
     vent.h \
-    ventilated_latent_heat_converter.h
+    ventilated_latent_heat_converter.h \
+    ventilation_net.h \
+    ventilation_total.h \
+    water_budget.h
 
 SOURCES += \
-    accumulator.cpp \
     actuators.cpp \
-    air_flux_base.cpp \
-    air_flux_given.cpp \
-    air_flux_infiltration.cpp \
-    air_flux_vents.cpp \
-    air_space_base.cpp \
-    air_space_net.cpp \
-    air_space_screened.cpp \
     any_flag.cpp \
     average.cpp \
     boundary_layer_resistance_base.cpp \
@@ -133,7 +121,6 @@ SOURCES += \
     chalk.cpp \
     controlled.cpp \
     controllers.cpp \
-    controllers_input.cpp \
     cover.cpp \
     crop.cpp \
     crop_development.cpp \
@@ -141,9 +128,9 @@ SOURCES += \
     crop_growth.cpp \
     crop_lai.cpp \
     crop_yield.cpp \
-    daylight_level.cpp \
     diffuse_irradiation_base.cpp \
     diffuse_irradiation_RE.cpp \
+    energy_budget.cpp \
     energy_flux_air.cpp \
     energy_flux_base.cpp \
     energy_flux_heating.cpp \
@@ -152,7 +139,6 @@ SOURCES += \
     fruit_crop_mass.cpp \
     fruit_factor.cpp \
     geometry.cpp \
-    given.cpp \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
@@ -170,48 +156,54 @@ SOURCES += \
     leaf_temperature.cpp \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
-    maximum.cpp \
-    minimum.cpp \
     outdoors.cpp \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \
-    radiation_layer.cpp \
-    radiation_layer_cover.cpp \
-    radiation_layer_crop.cpp \
-    radiation_layer_floor.cpp \
-    radiation_layer_pipe.cpp \
-    radiation_layer_screen1.cpp \
-    radiation_layer_screen2.cpp \
-    radiation_layer_screen3.cpp \
-    radiation_layer_shelter.cpp \
-    radiation_layer_sky.cpp \
-    radiation_layers.cpp \
-    running_average.cpp \
+    heat_transfer_layer_base.cpp \
+    heat_transfer_layer_parameters.cpp \
+    heat_transfer_cover.cpp \
+    heat_transfer_crop.cpp \
+    heat_transfer_floor.cpp \
+    heat_transfer_pipe.cpp \
+    heat_transfer_screen1.cpp \
+    heat_transfer_screen2.cpp \
+    heat_transfer_screen3.cpp \
+    heat_transfer_shelter.cpp \
+    heat_transfer_sky.cpp \
+    heat_transfer_volume.cpp \
     screen.cpp \
+    screen_roof.cpp \
+    screen_wall.cpp \
     screen_combination.cpp \
     screens.cpp \
+    screens_air_transmissivity.cpp \
     sensor.cpp \
     setpoints.cpp \
-    setpoints_input.cpp \
+    setpoint_heating.cpp \
+    setpoint_ventilation.cpp \
     shelter.cpp \
     shelter_base.cpp \
     shelter_face.cpp \
+    shelter_face_area.cpp \
     shelter_integration.cpp \
     simulation_period.cpp \
     sky_temperature.cpp \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
     stomatal_resistance_tomato.cpp \
-    sum.cpp \
-#    surface_radiation.cpp \
-#    surface_radiation_outputs.cpp \
     utilities.cpp \
-    vapour_flux_air.cpp \
     vapour_flux_base.cpp \
-    vapour_flux_condensation.cpp \
-    vapour_flux_sum.cpp \
-    vapour_flux_sum_base.cpp \
+    vapour_flux_condensation_cover.cpp \
+    vapour_flux_condensation_crop.cpp \
+    vapour_flux_condensation_screen_base.cpp \
+    vapour_flux_condensation_screen1.cpp \
+    vapour_flux_condensation_screen2.cpp \
+    vapour_flux_condensation_screen3.cpp \
     vapour_flux_transpiration.cpp \
+    vapour_flux_ventilation.cpp \
     vent.cpp \
-    ventilated_latent_heat_converter.cpp
+    ventilated_latent_heat_converter.cpp \
+    ventilation_net.cpp \
+    ventilation_total.cpp \
+    water_budget.cpp

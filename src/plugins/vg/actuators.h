@@ -17,8 +17,6 @@ class Actuators : public base::Box
 public:
     Actuators(QString name, QObject *parent);
     void amend();
-private:
-    void amendScreen(QString name);
 };
 } //namespace
 

@@ -25,7 +25,7 @@ StomatalResistanceRose::StomatalResistanceRose(QString name, QObject *parent)
     Input(rh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
     Input(Pn).imports("../photosynthesis[Pn]",CA).unit("g CO2/ground m2/h");
     Input(rbCO2).imports("../rb[rbCo2]",CA).unit("s/m");
-    Input(lai).imports("crop[lai]",CA).unit("m2/m2");
+    Input(lai).imports("..[lai]",CA).unit("m2/m2");
 }
 
 double StomatalResistanceRose::resetRsH2O() {

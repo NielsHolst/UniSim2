@@ -21,6 +21,7 @@ public:
 private:
     // Inputs
     double
+        parAbsorbed,
         par, lai, k,
         canopyReflectivity,
         Pgmax, lue, RdLeaf;

@@ -33,7 +33,7 @@ EnergyFluxShelter::EnergyFluxShelter(QString name, QObject *parent)
     Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
     Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]").unit("m2/m2");
 
-    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]").unit("oC");
     Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
     Input(skyTemperature).imports("outdoors[skyTemperature]").unit("oC");
     Input(radiationFluxCropTop).imports("crop/layers/top/radiationAbsorbed[shelterLoss]").unit("W/m2");

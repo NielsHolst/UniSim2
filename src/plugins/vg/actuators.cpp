@@ -22,52 +22,39 @@ Actuators::Actuators(QString name, QObject *parent)
 }
 
 void Actuators::amend() {
-    BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./screens")) {
-        builder.
-        box().name("screens").
-        endbox();
-        amendScreen("energy");
-        amendScreen("shade");
-        amendScreen("blackout");
-    }
+//    BoxBuilder builder(this);
 
-    if (!findMaybeOne<Box>("./vents"))
-        builder.
-        box("Accumulator").name("vents").
-            port("initial").imports("controllers/ventilation/crack[value]",CA).
-            port("change").imports("./controller[controlVariable]",CA).
-            port("minValue").equals(0.).
-            port("maxValue").equals(1.).
-            box("PidController").name("controller").
-                port("sensedValue").imports("..[value]").
-                port("desiredValue").imports("controllers/ventilation[value]",CA).
-                port("Kprop").equals(0.1).
-                port("Kderiv").equals(0.2).
-                port("Kint").equals(0.01).
-            endbox().
-        endbox();
+//    if (!findMaybeOne<Box>("./co2"))
+//        builder.
+//        box("Accumulator").name("co2").
+//            port("change").imports("./controller[controlVariable]").
+//            port("minValue").equals(0).
+//            port("maxValue").imports("controllers/co2Capacity[value]").
+//            box("PidController").name("controller").
+//                port("sensedValue").imports("indoors/co2[value]").
+//                port("desiredValue").imports("setpoints[co2Setpoint]").
+//                port("desire").equals("KeepAbove").
+//                port("Kprop").equals(0.1).
+//            endbox().
+//        endbox();
 
-    if (!findMaybeOne<Box>("./growthLights"))
-        builder.
-        box("vg::GrowthLights").name("growthLights").
-        endbox();
+//    if (!findMaybeOne<Box>("./ventilation"))
+//        builder.
+//        box("Accumulator").name("ventilation").
+//            port("initial").equals(0.).
+//            port("change").imports("./controller[controlVariable]",CA).
+//            port("minValue").equals(0.).
+//            port("maxValue").equals(1.).
+//            box("PidController").name("controller").
+//                port("sensedValue").imports("..[value]").
+//                port("desiredValue").imports("controllers/ventilation[value]",CA).
+//                port("Kprop").equals(0.1).
+//                port("Kderiv").equals(0.2).
+//                port("Kint").equals(0.01).
+//            endbox().
+//        endbox();
 }
 
-void Actuators::amendScreen(QString name) {
-    BoxBuilder builder(findOne<Box>("./screens"));
-    builder.
-        box("Accumulator").name(name).
-            port("change").imports("./controller[controlVariable]",CA).
-            port("minValue").equals(0.).
-            port("maxValue").equals(1.).
-            box("PidController").name("controller").
-                port("sensedValue").imports("..[value]").
-                port("desiredValue").imports("controllers/screens/"+name+"[value]",CA).
-                port("Kprop").equals(0.05).
-            endbox().
-        endbox();
-}
 
 } //namespace
 

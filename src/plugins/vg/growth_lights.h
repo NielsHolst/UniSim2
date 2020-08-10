@@ -8,16 +8,17 @@
 #ifndef GROWTH_LIGHTS_H
 #define GROWTH_LIGHTS_H
 
-#include "radiation_layer.h"
+#include "heat_transfer_layer_base.h"
 
 namespace vg {
 
-class GrowthLights : public RadiationLayer {
+class GrowthLights : public HeatTransferLayerBase {
 public:
     GrowthLights(QString name, QObject *parent);
 private:
-    // Inputs
+    // Outputs
     bool currentlyOn;
+    double powerUsage;
 };
 
 } //namespace

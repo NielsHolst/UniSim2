@@ -32,7 +32,7 @@ FruitCropMass::FruitCropMass(QString name, QObject *parent)
     Input(tempSumReproductive).equals(975.).help("Temperature sum when the reproductive stage is reached").unit("DD");
     Input(tempMaxReproductive).equals(30.).help("Max. temperature for plant producing fruits").unit("oC");
     Input(fruitFactor).equals(1.).help("Factor multiplied on propFruit").unit("-");
-    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
     Input(tempSum).imports("../physTime[total]",CA).unit("DD");
     Input(lai).imports("../lai[value]",CA).unit("m2/m2");
 }

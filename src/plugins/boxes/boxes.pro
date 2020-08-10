@@ -11,6 +11,7 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 QT += widgets
 
 HEADERS +=  \
+    accumulator.h \
     b.h \
     briere.h \
     buffer.h \
@@ -28,6 +29,8 @@ HEADERS +=  \
     host.h \
     layout_r.h \
     maker.h \
+    maximum.h \
+    minimum.h \
     multiplum.h \
     numbered_file.h \
     offset_date_time.h \
@@ -53,12 +56,14 @@ HEADERS +=  \
     random_base.h \
     random_base_typed.h \
     random_binomial.h \
-    random_lognormal.h \
+    random_log_normal.h \
+    random_log_uniform.h \
     random_normal.h \
     random_uniform.h \
     random_uniform_int.h \
     ratio.h \
     records.h \
+    running_average.h \
     sandy.h \
     scenarios.h \
     select_file.h \
@@ -66,9 +71,12 @@ HEADERS +=  \
     simulation.h \
     sine_wave_temperature.h \
     sliding_signal.h \
+    solar_time.h \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
+    sum.h \
+    sun.h \
     super_functional_response.h \
     supply_budget.h \
     threshold_signal.h \
@@ -76,6 +84,7 @@ HEADERS +=  \
     vector_sum.h
 	
 SOURCES +=  \
+    accumulator.cpp \
     b.cpp \
     briere.cpp \
     buffer.cpp \
@@ -93,6 +102,8 @@ SOURCES +=  \
     host.cpp \
     layout_r.cpp \
     maker.cpp \
+    maximum.cpp \
+    minimum.cpp \
     multiplum.cpp \
     numbered_file.cpp \
     offset_date_time.cpp \
@@ -116,12 +127,14 @@ SOURCES +=  \
     randomiser_stratified.cpp \
     random_base.cpp \
     random_binomial.cpp \
-    random_lognormal.cpp \
+    random_log_normal.cpp \
+    random_log_uniform.cpp \
     random_normal.cpp \
     random_uniform.cpp \
     random_uniform_int.cpp \
     ratio.cpp \
     records.cpp \
+    running_average.cpp \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \
@@ -129,9 +142,12 @@ SOURCES +=  \
     simulation.cpp \
     sine_wave_temperature.cpp \
     sliding_signal.cpp \
+    solar_time.cpp \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \
+    sum.cpp \
+    sun.cpp \
     super_functional_response.cpp \
     supply_budget.cpp \
     threshold_signal.cpp \

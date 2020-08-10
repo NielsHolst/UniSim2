@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<box xmlns:ecolmod="http://www.ecolmod.org" class="Simulation" name="greenhouse">
+	<port name="steps" value="180"/>
+	<!-- <port name="steps" ref="./period[steps]"/> -->
+	<!-- *** SimulationPeriod *** -->
+
+
+	<!-- *** Output *** -->
+	<box class="OutputR" name="output">
+		<box name="p">
+			<newPort name="outdoorsT" ref="outdoors[temperature]"/>
+			<newPort name="soilT" ref="outdoors[soilTemperature]"/>
+			<newPort name="outdoorsRh" ref="outdoors[rh]"/>
+			<newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
+			<newPort name="outdoorsLight" ref="outdoors[radiation]"/>
+			<newPort name="indoorsT" ref="indoors[temperature]"/>
+			<newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
+			<newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
+			<newPort name="indoorsLamp1Par" ref="actuators/growthLights/growthLight1[parFluxDown]"/>
+			<newPort name="indoorsLamp2Par" ref="actuators/growthLights/growthLight2[parFluxDown]"/>
+			<newPort name="indoorsLamp3Par" ref="actuators/growthLights/growthLight3[parFluxDown]"/>
+			<newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/>
+			<newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/>
+			<newPort name="actHeatingPower" ref="actuators/heating/energyFlux[value]"/>
+			<newPort name="actVentilation" ref="actuators/ventilation[value]"/>
+			<newPort name="airFluxInfiltration" ref="ventilation/total[dueToLeakage]"/>
+			<newPort name="airFluxVents" ref="ventilation/total[dueToVents]"/>
+			<newPort name="airFluxTotal" ref="ventilation/total[value]"/>
+			<newPort name="ctrHeating" ref="controllers/heating[value]"/>
+			<newPort name="ctrVentilation" ref="controllers/ventilation[value]"/>
+			<newPort name="ctrHeatingP" ref="controllers/heating/controller[error]"/>
+			<newPort name="ctrHeatingI" ref="controllers/heating/controller[errorIntegral]"/>
+			<newPort name="ctrHeatingD" ref="controllers/heating/controller[errorDerivative]"/>
+			<newPort name="ctrVentilationP" ref="controllers/ventilation/controller[error]"/>
+			<newPort name="ctrVentilationI" ref="controllers/ventilation/controller[errorIntegral]"/>
+			<newPort name="ctrVentilationD" ref="controllers/ventilation/controller[errorDerivative]"/>
+		</box>
+		<box class="PageR">
+			<port name="xAxis" value="calendar[dateTime]"/>
+			<box class="PlotR">
+				<port name="ncol" value="4"/>
+				<port name="ports" value="output/p[*]"/>
+			</box>
+		</box>
+	</box>
+</box>

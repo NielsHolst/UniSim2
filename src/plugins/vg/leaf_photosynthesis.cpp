@@ -22,10 +22,11 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes light capture and photosynthetic rate");
-    Input(par).imports("indoors/light[parTotal]",CA);
-    Input(lai).imports("crop[lai]",CA);
-    Input(k).imports("radiationLayers/crop[swK]",CA);
-    Input(canopyReflectivity).imports("radiationLayers/crop[swReflectivityUp]",CA);
+    Input(parAbsorbed).imports("crop[parAbsorbed]");
+    Input(par).imports("energyBudget/crop[parFluxDown] | energyBudget/crop[parFluxUp]",CA).transform(Sum);
+    Input(lai).imports("..[lai]",CA);
+    Input(k).imports("energyBudget/crop[swK]",CA);
+    Input(canopyReflectivity).imports("energyBudget/crop[swReflectivityTop]",CA);
     Input(Pgmax).imports("./lightResponse[Pgmax]",CA);
     Input(lue).imports("./lightResponse[lue]",CA);
     Input(RdLeaf).imports("./lightResponse[Rd]",CA);
@@ -44,14 +45,26 @@ void LeafPhotosynthesis::amend() {
 }
 
 void LeafPhotosynthesis::update() {
-    // From Goudriaan & van Laar (1994)
-    Pg = 0.;
+    // From Goudriaan & van Laar (1994) but scaled to parAbsorbed,
+    // i.e. the total PAR sbcorbed by the canopy has been computed elsewhere
+
+    // Compute proportionality to achieve parAbsorbed
+    double proportionality(0);
+    for (int i= 0; i<3; ++i) {
+        double laic = xGauss3[i]*lai;
+        proportionality += (1.-canopyReflectivity)*k*exp(-k*laic)*lai*wGauss3[i];
+    }
+    proportionality = parAbsorbed/proportionality;
+
+    // Integrate photosynthesis
+    Pg = parAbsorbed = 0.;
     for (int i= 0; i<3; ++i) {
         double
             laic = xGauss3[i]*lai,
-            absorbed = par*(1.-canopyReflectivity)*k*exp(-k*laic)*lai,
+            absorbed = proportionality*(1.-canopyReflectivity)*k*exp(-k*laic)*lai,
             photosynthesis = (Pgmax > 0) ? Pgmax*(1.-exp(-absorbed*lue/Pgmax)) : 0.;
         Pg += wGauss3[i]*photosynthesis;
+        parAbsorbed += wGauss3[i]*absorbed;
     }
     Pg *= lai;
     Rd = RdLeaf*lai;

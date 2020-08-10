@@ -28,10 +28,11 @@ HEADERS +=  \
     base_signal.h \
     box.h \
     box_builder.h \
+    box_output.h \
+    box_preprocessor.h \
     box_reader_base.h \
     box_reader_boxes.h \
     box_reader_xml.h \
-    box_output.h \
     caller.h \
     circular_buffer.h \
     command.h  \
@@ -110,6 +111,7 @@ SOURCES +=  \
     box.cpp \
     box_builder.cpp \
     box_output.cpp \
+    box_preprocessor.cpp \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \

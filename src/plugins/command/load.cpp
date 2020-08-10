@@ -34,11 +34,9 @@ void load::doExecute() {
     Environment &env(environment());
     QString fileName;
     switch (_args.size()) {
-    case 0:
-        // Zero arguments when called from run command
     case 1:
-        fileName = env.latestLoadArg();
-        break;
+        dialog().loadWithFilePicker();
+        return;
     case 2:
         fileName = _args.at(1);
         break;
@@ -52,7 +50,7 @@ void load::doExecute() {
 }
 
 void load::readFile(QString fileName) {
-    BoxReaderBase *reader{0};
+    BoxReaderBase *reader{nullptr};
     BoxBuilder builder;
     try {
         switch(fileType(fileName)) {

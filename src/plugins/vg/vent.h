@@ -21,10 +21,9 @@ public:
 private:
     // Inputs
     int number;
-    double length, width, state,
-        ventTransmissivity, screensTransmissivity;
+    double length, width, transmissivity;
     // Output
-    double transmissivity;
+    double area, effectiveArea;
 };
 
 } //namespace

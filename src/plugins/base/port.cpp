@@ -13,8 +13,6 @@ namespace base {
 
 QVector<Port*> Port::_index;
 
-// Configure
-
 Port::Port(QString name, QObject *parent)
     : QObject(parent), _valuePtr(nullptr), _valueType(Null), _mode(PortMode::Default),
       _portValueStep(ComputationStep::Start),
@@ -243,7 +241,11 @@ void Port::resolveImports() {
 
     // Missing import ports may be an error, otherwise accept and clear the import path
     if (_importPorts.isEmpty()) {
-        if (_importPortMustExist)
+        if (isVector(type())) {
+            _importPorts.clear();
+            return;
+        }
+        else if (_importPortMustExist)
             ThrowException("No matching import ports found").value(_importPath).context(this).caller(_importCaller);
         else {
             _importPath.clear();
@@ -266,6 +268,9 @@ void Port::resolveImports() {
         if (_valueType == Null)
             ThrowException("Unexpected error: Type of imported value is Null").value(_importPath).context(this).caller(_importCaller);
     }
+
+    // Set unit to import's
+    unit(_importPorts.at(0)->unit());
 }
 
 PortType Port::commonType(const QVector<Port*> &ports) {
@@ -318,6 +323,9 @@ void Port::copyFromSelfImport(const Box *self) {
 }
 
 void Port::assign(const QVector<Port*> &sources) {
+    // Nothing to do (can happen if a vector port has no sources)
+    if (sources.isEmpty())
+        return;
     // Create buffer for value if necessary
     if (!_valuePtr) {
         if (_valueType == Null) {

@@ -107,6 +107,15 @@ void difference(Vec &v, const Vec &x, const Scalar &y) {
         *receiver++ = *sender++ - y;
 }
 
+void difference(Vec &v, const Scalar &x, const Vec &y) {
+    int i = 0, n = y.size();
+    v.resize(n);
+    double *receiver = v.data();
+    const double *sender = y.data();
+    while (i++ < n)
+        *receiver++ = x - *sender++;
+}
+
 void product(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
     CHECK_SIZE(y);
@@ -140,10 +149,75 @@ double sum(const Vec &x) {
     return receiver;
 }
 
+double product(const Vec &x) {
+    int i = 0, n = x.size();
+    if (n==0) return 0.;
+    double receiver = 1.;
+    const double *sender = x.data();
+    while (i++ < n)
+        receiver *= *sender++;
+    return receiver;
+}
+
 double average(const Vec &x) {
     int n = x.size();
     return (n==0) ? 0 : sum(x)/n;
 }
+
+double max(const Vec &x) {
+    int i = 1, n = x.size();
+    const double *sender = x.data();
+    double receiver = *sender;
+    ++sender;
+    while (i++ < n) {
+        double v = *sender++;
+        if (v > receiver) receiver = v;
+    }
+    return receiver;
+}
+
+double min(const Vec &x) {
+    int i = 1, n = x.size();
+    const double *sender = x.data();
+    double receiver = *sender;
+    ++sender;
+    while (i++ < n) {
+        double v = *sender++;
+        if (v < receiver) receiver = v;
+    }
+    return receiver;
+}
+
+int whichMax(const Vec &x) {
+    int i = 1, which = 0, n = x.size();
+    const double *sender = x.data();
+    double receiver = *sender;
+    ++sender;
+    while (i++ < n) {
+        double v = *sender++;
+        if (v > receiver) {
+            receiver = v;
+            which = i;
+        }
+    }
+    return which;
+}
+
+int whichMin(const Vec &x) {
+    int i = 1, which = 0, n = x.size();
+    const double *sender = x.data();
+    double receiver = *sender;
+    ++sender;
+    while (i++ < n) {
+        double v = *sender++;
+        if (v < receiver) {
+            receiver = v;
+            which = i;
+        }
+    }
+    return which;
+}
+
 
 double weightedAverage(const Vec &x, const Vec &weights, QObject *context_) {
     int i = 0, n = x.size();

@@ -8,15 +8,14 @@
 #ifndef COVER_H
 #define COVER_H
 #include <base/box.h>
-#include "radiation_layer.h"
+#include "heat_transfer_layer_parameters.h"
 
 namespace vg {
 
-class Cover : public RadiationLayer
+class Cover : public HeatTransferLayerParameters
 {
 public:
     Cover(QString name, QObject *parent);
-    void initialize();
     void reset();
     void update();
 private:

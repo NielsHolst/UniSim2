@@ -93,8 +93,7 @@ void SineWaveTemperature::update() {
 }
 
 void SineWaveTemperature::updateTemperatures() {
-    shift =  (_step % _stepsPerDay == _stepsPerDay-1 && _step>_stepsPerDay-1);
-    ignore = (_step % _stepsPerDay != _stepsPerDay-2);
+    bool shift =  (_step % _stepsPerDay == _stepsPerDay-1 && _step>_stepsPerDay-1);
     if (shift) {
         TminYesterday = TminToday;
         TminToday     = TminTomorrow;
@@ -104,7 +103,6 @@ void SineWaveTemperature::updateTemperatures() {
         TmaxTomorrow  = *_Tmax;
     }
     _step++;
-    _offsetWeather->ignore(ignore);
 }
 
 inline int toSecs(double hours) {

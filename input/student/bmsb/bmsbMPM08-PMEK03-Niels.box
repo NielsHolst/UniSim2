@@ -1,0 +1,424 @@
+// bmsbMPM08-PMEK2.box (26 May 2020; Byju N Govindan) 			    // PMEK stands for Process Model based on Enzyme Kinetics approach
+
+	Simulation sim {													  
+    .steps = 365
+    Calendar calendar {
+      .timeStep = 1
+      .timeUnit = "d"
+      .initialDateTime = 1/1/2015        // Denotes biofix; later reset to a more variable location-specific first date of long day condition (>13.5 hrs sun light)
+        
+      // type the command after  double forward slash// help Calendar
+      .latitude = 44.9778
+      .longitude = 93.2650
+      
+    }// End of Calendar calendar
+    
+    
+    Records weather {
+    
+    .fileName = "weather/2015MSP14922Stn.txt"   // Weather data file
+     //.cycle = TRUE //!
+     
+    }// end of Records weather
+    
+    
+    Box pest {
+    
+        Box adult {
+        
+            
+            
+        // Adults in diapause stage, terminates the diapuse when day length >13.5 hours and after some heat units are accumulated above 17C 
+          
+          Stage adultInit {
+            .initial = 0.5   //28  //Niels: calibrated to obs
+            .duration =  1                       // BMSB adults live about 100 -300 days, depending on season's temperature
+            .timeStep = ./time[value]              //time[value]????? value denotes output from time submodel 
+                                                            
+          
+            
+            OnOff time { 
+            .x = calendar[dayLength]
+            .xOn = 13.5 // >=13.5 hrs daylength leads to diapause; roughly corresponds to Julian date 105 (i.e., 15 April)
+            .xOff = 24  // <=24 hrs daylength
+            .valueOn =  ./AdultLongevity[devrate]                   
+            .valueOff = 0
+            
+            
+            
+              Poly4DevRate AdultLongevity{ // apply when tempertaure is >7.55 C and < 39 C
+              .a0     =   3.626e-01
+              .a1     =   -6.878e-02
+              .a2     =   4.796e-03
+              .a3     =   -1.441e-04
+              .a4     =   1.586e-06
+              .dailytempC  =  weather[Tavg]
+              }// end of Poly4DevRate AdultLongevity
+
+              
+            }//end of OnOff time
+    
+          }//end of Stage adultInit
+          
+          
+        //Adults enter into Pre-oviposition period only when day length >13.5 hrs and they start to mature reproductively as function of temperature
+        
+          Stage preOviposition {
+            .inflow = ../adultInit[outflow]                
+            .duration = 1 
+            .timeStep = 0.1 //./AdultPOP[ovprate]  Niels: BetaRate model returned NaN value
+                        
+              
+            // Beta_95 Model to Describe Adult Pre-oviposition Period  
+        
+            BetaRate AdultPOP{
+            .mu = -3.6875
+            .Tb = 19.5904
+            .Tc = 36.7777
+            .aa = 0.3961
+            .bb = 0.1967
+            .dailytempC=weather[Tavg]
+            }// end of BetaRate AdultPOP 
+            
+            
+
+            // Polynomial HarcourtYee Model to Describe Adult Survival During Pre-oviposition Period
+            
+            Poly3Rate PreOvipositionSurvRate{
+            .a0     =   -7.006e-01      
+            .a1     =   9.974e-02 
+            .a2     =   -4.207e-03
+            .a3     =   5.817e-05
+            .dailytempC  =   weather[Tavg]            
+            }// end of Poly3Rate PreOvipositionSurvRate
+            
+            
+          } //end of Stage  preOviposition
+          
+            
+
+          
+          
+        //Adults that complete pre-oviposition period (>13.5 hrs daylight) starts mating and ovipositing, but all adults of any generation stops oviposition when daylight <13.5 hours and avg. temperature <17C
+        // Adults of each generation shall be tracked separately. First generation adults emerge from mid/late July - mid/late August 
+        // First Generation adults lay eggs until September 4 (first week of Sept) and stops afterwards as day length <13.5 hrs and temp <17C 
+        // about 5-6 % of those eggs develops to second generation adults emerging in very late Sept - mid October, and rest of developing nymphs will continue to develop and most nymphs will freeze die later
+        // First generation adults will eventually die as they are vitellogenic ,and cannot diapause
+        // Second generation adults must split here into two groups and tracked seperately for each year by generation ... 
+        // Nymphs are the stages that recieve photoperiod cue for diapause; those one's recieved the cue turns non-vitellogenic and others turn vitellogenic (will deal later)
+        // Vitellogenic adults may die faster than non-vitellogenic ones; my guess is that surviving ones of both fraction will lay eggs next year
+                // Or the non-vitellogenic ones that only survives to the next year to continue the dynamics
+        
+          Stage oviposition {
+            .inflow =  ../preOviposition[outflow]                     //// Should not it be?      ../preOviposition[outflow]  Niels: YES
+            .duration = 1                           // 330/(60+436+150) = 0.4741 assumed avg. 95 CDD for APOP, avg. 330 CDD for egglaying period; avg. 436 CDD for egg-to new adult emergence; previous adults should have about avg. 150 CDD left before they dies
+            .timeStep = ./AdultOP[fecundity]                     ////or should it be ./AdultOviPeriod[devrate] 
+            .growthFactor = 155.81                    //growthFactor =155.81 the net reproductive rate ; shoudl not this be temp-dependent function???
+                      
+            
+            // Extreme Value Function to Describe Fecundity Model as function of Temperature
+            
+            FecundityEVF AdultOP{
+            .a = 333.478
+            .b =  23.854
+            .k =  4.127
+            .dailytempC=weather[Tavg]            
+            }// end of FecundityEVF AdultOP
+            
+
+            //NRREVF AdultOP{
+            //.a = 155.812
+            //.b =  24.137
+            //.k =  3.539
+            //.dailytempC=weather[Tavg]            
+            //}// end of NRREVF AdultOP
+
+
+
+
+            // Poly4 Model to Describe Adult Oviposition Period  
+        
+            //Poly4DevRate AdultOviPeriod{
+            //.a0 = 4.7693179
+            //.a1 = -0.7479708
+            //.a2 = 0.0434429
+            //.a3 = -0.0011051
+            //.a4 = 0.0000104
+            //.dailytempC=weather[Tavg]
+            //}// end of Poly4 Model to Describe Adult Oviposition Period  
+            
+            
+          } //end of Stage oviposition
+        
+                
+          
+        }// end of Box adult
+        
+        
+        
+        Stage egg {
+          .inflow = ../adult/oviposition[outflow]    
+          .duration = 1 
+          .timeStep = ./EggDevRate[devrate]
+          .growthFactor = ./EggSurvRate[evfout]
+          
+          
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate EggDevRate { 
+            .TPhi = 298
+            .rhoPhi = 1.03
+            .HA = -22509.24
+            .HL = -57331.92
+            .TL = 302.10
+            .R = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate EggDevRate
+
+        
+              
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model
+              
+
+            ExtremeValFunc EggSurvRate{
+            .k1     =   1.00000        //1.04509
+            .Tmax     =   25.55107
+            .rho     =   -12.74007
+            .dailytempC  =  weather[Tavg]
+            }//end of ExtremeValFunc EggSurvRate
+
+
+
+            
+        }
+        
+        
+        Box nymph {        // input for the nymph box class of the pest boxclass is the output from egg submodel of the pest box class 
+      
+    
+          Stage instar1 {
+            .inflow = ../../egg[outflow]    
+            .duration = 1          //51.38 (CDD of 51.38331 based on Byju's BMSB data)
+            .timeStep = ./N1DevRate[devrate]
+            .growthFactor = ./N1SurvRate[evfout]
+          
+          
+          
+            
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate N1DevRate { 
+            .TPhi = 298
+            .rhoPhi =  0.72
+            .HA = -12712.26
+            .HL = -45698.94
+            .TL = 301.28
+            .R = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate N1DevRate
+
+
+            
+            
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model          
+            
+            
+            ExtremeValFunc N1SurvRate{
+            .k1     =   1.00000        //1.0371
+            .Tmax     =   25.8731
+            .rho     =   -12.5064
+            .dailytempC  =  weather[Tavg]
+            }//end of ExtremeValFunc N1SurvRate
+
+
+            
+          }
+    
+    
+          Stage instar2 {
+            .inflow = ../instar1[outflow]    
+            .duration = 1  // 112.94 (CDD of 112.9351 based on Byju's BMSB data)
+            .timeStep = ./N2DevRate[devrate]
+            .growthFactor = ./N2SurvRate[evfout]
+          
+        
+          
+          
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate N2DevRate { 
+            .TPhi = 298
+            .rhoPhi =  7.566
+            .HA = -54910
+            .HL = -74230
+            .TL = 308.60
+            .R = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate N2DevRate
+
+            
+
+          
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model  
+            
+            ExtremeValFunc N2SurvRate{
+            .k1     =   1.00000        //1.0115
+            .Tmax     =   25.0676
+            .rho     =   -14.6268
+            .dailytempC  =  weather[Tavg]
+            }//end of ExtremeValFunc N2SurvRate
+            
+            
+                        
+          }
+        
+        
+          Stage instar3 {
+            .inflow = ../instar2[outflow]
+            .duration = 1  // 87.42 (CDD of 87.41702 based on Byju's BMSB data)
+            .timeStep = ./N3DevRate[devrate]
+            .growthFactor = ./N3SurvRate[evfout]
+      
+          
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate N3DevRate { 
+            .TPhi = 298
+            .rhoPhi =  5.81E-01
+            .HA = -2.34E+04
+            .HL = -5.45E+04
+            .TL = 301.50
+            .R  = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate N3DevRate
+  
+                     
+
+            
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model
+            
+            ExtremeValFunc N3SurvRate{
+            .k1     =   0.9925
+            .Tmax     =   25.5728
+            .rho     =   -10.0700
+            .dailytempC  =  weather[Tavg]
+            }//end of ExtremeValFunc N3SurvRate
+
+
+  
+          }
+    
+    
+          Stage instar4 {
+            .inflow = ../instar3[outflow]        
+            .duration = 1  // 78.33 (CDD of 78.32516 based on Byju's BMSB data) 
+            .timeStep = ./N4DevRate[devrate]
+            .growthFactor = ./N4SurvRate[evfout]
+      
+          
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate N4DevRate { 
+            .TPhi = 298
+            .rhoPhi =  2.58E-01
+            .HA = -8.12E+03
+            .HL = -5.04E+04
+            .TL = 296.50
+            .R  = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate N4DevRate  
+ 
+
+            
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model
+            
+            ExtremeValFunc N4SurvRate{
+            .k1     =   1.00000        //1.0048
+            .Tmax     =   27.0027
+            .rho     =   -8.9022
+            .dailytempC  =   weather[Tavg]
+            }//end of ExtremeValFunc N4SurvRate
+            
+            
+            
+          }
+        
+        
+          Stage instar5 {
+            .inflow = ../instar4[outflow]        
+            .duration = 1 //  115.86 (CDD of 115.864 based on Byju's BMSB data) 
+            .timeStep = ./N5DevRate[devrate]
+            .growthFactor = ./N5SurvRate[evfout]
+          
+
+          
+          //These are parameters from SchoolfieldLow model to estimate developmental rates; convert to hourly developmental rates when weather data is scaled to hourly values    
+              
+            //Enzyme-kinetics based Development Rate Model (SchoolfieldLow)
+              
+            SchoolFieldLowDevRate N5DevRate { 
+            .TPhi = 298
+            .rhoPhi =  2.44E-01
+            .HA = -1.21E+04
+            .HL = -4.43E+04
+            .TL = 298.80
+            .R  = 1.987
+            .dailytempC=weather[Tavg]
+            }// end of SchoolFieldLowDevRate N5DevRate    
+ 
+    
+            
+            
+          //These are parameters to estimate daily survival rates ; convert to hourly survival rates when weather data is scaled to hourly values
+              
+            // Survival Model
+          
+            ExtremeValFunc N5SurvRate{
+            .k1     =   0.9621
+            .Tmax     =   24.6549
+            .rho     =   -8.9009
+            .dailytempC  =   weather[Tavg]
+            }//end of ExtremeValFunc N5SurvRate
+            
+
+            
+          }
+    
+        }
+      
+        
+        
+        
+        
+    }// end of Box Pest
+    
+    
+  // Niels
+  OutputR {
+    .end = "bmsb-end.R"
+    OutputText {
+      .ports = (calendar[date] *[content])
+    }
+  }
+
+  } // end of Simulation Sim

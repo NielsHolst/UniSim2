@@ -29,7 +29,6 @@ private:
         value;
     // Debugging outputs
     double proportion;
-    bool ignore, shift;
     int phase;
     // Data
     int _step, _stepsPerDay;

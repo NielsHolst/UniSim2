@@ -38,8 +38,13 @@ void run::doExecute() {
 void run::doLoad() {
     QStringList com;
     com << "load";
-    if (_args.size() == 2)
+    switch (_args.size()) {
+    case 1:
+        com << environment().latestLoadArg();
+        break;
+    case 2:
         com << _args[1];
+    }
     Command::submit(com, this);
 }
 

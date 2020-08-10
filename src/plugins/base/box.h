@@ -29,7 +29,8 @@ class Timer;
 class Box : public QObject, public ConstructionStep
 {
 public:
-    Box(QString name, QObject *parent);
+    enum Persistence {DontAllowRemoval, AllowRemoval};
+    Box(QString name, QObject *parent, Persistence=DontAllowRemoval);
     ~Box();
     QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
@@ -46,8 +47,7 @@ public:
     void sideEffects(QString s);
     QString sideEffects() const;
 
-    void ignore(bool doIgnore);
-    bool ignore() const;
+    void removeChild(QString name);
 
     static Box* currentRoot();
     static void saveCurrentRoot();
@@ -96,6 +96,8 @@ public:
 
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
 private:
+    // Inputs
+    bool remove;
     // Data
     QString _help, _sideEffects;
     QMap<QString,Port*> _ports, _orphanPorts;

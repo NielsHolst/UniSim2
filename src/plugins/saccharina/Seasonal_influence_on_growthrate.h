@@ -12,10 +12,11 @@ public:
     void update();
 private:
     // Inputs
-    double a1, a2;
-    int n;
+    double a1, a2, dayLength, maxDayLengthChange;
     // Outputs
-    double fphoto;
+    double dayLengthChange, lambda, fphoto;
+    // Data
+    double prevDayLength;
 };
 
 }

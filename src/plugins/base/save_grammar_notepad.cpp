@@ -57,7 +57,9 @@ void SaveGrammarNotepad::writeAttributes() {
 }
 
 void SaveGrammarNotepad::writeTransforms() {
-    _output = _output.replace("#Keywords5", transformNames().join(sep));
+    QStringList names = transformNames();
+    names << "#define" << "#include";
+    _output = _output.replace("#Keywords5", names.join(sep));
 }
 
 void SaveGrammarNotepad::writeConstants() {

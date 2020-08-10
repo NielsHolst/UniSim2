@@ -22,12 +22,17 @@ public:
 private:
     // Inputs
     QString material;
-    double density, diameter, flowRate, minTemperature, maxTemperature;
+    double density, diameter, flowRate, minTemperature, maxTemperature,
+        inflowTemperature, indoorsTemperature, groundArea;
+    int numSpans;
     // Outputs
-    double a, b, emissivity;
+    double a, b, emissivity,
+        length, volume, lengthPerSpan, volumePerSpan, transitTime,
+        outflowTemperature, temperatureDrop, energyFlux;
     // Methods
     void parseMaterial();
     // Data
+    double _k;
     struct MaterialInputs {
         double a, b, emissivity;
     };

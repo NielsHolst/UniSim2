@@ -39,6 +39,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     ast::ParameterWithAttribute,
     (std::string, type)
     (std::string, name)
+    (std::string, assignment)
     (std::string, attribute)
 )
 
@@ -74,7 +75,8 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
     qi::rule<Iterator, Skipper, std::string()>
             class_name, object_name, name, joker, value, transform,
             unquoted_value, unquoted_value_item, quoted_value, list_value,
-            trailing_list, unconditional_value, conditional_value;
+            trailing_list, unconditional_value, conditional_value,
+            assignment;
     qi::rule<Iterator, Skipper, ParameterWithAttribute()> attributed_name;
     qi::rule<Iterator, Skipper, Parameter()> parameter;
 
@@ -97,7 +99,7 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // bracing apostrophes are kept in the string
         quoted_value %= lexeme[char_('"') >> *(char_ - '"') > char_('"')];
         // An unquoted value item is for numbers, dates, times, booleans and path expressions
-        unquoted_value_item %= lexeme[+(char_ - char_(" \t\n\"{}()[]@?"))]
+        unquoted_value_item %= lexeme[+(char_ - char_(" =~\t\n\"{}()[]@?"))]
                 >> -(char_('[') > (joker|name) > char_(']'));
         // A trailing list is preceeded by @
         trailing_list %= char_('@') > list_value;
@@ -110,8 +112,10 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // A name with optional attribute
         transform = name;
         attributed_name %= char_("\\.+") >> name >> -('|' > transform);
+        // Assign with either '"' or '~'
+        assignment %= char_("=");
         // A parameter has a name, maybe with attributes, and a value and maybe a distribution
-        parameter %= attributed_name > '=' >> value;
+        parameter %= attributed_name > assignment >> value;
         // A node has a class name, maybe an object name, maybe some parameters, and maybe some nodes
         node %= class_name >> -object_name >> '{' >> *parameter >> *node > '}';
         // Rule names
@@ -130,6 +134,7 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         RULE_NAME(transform);
         RULE_NAME(attributed_name);
         RULE_NAME(parameter);
+        RULE_NAME(assignment);
         node.name("box");
         // Error handling
         qi::on_error<qi::fail>

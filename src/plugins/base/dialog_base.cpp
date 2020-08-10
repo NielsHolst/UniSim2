@@ -47,7 +47,10 @@ void DialogBase::updateProgress(const ProgressInfo &info) {
 }
 
 QTextEdit* DialogBase::textEdit() {
-    ThrowException("Dialog has no TextEdit widget");
+    return nullptr;
+}
+
+void DialogBase::loadWithFilePicker() {
 }
 
 void DialogBase::message(QString s) {

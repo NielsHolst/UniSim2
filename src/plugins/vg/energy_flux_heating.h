@@ -22,15 +22,7 @@ public:
 
 private:
     // Inputs
-    QVector<double> density, diameter, flowRate, a, b;
-    double inflowTemperature, indoorsTemperature, groundArea;
-    // Outputs
-    QVector<double> pipeLength, pipeVolume, transitTime,
-        outflowTemperature, temperatureDrop, energyFlux;
-    // Data
-    int n;
-    // Methods
-    void updatePipe(int i);
+    QVector<double> energyFluxes;
 };
 
 } //namespace

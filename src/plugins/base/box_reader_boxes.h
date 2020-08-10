@@ -5,7 +5,6 @@
 #ifndef BASE_BOX_READER_BOXES_H
 #define BASE_BOX_READER_BOXES_H
 
-#include <QFile>
 #include "box_reader_base.h"
 
 namespace ast {
@@ -20,9 +19,8 @@ public:
     void parse(QString filePath);
 private:
     // Data
-    QFile _file;
+    QString _filePath;
     // Methods
-    void openFile(QString filePath);
     bool parse(ast::Node &astRoot);
 };
 

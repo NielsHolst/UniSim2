@@ -22,7 +22,7 @@ public:
 private:
     // Inputs
     double indoorsTemperature, indoorsRh, rsH2O, rbH2O,
-        radiationAbsorbed;
+        radiationAbsorbed, lai;
     // Outputs
     double value;
 };

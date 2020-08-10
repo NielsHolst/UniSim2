@@ -103,7 +103,7 @@ sobol_indices = function(y) {
   # Use both matrices to compute f02 and V
   # A. Saltelli in email 29-11-2018: As you cannot use mixed matrices for V and f0,
   # you can either use the estimates corresponding to A or those corresponding to B or both. 
-  # When you use e.g. both you double the number of elementary effects and hence you improve you estimate.
+  # When you use e.g. both you double the number of elementary effects and hence you improve your estimate.
   yAB = c(yA, yB)
   f02 = mean(yAB)^2
   V = mult(yAB,yAB)/2 - f02
@@ -172,7 +172,31 @@ plot_against_sample_size = function() {
     ) 
 }
 
-plot_effects = function(stats, theme=NULL) {
+plot_effects = function(stats) {
+  # Some inputs might have been dropped
+  stats$Input = droplevels(stats$Input)
+  # Re-order on total effect then on input name 
+  M = subset(stats, Measure=="Total")
+  n = nrow(M)
+  M$Input = as.character(M$Input)
+  M = M[order(M$Input),]
+  M$EffectMean[M$LowerPercentile<0.001] = 0
+  M = M[order(M$EffectMean, decreasing=TRUE),]
+  M$NewOrder = 1:n
+  M = M[c("Input", "NewOrder")]
+  N = data.frame(
+    Input = as.character(levels(stats$Input)),
+    PrevOrder = 1:n
+  )
+  M = join(M,N)
+  print(M)
+  prev_order = M$PrevOrder
+  print(prev_order)
+  print(levels(stats$Input))
+  stats$Input = reorder_levels(stats$Input, prev_order)
+  print(levels(stats$Input))
+  stats$Input = reorder_levels(stats$Input, n:1)
+  # Now plot
   dodge = position_dodge(width = 0.9)
   ggplot(stats, aes(x=Input, y=EffectMean, fill=Measure)) +
     geom_bar(alpha=0.3, stat="identity", position=dodge) +
@@ -192,8 +216,7 @@ plot_effects = function(stats, theme=NULL) {
       legend.title = element_blank()
     ) +
     labs(x="", title=paste("Sensitivity of", unique_names(unique(stats$Output)))) +
-    coord_flip() +
-    theme
+    coord_flip() 
 }
 
 sobol_bootstrap = function(ix_output, n) {
@@ -246,6 +269,35 @@ sobol_statistics = function(B, num_digits=2) {
   # rownames(M) = NULL
   M
 }
+
+plot_sobol_convergence = function() {
+  plot_against_sample_size()
+}
+
+plot_sobol_indices = function() {
+  # f = function(a_plot) {
+    # open_plot_window()
+    # print(a_plot)
+  # }
+  
+  file_name = paste0(output_file_base_name(), "_sobol-indices.Rdata")
+  if (reuseData) {
+    load(file_name)
+  } else { 
+    n_outputs = length(output_names())
+    print(paste0("Bootstrapping (n=", sobol_B, ")..."))
+    B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
+    S = ddply(B, .(Output), sobol_statistics)
+    print(paste("Saving Sobol' indices for later reuse in", file_name))
+    save(S, file=file_name)
+  }
+  
+  plots = dlply(subset(S, Input!="Sum"), .(Output), plot_effects)
+  plots
+  # l_ply(plots, f)
+}
+
+
 
 
 

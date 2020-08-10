@@ -15,7 +15,7 @@ Grossphotosynthesis::Grossphotosynthesis(QString name, QObject *parent)
     Input(alpha).equals(0.0000375).help("Photosynthetic efficiency (gCdm−2 h−1(μmol photons m−2 s−1)−1)");
     Input(I).equals(200).help("Irradiance (PAR), environmental variable");
     Input(beta).equals(0.000000001).help("Photoinhibition parameter, auxiliary variable (gO2 dm−2 h−1(μmol photons m−2 s−1)−1)");
-    Output(Gphotosynthesis).help("Nitrate uptake rate (gN dm−2 h−1)");
+    Output(Gphotosynthesis).help("Gross photosynthesis (gC dm−2 h−1)");
 }
 
 void Grossphotosynthesis::reset() {

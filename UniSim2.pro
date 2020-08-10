@@ -24,29 +24,34 @@ command.subdir = src/plugins/command
 command.depends = base
 unisim.depends = command
 
-SUBDIRS += demo
-demo.subdir = src/plugins/demo
-demo.depends = base
-unisim.depends = demo
+#SUBDIRS += demo
+#demo.subdir = src/plugins/demo
+#demo.depends = base
+#unisim.depends = demo
 
 SUBDIRS += eq
 eq.subdir = src/plugins/eq
 eq.depends = base
 unisim.depends = eq
 
-SUBDIRS += student
-student.subdir = src/plugins/student
-student.depends = base
-unisim.depends = student
+#SUBDIRS += student
+#student.subdir = src/plugins/student
+#student.depends = base
+#unisim.depends = student
 
 #
 # Published or in-prep paper plug-ins
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
+
+#SUBDIRS += bmsb
+#bmsb.subdir = src/plugins/bmsb
+#bmsb.depends = base
+#unisim.depends = bmsb
 
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp

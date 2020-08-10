@@ -183,10 +183,10 @@
 </xsl:template>
 
 <xsl:template name="extract-screen">
+  <xsl:param name="position"/>
   <xsl:if test="Constants/Parameters[ParameterName='ScreenProduct']/Value!='No screen'">
     <!-- <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/> -->
     <xsl:variable name="layer" select="Layer"/>
-    
     <xsl:variable name="reflectivityTopName" select="'ReflectionOutwards'"/>
     <xsl:variable name="reflectivityTopSrc" select="Constants/Parameters[ParameterName=$reflectivityTopName]/Value" as="node()"/>
     <xsl:variable name="reflectivityBottomName" select="'ReflectionInwards'"/>
@@ -195,8 +195,22 @@
     <xsl:variable name="transmissivitySrc" select="Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
     <xsl:variable name="transmissivityAirName" select="'Porosity'"/>
     <xsl:variable name="transmissivityAirSrc" select="Constants/Parameters[ParameterName=$transmissivityAirName]/Value" as="node()"/>
+          
+    <box name="MISSING">
     
-    <box class="vg::Screen" name="MISSING">
+      <xsl:choose>  
+        <xsl:when test="$position=1 or $position=2">
+          <xsl:attribute name="class">
+            <xsl:value-of select="'vg::ScreenRoof'"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:value-of select="'vg::ScreenWall'"/>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>  
+      
       <xsl:attribute name="name">
         <xsl:value-of select="concat('layer', $layer)"/>
       </xsl:attribute>
@@ -311,33 +325,41 @@
           <!-- <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/> -->
         <!-- </xsl:attribute> -->
       </port>
-      <box class="vg::AirSpaceScreened" name="airSpace">
-        <port name="depth" value="0.1"/>
-      </box>
+      <box class="vg::ScreensAirTransmissivity" name="airTransmissivity"/>
     </box>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="extract-screens">
+  <xsl:param name="position"/>
   <xsl:for-each select=".[Layer='1']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
   <xsl:for-each select=".[Layer='2']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
   <xsl:for-each select=".[Layer='3']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="extract-shelter-face">
   <xsl:param name="position"/>
+  <box class="vg::ShelterFaceArea" name="area"/>
   <xsl:call-template name="extract-cover">
     <xsl:with-param name="cover" select="DVV_SETUP/Greenhouse/Panes/Pane[Position=$position]"/>
   </xsl:call-template>
   <box class="vg::Screens" name="screens">
     <xsl:for-each select="DVV_SETUP/Greenhouse/Screens/Screen[Position=$position]">
-      <xsl:call-template name="extract-screens"/>
+      <xsl:call-template name="extract-screens">
+        <xsl:with-param name="position" select="$position"/>
+      </xsl:call-template>
     </xsl:for-each>
   </box>
 </xsl:template>
@@ -355,7 +377,7 @@
   <xsl:variable name="numberName" select="'Number'"/>
   <xsl:variable name="numberSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$numberName]/Value"/>
   <xsl:variable name="numberValue" select="number(replace($numberSrc, ',', '.'))"/>
-  <xsl:variable name="transmissivityName" select="'VentTransmission'"/>
+  <xsl:variable name="transmissivityName" select="'VentTransmissivity'"/>
   <xsl:variable name="transmissivitySrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$transmissivityName]/Value"/>
   <xsl:variable name="transmissivityValue" select="number(replace($transmissivitySrc, ',', '.'))"/>
 
@@ -513,17 +535,17 @@
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template name="setpoint-reference">
-  <xsl:param name="setpointName"/>
-  <port>
-    <xsl:attribute name="name">
-      <xsl:value-of select="$setpointName"/>
-    </xsl:attribute>
-    <xsl:attribute name="ref">
-      <xsl:value-of select="concat('allSetpoints/', $setpointName, '[value]')"/>
-    </xsl:attribute>
-  </port>
-</xsl:template>
+<!-- <xsl:template name="setpoint-reference"> -->
+  <!-- <xsl:param name="setpointName"/> -->
+  <!-- <port> -->
+    <!-- <xsl:attribute name="name"> -->
+      <!-- <xsl:value-of select="$setpointName"/> -->
+    <!-- </xsl:attribute> -->
+    <!-- <xsl:attribute name="ref"> -->
+      <!-- <xsl:value-of select="concat('allSetpoints/', $setpointName, '[value]')"/> -->
+    <!-- </xsl:attribute> -->
+  <!-- </port> -->
+<!-- </xsl:template> -->
 
 <xsl:template name="extract-growth-light">
   <xsl:variable name="position" select="Position"/>
@@ -709,7 +731,7 @@
     </xsl:attribute>
     <port name="change" ref="./controller[controlVariable]"/>
     <port name="minValue" value="0"/>
-    <port name="maxValue" ref="../maxValue[value]"/>
+    <port name="maxValue" ref="setpoints[maxScreen]"/>
     <box class="ScreenCombination" name="desiredValue">
       <port name="formula">
         <xsl:attribute name="externalName">
@@ -928,17 +950,17 @@
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="1"/>
         </xsl:call-template>
-        <!-- <xsl:call-template name="extract-vent"> -->
-          <!-- <xsl:with-param name="position" select="1"/> -->
-        <!-- </xsl:call-template> -->
+        <xsl:call-template name="extract-vent">
+          <xsl:with-param name="position" select="1"/>
+        </xsl:call-template>
       </box>
       <box class="vg::ShelterFace" name="roof2">
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="2"/>
         </xsl:call-template>
-        <!-- <xsl:call-template name="extract-vent"> -->
-          <!-- <xsl:with-param name="position" select="2"/> -->
-        <!-- </xsl:call-template> -->
+        <xsl:call-template name="extract-vent">
+          <xsl:with-param name="position" select="2"/>
+        </xsl:call-template>
       </box>
       <box class="vg::ShelterFace" name="side1">
         <xsl:call-template name="extract-shelter-face">
@@ -961,8 +983,8 @@
         </xsl:call-template>
       </box>
     </box>
-    <box class="vg::AirSpaceNet" name="airSpaceNet"/>
   </box>
+  <!--
   <xsl:comment> *** Indoors *** </xsl:comment>
   <xsl:variable name="leakageName" select="'leakage'"/>
   <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
@@ -999,7 +1021,6 @@
           </port>
         </box>      
       </box>
-      <!--
       <box class="vg::EnergyFluxSum" name="energyFlux">
         <box class="vg::EnergyFluxFloor" name="floor">
           <port name="Uindoors">
@@ -1060,325 +1081,278 @@
             </port>
           </box>      
         </box>      
-      </box> -->
+      </box> 
     </box>
   </box>
-  <xsl:comment> *** allSetpoints *** </xsl:comment>
-  <box name="allSetpoints">
-    <box class="PrioritySignal" name="heatingTemperatureAtLowRh">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_HeatingTemp'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="ventilationTemperatureMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_VentTemp'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="rhMax">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxRelHmd'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="heatingTemperatureMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxHeatAddHighRH'"/>
-      </xsl:call-template>
-    </box>
-   <box class="PrioritySignal"  name="ventilationTemperatureRhMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxVentDecHighRH'"/>
-      </xsl:call-template>
-    </box>
-   <box class="PrioritySignal"  name="ventilationThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'ventilationsThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2Capacity">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Capacity'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2Setpoint">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Setpoint'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2VentilationThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationThreshold'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2VentilationBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="chalk">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_ShadingAgentReduction'"/>
-      </xsl:call-template>
-    </box>
-    <box name="growthLights">
-      <box name= "growthLight1">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn1'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff1'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive1'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-      <box name= "growthLight2">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn2'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff2'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive2'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-      <box name= "growthLight3">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn3'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff3'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive3'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-    </box>
-    <box class="PrioritySignal" name="rhMaxBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'rhMaxBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="dawnThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromNight'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="duskThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromDay'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilation">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilationTemperatureMin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMin'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThreshold1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThreshold2">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold2'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThreshold1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThreshold2">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold2'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenFixed1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenFixed1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenCrackAtHighRh">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackScreenHighHumidity'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenCrackAtHighTemperature">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperature'"/>
-      </xsl:call-template>
-    </box>
-  </box>
+  -->
   <xsl:comment> *** Setpoints *** </xsl:comment>
   <box class="vg::Setpoints" name="setpoints">
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'heatingTemperatureAtLowRh'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'heatingTemperatureMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationTemperatureMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationTemperatureRhMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'rhMax'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'rhMaxBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Capacity'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Setpoint'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'dawnThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'duskThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenCrackAtHighRh'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenCrackAtHighTemperature'"/>
-    </xsl:call-template>
+    <box name="elementary">
+      <box class="PrioritySignal" name="heatingTemperatureNormalRh">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'HeatingTemp'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="heatingTemperatureHighRhMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxHeatAddHighRH'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="heatingTemperatureLowRhMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxHeatAddLowRH'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="rhMax">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxRelHmd'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="rhMaxBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'rhMaxBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="rhMin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MinRelHmd'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="rhMinBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'rhMinBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="temperatureMax">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxTemp'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="temperatureMaxBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'tempMaxBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="ventilationTemperatureMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'VentTemp'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationNormalTemperature">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationTemperatureMin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMin'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighRh">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighHumidity'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighTemperature">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperature'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighTemperatureBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperatureBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2Capacity">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2Capacity'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2Setpoint">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2Setpoint'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2VentilationThreshold">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2VentilationThreshold'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2VentilationBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2VentilationBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="chalk">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'ShadingAgentReduction'"/>
+        </xsl:call-template>
+      </box>
+      <box name="growthLights">
+        <box name= "growthLight1">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn1'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff1'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive1'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+        <box name= "growthLight2">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn2'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff2'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive2'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+        <box name= "growthLight3">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn3'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff3'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive3'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThreshold1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold1'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThreshold2">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold2'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThresholdBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThreshold1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold1'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThreshold2">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold2'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThresholdBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenFixed1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenFixed1'"/>
+        </xsl:call-template>
+      </box>
+    </box>
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationThresholdBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilation'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMinBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'chalk'"/>
-    </xsl:call-template>
-    <box name="growthLights">
-      <box class="GrowthLightController" name="growthLight1">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight1/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight1/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight1/thresholdHigh[value]"/>
-      </box>
-      <box class="GrowthLightController" name="growthLight2">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight2/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight2/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight2/thresholdHigh[value]"/>
-      </box>
-      <box class="GrowthLightController" name="growthLight3">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight3/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight3/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight3/thresholdHigh[value]"/>
+    <box name="heating">
+      <newPort name="value" ref="./controller[controlVariable]"/>
+      <box class="PidController" name="controller">
+        <port name="sensedValue" ref="indoors[temperature]"/>
+        <port name="desiredValue" ref="setpoints/heatingTemperature[value]"/>
+        <port name="controlledValue" ref="actuators/heating/energyFlux[value]"/>
+        <port name="desire" value="KeepAbove"/>
+        <port name="minimum" value="0"/>
+        <port name="maximum" value="1"/>
+        <port name="Kprop" value="0.5"/>
+        <port name="Kderiv" value="-0.01"/>
       </box>
     </box>
-    <box name="screens">
-      <box class="ProportionalSignal" name="energy1">
-        <port name="increasingSignal" value="FALSE"/>
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenEnergyThreshold1[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
-      </box>
-      <box class="ProportionalSignal" name="energy2">
-        <port name="increasingSignal" value="FALSE"/>
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenEnergyThreshold2[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
-      </box>
-      <box class="ProportionalSignal" name="shade1">
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenShadeThreshold1[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
-      </box>
-      <box class="ProportionalSignal" name="shade2">
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenShadeThreshold2[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
-      </box>
-      <box name="fixed1">
-        <newPort name="value" ref="allSetpoints/screenFixed1[value]"/>
+    <box class="Maximum" name="ventilation">
+      <port name="values" ref="./controller[controlVariable] | setpoints/crackVentilation[value]"/>
+        <box class="PidController" name="controller">
+          <port name="sensedValue" ref="indoors[temperature]"/>
+          <port name="desiredValue" ref="setpoints/ventilationTemperature[value]"/>
+          <port name="desire" value="KeepBelow"/>
+          <port name="minimum" value="0"/>
+          <port name="maximum" value="1"/>
+          <port name="Kprop" value="0.05"/>
+          <port name="Kderiv" value="-0.5"/>
+        </box>
+    </box>
+    <box name="co2Injection">
+      <newPort name="value" ref="./controller[controlVariable]"/>
+      <box class="PidController" name="controller">
+        <port name="sensedValue" ref="indoors/co2[value]"/>
+        <port name="desiredValue" ref="setpoints[co2Setpoint]"/>
+        <port name="controlledValue" ref="actuators/co2Injection[value]"/>
+        <port name="desire" value="KeepAbove"/>
+        <port name="minimum" value="0"/>
+        <port name="maximum" value="1"/>
+        <port name="Kprop" value="0.05"/>
       </box>
     </box>
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
   <box class="vg::Actuators" name="actuators">
-    <box name="screens">
-      <box class="vg::Minimum" name="maxValue">
-        <port name="values" ref="./*[value]"/>
-        <box class="ProportionalSignal" name="maxAtHighRh">
-          <port name="input" ref="indoors/humidity[rh]"/>
-          <port name="threshold" ref="setpoints[rhMax]"/>
-          <port name="thresholdBand" ref="setpoints[rhMaxBand]"/>
-          <port name="initialSignal" value="1"/>
-          <port name="minSignal" ref="setpoints[maxScreenAtHighRh]"/>
-          <port name="maxSignal" value="1"/>
-          <port name="increasingSignal" value="FALSE"/>
-        </box>
-        <box class="ProportionalSignal" name="maxAtHighTemperature">
-          <port name="input" ref="indoors/temperature[value]"/>
-          <port name="threshold" ref="setpoints[ventilationTemperatureAtLowRh]"/>
+    <box name="heating">
+      <box class="RunningAverage" name="temperature">
+        <port name="initial" ref="./signal[value]"/> 
+        <port name="input" ref="./signal[value]"/> 
+        <port name="count" value="10"/>
+        <box class="ProportionalSignal" name="signal">
+          <port name="initialSignal" ref="indoors[temperature]"/>
+          <port name="input" ref="controllers/heating[value]"/>
+          <port name="threshold" value="0"/>
           <port name="thresholdBand" value="1"/>
-          <port name="initialSignal" value="1"/>
-          <port name="minSignal" ref="setpoints[maxScreenAtHighTemperature]"/>
-          <port name="maxSignal" value="1"/>
-          <port name="increasingSignal" value="FALSE"/>
+          <port name="minSignal" ref="indoors[temperature]"/>
+          <port name="maxSignal" ref="../../pipes/*[maxTemperature]" transform="max"/>
         </box>
       </box>
+      <box name="pipes">
+        <xsl:for-each select="DVV_SETUP/Greenhouse/Heatpipes/Heatpipe">
+          <xsl:call-template name="extract-heat-pipe"/>
+        </xsl:for-each>
+      </box>
+      <box class="EnergyFluxHeating" name="energyFlux"/>
+    </box>
+
+    <box class="RunningAverage" name="ventilation">
+      <port name="input" ref="controllers/ventilation[value]"/> 
+      <port name="count" value="8"/>
+    </box>      
+    <box name="screens">
       <xsl:call-template name="actuator-layer">
         <xsl:with-param name="layer" select="1"/>
       </xsl:call-template>
@@ -1394,23 +1368,47 @@
         <xsl:call-template name="extract-growth-light"/>
       </xsl:for-each>
     </box>
-    <box class="ProportionalSignal" name="heating">
-      <port name="initialSignal" ref="indoors/temperature[value]"/>
-      <port name="input" ref="controllers/heating[value]"/>
-      <port name="threshold" value="0"/>
-      <port name="thresholdBand" value="1"/>
-      <port name="minSignal" ref="indoors/temperature[value]"/>
-      <port name="maxSignal" externalName="None" source="Fixed">
-        <xsl:attribute name="value">
-          <xsl:value-of select="$heatPipeMaxTemperature"/>
-        </xsl:attribute>
-      </port>
-      <box name="pipes">
-        <xsl:for-each select="DVV_SETUP/Greenhouse/Heatpipes/Heatpipe">
-          <xsl:call-template name="extract-heat-pipe"/>
-        </xsl:for-each>
+    <box class="RunningAverage" name="co2Injection">
+      <port name="initial" ref="./signal[value]"/>
+      <port name="input" ref="./signal[value]"/>
+      <port name="count" value="8"/>
+      <box class="ProportionalSignal" name="signal">
+        <port name="initialSignal" value="0"/>
+        <port name="input" ref="controllers/co2Injection[value]"/>
+        <port name="threshold" value="0"/>
+        <port name="thresholdBand" value="1"/>
+        <port name="minSignal" value="0"/>
+        <port name="maxSignal" ref="setpoints[co2Capacity]"/>
       </box>
     </box>
+  </box>
+
+  <xsl:comment> *** Climate variables *** </xsl:comment>
+  <xsl:variable name="leakageName" select="'leakage'"/>
+  <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
+  <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
+  <box name="ventilation">
+    <box class="vg::VentilationTotal" name="total">
+      <port name="leakage">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$leakageName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$leakageValue"/>
+        </xsl:attribute>
+      </port>
+    </box>
+    <box class="vg::VentilationNet" name="net">
+    </box>
+  </box>
+  <box class="EnergyBudget" name="energyBudget">
+  </box>
+  <box class="WaterBudget" name="waterBudget">
+  </box>
+  <box class="Indoors" name="indoors">
   </box>
   
   <xsl:comment> *** Crop *** </xsl:comment>
@@ -1455,64 +1453,54 @@
       <newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
       <newPort name="outdoorsLight" ref="outdoors[radiation]"/>
       <newPort name="indoorsCo2" ref="indoors/co2[value]"/>
-      <newPort name="indoorsT" ref="indoors/temperature[value]"/>
+      <newPort name="indoorsT" ref="indoors[temperature]"/>
       <newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
-      <newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
-      <newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
-      <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
-      <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
-      <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
-      <newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
-      <newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
-      <newPort name="setpointHeating" ref="setpoints[heatingTemperatureAtLowRh]"/>
-      <newPort name="setpointVentilation" ref="setpoints[ventilationTemperatureMargin]"/>
-      <newPort name="setpointHeatingRhIncrement" ref="setpoints[heatingTemperatureMargin]"/>
-      <newPort name="setpointVentilationRhDecrement" ref="setpoints[ventilationTemperatureRhMargin]"/>
-      <newPort name="demandVentilationAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
-      <newPort name="demandVentilationAtLowRh"  ref="setpoints[ventilationTemperatureAtLowRh]"/>
-      <newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/>
-      <newPort name="demandHeatingAtLowRh"  ref="setpoints[heatingTemperatureAtLowRh]"/>
-			<newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/>
-      <newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/>
-      <newPort name="demandScreenLayer1" ref="actuators/screens/layer1[value]"/>
-      <newPort name="demandScreenLayer2" ref="actuators/screens/layer2[value]"/>
-      <newPort name="demandScreenLayer3" ref="actuators/screens/layer3[value]"/>
-      <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
-      <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
-      <newPort name="co2Injection" ref="controllers/co2[value]"/>
-      <newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
-      <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
-      <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
-      <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
-      <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
-      <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
-      <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
-      <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
-      <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
-      <newPort name="growthLightOn1" ref="actuators/growthLights/growthLight1[on]"/>
-      <newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/>
-      <newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/>
-      <newPort name="ventsOpening" ref="actuators/vents[value]"/>
-      <newPort name="screenEnergyThreshold1" ref="controllers/screens/energy1[threshold]"/>
-      <newPort name="screenEnergyThreshold2" ref="controllers/screens/energy2[threshold]"/>
-      <newPort name="screenShadeThreshold1" ref="controllers/screens/shade1[threshold]"/>
-      <newPort name="screenShadeThreshold2" ref="controllers/screens/shade2[threshold]"/>
-      <newPort name="screenEnergy1" ref="controllers/screens/energy1[value]"/>
-      <newPort name="screenEnergy2" ref="controllers/screens/energy2[value]"/>
-      <newPort name="screenShade1" ref="controllers/screens/shade1[value]"/>
-      <newPort name="screenShade2" ref="controllers/screens/shade2[value]"/>
-      <newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/>
-      <newPort name="screenMax" ref="actuators/screens/maxValue[value]"/>
-      <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
-      <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
-      <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
+      <newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
+
+      <newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/>
+      <newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/>
+      <newPort name="spRhMax" ref="setpoints[rhMax]"/>
+      <newPort name="spRhMin" ref="setpoints[rhMin]"/>
+      <newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/>
+      <newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/>
+      <newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/>
+      <newPort name="spScreenShadeThreshold1"  ref="setpoints[screenShadeThreshold1]"/> 
+      <newPort name="spScreenShadeThreshold2"  ref="setpoints[screenShadeThreshold2]"/>
+      <newPort name="spScreenFixed1"            ref="setpoints[screenFixed1]"/>
+      <newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/>
+      <newPort name="spScreenShadeThresholdBand"  ref="setpoints[screenShadeThresholdBand]"/>
+      <newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/>
+      <newPort name="spCo2" ref="setpoints[co2Setpoint]"/>
+      
+      <newPort name="actHeatingPower" ref="actuators/heating/energyFlux[value]"/>
+      <newPort name="actVentilation" ref="actuators/ventilation[value]"/>
+      <newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/>
+      <newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/>
+      <newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/>
+      <newPort name="actLightPower" ref="actuators/growthLights[powerUsage]"/>
+      <newPort name="actLightPar" ref="actuators/growthLights[parFluxDown]"/>
+      <newPort name="actScreen1" ref="actuators/screens/layer1[value]"/>
+      <newPort name="actScreen2" ref="actuators/screens/layer2[value]"/>
+      <newPort name="actScreen3" ref="actuators/screens/layer3[value]"/>
+			<newPort name="actCo2" ref="actuators/co2Injection[value]"/>
+      
+      <newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/>
+      <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/>  <!-- new -->
+      <newPort name="airFluxInfiltration" ref="ventilation/total[dueToLeakage]"/>
+      <newPort name="airFluxVents" ref="ventilation/total[dueToVents]"/>
+      <newPort name="airFluxTotal" ref="ventilation/total[value]"/>
+
+      <newPort name="coolingPower" ref="energyBudget/airSpaces/*[advectiveEnergyFlux]" transform="sum"/>
+            
+      <newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/>
+      <newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/>
+      <newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/>
       <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-      <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
-      <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
-      <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>    
+      <newPort name="leafLightUseEfficiency" ref="crop/photosynthesis[lue]"/>
+      <newPort name="leafTemperature"    ref="crop/temperature[value]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

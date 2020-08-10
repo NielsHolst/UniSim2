@@ -29,6 +29,7 @@ PlotR::PlotR(QString name, QObject *parent)
     Input(transform).help("Transformation of y-axis; only 'log10' available");
     Input(end).help("Deprecated");
     Input(endCode).help("Deprecated");
+    Input(maxData).help("Max. number of data rows to plot; ignored if zero");
     Input(ncol).equals(-1).help("Number of columns in arrangement of plots; -1 keeps default");
     Input(nrow).equals(-1).help("Number of rows in arrangement of plots; -1 keeps default");
     Input(iteration).imports("/*[iteration]");
@@ -116,11 +117,17 @@ QString PlotR::toScript() {
     return string;
 }
 
+inline QString df(int maxData) {
+    return (maxData==0) ? "df" : ("df[1:" + QString::number(maxData) + ",]");
+}
+
 QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const {
     QString string;
     QTextStream s(&string);
     s << "    "
-      << "plot_" << layout << "(df, "
+      << "plot_" << layout << "("
+      << df(maxData)
+      << ", "
       << "c(" << xLabels.join(", ") << ")"
       << ", "
       << (iteration > 2 ? ("\""+iterationLabel+"\"") : "NULL")
@@ -140,7 +147,8 @@ QString PlotR::scriptForDensityPlot(QStringList yLabels) const {
     QString string;
     QTextStream s(&string);
     s << "    "
-      << "plot_density(df"
+      << "plot_density("
+      << df(maxData)
       << ", "
       << "c(" << yLabels.join(", ") << ")"
       << ", "
@@ -165,7 +173,8 @@ QString PlotR::scriptForHistogramPlot(QStringList yLabels, QString geom) const {
     QString string;
     QTextStream s(&string);
     s << "    "
-      << "plot_histogram(df"
+      << "plot_histogram("
+      << df(maxData)
       << ", "
       << "c(" << yLabels.join(", ") << ")"
       << ", "

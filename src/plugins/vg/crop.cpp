@@ -26,10 +26,6 @@ Crop::Crop(QString name, QObject *parent)
 void Crop::amend() {
     BoxBuilder builder(this);
 
-    builder.
-    box("LeafWindSpeed").name("windSpeed").
-    endbox();
-
     if (!findMaybeOne<Box>("./rs"))
         builder.
         box("vg::StomatalResistanceRose").name("rs").

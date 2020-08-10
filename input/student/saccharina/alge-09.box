@@ -1,0 +1,116 @@
+Simulation sim {
+  .steps = 700 //3000
+  Calendar calendar {
+    .initialDateTime = "2017-09-21 00:05:00"
+    .timeUnit = "h"
+  }
+  Records env {
+    .fileName = "env_file.txt"
+  }
+  Carboncontent carboncontent {
+    .Cinit = 0.3
+    .carbonreservesrate = rateofchangeincarbonreserves[carbonreservesrate]
+    .dt = calendar[timeStepSecs]
+  }
+  Carbonexudation carbonexudation {
+    .C = carboncontent[C]
+  }
+  Nitrogencontent nitrogencontent {
+    .Ninit = 0.022
+    .nitrogenreservesrate = rateofchangeinnitrogenreserves[nitrogenreservesrate]
+    .dt = calendar[timeStepSecs]
+  }
+  Fronderosion fronderosion {
+    .A = area[A]
+  }
+  Temperaturedepententrespiration respiration {
+    .T = env[T]
+  }
+  LightInhibition beta {
+    .Pmax = maxphotoreftemp[maxphotosynthesisreftemp]
+    .guessBeta = 1e-9
+    .report = FALSE
+  }  
+  Photosynthesis photo  {
+    .beta = beta[beta]
+  }  
+  Maximalphotosynthesisratereftemp maxphotoreftemp {
+    .T = env[T]
+  }
+  Grossphotosynthesis grossphotosynthesis {
+    .PS = photo[photosynthesis]
+    .beta = beta[beta]
+    .I = env[I]
+  }
+  Nitrateuptakerate nitrateuptakerate {
+    .X = env[N]
+    .N = nitrogencontent[N]
+    .U = env[U]
+  }  
+  Seasonalinfluenceongrowthrate fphoto {
+    .n = calendar[dayOfYear]
+  }
+  Effectoftemperatureongrowthrate ftemp {
+    .T = env[T]
+  }
+  Effectofsizeongrowthrate farea {
+    .A = area[A]
+  }
+  Area area {
+    .Ainit = 0.005
+    .u = specificgrowthrate[specificgrowthrate]
+    .dt = calendar[timeStepSecs]
+  }
+  Specificgrowthrate specificgrowthrate {
+    .farea = farea[farea]
+    .fphoto = fphoto[fphoto]
+    .ftemp = ftemp[ftemp]
+    .N = nitrogencontent[N]
+    .C = carboncontent[C]
+  }
+  Rateofchangeincarbonreserves rateofchangeincarbonreserves {
+    .Gphotosynthesis = grossphotosynthesis[Gphotosynthesis]
+    .Cexudation = carbonexudation[carbonexudation]
+    .Respiration = respiration[respiration]
+    .C = carboncontent[C]
+    .u = specificgrowthrate[specificgrowthrate]
+  }
+  Rateofchangeinnitrogenreserves rateofchangeinnitrogenreserves {
+    .J = nitrateuptakerate[Nuptakerate]
+    .u = specificgrowthrate[specificgrowthrate]
+    .N = nitrogencontent[N]
+  }
+  Rateofchangeoffrondarea rateofchangeoffrondarea {
+    .u = specificgrowthrate[specificgrowthrate]
+    .A = area[A]
+    .fronderosion = fronderosion[fronderosion]
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[dateTime]
+      .ncol = 4
+      // PlotR {
+        // .ports = (env[T] env[I] env[N] env[U])
+      // }
+      PlotR {
+        .ports = (area[A] carboncontent[C] nitrogencontent[N])
+      }
+      PlotR {
+        .ports = rateofchangeincarbonreserves[*]
+      }
+      PlotR {
+        .ports = rateofchangeinnitrogenreserves[*]
+      }
+      PlotR {
+        .ports = specificgrowthrate[*]
+      }
+      // PlotR {
+        // .ports = (area[A] photo[photosynthesis] carbonexudation[carbonexudation] specificgrowthrate[specificgrowthrate] grossphotosynthesis[Gphotosynthesis] carboncontent[C] respiration[respiration] rateofchangeincarbonreserves[carbonreservesrate])
+      // }
+      // PlotR {
+        // .ports = (specificgrowthrate[specificgrowthrate] area[A])
+      // }
+
+    }
+  }
+}

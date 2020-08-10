@@ -1,0 +1,33 @@
+/* Copyright 2005-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
+** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
+#ifndef SCREENS_AIR_TRANSMISSIVITY_H
+#define SCREENS_AIR_TRANSMISSIVITY_H
+
+#include <base/box.h>
+
+namespace vg {
+
+class ScreensAirTransmissivity : public base::Box
+{
+public:
+    ScreensAirTransmissivity(QString name, QObject *parent);
+    void reset();
+    void update();
+private:
+    // Inputs
+    QVector<double> states, transmissivities;
+    // Outputs
+    double value;
+    // Data
+    int _n;
+
+};
+} //namespace
+
+
+#endif

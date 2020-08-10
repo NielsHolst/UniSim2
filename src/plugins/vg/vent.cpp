@@ -17,14 +17,13 @@ PUBLISH(Vent)
 Vent::Vent(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes vent effective area");
+    help("computes effective area of a set of vents");
     Input(length).imports("construction/geometry[length]",CA).unit("m");
     Input(width).equals(1).help("Width of one window (m)").unit("m");
     Input(number).equals(1).help("Number of windows").unit("-");
-    Input(state).imports("actuators/vents[value]",CA).help("Relative vent opening").unit("[0;1]");
-    Input(ventTransmissivity).equals(1.).help("Air transmissivity through vent").unit("[0;1]");
-    Input(screensTransmissivity).imports("../screens[airTransmissivity]",CA);
-    Output(transmissivity).help("Net air transmissivity").unit("[0;1]");
+    Input(transmissivity).equals(1.).help("Air transmissivity through vent").unit("[0;1]");
+    Output(area).help("Gross area").unit("m2");
+    Output(effectiveArea).help("Effective area").unit("m2");
 }
 
 void Vent::reset() {
@@ -32,7 +31,8 @@ void Vent::reset() {
 }
 
 void Vent::update() {
-    transmissivity = ventTransmissivity*screensTransmissivity;
+    area = length*width*number;
+    effectiveArea = area*transmissivity;
 }
 
 } //namespace

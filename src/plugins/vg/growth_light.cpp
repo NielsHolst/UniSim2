@@ -17,7 +17,7 @@ namespace vg {
 PUBLISH(GrowthLight)
 
 GrowthLight::GrowthLight(QString name, QObject *parent)
-    : RadiationLayer(name, parent)
+    : HeatTransferLayerBase(name, parent)
 {
     help("models the radiative emittance from growth lights");
     Input(on).help("Is light currently switched on?").unit("y|n");
@@ -26,9 +26,10 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     Input(propLw).equals(0.1).help("Proportion of power emitted as long-wave radiation").unit("[0;1]");
     Input(ageCorrectedEfficiency).equals(1.).help("Proportion of intensity actually emitted").unit("[0;1]");
     Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
-    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
+    port("area")->imports("construction/geometry[groundArea]",CA);
     Output(periodOn).help("Time since last time light went on").unit("m");
     Output(currentlyOn).help("Light remains on for the minimum period").unit("y|n");;
+    Output(powerUsage).help("Current power usage").unit("W/m2");
 }
 
 void GrowthLight::initialize() {
@@ -49,6 +50,7 @@ void GrowthLight::update() {
         parFluxDown = intensity*parPhotonCoef;
         swFluxDown  = intensity*(1. - propLw);
         lwFluxDown  = intensity*propLw;
+        powerUsage  = intensity;
     }
     else
         noLight();
@@ -57,7 +59,7 @@ void GrowthLight::update() {
 void GrowthLight::noLight() {
     periodOn = 0.;
     currentlyOn = false;
-    parFluxDown = swFluxDown = lwFluxDown = 0.;
+    parFluxDown = swFluxDown = lwFluxDown = powerUsage = 0.;
 }
 
 } //namespace

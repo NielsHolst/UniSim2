@@ -21,14 +21,18 @@ int Box::_count = 0;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
-Box::Box(QString name, QObject *parent)
+Box::Box(QString name, QObject *parent, Persistence persistence)
     : QObject(parent), _order(0), _amended(false), _cloned(false), _ignore(false)
 {
     Class(Box);
-    help("has yet undocumented functionality");
+    help("has no documented functionality");
     setObjectName(name);
     _currentRoot = this;
     _timer = new Timer(this);
+    if (persistence == AllowRemoval)
+        Input(remove).equals(false).help("Remove this box?");
+    else
+        remove = false;
 }
 
 Box::~Box() {
@@ -87,12 +91,10 @@ QString Box::sideEffects() const {
     return _sideEffects;
 }
 
-void Box::ignore(bool doIgnore) {
-    _ignore = doIgnore;
-}
-
-bool Box::ignore() const {
-    return _ignore;
+void Box::removeChild(QString name) {
+    Box *child = findOne<Box>(name);
+    dialog().information("Removing box " + child->fullName());
+    delete child;
 }
 
 Box* Box::currentRoot() {

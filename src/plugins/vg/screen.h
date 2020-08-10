@@ -7,30 +7,36 @@
 */
 #ifndef SCREEN_H
 #define SCREEN_H
-#include "radiation_layer.h"
+#include "heat_transfer_layer_parameters.h"
 #include <base/box.h>
 
 namespace vg {
 
-class Screen : public RadiationLayer
+class Screen : public HeatTransferLayerParameters
 {
 public:
     Screen(QString name, QObject *parent);
     void reset();
-    void initialize();
     void update();
 private:
     friend class Screens;
 
     // Inputs
-    double haze, transmissivityAir, transmissivityAirExponent, state;
+    double haze, transmissivityAir, state;
     // Outputs
-    int layer;
     double
-        unhazed, transmissivityAirNet, effectiveArea,
+        swReflectivityTopNet, swReflectivityBottomNet,
+        swTransmissivityTopNet, swTransmissivityBottomNet,
+        lwReflectivityTopNet, lwReflectivityBottomNet,
+        lwTransmissivityTopNet, lwTransmissivityBottomNet,
+        swAbsorptivityTopNet, swAbsorptivityBottomNet,
+        lwAbsorptivityTopNet, lwAbsorptivityBottomNet,
+        maxArea, depth,
         heatCapacity;
     // Methods
     void updateByState(double state);
+    virtual double computeMaxArea() = 0;
+    virtual double computeDepth() = 0;
 };
 
 } //namespace

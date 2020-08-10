@@ -27,10 +27,14 @@ public:
     };
     void resetProgress();
     void updateProgress(const ProgressInfo &info);
+
     virtual QProgressBar* progressBar() = 0;
     virtual void finishProgress() = 0;
     virtual void information(QString s) = 0;
     virtual QTextEdit* textEdit();
+    virtual void loadWithFilePicker();
+
+    virtual void restoreFont() {}
     virtual void setFont(QString, int) {}
     virtual QFont font() { return QFont(); }
 

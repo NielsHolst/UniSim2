@@ -16,7 +16,7 @@ namespace vg {
 PUBLISH(Controllers)
 
 Controllers::Controllers(QString name, QObject *parent)
-    : ControllersInput(name, parent)
+    : Box(name, parent)
 {
     help("contains sub-models to control actuators");
 }
@@ -24,132 +24,100 @@ Controllers::Controllers(QString name, QObject *parent)
 void Controllers::amend() {
     BoxBuilder builder(this);
 
-//    if (!findMaybeOne<Box>("./input"))
+//    if (!findMaybeOne<Box>("./heating"))
 //        builder.
-//        box("ControllersInput").name("input");
+//        box().name("heating").
+//            newPort("value").imports("./controller[controlVariable]",CA).
+//            box("PidController").name("controller").
+//                port("sensedValue").imports("indoors[temperature]",CA).
+//                port("desiredValue").imports("setpoints/heatingTemperature[value]",CA).
+//                port("desire").equals("KeepAbove").
+//                port("minimum").equals(0).
+//                port("maximum").equals(1).
+//                port("Kprop").equals(0.05).
+//                port("Kderiv").equals(-0.5).
+//            endbox().
+//        endbox();
 
-    if (!findMaybeOne<Box>("./ventilation"))
-        builder.
-        box("ProportionalSignal").name("ventilation").
-            port("input").imports("indoors/temperature[value]",CA).
-            port("threshold").imports("setpoints/temperature/ventilation[value]",CA).
-            port("thresholdBand").imports("controllers[ventilationThresholdBand]",CA).
-            port("maxSignal").equals(1.).
-            port("minSignal").imports("./crack[value]").
-            box("ProportionalSignal").name("crack").
-                port("input").imports("indoors/humidity[rh]",CA).
-                port("threshold").imports("setpoints[rhMax]",CA).
-                port("thresholdBand").imports("setpoints[rhMaxBand]",CA).
-                port("maxSignal").imports("./minsMax[value]").
-                port("minSignal").equals(0).
-                box("ProportionalSignal").name("minsMax").
-                    port("input").imports("outdoors[temperature]",CA).
-                    port("threshold").imports("controllers[crackVentilationTemperatureMin]",CA).
-                    port("thresholdBand").imports("controllers[crackVentilationTemperatureMinBand]",CA).
-                    port("maxSignal").imports("controllers[crackVentilation]",CA).
-                    port("minSignal").equals(0).
-                endbox().
-            endbox().
-        endbox();
-
-    if (!findMaybeOne<Box>("./heating"))
-        builder.
-        box("Accumulator").name("heating").
-            port("change").imports("./controller[controlVariable]",CA).
-            port("minValue").equals(0).
-            port("maxValue").equals(1).
-            box("PidController").name("controller").
-                port("sensedValue").imports("indoors/temperature[value]",CA).
-                port("desiredValue").imports("setpoints/temperature/heating[value]",CA).
-                port("Kprop").equals(0.1).
-            endbox().
-        endbox();
+//    if (!findMaybeOne<Box>("./ventilation"))
+//        builder.
+//        box("Maximum").name("ventilation").
+//            port("values").imports("./controller[controlVariable] | setpoints[crackVentilation]").
+//            box("PidController").name("controller").
+//                port("sensedValue").imports("indoors[temperature]",CA).
+//                port("desiredValue").imports("setpoints/ventilationTemperature[value]",CA).
+//                port("desire").equals("KeepBelow").
+//                port("minimum").equals(0).
+//                port("maximum").equals(1).
+//                port("Kprop").equals(0.05).
+//                port("Kderiv").equals(-0.5).
+//            endbox().
+//        endbox();
 
     if (!findMaybeOne<Box>("./screens"))
         builder.
         box().name("screens").
-            box("Accumulator").name("maxDrawn").
-                port("initial").equals(1).
-                port("change").imports("./controller[controlVariable]").
-                port("minValue").equals(0.).
-                port("maxValue").equals(1.).
-                box("PidController").name("controller").
-                    port("sensedValue").imports("..[value]").
-                    port("desiredValue").imports("./target[signal]").
-                    port("Kprop").equals(0.02).
-                    box("ThresholdSignal").name("target").
-                        port("input").imports("indoors/humidity[rh]").
-                        port("threshold").imports("setpoints[rhMax]").
-                        port("signalUnflagged").equals(1).
-                        port("signalFlagged").imports("controllers[screenMaxAtHighRh]").
-                    endbox().
-                endbox().
+            box("ProportionalSignal").name("energy1").
+                port("increasingSignal").equals(false).
+                port("maxSignal").equals(1).
+                port("input").imports("outdoors[radiation]").
+                port("threshold").imports("setpoints[screenEnergyThreshold1]").
+                port("thresholdBand").imports("setpoints[screenEnergyThresholdBand]").
             endbox().
-            box("Minimum").name("energy").
-                port("values").imports("./signals/*[signal]").
-                box().name("signals").
-                    box("ProportionalSignal").name("radiation").
-                        port("input").imports("outdoors[radiation]").
-                        port("threshold").imports("controllers[screenEnergyThreshold]").
-                        port("thresholdBand").imports("controllers[screenEnergyThresholdBand]").
-                        port("maxSignal").imports("controllers/screens/maxDrawn[value]").
-                        port("minSignal").equals(0).
-                        port("increasingSignal").equals(false).
-                    endbox().
-                endbox().
+            box("ProportionalSignal").name("energy2").
+                port("increasingSignal").equals(false).
+                port("maxSignal").equals(1).
+                port("input").imports("outdoors[radiation]").
+                port("threshold").imports("setpoints[screenEnergyThreshold2]").
+                port("thresholdBand").imports("setpoints[screenEnergyThresholdBand]").
             endbox().
-            box("Maximum").name("shade").
-                port("values").imports("./signals/*[signal]").
-                box().name("signals").
-                    box("ProportionalSignal").name("radiation").
-                        port("input").imports("outdoors[radiation]").
-                        port("threshold").imports("controllers[screenShadeThreshold]").
-                        port("thresholdBand").imports("controllers[screenShadeThresholdBand]").
-                        port("maxSignal").imports("controllers/screens/maxDrawn[value]").
-                        port("minSignal").equals(0).
-                    endbox().
-                    box().name("asEnergy").
-                        newPort("signal").imports("controllers/screens/energy[value]").
-                    endbox().
-                endbox().
+            box("ProportionalSignal").name("shade1").
+                port("increasingSignal").equals(false).
+                port("maxSignal").equals(1).
+                port("input").imports("outdoors[radiation]").
+                port("threshold").imports("setpoints[screenShadeThreshold1]").
+                port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").
             endbox().
-            box("Maximum").name("blackout").
-                port("values").imports("./signals/*[signal]").
-                box().name("signals").
-                    box("DateTimeSignal").name("time").
-                        port("beginTime").imports("controllers[screenBlackoutFromTime]").
-                        port("endTime").imports("controllers[screenBlackoutToTime]").
-                        port("signalInside").imports("setpoints/daylightLevel[day]").
-                    endbox().
-                    box().name("asEnergy").
-                        newPort("signal").imports("controllers/screens/energy[value]").
-                    endbox().
-                endbox().
+            box("ProportionalSignal").name("shade2").
+                port("increasingSignal").equals(false).
+                port("maxSignal").equals(1).
+                port("input").imports("outdoors[radiation]").
+                port("threshold").imports("setpoints[screenShadeThreshold2]").
+                port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").
+            endbox().
+            box().name("fixed1").
+                newPort("value").imports("setpoints[screenFixed1]").
             endbox().
         endbox();
-//    if (!findMaybeOne<Box>("./*<GrowthLightController>"))
-//        builder.
-//        box("vg::GrowthLightController").name("growthLight").
-//        endbox();
 
-    if (!findMaybeOne<Box>("./co2"))
+    if (!findMaybeOne<Box>("./co2Capacity"))
         builder.
-        box("Accumulator").name("co2").
-            port("change").imports("./controller[controlVariable]").
-            port("minValue").equals(0).
-            port("maxValue").imports("./co2Capacity[value]").
-            box("PidController").name("controller").
-                port("sensedValue").imports("indoors/co2[value]").
-                port("desiredValue").imports("setpoints[co2Setpoint]").
-                port("Kprop").equals(0.1).
+        box("ProportionalSignal").name("co2Capacity").
+            port("input").imports("actuators/ventilation[value]").
+            port("threshold").imports("setpoints[co2VentilationThreshold]").
+            port("thresholdBand").imports("setpoints[co2VentilationBand]").
+            port("maxSignal").imports("setpoints[co2Capacity]").
+            port("minSignal").equals(0).
+            port("increasingSignal").equals(false).
+        endbox();
+
+    if (!findMaybeOne<Box>("./growthLights"))
+        builder.
+        box().name("growthLights").
+            box("GrowthLightController").name("growthLight1").
+                port("setting").imports("setpoints[growthLightSetting1]").
+                port("lightThresholdLow").imports("setpoints[growthLightThresholdLow1]").
+                port("lightThresholdHigh").imports("setpoints[growthLightThresholdHigh1]").
             endbox().
-            box("ProportionalSignal").name("co2Capacity").
-                port("input").imports("actuators/vents[value]").
-                port("threshold").imports("setpoints[co2VentilationThreshold]").
-                port("thresholdBand").imports("setpoints[co2VentilationBand]").
-                port("maxSignal").imports("setpoints[co2Capacity]").
-                port("minSignal").equals(0).
-                port("increasingSignal").equals(false).
+            box("GrowthLightController").name("growthLight2").
+                port("setting").imports("setpoints[growthLightSetting2]").
+                port("lightThresholdLow").imports("setpoints[growthLightThresholdLow2]").
+                port("lightThresholdHigh").imports("setpoints[growthLightThresholdHigh2]").
+            endbox().
+            box("GrowthLightController").name("growthLight3").
+                port("setting").imports("setpoints[growthLightSetting3]").
+                port("lightThresholdLow").imports("setpoints[growthLightThresholdLow3]").
+                port("lightThresholdHigh").imports("setpoints[growthLightThresholdHigh3]").
             endbox().
         endbox();
 

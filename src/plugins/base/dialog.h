@@ -19,6 +19,7 @@ public:
     void finishProgress();
     void information(QString s);
     QTextEdit* textEdit();
+    void loadWithFilePicker();
     void setFont(QString family, int pt);
     QFont font();
     void writePrompt();

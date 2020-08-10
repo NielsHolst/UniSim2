@@ -15,13 +15,15 @@ namespace vg {
 PUBLISH(GrowthLights)
 
 GrowthLights::GrowthLights(QString name, QObject *parent)
-    : RadiationLayer(name, parent)
+    : HeatTransferLayerBase(name, parent)
 {
     help("sums the radiative emittance from several growth lights");
     port("parFluxDown")->imports("./*[parFluxDown]").transform(Sum);
     port("swFluxDown")->imports("./*[swFluxDown]").transform(Sum);
     port("lwFluxDown")->imports("./*[lwFluxDown]").transform(Sum);
-    Output(currentlyOn).imports("./*[currentlyOn]").transform(Any).help("Is any growth light on?").unit("y|n");;
+    port("area")->imports("construction/geometry[groundArea]",CA);
+    Output(currentlyOn).imports("./*[currentlyOn]").transform(Any).help("Is any growth light on?");
+    Output(powerUsage).imports("./*[powerUsage]").transform(Sum);
 }
 
 } //namespace

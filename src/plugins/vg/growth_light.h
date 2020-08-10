@@ -8,11 +8,11 @@
 #ifndef GROWTH_LIGHT_H
 #define GROWTH_LIGHT_H
 
-#include "radiation_layer.h"
+#include "heat_transfer_layer_base.h"
 
 namespace vg {
 
-class GrowthLight : public RadiationLayer {
+class GrowthLight : public HeatTransferLayerBase {
 public:
     GrowthLight(QString name, QObject *parent);
     void initialize();
@@ -22,11 +22,11 @@ private:
     // Inputs
     double intensity, parPhotonCoef, propLw,
         ageCorrectedEfficiency,
-        timeStep, minPeriodOn;
+        minPeriodOn;
     bool on;
     // Outputs
     double
-        periodOn;
+        periodOn, powerUsage;
     bool currentlyOn;
     // Methods
     void noLight();

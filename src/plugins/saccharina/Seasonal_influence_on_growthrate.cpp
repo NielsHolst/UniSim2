@@ -1,7 +1,9 @@
+#include <math.h>
 #include <base/publish.h>
 #include "Seasonal_influence_on_growthrate.h"
 
 using namespace base;
+using namespace std;
 
 namespace saccharina {
 
@@ -13,26 +15,28 @@ Seasonalinfluenceongrowthrate::Seasonalinfluenceongrowthrate(QString name, QObje
     help("Calculates the seasonal influence on growth rate (Eq 5)");
     Input(a1).equals(0.85).help("Photoperiodic parameter");
     Input(a2).equals(0.3).help("Photoperiodic parameter");
-    Input(n).equals(365).help("day number");
-    Output(fphoto).help("Unit is temperature");
+    Input(dayLength).imports("calendar[dayLength]");
+    Input(maxDayLengthChange).equals(0.1).help("Maximum change in day length between days").unit("h");
+    Output(dayLengthChange).help("Change in day length from yesterday").unit("h");
+    Output(lambda).help("Scaled day length change").unit("[-1,1]");
+    Output(fphoto).help("Scaling of growth rate");
 }
 
 void Seasonalinfluenceongrowthrate::reset() {
-   update();
+    prevDayLength = dayLength;
+    update();
+}
+
+// Returns one of: -1, 0, +1
+inline double signum(double val) {
+    return (0. < val) - (val < 0.);
 }
 
 void Seasonalinfluenceongrowthrate::update() {
-       if (tgamma(n) > 0.0)
-       {
-       fphoto = a1 * (pow(abs(tgamma(n)),0.5)) + a2;
-            }
-       if (tgamma(n) < 0.0)
-            {
-            fphoto = a1 * (-1 * (pow(abs(tgamma(n)),0.5))) + a2;
-                 }
-        else
-            {
-           fphoto = a2;
-                  }
- }
+    dayLengthChange = dayLength - prevDayLength;
+    prevDayLength = dayLength;
+    lambda  = dayLengthChange/maxDayLengthChange;
+    fphoto = a1*(1. + signum(lambda)*sqrt(abs(lambda))) + a2;
+}
+
 }

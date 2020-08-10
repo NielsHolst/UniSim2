@@ -22,7 +22,7 @@ BoundaryLayerResistanceStanghellini::BoundaryLayerResistanceStanghellini(QString
 {
     help("computes boundary layer resistance from Stanghellini (1987, p. 32)");
     Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
-    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
 }
 
 void BoundaryLayerResistanceStanghellini::setRbH2O() {

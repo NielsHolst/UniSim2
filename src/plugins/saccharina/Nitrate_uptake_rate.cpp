@@ -13,7 +13,7 @@ Nitrateuptakerate::Nitrateuptakerate(QString name, QObject *parent)
     help("Calculates the nitrate uptake rate (Eq 8)");
     Input(Jmax).equals(0.00014).help("Maximal nitrate uptake rate");
     Input(X).equals(0.001).help("Substrate nutrient concentration, environmental variable (mmol pr L)");
-    Input(KX).equals(4.0).help("Nitrate uptake half saturation constant");
+    Input(KX).equals(0.004).help("Nitrate uptake half saturation constant");
     Input(N).equals(6.0).help("Nitrogen reserve, relative to Ws, state variable (g N / (g sw)");
     Input(Nmin).equals(0.01).help("Minimal nitrogen reserve");
     Input(Nmax).equals(0.022).help("Maximal nitrogen reserve");

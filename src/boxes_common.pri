@@ -8,7 +8,7 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += debug
+CONFIG += release
 VERSION = 2.3.21
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
@@ -51,8 +51,13 @@ macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
 # Compiler options to silence warnings when compiling under Win and Linux
 !macx:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
 
+# Compiler options for extra debug info (can be toggled off)
+QMAKE_CXXFLAGS_DEBUG -= -g
+QMAKE_CXXFLAGS_DEBUG += -g3
+
 # Compiler options to speed up code
-QMAKE_CXXFLAGS += -ffast-math -O3
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE += -ffast-math -O3
 
 # Compiler option that would have saved me some days' work
 QMAKE_CXXFLAGS += -Wdelete-non-virtual-dtor

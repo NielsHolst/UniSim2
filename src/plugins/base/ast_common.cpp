@@ -49,6 +49,12 @@ QString ParameterWithAttribute::toString() const {
 }
 
 void ParameterWithAttribute::addToBuilder(base::BoxBuilder &builder) {
+//    QString s("type '%1', name '%2', assignment '%3', attribute '%4'");
+//    dialog().information(s.
+//                         arg(QString::fromStdString(type)).
+//                         arg(QString::fromStdString(name)).
+//                         arg(QString::fromStdString(assignment)).
+//                         arg(QString::fromStdString(attribute)));
     QString nam = QString::fromStdString(name);
     if (type==".")
         builder.port(nam);
@@ -72,6 +78,10 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
     QString val = QString::fromStdString(value),
             dist,
             fallBackValue;
+//    dialog().information("value '" + val + "'");
+    QString assignment = val.at(0);
+    val = val.mid(1);
+
     if (val.startsWith("?")) {
         int pos = val.indexOf(":");
         Q_ASSERT(pos>1);

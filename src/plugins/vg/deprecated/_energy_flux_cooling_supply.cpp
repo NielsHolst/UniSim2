@@ -24,7 +24,7 @@ EnergyFluxCoolingSupply::EnergyFluxCoolingSupply(QString name, QObject *parent)
     help("computes the energy flux supplied to cool the greenhouse to the ventilation setpoint");
     Input(airSupplyMax).imports("cooling/airSupplyMax[value]");
     Input(energyDemand).imports("cooling/demand[value]");
-    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]").unit("oC");
     Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
     Input(height).imports("geometry[indoorsAverageHeight]").unit("m");
     Input(airTransmissivity).imports("construction/shelter[airTransmissivity]").unit("[0;1]");

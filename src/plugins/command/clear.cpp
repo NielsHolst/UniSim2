@@ -25,17 +25,18 @@ clear::clear(QString name, QObject *parent)
 }
 
 void clear::doExecute() {
-    QTextCursor cursor = dialog().textEdit()->textCursor();
-    QTextCharFormat format = cursor.charFormat();
-    QFont font = format.font();
-    QString family = font.family();
-    int pt = font.pointSize();
+//    QTextCursor cursor = dialog().textEdit()->textCursor();
+//    QTextCharFormat format = cursor.charFormat();
+//    QFont font = format.font();
+//    QString family = font.family();
+//    int pt = font.pointSize();
 
     dialog().textEdit()->clear();
+    dialog().restoreFont();
 
-    format.setFont(QFontDatabase().font(family, QString(), pt));
-    cursor.setCharFormat(format);
-    dialog().textEdit()->setTextCursor(cursor);
+//    format.setFont(QFontDatabase().font(family, QString(), pt));
+//    cursor.setCharFormat(format);
+//    dialog().textEdit()->setTextCursor(cursor);
 }
 
 }

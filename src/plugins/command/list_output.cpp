@@ -100,10 +100,10 @@ void ListOutput::toString(base::Port *port, int level) {
                 assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
         }
-        if (port->hasImport())
-            assignment += " <- " + port->importPath();
         if (!port->unit().isEmpty())
             assignment += " " + port->unit();
+        if (port->hasImport())
+            assignment += " <- " + port->importPath();
         _s += fill +
               prefix +
               port->objectName() +

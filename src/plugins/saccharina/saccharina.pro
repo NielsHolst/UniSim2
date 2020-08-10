@@ -10,6 +10,7 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
     Area.h \
+    Area_lost.h \
     Beta.h \
     Carbon_content.h \
     Carbon_exudation.h \
@@ -32,6 +33,7 @@ HEADERS +=  \
     
 SOURCES +=  \
     Area.cpp \
+    Area_lost.cpp \
     Beta.cpp \
     Carbon_content.cpp \
     Carbon_exudation.cpp \

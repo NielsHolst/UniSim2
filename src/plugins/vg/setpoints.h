@@ -7,16 +7,54 @@
 */
 #ifndef SETPOINTS_H
 #define SETPOINTS_H
-
-#include "setpoints_input.h"
+#include <base/box.h>
 
 namespace vg {
 
-class Setpoints : public SetpointsInput
+class Setpoints : public base::Box
 {
 public:
     Setpoints(QString name, QObject *parent);
     void amend();
+    void reset();
+    void update();
+private:
+    // Inputs
+    double
+        heatingTemperatureNormalRh,
+        heatingTemperatureHighRhMargin,
+        heatingTemperatureLowRhMargin,
+        rhMax,
+        rhMaxBand,
+        rhMin,
+        rhMinBand,
+        temperatureMax,
+        temperatureMaxBand,
+        ventilationTemperatureMargin,
+        crackVentilationNormalTemperature,
+        crackVentilationTemperatureMin,
+        crackVentilationTemperatureMinBand,
+        co2Capacity,
+        co2Setpoint,
+        co2VentilationThreshold,
+        co2VentilationBand,
+        chalk,
+        screenEnergyThreshold1,
+        screenEnergyThreshold2,
+        screenEnergyThresholdBand,
+        screenShadeThreshold1,
+        screenShadeThreshold2,
+        screenShadeThresholdBand,
+        screenFixed1,
+        screenCrackAtHighRh,
+        screenCrackAtHighTemperature,
+        screenCrackAtHighTemperatureBand,
+        growthLightSetting1,       growthLightSetting2,       growthLightSetting3,
+        growthLightThresholdLow1,  growthLightThresholdLow2,  growthLightThresholdLow3,
+        growthLightThresholdHigh1, growthLightThresholdHigh2, growthLightThresholdHigh3,
+        screenCrack;
+private:
+    double maxScreen;
 };
 
 } //namespace

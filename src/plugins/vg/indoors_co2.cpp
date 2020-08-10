@@ -19,10 +19,10 @@ IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
 {
     help("models indoors CO2 concentration");
     Input(outdoorsCo2).imports("outdoors[co2]",CA).unit("ppm");
-    Input(airFlux).imports("total/airFlux[value]",CA).unit("m3/m3/h");
-    Input(injectionRate).imports("controllers/co2[signal]",CA).unit("g/m2/h");
-    Input(assimilation).imports("crop/Pg[value]",CA).unit("[g CO2/m2/h]");
-    Input(averageHeight).imports("geometry[indoorsAverageHeight]",CA).unit("m");
+    Input(airFlux).imports("ventilation/total[value]",CA).unit("m3/m3/h");
+    Input(injectionRate).imports("actuators/co2Injection[value]",CA).unit("g/m2/h");
+    Input(assimilation).imports("crop/photosynthesis[Pg]",CA).unit("[g CO2/m2/h]");
+    Input(averageHeight).imports("geometry[averageHeight]",CA).unit("m");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
     Output(value).help("Indoors CO2 concentration [ppm]").unit("ppm");
 }
@@ -38,7 +38,7 @@ namespace {
                      double y0, // initial indoors CO2
                      double dt) // time step
     {
-        return (b==0) ?
+        return (b==0.) ?
             y0 + a*dt :
             exp(-b*dt)*( (exp(b*dt)-1)*(a/b+c)+y0 );
     }

@@ -26,7 +26,7 @@ StomatalResistanceTomato::StomatalResistanceTomato(QString name, QObject *parent
     Input(riH2Omin).equals(82.).help("Minimum resistance against H2O").unit("s/m");
     Input(lai).imports("crop/lai[value]",CA).unit("m2/m2");
     Input(temperature).imports("../temperature[value]",CA).unit("oC");
-    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
     Input(rh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
     Input(radiationAbsorbed).imports("../radiationAbsorbed[value]",CA).unit("W/m2");
     Input(co2).imports("indoors/co2[value]",CA).unit("ppm");

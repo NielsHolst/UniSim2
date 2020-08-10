@@ -17,14 +17,6 @@ class ShelterFace : public ShelterBase
 public:
     ShelterFace(QString name, QObject *parent);
     void amend();
-    void initialize();
-
-private:
-    // Inputs
-    double roofArea, sideWallsArea, endWallsArea, gablesArea, groundArea;
-    // Outputs
-    double area, relativeArea, areaPerGround, screensMaxState;
-
 };
 } //namespace
 

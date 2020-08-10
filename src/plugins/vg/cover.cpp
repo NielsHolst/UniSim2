@@ -21,24 +21,15 @@ namespace vg {
 PUBLISH(Cover)
 
 Cover::Cover(QString name, QObject *parent)
-    : RadiationLayer(name, parent)
+    : HeatTransferLayerParameters(name, parent)
 {
     help("computes cover light and heat characteristics");
     Input(windSpeed).imports("outdoors[windSpeed]",CA).unit("m/s");
     Input(haze).equals(1.).help("Proportion of direct light transmitted as diffuse light").unit("[0;1]");
     Input(UwindMinimum).equals(7.2).help("Heat transfer coefficient at no wind").unit("W/m2/K");
     Input(UwindSlope).help("Heat transfer coefficient linear increase with wind speed").unit("W/m2/K/(m/s)");
-}
-
-void Cover::initialize() {
-    // Default to glass
-    swReflectivityTop    = lwReflectivityTop =
-    swReflectivityBottom = lwReflectivityBottom = 0.1;
-    swTransmissivityTop  = lwTransmissivityBottom = 0.9;
-    Ubottom =  1.247;
-    specificHeatCapacity = 6968.;
-    temperature = 20.;
-    updateAbsorptivities();
+    port("area")->imports("../area[value]",CA);
+    port("Ubottom")->equals(1.247);
 }
 
 void Cover::reset() {

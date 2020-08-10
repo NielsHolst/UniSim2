@@ -21,6 +21,8 @@
 #include "general.h"
 #include "mega_factory.h"
 
+#include <QMessageBox>
+
 namespace base {
 
 DialogWidget::DialogWidget(QMainWindow *parent)
@@ -34,6 +36,7 @@ DialogWidget::DialogWidget(QMainWindow *parent)
 {
     setObjectName("dialog");
     setDocument(_textDocument = new QTextDocument(this));
+    setFocus(Qt::ActiveWindowFocusReason);
 }
 
 void DialogWidget::init() {
@@ -171,12 +174,16 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_L:
         event->accept();
-        cursor = getCursor();
-        cursor.movePosition(QTextCursor::EndOfLine);
-        setTextCursor(cursor);
         Command::submit(QStringList() << "clear", this);
-        insertText("\n" + _prompt);
-        submitCommand();
+        handleEscKey();
+        restoreFont();
+//        event->accept();
+//        moveCursor(QTextCursor::End);
+//        cursor = getCursor();
+//        setTextCursor(cursor);
+//        Command::submit(QStringList() << "clear", this);
+//        insertText("\n" + _prompt);
+//        submitCommand();
         break;
     case Qt::Key_Space:
         s = selectFile();
@@ -198,6 +205,15 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     default:
         QTextEdit::keyPressEvent(event);
         break;
+    }
+}
+
+void DialogWidget::loadWithFilePicker() {
+    QString s = selectFile();
+    if (!s.isEmpty()) {
+        s.prepend(" ");
+        insertText(s);
+        submitCommand();
     }
 }
 
@@ -226,8 +242,7 @@ void DialogWidget::handleNormalKey(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_Escape:
         event->accept();
-        moveCursor(QTextCursor::End);
-        writePrompt();
+        handleEscKey();
         break;
     case Qt::Key_Tab:
         event->accept();
@@ -283,6 +298,11 @@ void DialogWidget::handleNormalKey(QKeyEvent *event) {
         QTextEdit::keyPressEvent(event);
         break;
     }
+}
+
+void DialogWidget::handleEscKey() {
+    moveCursor(QTextCursor::End);
+    writePrompt();
 }
 
 void DialogWidget::receivedFocus(QWidget *old, QWidget *now) {

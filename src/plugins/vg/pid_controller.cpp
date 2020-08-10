@@ -9,6 +9,10 @@
 #include <base/phys_math.h>
 #include <base/publish.h>
 
+#include <base/dialog.h>
+
+using std::min;
+using std::max;
 using namespace base;
 using namespace phys_math;
 
@@ -24,60 +28,59 @@ PidController::PidController(QString name, QObject *parent)
     help("delivers PID control of a control variable");
     Input(sensedValue).help("The sensed value");
     Input(desiredValue).help("The desired value (setpoint)");
-    Input(controlVariableReset).help("The initial value of the control variable at reset");
-    Input(Kprop).equals(0.5).help("The proportional gain").unit("/min");
+    Input(controlledValue).imports(".[controlVariable]").help("Value used for derivate control (Kderiv)");
+    Input(desire).equals("KeepAt").unit("KeepAt|KeepBelow|KeepAbove").help("Keep sensed value at, below or above desired value");
+    Input(Kprop).equals(0.1).help("The proportional gain").unit("/min");
     Input(Kint).equals(0.).help("The integral gain").unit("/min");
     Input(Kderiv).equals(0.).help("The derivative gain").unit("/min");
 
     Input(minimum).equals(-doubleMax).help("Minimum allowed value of control variable");
     Input(maximum).equals(doubleMax).help("Maximum allowed value of control variable");
-    Input(minSlope).equals(-doubleMax).help("Minimum allowed rate of change in control variable").unit("/min");
-    Input(maxSlope).equals(doubleMax).help("Maximum allowed rate of change in control variable").unit("/min");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
     Output(controlVariable).help("The control variable; tends to zero when all three error terms summed tend to zero");
-    Output(controlVariableSlope).help("Slope of change in control variable (per min)");
     Output(error).help("The error");
     Output(errorIntegral).help("The integral error");
     Output(errorDerivative).help("The derivative error");
 }
 
 void PidController::reset() {
-    controlVariable = cv0 = cv1 = controlVariableReset;
+    prevControlledValue = prevError = 0.;
     dt = timeStep/60.;  // from secs to minutes
     tick = 0;
+    QString s = desire.toLower();
+    if (s=="keepat")
+        _desire = KeepAt;
+    else if (s=="keepbelow")
+        _desire = KeepBelow;
+    else if (s=="keepabove")
+        _desire = KeepAbove;
+    else
+        ThrowException("Desire must be one of KeepAt|KeepBelow|KeepAbove").value(desire).context(this);
 }
 
 void PidController::update() {
     updateControlVariable();
-    adjustControlVariable();
+    prevControlledValue = controlledValue;
     prevError = error;
-    cv0 = cv1;
-    cv1 = controlVariable;
-    ++tick;
 }
 
 void PidController::updateControlVariable() {
-    error = desiredValue - sensedValue;
-    errorIntegral += error;
-    errorDerivative = (tick == 0) ? 0. : (error - prevError);
-    controlVariable = (Kprop*error + Kint*errorIntegral + Kderiv*errorDerivative)*dt;
-}
-
-void PidController::adjustControlVariable() {
-    double slope = fitSlopePPP(cv0, cv1, controlVariable)/dt;
-    if (tick>10) {
-        if (slope < minSlope) {
-            controlVariable = fitPointPPS(cv0, cv1, minSlope*dt);
-            slope = minSlope;
-        }
-        else if (slope > maxSlope) {
-            controlVariable = fitPointPPS(cv0, cv1, maxSlope*dt);
-            slope = maxSlope;
-        }
+    switch (_desire) {
+    case KeepBelow:
+        error = max(sensedValue - desiredValue, 0.);
+        break;
+    case KeepAbove:
+        error = max(desiredValue - sensedValue, 0.);
+        break;
+    case KeepAt:
+        error = desiredValue - sensedValue;
+        errorIntegral += error;
+        break;
     }
+    errorDerivative = (tick++ < 2) ? 0. : (controlledValue - prevControlledValue)/dt;
+    controlVariable = (Kprop*error + Kint*errorIntegral + Kderiv*errorDerivative)*dt;
     controlVariable = qBound(minimum, controlVariable, maximum);
-    controlVariableSlope = slope;
 }
 
 } //namespace

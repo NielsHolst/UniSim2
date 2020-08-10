@@ -36,7 +36,7 @@ Environment& environment() {
 }
 
 Environment::Environment()
-    : _root(nullptr), _current(nullptr), _isSilent(false)
+    : _root(nullptr), _current(nullptr), _isSilent(false), _isUnattended(false)
 {
     QSettings settings;
     _isFirstInstallation = !QDir(homePath()).exists();
@@ -219,6 +219,14 @@ bool Environment::isSilent() const {
     return _isSilent;
 }
 
+void Environment::isUnattended(bool unattended) {
+    _isUnattended = unattended;
+}
+
+bool Environment::isUnattended() const {
+    return _isUnattended;
+}
+
 void Environment::latestLoadArg(QString arg) {
     _latestLoadArg = arg;
     _latestInputFilePath = QFileInfo(_latestLoadArg).path();
@@ -327,8 +335,13 @@ void Environment::copyToClipboard(QString text) {
         file.close();
     }
     // Write text to clipboard
-    QApplication::clipboard()->setText(text);
-    dialog().information("Executable R script copied to clipboard");
+    if (_isUnattended) {
+        dialog().information("Executable R script copied to clipboard file");
+    }
+    else {
+        QApplication::clipboard()->setText(text);
+        dialog().information("Executable R script copied to clipboard");
+    }
 }
 
 void Environment::recreateClipboard() {

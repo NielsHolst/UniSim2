@@ -25,7 +25,7 @@ PipeForced::PipeForced(QString name, QObject *parent)
 {
     help("computes outflow temperature and effect");
     Input(area).imports("construction/geometry[groundArea]",CA);
-    Input(Tair).imports("indoors/temperature[value]",CA);
+    Input(Tair).imports("indoors[temperature]",CA);
     Input(innerDiameter).equals(43.5).help("Pipe inner diameter").unit("mm");
     Input(waterVolume).equals(7.5).help("Total volume of water in pipes in greenhouse").unit("m3");
     Input(flowRate).equals(20.).help("Water flow rate").unit("m3/h");

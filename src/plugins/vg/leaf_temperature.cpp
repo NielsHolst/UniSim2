@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by
+    /* Copyright 2005-2019 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
 ** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
@@ -20,11 +20,12 @@ LeafTemperature::LeafTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models leaf temperature");
-    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
     Input(indoorsRh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
     Input(rsH2O).imports("../rs[rsH2O]",CA).unit("s/m");
     Input(rbH2O).imports("../rb[rbH2O]",CA).unit("s/m");
-    Input(radiationAbsorbed).imports("radiationLayers/crop[absorbed]",CA).unit("W/m2");
+    Input(radiationAbsorbed).imports("energyBudget/crop[absorbed]",CA).unit("W/m2");
+    Input(lai).imports("/*/crop[lai]", CA);
     Output(value).help("Leaf temperature").unit("oC");
 }
 
@@ -33,17 +34,14 @@ void LeafTemperature::reset() {
 }
 
 void LeafTemperature::update() {
-    double s = svpSlope(indoorsTemperature),
+    // Stanghellini (1987, eq. 3.5-3.6), ignoring J (thermal storage)
+    double Rn = radiationAbsorbed/(2*lai),
+           s = svpSlope(indoorsTemperature),
            psatu = svp(indoorsTemperature),
            pgh = vpFromRh(indoorsTemperature, indoorsRh),
-           Tgh3 = p3(indoorsTemperature+T0);
-
-    value = (1/RhoAir/CpAir*(rsH2O+rbH2O)*radiationAbsorbed - 1/Psychr*(psatu-pgh))
-            /
-            (1+(s/Psychr+ rsH2O/rbH2O+ 1/(RhoAir*CpAir/4/Sigma*Tgh3)*(rsH2O+rbH2O)))
-            + indoorsTemperature;
-    if (std::isnan(value))
-        ThrowException("LeafTemperature is not a number").context(this);
+           dividend = (rsH2O+rbH2O)*Rn/(2*lai*RhoAir*CpAir) - (psatu-pgh)/Psychr,
+           divisor  = 1. + s/Psychr+ rsH2O/rbH2O;
+    value = dividend/divisor + indoorsTemperature;
 
     /* Thermal storage was neglible, max 1-2 W/m2
     double dt = 300,

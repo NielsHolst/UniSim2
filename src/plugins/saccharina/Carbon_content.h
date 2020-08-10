@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double Cinit, carbonreservesrate, dt;
+    double Cinit, carbonreservesrate, dt, Cmin;
     // Outputs
     double C;
 };

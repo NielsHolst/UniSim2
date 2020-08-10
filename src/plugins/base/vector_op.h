@@ -15,25 +15,31 @@ typedef double Scalar;
 
 // Unary
 void add(Vec &v, const Scalar &x);
-void add(Vec &v, const Vec &x, QObject *context=0);
-void subtract(Vec &v, const Vec &x, QObject *context=0);
+void add(Vec &v, const Vec &x, QObject *context=nullptr);
+void subtract(Vec &v, const Vec &x, QObject *context=nullptr);
 void subtract(Vec &v, const Scalar &x);
-void multiply(Vec &v, const Vec &x, QObject *context=0);
+void multiply(Vec &v, const Vec &x, QObject *context=nullptr);
 void multiply(Vec &v, const Scalar &x);
 
 // Binary
-void sum(Vec &v, const Vec &x, const Vec &y, QObject *context=0);
+void sum(Vec &v, const Vec &x, const Vec &y, QObject *context=nullptr);
 void sum(Vec &v, const Vec &x, const Scalar &y);
-void difference(Vec &v, const Vec &x, const Vec &y, QObject *context=0);
+void difference(Vec &v, const Vec &x, const Vec &y, QObject *context=nullptr);
 void difference(Vec &v, const Vec &x, const Scalar &y);
-void product(Vec &v, const Vec &x, const Vec &y, QObject *context=0);
+void difference(Vec &v, const Scalar &x, const Vec &y);
+void product(Vec &v, const Vec &x, const Vec &y, QObject *context=nullptr);
 void product(Vec &v, const Vec &x, const Scalar &y);
 
 // Summary
 double sum(const Vec &x);
+double product(const Vec &x);
 double average(const Vec &x);
-double weightedAverage(const Vec &x, const Vec &weights, QObject *context=0);
-double sumOfProducts(const Vec &x, const Vec &y, QObject *context=0);
+double max(const Vec &x);
+double min(const Vec &x);
+int whichMax(const Vec &x);
+int whichMin(const Vec &x);
+double weightedAverage(const Vec &x, const Vec &weights, QObject *context=nullptr);
+double sumOfProducts(const Vec &x, const Vec &y, QObject *context=nullptr);
 
 } //namespace
 

@@ -1,0 +1,35 @@
+/* Copyright 2005-2019 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
+** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
+#include <base/publish.h>
+#include "screen_wall.h"
+
+using namespace base;
+
+namespace vg {
+
+PUBLISH(ScreenWall)
+
+
+ScreenWall::ScreenWall(QString name, QObject *parent)
+    : Screen(name, parent)
+{
+    help("models a screen on wall side or end");
+    Input(faceArea).imports("../../area[value]",CA);
+    Input(fixedDepth).equals(0.1).help("Depth of air space").unit("m");
+}
+
+double ScreenWall::computeMaxArea() {
+    return faceArea;
+}
+
+double ScreenWall::computeDepth() {
+    return fixedDepth;
+}
+
+} //namespace
+

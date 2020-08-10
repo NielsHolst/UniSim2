@@ -3,11 +3,9 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <string>
-#include <QString>
 #include "ast_boxes.h"
-#include "box.h"
+#include "box_preprocessor.h"
 #include "box_reader_boxes.h"
-#include "dialog.h"
 #include "exception.h"
 
 using namespace std;
@@ -20,27 +18,19 @@ BoxReaderBoxes::BoxReaderBoxes(BoxBuilder *builder)
 }
 
 void BoxReaderBoxes::parse(QString filePath) {
-    openFile(filePath);
+    _filePath = filePath;
     ast::Node astRoot;
     if (parse(astRoot))
         astRoot.addToBuilder(*_builder);
     else
-        dialog().error("Parse failure");
-}
-
-void BoxReaderBoxes::openFile(QString filePath) {
-    _file.setFileName(filePath);
-    if (!_file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        QString msg("Could not open file for reading");
-        ThrowException(msg).value(filePath);
-    }
+        ThrowException("Parse failure");
 }
 
 bool BoxReaderBoxes::parse(ast::Node &astRoot) {
-    std::string storage = QString(_file.readAll()).toStdString();
-    // Make certain file ends with a line break
-    storage += "\n";
-    return ast::parse_boxes(storage.begin(), storage.end(), astRoot);
+    BoxPreprocessor preprocessor;
+    QString code = preprocessor.preprocess(_filePath);
+    std::string stdCode = code.toStdString();
+    return ast::parse_boxes(stdCode.begin(), stdCode.end(), astRoot);
 }
 
 } // namespace

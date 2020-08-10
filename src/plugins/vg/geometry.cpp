@@ -8,6 +8,7 @@
 #include <base/exception.h>
 #include <base/phys_math.h>
 #include <base/publish.h>
+#include <base/vector_op.h>
 #include "geometry.h"
 
 using namespace base;
@@ -28,6 +29,7 @@ Geometry::Geometry(QString name, QObject *parent)
     Input(height).equals(2.5).help("Wall height").unit("m");
     Input(roofPitch).equals(26.).help("Pitch (slope) of roof").unit("[0;180]");
     Input(reflection).equals(0.1).help("Outer reflection of greenhouse construction (excl. cover").unit("[0;1]");
+    Input(airSpaces).imports("shelter/*/screens[screenedVolume]");
 
     Output(width).help("Total width of greenhouse across spans").unit("m");
     Output(groundArea).help("Total area covered by greenhouse").unit("m2");
@@ -38,9 +40,12 @@ Geometry::Geometry(QString name, QObject *parent)
     Output(coverArea).help("Total area of greenhouse cover").unit("m2");
     Output(coverPerGroundArea).help("Area to ground cover ratio").unit("m2/m2");
     Output(indoorsVolumeTotal).help("Total greenhouse volume").unit("m3");
-    Output(roofHeight).help("height of roof above wall height").unit("m");
-    Output(roofVolume).help("Volume under roof above wall height").unit("m3");
-    Output(indoorsAverageHeight).help("Average height computed from indoorsVolume/groundArea").unit("m");
+    Output(averageHeight).help("Average height of total volume").unit("m");
+    Output(roofHeight).help("Height of roof above wall height").unit("m");
+    Output(screenedVolume).help("Indoors volume behind screens").unit("m3");
+    Output(roomVolume).help("Indoors volume not behind screens").unit("m3");
+    Output(screenedVolumeChange).help("Change in screenVolume").unit("m3");
+    Output(roomVolumeChange).help("Change in roomVolume").unit("m3");
 }
 
 void Geometry::reset() {
@@ -56,8 +61,20 @@ void Geometry::reset() {
     coverArea = sideWallsArea + endWallsArea + gablesArea + roofArea;
     coverPerGroundArea = coverArea/groundArea;
 
-    roofVolume  = length*gablesArea/2.;
-    indoorsVolumeTotal = groundArea*height + roofVolume;
+    _roofVolume  = length*gablesArea/2.;
+    indoorsVolumeTotal = groundArea*height + _roofVolume;
+    averageHeight = indoorsVolumeTotal/groundArea;
+    screenedVolume =
+    roomVolumeChange =
+    screenedVolumeChange = 0;
+    _prevRoomVolume = roomVolume = indoorsVolumeTotal;
+}
+
+void Geometry::update() {
+    screenedVolume = vector_op::sum(airSpaces);
+    roomVolume = indoorsVolumeTotal - screenedVolume;
+    roomVolumeChange = roomVolume - _prevRoomVolume;
+    screenedVolumeChange = -roomVolumeChange;
 }
 
 } //namespace

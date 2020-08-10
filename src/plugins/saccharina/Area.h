@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double u, dt, Ainit;
+    double u, Ainit, fronderosion, C, Cmin, Cstruct, Alost, Factor;
     // Outputs
     double A;
 };

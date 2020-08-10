@@ -363,16 +363,16 @@
 						<ParameterName>Number</ParameterName>
 						<Value>200</Value>
 					</Parameters>
+					<Parameters>
+						<ParameterName>VentTransmissivity</ParameterName>
+						<Value>1</Value>
+					</Parameters>
 				</Constants>
 			</Vent>
 			<Vent>
 				<Name></Name>
 				<Position>2</Position>
 				<Constants>
-					<Parameters>
-						<ParameterName>VentTransmissivity</ParameterName>
-						<Value>1</Value>
-					</Parameters>
 					<Parameters>
 						<ParameterName>Length</ParameterName>
 						<Value>3</Value>
@@ -851,7 +851,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>MicromolParPerWatt</ParameterName>
-						<Value>0</Value>
+						<Value>1.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>LampType</ParameterName>
@@ -877,7 +877,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>MicromolParPerWatt</ParameterName>
-						<Value>0</Value>
+						<Value>1.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>LampType</ParameterName>
@@ -903,7 +903,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>MicromolParPerWatt</ParameterName>
-						<Value>0</Value>
+						<Value>1.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>LampType</ParameterName>
@@ -1090,11 +1090,11 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_HeatingTemp</ParameterName>
+						<ParameterName>HeatingTemp</ParameterName>
 						<Value>20</Value>
 					</Parameters>
 					<ModSetpoint>
-						<Setpoint>Cli_HeatingTemp</Setpoint>
+						<Setpoint>HeatingTemp</Setpoint>
 						<FromDay>01-01-2019</FromDay>
 						<ToDay>31-12-2019</ToDay>
 						<FromTime>06:00</FromTime>
@@ -1103,7 +1103,7 @@
 						<Unit></Unit>
 					</ModSetpoint>
 					<ModSetpoint>
-						<Setpoint>Cli_HeatingTemp</Setpoint>
+						<Setpoint>HeatingTemp</Setpoint>
 						<FromDay>01-01-2019</FromDay>
 						<ToDay>31-12-2019</ToDay>
 						<FromTime>20:00</FromTime>
@@ -1116,8 +1116,8 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_VentTemp</ParameterName>
-						<Value>10</Value>
+						<ParameterName>VentTemp</ParameterName>
+						<Value>5</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1132,7 +1132,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_MaxRelHmd</ParameterName>
+						<ParameterName>MaxRelHmd</ParameterName>
 						<Value>90</Value>
 					</Parameters>
 				</Constants>
@@ -1141,14 +1141,46 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>rhMaxBand</ParameterName>
-						<Value>1</Value>
+						<Value>5</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_MaxHeatAddHighRH</ParameterName>
+						<ParameterName>MinRelHmd</ParameterName>
+						<Value>40</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>rhMinBand</ParameterName>
+						<Value>10</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>MaxTemp</ParameterName>
+						<Value>25</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>tempMaxBand</ParameterName>
+						<Value>5</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>MaxHeatAddHighRH</ParameterName>
 						<Value>2</Value>
 					</Parameters>
 				</Constants>
@@ -1156,7 +1188,15 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_MaxVentDecHighRH</ParameterName>
+						<ParameterName>MaxHeatAddLowRH</ParameterName>
+						<Value>2</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>MaxVentDecHighRH</ParameterName>
 						<Value>3</Value>
 					</Parameters>
 				</Constants>
@@ -1164,11 +1204,11 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_CO2Setpoint</ParameterName>
+						<ParameterName>CO2Setpoint</ParameterName>
 						<Value>380</Value>
 					</Parameters>
 					<ModSetpoint>
-						<Setpoint>Cli_CO2Setpoint</Setpoint>
+						<Setpoint>CO2Setpoint</Setpoint>
 						<FromDay>01-01-2019</FromDay>
 						<ToDay>31-12-2019</ToDay>
 						<FromTime>06:00</FromTime>
@@ -1177,7 +1217,7 @@
 						<Unit></Unit>
 					</ModSetpoint>
 					<ModSetpoint>
-						<Setpoint>Cli_CO2Setpoint</Setpoint>
+						<Setpoint>CO2Setpoint</Setpoint>
 						<FromDay>01-01-2019</FromDay>
 						<ToDay>31-12-2019</ToDay>
 						<FromTime>20:00</FromTime>
@@ -1190,7 +1230,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_CO2Capacity</ParameterName>
+						<ParameterName>CO2Capacity</ParameterName>
 						<Value>10</Value>
 					</Parameters>
 				</Constants>
@@ -1198,7 +1238,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_CO2VentilationThreshold</ParameterName>
+						<ParameterName>CO2VentilationThreshold</ParameterName>
 						<Value>0,1</Value>
 					</Parameters>
 				</Constants>
@@ -1206,7 +1246,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_CO2VentilationBand</ParameterName>
+						<ParameterName>CO2VentilationBand</ParameterName>
 						<Value>0,2</Value>
 					</Parameters>
 				</Constants>
@@ -1402,7 +1442,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>crackScreenHighHumidity</ParameterName>
-						<Value>0,9</Value>
+						<Value>0,1</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1410,14 +1450,22 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>crackScreenHighTemperature</ParameterName>
-						<Value>0,9</Value>
+						<Value>0,1</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_ShadingAgentReduction</ParameterName>
+						<ParameterName>crackScreenHighTemperatureBand</ParameterName>
+						<Value>2</Value>
+					</Parameters>
+				</Constants>
+			</Setpoint>
+			<Setpoint>
+				<Constants>
+					<Parameters>
+						<ParameterName>ShadingAgentReduction</ParameterName>
 						<Value>0</Value>
 					</Parameters>
 				</Constants>
@@ -1465,7 +1513,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_LightChangeFromNight</ParameterName>
+						<ParameterName>LightChangeFromNight</ParameterName>
 						<Value>0,2</Value>
 					</Parameters>
 				</Constants>
@@ -1473,7 +1521,7 @@
 			<Setpoint>
 				<Constants>
 					<Parameters>
-						<ParameterName>Cli_LightChangeFromDay</ParameterName>
+						<ParameterName>LightChangeFromDay</ParameterName>
 						<Value>0,3</Value>
 					</Parameters>
 				</Constants>
@@ -1490,17 +1538,17 @@
 			<From_date>01-01-2019</From_date>
 			<HourPeriod1>
 				<FromTime>0</FromTime>
-				<Cli_HeatingTemp>20</Cli_HeatingTemp>
-				<Cli_VentTemp>10</Cli_VentTemp>
+				<HeatingTemp>20</HeatingTemp>
+				<VentTemp>10</VentTemp>
 				<ventilationsThresholdBand>5</ventilationsThresholdBand>
-				<Cli_MaxRelHmd>90</Cli_MaxRelHmd>
+				<MaxRelHmd>90</MaxRelHmd>
 				<rhMaxBand>1</rhMaxBand>
-				<Cli_MaxHeatAddHighRH>2</Cli_MaxHeatAddHighRH>
-				<Cli_MaxVentDecHighRH>3</Cli_MaxVentDecHighRH>
-				<Cli_CO2Setpoint>380</Cli_CO2Setpoint>
-				<Cli_CO2Capacity>10</Cli_CO2Capacity>
-				<Cli_CO2VentilationThreshold>0.1</Cli_CO2VentilationThreshold>
-				<Cli_CO2VentilationBand>0.2</Cli_CO2VentilationBand>
+				<MaxHeatAddHighRH>2</MaxHeatAddHighRH>
+				<MaxVentDecHighRH>3</MaxVentDecHighRH>
+				<CO2Setpoint>380</CO2Setpoint>
+				<CO2Capacity>10</CO2Capacity>
+				<CO2VentilationThreshold>0.1</CO2VentilationThreshold>
+				<CO2VentilationBand>0.2</CO2VentilationBand>
 				<AssLightActive1>0</AssLightActive1>
 				<AssLightOn1>40</AssLightOn1>
 				<AssLightOff1>600</AssLightOff1>
@@ -1523,28 +1571,28 @@
 				<screenFixed1>0</screenFixed1>
 				<crackScreenHighHumidity>0.9</crackScreenHighHumidity>
 				<crackScreenHighTemperature>0.9</crackScreenHighTemperature>
-				<Cli_ShadingAgentReduction>0</Cli_ShadingAgentReduction>
+				<ShadingAgentReduction>0</ShadingAgentReduction>
 				<screenBlackoutFromTime>0</screenBlackoutFromTime>
 				<screenBlackoutToTime>0</screenBlackoutToTime>
 				<crackVentilation>0.05</crackVentilation>
 				<crackVentilationTemperatureMin>-5</crackVentilationTemperatureMin>
 				<crackVentilationTemperatureMinBand>1</crackVentilationTemperatureMinBand>
-				<Cli_LightChangeFromNight>0.2</Cli_LightChangeFromNight>
-				<Cli_LightChangeFromDay>0.3</Cli_LightChangeFromDay>
+				<LightChangeFromNight>0.2</LightChangeFromNight>
+				<LightChangeFromDay>0.3</LightChangeFromDay>
 			</HourPeriod1>
 			<HourPeriod2>
 				<FromTime>0.25</FromTime>
-				<Cli_HeatingTemp>22</Cli_HeatingTemp>
-				<Cli_VentTemp>10</Cli_VentTemp>
+				<HeatingTemp>22</HeatingTemp>
+				<VentTemp>10</VentTemp>
 				<ventilationsThresholdBand>5</ventilationsThresholdBand>
-				<Cli_MaxRelHmd>90</Cli_MaxRelHmd>
+				<MaxRelHmd>90</MaxRelHmd>
 				<rhMaxBand>1</rhMaxBand>
-				<Cli_MaxHeatAddHighRH>2</Cli_MaxHeatAddHighRH>
-				<Cli_MaxVentDecHighRH>3</Cli_MaxVentDecHighRH>
-				<Cli_CO2Setpoint>900</Cli_CO2Setpoint>
-				<Cli_CO2Capacity>10</Cli_CO2Capacity>
-				<Cli_CO2VentilationThreshold>0.1</Cli_CO2VentilationThreshold>
-				<Cli_CO2VentilationBand>0.2</Cli_CO2VentilationBand>
+				<MaxHeatAddHighRH>2</MaxHeatAddHighRH>
+				<MaxVentDecHighRH>3</MaxVentDecHighRH>
+				<CO2Setpoint>900</CO2Setpoint>
+				<CO2Capacity>10</CO2Capacity>
+				<CO2VentilationThreshold>0.1</CO2VentilationThreshold>
+				<CO2VentilationBand>0.2</CO2VentilationBand>
 				<AssLightActive1>1</AssLightActive1>
 				<AssLightOn1>40</AssLightOn1>
 				<AssLightOff1>600</AssLightOff1>
@@ -1567,28 +1615,28 @@
 				<screenFixed1>0</screenFixed1>
 				<crackScreenHighHumidity>0.9</crackScreenHighHumidity>
 				<crackScreenHighTemperature>0.9</crackScreenHighTemperature>
-				<Cli_ShadingAgentReduction>0</Cli_ShadingAgentReduction>
+				<ShadingAgentReduction>0</ShadingAgentReduction>
 				<screenBlackoutFromTime>0</screenBlackoutFromTime>
 				<screenBlackoutToTime>0</screenBlackoutToTime>
 				<crackVentilation>0.05</crackVentilation>
 				<crackVentilationTemperatureMin>-5</crackVentilationTemperatureMin>
 				<crackVentilationTemperatureMinBand>1</crackVentilationTemperatureMinBand>
-				<Cli_LightChangeFromNight>0.2</Cli_LightChangeFromNight>
-				<Cli_LightChangeFromDay>0.3</Cli_LightChangeFromDay>
+				<LightChangeFromNight>0.2</LightChangeFromNight>
+				<LightChangeFromDay>0.3</LightChangeFromDay>
 			</HourPeriod2>
 			<HourPeriod3>
 				<FromTime>0.833333333333333</FromTime>
-				<Cli_HeatingTemp>20</Cli_HeatingTemp>
-				<Cli_VentTemp>10</Cli_VentTemp>
+				<HeatingTemp>20</HeatingTemp>
+				<VentTemp>10</VentTemp>
 				<ventilationsThresholdBand>5</ventilationsThresholdBand>
-				<Cli_MaxRelHmd>90</Cli_MaxRelHmd>
+				<MaxRelHmd>90</MaxRelHmd>
 				<rhMaxBand>1</rhMaxBand>
-				<Cli_MaxHeatAddHighRH>2</Cli_MaxHeatAddHighRH>
-				<Cli_MaxVentDecHighRH>3</Cli_MaxVentDecHighRH>
-				<Cli_CO2Setpoint>380</Cli_CO2Setpoint>
-				<Cli_CO2Capacity>10</Cli_CO2Capacity>
-				<Cli_CO2VentilationThreshold>0.1</Cli_CO2VentilationThreshold>
-				<Cli_CO2VentilationBand>0.2</Cli_CO2VentilationBand>
+				<MaxHeatAddHighRH>2</MaxHeatAddHighRH>
+				<MaxVentDecHighRH>3</MaxVentDecHighRH>
+				<CO2Setpoint>380</CO2Setpoint>
+				<CO2Capacity>10</CO2Capacity>
+				<CO2VentilationThreshold>0.1</CO2VentilationThreshold>
+				<CO2VentilationBand>0.2</CO2VentilationBand>
 				<AssLightActive1>0</AssLightActive1>
 				<AssLightOn1>40</AssLightOn1>
 				<AssLightOff1>600</AssLightOff1>
@@ -1611,14 +1659,14 @@
 				<screenFixed1>0</screenFixed1>
 				<crackScreenHighHumidity>0.9</crackScreenHighHumidity>
 				<crackScreenHighTemperature>0.9</crackScreenHighTemperature>
-				<Cli_ShadingAgentReduction>0</Cli_ShadingAgentReduction>
+				<ShadingAgentReduction>0</ShadingAgentReduction>
 				<screenBlackoutFromTime>0</screenBlackoutFromTime>
 				<screenBlackoutToTime>0</screenBlackoutToTime>
 				<crackVentilation>0.05</crackVentilation>
 				<crackVentilationTemperatureMin>-5</crackVentilationTemperatureMin>
 				<crackVentilationTemperatureMinBand>1</crackVentilationTemperatureMinBand>
-				<Cli_LightChangeFromNight>0.2</Cli_LightChangeFromNight>
-				<Cli_LightChangeFromDay>0.3</Cli_LightChangeFromDay>
+				<LightChangeFromNight>0.2</LightChangeFromNight>
+				<LightChangeFromDay>0.3</LightChangeFromDay>
 			</HourPeriod3>
 		</DaysPeriod1>
 		<DayPeriodElementCount>3</DayPeriodElementCount>

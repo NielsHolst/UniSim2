@@ -17,13 +17,7 @@ class VapourFluxTranspiration : public VapourFluxBase
 {
 public:
     VapourFluxTranspiration(QString name, QObject *parent);
-    void update();
-
-private:
-    double conductanceIn, vapourFluxIn, gainIn;
-
 };
+
 } //namespace
-
-
 #endif

@@ -33,6 +33,7 @@ Simulation::Simulation(QString name, QObject *parent)
     Input(useStopIterations).equals(false).help("Use the stopIterations flag?");
     Input(useStopSteps).equals(false).help("Use the stopSteps flag?");
     Input(silent).equals(false).help("Run without scrolling progress messages?");
+    Input(unattended).equals(false).help("An unattended run will finish without accessing clipboard");
     Output(iteration).noReset().help("Iteration number (1,2,...)");
     Output(step).help("Step number (0,1,2,...)");
     Output(finalStep).help("Last completed step in simulation");
@@ -52,6 +53,7 @@ void Simulation::amend() {
 }
 
 void Simulation::initialize() {
+    environment().isUnattended(unattended);
     iteration = 1;
 }
 

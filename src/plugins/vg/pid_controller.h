@@ -20,18 +20,20 @@ public:
     void update();
 private:
     // Inputs
-    double sensedValue, desiredValue, controlVariableReset,
-        minimum, maximum, minSlope, maxSlope, timeStep,
+    double sensedValue, desiredValue, controlledValue,
+        minimum, maximum,
+        timeStep,
         Kprop, Kint, Kderiv;
+    QString desire;
     // Outputs
-    double controlVariable, controlVariableSlope,
+    double controlVariable,
         error, errorIntegral, errorDerivative;
     // Data
-    double dt, prevError, cv0, cv1;
+    double dt, prevControlledValue, prevError;
     int tick;
+    enum {KeepAt, KeepBelow, KeepAbove} _desire;
     // Methods
     void updateControlVariable();
-    void adjustControlVariable();
 };
 } //namespace
 

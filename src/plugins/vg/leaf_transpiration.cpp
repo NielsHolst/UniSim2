@@ -23,10 +23,10 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models leaf transpiration");
-    Input(lai).imports("crop[lai]",CA);
+    Input(lai).imports("..[lai]",CA);
     Input(cropCoverage).imports("crop[coverage]",CA);
     Input(indoorsAh).imports("indoors/humidity[ah]",CA).unit("kg/m3");
-    Input(radiationAbsorbed).imports("radiationLayers/crop[absorbed]",CA).unit("W/m2");
+    Input(radiationAbsorbed).imports("energyBudget/crop[absorbed]",CA).unit("W/m2");
     Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
     Input(rbH2O).imports("../rb[rbH2O]").unit("s/m");
     Input(rsH2O).imports("../rs[rsH2O]").unit("s/m");

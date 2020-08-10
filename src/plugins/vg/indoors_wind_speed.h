@@ -21,8 +21,7 @@ public:
 
 private:
     // Parameters
-    double constructionWidth, ventilation;
-
+    double groundArea, indoorsVolumeTotal, ventilation, minimumValue;
     // Variables
     double value;
 };

@@ -4,6 +4,7 @@
 */
 #ifndef OUTPUT_R_H
 #define OUTPUT_R_H
+#include <QDir>
 #include <QFile>
 #include <QString>
 #include <QVector>
@@ -22,13 +23,14 @@ public:
     OutputR(QString name, QObject *parent);
     void amend();
     void initialize();
+    void reset();
     void debrief();
     QString toString();
     QString toScript();
     void addRCode(QString s);
 private:
     // Input
-    QString begin, outputFileNameVariable;
+    QString begin, destinationFolder, graphicsFormat;
     bool popUp, keepPages, keepVariables, useLocalDecimalChar;
     double width, height;
     QVector<QString> end;
@@ -38,6 +40,8 @@ private:
     int numPages;
 
     // Data
+    bool _hasDestination;
+    QDir _destinationDir;
     QVector<PageR*> _pages;
     QFile _file;
     QString _filePathR;
@@ -48,7 +52,8 @@ private:
     void openFile();
     void writeScript();
     void copyToClipboard();
-    QString makeClipboardOutput();
+    void copyFileToDestination(QString filePath);
+    QString makeOutputRCode(bool forClipboard);
     QString toFigureListElement(PageR *page);
     QStringList endScripts();
 };

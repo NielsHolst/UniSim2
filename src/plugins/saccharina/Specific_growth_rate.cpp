@@ -1,4 +1,6 @@
+#include <base/dialog.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "Specific_growth_rate.h"
 
 using namespace base;
@@ -18,6 +20,8 @@ Specificgrowthrate::Specificgrowthrate(QString name, QObject *parent)
     Input(Nmin).equals(0.01).help("Minimal nitrogen reserve");
     Input(C).equals(0.01).help("Carbon reserves, relative to Ws, state variable");
     Input(Cmin).equals(0.01).help("Minimal carbon reserve");
+    Input(dt).imports("calendar[timeStepSecs]");
+    Input(Factor).equals(1).help("Scaling factor of model");
     Output(specificgrowthrate).help("Specific growthrate");
 }
 
@@ -26,6 +30,11 @@ void Specificgrowthrate::reset() {
 }
 
 void Specificgrowthrate::update() {
-    specificgrowthrate = farea * fphoto * ftemp * std::min(((1-Nmin)/N), ((1-Cmin)/C));
+    if (TestNum::gt(Nmin,N))
+        dialog().information(QString("Specificgrowthrate: Nmin > N, %1 > %2").arg(Nmin).arg(N));
+    if (TestNum::gt(Cmin,C))
+        dialog().information(QString("Specificgrowthrate: Cmin > C, %1 > %2").arg(Cmin).arg(C));
+    specificgrowthrate = Factor * farea * fphoto * ftemp * std::min((1-Nmin/N), (1-Cmin/C));
 }
+
 }

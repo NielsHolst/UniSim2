@@ -21,7 +21,7 @@ IgIndoorsHumidity::IgIndoorsHumidity(QString name, QObject *parent)
 {
     help("models indoors humidity (simplified)");
     Input(rh).help("Indoors relative humidity").unit("[0;100]");
-    Input(temperature).imports("indoors/temperature[value]",CA).unit("oC");
+    Input(temperature).imports("indoors[temperature]",CA).unit("oC");
     Output(ah).help("Indoors absolute humidity").unit("kg/m3");
 }
 

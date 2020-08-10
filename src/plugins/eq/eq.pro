@@ -7,6 +7,14 @@
 BOXES_PLUGIN_NAME = eq
 
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
+#message("QMAKE_CXXFLAGS")
+#message($$QMAKE_CXXFLAGS)
+
+#message("QMAKE_CXXFLAGS_DEBUG")
+#message($$QMAKE_CXXFLAGS_DEBUG)
+
+#message("QMAKE_CXXFLAGS_RELEASE")
+#message($$QMAKE_CXXFLAGS_RELEASE)
 
 HEADERS +=  \
     exponential.h \
