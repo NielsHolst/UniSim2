@@ -23,7 +23,6 @@ HeatTransferSky::HeatTransferSky(QString name, QObject *parent)
     Input(irradiation).imports("outdoors[radiation]",CA);
     Input(propPar).imports("outdoors[propPar]",CA);
     Input(propUv).imports("outdoors[propUv]",CA);
-    Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
     port("swTransmissivityTop")->equals(0.);
     port("lwTransmissivityTop")->equals(0.);
     port("swTransmissivityBottom")->equals(0.);
@@ -38,13 +37,12 @@ void HeatTransferSky::reset() {
 }
 
 void HeatTransferSky::update() {
-    // Convert from m2 ground to m2 greenhouse cover
-    swFluxDown = irradiation/coverPerGroundArea;
+    // W/m2 ground
+    swFluxDown = irradiation;
     // Anticipate that all UV light will be reflected by the cover (glass); this will increase the proportion of PAR inside
     parFluxDown = 4.57*swFluxDown*propPar/(1. - propUv);
     // Radiation from sky is only downwards
     updateLwEmission();
-    lwFluxDown *= coverPerGroundArea;
     lwFluxUp = 0.;
 }
 

@@ -6,6 +6,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include "budget.h"
+#include <base/phys_math.h>
 #include <base/publish.h>
 
 using namespace base;
@@ -18,51 +19,59 @@ Budget::Budget(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
+    Input(date).imports("calendar[date]", CA);
+    Input(skyIrradiationRate).imports("outdoors[radiation]", CA);
+    Input(skyRadiationAbsorbedRate).imports("energyBudget/sky[absorbed]", CA);
+    Input(ventilationEnergyRate).imports("energyBudget/indoors[advectiveEnergyFlux]", CA);
+    Input(airInflux).imports("indoors/ventilation[absolute]", CA).unit("m3");
+    Input(soilEnergyRate).imports("energyBudget/floor[conductiveInflux]", CA);
     Input(heatingPowerUsage).imports("actuators/heating/energyFlux[value]",CA).unit("W/m2");
     Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
     Input(co2Flux).imports("actuators/co2Injection[value]",CA).unit("g/m2/h");
     Input(dt).imports("calendar[timeStepSecs]").unit("s");
-    Input(energyUnit).equals("GJ").help("Energy units for outputs").unit("GJ|kWh");
-    Output(heatingEnergyTotal).help("Accumulated energy spent on heating");
-    Output(growthLightsEnergyTotal).help("Accumulated energy spent on growth lights");
+    Output(skyIrradiation).help("Accumulated sunlight irradiation").unit("kWh/m2");
+    Output(skyRadiationAbsorbed).help("Accumulated radiation lost to the sky").unit("kWh/m2");
+    Output(ventilationEnergy).help("Energy lost by ventilation incl. leakage").unit("kWh/m2");
+    Output(soilEnergy).help("Energy lost to soil by conduction from floor").unit("kWh/m2");
+    Output(heatingEnergy).help("Accumulated energy spent on heating").unit("kWh/m2");
+    Output(growthLightsEnergy).help("Accumulated energy spent on growth lights").unit("kWh/m2");
     Output(co2Total).help("Accumulated CO2 spent").unit("kg/m2");
 }
 
 void Budget::initialize() {
-    QString u = energyUnit.toLower();
-    if (u=="gj") {
-        port("heatingEnergyTotal")->unit("GJ");
-        port("growthLightsEnergyTotal")->unit("GJ");
-    }
-    else if (u=="kwh") {
-        port("heatingEnergyTotal")->unit("kWh");
-        port("growthLightsEnergyTotal")->unit("kWh");
-    }
 }
 
 void Budget::reset() {
-    heatingPowerUsage = heatingEnergyTotal =
-    growthLightsPowerUsage = growthLightsEnergyTotal =
-    co2Flux = co2Total = 0.;
-    QString u = energyUnit.toLower();
-    if (u=="gj") {
-        eUnit = dt*1e-9;          // Gs = s * G
-    }
-    else if (u=="kwh") {
-        eUnit = dt/3600.*1e-3;    // kh = s / (s/h) * k
-    }
-    else {
-        QString msg {"Unknown energy unit '%1', expected 'kWh' or 'GJ'"};
-        ThrowException(msg.arg(energyUnit)).value(energyUnit).context(this);
-    }
+   _kiloHour = dt*1./3600./1000.;
+   _prevDate = QDate();
 }
 
 void Budget::update() {
-    heatingEnergyTotal += heatingPowerUsage*eUnit;
-    growthLightsEnergyTotal += growthLightsPowerUsage*eUnit;
-    co2Total += co2Flux*dt/3600.*1e-3;   // g/m2/h * s / (s/h) * k
+    checkNewYear();
+//    double latentHeatRate = ventilationAirExchangeRate;
+    skyIrradiation       += skyIrradiationRate*_kiloHour;
+    skyRadiationAbsorbed += skyRadiationAbsorbedRate*_kiloHour;
+    ventilationEnergy    += ventilationEnergyRate*_kiloHour;
+    latentHeat           += latentHeat*_kiloHour;
+    soilEnergy           += soilEnergyRate*_kiloHour;
+    heatingEnergy        += heatingPowerUsage*_kiloHour;
+    growthLightsEnergy   += growthLightsPowerUsage*_kiloHour;
+    co2Total             += co2Flux*_kiloHour;
 }
 
+void Budget::checkNewYear()  {
+    if (_prevDate.isValid() && date.day()==1 && date.month()==1 && date!=_prevDate) {
+        skyIrradiation =
+        skyRadiationAbsorbed =
+        ventilationEnergy =
+        latentHeat =
+        soilEnergy =
+        heatingEnergy =
+        growthLightsEnergy =
+        co2Total = 0.;
+    }
+    _prevDate = date;
+}
 
 } //namespace
 

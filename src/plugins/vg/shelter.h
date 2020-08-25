@@ -7,28 +7,21 @@
 */
 #ifndef SHELTER_H
 #define SHELTER_H
-#include "shelter_base.h"
+#include "base/box.h"
 
 namespace base {
-    class Box;
     class BoxBuilder;
 }
 
 namespace vg {
 
-class Shelter : public ShelterBase
+class Shelter : public base::Box
 {
 public:
     Shelter(QString name, QObject *parent);
     void amend();
-    void reset();
-    void update();
 
 private:
-    // Inputs
-    QVector<double> screenVolumes;
-    // Outputs
-    double volumeBehindScreens;
     // Methods
     void amendShelter(base::BoxBuilder &builder, QString shelterName);
 };

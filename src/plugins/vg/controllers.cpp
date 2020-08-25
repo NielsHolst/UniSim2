@@ -72,14 +72,14 @@ void Controllers::amend() {
                 port("thresholdBand").imports("setpoints[screenEnergyThresholdBand]").
             endbox().
             box("ProportionalSignal").name("shade1").
-                port("increasingSignal").equals(false).
+                port("increasingSignal").equals(true).
                 port("maxSignal").equals(1).
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenShadeThreshold1]").
                 port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").
             endbox().
             box("ProportionalSignal").name("shade2").
-                port("increasingSignal").equals(false).
+                port("increasingSignal").equals(true).
                 port("maxSignal").equals(1).
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenShadeThreshold2]").

@@ -22,7 +22,7 @@ DiffuseIrradiationRE::DiffuseIrradiationRE(QString name, QObject *parent)
     : DiffuseIrradiationBase(name, parent)
 {
     help("computes diffuse fraction of global irradiation");
-    Input(sinb).imports("calendar[sinb]").unit("[-1;1]");
+    Input(sinb).imports("sun[sinb]").unit("[-1;1]");
     Output(value).help("Diffuse irradiation").unit("W/m2");
     Output(fraction).help("Diffuse fraction of global irradiation [0;1]").unit("[0;1]");
     Output(eq).help("Equation number used").unit("[0;3]");

@@ -1,0 +1,5 @@
+PaneLwReflection = 0.90 (glas)
+PaneUValue       = 2.8 (det er værdien ved vindstille; derfor er den lille)
+PipeLengthPerSqm = 2   (det er m rør pr. m2 gulv)
+CO2Capacity     = 50
+

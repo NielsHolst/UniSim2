@@ -20,6 +20,7 @@ namespace vg {
 	
 PUBLISH(PidController)
 
+const double doubleMin = std::numeric_limits<double>::lowest();
 const double doubleMax = std::numeric_limits<double>::max();
 
 PidController::PidController(QString name, QObject *parent)
@@ -28,59 +29,41 @@ PidController::PidController(QString name, QObject *parent)
     help("delivers PID control of a control variable");
     Input(sensedValue).help("The sensed value");
     Input(desiredValue).help("The desired value (setpoint)");
-    Input(controlledValue).imports(".[controlVariable]").help("Value used for derivate control (Kderiv)");
-    Input(desire).equals("KeepAt").unit("KeepAt|KeepBelow|KeepAbove").help("Keep sensed value at, below or above desired value");
-    Input(Kprop).equals(0.1).help("The proportional gain").unit("/min");
+    Input(Kprop).equals(0.1).help("The proportional gain");
     Input(Kint).equals(0.).help("The integral gain").unit("/min");
-    Input(Kderiv).equals(0.).help("The derivative gain").unit("/min");
+    Input(Kderiv).equals(0.).help("The derivative gain").unit("min");
+    Input(lookAhead).equals(0.).help("Computed error from predicted sensed value this time ahead").unit("min");
 
-    Input(minimum).equals(-doubleMax).help("Minimum allowed value of control variable");
+    Input(minimum).equals(doubleMin).help("Minimum allowed value of control variable");
     Input(maximum).equals(doubleMax).help("Maximum allowed value of control variable");
     Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
 
     Output(controlVariable).help("The control variable; tends to zero when all three error terms summed tend to zero");
     Output(error).help("The error");
-    Output(errorIntegral).help("The integral error");
-    Output(errorDerivative).help("The derivative error");
+    Output(integral).help("The integral error").unit("min");
+    Output(derivative).help("The derivative of the approach of sensed towards target value").unit("/min");
+    Output(eta).help("Estimated time of arrival at desired value; negative means wrong direction").unit("min");
 }
 
 void PidController::reset() {
-    prevControlledValue = prevError = 0.;
     dt = timeStep/60.;  // from secs to minutes
-    tick = 0;
-    QString s = desire.toLower();
-    if (s=="keepat")
-        _desire = KeepAt;
-    else if (s=="keepbelow")
-        _desire = KeepBelow;
-    else if (s=="keepabove")
-        _desire = KeepAbove;
-    else
-        ThrowException("Desire must be one of KeepAt|KeepBelow|KeepAbove").value(desire).context(this);
 }
 
 void PidController::update() {
     updateControlVariable();
-    prevControlledValue = controlledValue;
-    prevError = error;
+    prevSensedValue = sensedValue;
 }
 
 void PidController::updateControlVariable() {
-    switch (_desire) {
-    case KeepBelow:
-        error = max(sensedValue - desiredValue, 0.);
-        break;
-    case KeepAbove:
-        error = max(desiredValue - sensedValue, 0.);
-        break;
-    case KeepAt:
-        error = desiredValue - sensedValue;
-        errorIntegral += error;
-        break;
-    }
-    errorDerivative = (tick++ < 2) ? 0. : (controlledValue - prevControlledValue)/dt;
-    controlVariable = (Kprop*error + Kint*errorIntegral + Kderiv*errorDerivative)*dt;
+    // Compute errors
+    derivative = (error == 0. || tick++ < 2) ? 0. : (sensedValue-prevSensedValue)/dt;
+    error = desiredValue - (sensedValue + derivative*lookAhead);
+    integral += error*dt;
+    // Compute control response
+    controlVariable = Kprop*error + Kint*integral + Kderiv*derivative*dt;
     controlVariable = qBound(minimum, controlVariable, maximum);
+    // Compute estimated time of arrival
+    eta = (derivative == 0.) ? 0. : error/derivative;;
 }
 
 } //namespace

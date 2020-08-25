@@ -22,12 +22,12 @@ PUBLISH(OutputText)
 OutputText::OutputText(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
-    Class(OutputText);
+    help("creates an output text file");
     Input(skipFormats).equals(false).help("Skip line with column formats?");
     Input(skipInitialRows).equals(0).help("Skip this number of data frame rows");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Input(averageN).equals(1).help("If N>1 then rows will be averaged for every N rows");
-    help("creates an output text file");
+    Output(filePath).noReset().help("Name of output file including absolute path");
 }
 
 void OutputText::initialize() {
@@ -85,6 +85,7 @@ void OutputText::debrief() {
 void OutputText::openFileStream() {
     _file.close();
     environment().openOutputFile(_file, "txt");
+    filePath = _file.fileName();
     _stream.setDevice(&_file);
 }
 

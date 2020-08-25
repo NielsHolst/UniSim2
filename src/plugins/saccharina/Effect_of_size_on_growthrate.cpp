@@ -11,8 +11,8 @@ Effectofsizeongrowthrate::Effectofsizeongrowthrate(QString name, QObject *parent
     : Box(name, parent)
 {
     help("Calculates the effect of size on growth rate (Eq 3)");
-    Input(m1).equals(0.1085).help("Growth rate adjustment parameter");
-    Input(m2).equals(0.03).help("Growth rate adjustment parameter");
+    Input(m1).equals(0.1085).help("Growth rate adjustment parameter (pr hour)");
+    Input(m2).equals(0.03).help("Growth rate adjustment parameter (pr hour)");
     Input(A).equals(8.0).help("Frond area, state variable");
     Input(A0).equals(6.0).help("Growth rate adjustment parameter");
     Output(farea).help("Unit is dm2");

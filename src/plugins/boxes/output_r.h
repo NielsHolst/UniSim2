@@ -30,7 +30,7 @@ public:
     void addRCode(QString s);
 private:
     // Input
-    QString begin, destinationFolder, graphicsFormat;
+    QString begin, destinationFolder, graphicsFormat, textOutputFilePath;
     bool popUp, keepPages, keepVariables, useLocalDecimalChar;
     double width, height;
     QVector<QString> end;

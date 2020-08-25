@@ -19,7 +19,7 @@ IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
 {
     help("models indoors CO2 concentration");
     Input(outdoorsCo2).imports("outdoors[co2]",CA).unit("ppm");
-    Input(airFlux).imports("ventilation/total[value]",CA).unit("m3/m3/h");
+    Input(airFlux).imports("indoors/ventilation[relative]",CA).unit("m3/m3/h");
     Input(injectionRate).imports("actuators/co2Injection[value]",CA).unit("g/m2/h");
     Input(assimilation).imports("crop/photosynthesis[Pg]",CA).unit("[g CO2/m2/h]");
     Input(averageHeight).imports("geometry[averageHeight]",CA).unit("m");

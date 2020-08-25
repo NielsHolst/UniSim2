@@ -21,7 +21,7 @@ public:
 private:
     // Inputs
     double
-        UwindMinimum, UwindSlope, windSpeed, haze;
+        UwindMinimum, UwindSlope, UwindExponent, windSpeed, haze;
 };
 } //namespace
 

@@ -17,21 +17,6 @@ class Screens : public base::Box
 public:
     Screens(QString name, QObject *parent);
     void amend();
-    void reset();
-    void update();
-private:
-    // Inputs
-    QVector<double>
-        states,
-        depths, maxAreas,
-        Utops, Ubottoms,
-        heatCapacities;
-
-    // Outputs
-    double Utop, Ubottom,
-        maxState,
-        screenedVolume,
-        heatCapacity;
 };
 
 } //namespace

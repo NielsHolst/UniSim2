@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double Jmax, X, KX, N, Nmin, Nmax, U, U065;
+    double Jmax, X, KX, N, Nmin, Nmax, U, U0, a, b;
     // Outputs
     double Nuptakerate;
 };

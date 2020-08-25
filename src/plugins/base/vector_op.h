@@ -20,6 +20,7 @@ void subtract(Vec &v, const Vec &x, QObject *context=nullptr);
 void subtract(Vec &v, const Scalar &x);
 void multiply(Vec &v, const Vec &x, QObject *context=nullptr);
 void multiply(Vec &v, const Scalar &x);
+void inverse(Vec &v, const Vec &x, QObject *context=nullptr);
 
 // Binary
 void sum(Vec &v, const Vec &x, const Vec &y, QObject *context=nullptr);

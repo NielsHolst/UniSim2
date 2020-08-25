@@ -119,62 +119,6 @@
     <file>data/input/papers/2012-photosynthesis-pending/reference.txt</file>
     <file>data/input/papers/2013-Inachis-pending/reference.txt</file>
     <file>data/input/papers/2014-Rift-Valley-fever-pending/reference.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/1-aphid-fungus-example.box</file>
-    <file>data/input/papers/2019-aphid-fungus/1-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/2-aphid-fungus-uncertain-timing.box</file>
-    <file>data/input/papers/2019-aphid-fungus/2-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/3-aphid-fungus-uncertain-outcomes.box</file>
-    <file>data/input/papers/2019-aphid-fungus/3-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/4-aphid-fungus-sobol-indices.box</file>
-    <file>data/input/papers/2019-aphid-fungus/4-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/validation/A94-95.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/validation/A94.Rdata</file>
-    <file>data/input/papers/2019-aphid-fungus/validation/A95.Rdata</file>
-    <file>data/input/papers/2019-aphid-fungus/validation/K94-95.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/validation/K95.Rdata</file>
-    <file>data/input/papers/2019-aphid-fungus/validation A95 - Copy.box</file>
-    <file>data/input/papers/2019-aphid-fungus/validation-A95-end.R</file>
-    <file>data/input/papers/2019-aphid-fungus/validation-A95.box</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2004.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2005.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2006.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2012.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2013.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2014.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2015.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2016.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2017.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Aarnes_2018.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2004.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2005.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2006.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2012.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2013.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2014.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2015.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2016.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2017.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ilseng_2018.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2004.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2005.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2006.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2012.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2013.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2014.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2015.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2016.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2017.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Ramnes_2018.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2004.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2005.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2006.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2012.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2013.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2014.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2015.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2016.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2017.txt</file>
-    <file>data/input/papers/2019-aphid-fungus/weather/Rygge_2018.txt</file>
     <file>data/input/papers/2019-musselbed/data/AD1.txt</file>
     <file>data/input/papers/2019-musselbed/data/ADw.txt</file>
     <file>data/input/papers/2019-musselbed/data/apparencycal.txt</file>
@@ -230,6 +174,70 @@
     <file>data/input/papers/2019-PestTox/scenarios-bufferzone.txt</file>
     <file>data/input/papers/2019-PestTox/weather/free_radicals_table.txt</file>
     <file>data/input/papers/2019-PestTox/weather/Pathumthani.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/0-aphid-fungus-the-model.box</file>
+    <file>data/input/papers/2020-aphid-fungus/1-aphid-fungus-example.box</file>
+    <file>data/input/papers/2020-aphid-fungus/1-end.R</file>
+    <file>data/input/papers/2020-aphid-fungus/2-aphid-fungus-uncertain-timing.box</file>
+    <file>data/input/papers/2020-aphid-fungus/2-end.R</file>
+    <file>data/input/papers/2020-aphid-fungus/3-aphid-fungus-uncertain-outcomes.box</file>
+    <file>data/input/papers/2020-aphid-fungus/3-end.R</file>
+    <file>data/input/papers/2020-aphid-fungus/4-aphid-fungus-sobol-indices.box</file>
+    <file>data/input/papers/2020-aphid-fungus/4-end.R</file>
+    <file>data/input/papers/2020-aphid-fungus/configure.R</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2004.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2005.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2006.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2012.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2013.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2014.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2015.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2016.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2017.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Aarnes_2018.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2004.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2005.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2006.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2012.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2013.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2014.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2015.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2016.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2017.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ilseng_2018.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2004.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2005.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2006.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2012.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2013.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2014.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2015.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2016.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2017.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Ramnes_2018.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2004.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2005.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2006.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2012.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2013.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2014.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2015.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2016.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2017.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/weather/Rygge_2018.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/A94-95.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/A94.Rdata</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/A95.Rdata</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/K94-95.txt</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/K95.Rdata</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/validation-A95-end.R</file>
+    <file>data/input/papers/2020-aphid-fungus/_validation/validation-A95.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapa2016.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapa2017Calibrated.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapa2017CalibratedClose.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapaImCalibrated.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapaNiels.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/hopperNapaNotWorking.box</file>
+    <file>data/input/papers/2020-S-festinus-degree-day/Oakville.txt</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end-batch.R</file>
@@ -237,6 +245,20 @@
     <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
+    <file>data/input/scripts/sandy/sandy.box</file>
+    <file>data/input/scripts/sandy/sandy1.box</file>
+    <file>data/input/scripts/sandy/sandy2a.box</file>
+    <file>data/input/scripts/sandy/sandy2b.box</file>
+    <file>data/input/scripts/sandy/sandy2c.box</file>
+    <file>data/input/scripts/sandy/sandy2d.box</file>
+    <file>data/input/scripts/sandy/sandy3a.box</file>
+    <file>data/input/scripts/sandy/sandy3b.box</file>
+    <file>data/input/scripts/sandy/sandy4a.box</file>
+    <file>data/input/scripts/sandy/sandy4b.box</file>
+    <file>data/input/scripts/sandy/sandy_.box</file>
+    <file>data/input/scripts/sandy/t_urticae.box</file>
+    <file>data/input/scripts/sandy/t_urticae_sandy.box</file>
+    <file>data/input/scripts/sandy/t_urticae_simulation.box</file>
     <file>data/input/teaching/cabbage-nightshade.box</file>
     <file>data/input/teaching/weather/alpine 2016.txt</file>
     <file>data/input/teaching/weather/braunschweig 2009.txt</file>

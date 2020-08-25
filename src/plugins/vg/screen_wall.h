@@ -17,10 +17,9 @@ public:
     ScreenWall(QString name, QObject *parent);
 private:
     // Input
-    double faceArea, fixedDepth;
+    double faceArea;
     // Methods
     double computeMaxArea();
-    double computeDepth();
 };
 
 } //namespace

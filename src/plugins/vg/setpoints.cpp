@@ -29,8 +29,6 @@ Setpoints::Setpoints(QString name, QObject *parent)
     ELEMENT(rhMaxBand).unit("[0;100]").help("Proportional band for increasing response over rhMax");
     ELEMENT(rhMin).unit("[0;100]").help("RH is too low below rhMin+rhMinBand");
     ELEMENT(rhMinBand).unit("[0;100]").help("Proportional band for increasing response below rhMin+rhMinBand");
-    ELEMENT(temperatureMax).unit("oC").help("Temperature is too high above this setpoint");
-    ELEMENT(temperatureMaxBand).unit("oC").help("Proportional band for increasing response over rhMax");
     ELEMENT(ventilationTemperatureMargin).unit("oC").help("Fixed margin above heating setpoint for ventilation");
     ELEMENT(crackVentilationNormalTemperature).unit("[0;1]").help("Max. vent crack opening at high RH (RH>=rhMax+rhMaxBand)");
     ELEMENT(crackVentilationTemperatureMin).unit("oC").help("Crack closed below this temparature");
@@ -66,8 +64,14 @@ Setpoints::Setpoints(QString name, QObject *parent)
 void Setpoints::amend() {
     BoxBuilder builder(this);
     builder.
-    box("ProportionalSignal").name("heatingTemperatureHighRhIncrement").
+    box("RunningAverageTimed").name("avgRh").
+        port("initial").imports("indoors/humidity[rh]",CA).
         port("input").imports("indoors/humidity[rh]",CA).
+        port("timeWindow").equals(20.).
+        port("timeUnit").equals('m').
+    endbox().
+    box("ProportionalSignal").name("heatingTemperatureHighRhIncrement").
+        port("input").imports("../avgRh[value]",CA).
         port("threshold").imports("..[rhMax]",CA).
         port("thresholdBand").imports("..[rhMaxBand]",CA).
         port("increasingSignal").equals(true).
@@ -75,7 +79,7 @@ void Setpoints::amend() {
         port("maxSignal").imports("..[heatingTemperatureHighRhMargin]",CA).
     endbox().
     box("ProportionalSignal").name("heatingTemperatureLowRhIncrement").
-        port("input").imports("indoors/humidity[rh]",CA).
+        port("input").imports("../avgRh[value]",CA).
         port("threshold").imports("..[rhMin]",CA).
         port("thresholdBand").imports("..[rhMinBand]",CA).
         port("increasingSignal").equals(false).

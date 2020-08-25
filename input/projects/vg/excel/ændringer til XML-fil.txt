@@ -8,8 +8,6 @@ Tilføjet for gardiner:
   ReflectionOutwards
   ReflectionInwards
   (Transmission beholdes)
-  AirSpaceWidth:
-    Bruges til at beregne rumfanget af luft, som gardinet indespærrer. For yderste gardin (Layer==1) er det afstanden mellem gardin og glas (i meter). Specielt for Position==1 og Position==2 sættes AirSpaceWidth=0, hvis gardinet er horisontalt. I så fald beregner modellen rumfanget i "loftsrummet".
 
 Fjernet fra gardiner:
   InsulationRatio

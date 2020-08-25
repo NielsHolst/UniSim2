@@ -24,10 +24,12 @@ Screen::Screen(QString name, QObject *parent)
     Input(state).equals(0.).help("Proportion drawn (0=fully withdrawn; 1=fully drawn").unit("[0;1]");
     port("Utop")->equals(1.247);
     port("Ubottom")->equals(1.247);
-
+    port("heatCapacity")->equals(2280.);
+    /* density of polyester = 1.22 g/cm3
+     * 1mm * 1m2 = 0.1cm * 100^2 cm2 = 1000 cm3 = 1220 g/m2
+     * heat capacity of polyester = 1.87 J/g/K = 1.87*1220 J/m2/K = 2280 J/m2/K
+    */
     Output(maxArea).help("Max. area covered by screen").unit("m");
-    Output(depth).help("Depth of volume covered by screen").unit("m");
-    Output(heatCapacity).help("Heat capacity of drawn part of screen").unit("J/K");
     Output(swReflectivityTopNet).help("Parameter corrected for state").unit("[0;1]");
     Output(swReflectivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
     Output(swTransmissivityTopNet).help("Parameter corrected for state").unit("[0;1]");
@@ -40,12 +42,13 @@ Screen::Screen(QString name, QObject *parent)
     Output(swAbsorptivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
     Output(lwAbsorptivityTopNet).help("Parameter corrected for state").unit("[0;1]");
     Output(lwAbsorptivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
+    Output(UtopNet).help("Parameter corrected for state").unit("W/K/m2 screen");
+    Output(UbottomNet).help("Parameter corrected for state").unit("W/K/m2 screen");
 }
 
 void Screen::reset() {
     updateByState(0);
     maxArea = computeMaxArea();
-    depth = computeDepth();
 }
 
 void Screen::update() {
@@ -59,7 +62,7 @@ void Screen::updateByState(double state) {
     if (state<0. || state>1.)
         ThrowException("Screen state out of [0;1] bounds").value(state).context(this);
     area = maxArea*state;
-    heatCapacity = specificHeatCapacity*area;
+//    heatCapacity = specificHeatCapacity*area;
     updateAbsorptivities();
     ADJUST_BY_STATE(swReflectivityTop);
     ADJUST_BY_STATE(swReflectivityBottom);
@@ -73,6 +76,8 @@ void Screen::updateByState(double state) {
     ADJUST_BY_STATE(swAbsorptivityBottom);
     ADJUST_BY_STATE(lwAbsorptivityTop);
     ADJUST_BY_STATE(lwAbsorptivityBottom);
+    UtopNet = (Utop == 0.) ? infinity() : Utop/state;
+    UbottomNet = (Ubottom == 0.) ? infinity() : Ubottom/state;
 }
 
 } //namespace

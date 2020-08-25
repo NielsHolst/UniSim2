@@ -17,6 +17,7 @@ private:
     double u;
     double N;
     double Nstruct;
+    double Factor;
     // Outputs
     double nitrogenreservesrate;
 };

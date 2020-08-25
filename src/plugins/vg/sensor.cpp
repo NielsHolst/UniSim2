@@ -29,7 +29,7 @@ Sensor::Sensor(QString name, QObject *parent)
     Input(outdoorsGlobalRadiationIn).equals(missing);
     Input(outdoorsWindSpeedIn).equals(missing);
     Input(soilTemperatureIn).equals(missing);
-    Input(sinb).imports("calendar[sinb]");
+    Input(sinb).imports("sun[sinb]");
     Output(indoorsTemperature);
     Output(indoorsRh);
     Output(indoorsAh);

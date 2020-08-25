@@ -23,8 +23,7 @@ VapourFluxCondensationScreenBase::VapourFluxCondensationScreenBase(QString name,
     Input(groundArea).imports("geometry[groundArea]", CA);
     Input(screenAreas).imports("shelter/*/screens/layer"+number+"[area]", CA);
     Input(screenTemperature).imports("energyBudget/screen"+number+"[temperature]", CA);
-    Input(screenedTemperature).imports("airSpaces/screened[temperature]", CA);
-    Input(roomTemperature).imports("indoors[temperature]", CA);
+    Input(indoorsTemperature).imports("indoors[temperature]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]", CA);
 }
 
@@ -34,16 +33,10 @@ inline double condensation(double dTemp) {
 
 void VapourFluxCondensationScreenBase::update() {
     double screenPerGroundArea = vector_op::sum(screenAreas)/groundArea,
-           conductanceScreened = condensation(screenedTemperature - screenTemperature)*screenPerGroundArea,
-           conductanceRoom     = condensation(    roomTemperature - screenTemperature)*screenPerGroundArea,
-           surfaceSah          = sah(screenTemperature),
-           vapourFluxScreened  = min(conductanceScreened*(surfaceSah - indoorsAh), 0.),
-           vapourFluxRoom      = min(conductanceRoom    *(surfaceSah - indoorsAh), 0.),
-           gainScreened        = conductanceScreened*surfaceSah,
-           gainRoom            = conductanceScreened*surfaceSah;
-    conductance = conductanceScreened + conductanceRoom;
-    vapourFlux  = vapourFluxScreened  + vapourFluxRoom;
-    gain        = gainScreened        + gainRoom;
+           surfaceSah          = sah(screenTemperature);
+    conductance = condensation(indoorsTemperature - screenTemperature)*screenPerGroundArea*2.;  // both sides of screen;
+    vapourFlux  = min(conductance*(surfaceSah - indoorsAh), 0.);
+    gain        = conductance*surfaceSah;
 }
 
 } //namespace

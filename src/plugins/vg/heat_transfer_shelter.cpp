@@ -9,7 +9,10 @@
 #include <base/vector_op.h>
 #include "heat_transfer_shelter.h"
 
+#include <base/dialog.h>
+
 using namespace base;
+using vector_op::sumOfProducts;
 
 namespace vg {
 
@@ -34,17 +37,29 @@ HeatTransferShelter::HeatTransferShelter(QString name, QObject *parent, QString 
     InputShelter(lwAbsorptivityTop);
     InputShelter(lwAbsorptivityBottom);
 
-    suffix = "";
     InputShelter(Utop);
     InputShelter(Ubottom);
+
+    suffix = "";
     InputShelter(area);
+    InputShelter(heatCapacity);
+
+    Input(groundArea).imports("geometry[groundArea]");
+    Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
+    Input(indoorsTemperature).imports("indoors[temperature]");
+    port("heatCapacity")->unit("J/K/m2 ground");
+    port("Utop")->unit("J/K/m2 ground");
+    port("Ubottom")->unit("J/K/m2 ground");
 
     Output(numFaces).help("Number of shelter faces contributing to this shelter layer").unit("0..6");
 }
 
 void HeatTransferShelter::reset() {
+    temperature = 20.;
     numFaces = swReflectivityTopShelter.size();
+    R_.resize(numFaces);
     updateArea();
+    updateHeatCapacity();
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
@@ -54,7 +69,11 @@ void HeatTransferShelter::updateArea() {
     area = vector_op::sum(areaShelter);
 }
 
-#define SUM_OF_PRODUCTS(x) x = vector_op::sumOfProducts(x##Shelter, areaShelter, this)
+void HeatTransferShelter::updateHeatCapacity() {
+    heatCapacity = sumOfProducts(heatCapacityShelter, areaShelter, this)/groundArea;
+}
+
+#define SUM_OF_PRODUCTS(x) x = sumOfProducts(x##Shelter, areaShelter, this)
 
 void HeatTransferShelter::updateRadiativeProperties() {
     // Collect radiative properties from all six shelter faces and compute
@@ -121,12 +140,25 @@ void HeatTransferShelter::updateRadiativeProperties() {
     }
 }
 
+void HeatTransferShelter::updateLwEmission() {
+    HeatTransferLayerBase::updateLwEmission();
+    // W/m2 ground = W/m2 cover * m2 cover/m2 ground
+    lwFluxDown *= coverPerGroundArea;
+    lwFluxUp *= coverPerGroundArea;
+}
+
 void HeatTransferShelter::updateConvectiveProperties() {
     // Collect convectice properties from all six shelter faces and compute
     // joint properties from the weighted sums
     if (numFaces==0) return;
-    Utop    = vector_op::weightedAverage(UtopShelter, areaShelter, this);
-    Ubottom = vector_op::weightedAverage(UbottomShelter, areaShelter, this);
+    // W/m2 ground = W/m2 layer * m2 layer/m2 ground
+    vector_op::inverse(R_, UtopShelter, this);
+    double Rtop = vector_op::weightedAverage(R_, areaShelter, this);
+    Utop = 1./Rtop*coverPerGroundArea;
+
+    vector_op::inverse(R_, UbottomShelter, this);
+    double Rbottom = vector_op::weightedAverage(R_, areaShelter, this);
+    Ubottom = 1./Rbottom*coverPerGroundArea;
 }
 
 } //namespace

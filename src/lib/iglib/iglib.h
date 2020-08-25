@@ -1,4 +1,4 @@
-// Version 2.3.20
+// Version 2.3.22
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -128,8 +128,8 @@ struct ScreenMaterial {
         transmissivityLight,    // 0..1
         emmisivityInner,        // 0..1
         emmisivityOuter,        // 0..1
-        haze,                   // 0..1
-        energySaving,           // 0..100 
+        haze,                   // 0..1     // not used
+        energySaving,           // 0..100   // not used
         transmissivityAir,      // 0..1
         U,                      // W/m2/K
         heatCapacity;           // J/m2/K

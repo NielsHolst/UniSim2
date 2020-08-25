@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Inputs
-    double irradiation, propPar, propUv, coverPerGroundArea;
+    double irradiation, propPar, propUv;
 };
 
 } //namespace

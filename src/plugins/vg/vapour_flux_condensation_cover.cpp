@@ -23,7 +23,7 @@ VapourFluxCondensationCover::VapourFluxCondensationCover(QString name, QObject *
     help("models vapour flux through condensation on inside greenhouse surface");
     Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]");
     Input(coverTemperature).imports("energyBudget/cover[temperature]",CA);
-    Input(indoorsTemperature).imports("airSpaces/screened[temperature]",CA);
+    Input(indoorsTemperature).imports("indoors[temperature]",CA);
     Input(indoorsAh).imports("indoors/humidity[ah]",CA);
     Output(surfaceSah).help("Saturated absolute humidity at cover").unit("kg/m3");
 }

@@ -14,6 +14,7 @@ HEADERS +=  \
     Beta.h \
     Carbon_content.h \
     Carbon_exudation.h \
+    Dryweight.h \
     Effect_of_size_on_growthrate.h \
     Effect_of_temperature_on_growthrate.h \
     Frond_erosion.h \
@@ -26,9 +27,15 @@ HEADERS +=  \
     Rate_of_change_in_carbon_reserves.h \
     Rate_of_change_in_nitrogen_reserves.h \
     Rate_of_change_of_frond_area.h \
+    Salinity.h \
     Seasonal_influence_on_growthrate.h \
     Specific_growth_rate.h \
+    Structural_dryweight.h \
     Temperature_dependent_respiration.h \
+    Total_carbon.h \
+    Total_nitrogen.h \
+    Wetweight.h \
+    Yieldprm.h \
     light_inhibition.h
     
 SOURCES +=  \
@@ -37,6 +44,7 @@ SOURCES +=  \
     Beta.cpp \
     Carbon_content.cpp \
     Carbon_exudation.cpp \
+    Dryweight.cpp \
     Effect_of_size_on_growthrate.cpp \
     Effect_of_temperature_on_growthrate.cpp \
     Frond_erosion.cpp \
@@ -49,9 +57,15 @@ SOURCES +=  \
     Rate_of_change_in_carbon_reserves.cpp \
     Rate_of_change_in_nitrogen_reserves.cpp \
     Rate_of_change_of_frond_area.cpp \
+    Salinity.cpp \
     Seasonal_influence_on_growthrate.cpp \
     Specific_growth_rate.cpp \
+    Structural_dryweight.cpp \
     Temperature_dependent_respiration.cpp \
+    Total_carbon.cpp \
+    Total_nitrogen.cpp \
+    Wetweight.cpp \
+    Yieldprm.cpp \
     light_inhibition.cpp
 
 

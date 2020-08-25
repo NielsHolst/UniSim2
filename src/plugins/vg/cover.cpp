@@ -26,10 +26,15 @@ Cover::Cover(QString name, QObject *parent)
     help("computes cover light and heat characteristics");
     Input(windSpeed).imports("outdoors[windSpeed]",CA).unit("m/s");
     Input(haze).equals(1.).help("Proportion of direct light transmitted as diffuse light").unit("[0;1]");
-    Input(UwindMinimum).equals(7.2).help("Heat transfer coefficient at no wind").unit("W/m2/K");
-    Input(UwindSlope).help("Heat transfer coefficient linear increase with wind speed").unit("W/m2/K/(m/s)");
+    Input(UwindMinimum).equals(2.8).help("Heat transfer coefficient at no wind").unit("W/m2/K"); // From Watmuff et al. (1977)
+    Input(UwindSlope).equals(3.0).help("Heat transfer coefficient linear increase with wind speed").unit("W/m2/K/(m/s)"); // From Watmuff et al. (1977)
+    Input(UwindExponent).equals(0.8).help("Reduces effect of high windspeed"); // From Körner MatLab code (1977)
     port("area")->imports("../area[value]",CA);
-    port("Ubottom")->equals(1.247);
+    port("Ubottom")->equals(3.3); //
+    port("heatCapacity")->equals(8400.);
+    /* density of glass       = 2.5kg per m2 per mm of thickness => 10 kg glass/m2
+     * heat capacity of glass = 0.84 J/g/K = 840 J/kg/K = 8400 J/m2/K
+    */
 }
 
 void Cover::reset() {
@@ -38,8 +43,7 @@ void Cover::reset() {
 
 void Cover::update() {
     updateAbsorptivities();
-    Utop = UwindMinimum + windSpeed*UwindSlope;
-//    heatCapacity = specificHeatCapacity*area;
+    Utop = UwindMinimum + pow(windSpeed,UwindExponent)*UwindSlope;
 }
 
 } //namespace

@@ -55,6 +55,9 @@ void Simulation::amend() {
 void Simulation::initialize() {
     environment().isUnattended(unattended);
     iteration = 1;
+    // Increment file counter;
+    // output files needed for this run must be open at this time
+    environment().incrementFileCounter();
 }
 
 void Simulation::run() {
@@ -123,7 +126,6 @@ void Simulation::cleanup() {
 }
 
 void Simulation::debrief() {
-    environment().incrementFileCounter();
     dialog().finishProgress();
 }
 

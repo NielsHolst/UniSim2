@@ -42,6 +42,11 @@ void LeafTemperature::update() {
            dividend = (rsH2O+rbH2O)*Rn/(2*lai*RhoAir*CpAir) - (psatu-pgh)/Psychr,
            divisor  = 1. + s/Psychr+ rsH2O/rbH2O;
     value = dividend/divisor + indoorsTemperature;
+    if (fabs(value) > 100.) {
+        QString msg("s = %1\nrsH2O = %2\nrbH2O = %3\nRn = %4\nTin = %5");
+        ThrowException("Leaf temperature out of bounds").value(value).context(this).
+                hint(msg.arg(s).arg(rsH2O).arg(rbH2O).arg(Rn).arg(indoorsTemperature));
+    }
 
     /* Thermal storage was neglible, max 1-2 W/m2
     double dt = 300,

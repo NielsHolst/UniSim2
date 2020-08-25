@@ -64,6 +64,7 @@ HEADERS +=  \
     ratio.h \
     records.h \
     running_average.h \
+    running_average_timed.h \
     sandy.h \
     scenarios.h \
     select_file.h \
@@ -135,6 +136,7 @@ SOURCES +=  \
     ratio.cpp \
     records.cpp \
     running_average.cpp \
+    running_average_timed.cpp \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \

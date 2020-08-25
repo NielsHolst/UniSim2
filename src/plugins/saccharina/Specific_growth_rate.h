@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double farea, fphoto, ftemp, N, Nmin, C, Cmin, dt, Factor;
+    double farea, fphoto, ftemp, fsalinity, N, Nmin, C, Cmin, dt, Factor;
     // Outputs
     double specificgrowthrate;
 };

@@ -8,9 +8,10 @@
 <xsl:variable name="test-weather-file" select="'input/sel_dk.txt'"/> 
 
 <!-- Missing parameters -->
-<xsl:variable name="heatPipeMaxTemperature" select="60"/>
 <xsl:variable name="HPS-minPeriodOn" select="30"/>
 <xsl:variable name="LED-minPeriodOn" select="0"/>
+<xsl:variable name="UwindSlope" select="3.0"/>
+<xsl:variable name="UwindExponent" select="0.8"/>
 
 <!-- Call templates -->
 <xsl:template name="float-with-period">
@@ -63,78 +64,281 @@
 <xsl:template name="extract-cover">
   <xsl:param name="cover"/>
 
-  <xsl:variable name="transmissivityName" select="'PaneTransmission'"/>
-  <xsl:variable name="transmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
-  <xsl:variable name="U4Name" select="'PaneUValue'"/>
-  <xsl:variable name="U4Src" select="$cover/Constants/Parameters[ParameterName=$U4Name]/Value" as="node()"/>
+  <xsl:variable name="swReflectivityName" select="'PaneReflection'"/>
+  <xsl:variable name="swReflectivitySrc" select="$cover/Constants/Parameters[ParameterName=$swReflectivityName]/Value" as="node()"/>
+  <xsl:variable name="swTransmissivityName" select="'PaneTransmission'"/>
+  <xsl:variable name="swTransmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$swTransmissivityName]/Value" as="node()"/>
+  
+  <xsl:variable name="lwReflectivityName" select="'PaneLwReflection'"/>
+  <xsl:variable name="lwReflectivitySrc" select="$cover/Constants/Parameters[ParameterName=$lwReflectivityName]/Value" as="node()"/>
+  <xsl:variable name="lwTransmissivityName" select="'PaneLwTransmission'"/>
+  <xsl:variable name="lwTransmissivitySrc" select="$cover/Constants/Parameters[ParameterName=$swTransmissivityName]/Value" as="node()"/>
+  
+  <xsl:variable name="UwindMinimumName" select="'PaneUValue'"/>
+  <xsl:variable name="UwindMinimumSrc" select="$cover/Constants/Parameters[ParameterName=$UwindMinimumName]/Value" as="node()"/>
 
   <box class="vg::Cover" name="cover">
-    <port name="transmissivity">
+    <port name="swReflectivityTop">
       <xsl:attribute name="externalName">
-        <xsl:value-of select="$transmissivityName"/>
+        <xsl:value-of select="$swReflectivityName"/>
       </xsl:attribute>
       <xsl:attribute name="source">
-        <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        <xsl:value-of select="ecolmod:generateXPath($swReflectivitySrc)"/>
       </xsl:attribute>
       <xsl:call-template name="float-value">
-        <xsl:with-param name="value" select="$transmissivitySrc"/>
+        <xsl:with-param name="value" select="$swReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swReflectivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swReflectivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swReflectivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swTransmissivityTop">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="swTransmissivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$swTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($swTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$swTransmissivitySrc"/>
       </xsl:call-template>
     </port>
 
-    <port name="U4">
+    <port name="lwReflectivityTop">
       <xsl:attribute name="externalName">
-        <xsl:value-of select="$U4Name"/>
+        <xsl:value-of select="$lwReflectivityName"/>
       </xsl:attribute>
       <xsl:attribute name="source">
-        <xsl:value-of select="ecolmod:generateXPath($U4Src)"/>
+        <xsl:value-of select="ecolmod:generateXPath($lwReflectivitySrc)"/>
       </xsl:attribute>
       <xsl:call-template name="float-value">
-        <xsl:with-param name="value" 
-          select="$cover/Constants/Parameters[ParameterName='PaneUValue']/Value"/>
+        <xsl:with-param name="value" select="$lwReflectivitySrc"/>
       </xsl:call-template>
     </port>
-    </box>
+    <port name="lwReflectivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwReflectivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwReflectivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwReflectivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="lwTransmissivityTop">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="lwTransmissivityBottom">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$lwTransmissivityName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($lwTransmissivitySrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$lwTransmissivitySrc"/>
+      </xsl:call-template>
+    </port>
+    
+    <port name="UwindMinimum">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$UwindMinimumName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($UwindMinimumSrc)"/>
+      </xsl:attribute>
+      <xsl:call-template name="float-value">
+        <xsl:with-param name="value" select="$UwindMinimumSrc"/>
+      </xsl:call-template>
+    </port>
+    <port name="UwindSlope" externalName="UwindSlope" source="Fixed">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$UwindSlope"/>
+      </xsl:attribute>
+    </port>
+    <port name="UwindExponent" externalName="UwindExponent" source="Fixed">
+      <xsl:attribute name="value">
+        <xsl:value-of select="$UwindExponent"/>
+      </xsl:attribute>
+    </port>
+  </box>
 </xsl:template>
 
 <xsl:template name="extract-screen">
+  <xsl:param name="position"/>
   <xsl:if test="Constants/Parameters[ParameterName='ScreenProduct']/Value!='No screen'">
-    <!-- <xsl:variable name="name" select="lower-case(Constants/Parameters[ParameterName='ScreenTypeText']/Value)"/> -->
     <xsl:variable name="layer" select="Layer"/>
-    
-    <xsl:variable name="transmissivityLightName" select="'Transmission'"/>
-    <xsl:variable name="transmissivityLightSrc" select="Constants/Parameters[ParameterName=$transmissivityLightName]/Value" as="node()"/>
-    <xsl:variable name="energyLossReductionName" select="'InsulationRatio'"/>
-    <xsl:variable name="energyLossReductionSrc" select="Constants/Parameters[ParameterName=$energyLossReductionName]/Value" as="node()"/>
+    <xsl:variable name="reflectivityTopName" select="'ReflectionOutwards'"/>
+    <xsl:variable name="reflectivityTopSrc" select="Constants/Parameters[ParameterName=$reflectivityTopName]/Value" as="node()"/>
+    <xsl:variable name="reflectivityBottomName" select="'ReflectionInwards'"/>
+    <xsl:variable name="reflectivityBottomSrc" select="Constants/Parameters[ParameterName=$reflectivityBottomName]/Value" as="node()"/>
+    <xsl:variable name="transmissivityName" select="'Transmission'"/>
+    <xsl:variable name="transmissivitySrc" select="Constants/Parameters[ParameterName=$transmissivityName]/Value" as="node()"/>
+    <xsl:variable name="UName" select="'U'"/>
+    <xsl:variable name="USrc" select="Constants/Parameters[ParameterName=$UName]/Value" as="node()"/>
     <xsl:variable name="transmissivityAirName" select="'Porosity'"/>
     <xsl:variable name="transmissivityAirSrc" select="Constants/Parameters[ParameterName=$transmissivityAirName]/Value" as="node()"/>
+          
+    <box name="MISSING">
     
-    <box class="vg::Screen" name="MISSING">
+      <xsl:choose>  
+        <xsl:when test="$position=1 or $position=2">
+          <xsl:attribute name="class">
+            <xsl:value-of select="'vg::ScreenRoof'"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:value-of select="'vg::ScreenWall'"/>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>  
+      
       <xsl:attribute name="name">
         <xsl:value-of select="concat('layer', $layer)"/>
       </xsl:attribute>
-      <port name="orientation" externalName="No name" source="Fixed" value="cover"/>
-      <port name="transmissivityLight">
+      
+      <port name="swTransmissivityTop">
         <xsl:attribute name="externalName">
-          <xsl:value-of select="$transmissivityLightName"/>
+          <xsl:value-of select="$transmissivityName"/>
         </xsl:attribute>
         <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($transmissivityLightSrc)"/>
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
         </xsl:attribute>
         <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="$transmissivityLightSrc"/>
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
         </xsl:call-template>
       </port>
-      <port name="energyLossReduction">
+      <port name="swTransmissivityBottom">
         <xsl:attribute name="externalName">
-          <xsl:value-of select="$energyLossReductionName"/>
+          <xsl:value-of select="$transmissivityName"/>
         </xsl:attribute>
         <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($energyLossReductionSrc)"/>
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
         </xsl:attribute>
         <xsl:call-template name="float-value">
-          <xsl:with-param name="value" select="$energyLossReductionSrc"/>
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
         </xsl:call-template>
       </port>
+      <port name="swReflectivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityTopName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityTopSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityTopSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="swReflectivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityBottomName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityBottomSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityBottomSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwTransmissivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwTransmissivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$transmissivityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($transmissivitySrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$transmissivitySrc"/>
+        </xsl:call-template>
+      </port>
+
+      <port name="lwReflectivityTop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityTopName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityTopSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityTopSrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="lwReflectivityBottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$reflectivityBottomName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($reflectivityBottomSrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$reflectivityBottomSrc"/>
+        </xsl:call-template>
+      </port>
+
+      <port name="Utop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$UName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($USrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$USrc"/>
+        </xsl:call-template>
+      </port>
+      <port name="Ubottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$UName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($USrc)"/>
+        </xsl:attribute>
+        <xsl:call-template name="float-value">
+          <xsl:with-param name="value" select="$USrc"/>
+        </xsl:call-template>
+      </port>
+      
       <port name="transmissivityAir">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$transmissivityAirName"/>
@@ -146,6 +350,7 @@
           <xsl:with-param name="value" select="$transmissivityAirSrc"/>
         </xsl:call-template>
       </port>
+      
       <port name="state">
         <xsl:attribute name="ref">
           <xsl:value-of select="concat('actuators/screens/layer', $layer, '[value]')"/>
@@ -154,30 +359,41 @@
           <!-- <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/> -->
         <!-- </xsl:attribute> -->
       </port>
+      <box class="vg::ScreensAirTransmissivity" name="airTransmissivity"/>
     </box>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="extract-screens">
+  <xsl:param name="position"/>
   <xsl:for-each select=".[Layer='1']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
   <xsl:for-each select=".[Layer='2']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
   <xsl:for-each select=".[Layer='3']">
-    <xsl:call-template name="extract-screen"/>
+    <xsl:call-template name="extract-screen">
+      <xsl:with-param name="position" select="$position"/>
+    </xsl:call-template>
   </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="extract-shelter-face">
   <xsl:param name="position"/>
+  <box class="vg::ShelterFaceArea" name="area"/>
   <xsl:call-template name="extract-cover">
     <xsl:with-param name="cover" select="DVV_SETUP/Greenhouse/Panes/Pane[Position=$position]"/>
   </xsl:call-template>
   <box class="vg::Screens" name="screens">
     <xsl:for-each select="DVV_SETUP/Greenhouse/Screens/Screen[Position=$position]">
-      <xsl:call-template name="extract-screens"/>
+      <xsl:call-template name="extract-screens">
+        <xsl:with-param name="position" select="$position"/>
+      </xsl:call-template>
     </xsl:for-each>
   </box>
 </xsl:template>
@@ -195,7 +411,7 @@
   <xsl:variable name="numberName" select="'Number'"/>
   <xsl:variable name="numberSrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$numberName]/Value"/>
   <xsl:variable name="numberValue" select="number(replace($numberSrc, ',', '.'))"/>
-  <xsl:variable name="transmissivityName" select="'VentTransmission'"/>
+  <xsl:variable name="transmissivityName" select="'VentTransmissivity'"/>
   <xsl:variable name="transmissivitySrc" select="DVV_SETUP/Greenhouse/Vents/Vent[Position=$position]/Constants/Parameters[ParameterName=$transmissivityName]/Value"/>
   <xsl:variable name="transmissivityValue" select="number(replace($transmissivitySrc, ',', '.'))"/>
 
@@ -353,17 +569,17 @@
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template name="setpoint-reference">
-  <xsl:param name="setpointName"/>
-  <port>
-    <xsl:attribute name="name">
-      <xsl:value-of select="$setpointName"/>
-    </xsl:attribute>
-    <xsl:attribute name="ref">
-      <xsl:value-of select="concat('allSetpoints/', $setpointName, '[value]')"/>
-    </xsl:attribute>
-  </port>
-</xsl:template>
+<!-- <xsl:template name="setpoint-reference"> -->
+  <!-- <xsl:param name="setpointName"/> -->
+  <!-- <port> -->
+    <!-- <xsl:attribute name="name"> -->
+      <!-- <xsl:value-of select="$setpointName"/> -->
+    <!-- </xsl:attribute> -->
+    <!-- <xsl:attribute name="ref"> -->
+      <!-- <xsl:value-of select="concat('allSetpoints/', $setpointName, '[value]')"/> -->
+    <!-- </xsl:attribute> -->
+  <!-- </port> -->
+<!-- </xsl:template> -->
 
 <xsl:template name="extract-growth-light">
   <xsl:variable name="position" select="Position"/>
@@ -549,7 +765,7 @@
     </xsl:attribute>
     <port name="change" ref="./controller[controlVariable]"/>
     <port name="minValue" value="0"/>
-    <port name="maxValue" ref="../maxValue[value]"/>
+    <port name="maxValue" ref="setpoints[maxScreen]"/>
     <box class="ScreenCombination" name="desiredValue">
       <port name="formula">
         <xsl:attribute name="externalName">
@@ -768,17 +984,17 @@
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="1"/>
         </xsl:call-template>
-        <!-- <xsl:call-template name="extract-vent"> -->
-          <!-- <xsl:with-param name="position" select="1"/> -->
-        <!-- </xsl:call-template> -->
+        <xsl:call-template name="extract-vent">
+          <xsl:with-param name="position" select="1"/>
+        </xsl:call-template>
       </box>
       <box class="vg::ShelterFace" name="roof2">
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="2"/>
         </xsl:call-template>
-        <!-- <xsl:call-template name="extract-vent"> -->
-          <!-- <xsl:with-param name="position" select="2"/> -->
-        <!-- </xsl:call-template> -->
+        <xsl:call-template name="extract-vent">
+          <xsl:with-param name="position" select="2"/>
+        </xsl:call-template>
       </box>
       <box class="vg::ShelterFace" name="side1">
         <xsl:call-template name="extract-shelter-face">
@@ -802,421 +1018,272 @@
       </box>
     </box>
   </box>
-  <xsl:comment> *** Indoors *** </xsl:comment>
-  <xsl:variable name="leakageName" select="'leakage'"/>
-  <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
-  <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
-  <xsl:variable name="floorUindoorsName" select="'floor-Uindoors'"/>
-  <xsl:variable name="floorUindoorsSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUindoorsName]/Value" as="node()"/>
-  <xsl:variable name="floorUindoorsValue" select="number(replace($floorUindoorsSrc, ',', '.'))"/>
-  <xsl:variable name="floorUsoilName" select="'floor-Usoil'"/>
-  <xsl:variable name="floorUsoilSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUsoilName]/Value" as="node()"/>
-  <xsl:variable name="floorUsoilValue" select="number(replace($floorUsoilSrc, ',', '.'))"/>
-  <xsl:variable name="floorHeatCapacityName" select="'floor-heatCapacity'"/>
-  <xsl:variable name="floorHeatCapacitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorHeatCapacityName]/Value" as="node()"/>
-  <xsl:variable name="floorHeatCapacityValue" select="number(replace($floorHeatCapacitySrc, ',', '.'))"/>
-  <xsl:variable name="floorEmissivityName" select="'floor-emissivity'"/>
-  <xsl:variable name="floorEmissivitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorEmissivityName]/Value" as="node()"/>
-  <xsl:variable name="floorEmissivityValue" select="number(replace($floorEmissivitySrc, ',', '.'))"/>
-  <xsl:variable name="floorReflectanceName" select="'floor-reflectance'"/>
-  <xsl:variable name="floorReflectanceSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorReflectanceName]/Value" as="node()"/>
-  <xsl:variable name="floorReflectanceValue" select="number(replace($floorReflectanceSrc, ',', '.'))"/>
-  <box class="vg::Indoors" name="indoors">
-    <box class="vg::Given" name="given">
-      <box class="vg::AirFluxGiven" name="airFlux">
-        <box class="vg::AirFluxInfiltration" name="infiltration">
-          <port name="leakage">
-            <xsl:attribute name="externalName">
-              <xsl:value-of select="$leakageName"/>
-            </xsl:attribute>
-            <xsl:attribute name="source">
-              <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
-            </xsl:attribute>
-            <xsl:attribute name="value">
-              <xsl:value-of select="$leakageValue"/>
-            </xsl:attribute>
-          </port>
-        </box>      
-      </box>
-      <box class="vg::EnergyFluxSum" name="energyFlux">
-        <box class="vg::EnergyFluxFloor" name="floor">
-          <port name="Uindoors">
-            <xsl:attribute name="externalName">
-              <xsl:value-of select="$floorUindoorsName"/>
-            </xsl:attribute>
-            <xsl:attribute name="source">
-              <xsl:value-of select="ecolmod:generateXPath($floorUindoorsSrc)"/>
-            </xsl:attribute>
-            <xsl:attribute name="value">
-              <xsl:value-of select="$floorUindoorsValue"/>
-            </xsl:attribute>
-          </port>
-          <port name="Usoil">
-            <xsl:attribute name="externalName">
-              <xsl:value-of select="$floorUsoilName"/>
-            </xsl:attribute>
-            <xsl:attribute name="source">
-              <xsl:value-of select="ecolmod:generateXPath($floorUsoilSrc)"/>
-            </xsl:attribute>
-            <xsl:attribute name="value">
-              <xsl:value-of select="$floorUsoilValue"/>
-            </xsl:attribute>
-          </port>
-          <port name="heatCapacity">
-            <xsl:attribute name="externalName">
-              <xsl:value-of select="$floorHeatCapacityName"/>
-            </xsl:attribute>
-            <xsl:attribute name="source">
-              <xsl:value-of select="ecolmod:generateXPath($floorHeatCapacitySrc)"/>
-            </xsl:attribute>
-            <xsl:attribute name="value">
-              <xsl:value-of select="$floorHeatCapacityValue"/>
-            </xsl:attribute>
-          </port>
-          <port name="emissivity">
-            <xsl:attribute name="externalName">
-              <xsl:value-of select="$floorEmissivityName"/>
-            </xsl:attribute>
-            <xsl:attribute name="source">
-              <xsl:value-of select="ecolmod:generateXPath($floorEmissivitySrc)"/>
-            </xsl:attribute>
-            <xsl:attribute name="value">
-              <xsl:value-of select="$floorEmissivityValue"/>
-            </xsl:attribute>
-          </port>
-          <box class="vg::FloorRadiationAbsorbed" name="radiationAbsorbed">
-            <port name="reflectance">
-              <xsl:attribute name="externalName">
-                <xsl:value-of select="$floorReflectanceName"/>
-              </xsl:attribute>
-              <xsl:attribute name="source">
-                <xsl:value-of select="ecolmod:generateXPath($floorReflectanceSrc)"/>
-              </xsl:attribute>
-              <xsl:attribute name="value">
-                <xsl:value-of select="$floorReflectanceValue"/>
-              </xsl:attribute>
-            </port>
-          </box>      
-        </box>      
-      </box>
-    </box>
-  </box>
-  <xsl:comment> *** allSetpoints *** </xsl:comment>
-  <box name="allSetpoints">
-    <box class="PrioritySignal" name="heatingTemperatureAtLowRh">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_HeatingTemp'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="ventilationTemperatureMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_VentTemp'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="rhMax">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxRelHmd'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal"  name="heatingTemperatureMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxHeatAddHighRH'"/>
-      </xsl:call-template>
-    </box>
-   <box class="PrioritySignal"  name="ventilationTemperatureRhMargin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_MaxVentDecHighRH'"/>
-      </xsl:call-template>
-    </box>
-   <box class="PrioritySignal"  name="ventilationThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'ventilationsThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2Capacity">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Capacity'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2Setpoint">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2Setpoint'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2VentilationThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationThreshold'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="co2VentilationBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_CO2VentilationBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="chalk">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_ShadingAgentReduction'"/>
-      </xsl:call-template>
-    </box>
-    <box name="growthLights">
-      <box name= "growthLight1">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn1'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff1'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive1'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-      <box name= "growthLight2">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn2'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff2'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive2'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-      <box name= "growthLight3">
-        <box class="PrioritySignal" name="thresholdLow">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOn3'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="thresholdHigh">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightOff3'"/>
-          </xsl:call-template>
-        </box>
-        <box class="PrioritySignal" name="setting">
-          <xsl:call-template name="extract-setpoints">
-            <xsl:with-param name="climateSetpointName" select="'AssLightActive3'"/>
-          </xsl:call-template>
-        </box>
-      </box>
-    </box>
-    <box class="PrioritySignal" name="rhMaxBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'rhMaxBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="dawnThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromNight'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="duskThreshold">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'Cli_LightChangeFromDay'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilation">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilationTemperatureMin">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMin'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThreshold1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThreshold2">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold2'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenEnergyThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThreshold1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThreshold2">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold2'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenShadeThresholdBand">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenFixed1">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'screenFixed1'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenCrackAtHighRh">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackScreenHighHumidity'"/>
-      </xsl:call-template>
-    </box>
-    <box class="PrioritySignal" name="screenCrackAtHighTemperature">
-      <xsl:call-template name="extract-setpoints">
-        <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperature'"/>
-      </xsl:call-template>
-    </box>
-  </box>
+
   <xsl:comment> *** Setpoints *** </xsl:comment>
   <box class="vg::Setpoints" name="setpoints">
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'heatingTemperatureAtLowRh'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'heatingTemperatureMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationTemperatureMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationTemperatureRhMargin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'rhMax'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'rhMaxBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Capacity'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'co2Setpoint'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'dawnThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'duskThreshold'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenCrackAtHighRh'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'screenCrackAtHighTemperature'"/>
-    </xsl:call-template>
+    <box name="elementary">
+      <box class="PrioritySignal" name="heatingTemperatureNormalRh">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'HeatingTemp'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="heatingTemperatureHighRhMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxHeatAddHighRH'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="heatingTemperatureLowRhMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxHeatAddLowRH'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="rhMax">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MaxRelHmd'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="rhMaxBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'rhMaxBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="rhMin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'MinRelHmd'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="rhMinBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'rhMinBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="ventilationTemperatureMargin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'VentTemp'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationNormalTemperature">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilation'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationTemperatureMin">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMin'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackVentilationTemperatureMinBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighRh">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighHumidity'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighTemperature">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperature'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenCrackAtHighTemperatureBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'crackScreenHighTemperatureBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2Capacity">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2Capacity'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2Setpoint">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2Setpoint'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2VentilationThreshold">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2VentilationThreshold'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="co2VentilationBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'CO2VentilationBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="chalk">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'ShadingAgentReduction'"/>
+        </xsl:call-template>
+      </box>
+      <box name="growthLights">
+        <box name= "growthLight1">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn1'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff1'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive1'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+        <box name= "growthLight2">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn2'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff2'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive2'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+        <box name= "growthLight3">
+          <box class="PrioritySignal" name="thresholdLow">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOn3'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="thresholdHigh">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightOff3'"/>
+            </xsl:call-template>
+          </box>
+          <box class="PrioritySignal" name="setting">
+            <xsl:call-template name="extract-setpoints">
+              <xsl:with-param name="climateSetpointName" select="'AssLightActive3'"/>
+            </xsl:call-template>
+          </box>
+        </box>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThreshold1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold1'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThreshold2">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThreshold2'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenEnergyThresholdBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenEnergyThresholdBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThreshold1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold1'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThreshold2">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThreshold2'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenShadeThresholdBand">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenShadeThresholdBand'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="screenFixed1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'screenFixed1'"/>
+        </xsl:call-template>
+      </box>
+    </box>
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'ventilationThresholdBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilation'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMin'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'crackVentilationTemperatureMinBand'"/>
-    </xsl:call-template>
-    <xsl:call-template name="setpoint-reference">
-      <xsl:with-param name="setpointName" select="'chalk'"/>
-    </xsl:call-template>
-    <box name="growthLights">
-      <box class="GrowthLightController" name="growthLight1">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight1/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight1/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight1/thresholdHigh[value]"/>
-      </box>
-      <box class="GrowthLightController" name="growthLight2">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight2/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight2/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight2/thresholdHigh[value]"/>
-      </box>
-      <box class="GrowthLightController" name="growthLight3">
-        <port name="setting" ref="allSetpoints/growthLights/growthLight3/setting[value]"/>
-        <port name="lightThresholdLow" ref="allSetpoints/growthLights/growthLight3/thresholdLow[value]"/>
-        <port name="lightThresholdHigh" ref="allSetpoints/growthLights/growthLight3/thresholdHigh[value]"/>
+    <box name="heating">
+      <newPort name="value" ref="./controller[controlVariable]"/>
+      <box class="PidController" name="controller">
+        <port name="sensedValue" ref="indoors[temperature]"/>
+        <port name="desiredValue" ref="setpoints/heatingTemperature[value]"/>
+        <port name="Kprop" value="0.2"/>
+        <port name="lookAhead" value="20"/>
       </box>
     </box>
-    <box name="screens">
-      <box class="ProportionalSignal" name="energy1">
-        <port name="increasingSignal" value="FALSE"/>
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenEnergyThreshold1[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
+    <box class="OnOff" name="ventilation">
+      <port name="x" ref="controllers/heating[value]"/>
+      <port name="xOn"  value="-999"/>
+      <port name="xOff" value="0"/>
+      <port name="valueOn"  ref="./controller[controlVariable]"/>
+      <port name="valueOff" value="-0.2"/>
+      <box class="PidController" name="controller">
+        <port name="sensedValue" ref="indoors[temperature]"/>
+        <port name="desiredValue" ref="setpoints/ventilationTemperature[value]"/>
+        <port name="Kprop" value="-0.1"/>
       </box>
-      <box class="ProportionalSignal" name="energy2">
-        <port name="increasingSignal" value="FALSE"/>
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenEnergyThreshold2[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenEnergyThresholdBand[value]"/>
-      </box>
-      <box class="ProportionalSignal" name="shade1">
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenShadeThreshold1[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
-      </box>
-      <box class="ProportionalSignal" name="shade2">
-        <port name="maxSignal" value="1"/>
-        <port name="input" ref="outdoors[radiation]"/>
-        <port name="threshold" ref="allSetpoints/screenShadeThreshold2[value]"/>
-        <port name="thresholdBand" ref="allSetpoints/screenShadeThresholdBand[value]"/>
-      </box>
-      <box name="fixed1">
-        <newPort name="value" ref="allSetpoints/screenFixed1[value]"/>
+    </box>
+    <box name="co2Injection">
+      <newPort name="value" ref="./controller[controlVariable]"/>
+      <box class="PidController" name="controller">
+        <port name="sensedValue" ref="indoors/co2[value]"/>
+        <port name="desiredValue" ref="setpoints[co2Setpoint]"/>
+        <port name="Kprop" value="0.05"/>
+        <port name="lookAhead" value="10"/>
       </box>
     </box>
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
   <box class="vg::Actuators" name="actuators">
-    <box name="screens">
-      <box class="vg::Minimum" name="maxValue">
-        <port name="values" ref="./*[value]"/>
-        <box class="ProportionalSignal" name="maxAtHighRh">
-          <port name="input" ref="indoors/humidity[rh]"/>
-          <port name="threshold" ref="setpoints[rhMax]"/>
-          <port name="thresholdBand" ref="setpoints[rhMaxBand]"/>
-          <port name="initialSignal" value="1"/>
-          <port name="minSignal" ref="setpoints[maxScreenAtHighRh]"/>
-          <port name="maxSignal" value="1"/>
-          <port name="increasingSignal" value="FALSE"/>
+    <box name="heating">
+      <box class="Accumulator" name="temperature">
+        <port name="initial" ref="indoors[temperature]"/>
+        <port name="change" ref="controllers/heating[value]"/>
+        <port name="minValue" ref="indoors[temperature]"/>
+        <port name="maxValue" ref="../pipes/*[maxTemperature]" transform="max"/>
+      </box>
+      <box name="pipes">
+        <box class="vg::Pipe" name="pipe">
+          <port name="density" externalName="PipeLengthPerSqm" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="20"/>
+          <port name="diameter" externalName="InnerDiameter" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="52"/>
+          <port name="flowRate" externalName="heatPipeFlowRate" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="10"/>
+          <port name="minTemperature" externalName="CommonReturnTemperature" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="20"/>
+          <port name="maxTemperature" externalName="CommonFlowTemperature" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="85"/>
         </box>
-        <box class="ProportionalSignal" name="maxAtHighTemperature">
-          <port name="input" ref="indoors/temperature[value]"/>
-          <port name="threshold" ref="setpoints[ventilationTemperatureAtLowRh]"/>
-          <port name="thresholdBand" value="1"/>
-          <port name="initialSignal" value="1"/>
-          <port name="minSignal" ref="setpoints[maxScreenAtHighTemperature]"/>
-          <port name="maxSignal" value="1"/>
-          <port name="increasingSignal" value="FALSE"/>
+        <box class="vg::Pipe" name="pipe">
+          <port name="density" externalName="PipeLengthPerSqm" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="20"/>
+          <port name="diameter" externalName="InnerDiameter" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="52"/>
+          <port name="flowRate" externalName="heatPipeFlowRate" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="10"/>
+          <port name="minTemperature" externalName="CommonReturnTemperature" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="20"/>
+          <port name="maxTemperature" externalName="CommonFlowTemperature" source="/DVV_SETUP/Greenhouse/Heatpipes/Heatpipe/Constants/Parameters/Value" value="85"/>
         </box>
       </box>
+      <box class="EnergyFluxHeating" name="energyFlux"/>
+      </box>
+
+    <box class="Accumulator" name="ventilation">
+      <port name="initial" value="0"/>
+      <port name="change"   ref="controllers/ventilation[value]"/>
+      <port name="minValue" ref="setpoints/crackVentilation[value]"/>
+      <port name="maxValue" value="1"/>
+    </box>
+
+    <box class="Accumulator" name="co2Injection">
+      <port name="initial" value="0"/>
+      <port name="change"   ref="controllers/co2Injection[value]"/>
+      <port name="minValue"  value="0"/>
+      <port name="maxValue"  ref="setpoints[co2Capacity]"/>
+    </box>
+
+    <box name="screens">
       <xsl:call-template name="actuator-layer">
         <xsl:with-param name="layer" select="1"/>
       </xsl:call-template>
@@ -1232,58 +1299,64 @@
         <xsl:call-template name="extract-growth-light"/>
       </xsl:for-each>
     </box>
-    <box class="ProportionalSignal" name="heating">
-      <port name="initialSignal" ref="indoors/temperature[value]"/>
-      <port name="input" ref="controllers/heating[value]"/>
-      <port name="threshold" value="0"/>
-      <port name="thresholdBand" value="1"/>
-      <port name="minSignal" ref="indoors/temperature[value]"/>
-      <port name="maxSignal" externalName="None" source="Fixed">
+  </box>
+
+  <xsl:comment> *** Climate variables *** </xsl:comment>
+  <xsl:variable name="leakageName" select="'leakage'"/>
+  <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
+  <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
+  <box class="EnergyBudget" name="energyBudget">
+  </box>
+  <box class="WaterBudget" name="waterBudget">
+  </box>
+  <box class="Indoors" name="indoors">
+    <box class="vg::IndoorsVentilation" name="ventilation">
+      <port name="leakage">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$leakageName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="$heatPipeMaxTemperature"/>
+          <xsl:value-of select="$leakageValue"/>
         </xsl:attribute>
       </port>
-      <box name="pipes">
-        <xsl:for-each select="DVV_SETUP/Greenhouse/Heatpipes/Heatpipe">
-          <xsl:call-template name="extract-heat-pipe"/>
-        </xsl:for-each>
-      </box>
     </box>
   </box>
-       
+  
   <xsl:comment> *** Crop *** </xsl:comment>
   <xsl:variable name="laiName" select="'LAI'"/>
   <xsl:variable name="laiSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$laiName]/Value" as="node()"/>
   <xsl:variable name="laiValue" select="number(replace($laiSrc, ',', '.'))"/>
-  <xsl:variable name="fractionPlantAreaName" select="'propAreaCultured'"/>
-  <xsl:variable name="fractionPlantAreaSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$fractionPlantAreaName]/Value" as="node()"/>
-  <xsl:variable name="fractionPlantAreaValue" select="number(replace($fractionPlantAreaSrc, ',', '.'))"/>
+  <xsl:variable name="coverageName" select="'propAreaCultured'"/>
+  <xsl:variable name="coverageSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$coverageName]/Value" as="node()"/>
+  <xsl:variable name="coverageValue" select="number(replace($coverageSrc, ',', '.'))"/>
   <box class="vg::Crop" name="crop">
-    <box name="lai">
-      <newPort name="value">
-          <xsl:attribute name="externalName">
-            <xsl:value-of select="$laiName"/>
-          </xsl:attribute>
-          <xsl:attribute name="source">
-            <xsl:value-of select="ecolmod:generateXPath($laiSrc)"/>
-          </xsl:attribute>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$laiValue"/>
-          </xsl:attribute>
-      </newPort>
-      <newPort name="fractionPlantArea">
-          <xsl:attribute name="externalName">
-            <xsl:value-of select="$fractionPlantAreaName"/>
-          </xsl:attribute>
-          <xsl:attribute name="source">
-            <xsl:value-of select="ecolmod:generateXPath($fractionPlantAreaSrc)"/>
-          </xsl:attribute>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$fractionPlantAreaValue"/>
-          </xsl:attribute>
-      </newPort>
-    </box>
+    <port name="lai">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$laiName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($laiSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$laiValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="coverage">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$coverageName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($coverageSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$coverageValue"/>
+        </xsl:attribute>
+    </port>
   </box>
+  <xsl:comment> *** Budget *** </xsl:comment>
   <box class="vg::Budget" name="budget"/>
   <xsl:comment> *** Output *** </xsl:comment>
   <box class="OutputR" name="output">
@@ -1295,64 +1368,57 @@
       <newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
       <newPort name="outdoorsLight" ref="outdoors[radiation]"/>
       <newPort name="indoorsCo2" ref="indoors/co2[value]"/>
-      <newPort name="indoorsT" ref="indoors/temperature[value]"/>
+      <newPort name="indoorsT" ref="indoors[temperature]"/>
       <newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
-      <newPort name="growthLightPower" ref="actuators/growthLights[powerUsage] "/>
-      <newPort name="heatingPower" ref="controlled/heating/energyFlux[value] "/>
-      <newPort name="coolingPower" ref="controlled/cooling/energyFlux[value]"/>
-      <newPort name="growthLightIntensity" ref="actuators/growthLights[parIntensity]"/>
-      <newPort name="totalLightIntensity" ref="indoors/light[parTotal]"/>
-      <newPort name="netPhotosynthesisRate" ref="crop/Pn[value]"/>
-      <newPort name="rhSetpoint" ref="setpoints[rhMax]"/>
-      <newPort name="setpointHeating" ref="setpoints[heatingTemperatureAtLowRh]"/>
-      <newPort name="setpointVentilation" ref="setpoints[ventilationTemperatureMargin]"/>
-      <newPort name="setpointHeatingRhIncrement" ref="setpoints[heatingTemperatureMargin]"/>
-      <newPort name="setpointVentilationRhDecrement" ref="setpoints[ventilationTemperatureRhMargin]"/>
-      <newPort name="demandVentilationAtHighRh" ref="setpoints[ventilationTemperatureAtHighRh]"/>
-      <newPort name="demandVentilationAtLowRh"  ref="setpoints[ventilationTemperatureAtLowRh]"/>
-      <newPort name="demandHeatingAtHighRh" ref="setpoints[heatingTemperatureAtHighRh]"/>
-      <newPort name="demandHeatingAtLowRh"  ref="setpoints[heatingTemperatureAtLowRh]"/>
-			<newPort name="demandVentilation" ref="setpoints/temperature/ventilation[value]"/>
-      <newPort name="demandHeating" ref="setpoints/temperature/heating[value]"/>
-      <newPort name="demandScreenLayer1" ref="actuators/screens/layer1[value]"/>
-      <newPort name="demandScreenLayer2" ref="actuators/screens/layer2[value]"/>
-      <newPort name="demandScreenLayer3" ref="actuators/screens/layer3[value]"/>
-      <newPort name="co2Setpoint" ref="allSetpoints/co2Setpoint[signal]"/>
-      <newPort name="co2Capacity" ref="allSetpoints/co2Capacity[signal]"/>
-      <newPort name="co2Injection" ref="controllers/co2[value]"/>
-      <newPort name="co2InjectionMax" ref="controllers/co2[maxValue]"/>
-      <newPort name="vapourFluxTranspiration" ref="indoors/given/vapourFlux/transpiration[vapourFlux]"/>
-      <newPort name="vapourFluxCondensationCover" ref="indoors/given/vapourFlux/condensationCover[vapourFlux]"/>
-      <newPort name="vapourFluxCondensationsScreens" ref="indoors/given/vapourFlux/condensationScreens[vapourFlux]"/>
-      <newPort name="vapourFluxLeakage" ref="indoors/given/vapourFlux/airFluxOutdoors[vapourFlux]"/>
-      <newPort name="vapourFluxVents" ref="cooling/vapourFlux[vapourFlux]"/>
-      <newPort name="airFluxInfiltration" ref="given/airFlux/infiltration[value]"/>
-      <newPort name="airFluxVents" ref="controlled/cooling/airFluxVents[value]"/>
-      <newPort name="airFluxTotal" ref="total/airFlux[value]"/>
-      <newPort name="growthLightOn1" ref="actuators/growthLights/growthLight1[on]"/>
-      <newPort name="growthLightOn2" ref="actuators/growthLights/growthLight2[on]"/>
-      <newPort name="growthLightOn3" ref="actuators/growthLights/growthLight3[on]"/>
-      <newPort name="ventsOpening" ref="actuators/vents[value]"/>
-      <newPort name="screenEnergyThreshold1" ref="controllers/screens/energy1[threshold]"/>
-      <newPort name="screenEnergyThreshold2" ref="controllers/screens/energy2[threshold]"/>
-      <newPort name="screenShadeThreshold1" ref="controllers/screens/shade1[threshold]"/>
-      <newPort name="screenShadeThreshold2" ref="controllers/screens/shade2[threshold]"/>
-      <newPort name="screenEnergy1" ref="controllers/screens/energy1[value]"/>
-      <newPort name="screenEnergy2" ref="controllers/screens/energy2[value]"/>
-      <newPort name="screenShade1" ref="controllers/screens/shade1[value]"/>
-      <newPort name="screenShade2" ref="controllers/screens/shade2[value]"/>
-      <newPort name="screenFixed1" ref="controllers/screens/fixed1[value]"/>
-      <newPort name="screenMax" ref="actuators/screens/maxValue[value]"/>
-      <newPort name="ventTransmissivity" ref="shelter/roof1/vent[transmissivity]"/>
-      <newPort name="grossPhotosynthesisRate" ref="crop/Pg[value]"/>
-      <newPort name="darkRespirationRate" ref="crop/Rd[value]"/>
+      <newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
+
+      <newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/>
+      <newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/>
+      <newPort name="spRhMax" ref="setpoints[rhMax]"/>
+      <newPort name="spRhMin" ref="setpoints[rhMin]"/>
+      <newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/>
+      <newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/>
+      <newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/>
+      <newPort name="spScreenShadeThreshold1"  ref="setpoints[screenShadeThreshold1]"/> 
+      <newPort name="spScreenShadeThreshold2"  ref="setpoints[screenShadeThreshold2]"/>
+      <newPort name="spScreenFixed1"            ref="setpoints[screenFixed1]"/>
+      <newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/>
+      <newPort name="spScreenShadeThresholdBand"  ref="setpoints[screenShadeThresholdBand]"/>
+      <newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/>
+      <newPort name="spCo2" ref="setpoints[co2Setpoint]"/>
+      
+      <newPort name="actHeatingPower" ref="actuators/heating/energyFlux[value]"/>
+      <newPort name="actVentilation" ref="actuators/ventilation[value]"/>
+      <newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/>
+      <newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/>
+      <newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/>
+      <newPort name="actLightPower" ref="actuators/growthLights[powerUsage]"/>
+      <newPort name="actLightPar" ref="actuators/growthLights[parFluxDown]"/>
+      <newPort name="actScreen1" ref="actuators/screens/layer1[value]"/>
+      <newPort name="actScreen2" ref="actuators/screens/layer2[value]"/>
+      <newPort name="actScreen3" ref="actuators/screens/layer3[value]"/>
+      <newPort name="actCo2" ref="actuators/co2Injection[value]"/>
+      
+      <newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/>
+      <newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/>
+      <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/> 
+      <newPort name="airFluxInfiltration" ref="indoors/ventilation[dueToLeakage]"/>
+      <newPort name="airFluxVents" ref="indoors/ventilation[dueToVents]"/>
+      <newPort name="airFluxTotal" ref="indoors/ventilation[value]"/>
+
+      <newPort name="coolingPower" ref="indoors[advectiveEnergyFlux]"/>
+      <newPort name="Uinside" ref="energyBudget[Uinside]"/>
+      <newPort name="Uoutside" ref="energyBudget[Uoutside]"/>
+      <newPort name="heatingEnergy" ref="budget[heatingEnergyTotal]"/>
+            
+      <newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/>
+      <newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/>
+      <newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/>
       <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-      <newPort name="leafLightUseEfficiencyTop" ref="crop/layers/top/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyMiddle" ref="crop/layers/middle/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafLightUseEfficiencyBottom" ref="crop/layers/bottom/photosynthesis/lightResponse[LUE]"/>
-      <newPort name="leafTemperatureTop"    ref="crop/layers/top/temperature[value]"/>
-      <newPort name="leafTemperatureMiddle" ref="crop/layers/middle/temperature[value]"/>
-      <newPort name="leafTemperatureBottom" ref="crop/layers/bottom/temperature[value]"/>    
+      <newPort name="leafLightUseEfficiency" ref="crop/photosynthesis[lue]"/>
+      <newPort name="leafTemperature"    ref="crop/temperature[value]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

@@ -21,6 +21,7 @@ HEADERS +=  \
     chalk.h \
     controlled.h \
     controllers.h \
+    controller_ventilation_combined.h \
     cover.h \
     crop.h \
     crop_development.h \
@@ -61,6 +62,7 @@ HEADERS +=  \
     indoors_humidity.h \
     indoors_light.h \
     indoors_temperature.h \
+    indoors_ventilation.h \
     indoors_wind_speed.h \
     leaf_light_response.h \
     leaf_light_response_processes.h \
@@ -83,7 +85,6 @@ HEADERS +=  \
     setpoint_heating.h \
     setpoint_ventilation.h \
     shelter.h \
-    shelter_base.h \
     shelter_face.h \
     shelter_face_area.h \
     shelter_integration.h \
@@ -104,8 +105,6 @@ HEADERS +=  \
     vapour_flux_ventilation.h \
     vent.h \
     ventilated_latent_heat_converter.h \
-    ventilation_net.h \
-    ventilation_total.h \
     water_budget.h
 
 SOURCES += \
@@ -121,6 +120,7 @@ SOURCES += \
     chalk.cpp \
     controlled.cpp \
     controllers.cpp \
+    controller_ventilation_combined.cpp \
     cover.cpp \
     crop.cpp \
     crop_development.cpp \
@@ -149,6 +149,7 @@ SOURCES += \
     indoors_humidity.cpp \
     indoors_light.cpp \
     indoors_temperature.cpp \
+    indoors_ventilation.cpp \
     indoors_wind_speed.cpp \
     leaf_light_response.cpp \
     leaf_light_response_processes.cpp \
@@ -183,7 +184,6 @@ SOURCES += \
     setpoint_heating.cpp \
     setpoint_ventilation.cpp \
     shelter.cpp \
-    shelter_base.cpp \
     shelter_face.cpp \
     shelter_face_area.cpp \
     shelter_integration.cpp \
@@ -204,6 +204,4 @@ SOURCES += \
     vapour_flux_ventilation.cpp \
     vent.cpp \
     ventilated_latent_heat_converter.cpp \
-    ventilation_net.cpp \
-    ventilation_total.cpp \
     water_budget.cpp

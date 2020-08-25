@@ -12,6 +12,8 @@
 #include <base/vector_op.h>
 #include "screens_air_transmissivity.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 using namespace TestNum;
 using namespace vector_op;
@@ -24,10 +26,10 @@ ScreensAirTransmissivity::ScreensAirTransmissivity(QString name, QObject *parent
     : Box(name, parent)
 {
     help("computes total air transmissivity through screens");
-    Input(states).imports("../screens/*[state]").unit("[0;1]");
-    Input(transmissivities).imports("../screens/*[transmissivityAir]").unit("[0;1]");
+    Input(states).imports("../*[state]").unit("[0;1]");
+    Input(transmissivities).imports("../*[transmissivityAir]").unit("[0;1]");
 
-    Output(value).noReset().help("total air transmissivity").unit("[0;1]");
+    Output(value).help("total air transmissivity").unit("[0;1]");
 }
 
 void ScreensAirTransmissivity::reset() {
@@ -79,6 +81,17 @@ void ScreensAirTransmissivity::update() {
         double additive = unscreened + sum(prod)*(1-unscreened)/sum_st;
         value = overlap*(multiplicative - additive) + additive;
     }
+//    if (fullName().contains("screens/airTransmissivity")) {
+//        QString s(fullName() + "\nStates: ");
+//        for (double x : states)
+//            s += QString::number(x) + " ";
+//        s += "\nTrans: ";
+//        for (double x : transmissivities)
+//            s += QString::number(x) + " ";
+//        s += "\nValue: " + QString::number(value);
+
+//        dialog().information(s);
+//    }
 }
 
 } //namespace

@@ -17,10 +17,9 @@ public:
     ScreenRoof(QString name, QObject *parent);
 private:
     // Input
-    double groundArea, roofHeight;
+    double groundArea;
     // Methods
     double computeMaxArea();
-    double computeDepth();
 };
 
 } //namespace

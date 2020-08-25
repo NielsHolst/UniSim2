@@ -35,7 +35,10 @@ void HeatTransferPipe::reset() {
 
 void HeatTransferPipe::update() {
     // Spread the flux equally upwards and downwards
-    lwFluxDown = lwFluxUp = energyFlux/2.;
+//    lwFluxDown = lwFluxUp = energyFlux/2.;
+    // Send it all down
+    lwFluxDown = energyFlux;
+    lwFluxUp = 0.;
 }
 
 } //namespace

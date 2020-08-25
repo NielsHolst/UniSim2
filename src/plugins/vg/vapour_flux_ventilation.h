@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Inputs
-    double ventilationTotal, averageHeight,
+    double timeStep, airInflux, groundArea,
       outdoorsAh, indoorsAh;
 };
 } //namespace

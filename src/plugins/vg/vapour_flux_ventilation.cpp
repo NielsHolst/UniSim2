@@ -19,14 +19,15 @@ VapourFluxVentilation::VapourFluxVentilation(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux through air exchange");
-    Input(ventilationTotal).imports("ventilation/total[value]",CA);
-    Input(averageHeight).imports("geometry[averageHeight]",CA);
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(airInflux).imports("indoors/ventilation[absolute]", CA).unit("m3");
+    Input(groundArea).imports("geometry[groundArea]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]",CA);
     Input(outdoorsAh).imports("outdoors[ah]",CA);
 }
 
 void VapourFluxVentilation::update() {
-    conductance = averageHeight*ventilationTotal/3600.;  // m/s
+    conductance = airInflux/groundArea/timeStep;         // m/s = m3/m2/s
     vapourFlux = conductance*(outdoorsAh-indoorsAh);     // kg/m2/s = m/s * kg/m3
     gain = conductance*outdoorsAh;                       // kg/m2/s = m/s * kg/m3
 }

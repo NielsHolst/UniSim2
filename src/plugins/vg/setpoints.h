@@ -28,8 +28,6 @@ private:
         rhMaxBand,
         rhMin,
         rhMinBand,
-        temperatureMax,
-        temperatureMaxBand,
         ventilationTemperatureMargin,
         crackVentilationNormalTemperature,
         crackVentilationTemperatureMin,

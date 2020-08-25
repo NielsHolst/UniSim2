@@ -63,6 +63,18 @@ void multiply(Vec &v, const Scalar &x) {
         *receiver++ *= x;
 }
 
+void inverse(Vec &v, const Vec &x, QObject *context_) {
+    int i = 0, n = v.size();
+    CHECK_SIZE(x);
+    double *receiver = v.data();
+    const double *sender = x.data();
+    while (i++ < n) {
+        *receiver++ = 1./(*sender);
+        sender++;
+    }
+}
+
+
 //
 // Binary
 //

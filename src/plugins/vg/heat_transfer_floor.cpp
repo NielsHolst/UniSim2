@@ -28,8 +28,8 @@ HeatTransferFloor::HeatTransferFloor(QString name, QObject *parent)
     port("lwReflectivityTop")->equals(0.4);
     port("lwReflectivityBottom")->equals(0.4);
     port("Utop")->equals(7.5);
-    port("Ubottom")->equals(7.5);
-    port("specificHeatCapacity")->equals(42000.);
+    port("Ubottom")->equals(0.1);
+    port("heatCapacity")->equals(42000.);
     port("area")->imports("construction/geometry[groundArea]",CA);
 }
 

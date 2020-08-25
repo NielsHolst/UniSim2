@@ -1,6 +1,9 @@
-set VERSION=2.3.20
-set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
-REM set QT_PATH=C:\Qt\5.9.2\mingw53_32
+echo on
+cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig
+
+set VERSION=2.3.22
+REM set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
+set QT_PATH=C:\Qt\5.9.2\mingw53_32
 set PATH=C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig\
 
 set IGLIB_BIN=iglib\bin
@@ -37,6 +40,8 @@ copy ..\..\..\bin\universal_simulator_base.dll %IGLIB_BIN%
 
 echo = Copy Qt library folders =
 pushd %QT_PATH%
+pause
+
 copy plugins\imageformats\*.* %IGLIB_BIN_IMAGEFORMATS%
 copy plugins\platforms\*.* %IGLIB_BIN_PLATFORMS%
 

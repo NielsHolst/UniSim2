@@ -18,11 +18,9 @@ namespace vg {
 PUBLISH(Shelter)
 
 Shelter::Shelter(QString name, QObject *parent)
-    : ShelterBase(name, parent)
+    : Box(name, parent)
 {
     help("models the greenhouse shelter");
-    Input(screenVolumes).imports("./*/screens/*/airSpace[volume]");
-    Output(volumeBehindScreens).help("Total volume behind screens").unit("m3");
 }
 
 void Shelter::amend() {
@@ -39,14 +37,5 @@ void Shelter::amendShelter(BoxBuilder &builder, QString shelterName) {
     if (!findMaybeOne<Box>("./" + shelterName))
         builder.box("ShelterFace").name(shelterName).endbox();
 }
-
-void Shelter::reset() {
-    update();
-}
-
-void Shelter::update() {
-    volumeBehindScreens = vector_op::sum(screenVolumes);
-}
-
 } //namespace
 

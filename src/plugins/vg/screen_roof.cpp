@@ -19,7 +19,6 @@ ScreenRoof::ScreenRoof(QString name, QObject *parent)
 {
     help("models a screen towards the roof");
     Input(groundArea).imports("construction/geometry[groundArea]",CA);
-    Input(roofHeight).imports("construction/geometry[roofHeight]",CA);
 }
 
 double ScreenRoof::computeMaxArea() {
@@ -27,13 +26,6 @@ double ScreenRoof::computeMaxArea() {
     // we assume a horizontal roof screen
     return groundArea/2.;
 }
-
-double ScreenRoof::computeDepth() {
-    // First air space below the roof always uses half of the roof height for its depth
-    // (thus assuming a horizontal roof screen)
-    return roofHeight/2.;
-}
-
 
 } //namespace
 

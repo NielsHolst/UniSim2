@@ -17,11 +17,7 @@ PUBLISH(HeatTransferCover)
 HeatTransferCover::HeatTransferCover(QString name, QObject *parent)
     : HeatTransferShelter(name, parent, "shelter/*/cover")
 {
-    help("holds the radiative parameters of the whole cover");
-    /* density of glass       = 2.5kg per m2 per mm of thickness => 10 kg glass/m2
-     * heat capacity of glass = 0.84 J/g/K = 840 J/kg/K = 8400 J/m2/K
-    */
-    port("specificHeatCapacity")->equals(8400.);
+    help("holds the radiative parameters of the greenhouse cover averaged for all shelter faces");
     port("condensationRate")->imports("waterBudget/condensationCover[vapourFlux]");
 }
 

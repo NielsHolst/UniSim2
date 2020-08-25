@@ -173,10 +173,11 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     QString s;
     switch (event->key()) {
     case Qt::Key_L:
-        event->accept();
+//        event->accept();
+//        restoreFont();
         Command::submit(QStringList() << "clear", this);
-        handleEscKey();
-        restoreFont();
+//        handleEscKey();
+
 //        event->accept();
 //        moveCursor(QTextCursor::End);
 //        cursor = getCursor();

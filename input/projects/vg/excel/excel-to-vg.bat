@@ -1,3 +1,4 @@
-REM \Users\au152367\Documents\QDev\AltovaXML /xslt2 "C:\Users\au152367\Documents\QDev\UniSim2\input\scripts\excel-to-vg.xsl" /in 2019-11-15-vent1.xml /out 2019-11-15-vent1-transformed.xml
-\Users\au152367\Documents\QDev\AltovaXML /xslt2 "C:\Users\au152367\Documents\QDev\UniSim2\input\scripts\excel-to-vg.xsl" /in 2019-11-15-vent10.xml /out 2019-11-15-vent10-transformed.xml
+\Users\au152367\Documents\QDev\AltovaXML /xslt2 "C:\Users\au152367\Documents\QDev\UniSim2\input\scripts\excel-to-vg.xsl" /in 2020-08-19-NoScreen2.xml /out 2020-08-19-NoScreen2-transformed.xml
+\Users\au152367\Documents\QDev\AltovaXML /xslt2 "C:\Users\au152367\Documents\QDev\UniSim2\input\scripts\excel-to-vg.xsl" /in 2020-08-19-Harmony3315.xml /out 2020-08-19-Harmony3315-transformed.xml
+\Users\au152367\Documents\QDev\AltovaXML /xslt2 "C:\Users\au152367\Documents\QDev\UniSim2\input\scripts\excel-to-vg.xsl" /in 2020-08-19-Lux1547.xml /out 2020-08-19-Lux1547-transformed.xml
 pause

@@ -8,6 +8,7 @@
 #include <base/box_builder.h>
 #include <base/convert.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include <base/vector_op.h>
 #include "heat_transfer_volume.h"
 #include "heat_transfer_layer_base.h"
@@ -95,7 +96,6 @@ QString EnergyBudget::toString() const {
     for (HeatTransferLayerBase *layer : stack)
         s += "\n" + layer->objectName().leftJustified(12) + toString(layer);
     s += "\n" + QString().fill(' ', 12) + airLabels;
-    s += "\n" + airSpaceScreened->objectName().leftJustified(12) + toString(airSpaceScreened);
     s += "\n" + airSpaceRoom    ->objectName().leftJustified(12) + toString(airSpaceRoom);
     return s;
 }
@@ -105,13 +105,16 @@ EnergyBudget::EnergyBudget(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("distributes radiation among layers");
-    Input(groundArea).imports("construction/geometry[groundArea]",CA);
-    Input(screenedVolume).imports("construction/geometry[screenedVolume]");
-    Input(roomVolume).imports("construction/geometry[roomVolume]");
+    Input(greenhouseVolume).imports("construction/geometry[volume]",CA);
+    Input(roomTemperature).imports("indoors[temperature]",CA);
     Input(cropCoverage).imports("crop[coverage]",CA);
     Input(withCrop).equals(true).unit("bool").help("Layers over crop?");
+    Input(keepConstantScreenTemperature).equals(false).unit("bool").help();
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(soilTemperature).imports("outdoors[soilTemperature]");
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Output(Uinside).help("Total inside U-value (cover inside + screens)").unit("W/K/m2 ground");
+    Output(Uoutside).help("Total outside U-value (cover outside").unit("W/K/m2 ground");
 }
 
 void EnergyBudget::amend() {
@@ -144,19 +147,7 @@ void EnergyBudget::amend() {
     endbox().
     box("HeatTransferFloor").name("floor").
     endbox().
-    box().name("airSpaces").
-        box("HeatTransferVolume").name("screened").
-            port("volume").imports("construction/geometry[screenedVolume]", CA).
-            port("outdoorsInfluxVolume").imports("ventilation/net[screened]", CA).
-            port("neighbourInfluxVolume").imports("construction/geometry[screenedVolumeChange]", CA).
-            port("neighbourTemperature").imports("../indoors[temperature]", CA).
-        endbox().
-        box("HeatTransferVolume").name("indoors").
-            port("volume").imports("construction/geometry[roomVolume]", CA).
-            port("outdoorsInfluxVolume").imports("ventilation/net[room]", CA).
-            port("neighbourInfluxVolume").imports("construction/geometry[roomVolumeChange]", CA).
-            port("neighbourTemperature").imports("../screened[temperature]", CA).
-        endbox().
+    box("HeatTransferVolume").name("indoors").
     endbox();
 }
 
@@ -187,8 +178,7 @@ void EnergyBudget::reset() {
           << findOne<HeatTransferLayerBase>("./crop")
           << findOne<HeatTransferLayerBase>("./floor");
 
-    airSpaceScreened = findOne<HeatTransferVolume>("./airSpaces/screened");
-    airSpaceRoom     = findOne<HeatTransferVolume>("./airSpaces/indoors");
+    airSpaceRoom     = findOne<HeatTransferVolume>("./indoors");
 
     update();
 }
@@ -204,9 +194,12 @@ void EnergyBudget::update() {
         stack[i]->absorbed = stack.at(i)->swAbsorbed + stack.at(i)->lwAbsorbed;
     }
     distributeHeatByConvectionAndConduction();
+    if (keepConstantScreenTemperature)
+        transferScreenHeatToRoom();
 }
 
 void EnergyBudget::distributeParRadiation() {
+    LOG("distributeParRadiation");
     int n = stack.size();
     Vec a(n), r(n), t(n), a_(n), r_(n), t_(n),
         I(n), I_(n), A(n), A_(n);
@@ -219,7 +212,6 @@ void EnergyBudget::distributeParRadiation() {
         t_[i] = stack.at(i)->swTransmissivityBottom;
         I[i]  = stack.at(i)->parFluxDown;
         I_[i] = stack.at(i)->parFluxUp;
-        LOG("I1:   " + QString::number(I.at(i)));
     }
     distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
     for (int i=0; i<n; ++i) {
@@ -232,6 +224,7 @@ void EnergyBudget::distributeParRadiation() {
 }
 
 void EnergyBudget::distributeSwRadiation() {
+    LOG("distributeSwRadiation");
     int n = stack.size();
     Vec a(n), r(n), t(n), a_(n), r_(n), t_(n),
         I(n), I_(n), A(n), A_(n);
@@ -256,6 +249,7 @@ void EnergyBudget::distributeSwRadiation() {
 }
 
 void EnergyBudget::distributeLwRadiation() {
+    LOG("distributeLwRadiation");
     int n = stack.size();
     Vec a(n), r(n), t(n), a_(n), r_(n), t_(n),
         I(n), I_(n), A(n), A_(n);
@@ -398,77 +392,79 @@ inline double powdiff(double Tdiff) {
     return pow(fabs(Tdiff), 0.33)*Tdiff;
 }
 
+inline double DeltaT(double U, double heatCapacity, double T0, double Troom, double dt) {
+    if (TestNum::eq(T0,Troom) || TestNum::eqZero(heatCapacity)) return 0.;
+    double a = U/heatCapacity;
+    const double c = 1.33;
+    double dT = pow((a*(c-1)*dt + pow(fabs(Troom-T0), 1-c)), 1/(1 - c));
+    // Return a positive DeltaT Troom > T0 else a negative DeltaT
+    return (Troom > T0) ? Troom - T0 - dT : Troom - T0 + dT;
+}
+
+inline double DeltaHeat(double U, double heatCapacity, double T0, double Troom, double dt) {
+    // W/m2 = K * J/K/m2 / s
+    return DeltaT(U, heatCapacity,T0,Troom,dt)*heatCapacity/dt;
+}
+
 void EnergyBudget::distributeHeatByConvectionAndConduction() {
-    // Accumulators for total heat loss from screened and room volumes
-    double totalHeatFromScreened = 0.,
-           totalHeatFromRoom     = 0.;
+    // All m2 are m2 ground
 
-    // Convection at cover to outdoors and to screened volume
-    double propScreened = screenedVolume/(screenedVolume+roomVolume);
+    // Accumulators for total heat loss from room
+    double totalHeatFromRoom     = 0.;
+
+    // Convection at both sides of cover to outside or room
     HeatTransferLayerBase *cover = stack[1];
-    // W/m2 surface = W/m2/K * K
-    double heatFromOuterToCover    = cover->Utop   *(outdoorsTemperature - cover->temperature),
-           heatFromScreenedToCover = cover->Ubottom*powdiff(airSpaceScreened->temperature - cover->temperature)*propScreened,
-           heatFromRoomToCover     = cover->Ubottom*powdiff(airSpaceRoom->temperature     - cover->temperature)*(1.-propScreened),
-           totalHeatToCover        = heatFromOuterToCover + heatFromScreenedToCover;
-    // W = W/m2 * m2
-    totalHeatFromScreened          += heatFromScreenedToCover*cover->area;
-    totalHeatFromRoom              += heatFromRoomToCover;
-    LOG(QString("A totalHeatFromScreened %1 W").arg(totalHeatFromScreened));
-    QString s("Test %1 %2 %3 %4");
-    LOG(s.arg(cover->Ubottom).arg(airSpaceScreened->temperature).arg(cover->temperature).arg(cover->area));
-
-    // Convection at both sides of screens (excluding the innermost) to screened volume
-    int numScreens = screens.size();
-    QVector<double> totalHeatToScreen(numScreens);
-    for (int i=0; i<numScreens-1; ++i) {
-        // W/m2 surface = W/m2/K * K
-        double heat = (screens.at(i)->Utop + screens.at(i)->Ubottom)*powdiff(airSpaceScreened->temperature - screens.at(i)->temperature);
-        totalHeatToScreen[i]   = heat;
-        // W = W/m2 * m2
-        totalHeatFromScreened += heat*screens.at(i)->area;
-        LOG(QString("B%1 totalHeatFromScreened %2").arg(i).arg(totalHeatFromScreened));
+    // Total U of cover + screens
+    double Rtot = 1./cover->Ubottom;
+    for (HeatTransferLayerBase *screen : screens) {
+        Rtot += 2./(screen->Utop + screen->Ubottom);
     }
+    Uinside = 1./Rtot;
+    Uoutside = cover->Utop;
+    // W/m2 = W/m2/K * K
+    double heatFromOuterToCover = Uoutside*       (outdoorsTemperature - cover->temperature),
+           heatFromRoomToCover  = Uinside *powdiff(roomTemperature - cover->temperature);
+    cover->convectiveInflux     = heatFromOuterToCover + heatFromRoomToCover;
+    totalHeatFromRoom           += heatFromRoomToCover;
 
-    // Convection at innermost screen to screened volume and room volume
-    int i = numScreens-1;
-    // W/m2 surface = W/m2/K * K
-    double heatFromScreenedToScreen  = screens.at(i)->Utop   *powdiff(airSpaceScreened->temperature - screens.at(i)->temperature),
-           heatFromRoomToScreen      = screens.at(i)->Ubottom*powdiff(airSpaceRoom->temperature - screens.at(i)->temperature);
-    totalHeatToScreen[i]   = heatFromScreenedToScreen + heatFromRoomToScreen;
-    // W = W/m2 * m2
-    totalHeatFromScreened += heatFromScreenedToScreen*screens.at(i)->area;
-    totalHeatFromRoom     += heatFromRoomToScreen    *screens.at(i)->area;
-    LOG(QString("C totalHeatFromScreened %1").arg(totalHeatFromScreened));
-    LOG(QString("A totalHeatFromRoom %1").arg(totalHeatFromRoom));
+    if (!keepConstantScreenTemperature) {
+        // Convection at both sides of screens to room
+        for (HeatTransferLayerBase *screen : screens) {
+            // W/m2 surface = W/m2/K * K
+            double U = screen->Utop + screen->Ubottom,
+                   heat = DeltaHeat(U, screen->heatCapacity, screen->temperature, roomTemperature, timeStep);
+            screen->convectiveInflux = heat;
+            totalHeatFromRoom += heat;
+        }
+    }
 
     // Convection between floor, and room volume and soil
     HeatTransferLayerBase *floor = stack.last();
     // W/m2 ground = W/m2/K * K
     double heatFromRoomToFloor = floor->Utop*powdiff(airSpaceRoom->temperature - floor->temperature),
            heatFromSoilToFloor = floor->Ubottom*(soilTemperature - floor->temperature);
-    // W = W/m2 * m2
-    totalHeatFromRoom         += heatFromRoomToFloor*floor->area;
+    totalHeatFromRoom += heatFromRoomToFloor;
     LOG(QString("B totalHeatFromRoom %1").arg(totalHeatFromRoom));
 
-    // Transfer energy to layers (W/m2 surface)
-    cover->convectiveInflux = totalHeatToCover;
-    LOG(QString("Z totalHeatToCover %1").arg(totalHeatToCover));
-    for (int i=0; i<numScreens; ++i) {
-        screens[i]->convectiveInflux = totalHeatToScreen.at(i);
-        LOG(QString("Z%1 totalHeatToScreen %2").arg(i).arg(totalHeatToScreen.at(i)));
-    }
     // W/m2 ground
     floor->convectiveInflux = heatFromRoomToFloor;
     floor->conductiveInflux = heatFromSoilToFloor;
     LOG(QString("Z heatFromRoomToFloor %1").arg(heatFromRoomToFloor));
     LOG(QString("Z heatFromSoilToFloor %1").arg(heatFromSoilToFloor));
     // Transfer energy to air volumes (W)
-    airSpaceScreened->convectiveInflux = -totalHeatFromScreened;
     airSpaceRoom->convectiveInflux     = -totalHeatFromRoom;
 }
 
-//}
+void EnergyBudget::transferScreenHeatToRoom() {
+    // Give up on heat transfer to screens
+    for (HeatTransferLayerBase *screen : screens) {
+        airSpaceRoom->convectiveInflux += screen->absorbed;
+        screen->  absorbed =
+        screen->swAbsorbed =
+        screen->lwAbsorbed = 0.;
+    }
+}
+
 
 } //namespace
 

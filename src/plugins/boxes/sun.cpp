@@ -18,7 +18,6 @@ using namespace phys_math;
 namespace boxes {
 
 constexpr double RAD = PI/180.;
-constexpr double DEGREES = 1./RAD;
 
 PUBLISH(Sun)
 
@@ -55,7 +54,7 @@ void Sun::update() {
     if (aob > 1) aob = 1.;
     if (aob < -1) aob = -1.;
     dayLength = 12.*(1. + 2.*asin(aob)/PI);
-    int halfDay = dayLength/2.*60*60;
+    int halfDay = dayLength/2.*60.*60.;
     sunrise = QTime(12,00).addSecs(-halfDay); // Shouldn't solar noon be used?
     sunset = QTime(12,00).addSecs(halfDay);
 

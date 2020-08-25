@@ -8,11 +8,11 @@
 #ifndef SHELTER_FACE_H
 #define SHELTER_FACE_H
 
-#include "shelter_base.h"
+#include "base/box.h"
 
 namespace vg {
 
-class ShelterFace : public ShelterBase
+class ShelterFace : public base::Box
 {
 public:
     ShelterFace(QString name, QObject *parent);

@@ -18,7 +18,7 @@ public:
     VapourFluxCondensationScreenBase(QString name, QObject *parent, int layer);
     void update();
 private:
-    double screenTemperature, screenedTemperature, roomTemperature, indoorsAh,
+    double screenTemperature, indoorsTemperature, indoorsAh,
         groundArea;
     QVector<double> screenAreas;
 };

@@ -1,0 +1,17 @@
+#define RANDOMISER = RandomiserStratified
+Simulation sim {
+  .iterations = 1
+  .steps =  273 // end of september
+  .silent = FALSE
+  Box settings {
+    +doSensitivityAnalysis = FALSE
+  }
+  #include "0-aphid-fungus-the-model.box" 
+  OutputR {
+    .end = "1-end.R"
+    .destinationFolder = output[destinationFolder]
+    OutputText {
+      .ports = (calendar[date] system/*/density[total] cadavers[content] cropGrowthStage[value] yield[loss])
+    }
+  }  
+}

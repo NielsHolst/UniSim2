@@ -17,14 +17,14 @@ namespace vg {
 PUBLISH(ShelterFace)
 
 ShelterFace::ShelterFace(QString name, QObject *parent)
-    : ShelterBase(name, parent)
+    : Box(name, parent)
 {
     help("models a shelter face");
 }
 
 void ShelterFace::amend() {
     if (!findMaybeOne<Box>("./area"))
-        ThrowException("Shelter face must have an area child box").context(this);
+        ThrowException("Shelter face must have an 'area' child box").context(this);
     BoxBuilder builder(this);
     if (!findMaybeOne<Box>("./cover"))
         builder.box("Cover").name("cover").endbox();

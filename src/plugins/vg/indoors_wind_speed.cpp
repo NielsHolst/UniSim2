@@ -20,9 +20,8 @@ IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors wind speed");
-    Input(ventilation).imports("ventilation/total[value]",CA).unit("m3/m3/h");
-    Input(indoorsVolumeTotal).imports("geometry[indoorsVolumeTotal]",CA).unit("m");
-    Input(groundArea).imports("geometry[width]",CA).unit("m");
+    Input(ventilation).imports("indoors/ventilation[relative]",CA).unit("m3/m3/h");
+    Input(averageHeight).imports("geometry[volume]",CA).unit("m");
     Input(minimumValue).equals(0.1).help("Lower bound on value").unit("m/s");
     Output(value).help("Indoors wind speed [m/s]").unit("m/s");
 }
@@ -32,7 +31,7 @@ void IndoorsWindSpeed::reset() {
 }
 
 void IndoorsWindSpeed::update() {
-    value = max(ventilation*indoorsVolumeTotal/groundArea/3600., minimumValue); // m/s = h-1 * m3/m2 *  h/s
+    value = max(ventilation*averageHeight/3600., minimumValue); // m/s = h-1 * m *  h/s
 }
 
 } //namespace

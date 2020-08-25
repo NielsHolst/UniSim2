@@ -28,6 +28,8 @@ private:
     // Inputs
     bool skipFormats, useLocalDecimalChar;
     int skipInitialRows, averageN;
+    // Outputs
+    QString filePath;
     // Data
     bool _isCondensed;
     int _rowCount;

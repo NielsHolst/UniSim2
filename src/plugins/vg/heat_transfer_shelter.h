@@ -27,12 +27,19 @@ private:
         lwTransmissivityTopShelter, lwTransmissivityBottomShelter,
         lwAbsorptivityTopShelter,   lwAbsorptivityBottomShelter,
         UtopShelter, UbottomShelter,
-        areaShelter;
+        areaShelter, heatCapacityShelter;
+    double groundArea, coverPerGroundArea;
     // Output
     int numFaces;
+    // Data
+    QVector<double> R_;
 protected:
+    // Inputs
+    double indoorsTemperature;
     // Methods
+    void updateLwEmission();
     void updateArea();
+    void updateHeatCapacity();
     void updateRadiativeProperties();
     void updateConvectiveProperties();
 };

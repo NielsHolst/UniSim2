@@ -20,15 +20,10 @@ ScreenWall::ScreenWall(QString name, QObject *parent)
 {
     help("models a screen on wall side or end");
     Input(faceArea).imports("../../area[value]",CA);
-    Input(fixedDepth).equals(0.1).help("Depth of air space").unit("m");
 }
 
 double ScreenWall::computeMaxArea() {
     return faceArea;
-}
-
-double ScreenWall::computeDepth() {
-    return fixedDepth;
 }
 
 } //namespace

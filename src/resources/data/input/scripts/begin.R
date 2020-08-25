@@ -1,4 +1,6 @@
 library(ggplot2)
+library(ggpubr)
+library(grid)
 library(gridExtra)
 library(lubridate)
 library(plyr)
@@ -18,7 +20,17 @@ if (!keepVariables) {
 skip_formats = exists("output_skip_formats")
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
-unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999')  
+#                   red       blue      green     violet    orange    brown     pink      grey 
+unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999') 
+
+unisim_colour = function(i) { 
+  strtoi(c(
+    paste0("0X", substr(unisim_colours[i], 2,3)),
+    paste0("0X", substr(unisim_colours[i], 4,5)),
+    paste0("0X", substr(unisim_colours[i], 6,7))
+  ))
+}
+
 scale_colour_discrete = function(...) {
   scale_colour_manual(..., values = rep(unisim_colours, 10))
 }
@@ -48,6 +60,13 @@ output_file_folder = function() {
   substr(output_file_name, 1, last-1)
 }
 
+output_file_base_name = function() {
+  last = last_occurence(output_file_name, "/")
+  file_name = substring(output_file_name, last+1)
+  last = last_occurence(file_name, "\\.")
+  substr(file_name, 1, last-1)
+}
+
 reorder_levels = function(the_factor, new_order) {
   factor(the_factor,levels(the_factor)[new_order])
 }
@@ -56,7 +75,7 @@ is_rstudio = function() {
   !is.na(Sys.getenv("RSTUDIO", unset = NA))
 }
 
-open_plot_window = function(width, height) {
+open_plot_window = function(width=7, height=7) {
   is_windows = (.Platform$OS.type == "windows")
   if (!is_rstudio()) {
     if (is_windows) windows(width=width, height=height) else
@@ -110,7 +129,7 @@ unique_names = function(col_names) {
 read_output = function(file_path) {
 
   column_info = function(file_path) {
-    sip = read.table(file_path, header=TRUE, sep="\t", stringsAsFactors=FALSE, nrows=1)
+    sip = read.table(file_path, header=TRUE, sep="\t", stringsAsFactors=FALSE, nrows=1, na.strings=c("NA","nan","nan.0"))
     Rformat = unlist(sip[1,])
     ix_date = (Rformat == "ymd") | (Rformat == "HMS") | (Rformat == "ymdHMS")
     read_format = Rformat
@@ -354,23 +373,6 @@ plot_histogram = function(df, ports, bins, ncol, nrow) {
     labs(y="") + 
     facet_wrap(~Variable, scales="free", ncol=ncol, nrow=nrow) +
     theme(legend.position="none")    
-}
-
-plot_sobol_convergence = function() {
-  plot_against_sample_size()
-}
-
-plot_sobol_indices = function(theme=NULL) {
-  n_outputs = length(output_names())
-  print(paste0("Bootstrapping (n=", sobol_B, ")..."))
-  B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
-  S = ddply(B, .(Output), sobol_statistics)
-  
-  file_name = paste0(output_file_folder(), "/S.Rdata")
-  save(S, file=file_name)
-  print(paste("Sobol statistics data frame saved in ", file_name))
-  
-  dlply(subset(S, Input!="Sum"), .(Output), plot_effects, theme=theme)
 }
 
 

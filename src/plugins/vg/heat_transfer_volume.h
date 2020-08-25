@@ -9,8 +9,9 @@
 #define HEAT_TRANSFER_VOLUME_H
 #include <base/box.h>
 
-
 namespace vg {
+
+class HeatTransferLayerBase;
 
 class HeatTransferVolume : public base::Box
 {
@@ -22,14 +23,17 @@ public:
 protected:
     // Inputs
     double initTemperature, convectiveInflux,
-        outdoorsInfluxVolume, outdoorsTemperature,
-        neighbourInfluxVolume, neighbourTemperature,
+        airInflux, outdoorsTemperature,
+        sumUnusedInfluxes, maxTemperatureRateOfChange, heatBuffer,
         timeStep, groundArea, volume;
     // Outputs
     double temperature, advectiveEnergyFlux;
+    // Data
+    QVector<HeatTransferLayerBase*> screens;
 private:
     // Methods
     void updateByAdvection(double influxVolume, double influxTemperature);
+    HeatTransferLayerBase* findScreen(int i);
 };
 
 } //namespace

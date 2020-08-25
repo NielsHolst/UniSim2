@@ -34,6 +34,7 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(end).equals("scripts/end.R").help("Name of R script(s) run after auto-generated R script");
     Input(graphicsFormat).equals("none").help("Format of graphics output file; intended for use in your own end script");
     Input(destinationFolder).help("If this path to a folder is set, all outputs will be copied there");
+    Input(textOutputFilePath).imports("./*[filePath]").help("Name of text output file, including absolute path");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
@@ -72,6 +73,8 @@ void OutputR::initialize() {
         ThrowException("Only one OutputR box is allowed").
                 hint("Put all PageR boxes inside the same OutputR box").
                 context(this);
+    // Open file for R script
+    openFile();
 }
 
 void OutputR::reset() {
@@ -139,7 +142,6 @@ void OutputR::debrief() {
 }
 
 void OutputR::writeScript() {
-    openFile();
     QTextStream script(&_file);
     script << toScript();
     _file.close();
@@ -177,7 +179,7 @@ void OutputR::copyToClipboard() {
 
 QString OutputR::makeOutputRCode(bool forClipboard) {
     // Set up names for R and txt output files
-    QString ofp = environment().outputFilePath(".txt"),
+    QString ofp = textOutputFilePath, //environment().outputFilePath(".txt"),
             outputFileName = forClipboard ? ofp : QFileInfo(ofp).fileName(),
             RFileName = forClipboard ? _filePathR : QFileInfo(_filePathR).fileName();
     // Copy output files to destination folder if set

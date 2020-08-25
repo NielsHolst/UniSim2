@@ -31,12 +31,12 @@ private:
         lwTransmissivityTopNet, lwTransmissivityBottomNet,
         swAbsorptivityTopNet, swAbsorptivityBottomNet,
         lwAbsorptivityTopNet, lwAbsorptivityBottomNet,
-        maxArea, depth,
-        heatCapacity;
+        UtopNet, UbottomNet,
+        maxArea;
+//        heatCapacity;
     // Methods
     void updateByState(double state);
     virtual double computeMaxArea() = 0;
-    virtual double computeDepth() = 0;
 };
 
 } //namespace

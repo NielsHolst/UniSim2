@@ -22,12 +22,30 @@ public:
 
 private:
     // Inputs
-    double heatingPowerUsage, growthLightsPowerUsage, co2Flux, dt;
-    QString energyUnit;
+    QDate date;
+    double
+        dt,
+        skyIrradiationRate, skyRadiationAbsorbedRate,
+        ventilationEnergyRate,
+        airInflux,
+        soilEnergyRate,
+        heatingPowerUsage,
+        growthLightsPowerUsage,
+        co2Flux;
     // Outputs
-    double heatingEnergyTotal, growthLightsEnergyTotal, co2Total;
+    double
+        skyIrradiation, skyRadiationAbsorbed,
+        ventilationEnergy,
+        latentHeat,
+        soilEnergy,
+        heatingEnergy,
+        growthLightsEnergy,
+        co2Total;
     // Data
-    double eUnit;
+    double _kiloHour;
+    QDate _prevDate;
+    // Method
+    void checkNewYear();
 
 };
 } //namespace

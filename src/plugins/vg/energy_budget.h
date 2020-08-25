@@ -38,18 +38,22 @@ public:
             );
 private:
     // Inputs
-    double groundArea, screenedVolume, roomVolume, cropCoverage,
-        outdoorsTemperature, soilTemperature;
-    bool withCrop;
+    double greenhouseVolume, cropCoverage,
+        outdoorsTemperature, soilTemperature,
+        roomTemperature, timeStep;
+    bool withCrop, keepConstantScreenTemperature;
+    // Outputs
+    double Uinside, Uoutside;
     // Data
     typedef QVector<HeatTransferLayerBase*> Stack;
     Stack stack, screens; // screens are a subset of stack
-    HeatTransferVolume *airSpaceScreened, *airSpaceRoom;
+    HeatTransferVolume *airSpaceRoom;
     // Methods
     void distributeParRadiation();
     void distributeSwRadiation();
     void distributeLwRadiation();
     void distributeHeatByConvectionAndConduction();
+    void transferScreenHeatToRoom();
     QString toString(const HeatTransferLayerBase *layer) const;
     QString toString(const HeatTransferVolume *airSpace) const;
     QString toString() const;

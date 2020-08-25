@@ -9,7 +9,7 @@
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.21
+VERSION = 2.3.27
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 
@@ -34,7 +34,7 @@ QT += core widgets
 DEFINES += QT_DEPRECATED_WARNINGS
 
 # Compiler options add-ons
-QMAKE_CXXFLAGS += -Wall -Wextra
+QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 
 # Compiler options to silence warnings
 QMAKE_CXXFLAGS += -Wno-padded

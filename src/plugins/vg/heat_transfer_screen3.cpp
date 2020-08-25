@@ -18,17 +18,19 @@ PUBLISH(HeatTransferScreen3)
 HeatTransferScreen3::HeatTransferScreen3(QString name, QObject *parent)
     : HeatTransferShelter(name, parent, "shelter/*/screens/layer3", "Net")
 {
-    help("holds the combined radiative parameters of screen layer 3");
-    port("specificHeatCapacity")->equals(2280.);
-    port("condensationRate")->imports("waterBudget/condensations/screen3[vapourFlux]");
+    help("holds the radiative parameters of screen layer 3 averaged for all shelter faces");
+    port("condensationRate")->imports("waterBudget/condensationScreens/screen3[vapourFlux]");
+    port("maxTemperatureRateOfChange")->equals(0.25);
 }
 
 void HeatTransferScreen3::update() {
     updateArea();
+    updateHeatCapacity();
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
-    updateTemperature();
+    //    updateTemperature();
+        temperature = indoorsTemperature;
 }
 
 } //namespace

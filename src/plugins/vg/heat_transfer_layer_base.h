@@ -23,6 +23,7 @@ protected:
         swFluxDown, swFluxUp,
         convectiveInflux, conductiveInflux,
         condensationRate,
+        maxTemperatureRateOfChange, unusedInflux,
         timeStep;
     // Outputs
     double
@@ -30,9 +31,9 @@ protected:
         swAbsorbedFromAbove, swAbsorbedFromBelow, swAbsorbed,
         lwAbsorbedFromAbove, lwAbsorbedFromBelow, lwAbsorbed,
         lwFluxDown, lwFluxUp,
-        absorbed, temperature;
+        absorbed, latentHeat, temperature;
     // Methods
-    void updateLwEmission();
+    virtual void updateLwEmission();
     void updateTemperature();
 };
 

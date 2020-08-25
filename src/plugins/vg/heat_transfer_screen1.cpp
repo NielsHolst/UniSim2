@@ -18,21 +18,19 @@ PUBLISH(HeatTransferScreen1)
 HeatTransferScreen1::HeatTransferScreen1(QString name, QObject *parent)
     : HeatTransferShelter(name, parent, "shelter/*/screens/layer1", "Net")
 {
-    help("holds the combined radiative parameters of screen layer 1");
-    /* density of polyester = 1.22 g/cm3
-     * 1mm * 1m2 = 0.1cm * 100^2 cm2 = 1000 cm3 = 1220 g/m2
-     * heat capacity of polyester = 1.87 J/g/K = 1.87*1220 J/m2/K = 2280 J/m2/K
-    */
-    port("specificHeatCapacity")->equals(2280.);
+    help("holds the radiative parameters of screen layer 1 averaged for all shelter faces");
     port("condensationRate")->imports("waterBudget/condensationScreens/screen1[vapourFlux]");
+    port("maxTemperatureRateOfChange")->equals(5.);
 }
 
 void HeatTransferScreen1::update() {
     updateArea();
+    updateHeatCapacity();
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
-    updateTemperature();
+//    updateTemperature();
+    temperature = indoorsTemperature;
 }
 
 } //namespace

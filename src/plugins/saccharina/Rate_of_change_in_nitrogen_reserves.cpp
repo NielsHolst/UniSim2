@@ -16,6 +16,7 @@ Rateofchangeinnitrogenreserves::Rateofchangeinnitrogenreserves(QString name, QOb
     Input(u).equals(0.18).help("Specific growth rate");
     Input(N).equals(0.022).help("Nitrogen reserve");
     Input(Nstruct).equals(0.01).help("Amount of nitrogen per unit dry weight of structural mass");
+    Input(Factor).equals(1).help("Scaling factor of model");
     Output(nitrogenreservesrate).help("Rate of change in nitrogen reserve");
 }
 
@@ -24,6 +25,6 @@ void Rateofchangeinnitrogenreserves::reset() {
 }
 
 void Rateofchangeinnitrogenreserves::update() {
-    nitrogenreservesrate = pow(kA,-1) * J - u * (N + Nstruct);
+    nitrogenreservesrate = pow(kA,-1) * J - u * (N + Nstruct) * Factor;
 }
 }
