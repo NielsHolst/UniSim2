@@ -30,7 +30,9 @@ Cover::Cover(QString name, QObject *parent)
     Input(UwindSlope).equals(3.0).help("Heat transfer coefficient linear increase with wind speed").unit("W/m2/K/(m/s)"); // From Watmuff et al. (1977)
     Input(UwindExponent).equals(0.8).help("Reduces effect of high windspeed"); // From Körner MatLab code (1977)
     port("area")->imports("../area[value]",CA);
-    port("Ubottom")->equals(3.3); //
+//    port("emissivityTop")->equals(0.94);
+//    port("emissivityBottom")->equals(0.94);
+    port("Ubottom")->equals(3.3);
     port("heatCapacity")->equals(8400.);
     /* density of glass       = 2.5kg per m2 per mm of thickness => 10 kg glass/m2
      * heat capacity of glass = 0.84 J/g/K = 840 J/kg/K = 8400 J/m2/K

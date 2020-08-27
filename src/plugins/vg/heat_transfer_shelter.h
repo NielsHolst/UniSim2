@@ -26,6 +26,7 @@ private:
         lwReflectivityTopShelter,   lwReflectivityBottomShelter,
         lwTransmissivityTopShelter, lwTransmissivityBottomShelter,
         lwAbsorptivityTopShelter,   lwAbsorptivityBottomShelter,
+        emissivityTopShelter,       emissivityBottomShelter,
         UtopShelter, UbottomShelter,
         areaShelter, heatCapacityShelter;
     double groundArea, coverPerGroundArea;

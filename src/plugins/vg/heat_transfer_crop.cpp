@@ -6,6 +6,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "heat_transfer_crop.h"
 
 using namespace base;
@@ -25,6 +26,8 @@ HeatTransferCrop::HeatTransferCrop(QString name, QObject *parent)
     Input(lwScatteringCoef).equals(0.05);
     Input(leafTemperature).imports("crop/temperature[value]",CA);
     port("area")->imports("construction/geometry[groundArea]",CA);
+//    port("emissivityBottom")->equals(0.98);
+//    port("emissivityTop")->equals(0.98);
 }
 
 
@@ -33,7 +36,7 @@ void HeatTransferCrop::reset() {
 }
 
 void HeatTransferCrop::update() {
-    temperature = leafTemperature;
+    temperature = temperatureTop = temperatureBottom = leafTemperature;
 
     Distribution sw = distribute(swK, swScatteringCoef);
     swAbsorptivityBottom   = swAbsorptivityTop   = sw.a;
@@ -45,6 +48,10 @@ void HeatTransferCrop::update() {
     lwReflectivityBottom   = lwReflectivityTop   = lw.r;
     lwTransmissivityBottom = lwTransmissivityTop = lw.t;
 
+    if (TestNum::eq(emissivityTop, -1.))
+        emissivityTop = lwAbsorptivityTop;
+    if (TestNum::eq(emissivityBottom, -1.))
+        emissivityBottom = lwAbsorptivityBottom;
     updateLwEmission();
 }
 

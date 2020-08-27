@@ -20,7 +20,9 @@ ControllerVentilationCombined::ControllerVentilationCombined(QString name, QObje
     help("combines controllers for ventilation");
     Input(controllerVentilation).imports("controllers/ventilation[value]", CA);
     Input(controllerCrackVentilation).imports("controllers/crackVentilation[value]", CA);
-    Output(value).help("Combined control");
+    Input(crackVentilation).imports("setpoints/elementary/crackVentilationNormalTemperature[value]", CA);
+    Output(ventilationChange).help("Reconciled change in opening");
+    Output(ventilationMax).help("Reconciled max. opening").unit("[0;1]");
 }
 
 void ControllerVentilationCombined::reset() {
@@ -28,11 +30,18 @@ void ControllerVentilationCombined::reset() {
 }
 
 void ControllerVentilationCombined::update() {
-    value = (controllerVentilation < 0. && controllerCrackVentilation < 0.) ?
+    ventilationChange = (controllerVentilation < 0. && controllerCrackVentilation < 0.) ?
             // If both want to close, let the largest desire win
             std::min(controllerVentilation, controllerCrackVentilation) :
             // If either or both want to open, let the largest desire win
             std::max(controllerVentilation, controllerCrackVentilation);
+
+    ventilationMax = (controllerVentilation < 0. && controllerCrackVentilation > 0.) ?
+            // If there is a desire for crack only then the max. opening is restricted
+            crackVentilation :
+            // Otherwise the windows are allowed to open fully
+            1.;
+
 }
 
 } //namespace

@@ -18,6 +18,8 @@ HeatTransferCover::HeatTransferCover(QString name, QObject *parent)
     : HeatTransferShelter(name, parent, "shelter/*/cover")
 {
     help("holds the radiative parameters of the greenhouse cover averaged for all shelter faces");
+    Input(skyTemperature).imports("outdoors[skyTemperature]", CA);
+    Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
     port("condensationRate")->imports("waterBudget/condensationCover[vapourFlux]");
 }
 
@@ -25,6 +27,17 @@ void HeatTransferCover::update() {
     updateLwEmission();
     updateConvectiveProperties();
     updateTemperature();
+//    const double coverWeight = 1.;
+//    temperatureTop    = coverWeight*temperature + (1.-coverWeight)*std::min(skyTemperature,outdoorsTemperature);
+//    temperatureBottom = coverWeight*temperature + (1.-coverWeight)*indoorsTemperature;
+    double minTemperatureTop = std::min(skyTemperature,outdoorsTemperature);
+//    temperature = (minTemperatureTop + indoorsTemperature)/2.;
+    temperatureTop    = temperature - 2.;
+    temperatureBottom = temperature + 2.;
+    if (temperatureTop < minTemperatureTop)
+        temperatureTop = minTemperatureTop;
+    if (temperatureBottom > indoorsTemperature)
+        temperatureBottom = indoorsTemperature;
 }
 
 } //namespace

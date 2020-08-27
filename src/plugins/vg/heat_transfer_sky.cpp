@@ -29,6 +29,8 @@ HeatTransferSky::HeatTransferSky(QString name, QObject *parent)
     port("lwTransmissivityBottom")->equals(0.);
     port("area")->imports("construction/geometry[coverArea]",CA);
     port("temperature")->imports("outdoors[skyTemperature]",CA);
+    port("temperatureTop")->imports("outdoors[skyTemperature]",CA);
+    port("temperatureBottom")->imports("outdoors[skyTemperature]",CA);
 }
 
 void HeatTransferSky::reset() {

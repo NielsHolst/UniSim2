@@ -24,7 +24,6 @@ HeatTransferPipe::HeatTransferPipe(QString name, QObject *parent)
 }
 
 void HeatTransferPipe::reset() {
-    temperature = phys_math::infinity();
     swReflectivityBottom = swReflectivityTop =
     lwReflectivityBottom = lwReflectivityTop = 0.;
     swTransmissivityTop = swTransmissivityBottom =
@@ -35,10 +34,10 @@ void HeatTransferPipe::reset() {
 
 void HeatTransferPipe::update() {
     // Spread the flux equally upwards and downwards
-//    lwFluxDown = lwFluxUp = energyFlux/2.;
-    // Send it all down
-    lwFluxDown = energyFlux;
-    lwFluxUp = 0.;
+    lwFluxDown = lwFluxUp = energyFlux/2.;
+//     Send it all down
+//    lwFluxDown = energyFlux;
+//    lwFluxUp = 0.;
 }
 
 } //namespace

@@ -47,26 +47,25 @@ HeatTransferLayerBase::HeatTransferLayerBase(QString name, QObject *parent)
     Output(lwFluxUp).unit("W/m2").help("Long-wave flux going up from");
     Output(absorbed).unit("W/m2").help("All flux (short+long) absorbed in total");
     Output(latentHeat).unit("W/m2").help("Latent heat from water condensation");
-    Output(temperature).unit("oC").help("Surface temperature");
+    Output(temperature).unit("oC").help("Surface temperature (average)");
+    Output(temperatureTop).unit("oC").help("Surface temperature (top)");
+    Output(temperatureBottom).unit("oC").help("Surface temperature (bottom)");
     Output(unusedInflux).unit("W/m2").help("Influx left over too keep within maxTemperatureRateOfChange");
 }
 
 
 void HeatTransferLayerBase::updateLwEmission() {
-    double lwFlux = Sigma*p4K(temperature);
-    // Assumet that emmissivity equals absorptivity
-    lwFluxDown = lwAbsorptivityBottom*lwFlux;
-    lwFluxUp   = lwAbsorptivityTop*lwFlux;
+    double fluxDown = Sigma*p4K(temperatureBottom),
+           fluxUp  = Sigma*p4K(temperatureTop);
+    lwFluxDown = emissivityBottom*fluxDown;
+    lwFluxUp   = emissivityTop*fluxUp;
+    if (emissivityBottom<0. || emissivityTop<0.)
+        ThrowException("Emissivities have not been properly initialized").context(this);
 }
 
 void HeatTransferLayerBase::updateTemperature() {
-    // K = W/m2 / (J/K/m2) * s = W/m2 * K*m2/J * s = K
     latentHeat = -condensationRate*LHe; // W/m2 = kg/m2/s * J/kg
 
-//    dialog().information(QString("A HeatTransferLayerBase::updateTemperature %1 T=%2 abs=%3 conv=%4 cond=%5 latent=%6 C=%7")
-//                         .arg(name()).arg(temperature).arg(absorbed).arg(convectiveInflux).arg(conductiveInflux).arg(latentHeat)
-//                         .arg(heatCapacity)
-//                         );
     if (TestNum::neZero(heatCapacity)) {
         double maxRateOfChange = maxTemperatureRateOfChange/60., // K/s
                rateOfChange  = (absorbed + convectiveInflux + conductiveInflux + latentHeat - lwFluxDown - lwFluxUp)/heatCapacity;  // K/s
@@ -83,22 +82,9 @@ void HeatTransferLayerBase::updateTemperature() {
         }
         temperature += rateOfChange*timeStep;
     }
-//    dialog().information(QString("B HeatTransferLayerBase::updateTemperature T=%1").arg(temperature));
+    temperatureTop = temperatureBottom = temperature;
 }
 
-// Sets temperature to newTemperature;
-// returns the energyInflux to the layerr (W/m2 ground, positive or negative) needed for the temperature change
-//double HeatTransferLayerBase::setTemperature(double newTemperature) {
-//    double dT = newTemperature - temperature;
-//    if (TestNum::eqZero(dT) || TestNum::eqZero(heatCapacity))
-//        return 0.;
-//    QString s("setTemperature %1: %2");
-//    dialog().information(s.arg(name()).arg(dT));
-
-//    double energyInflux = dT/heatCapacity/timeStep; // W/m2 = K / (K*m2/J) / s
-//    temperature = newTemperature;
-//    return energyInflux;
-//}
 
 } //namespace
 

@@ -56,7 +56,7 @@ void IndoorsVentilation::update() {
     relativeArea  = state*effectiveArea/groundArea;
     fluxLeak = airTransmissivity*leakage*windSpeed/4.;
     fluxWind = airTransmissivity*relativeArea*windCoef*windSpeed;
-    fluxTemp = airTransmissivity*relativeArea*temperatureCoef*std::max(indoorsTemperature-outdoorsTemperature, 0.)/(indoorsTemperature+T0);
+    fluxTemp = airTransmissivity*relativeArea*temperatureCoef*std::max(indoorsTemperature-outdoorsTemperature, 0.);
 //    double sum = fluxLeak+fluxWind+fluxTemp;
     relative = sqrt(p2(fluxLeak) + p2(fluxWind) + p2(fluxTemp));
     absolute = volume*(1. - exp(-relative*timeStep/3600.));

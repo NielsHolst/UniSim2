@@ -5,23 +5,25 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef HEAT_TRANSFER_SCREEN3_H
-#define HEAT_TRANSFER_SCREEN3_H
-#include "heat_transfer_shelter.h"
+#ifndef ENERGY_BUDGET_OPTIMISER_H
+#define ENERGY_BUDGET_OPTIMISER_H
+#include <QVector>
+#include <base/box.h>
 
 namespace vg {
 
-class HeatTransferScreen3 : public HeatTransferShelter
+class EnergyBudgetOptimiser : public base::Box
 {
-public:
-    HeatTransferScreen3(QString name, QObject *parent);
+public: 
+    EnergyBudgetOptimiser(QString name, QObject *parent);
+    // standard methods
+    void initialize();
     void update();
 private:
-    // Inputs
-    bool keepTemperatureConstant;
+    QVector<QString> inputs;
+    double value;
+    QVector<base::Port*> ports;
 };
 
 } //namespace
-
-
 #endif

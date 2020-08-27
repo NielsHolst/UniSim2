@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <DVV_SETUP>
 	<StartTime>01-01-2020</StartTime>
-	<StopTime>31-01-2020</StopTime>
+	<StopTime>31-12-2020</StopTime>
 	<TimeStep>2</TimeStep>
 	<DVVSimName>Simulation performed 15:52 30-01-19</DVVSimName>
 	<DVVSimDesc>hej</DVVSimDesc>
@@ -149,7 +149,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -161,7 +161,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -179,7 +179,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -191,7 +191,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -209,7 +209,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -221,7 +221,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -239,7 +239,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -251,7 +251,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -269,7 +269,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -281,7 +281,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -299,7 +299,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneUValue</ParameterName>
-						<Value>6.5</Value>
+						<Value>2.8</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
@@ -311,7 +311,7 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.95</Value>
 					</Parameters>
 				</Constants>
 			</Pane>

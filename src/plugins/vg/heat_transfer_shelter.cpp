@@ -9,10 +9,10 @@
 #include <base/vector_op.h>
 #include "heat_transfer_shelter.h"
 
-#include <base/dialog.h>
 
 using namespace base;
 using vector_op::sumOfProducts;
+using vector_op::weightedAverage;
 
 namespace vg {
 
@@ -41,6 +41,9 @@ HeatTransferShelter::HeatTransferShelter(QString name, QObject *parent, QString 
     InputShelter(Ubottom);
 
     suffix = "";
+    InputShelter(emissivityTop);
+    InputShelter(emissivityBottom);
+
     InputShelter(area);
     InputShelter(heatCapacity);
 
@@ -138,6 +141,13 @@ void HeatTransferShelter::updateRadiativeProperties() {
         lwTransmissivityBottom = 1.;
         lwReflectivityBottom   = lwAbsorptivityBottom  = 0.;
     }
+
+    emissivityTop    = weightedAverage(emissivityTopShelter,    areaShelter, this);
+    emissivityBottom = weightedAverage(emissivityBottomShelter, areaShelter, this);
+    if (TestNum::eq(emissivityTop, -1.))
+        emissivityTop = lwAbsorptivityTop;
+    if (TestNum::eq(emissivityBottom, -1.))
+        emissivityBottom = lwAbsorptivityBottom;
 }
 
 void HeatTransferShelter::updateLwEmission() {

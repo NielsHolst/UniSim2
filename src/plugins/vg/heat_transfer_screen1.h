@@ -16,6 +16,9 @@ class HeatTransferScreen1 : public HeatTransferShelter
 public:
     HeatTransferScreen1(QString name, QObject *parent);
     void update();
+private:
+    // Inputs
+    bool keepTemperatureConstant;
 };
 
 } //namespace

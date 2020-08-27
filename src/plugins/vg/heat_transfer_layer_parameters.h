@@ -24,6 +24,7 @@ protected:
         swTransmissivityTop, swTransmissivityBottom,
         lwReflectivityTop, lwReflectivityBottom,
         lwTransmissivityTop, lwTransmissivityBottom,
+        emissivityTop, emissivityBottom,
         Utop, Ubottom,
         area, heatCapacity;
     // Outputs
@@ -33,7 +34,6 @@ protected:
 private:
     // Methods
     void checkRange(double x, QString name) const;
-    void checkNotZero(double x, QString name) const;
 };
 
 } //namespace

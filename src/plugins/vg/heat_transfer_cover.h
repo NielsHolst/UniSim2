@@ -16,6 +16,9 @@ class HeatTransferCover : public HeatTransferShelter
 public:
     HeatTransferCover(QString name, QObject *parent);
     void update();
+private:
+    // Inputs
+    double skyTemperature, outdoorsTemperature;
 };
 
 } //namespace

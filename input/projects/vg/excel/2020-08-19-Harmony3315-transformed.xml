@@ -828,6 +828,8 @@
 	<box class="WaterBudget" name="waterBudget"/>
 	<box class="Indoors" name="indoors">
 		<box class="vg::IndoorsVentilation" name="ventilation">
+			<port name="windCoef" externalName="VentilationWindCoef" source="Fixed" value="50"/>
+			<port name="temperatureCoef" externalName="VentilationTemperatureCoef" source="Fixed" value="14"/>
 			<port name="leakage" externalName="leakage" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="0.1"/>
 		</box>
 	</box>

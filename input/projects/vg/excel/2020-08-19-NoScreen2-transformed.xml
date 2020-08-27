@@ -4,10 +4,10 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2020"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="01-01-2020"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
-		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
+		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="2"/>
 		<port name="timeUnit" value="m" externalName="None" source="Fixed"/>
 	</box>
 	<!-- *** Calendar *** -->
@@ -43,8 +43,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -97,8 +97,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -166,8 +166,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -229,8 +229,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -292,8 +292,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -355,8 +355,8 @@
 					<port name="swReflectivityBottom" externalName="PaneReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
 					<port name="swTransmissivityTop" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
 					<port name="swTransmissivityBottom" externalName="PaneTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.89"/>
-					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
-					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.1"/>
+					<port name="lwReflectivityTop" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
+					<port name="lwReflectivityBottom" externalName="PaneLwReflection" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.95"/>
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.0"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="2.8"/>
@@ -692,14 +692,23 @@
 				<port name="Kprop" value="-0.1"/>
 			</box>
 		</box>
+		<!-- <box name="crackVentilation"> -->
+			<!-- <newPort name="value" ref="./controller[controlVariable]"/> -->
+			<!-- <box class="PidController" name="controller"> -->
+				<!-- <port name="sensedValue" ref="actuators/ventilation[value]"/> -->
+				<!-- <port name="desiredValue" ref="setpoints/crackVentilation[value]"/> -->
+				<!-- <port name="Kprop" value="0.05"/> -->
+			<!-- </box> -->
+		<!-- </box> -->
 		<box name="crackVentilation">
 			<newPort name="value" ref="./controller[controlVariable]"/>
 			<box class="PidController" name="controller">
-				<port name="sensedValue" ref="actuators/ventilation[value]"/>
-				<port name="desiredValue" ref="setpoints/crackVentilation[value]"/>
-				<port name="Kprop" value="0.2"/>
+				<port name="sensedValue" ref="indoors/humidity[rh]"/>
+				<port name="desiredValue" ref="setpoints[rhMax]"/>
+				<port name="Kprop" value="-0.02"/>
 			</box>
 		</box>
+    
 		<box name="co2Injection">
 			<newPort name="value" ref="./controller[controlVariable]"/>
 			<box class="PidController" name="controller">
@@ -719,10 +728,9 @@
 				<port name="minValue" ref="setpoints/heatingTemperature[value]"/>
 				<port name="maxValue" ref="ventilationControlled[value]"/>
 				<box class="OnOff" name="ventilationControlled">
-					<port name="x" ref="controllers/ventilation[value]"/>
+					<port name="x" ref="actuators/ventilation[value]"/>
 					<port name="xOn" value="-999"/>
-					<port name="xOff" value="0"/>
-					<port name="valueOn" ref="controlledTemperature[value]"/>
+					<port name="xOff" value="0.052"/>
 					<port name="valueOn" ref="../../pipes/*[maxTemperature]" transform="max"/>
 					<port name="valueOff" ref="setpoints/heatingTemperature[value]"/>
 				</box>
@@ -747,10 +755,10 @@
 		</box>
 		<box class="Accumulator" name="ventilation">
 			<port name="initial" value="0"/>
-			<port name="change" ref="./combined[value]"/>
+			<port name="change" ref="./combined[ventilationChange]"/>
 			<port name="minValue" value="0"/>
-			<port name="maxValue" value="1"/>
-			<box class="ControllerVentilationCombined" name="combined">
+			<port name="maxValue" ref="./combined[ventilationMax]"/>
+ 			<box class="ControllerVentilationCombined" name="combined">
 				<port name="controllerVentilation" ref="controllers/ventilation[value]"/>
 				<port name="controllerCrackVentilation" ref="controllers/crackVentilation[value]"/>
 			</box>
@@ -828,6 +836,8 @@
 	<box class="WaterBudget" name="waterBudget"/>
 	<box class="Indoors" name="indoors">
 		<box class="vg::IndoorsVentilation" name="ventilation">
+			<port name="windCoef" externalName="VentilationWindCoef" source="Fixed" value="50"/>
+			<port name="temperatureCoef" externalName="VentilationTemperatureCoef" source="Fixed" value="25"/>
 			<port name="leakage" externalName="leakage" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="0.1"/>
 		</box>
 	</box>
@@ -841,57 +851,72 @@
 	<!-- *** Output *** -->
 	<box class="OutputR" name="output">
 		<box name="p">
-			<newPort name="outdoorsCo2" ref="outdoors[co2]"/>
+			<!-- <newPort name="outdoorsCo2" ref="outdoors[co2]"/> -->
+			<newPort name="skyT" ref="outdoors[skyTemperature]"/>
 			<newPort name="outdoorsT" ref="outdoors[temperature]"/>
-			<newPort name="soilT" ref="outdoors[soilTemperature]"/>
-			<newPort name="outdoorsRh" ref="outdoors[rh]"/>
+			<!-- <newPort name="soilT" ref="outdoors[soilTemperature]"/> -->
+			<!-- <newPort name="outdoorsRh" ref="outdoors[rh]"/> -->
 			<newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
 			<newPort name="outdoorsLight" ref="outdoors[radiation]"/>
-			<newPort name="indoorsCo2" ref="indoors/co2[value]"/>
+			<!-- <newPort name="indoorsCo2" ref="indoors/co2[value]"/> -->
 			<newPort name="indoorsT" ref="indoors[temperature]"/>
+			<newPort name="coverT" ref="energyBudget/cover[temperature]"/>
+			<newPort name="coverTtop" ref="energyBudget/cover[temperatureTop]"/>
+			<newPort name="coverTbottom" ref="energyBudget/cover[temperatureBottom]"/>
+      <newPort name="ventFluxT" ref="indoors/ventilation[fluxTemp]"/>
 			<newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
-			<newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
+			<!-- <newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/> -->
 			<newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/>
 			<newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/>
-			<newPort name="spRhMax" ref="setpoints[rhMax]"/>
-			<newPort name="spRhMin" ref="setpoints[rhMin]"/>
-			<newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/>
-			<newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/>
-			<newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/>
-			<newPort name="spScreenShadeThreshold1" ref="setpoints[screenShadeThreshold1]"/>
-			<newPort name="spScreenShadeThreshold2" ref="setpoints[screenShadeThreshold2]"/>
-			<newPort name="spScreenFixed1" ref="setpoints[screenFixed1]"/>
-			<newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/>
-			<newPort name="spScreenShadeThresholdBand" ref="setpoints[screenShadeThresholdBand]"/>
-			<newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/>
-			<newPort name="spCo2" ref="setpoints[co2Setpoint]"/>
+			<!-- <newPort name="spRhMax" ref="setpoints[rhMax]"/> -->
+			<!-- <newPort name="spRhMin" ref="setpoints[rhMin]"/> -->
+			<!-- <newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/> -->
+			<!-- <newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/> -->
+			<!-- <newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/> -->
+			<!-- <newPort name="spScreenShadeThreshold1" ref="setpoints[screenShadeThreshold1]"/> -->
+			<!-- <newPort name="spScreenShadeThreshold2" ref="setpoints[screenShadeThreshold2]"/> -->
+			<!-- <newPort name="spScreenFixed1" ref="setpoints[screenFixed1]"/> -->
+			<!-- <newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/> -->
+			<!-- <newPort name="spScreenShadeThresholdBand" ref="setpoints[screenShadeThresholdBand]"/> -->
+			<!-- <newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/> -->
+			<!-- <newPort name="spCo2" ref="setpoints[co2Setpoint]"/> -->
+			<newPort name="ctrHeating" ref="controllers/heating[value]"/>
+			<newPort name="ctrVentilation" ref="controllers/ventilation[value]"/>
+			<newPort name="actHeatingTemperature" ref="actuators/heating/temperature[value]"/>
 			<newPort name="actHeatingPower" ref="actuators/heating/energyFlux[value]"/>
 			<newPort name="actVentilation" ref="actuators/ventilation[value]"/>
-			<newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/>
-			<newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/>
-			<newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/>
-			<newPort name="actLightPower" ref="actuators/growthLights[powerUsage]"/>
-			<newPort name="actLightPar" ref="actuators/growthLights[parFluxDown]"/>
-			<newPort name="actScreen1" ref="actuators/screens/layer1[value]"/>
-			<newPort name="actScreen2" ref="actuators/screens/layer2[value]"/>
-			<newPort name="actScreen3" ref="actuators/screens/layer3[value]"/>
-			<newPort name="actCo2" ref="actuators/co2Injection[value]"/>
-			<newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/>
-			<newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/>
-			<newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/>
-			<newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/>
-			<newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/>
+			<!-- <newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/> -->
+			<!-- <newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/> -->
+			<!-- <newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/> -->
+			<!-- <newPort name="actLightPower" ref="actuators/growthLights[powerUsage]"/> -->
+			<!-- <newPort name="actLightPar" ref="actuators/growthLights[parFluxDown]"/> -->
+			<!-- <newPort name="actScreen1" ref="actuators/screens/layer1[value]"/> -->
+			<!-- <newPort name="actScreen2" ref="actuators/screens/layer2[value]"/> -->
+			<!-- <newPort name="actScreen3" ref="actuators/screens/layer3[value]"/> -->
+			<!-- <newPort name="actCo2" ref="actuators/co2Injection[value]"/> -->
+			<!-- <newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/> -->
+			<!-- <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/> -->
 			<newPort name="airFluxTotal" ref="indoors/ventilation[relative]"/>
 			<newPort name="coolingPower" ref="indoors[advectiveEnergyFlux]"/>
 			<newPort name="Uinside" ref="energyBudget[Uinside]"/>
 			<newPort name="Uoutside" ref="energyBudget[Uoutside]"/>
 			<newPort name="heatingEnergy" ref="budget[heatingEnergy]"/>
-			<newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/>
-			<newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/>
-			<newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/>
-			<newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-			<newPort name="leafLightUseEfficiency" ref="crop/photosynthesis[lue]"/>
+			<!-- <newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/> -->
+			<!-- <newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/> -->
+			<!-- <newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/> -->
+			<!-- <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/> -->
+			<!-- <newPort name="leafLightUseEfficiency" ref="crop/photosynthesis[lue]"/> -->
 			<newPort name="leafTemperature" ref="crop/temperature[value]"/>
+			<newPort name="cropAbsorbed" ref="energyBudget/crop[absorbed]"/>
+			<newPort name="leafTranspiration" ref="crop/transpiration[vapourFlux]"/>
+			<newPort name="skySwAbs" ref="budget[skySwRadiationAbsorbed]"/>
+			<newPort name="skyLwAbs" ref="budget[skyLwRadiationAbsorbed]"/>
+			<newPort name="skyAbs" ref="budget[skyRadiationAbsorbed]"/>
+      <newPort name="coverLwAbsAbove" ref="energyBudget/cover[lwAbsorbedFromAbove]"/>
+      <newPort name="coverLwAbsBelow" ref="energyBudget/cover[lwAbsorbedFromBelow]"/>
 		</box>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
@@ -903,8 +928,8 @@
 		<box class="OutputText">
 			<!-- <port name="skipFormats" value="TRUE"/> -->
 			<port name="useLocalDecimalChar" value="TRUE"/>
-			<port name="skipInitialRows" value="360"/>
-			<port name="averageN" value="15"/>
+			<port name="skipInitialRows" value="720"/>
+			<!-- <port name="averageN" value="15"/> -->
 		</box>
 	</box>
 </box>

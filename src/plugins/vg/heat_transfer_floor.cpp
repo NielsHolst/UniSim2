@@ -35,7 +35,7 @@ HeatTransferFloor::HeatTransferFloor(QString name, QObject *parent)
 
 void HeatTransferFloor::reset() {
     updateAbsorptivities();
-    temperature = 20.;
+    temperature = temperatureTop = temperatureBottom= 20.;
 }
 
 void HeatTransferFloor::update() {

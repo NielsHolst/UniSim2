@@ -422,8 +422,8 @@ void EnergyBudget::distributeHeatByConvectionAndConduction() {
     Uinside = 1./Rtot;
     Uoutside = cover->Utop;
     // W/m2 = W/m2/K * K
-    double heatFromOuterToCover = Uoutside*       (outdoorsTemperature - cover->temperature),
-           heatFromRoomToCover  = Uinside *powdiff(roomTemperature - cover->temperature);
+    double heatFromOuterToCover = Uoutside*       (outdoorsTemperature - cover->temperatureTop),
+           heatFromRoomToCover  = Uinside *powdiff(roomTemperature - cover->temperatureBottom);
     cover->convectiveInflux     = heatFromOuterToCover + heatFromRoomToCover;
     totalHeatFromRoom           += heatFromRoomToCover;
 

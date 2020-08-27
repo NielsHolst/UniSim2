@@ -20,9 +20,9 @@ public:
     void update();
 private:
     // Inputs
-    double controllerVentilation, controllerCrackVentilation;
+    double controllerVentilation, controllerCrackVentilation, crackVentilation;
     // Output
-    double value;
+    double ventilationChange, ventilationMax;
 };
 } //namespace
 

@@ -10,6 +10,7 @@
 #include <base/publish.h>
 
 using namespace base;
+using namespace phys_math;
 
 namespace vg {
 
@@ -22,8 +23,14 @@ Budget::Budget(QString name, QObject *parent)
     Input(date).imports("calendar[date]", CA);
     Input(skyIrradiationRate).imports("outdoors[radiation]", CA);
     Input(skyRadiationAbsorbedRate).imports("energyBudget/sky[absorbed]", CA);
+    Input(skySwRadiationAbsorbedRate).imports("energyBudget/sky[swAbsorbed]", CA);
+    Input(skyLwRadiationAbsorbedRate).imports("energyBudget/sky[lwAbsorbed]", CA);
     Input(ventilationEnergyRate).imports("energyBudget/indoors[advectiveEnergyFlux]", CA);
+    Input(convectionEnergyRate).imports("energyBudget/cover[convectiveInflux]", CA);
     Input(airInflux).imports("indoors/ventilation[absolute]", CA).unit("m3");
+    Input(groundArea).imports("geometry[groundArea]", CA);
+    Input(indoorsAh).imports("indoors/humidity[ah]", CA);
+    Input(outdoorsAh).imports("outdoors[ah]", CA);
     Input(soilEnergyRate).imports("energyBudget/floor[conductiveInflux]", CA);
     Input(heatingPowerUsage).imports("actuators/heating/energyFlux[value]",CA).unit("W/m2");
     Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
@@ -31,7 +38,11 @@ Budget::Budget(QString name, QObject *parent)
     Input(dt).imports("calendar[timeStepSecs]").unit("s");
     Output(skyIrradiation).help("Accumulated sunlight irradiation").unit("kWh/m2");
     Output(skyRadiationAbsorbed).help("Accumulated radiation lost to the sky").unit("kWh/m2");
+    Output(skySwRadiationAbsorbed).help("Accumulated sw radiation lost to the sky").unit("kWh/m2");
+    Output(skyLwRadiationAbsorbed).help("Accumulated lw radiation lost to the sky").unit("kWh/m2");
     Output(ventilationEnergy).help("Energy lost by ventilation incl. leakage").unit("kWh/m2");
+    Output(convectionEnergy).help("Energy lost by convection").unit("kWh/m2");
+//    Output(latentHeatEnergy).help("Energy lost by latent heat in air flux").unit("kWh/m2");
     Output(soilEnergy).help("Energy lost to soil by conduction from floor").unit("kWh/m2");
     Output(heatingEnergy).help("Accumulated energy spent on heating").unit("kWh/m2");
     Output(growthLightsEnergy).help("Accumulated energy spent on growth lights").unit("kWh/m2");
@@ -42,17 +53,22 @@ void Budget::initialize() {
 }
 
 void Budget::reset() {
-   _kiloHour = dt*1./3600./1000.;
+   _kiloHour = dt/3600./1000.;
    _prevDate = QDate();
+   _hasResetSums = false;
 }
 
 void Budget::update() {
     checkNewYear();
-//    double latentHeatRate = ventilationAirExchangeRate;
+    // W/m2 = m3/m2 * kg/m3 * J/kg / s;
+    double latentHeatRate = airInflux/groundArea*(outdoorsAh-indoorsAh)*LHe/dt;
     skyIrradiation       += skyIrradiationRate*_kiloHour;
     skyRadiationAbsorbed += skyRadiationAbsorbedRate*_kiloHour;
+    skySwRadiationAbsorbed += skySwRadiationAbsorbedRate*_kiloHour;
+    skyLwRadiationAbsorbed += skyLwRadiationAbsorbedRate*_kiloHour;
     ventilationEnergy    += ventilationEnergyRate*_kiloHour;
-    latentHeat           += latentHeat*_kiloHour;
+    convectionEnergy     += convectionEnergyRate*_kiloHour;
+    latentHeatEnergy     += latentHeatRate*_kiloHour;
     soilEnergy           += soilEnergyRate*_kiloHour;
     heatingEnergy        += heatingPowerUsage*_kiloHour;
     growthLightsEnergy   += growthLightsPowerUsage*_kiloHour;
@@ -60,17 +76,21 @@ void Budget::update() {
 }
 
 void Budget::checkNewYear()  {
-    if (_prevDate.isValid() && date.day()==1 && date.month()==1 && date!=_prevDate) {
+    if (!_hasResetSums && _prevDate.isValid() && date.day()==1 && date.month()==1 && date!=_prevDate) {
         skyIrradiation =
         skyRadiationAbsorbed =
+        skySwRadiationAbsorbed =
+        skyLwRadiationAbsorbed =
         ventilationEnergy =
-        latentHeat =
+        convectionEnergy =
+        latentHeatEnergy =
         soilEnergy =
         heatingEnergy =
         growthLightsEnergy =
         co2Total = 0.;
     }
     _prevDate = date;
+    _hasResetSums = true;
 }
 
 } //namespace

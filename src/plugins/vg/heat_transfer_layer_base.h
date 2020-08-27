@@ -31,7 +31,8 @@ protected:
         swAbsorbedFromAbove, swAbsorbedFromBelow, swAbsorbed,
         lwAbsorbedFromAbove, lwAbsorbedFromBelow, lwAbsorbed,
         lwFluxDown, lwFluxUp,
-        absorbed, latentHeat, temperature;
+        absorbed, latentHeat,
+        temperature, temperatureTop, temperatureBottom;
     // Methods
     virtual void updateLwEmission();
     void updateTemperature();

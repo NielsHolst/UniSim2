@@ -25,18 +25,24 @@ private:
     QDate date;
     double
         dt,
-        skyIrradiationRate, skyRadiationAbsorbedRate,
+        skyIrradiationRate,
+        skyRadiationAbsorbedRate, skySwRadiationAbsorbedRate, skyLwRadiationAbsorbedRate,
         ventilationEnergyRate,
+        convectionEnergyRate,
         airInflux,
+        groundArea,
+        indoorsAh, outdoorsAh,
         soilEnergyRate,
         heatingPowerUsage,
         growthLightsPowerUsage,
         co2Flux;
     // Outputs
     double
-        skyIrradiation, skyRadiationAbsorbed,
+        skyIrradiation,
+        skyRadiationAbsorbed, skySwRadiationAbsorbed, skyLwRadiationAbsorbed,
         ventilationEnergy,
-        latentHeat,
+        convectionEnergy,
+        latentHeatEnergy,
         soilEnergy,
         heatingEnergy,
         growthLightsEnergy,
@@ -44,6 +50,7 @@ private:
     // Data
     double _kiloHour;
     QDate _prevDate;
+    bool _hasResetSums;
     // Method
     void checkNewYear();
 
