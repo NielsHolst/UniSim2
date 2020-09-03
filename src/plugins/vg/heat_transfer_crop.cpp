@@ -26,8 +26,6 @@ HeatTransferCrop::HeatTransferCrop(QString name, QObject *parent)
     Input(lwScatteringCoef).equals(0.05);
     Input(leafTemperature).imports("crop/temperature[value]",CA);
     port("area")->imports("construction/geometry[groundArea]",CA);
-//    port("emissivityBottom")->equals(0.98);
-//    port("emissivityTop")->equals(0.98);
 }
 
 
@@ -48,10 +46,6 @@ void HeatTransferCrop::update() {
     lwReflectivityBottom   = lwReflectivityTop   = lw.r;
     lwTransmissivityBottom = lwTransmissivityTop = lw.t;
 
-    if (TestNum::eq(emissivityTop, -1.))
-        emissivityTop = lwAbsorptivityTop;
-    if (TestNum::eq(emissivityBottom, -1.))
-        emissivityBottom = lwAbsorptivityBottom;
     updateLwEmission();
 }
 

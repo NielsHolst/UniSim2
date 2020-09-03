@@ -29,8 +29,6 @@ HeatTransferLayerParameters::HeatTransferLayerParameters(QString name, QObject *
     Input(lwReflectivityBottom).unit("[0;1]").help("Long-wave reflectivity at the bottom");
     Input(lwTransmissivityTop).equals(1.).unit("[0;1]").help("Long-wave transmissivity at the top");
     Input(lwTransmissivityBottom).equals(1.).unit("[0;1]").help("Long-wave transmissivity at the bottom");
-    Input(emissivityTop).equals(-1.).unit("[0;1]").help("If -1 then use lwAbsorptivityTop instead");
-    Input(emissivityBottom).equals(-1.).unit("[0;1]").help("If -1 then use lwAbsorptivityBottom instead");
     Input(Utop).equals(infinity()).unit("W/K/m2 layer").help("Heat transfer coefficient at the top");
     Input(Ubottom).equals(infinity()).unit("W/K/m2 layer").help("Heat transfer coefficient at the bottom");
 
@@ -56,11 +54,6 @@ void HeatTransferLayerParameters::updateAbsorptivities() {
     snapTo(lwAbsorptivityTop, 0.); snapTo(lwAbsorptivityTop, 1.);
     snapTo(lwAbsorptivityBottom , 0.); snapTo(lwAbsorptivityBottom , 1.);
 
-    if (TestNum::eq(emissivityTop, -1.))
-        emissivityTop = lwAbsorptivityTop;
-    if (TestNum::eq(emissivityBottom, -1.))
-        emissivityBottom = lwAbsorptivityBottom;
-
     CHK(swReflectivityTop);
     CHK(swReflectivityBottom);
     CHK(swTransmissivityTop);
@@ -73,8 +66,6 @@ void HeatTransferLayerParameters::updateAbsorptivities() {
     CHK(swAbsorptivityBottom);
     CHK(lwAbsorptivityTop);
     CHK(lwAbsorptivityBottom);
-    CHK(emissivityTop);
-    CHK(emissivityBottom);
 }
 
 void HeatTransferLayerParameters::checkRange(double x, QString name) const {

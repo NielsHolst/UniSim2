@@ -10,8 +10,8 @@
 #include <base/publish.h>
 #include <base/test_num.h>
 #include <base/vector_op.h>
-#include "heat_transfer_volume.h"
 #include "heat_transfer_layer_base.h"
+#include "indoors_temperature.h"
 #include "energy_budget.h"
 
 #include <base/dialog.h>
@@ -21,9 +21,10 @@ using namespace base;
 //#define LOG(x) dialog().information(x);
 #define LOG(x)
 
-namespace vg {
+//#define LOG1(x) dialog().information(QString("EnergyBudget ") + #x + " " + QString::number(x));
+#define LOG1(x)
 
-const double tolerance = 1e-3;
+namespace vg {
 
 PUBLISH(EnergyBudget)
 
@@ -84,11 +85,11 @@ QString EnergyBudget::toString(const HeatTransferLayerBase *layer) const {
         QString::number(layer->Ubottom, 'f', 1).rightJustified(6);
 }
 
-QString EnergyBudget::toString(const HeatTransferVolume *airSpace) const {
+QString EnergyBudget::toString(const IndoorsTemperature *indoorsTemperature) const {
     return
-        QString::number(airSpace->volume, 'f', 1).rightJustified(5) +
-        QString::number(airSpace->temperature, 'f', 1).rightJustified(5) +
-        QString::number(airSpace->convectiveInflux, 'f', 1).rightJustified(5);
+        QString::number(indoorsTemperature->volume, 'f', 1).rightJustified(5) +
+        QString::number(indoorsTemperature->value, 'f', 1).rightJustified(5) +
+        QString::number(indoorsTemperature->convectiveInflux, 'f', 1).rightJustified(5);
 }
 
 QString EnergyBudget::toString() const {
@@ -96,7 +97,7 @@ QString EnergyBudget::toString() const {
     for (HeatTransferLayerBase *layer : stack)
         s += "\n" + layer->objectName().leftJustified(12) + toString(layer);
     s += "\n" + QString().fill(' ', 12) + airLabels;
-    s += "\n" + airSpaceRoom    ->objectName().leftJustified(12) + toString(airSpaceRoom);
+    s += "\n" + indoorsTemperature->objectName().leftJustified(12) + toString(indoorsTemperature);
     return s;
 }
 
@@ -106,15 +107,21 @@ EnergyBudget::EnergyBudget(QString name, QObject *parent)
 {
     help("distributes radiation among layers");
     Input(greenhouseVolume).imports("construction/geometry[volume]",CA);
-    Input(roomTemperature).imports("indoors[temperature]",CA);
+    Input(roomTemperature).imports("indoors/temperature[value]",CA);
+    Input(pipeEnergyFluxConvection).imports("actuators/heating[energyFluxConvection]", CA);
     Input(cropCoverage).imports("crop[coverage]",CA);
     Input(withCrop).equals(true).unit("bool").help("Layers over crop?");
     Input(keepConstantScreenTemperature).equals(false).unit("bool").help();
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(soilTemperature).imports("outdoors[soilTemperature]");
     Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(precision).equals(1e-3).help("Precision of numerical integration");
+//    Input(precision).imports("../*[precision]").help("Precision of numerical integration");
     Output(Uinside).help("Total inside U-value (cover inside + screens)").unit("W/K/m2 ground");
     Output(Uoutside).help("Total outside U-value (cover outside").unit("W/K/m2 ground");
+    Output(iterSw).help("No. of iterations for short wave integration");
+    Output(iterLw).help("No. of iterations for long wave integration");
+    Output(iterPar).help("No. of iterations for PAR integration");
 }
 
 void EnergyBudget::amend() {
@@ -146,8 +153,6 @@ void EnergyBudget::amend() {
     box("HeatTransferCrop").name("crop").
     endbox().
     box("HeatTransferFloor").name("floor").
-    endbox().
-    box("HeatTransferVolume").name("indoors").
     endbox();
 }
 
@@ -178,7 +183,7 @@ void EnergyBudget::reset() {
           << findOne<HeatTransferLayerBase>("./crop")
           << findOne<HeatTransferLayerBase>("./floor");
 
-    airSpaceRoom     = findOne<HeatTransferVolume>("./indoors");
+    indoorsTemperature = findOne<IndoorsTemperature>("indoors/temperature");
 
     update();
 }
@@ -213,7 +218,7 @@ void EnergyBudget::distributeParRadiation() {
         I[i]  = stack.at(i)->parFluxDown;
         I_[i] = stack.at(i)->parFluxUp;
     }
-    distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
+    iterPar = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
     for (int i=0; i<n; ++i) {
         stack[i]->parFluxDown          = I .at(i);
         stack[i]->parFluxUp            = I_.at(i);
@@ -238,7 +243,7 @@ void EnergyBudget::distributeSwRadiation() {
         I[i]  = stack.at(i)->swFluxDown;
         I_[i] = stack.at(i)->swFluxUp;
     }
-    distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
+    iterSw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
     for (int i=0; i<n; ++i) {
         stack[i]->swFluxDown          = I .at(i);
         stack[i]->swFluxUp            = I_.at(i);
@@ -263,7 +268,7 @@ void EnergyBudget::distributeLwRadiation() {
         I[i]  = stack.at(i)->lwFluxDown;
         I_[i] = stack.at(i)->lwFluxUp;
     }
-    distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
+    iterLw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
     for (int i=0; i<n; ++i) {
         stack[i]->lwFluxDown          = I .at(i);
         stack[i]->lwFluxUp            = I_.at(i);
@@ -311,10 +316,10 @@ QString EnergyBudget::toString(
     return s;
 }
 
-void EnergyBudget::distributeRadiation(
+int EnergyBudget::distributeRadiation(
         Vec a, Vec r, Vec t,
         Vec a_, Vec r_, Vec t_,
-        Vec I, Vec I_, Vec &A, Vec &A_
+        Vec I, Vec I_, Vec &A, Vec &A_, double precision
         )
 {
     Vec F = I, F_ = I_;
@@ -327,11 +332,12 @@ void EnergyBudget::distributeRadiation(
         LOG("RadiationLayers::distributeRadiation() " + QString::number(i) + "b:\n" + toString(a, r, t, a_, r_, t_, I, I_, F, F_, A, A_));
         distributeRadiationUp  (a, r, t, a_, r_, t_, F, F_, A, A_);
         LOG("RadiationLayers::distributeRadiation() " + QString::number(i) + "c:\n" + toString(a, r, t, a_, r_, t_, I, I_, F, F_, A, A_));
-    } while (vector_op::sum(F) + vector_op::sum(F_) > tolerance && ++i<20);
+    } while (vector_op::sum(F) + vector_op::sum(F_) > precision && ++i<20);
     if (i==20)
         ThrowException("DistributeRadiation did not converge").
                 value(vector_op::sum(I)).
                 value2(vector_op::sum(I_));
+    return i;
 }
 
 /* F contains the downward, F_ the upward radiation flux.
@@ -426,7 +432,7 @@ void EnergyBudget::distributeHeatByConvectionAndConduction() {
            heatFromRoomToCover  = Uinside *powdiff(roomTemperature - cover->temperatureBottom);
     cover->convectiveInflux     = heatFromOuterToCover + heatFromRoomToCover;
     totalHeatFromRoom           += heatFromRoomToCover;
-
+    LOG1(heatFromRoomToCover);
     if (!keepConstantScreenTemperature) {
         // Convection at both sides of screens to room
         for (HeatTransferLayerBase *screen : screens) {
@@ -435,15 +441,17 @@ void EnergyBudget::distributeHeatByConvectionAndConduction() {
                    heat = DeltaHeat(U, screen->heatCapacity, screen->temperature, roomTemperature, timeStep);
             screen->convectiveInflux = heat;
             totalHeatFromRoom += heat;
+            LOG1(heat);
         }
     }
 
     // Convection between floor, and room volume and soil
     HeatTransferLayerBase *floor = stack.last();
     // W/m2 ground = W/m2/K * K
-    double heatFromRoomToFloor = floor->Utop*powdiff(airSpaceRoom->temperature - floor->temperature),
+    double heatFromRoomToFloor = floor->Utop*powdiff(indoorsTemperature->value - floor->temperature),
            heatFromSoilToFloor = floor->Ubottom*(soilTemperature - floor->temperature);
     totalHeatFromRoom += heatFromRoomToFloor;
+    LOG1(heatFromRoomToFloor);
     LOG(QString("B totalHeatFromRoom %1").arg(totalHeatFromRoom));
 
     // W/m2 ground
@@ -452,13 +460,13 @@ void EnergyBudget::distributeHeatByConvectionAndConduction() {
     LOG(QString("Z heatFromRoomToFloor %1").arg(heatFromRoomToFloor));
     LOG(QString("Z heatFromSoilToFloor %1").arg(heatFromSoilToFloor));
     // Transfer energy to air volumes (W)
-    airSpaceRoom->convectiveInflux     = -totalHeatFromRoom;
+    indoorsTemperature->convectiveInflux     = -totalHeatFromRoom + pipeEnergyFluxConvection;
 }
 
 void EnergyBudget::transferScreenHeatToRoom() {
     // Give up on heat transfer to screens
     for (HeatTransferLayerBase *screen : screens) {
-        airSpaceRoom->convectiveInflux += screen->absorbed;
+        indoorsTemperature->convectiveInflux += screen->absorbed;
         screen->  absorbed =
         screen->swAbsorbed =
         screen->lwAbsorbed = 0.;

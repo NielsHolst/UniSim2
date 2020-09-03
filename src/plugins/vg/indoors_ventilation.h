@@ -28,7 +28,6 @@ private:
     QVector<double> airTransmissivities, areas;
     // Outputs
     double relative, absolute,
-//        dueToLeakage, dueToVents,
         airTransmissivity,
         relativeArea, fluxLeak, fluxWind, fluxTemp;
 };

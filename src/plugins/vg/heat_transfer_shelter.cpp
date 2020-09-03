@@ -41,15 +41,12 @@ HeatTransferShelter::HeatTransferShelter(QString name, QObject *parent, QString 
     InputShelter(Ubottom);
 
     suffix = "";
-    InputShelter(emissivityTop);
-    InputShelter(emissivityBottom);
-
     InputShelter(area);
     InputShelter(heatCapacity);
 
     Input(groundArea).imports("geometry[groundArea]");
     Input(coverPerGroundArea).imports("construction/geometry[coverPerGroundArea]");
-    Input(indoorsTemperature).imports("indoors[temperature]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
     port("heatCapacity")->unit("J/K/m2 ground");
     port("Utop")->unit("J/K/m2 ground");
     port("Ubottom")->unit("J/K/m2 ground");
@@ -141,13 +138,6 @@ void HeatTransferShelter::updateRadiativeProperties() {
         lwTransmissivityBottom = 1.;
         lwReflectivityBottom   = lwAbsorptivityBottom  = 0.;
     }
-
-    emissivityTop    = weightedAverage(emissivityTopShelter,    areaShelter, this);
-    emissivityBottom = weightedAverage(emissivityBottomShelter, areaShelter, this);
-    if (TestNum::eq(emissivityTop, -1.))
-        emissivityTop = lwAbsorptivityTop;
-    if (TestNum::eq(emissivityBottom, -1.))
-        emissivityBottom = lwAbsorptivityBottom;
 }
 
 void HeatTransferShelter::updateLwEmission() {

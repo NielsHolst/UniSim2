@@ -24,36 +24,6 @@ Controllers::Controllers(QString name, QObject *parent)
 void Controllers::amend() {
     BoxBuilder builder(this);
 
-//    if (!findMaybeOne<Box>("./heating"))
-//        builder.
-//        box().name("heating").
-//            newPort("value").imports("./controller[controlVariable]",CA).
-//            box("PidController").name("controller").
-//                port("sensedValue").imports("indoors[temperature]",CA).
-//                port("desiredValue").imports("setpoints/heatingTemperature[value]",CA).
-//                port("desire").equals("KeepAbove").
-//                port("minimum").equals(0).
-//                port("maximum").equals(1).
-//                port("Kprop").equals(0.05).
-//                port("Kderiv").equals(-0.5).
-//            endbox().
-//        endbox();
-
-//    if (!findMaybeOne<Box>("./ventilation"))
-//        builder.
-//        box("Maximum").name("ventilation").
-//            port("values").imports("./controller[controlVariable] | setpoints[crackVentilation]").
-//            box("PidController").name("controller").
-//                port("sensedValue").imports("indoors[temperature]",CA).
-//                port("desiredValue").imports("setpoints/ventilationTemperature[value]",CA).
-//                port("desire").equals("KeepBelow").
-//                port("minimum").equals(0).
-//                port("maximum").equals(1).
-//                port("Kprop").equals(0.05).
-//                port("Kderiv").equals(-0.5).
-//            endbox().
-//        endbox();
-
     if (!findMaybeOne<Box>("./screens"))
         builder.
         box().name("screens").

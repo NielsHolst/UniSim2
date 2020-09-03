@@ -42,6 +42,8 @@ Screen::Screen(QString name, QObject *parent)
     Output(swAbsorptivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
     Output(lwAbsorptivityTopNet).help("Parameter corrected for state").unit("[0;1]");
     Output(lwAbsorptivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
+    Output(emissivityTopNet).help("Parameter corrected for state").unit("[0;1]");
+    Output(emissivityBottomNet).help("Parameter corrected for state").unit("[0;1]");
     Output(UtopNet).help("Parameter corrected for state").unit("W/K/m2 screen");
     Output(UbottomNet).help("Parameter corrected for state").unit("W/K/m2 screen");
 }

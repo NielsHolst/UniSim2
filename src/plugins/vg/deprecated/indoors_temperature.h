@@ -7,30 +7,28 @@
 */
 #ifndef INDOORS_TEMPERATURE_H
 #define INDOORS_TEMPERATURE_H
+
+#include <QVector>
 #include <base/box.h>
+#include <base/circular_buffer.h>
 
 namespace vg {
 
 class IndoorsTemperature : public base::Box
 {
-    friend class EnergyBudget;
 public:
     IndoorsTemperature(QString name, QObject *parent);
-    void reset() final;
-    void update() final;
-    double getTemperature() const;
-    void setTemperature(double value);
-protected:
-    // Inputs
-    double initTemperature, convectiveInflux,
-        airInflux, outdoorsTemperature,
-        timeStep, groundArea, volume;
-    // Outputs
-    double value, advectiveEnergyFlux;
+    void reset();
+    void update();
 private:
-    // Methods
-    void updateByAdvection(double influxVolume, double influxTemperature);
+    // Inputs
+    double height, timeStep, energyFlux, resetValue, baseTemperature;
+    // Output
+    double value;
+    // Data
+    int tick;
 };
-
 } //namespace
+
+
 #endif

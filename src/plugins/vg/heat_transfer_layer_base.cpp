@@ -57,10 +57,8 @@ HeatTransferLayerBase::HeatTransferLayerBase(QString name, QObject *parent)
 void HeatTransferLayerBase::updateLwEmission() {
     double fluxDown = Sigma*p4K(temperatureBottom),
            fluxUp  = Sigma*p4K(temperatureTop);
-    lwFluxDown = emissivityBottom*fluxDown;
-    lwFluxUp   = emissivityTop*fluxUp;
-    if (emissivityBottom<0. || emissivityTop<0.)
-        ThrowException("Emissivities have not been properly initialized").context(this);
+    lwFluxDown = lwAbsorptivityBottom*fluxDown;
+    lwFluxUp   = lwAbsorptivityTop*fluxUp;
 }
 
 void HeatTransferLayerBase::updateTemperature() {

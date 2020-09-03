@@ -1,5 +1,0 @@
-PaneLwReflection = 0.95 (glas)
-PaneUValue       = 2.8 (det er værdien ved vindstille; derfor er den lille)
-CO2Capacity     = 50
-Pipe density    = 4
-

@@ -23,7 +23,7 @@ VapourFluxCondensationCrop::VapourFluxCondensationCrop(QString name, QObject *pa
     help("models vapour flux through condensation on inside greenhouse surface");
     Input(lai).imports("greenhouse/crop[lai]",CA);
     Input(cropTemperature).imports("crop/temperature[value]",CA);
-    Input(indoorsTemperature).imports("indoors[temperature]",CA);
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA);
     Input(indoorsAh).imports("indoors/humidity[ah]",CA);
 }
 

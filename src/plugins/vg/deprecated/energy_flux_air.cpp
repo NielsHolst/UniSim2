@@ -22,7 +22,7 @@ EnergyFluxAir::EnergyFluxAir(QString name, QObject *parent)
 {
     help("models energy flux carried by air from outdoors to indoors");
     Input(airFlux).equals(0).help("Rate of air exchange between outdoors and indoors").unit("m3/m3/h");
-    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(outdoorsTemperature).imports("outdoors[temperature]",CA).unit("oC");
     Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
     Input(timeStepSecs).imports("calendar[timeStepSecs]").unit("s");

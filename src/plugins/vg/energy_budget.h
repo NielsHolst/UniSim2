@@ -13,7 +13,7 @@
 namespace vg {
 
 class HeatTransferLayerBase;
-class HeatTransferVolume;
+class IndoorsTemperature;
 
 class EnergyBudget : public base::Box
 {
@@ -24,9 +24,9 @@ public:
     void update();
     // Methods mimicking R functions
     typedef QVector<double> Vec;
-    static void distributeRadiation(Vec a, Vec r, Vec t,
+    static int distributeRadiation(Vec a, Vec r, Vec t,
             Vec a_, Vec r_, Vec t_,
-            Vec I, Vec I_, Vec &A, Vec &A_
+            Vec I, Vec I_, Vec &A, Vec &A_, double precision
             );
     static void distributeRadiationDown(Vec a, Vec r, Vec t,
             Vec a_, Vec r_, Vec t_,
@@ -40,14 +40,17 @@ private:
     // Inputs
     double greenhouseVolume, cropCoverage,
         outdoorsTemperature, soilTemperature,
-        roomTemperature, timeStep;
+        roomTemperature, timeStep,
+        pipeEnergyFluxConvection,
+        precision;
     bool withCrop, keepConstantScreenTemperature;
     // Outputs
     double Uinside, Uoutside;
+    int iterSw, iterLw, iterPar;
     // Data
     typedef QVector<HeatTransferLayerBase*> Stack;
     Stack stack, screens; // screens are a subset of stack
-    HeatTransferVolume *airSpaceRoom;
+    IndoorsTemperature *indoorsTemperature;
     // Methods
     void distributeParRadiation();
     void distributeSwRadiation();
@@ -55,7 +58,7 @@ private:
     void distributeHeatByConvectionAndConduction();
     void transferScreenHeatToRoom();
     QString toString(const HeatTransferLayerBase *layer) const;
-    QString toString(const HeatTransferVolume *airSpace) const;
+    QString toString(const IndoorsTemperature *indoorsTemperature) const;
     QString toString() const;
     static QString toString(Vec a, Vec r, Vec t,
              Vec a_, Vec r_, Vec t_, Vec I, Vec I_,

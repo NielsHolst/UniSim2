@@ -61,7 +61,7 @@ void Controlled::amend() {
     builder2.
     box("IndoorsTemperature").name("temperature").
         port("energyFlux").imports("./energyFlux[value]").
-        port("baseTemperature").imports("indoors[temperature]",CA).
+        port("baseTemperature").imports("indoors/temperature[value]",CA).
         box("vg::Sum").name("energyFlux").
             port("inputs").equals("(given/energyFlux[value] energyFlux/heating/supply[value])").
         endbox().

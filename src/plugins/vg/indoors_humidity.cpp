@@ -25,7 +25,7 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
     Input(conductance).imports("waterBudget[conductanceSum]",CA);
     Input(vapourFlux).imports("waterBudget[vapourFluxSum]",CA);
     Input(gain).imports("waterBudget[gainSum]",CA);
-    Input(temperature).imports("indoors[temperature]",CA);
+    Input(temperature).imports("indoors/temperature[value]",CA);
     Input(height).imports("geometry[averageHeight]",CA);
     Input(timeStep).imports("calendar[timeStepSecs]");
 

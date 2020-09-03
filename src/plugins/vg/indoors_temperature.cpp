@@ -7,37 +7,69 @@
 */
 #include <base/phys_math.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "indoors_temperature.h"
+
+#include <base/dialog.h>
 
 using namespace base;
 using namespace phys_math;
 
+//#define LOG(x) dialog().information(QString("IndoorsTemperature ") + #x + " " + QString::number(x));
+#define LOG(x)
+
 namespace vg {
-	
+
 PUBLISH(IndoorsTemperature)
 
 IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("models indoors temperature");
-    Input(resetValue).equals(20.).help("Indoors temperature when model is reset").unit("oC");
-    Input(energyFlux).help("Energy flux dissipated into greenhouse air").unit("W/m2");
-    Input(baseTemperature).imports(".[value]").unit("oC");
-    Input(height).imports("geometry[indoorsAverageHeight]",CA).unit("m");
-    Input(timeStep).imports("calendar[timeStepSecs]").unit("s");
-    Output(value).help("Indoors temperature").unit("oC");
+    Input(initTemperature).equals(20.).help("Initial air temperature").unit("oC");
+    Input(convectiveInflux).help("Energy influx by convection").unit("W/m2 ground");
+    Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(groundArea).imports("geometry[groundArea]", CA);
+    Input(volume).imports("geometry[volume]", CA);
+    Input(airInflux).imports("indoors/ventilation[relative]", CA);
+    Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
+    Output(value).help("Current air temperature").unit("oC");
+    Output(advectiveEnergyFlux).help("Energy exchanged with outdoors by air exchange").unit("W/m2");
 }
 
 void IndoorsTemperature::reset() {
-    value = resetValue;
-    tick = 0;
+    value = initTemperature;
+}
+
+inline double y(double y0, double z, double v, double dt) {
+  return z + (y0 - z)*exp(-v*dt);
 }
 
 void IndoorsTemperature::update() {
-    // Keep temperature constant for the first few time steps to stabilise overall model state
-    if (tick++ < 10) return;
-    double Cair = height*RhoAir*CpAir;               // J/m2/K = m * kg/m3 * J/kg/K
-    value = baseTemperature + energyFlux*timeStep/Cair;  // K = W/m2 * s / (J/m2/K)
+    LOG(convectiveInflux);
+    // First, adjust air temperature for convective heat
+    double mass = RhoAir*volume,  // kg = kg/m3 * m3
+           heatCapacity = CpAir*mass/groundArea,  // J/K/m2 = (J/kg/K) * kg / m2
+           rateOfChange  = convectiveInflux/heatCapacity;  // K/s = W/m2 * K*m2/J
+    value += rateOfChange*timeStep;
+
+    // Then, adjust air temperature for advective heat
+    double indoorsTemperatureFinal = y(value, outdoorsTemperature, airInflux, timeStep/3600.),
+           dTemp = indoorsTemperatureFinal - value;
+    LOG(dTemp);
+    value = indoorsTemperatureFinal;
+
+    // Compute temperature by air exchange in terms of energy flux
+    // W/m2 = K * J/K/m2 /s
+    advectiveEnergyFlux = dTemp*heatCapacity/timeStep;
+}
+
+double IndoorsTemperature::getTemperature() const {
+    return value;
+}
+
+void IndoorsTemperature::setTemperature(double value) {
+    value = value;
 }
 
 } //namespace
+

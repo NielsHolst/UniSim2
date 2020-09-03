@@ -44,8 +44,8 @@ private:
     bool _importPortMustExist, _importsResolved;
     Caller _importCaller;
     PortAccess _access;
-    bool _isReference, _reset, _valueOverridden;
-    bool _isBlind;
+    bool _isReference, _reset, _valueOverridden,
+        _isBlind;
     QStringList _warnings;
 
     void checkValueOverridden();
@@ -98,7 +98,7 @@ public:
     void reset();
     void update();
     void copyFromImport();
-    void copyFromSelfImport(const Box *self);
+    void checkSelfImport();
     void assign(const QVector<Port *> &sources);
     void format(PortType type);
     Track::Order track(PortFilter filter=PortFilter::None);
@@ -114,6 +114,7 @@ public:
     PortType type() const;
     PortAccess access() const;
     bool hasImport() const;
+    bool hasSelfImport() const;
     bool hasDistribution() const;
     bool isValueOverridden() const;
     QString importPath() const;

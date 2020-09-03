@@ -20,7 +20,7 @@ VentilationByTemperature::VentilationByTemperature(QString name, QObject *parent
 {
     help("computes ventilation through vents due to temperature");
     Input(coefficient).equals(0.1).help("Linear increase in ventilation rate with increasing temperature difference and vent area [m/K/h]");
-    Input(indoorsTemperature).imports("indoors[temperature]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
     Input(ventsEffectiveArea).imports("construction/shelter[ventsEffectiveArea]");
     Input(ventsMaxEffectiveArea).imports("construction/shelter[ventsMaxEffectiveArea]");

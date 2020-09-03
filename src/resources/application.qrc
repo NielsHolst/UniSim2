@@ -245,20 +245,6 @@
     <file>data/input/scripts/excel-to-vg.xsl</file>
     <file>data/input/scripts/install_packages.R</file>
     <file>data/input/scripts/profile.R</file>
-    <file>data/input/scripts/sandy/sandy.box</file>
-    <file>data/input/scripts/sandy/sandy1.box</file>
-    <file>data/input/scripts/sandy/sandy2a.box</file>
-    <file>data/input/scripts/sandy/sandy2b.box</file>
-    <file>data/input/scripts/sandy/sandy2c.box</file>
-    <file>data/input/scripts/sandy/sandy2d.box</file>
-    <file>data/input/scripts/sandy/sandy3a.box</file>
-    <file>data/input/scripts/sandy/sandy3b.box</file>
-    <file>data/input/scripts/sandy/sandy4a.box</file>
-    <file>data/input/scripts/sandy/sandy4b.box</file>
-    <file>data/input/scripts/sandy/sandy_.box</file>
-    <file>data/input/scripts/sandy/t_urticae.box</file>
-    <file>data/input/scripts/sandy/t_urticae_sandy.box</file>
-    <file>data/input/scripts/sandy/t_urticae_simulation.box</file>
     <file>data/input/teaching/cabbage-nightshade.box</file>
     <file>data/input/teaching/weather/alpine 2016.txt</file>
     <file>data/input/teaching/weather/braunschweig 2009.txt</file>

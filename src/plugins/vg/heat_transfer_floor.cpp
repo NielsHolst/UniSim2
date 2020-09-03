@@ -21,15 +21,15 @@ HeatTransferFloor::HeatTransferFloor(QString name, QObject *parent)
     help("holds the radiative parameters of the floor");
     port("swTransmissivityTop")->equals(0.);
     port("swTransmissivityBottom")->equals(0.);
-    port("swReflectivityTop")->equals(0.4);
-    port("swReflectivityBottom")->equals(0.4);
+    port("swReflectivityTop")->imports("construction/floor[reflectivity]");
+    port("swReflectivityBottom")->imports("construction/floor[reflectivity]");
     port("lwTransmissivityTop")->equals(0.);
     port("lwTransmissivityBottom")->equals(0.);
-    port("lwReflectivityTop")->equals(0.4);
-    port("lwReflectivityBottom")->equals(0.4);
-    port("Utop")->equals(7.5);
-    port("Ubottom")->equals(0.1);
-    port("heatCapacity")->equals(42000.);
+    port("lwReflectivityTop")->imports("construction/floor[reflectivity]");
+    port("lwReflectivityBottom")->imports("construction/floor[reflectivity]");
+    port("Utop")->imports("construction/floor[Utop]");
+    port("Ubottom")->imports("construction/floor[Ubottom]");
+    port("heatCapacity")->imports("construction/floor[heatCapacity]");
     port("area")->imports("construction/geometry[groundArea]",CA);
 }
 

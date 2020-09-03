@@ -24,6 +24,9 @@ HeatTransferScreen1::HeatTransferScreen1(QString name, QObject *parent)
     port("maxTemperatureRateOfChange")->equals(0.25);
 }
 
+void HeatTransferScreen1::amend() {
+}
+
 void HeatTransferScreen1::update() {
     updateArea();
     updateHeatCapacity();

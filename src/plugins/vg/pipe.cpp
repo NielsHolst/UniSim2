@@ -11,6 +11,8 @@
 #include <base/test_num.h>
 #include "pipe.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 using namespace phys_math;
 using namespace std;
@@ -30,8 +32,8 @@ Pipe::Pipe(QString name, QObject *parent)
     Input(minTemperature).equals(20.).help("Minimum inflow temperature").unit("oC");
     Input(maxTemperature).equals(80.).help("Maximum inflow temperature").unit("oC");
 
-    Input(inflowTemperature).imports("actuators/heating/temperature[value]",CA).unit("oC");
-    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
+    Input(inflowTemperature).imports("actuators/heating[temperature]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(groundArea).imports("geometry[groundArea]",CA).unit("m2");
     Input(numSpans).imports("geometry[numSpans]",CA);
 
@@ -68,6 +70,10 @@ void Pipe::reset() {
 }
 
 void Pipe::update() {
+//    dialog().information("Pipe::update indoors inflow " +
+//                         QString::number(indoorsTemperature) + " " +
+//            QString::number(inflowTemperature));
+
     if (TestNum::eq(flowRate, -999)) flowRate = 5.;
     transitTime = 1000.*volumePerSpan/flowRate;
     inflowTemperature = minmax(indoorsTemperature, inflowTemperature, maxTemperature);

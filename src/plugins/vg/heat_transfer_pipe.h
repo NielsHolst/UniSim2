@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Inputs
-    double energyFlux;
+    double energyFluxRadiation;
 };
 
 } //namespace

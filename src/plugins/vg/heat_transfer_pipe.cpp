@@ -11,6 +11,7 @@
 
 using namespace base;
 
+
 namespace vg {
 
 PUBLISH(HeatTransferPipe)
@@ -19,7 +20,8 @@ HeatTransferPipe::HeatTransferPipe(QString name, QObject *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the heat pipes");
-    Input(energyFlux).imports("actuators/heating/energyFlux[value]",CA);
+    Input(energyFluxRadiation).imports("actuators/heating[energyFluxRadiation]",CA);
+    port("temperature")->imports("actuators/heating[temperature]",CA).help("For concistence. Not used here");
     port("area")->imports("construction/geometry[groundArea]",CA);
 }
 
@@ -34,10 +36,7 @@ void HeatTransferPipe::reset() {
 
 void HeatTransferPipe::update() {
     // Spread the flux equally upwards and downwards
-    lwFluxDown = lwFluxUp = energyFlux/2.;
-//     Send it all down
-//    lwFluxDown = energyFlux;
-//    lwFluxUp = 0.;
+    lwFluxDown = lwFluxUp = energyFluxRadiation/2.;
 }
 
 } //namespace

@@ -7,22 +7,49 @@
 */
 #ifndef ENERGY_BUDGET_OPTIMISER_H
 #define ENERGY_BUDGET_OPTIMISER_H
-#include <QVector>
 #include <base/box.h>
+#include <base/port.h>
+
+namespace base {
+    class Box;
+    class Port;
+}
 
 namespace vg {
+
+class ActuatorHeatPipes;
+class ActuatorVentilation;
+class IndoorsTemperature;
 
 class EnergyBudgetOptimiser : public base::Box
 {
 public: 
     EnergyBudgetOptimiser(QString name, QObject *parent);
-    // standard methods
     void initialize();
     void update();
 private:
-    QVector<QString> inputs;
-    double value;
-    QVector<base::Port*> ports;
+    // Inputs
+    double
+        deltaPipeTemperature, deltaVentilation,
+        setpointHeating, setpointVentilation, setPointPrecision,
+        pipeTemperature, pipeTemperatureMin, pipeTemperatureMax,
+        ventilation, ventilationMin, ventilationMax,
+        precision;
+    // Outputs
+    QString action, solution;
+    double changePipeTemperature, changeVentilation;
+    int numUpdates;
+    // Data
+    ActuatorHeatPipes *actuatorHeatPipes;
+    ActuatorVentilation *actuatorVentilation;
+    IndoorsTemperature *indoorsTemperature;
+    base::Box *energyBudget;
+    double _currentIndoorsTemperature, _currentHeat, _currentVentilation;
+    // Methods
+    void tooHot();
+    void tooCold();
+    void carryOn();
+    void updateDependents();
 };
 
 } //namespace

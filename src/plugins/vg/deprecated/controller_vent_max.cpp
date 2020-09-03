@@ -18,7 +18,7 @@ ControllerVentMax::ControllerVentMax(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes maximum vent opening");
-    Input(indoorsTemperature).imports("indoors[temperature]",CA);
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA);
     Input(outdoorsTemperature).imports("outdoors[temperature]",CA);
     Input(crackVentilation).imports("../min[value]");
     Output(value).help("Relative rate of air exchange [m3/m3/h]");

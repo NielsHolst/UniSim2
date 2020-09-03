@@ -117,7 +117,7 @@ void Setpoints::amend() {
             port("maxSignal").imports("../..[screenCrackAtHighRh]",CA).
         endbox().
         box("ProportionalSignal").name("atHighTemperature").
-            port("input").imports("indoors[temperature]",CA).
+            port("input").imports("indoors/temperature[value]",CA).
             port("threshold").imports("../../ventilationTemperature[value]",CA).
             port("thresholdBand").imports("../..[screenCrackAtHighTemperatureBand]",CA).
             port("increasingSignal").equals(false).

@@ -53,6 +53,8 @@ void Simulation::amend() {
 }
 
 void Simulation::initialize() {
+    if (debug())
+        dialog().information("Note: Debug is ON. Program will be slow");
     environment().isUnattended(unattended);
     iteration = 1;
     // Increment file counter;

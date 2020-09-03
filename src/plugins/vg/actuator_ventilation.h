@@ -5,24 +5,25 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/publish.h>
-#include "actuators.h"
+#ifndef ACTUATOR_VENTILATION_H
+#define ACTUATOR_VENTILATION_H
 
-using namespace base;
+#include <base/box.h>
 
 namespace vg {
 
-PUBLISH(Actuators)
-
-Actuators::Actuators(QString name, QObject *parent)
-    : Box(name, parent)
+class ActuatorVentilation : public base::Box
 {
-    help("contains sub-models for actuators");
-}
-
-void Actuators::amend() {
-}
-
-
+public:
+    ActuatorVentilation(QString name, QObject *parent);
+    void reset();
+    double getOpening() const;
+    void setOpening(double opening);
+private:
+    // Inputs
+    double value, minValue, maxValue;
+};
 } //namespace
 
+
+#endif

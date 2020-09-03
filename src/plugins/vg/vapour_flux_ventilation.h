@@ -19,7 +19,7 @@ public:
     void update();
 private:
     // Inputs
-    double timeStep, airInflux, groundArea,
+    double timeStep, airInflux, averageHeight,
       outdoorsAh, indoorsAh;
 };
 } //namespace

@@ -22,7 +22,7 @@ EnergyFluxHeatingDemand::EnergyFluxHeatingDemand(QString name, QObject *parent)
     help("computes the energy flux demanded to heat the greenhouse to the heating setpoint");
     Input(givenEnergyFlux).imports("given/energyFlux[value]");
     Input(heatingSetpoint).imports("setpoints/temperature/heating[value]");
-    Input(indoorsTemperature).imports("indoors[temperature]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(height).imports("geometry[indoorsAverageHeight]");
     Input(timeStep).imports("calendar[timeStepSecs]");
     Input(noHeating).imports("indoors[noHeating]");

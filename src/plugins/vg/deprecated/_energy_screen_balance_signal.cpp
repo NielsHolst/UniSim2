@@ -20,7 +20,7 @@ EnergyScreenBalanceSignal::EnergyScreenBalanceSignal(QString name, QObject *pare
     help("signals whether an energy screen should be drawn");
     Input(Ucover).imports("construction/shelter[U]").unit("W/m2/K");
     Input(indoorsLight).imports("indoors/light[total]").unit("W/m2");
-    Input(indoorsTemperature).imports("indoors[temperature]").unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]").unit("oC");
     Input(outdoorsTemperature).imports("outdoors[temperature]").unit("oC");
 }
 

@@ -35,6 +35,7 @@ private:
         soilEnergyRate,
         heatingPowerUsage,
         growthLightsPowerUsage,
+         parAbsorbed,
         co2Flux;
     // Outputs
     double
@@ -46,9 +47,10 @@ private:
         soilEnergy,
         heatingEnergy,
         growthLightsEnergy,
+        parAbsorbedTotal,
         co2Total;
     // Data
-    double _kiloHour;
+    double _kiloHour, _kiloMol;
     QDate _prevDate;
     bool _hasResetSums;
     // Method

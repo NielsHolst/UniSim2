@@ -22,7 +22,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes light capture and photosynthetic rate");
-    Input(parAbsorbed).imports("crop[parAbsorbed]");
+    Input(parAbsorbed).imports("energyBudget/crop[parAbsorbed]");
     Input(par).imports("energyBudget/crop[parFluxDown] | energyBudget/crop[parFluxUp]",CA).transform(Sum);
     Input(lai).imports("..[lai]",CA);
     Input(k).imports("energyBudget/crop[swK]",CA);

@@ -5,32 +5,29 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef INDOORS_TEMPERATURE_H
-#define INDOORS_TEMPERATURE_H
+#ifndef ACTUATOR_HEAT_PIPES_H
+#define ACTUATOR_HEAT_PIPES_H
+
 #include <base/box.h>
 
 namespace vg {
 
-class IndoorsTemperature : public base::Box
+class ActuatorHeatPipes : public base::Box
 {
-    friend class EnergyBudget;
 public:
-    IndoorsTemperature(QString name, QObject *parent);
-    void reset() final;
-    void update() final;
+    ActuatorHeatPipes(QString name, QObject *parent);
+    void reset();
+    void update();
     double getTemperature() const;
     void setTemperature(double value);
-protected:
-    // Inputs
-    double initTemperature, convectiveInflux,
-        airInflux, outdoorsTemperature,
-        timeStep, groundArea, volume;
-    // Outputs
-    double value, advectiveEnergyFlux;
 private:
-    // Methods
-    void updateByAdvection(double influxVolume, double influxTemperature);
+    // Inputs
+    double temperature, propConvection;
+    QVector<double> minTemperatures, maxTemperatures, energyFluxes;
+    // Outputs
+    double minTemperature, maxTemperature, energyFluxConvection, energyFluxRadiation, energyFluxTotal;
 };
-
 } //namespace
+
+
 #endif

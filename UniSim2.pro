@@ -137,10 +137,10 @@ unisim.depends = vg
 #resist.depends = base
 #unisim.depends = resist
 
-SUBDIRS += saccharina
-saccharina.subdir = src/plugins/saccharina
-saccharina.depends = base
-unisim.depends = saccharina
+#SUBDIRS += saccharina
+#saccharina.subdir = src/plugins/saccharina
+#saccharina.depends = base
+#unisim.depends = saccharina
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

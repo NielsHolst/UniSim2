@@ -317,9 +317,20 @@ void Port::copyFromImport() {
         assign(_importPorts);
 }
 
-void Port::copyFromSelfImport(const Box *self) {
-    if (hasImport() && boxParent()==self)
-        assign(_importPorts);
+void Port::checkSelfImport() {
+    if (hasImport()) {
+        Port *me = const_cast<Port*>(this);
+        for (Port *source : _importPorts) {
+            const Box *sourceParent = const_cast<const Box*>(source->boxParent());
+            const Box *myParent     = const_cast<const Box*>(me->boxParent());
+            if (sourceParent == myParent) {
+                ThrowException("Ports in the same box should not import one another").
+                        value(fullName()).
+                        value2(source->fullName()).
+                        context(this);
+            }
+        }
+    }
 }
 
 void Port::assign(const QVector<Port*> &sources) {
@@ -424,6 +435,9 @@ QString Port::valueAsString() const {
 void Port::verifyValue() const {
     if (valueAsString().startsWith("nan")) {
         ThrowException("Value is not a number").context(this);
+    }
+    else if (valueAsString() == "NA") {
+        ThrowException("Value is NA").context(this);
     }
 }
 

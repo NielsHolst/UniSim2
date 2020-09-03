@@ -178,14 +178,26 @@ void Box::amendFamily() {
 }
 
 void Box::createTimers() {
-    _timer->addProfile("amend");
-    _timer->addProfile("initialize");
-    _timer->addProfile("reset");
-    _timer->addProfile("update-updateImports");
-    _timer->addProfile("update-update");
-    _timer->addProfile("update-trackPorts");
-    _timer->addProfile("cleanup");
-    _timer->addProfile("debrief");
+    createTimer("amend");
+    createTimer("initialize");
+    createTimer("reset");
+    createTimer("update");
+    createTimer("updateImports");
+    createTimer("updateSelfImports");
+    createTimer("cleanup");
+    createTimer("debrief");
+}
+
+void Box::createTimer(QString name) {
+    _timer->addProfile(name);
+}
+
+void Box::startTimer(QString name) {
+    _timer->start(name);
+}
+
+void Box::stopTimer(QString name) {
+    _timer->stop(name);
 }
 
 void Box::enumerateBoxes(int &i) {
@@ -214,10 +226,10 @@ void Box::initializeFamily() {
     }
     resolvePortImports();
     updateImports();
+    checkSelfImports();
     if (_traceOn)
         dialog().information("initialize " + fullName());
     if (!_ignore) initialize();
-    updateSelfImports();
     _timer->stop("initialize");
 }
 
@@ -234,7 +246,6 @@ void Box::resetFamily() {
         dialog().information("reset " + fullName());
     if (!_ignore) reset();
     verifyPorts();
-    updateSelfImports();
     _timer->stop("reset");
 }
 
@@ -244,21 +255,16 @@ void Box::updateFamily() {
         if (box)
             box->updateFamily();
     }
-
-    _timer->start("update-updateImports");
     updateImports();
-    _timer->stop("update-updateImports");
-
-    _timer->start("update-update");
     if (_traceOn)
         dialog().information("update " + fullName());
-    if (!_ignore) update();
-    verifyPorts();
-    updateSelfImports();
-    _timer->stop("update-update");
 
-    _timer->start("update-trackPorts");
-    _timer->stop("update-trackPorts");
+    _timer->start("update");
+    if (!_ignore) update();
+    _timer->stop("update");
+
+    verifyPorts();
+
 }
 
 void Box::cleanupFamily() {
@@ -273,7 +279,6 @@ void Box::cleanupFamily() {
         dialog().information("cleanup " + fullName());
     if (!_ignore) cleanup();
     verifyPorts();
-    updateSelfImports();
     _timer->stop("cleanup");
 }
 
@@ -289,7 +294,6 @@ void Box::debriefFamily() {
         dialog().information("debrief " + fullName());
     if (!_ignore) debrief();
     verifyPorts();
-    updateSelfImports();
     _timer->stop("debrief");
 }
 
@@ -302,13 +306,15 @@ void Box::resolvePortImports() {
 }
 
 void Box::updateImports() {
+    _timer->start("updateImports");
     for (Port *port : _ports.values())
         port->copyFromImport();
+    _timer->stop("updateImports");
 }
 
-void Box::updateSelfImports() {
+void Box::checkSelfImports() {
     for (Port *port : _ports.values())
-        port->copyFromSelfImport(this);
+        port->checkSelfImport();
 }
 
 void Box::verifyPorts() {
@@ -364,6 +370,10 @@ bool Box::cloned() const {
 
 void Box::debug(bool on) {
     _traceOn = _debugOn = on;
+}
+
+bool Box::debug() {
+    return _debugOn;
 }
 
 void Box::toText(QTextStream &text, QString options, int indentation) const {

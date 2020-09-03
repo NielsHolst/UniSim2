@@ -10,7 +10,6 @@
 <!-- Missing parameters -->
 <xsl:variable name="HPS-minPeriodOn" select="30"/>
 <xsl:variable name="LED-minPeriodOn" select="0"/>
-<xsl:variable name="UwindSlope" select="1.2"/>
 <xsl:variable name="UwindExponent" select="0.8"/>
 
 <!-- Call templates -->
@@ -76,6 +75,10 @@
   
   <xsl:variable name="UwindMinimumName" select="'PaneUValue'"/>
   <xsl:variable name="UwindMinimumSrc" select="$cover/Constants/Parameters[ParameterName=$UwindMinimumName]/Value" as="node()"/>
+
+  <xsl:variable name="UwindSlopeName" select="'UwindSlope'"/>
+  <xsl:variable name="UwindSlopeSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$UwindSlopeName]/Value" as="node()"/>
+  <xsl:variable name="UwindSlopeValue" select="number(replace($UwindSlopeSrc, ',', '.'))"/>
 
   <box class="vg::Cover" name="cover">
     <port name="swReflectivityTop">
@@ -179,9 +182,15 @@
         <xsl:with-param name="value" select="$UwindMinimumSrc"/>
       </xsl:call-template>
     </port>
-    <port name="UwindSlope" externalName="UwindSlope" source="Fixed">
+    <port name="UwindSlope">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$UwindSlopeName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($UwindSlopeSrc)"/>
+      </xsl:attribute>
       <xsl:attribute name="value">
-        <xsl:value-of select="$UwindSlope"/>
+        <xsl:value-of select="$UwindSlopeValue"/>
       </xsl:attribute>
     </port>
     <port name="UwindExponent" externalName="UwindExponent" source="Fixed">
@@ -897,6 +906,18 @@
   <xsl:variable name="reflectionName" select="'GreenhouseReductionFactorLight'"/>
   <xsl:variable name="reflectionSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$reflectionName]/Value" as="node()"/>
   <xsl:variable name="reflectionValue" select="number(replace($reflectionSrc, ',', '.'))"/>
+  <xsl:variable name="floorReflectivityName" select="'floor-reflectance'"/>
+  <xsl:variable name="floorReflectivitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorReflectivityName]/Value" as="node()"/>
+  <xsl:variable name="floorReflectivityValue" select="number(replace($floorReflectivitySrc, ',', '.'))"/>
+  <xsl:variable name="floorUtopName" select="'floor-Uindoors'"/>
+  <xsl:variable name="floorUtopSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUtopName]/Value" as="node()"/>
+  <xsl:variable name="floorUtopValue" select="number(replace($floorUtopSrc, ',', '.'))"/>
+  <xsl:variable name="floorUbottomName" select="'floor-Usoil'"/>
+  <xsl:variable name="floorUbottomSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorUbottomName]/Value" as="node()"/>
+  <xsl:variable name="floorUbottomValue" select="number(replace($floorUbottomSrc, ',', '.'))"/>
+  <xsl:variable name="floorHeatCapacityName" select="'floor-heatCapacity'"/>
+  <xsl:variable name="floorHeatCapacitySrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$floorHeatCapacityName]/Value" as="node()"/>
+  <xsl:variable name="floorHeatCapacityValue" select="number(replace($floorHeatCapacitySrc, ',', '.'))"/>
 
   <box name="construction">
     <box class="vg::Geometry" name="geometry">
@@ -1016,13 +1037,60 @@
         </xsl:call-template>
       </box>
     </box>
+    <box name="floor">
+      <newPort name="reflectivity">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$floorReflectivityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($floorReflectivitySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$floorReflectivityValue"/>
+        </xsl:attribute>
+      </newPort>
+      <newPort name="Utop">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$floorUtopName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($floorUtopSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$floorUtopValue"/>
+        </xsl:attribute>
+      </newPort>
+      <newPort name="Ubottom">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$floorUbottomName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($floorUbottomSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$floorUbottomValue"/>
+        </xsl:attribute>
+      </newPort>
+      <newPort name="heatCapacity">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$floorHeatCapacityName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($floorHeatCapacitySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$floorHeatCapacityValue"/>
+        </xsl:attribute>
+      </newPort>
+    </box>
+  
   </box>
 
   <xsl:comment> *** Setpoints *** </xsl:comment>
   <box class="vg::Setpoints" name="setpoints">
     <box name="elementary">
       <box class="PrioritySignal" name="heatingTemperatureNormalRh">
-				<port name="initialSignal" value="20"/>  
+        <port name="initialSignal" value="20"/>  
         <xsl:call-template name="extract-setpoints">
           <xsl:with-param name="climateSetpointName" select="'HeatingTemp'"/>
         </xsl:call-template>
@@ -1058,7 +1126,7 @@
         </xsl:call-template>
       </box>
       <box class="PrioritySignal"  name="ventilationTemperatureMargin">
-				<port name="initialSignal" value="5"/>  
+        <port name="initialSignal" value="5"/>  
         <xsl:call-template name="extract-setpoints">
           <xsl:with-param name="climateSetpointName" select="'VentTemp'"/>
         </xsl:call-template>
@@ -1210,31 +1278,6 @@
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
-		<box name="heating">
-			<newPort name="value" ref="./controller[controlVariable]"/>
-			<box class="PidController" name="controller">
-				<port name="sensedValue" ref="indoors[temperature]"/>
-				<port name="desiredValue" ref="setpoints/heatingTemperature[value]"/>
-				<port name="Kprop" value="0.2"/>
-				<port name="lookAhead" value="20"/>
-			</box>
-		</box>
-		<box name="ventilation">
-			<newPort name="value" ref="./controller[controlVariable]"/>
-			<box class="PidController" name="controller">
-				<port name="sensedValue" ref="indoors[temperature]"/>
-				<port name="desiredValue" ref="setpoints/ventilationTemperature[value]"/>
-				<port name="Kprop" value="-0.1"/>
-			</box>
-		</box>
-		<box name="crackVentilation">
-			<newPort name="value" ref="./controller[controlVariable]"/>
-			<box class="PidController" name="controller">
-				<port name="sensedValue" ref="actuators/ventilation[value]"/>
-				<port name="desiredValue" ref="setpoints/crackVentilation[value]"/>
-				<port name="Kprop" value="0.2"/>
-			</box>
-		</box>
     <box name="co2Injection">
       <newPort name="value" ref="./controller[controlVariable]"/>
       <box class="PidController" name="controller">
@@ -1247,39 +1290,31 @@
   </box>
 
   <xsl:comment> *** Actuators *** </xsl:comment>
+  <xsl:variable name="heatPipePropConvectionName" select="'HeatPipeConvection'"/>
+  <xsl:variable name="heatPipePropConvectionSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$heatPipePropConvectionName]/Value" as="node()"/>
+  <xsl:variable name="heatPipePropConvectionValue" select="number(replace($heatPipePropConvectionSrc, ',', '.'))"/>
+
   <box class="vg::Actuators" name="actuators">
-		<box name="heating">
-      <box class="Accumulator" name="temperature">
-        <port name="initial" ref="indoors[temperature]"/>
-        <port name="change" ref="controllers/heating[value]"/>
-        <port name="minValue" ref="setpoints/heatingTemperature[value]"/>
-        <port name="maxValue" ref="ventilationControlled[value]"/>
-        <box class="OnOff" name="ventilationControlled">
-          <port name="x" ref="controllers/ventilation[value]"/>
-          <port name="xOn" value="-999"/>
-          <port name="xOff" value="0"/>
-          <port name="valueOn" ref="controlledTemperature[value]"/>
-          <port name="valueOn" ref="../../pipes/*[maxTemperature]" transform="max"/>
-          <port name="valueOff" ref="setpoints/heatingTemperature[value]"/>
-        </box>
-      </box>
+    <box class="ActuatorHeatPipes" name="heating">
+    <port name="propConvection" externalName="propConvection" source="Fixed">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$heatPipePropConvectionName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($heatPipePropConvectionSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$heatPipePropConvectionValue"/>
+        </xsl:attribute>
+    </port>
       <box name="pipes">
         <xsl:for-each select="DVV_SETUP/Greenhouse/Heatpipes/Heatpipe">
           <xsl:call-template name="extract-heat-pipe"/>
         </xsl:for-each>
       </box>
-      <box class="EnergyFluxHeating" name="energyFlux"/>
     </box>
-    <box class="Accumulator" name="ventilation">
-      <port name="initial" value="0"/>
-      <port name="change" ref="./combined[value]"/>
-      <port name="minValue" value="0"/>
-      <port name="maxValue" value="1"/>
-      <box class="ControllerVentilationCombined" name="combined">
-        <port name="controllerVentilation" ref="controllers/ventilation[value]"/>
-        <port name="controllerCrackVentilation" ref="controllers/crackVentilation[value]"/>
-      </box>
-    </box>
+
+    <box class="ActuatorVentilation" name="ventilation"/>
 
     <box class="Accumulator" name="co2Injection">
       <port name="initial" value="0"/>
@@ -1310,25 +1345,31 @@
   <xsl:variable name="leakageName" select="'leakage'"/>
   <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
   <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
-  <box class="EnergyBudget" name="energyBudget">
-  </box>
-  <box class="WaterBudget" name="waterBudget">
-  </box>
-  <box class="Indoors" name="indoors">
-    <box class="vg::IndoorsVentilation" name="ventilation">
-      <port name="leakage">
-        <xsl:attribute name="externalName">
-          <xsl:value-of select="$leakageName"/>
-        </xsl:attribute>
-        <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
-        </xsl:attribute>
-        <xsl:attribute name="value">
-          <xsl:value-of select="$leakageValue"/>
-        </xsl:attribute>
-      </port>
+  
+  <box class="vg::EnergyBudgetOptimiser" name="energyBudgetOptimiser">
+    <box class="vg::EnergyBudget" name="energyBudget">
+    </box>
+    <box name="indoors">
+      <box class="vg::IndoorsVentilation" name="ventilation">
+        <port name="leakage">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$leakageName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
+          </xsl:attribute>
+          <xsl:attribute name="value">
+            <xsl:value-of select="$leakageValue"/>
+          </xsl:attribute>
+        </port>
+      </box>
+      <box class="vg::IndoorsTemperature" name="temperature">
+      </box>
     </box>
   </box>
+  
+  <box class="WaterBudget" name="waterBudget"/>
+  <box class="Indoors" name="indoors"/>
   
   <xsl:comment> *** Crop *** </xsl:comment>
   <xsl:variable name="laiName" select="'LAI'"/>
@@ -1366,17 +1407,29 @@
   <xsl:comment> *** Output *** </xsl:comment>
   <box class="OutputR" name="output">
     <box name="p">
-      <newPort name="outdoorsCo2" ref="outdoors[co2]"/>
+       <newPort name="skyT" ref="outdoors[skyTemperature]"/>
       <newPort name="outdoorsT" ref="outdoors[temperature]"/>
-      <newPort name="soilT" ref="outdoors[soilTemperature]"/>
       <newPort name="outdoorsRh" ref="outdoors[rh]"/>
-      <newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
       <newPort name="outdoorsLight" ref="outdoors[radiation]"/>
-      <newPort name="indoorsCo2" ref="indoors/co2[value]"/>
-      <newPort name="indoorsT" ref="indoors[temperature]"/>
+      <newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/>
+      <newPort name="soilT" ref="outdoors[soilTemperature]"/>
+
+      <newPort name="coverT" ref="energyBudget/cover[temperature]"/>
+      <newPort name="screen1T" ref="energyBudget/screen1[temperature]"/>
+      <newPort name="screen2T" ref="energyBudget/screen2[temperature]"/>
+      <newPort name="screen3T" ref="energyBudget/screen3[temperature]"/>
+       <newPort name="pipeT" ref="energyBudget/pipe[temperature]"/>
+       <newPort name="leafT" ref="energyBudget/crop[temperature]"/>
+       <newPort name="floorT" ref="energyBudget/floor[temperature]"/>
+
+      <newPort name="indoorsT" ref="indoors/temperature[value]"/>
       <newPort name="indoorsRh" ref="indoors/humidity[rh]"/>
       <newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
+       <newPort name="indoorsCo2" ref="indoors/co2[value]"/>
 
+      <newPort name="Uinside" ref="energyBudget[Uinside]"/>
+      <newPort name="Uoutside" ref="energyBudget[Uoutside]"/>
+    
       <newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/>
       <newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/>
       <newPort name="spRhMax" ref="setpoints[rhMax]"/>
@@ -1384,16 +1437,19 @@
       <newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/>
       <newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/>
       <newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/>
-      <newPort name="spScreenShadeThreshold1"  ref="setpoints[screenShadeThreshold1]"/> 
-      <newPort name="spScreenShadeThreshold2"  ref="setpoints[screenShadeThreshold2]"/>
-      <newPort name="spScreenFixed1"            ref="setpoints[screenFixed1]"/>
+      <newPort name="spScreenShadeThreshold1" ref="setpoints[screenShadeThreshold1]"/>
+      <newPort name="spScreenShadeThreshold2" ref="setpoints[screenShadeThreshold2]"/>
+      <newPort name="spScreenFixed1" ref="setpoints[screenFixed1]"/>
       <newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/>
-      <newPort name="spScreenShadeThresholdBand"  ref="setpoints[screenShadeThresholdBand]"/>
+      <newPort name="spScreenShadeThresholdBand" ref="setpoints[screenShadeThresholdBand]"/>
       <newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/>
       <newPort name="spCo2" ref="setpoints[co2Setpoint]"/>
-      
-      <newPort name="actHeatingPower" ref="actuators/heating/energyFlux[value]"/>
+
+      <newPort name="actHeatingPower" ref="actuators/heating[energyFluxTotal]"/>
       <newPort name="actVentilation" ref="actuators/ventilation[value]"/>
+      <newPort name="airFluxTotal" ref="indoors/ventilation[relative]"/>
+      <newPort name="airFluxPower" ref="indoors/temperature[advectiveEnergyFlux]"/>
+
       <newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/>
       <newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/>
       <newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/>
@@ -1403,25 +1459,30 @@
       <newPort name="actScreen2" ref="actuators/screens/layer2[value]"/>
       <newPort name="actScreen3" ref="actuators/screens/layer3[value]"/>
       <newPort name="actCo2" ref="actuators/co2Injection[value]"/>
-      
+
       <newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/>
       <newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/>
       <newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/>
       <newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/>
-      <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/> 
-      <newPort name="airFluxTotal" ref="indoors/ventilation[relative]"/>
+      <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/>
 
-      <newPort name="coolingPower" ref="indoors[advectiveEnergyFlux]"/>
-      <newPort name="Uinside" ref="energyBudget[Uinside]"/>
-      <newPort name="Uoutside" ref="energyBudget[Uoutside]"/>
-      <newPort name="heatingEnergy" ref="budget[heatingEnergy]"/>
-            
       <newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/>
       <newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/>
       <newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/>
       <newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-      <newPort name="leafLightUseEfficiency" ref="crop/photosynthesis[lue]"/>
-      <newPort name="leafTemperature"    ref="crop/temperature[value]"/>
+      <newPort name="lightUseEfficiency" ref="crop/photosynthesis[lue]"/>
+
+      <newPort name="totalIrradiation"           ref="budget[skyIrradiation]"/>
+      <newPort name="totalSkyAbsorbed"    ref="budget[skyRadiationAbsorbed]"/>
+      <newPort name="totalSkySwAbsorbed"  ref="budget[skySwRadiationAbsorbed]"/>
+      <newPort name="totalSkyLwAbsorbed"  ref="budget[skyLwRadiationAbsorbed]"/>
+      <newPort name="totalVentilationEnergy"       ref="budget[ventilationEnergy]"/>
+      <newPort name="totalConvectionEnergy"        ref="budget[convectionEnergy]"/>
+      <newPort name="totalSoilEnergy"              ref="budget[soilEnergy]"/>
+      <newPort name="totalHeatingEnergy"           ref="budget[heatingEnergy]"/>
+      <newPort name="totalGrowthLightEnergy"     ref="budget[growthLightsEnergy]"/>
+      <newPort name="totalParAbsorbed"     ref="budget[parAbsorbedTotal]"/>
+      <newPort name="totalCo2"                ref="budget[co2Total]"/>
     </box>
     <box class="PageR">
       <port name="xAxis" value="calendar[dateTime]"/>

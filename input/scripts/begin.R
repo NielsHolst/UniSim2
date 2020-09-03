@@ -175,7 +175,13 @@ convert_factors = function(df, cols) {
   df
 }
 
+remove_character_columns = function(df, cols) {
+  ix = which(sapply(df[cols],is.character))
+  if (length(ix)==0) cols else cols[-ix]
+}
+
 melted = function(df, id_x, id_iteration, cols) {
+  cols = remove_character_columns(df, cols)
   df = convert_factors(df, cols)
   cols_id = c(id_x, id_iteration)
   cols_final = union(cols, cols_id)

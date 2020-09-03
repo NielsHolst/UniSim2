@@ -10,6 +10,8 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
     actuators.h \
+    actuator_heat_pipes.h \
+    actuator_ventilation.h \
     any_flag.h \
     average.h \
     boundary_layer_resistance_base.h \
@@ -33,9 +35,6 @@ HEADERS +=  \
     diffuse_irradiation_RE.h \
     energy_budget.h \
     energy_budget_optimiser.h \
-    energy_flux_air.h \
-    energy_flux_base.h \
-    energy_flux_heating.h \
     floor_radiation_absorbed.h \
     fruit_crop_lai.h \
     fruit_crop_mass.h \
@@ -55,7 +54,6 @@ HEADERS +=  \
     heat_transfer_screen3.h \
     heat_transfer_shelter.h \
     heat_transfer_sky.h \
-    heat_transfer_volume.h \
     hump.h \
     ig_indoors_humidity.h \
     indoors.h \
@@ -110,6 +108,8 @@ HEADERS +=  \
 
 SOURCES += \
     actuators.cpp \
+    actuator_heat_pipes.cpp \
+    actuator_ventilation.cpp \
     any_flag.cpp \
     average.cpp \
     boundary_layer_resistance_base.cpp \
@@ -133,9 +133,6 @@ SOURCES += \
     diffuse_irradiation_RE.cpp \
     energy_budget.cpp \
     energy_budget_optimiser.cpp \
-    energy_flux_air.cpp \
-    energy_flux_base.cpp \
-    energy_flux_heating.cpp \
     floor_radiation_absorbed.cpp \
     fruit_crop_lai.cpp \
     fruit_crop_mass.cpp \
@@ -144,6 +141,17 @@ SOURCES += \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
+    heat_transfer_layer_base.cpp \
+    heat_transfer_layer_parameters.cpp \
+    heat_transfer_cover.cpp \
+    heat_transfer_crop.cpp \
+    heat_transfer_floor.cpp \
+    heat_transfer_pipe.cpp \
+    heat_transfer_screen1.cpp \
+    heat_transfer_screen2.cpp \
+    heat_transfer_screen3.cpp \
+    heat_transfer_shelter.cpp \
+    heat_transfer_sky.cpp \
     hump.cpp \
     ig_indoors_humidity.cpp \
     indoors.cpp \
@@ -163,18 +171,6 @@ SOURCES += \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \
-    heat_transfer_layer_base.cpp \
-    heat_transfer_layer_parameters.cpp \
-    heat_transfer_cover.cpp \
-    heat_transfer_crop.cpp \
-    heat_transfer_floor.cpp \
-    heat_transfer_pipe.cpp \
-    heat_transfer_screen1.cpp \
-    heat_transfer_screen2.cpp \
-    heat_transfer_screen3.cpp \
-    heat_transfer_shelter.cpp \
-    heat_transfer_sky.cpp \
-    heat_transfer_volume.cpp \
     screen.cpp \
     screen_roof.cpp \
     screen_wall.cpp \

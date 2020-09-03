@@ -31,6 +31,7 @@ private:
         lwTransmissivityTopNet, lwTransmissivityBottomNet,
         swAbsorptivityTopNet, swAbsorptivityBottomNet,
         lwAbsorptivityTopNet, lwAbsorptivityBottomNet,
+        emissivityTopNet, emissivityBottomNet,
         UtopNet, UbottomNet,
         maxArea;
 //        heatCapacity;

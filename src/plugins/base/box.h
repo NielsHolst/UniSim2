@@ -85,14 +85,19 @@ public:
     virtual void update(Port *) {}
     void resolvePortImports();
     void updateImports();
-    void updateSelfImports();
+    void checkSelfImports();
     void verifyPorts();
 
     Box* clone(QString name, QObject *parent);
     Box* cloneFamily(QString name, QObject *parent);
     bool cloned() const;
 
+    static bool debug();
     static void debug(bool on);
+
+    void createTimer(QString name);
+    void startTimer(QString name);
+    void stopTimer(QString name);
 
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
 private:

@@ -24,7 +24,6 @@ protected:
         swTransmissivityTop, swTransmissivityBottom,
         lwReflectivityTop, lwReflectivityBottom,
         lwTransmissivityTop, lwTransmissivityBottom,
-        emissivityTop, emissivityBottom,
         Utop, Ubottom,
         area, heatCapacity;
     // Outputs

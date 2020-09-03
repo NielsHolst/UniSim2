@@ -26,7 +26,7 @@ RadiationLayers::RadiationLayers(QString name, QObject *parent)
     Input(cropCoverage).imports("crop[coverage]");
     Input(withCrop).equals(true).unit("bool").help("Layers over crop?");
     Input(outdoorsTemperature).imports("outdoors[temperature]");
-    Input(indoorsTemperature).imports("indoors[temperature]");
+    Input(indoorsTemperature).imports("indoors/temperature[value]");
     Input(soilTemperature).imports("outdoors[soilTemperature]");
     Output(newIndoorsTemperature).unit("oC").help("Update indoors temperature");
 }

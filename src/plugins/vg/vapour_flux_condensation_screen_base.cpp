@@ -23,7 +23,7 @@ VapourFluxCondensationScreenBase::VapourFluxCondensationScreenBase(QString name,
     Input(groundArea).imports("geometry[groundArea]", CA);
     Input(screenAreas).imports("shelter/*/screens/layer"+number+"[area]", CA);
     Input(screenTemperature).imports("energyBudget/screen"+number+"[temperature]", CA);
-    Input(indoorsTemperature).imports("indoors[temperature]", CA);
+    Input(indoorsTemperature).imports("indoors/temperature[value]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]", CA);
 }
 

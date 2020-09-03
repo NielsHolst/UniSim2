@@ -30,14 +30,14 @@ void HeatTransferCover::update() {
 //    const double coverWeight = 1.;
 //    temperatureTop    = coverWeight*temperature + (1.-coverWeight)*std::min(skyTemperature,outdoorsTemperature);
 //    temperatureBottom = coverWeight*temperature + (1.-coverWeight)*indoorsTemperature;
-    double minTemperatureTop = std::min(skyTemperature,outdoorsTemperature);
+//    double minTemperatureTop = std::min(skyTemperature,outdoorsTemperature);
 //    temperature = (minTemperatureTop + indoorsTemperature)/2.;
-    temperatureTop    = temperature - 2.;
-    temperatureBottom = temperature + 2.;
-    if (temperatureTop < minTemperatureTop)
-        temperatureTop = minTemperatureTop;
-    if (temperatureBottom > indoorsTemperature)
-        temperatureBottom = indoorsTemperature;
+    temperatureTop    =
+    temperatureBottom = temperature;
+//    if (temperatureTop < minTemperatureTop)
+//        temperatureTop = minTemperatureTop;
+//    if (temperatureBottom > indoorsTemperature)
+//        temperatureBottom = indoorsTemperature;
 }
 
 } //namespace

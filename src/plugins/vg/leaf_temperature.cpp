@@ -20,7 +20,7 @@ LeafTemperature::LeafTemperature(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models leaf temperature");
-    Input(indoorsTemperature).imports("indoors[temperature]",CA).unit("oC");
+    Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(indoorsRh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
     Input(rsH2O).imports("../rs[rsH2O]",CA).unit("s/m");
     Input(rbH2O).imports("../rb[rbH2O]",CA).unit("s/m");
