@@ -80,6 +80,7 @@ BoxBuilder& BoxBuilder::endbox() {
 
 BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
+
         ThrowException("BoxBuilder: port declaration outside of box context");
     _currentPort = _currentBox->port(name);
     _currentDistribution = nullptr;
@@ -110,7 +111,6 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
     _currentDistribution = MegaFactory::create<Distribution>(className, className, _currentPort);
     _currentDistribution->arguments(items);
     _currentDistribution->port(_currentPort);
-
     return *this;
 }
 

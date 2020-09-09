@@ -16,15 +16,22 @@ Area::Area(QString name, QObject *parent)
     Input(fronderosion).equals(0.1).help("Apical frond loss pr day");
     Input(Alost).equals(0.05).help("Area lost due to subcritical C value (dm)");
     Input(Factor).equals(1).help("Scaling factor of model");
-    Output(A).help("Area of the algae at deployment (dm)");
+    Input(date).imports("calendar[date]");
+    Output(A).help("Area of the algae (dm)");
+    Output(logA).help("Log area");
+    Output(logAOct).help("Log area on 1 October");
 }
 
 void Area::reset() {
    A = Ainit;
+   logA = log10(A);
 }
 
 void Area::update() {
    A += (A*(u-fronderosion)-Alost)*Factor;
+   logA = log10(A);
+   if (date.month()==10 && date.day()==1)
+       logAOct = logA;
 }
 
 

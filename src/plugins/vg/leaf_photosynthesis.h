@@ -22,7 +22,7 @@ private:
     // Inputs
     double
         parAbsorbed,
-        par, lai, k,
+        lai, k,
         canopyReflectivity,
         Pgmax, lue, RdLeaf;
     // Outputs

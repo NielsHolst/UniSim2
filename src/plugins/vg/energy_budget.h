@@ -24,18 +24,18 @@ public:
     void update();
     // Methods mimicking R functions
     typedef QVector<double> Vec;
-    static int distributeRadiation(Vec a, Vec r, Vec t,
+    int distributeRadiation(Vec a, Vec r, Vec t,
             Vec a_, Vec r_, Vec t_,
-            Vec I, Vec I_, Vec &A, Vec &A_, double precision
-            );
-    static void distributeRadiationDown(Vec a, Vec r, Vec t,
-            Vec a_, Vec r_, Vec t_,
-            Vec &F, Vec &F_, Vec &A, Vec &A_
-            );
-    static void distributeRadiationUp(Vec a, Vec r, Vec t,
+            Vec I, Vec I_, Vec &A, Vec &A_
+            ) const;
+    void distributeRadiationDown(Vec a, Vec r, Vec t,
             Vec a_, Vec r_, Vec t_,
             Vec &F, Vec &F_, Vec &A, Vec &A_
-            );
+            ) const;
+    void distributeRadiationUp(Vec a, Vec r, Vec t,
+            Vec a_, Vec r_, Vec t_,
+            Vec &F, Vec &F_, Vec &A, Vec &A_
+            ) const;
 private:
     // Inputs
     double greenhouseVolume, cropCoverage,
@@ -46,11 +46,13 @@ private:
     bool withCrop, keepConstantScreenTemperature;
     // Outputs
     double Uinside, Uoutside;
+    mutable double cropParFluxFromAbove, cropParFluxFromBelow;
     int iterSw, iterLw, iterPar;
     // Data
     typedef QVector<HeatTransferLayerBase*> Stack;
     Stack stack, screens; // screens are a subset of stack
     IndoorsTemperature *indoorsTemperature;
+    int cropIndex;
     // Methods
     void distributeParRadiation();
     void distributeSwRadiation();

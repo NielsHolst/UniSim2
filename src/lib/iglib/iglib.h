@@ -182,7 +182,7 @@ struct Query {
     Culture culture;
     Construction construction;
     HeatPipes heatPipes;
-    Vents vents; // Only one vent allowed
+    Vents vents;
     GrowthLights growthLights;
     Co2Dispenser co2Dispenser;
     Screens screens;
@@ -194,9 +194,9 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        indoorsCo2 = 0,         // ppm
-        indoorsRh = 0,          // 0-100 %
-        indoorsTemperature = 0, // Celcius
+        indoorsCo2 = 0,         // Not used
+        indoorsRh = 0,          // Not used
+        indoorsTemperature = 0, // Not used
         indoorsPar = 0,         // PAR at plant height (micromole/m2/s)
         growthLight = 0,        // Current expenditure (W/m2)
         heating = 0,            // Current expenditure (W/m2)

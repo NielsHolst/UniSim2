@@ -13,8 +13,9 @@ public:
 private:
     // Inputs
     double u, Ainit, fronderosion, C, Cmin, Cstruct, Alost, Factor;
+    QDate date;
     // Outputs
-    double A;
+    double A, logAOct, logA;
 };
 
 }

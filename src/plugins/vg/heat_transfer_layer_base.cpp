@@ -65,19 +65,19 @@ void HeatTransferLayerBase::updateTemperature() {
     latentHeat = -condensationRate*LHe; // W/m2 = kg/m2/s * J/kg
 
     if (TestNum::neZero(heatCapacity)) {
-        double maxRateOfChange = maxTemperatureRateOfChange/60., // K/s
-               rateOfChange  = (absorbed + convectiveInflux + conductiveInflux + latentHeat - lwFluxDown - lwFluxUp)/heatCapacity;  // K/s
-        if (rateOfChange > maxRateOfChange) {
-            unusedInflux = (rateOfChange - maxRateOfChange)*heatCapacity;  // W/m2 = K/s * J/K/m2
-            rateOfChange = maxRateOfChange;
-        }
-        else if (rateOfChange < -maxRateOfChange) {
-            unusedInflux = (rateOfChange + maxRateOfChange)*heatCapacity;  // W/m2 = K/s * J/K/m2
-            rateOfChange = -maxRateOfChange;
-        }
-        else {
-            unusedInflux = 0.;
-        }
+//         maxRateOfChange = maxTemperatureRateOfChange/60., // K/s
+        double rateOfChange  = (absorbed + convectiveInflux + conductiveInflux + latentHeat - lwFluxDown - lwFluxUp)/heatCapacity;  // K/s
+//        if (rateOfChange > maxRateOfChange) {
+//            unusedInflux = (rateOfChange - maxRateOfChange)*heatCapacity;  // W/m2 = K/s * J/K/m2
+//            rateOfChange = maxRateOfChange;
+//        }
+//        else if (rateOfChange < -maxRateOfChange) {
+//            unusedInflux = (rateOfChange + maxRateOfChange)*heatCapacity;  // W/m2 = K/s * J/K/m2
+//            rateOfChange = -maxRateOfChange;
+//        }
+//        else {
+//            unusedInflux = 0.;
+//        }
         temperature += rateOfChange*timeStep;
     }
     temperatureTop = temperatureBottom = temperature;

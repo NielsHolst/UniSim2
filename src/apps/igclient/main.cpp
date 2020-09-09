@@ -13,8 +13,7 @@ using namespace ig;
 using namespace std;
 
 const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/"
-                         "UnisimInput_growth_light.json";
-//                         "UnisimInput_2019-09-10_2019-09-11.json";
+                         "UnisimInput_2019-11-25.json";
 
 using namespace base;
 

@@ -122,6 +122,8 @@ EnergyBudget::EnergyBudget(QString name, QObject *parent)
     Output(iterSw).help("No. of iterations for short wave integration");
     Output(iterLw).help("No. of iterations for long wave integration");
     Output(iterPar).help("No. of iterations for PAR integration");
+    Output(cropParFluxFromAbove).help("Total PAR hitting crop from above").unit("umol/s/m2");
+    Output(cropParFluxFromBelow).help("Total PAR hitting crop from below").unit("umol/s/m2");
 }
 
 void EnergyBudget::amend() {
@@ -182,6 +184,7 @@ void EnergyBudget::reset() {
           << findOne<HeatTransferLayerBase>("./pipe")
           << findOne<HeatTransferLayerBase>("./crop")
           << findOne<HeatTransferLayerBase>("./floor");
+    cropIndex = stack.size() - 2;
 
     indoorsTemperature = findOne<IndoorsTemperature>("indoors/temperature");
 
@@ -205,6 +208,8 @@ void EnergyBudget::update() {
 
 void EnergyBudget::distributeParRadiation() {
     LOG("distributeParRadiation");
+    cropParFluxFromAbove = 0.;
+    cropParFluxFromBelow = 0.;
     int n = stack.size();
     Vec a(n), r(n), t(n), a_(n), r_(n), t_(n),
         I(n), I_(n), A(n), A_(n);
@@ -218,7 +223,7 @@ void EnergyBudget::distributeParRadiation() {
         I[i]  = stack.at(i)->parFluxDown;
         I_[i] = stack.at(i)->parFluxUp;
     }
-    iterPar = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
+    iterPar = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
     for (int i=0; i<n; ++i) {
         stack[i]->parFluxDown          = I .at(i);
         stack[i]->parFluxUp            = I_.at(i);
@@ -243,7 +248,7 @@ void EnergyBudget::distributeSwRadiation() {
         I[i]  = stack.at(i)->swFluxDown;
         I_[i] = stack.at(i)->swFluxUp;
     }
-    iterSw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
+    iterSw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
     for (int i=0; i<n; ++i) {
         stack[i]->swFluxDown          = I .at(i);
         stack[i]->swFluxUp            = I_.at(i);
@@ -268,7 +273,7 @@ void EnergyBudget::distributeLwRadiation() {
         I[i]  = stack.at(i)->lwFluxDown;
         I_[i] = stack.at(i)->lwFluxUp;
     }
-    iterLw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_, precision);
+    iterLw = distributeRadiation(a, r, t, a_, r_, t_, I, I_, A, A_);
     for (int i=0; i<n; ++i) {
         stack[i]->lwFluxDown          = I .at(i);
         stack[i]->lwFluxUp            = I_.at(i);
@@ -319,8 +324,8 @@ QString EnergyBudget::toString(
 int EnergyBudget::distributeRadiation(
         Vec a, Vec r, Vec t,
         Vec a_, Vec r_, Vec t_,
-        Vec I, Vec I_, Vec &A, Vec &A_, double precision
-        )
+        Vec I, Vec I_, Vec &A, Vec &A_
+        ) const
 {
     Vec F = I, F_ = I_;
     A.fill(0.);
@@ -349,7 +354,7 @@ void EnergyBudget::distributeRadiationDown(
         Vec a, Vec r, Vec t,
         Vec a_, Vec r_, Vec t_,
         Vec &F, Vec &F_, Vec &A, Vec &A_
-     )
+     ) const
 {
     int n = a.size();
     for (int i=0; i<n-1; ++i) {
@@ -364,6 +369,7 @@ void EnergyBudget::distributeRadiationDown(
         F_[i]   += th_*F[i];
         A_[i]   += ah_*F[i];
     }
+    cropParFluxFromAbove += F.at(cropIndex-1);
     F.fill(0.);
 }
 
@@ -376,7 +382,7 @@ void EnergyBudget::distributeRadiationUp(
         Vec a, Vec r, Vec t,
         Vec a_, Vec r_, Vec t_,
         Vec &F, Vec &F_, Vec &A, Vec &A_
-     )
+     ) const
 {
     int n = a.size();
     for (int i=n-1; i>0; --i) {
@@ -391,6 +397,7 @@ void EnergyBudget::distributeRadiationUp(
         F [i]   += th *F_[i];
         A [i]   += ah *F_[i];
     }
+    cropParFluxFromBelow += F_.at(cropIndex);
     F_.fill(0.);
 }
 

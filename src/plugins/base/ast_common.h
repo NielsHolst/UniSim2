@@ -16,7 +16,7 @@ namespace ast {
 typedef std::string::const_iterator Iterator;
 
 struct ParameterWithAttribute {
-    std::string type, name, assignment, attribute;
+    std::string type, name, attribute;
     QString toString() const;
     void addToBuilder(base::BoxBuilder &builder);
 };

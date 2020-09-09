@@ -199,7 +199,7 @@ QString PlotR::scriptForSobolIndicesPlot() {
     if (fontSize > 0)
         s << "(ggplot_theme(" << fontSize << "))";
     else
-        s << "(NULL)";
+        s << "()";
     return string;
 }
 

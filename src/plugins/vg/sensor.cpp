@@ -7,9 +7,11 @@
 */
 #include <base/phys_math.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "sensor.h"
 
 using namespace base;
+using TestNum::eq;
 
 namespace vg {
 
@@ -65,7 +67,7 @@ void Sensor::update() {
 }
 
 bool Sensor::isMissing(double value) const {
-    return value==missing;
+    return eq(value, missing);
 }
 
 double Sensor::estimateGlobalRadiation() const {

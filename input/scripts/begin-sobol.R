@@ -148,7 +148,7 @@ plot_against_sample_size = function() {
   alphabetic_ordering = order(totals$Input)
   totals = totals[alphabetic_ordering, ]
   effect_ordering = order(totals$Effect, decreasing=TRUE)
-  M$Input = reorder_levels(M$Input, effect_ordering)
+  M$Input = reorder_levels(factor(M$Input), effect_ordering)
   M$Output = factor(M$Output)
   levels(M$Input)  = unique_names(levels(M$Input))
   levels(M$Output) = unique_names(levels(M$Output))
@@ -261,7 +261,7 @@ sobol_statistics = function(B, num_digits=2) {
   totals = totals[alphabetic_ordering, ]
   row_ordering = order(totals$EffectMean, decreasing=TRUE)
   levels_ordering = order(totals$EffectMean, decreasing=FALSE)
-  M$Input = reorder_levels(M$Input, levels_ordering)
+  M$Input = reorder_levels(factor(M$Input), levels_ordering)
     
   f = function(x) c(x,x-1)
   row_numbers = c(sapply(2*row_ordering, f))

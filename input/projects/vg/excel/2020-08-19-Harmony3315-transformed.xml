@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box xmlns:ecolmod="http://www.ecolmod.org" class="Simulation" name="greenhouse">
-	<!-- <port name="steps" ref="./period[steps]"/> -->
-	<port name="steps" value="3"/>
+	<port name="steps" ref="./period[steps]"/>
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
@@ -880,7 +879,7 @@
 			</box>
 		</box>
 		<box class="OutputText">
-			<!-- <port name="skipFormats" value="TRUE"/> -->
+			<port name="skipFormats" value="TRUE"/>
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>

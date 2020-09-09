@@ -24,7 +24,7 @@ PUBLISH(Pipe)
 Pipe::Pipe(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    help("holds heat pipe characteristics");
+    help("computes outflow temperature and effect");
     Input(material).equals("carbon steel").help("Material type").unit("text id");
     Input(density).equals(1.).help("Pipe length per greenhouse area").unit("m/m2");
     Input(diameter).equals(51.).help("Pipe inner diameter").unit("mm");

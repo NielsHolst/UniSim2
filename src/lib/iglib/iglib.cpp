@@ -84,6 +84,8 @@ void buildCalendar(Box *parent, const Query &q) {
         port("initialDateTime").equals(dateTime).
         port("timeStep").equals(30).
         port("timeUnit").equals("s").
+        box("Sun").name("sun").
+        endbox().
     endbox();
 }
 
@@ -126,7 +128,6 @@ void buildOutdoors(Box *parent) {
 }
 Box* buildScreen(const Screen *s) {
     BoxBuilder builder;
-    QString orientation = (s->position==WholeRoof) ? "horizontal" : "cover";
     double effect = (s->effect.origin!=NotAvailable) ? s->effect.value/100. : 0.,
            transmissivityLight = s->material.transmissivityLight,
            emmisivityTop = s->material.emmisivityOuter,
@@ -150,8 +151,10 @@ Box* buildScreen(const Screen *s) {
         transmissivityAir /= 100.;
     }
 
+    bool isRoof = (s->position==WholeRoof ||  s->position==FlatRoof ||  s->position==Roof1 || s->position==Roof2);
+    QString screenClass = isRoof ? "vg::ScreenRoof" : "vg::ScreenWall";
     builder.
-        box("vg::Screen").name("screen").
+        box(screenClass).name("screen").
             port("swReflectivityTop").equals(1. - emmisivityTop).
             port("swReflectivityBottom").equals(1. - emmisivityBottom).
             port("swTransmissivityTop").equals(transmissivityLight).
@@ -188,34 +191,14 @@ Box* buildScreens(Screens screens, ScreenPosition position) {
     return builder.content(BoxBuilder::AmendNone);
 }
 
-Box* buildVent(const Vents &vents, int i) {
-    BoxBuilder builder;
-    if (i < vents.size) {
-        const Vent &v(vents.array[i]);
-//        double opening = (v.opening.origin!=NotAvailable) ? v.opening.value : 0.;
-        builder.
-            box("vg::Vent").name("vent").
-                port("length").equals(v.length).
-                port("width").equals(v.height).
-                port("number").equals(v.numberOfVents).
-                port("transmissivity").equals(v.porosity).
-//                port("state").equals(opening).
-            endbox();
-    }
-    else {
-        builder.box().name("noVent").endbox();
-    }
-    return builder.content(BoxBuilder::AmendNone);
-}
-
 // Ignore cover parameters from IG user, until they have been checked
 #define SHELTERFACE(X, Y, N) \
 box("vg::ShelterFace").name(#X). \
     box("vg::ShelterFaceArea").name("area"). \
+    endbox(). \
     box("vg::Cover").name("cover"). \
     endbox(). \
-    box(buildScreens(q.screens, Y)). \
-    box(buildVent(q.vents, N))
+    box(buildScreens(q.screens, Y))
 
 void buildConstruction(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
@@ -240,14 +223,10 @@ void buildConstruction(Box *parent, const Query &q) {
     endbox();
 }
 
-void buildActuators(Box *parent, const Query &q) {
-
-}
-
-void buildEnergyBudget(Box *parent, const Query &q);
-void buildWaterBudget(Box *parent, const Query &q);
-void buildIndoors(Box *parent, const Query &q);
-void buildCrop(Box *parent, const Query &q);
+//void buildEnergyBudget(Box *parent, const Query &q);
+//void buildWaterBudget(Box *parent, const Query &q);
+//void buildIndoors(Box *parent, const Query &q);
+//void buildCrop(Box *parent, const Query &q);
 
 Box* build(const Query &q) {
     init();
@@ -264,11 +243,10 @@ Box* build(const Query &q) {
         buildSensor(sim, q);
         buildOutdoors(sim);
         buildConstruction(sim, q);
-        buildActuators(sim, q);
-        buildEnergyBudget(sim, q);
-        buildWaterBudget(sim, q);
-        buildIndoors(sim, q);
-        buildCrop(sim, q);
+//        buildEnergyBudget(sim, q);
+//        buildIndoors(sim, q);
+//        buildWaterBudget(sim, q);
+//        buildCrop(sim, q);
     }
     catch (Exception &ex) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
