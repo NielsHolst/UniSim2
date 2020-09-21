@@ -29,25 +29,25 @@ WaterBudget::WaterBudget(QString name, QObject *parent)
 }
 
 void WaterBudget::amend() {
-    bool
-        hasScreen1 = !findMany<Box>("construction/shelter/*/screens/layer1").isEmpty(),
-        hasScreen2 = !findMany<Box>("construction/shelter/*/screens/layer2").isEmpty(),
-        hasScreen3 = !findMany<Box>("construction/shelter/*/screens/layer3").isEmpty();
     BoxBuilder builder(this);
 
-    builder.
-    box("VapourFluxVentilation").name("ventilation").
-    endbox().
-    box("VapourFluxTranspiration").name("transpiration").
-    endbox().
-    box("VapourFluxCondensationCrop").name("condensationCrop").
-    endbox().
-    box("VapourFluxCondensationCover").name("condensationCover").
-    endbox().
-    box().name("condensationScreens").
-        newPort("conductance").imports("./*[conductance]").transform(Sum).
-        newPort("vapourFlux").imports("./*[vapourFlux]").transform(Sum).
-        newPort("gain").imports("./*[gain]").transform(Sum);
+    if (!findMaybeOne<Box>("./ventilation"))
+        builder.box("vg::VapourFluxVentilation").name("ventilation").
+        endbox();
+    if (!findMaybeOne<Box>("./transpiration"))
+        builder.box("vg::VapourFluxTranspiration").name("transpiration").
+        endbox();
+    if (!findMaybeOne<Box>("./condensationCrop"))
+        builder.box("vg::VapourFluxCondensationCover").name("condensationCrop").
+        endbox();
+    if (!findMaybeOne<Box>("./condensationCover"))
+        builder.box("vg::VapourFluxCondensationCover").name("condensationCover").
+        endbox();
+    if (!findMaybeOne<Box>("./condensationScreens")) {
+        bool hasScreen1 = !findMany<Box>("construction/shelter/*/screens/layer1").isEmpty(),
+             hasScreen2 = !findMany<Box>("construction/shelter/*/screens/layer2").isEmpty(),
+             hasScreen3 = !findMany<Box>("construction/shelter/*/screens/layer3").isEmpty();
+        builder.box("vg::VapourFluxCondensationScreens").name("condensationScreens");
         if (hasScreen1)
             builder.
             box("VapourFluxCondensationScreen1").name("screen1").
@@ -60,8 +60,9 @@ void WaterBudget::amend() {
             builder.
             box("VapourFluxCondensationScreen3").name("screen3").
             endbox();
-    builder.
-    endbox();
+        builder.
+        endbox();
+    }
 }
 
 void WaterBudget::reset() {

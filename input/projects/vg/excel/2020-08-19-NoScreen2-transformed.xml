@@ -4,7 +4,7 @@
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="01-01-2020"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2020"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="4"/>
@@ -677,6 +677,13 @@
 					<newPort name="signal" externalName="screenFixed1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
 				</box>
 			</box>
+			<box class="PrioritySignal" name="screenFixed2">
+				<port name="reverseOrder" value="TRUE"/>
+				<box name="default">
+					<newPort name="flagIsUp" value="TRUE"/>
+					<newPort name="signal" externalName="screenFixed2" source="Missing" value="NaN.0"/>
+				</box>
+			</box>
 		</box>
 	</box>
 	<!-- *** Controllers *** -->
@@ -802,88 +809,16 @@
 	<box class="vg::Budget" name="budget"/>
 	<!-- *** Output *** -->
 	<box class="OutputR" name="output">
-		<box name="p">
-			<!-- <newPort name="skyT" ref="outdoors[skyTemperature]"/> -->
-			<!-- <newPort name="outdoorsT" ref="outdoors[temperature]"/> -->
-			<!-- <newPort name="outdoorsRh" ref="outdoors[rh]"/> -->
-			<newPort name="outdoorsLight" ref="outdoors[radiation]"/>
-			<!-- <newPort name="outdoorsWindSpeed" ref="outdoors[windSpeed]"/> -->
-			<!-- <newPort name="soilT" ref="outdoors[soilTemperature]"/> -->
-			<!-- <newPort name="coverT" ref="energyBudget/cover[temperature]"/> -->
-			<!-- <newPort name="screen1T" ref="energyBudget/screen1[temperature]"/> -->
-			<!-- <newPort name="screen2T" ref="energyBudget/screen2[temperature]"/> -->
-			<!-- <newPort name="screen3T" ref="energyBudget/screen3[temperature]"/> -->
-			<!-- <newPort name="pipeT" ref="energyBudget/pipe[temperature]"/> -->
-			<!-- <newPort name="leafT" ref="energyBudget/crop[temperature]"/> -->
-			<!-- <newPort name="floorT" ref="energyBudget/floor[temperature]"/> -->
-			<!-- <newPort name="indoorsT" ref="indoors/temperature[value]"/> -->
-			<!-- <newPort name="indoorsRh" ref="indoors/humidity[rh]"/> -->
-			<newPort name="indoorsSunPar" ref="energyBudget/sky[parFluxDown]"/>
-			<!-- <newPort name="indoorsCo2" ref="indoors/co2[value]"/> -->
-			<!-- <newPort name="Uinside" ref="energyBudget[Uinside]"/> -->
-			<!-- <newPort name="Uoutside" ref="energyBudget[Uoutside]"/> -->
-			<!-- <newPort name="spHeatingTemperature" ref="setpoints/heatingTemperature[value]"/> -->
-			<!-- <newPort name="spVentilationTemperature" ref="setpoints/ventilationTemperature[value]"/> -->
-			<!-- <newPort name="spRhMax" ref="setpoints[rhMax]"/> -->
-			<!-- <newPort name="spRhMin" ref="setpoints[rhMin]"/> -->
-			<!-- <newPort name="spCrackVentilation" ref="setpoints/crackVentilation[value]"/> -->
-			<!-- <newPort name="spScreenEnergyThreshold1" ref="setpoints[screenEnergyThreshold1]"/> -->
-			<!-- <newPort name="spScreenEnergyThreshold2" ref="setpoints[screenEnergyThreshold2]"/> -->
-			<!-- <newPort name="spScreenShadeThreshold1" ref="setpoints[screenShadeThreshold1]"/> -->
-			<!-- <newPort name="spScreenShadeThreshold2" ref="setpoints[screenShadeThreshold2]"/> -->
-			<!-- <newPort name="spScreenFixed1" ref="setpoints[screenFixed1]"/> -->
-			<!-- <newPort name="spScreenEnergyThresholdBand" ref="setpoints[screenEnergyThresholdBand]"/> -->
-			<!-- <newPort name="spScreenShadeThresholdBand" ref="setpoints[screenShadeThresholdBand]"/> -->
-			<!-- <newPort name="spScreenCrack" ref="setpoints/screenCrack[value]"/> -->
-			<!-- <newPort name="spCo2" ref="setpoints[co2Setpoint]"/> -->
-			<!-- <newPort name="actHeatingPower" ref="actuators/heating[energyFluxTotal]"/> -->
-			<!-- <newPort name="actVentilation" ref="actuators/ventilation[value]"/> -->
-			<!-- <newPort name="airFluxTotal" ref="indoors/ventilation[relative]"/> -->
-			<!-- <newPort name="airFluxPower" ref="indoors/temperature[advectiveEnergyFlux]"/> -->
-			<!-- <newPort name="actLight1" ref="actuators/growthLights/growthLight1[on]"/> -->
-			<!-- <newPort name="actLight2" ref="actuators/growthLights/growthLight2[on]"/> -->
-			<!-- <newPort name="actLight3" ref="actuators/growthLights/growthLight3[on]"/> -->
-			<!-- <newPort name="actLightPower" ref="actuators/growthLights[powerUsage]"/> -->
-			<!-- <newPort name="actLightPar" ref="actuators/growthLights[parFluxDown]"/> -->
-			<!-- <newPort name="actScreen1" ref="actuators/screens/layer1[value]"/> -->
-			<!-- <newPort name="actScreen2" ref="actuators/screens/layer2[value]"/> -->
-			<!-- <newPort name="actScreen3" ref="actuators/screens/layer3[value]"/> -->
-			<!-- <newPort name="actCo2" ref="actuators/co2Injection[value]"/> -->
-			<!-- <newPort name="vapourFluxTranspiration" ref="waterBudget/transpiration[vapourFlux]"/> -->
-			<!-- <newPort name="vapourFluxCondensationCrop" ref="waterBudget/condensationCrop[vapourFlux]"/> -->
-			<!-- <newPort name="vapourFluxCondensationCover" ref="waterBudget/condensationCover[vapourFlux]"/> -->
-			<!-- <newPort name="vapourFluxCondensationdScreens" ref="waterBudget/condensationScreens[vapourFlux]"/> -->
-			<!-- <newPort name="vapourFluxVentilation" ref="waterBudget/ventilation[vapourFlux]"/> -->
-			<newPort name="netPhotosynthesisRate" ref="crop/photosynthesis[Pn]"/>
-			<newPort name="grossPhotosynthesisRate" ref="crop/photosynthesis[Pg]"/>
-			<newPort name="darkRespirationRate" ref="crop/photosynthesis[Rd]"/>
-			<newPort name="cropGrowthRate" ref="crop/growth[netGrowthRate]"/>
-			<newPort name="lightUseEfficiency" ref="crop/photosynthesis[lue]"/>
-			<!-- <newPort name="totalIrradiation" ref="budget[skyIrradiation]"/> -->
-			<!-- <newPort name="totalSkyAbsorbed" ref="budget[skyRadiationAbsorbed]"/> -->
-			<!-- <newPort name="totalSkySwAbsorbed" ref="budget[skySwRadiationAbsorbed]"/> -->
-			<!-- <newPort name="totalSkyLwAbsorbed" ref="budget[skyLwRadiationAbsorbed]"/> -->
-			<!-- <newPort name="totalVentilationEnergy" ref="budget[ventilationEnergy]"/> -->
-			<!-- <newPort name="totalConvectionEnergy" ref="budget[convectionEnergy]"/> -->
-			<!-- <newPort name="totalSoilEnergy" ref="budget[soilEnergy]"/> -->
-			<!-- <newPort name="totalHeatingEnergy" ref="budget[heatingEnergy]"/> -->
-			<!-- <newPort name="totalGrowthLightEnergy" ref="budget[growthLightsEnergy]"/> -->
-			<!-- <newPort name="totalParAbsorbed" ref="budget[parAbsorbedTotal]"/> -->
-			<!-- <newPort name="totalCo2" ref="budget[co2Total]"/> -->
-		</box>
+		<box class="vg::Outputs" name="p"/>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
-			<!-- <box class="PlotR"> -->
-				<!-- <port name="ncol" value="4"/> -->
-				<!-- <port name="ports" value="output/p[*]"/> -->
-			<!-- </box> -->
 			<box class="PlotR">
-				<port name="ncol" value="8"/>
-				<port name="ports" value="(energyBudget/*[parFluxDown] energyBudget/*[parFluxUp] energyBudget/*[parAbsorbed])"/>
+				<port name="ncol" value="4"/>
+				<port name="ports" value="output/p[*]"/>
 			</box>
 		</box>
 		<box class="OutputText">
-			<!-- <port name="skipFormats" value="TRUE"/> -->
+			<port name="skipFormats" value="TRUE"/>
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
 			<port name="averageN" value="15"/>

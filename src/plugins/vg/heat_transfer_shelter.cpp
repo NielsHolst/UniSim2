@@ -55,6 +55,7 @@ HeatTransferShelter::HeatTransferShelter(QString name, QObject *parent, QString 
 }
 
 void HeatTransferShelter::reset() {
+    tick_ = 0;
     temperature = 20.;
     numFaces = swReflectivityTopShelter.size();
     R_.resize(numFaces);

@@ -126,8 +126,8 @@ void buildOutdoors(Box *parent) {
         endbox().
     endbox();
 }
-Box* buildScreen(const Screen *s) {
-    BoxBuilder builder;
+
+void buildScreen(Box *parent, const Screen *s) {
     double effect = (s->effect.origin!=NotAvailable) ? s->effect.value/100. : 0.,
            transmissivityLight = s->material.transmissivityLight,
            emmisivityTop = s->material.emmisivityOuter,
@@ -151,54 +151,64 @@ Box* buildScreen(const Screen *s) {
         transmissivityAir /= 100.;
     }
 
-    bool isRoof = (s->position==WholeRoof ||  s->position==FlatRoof ||  s->position==Roof1 || s->position==Roof2);
+    bool isRoof = (s->position==Roof1 || s->position==Roof2);
     QString screenClass = isRoof ? "vg::ScreenRoof" : "vg::ScreenWall";
+
+    BoxBuilder builder(parent);
     builder.
-        box(screenClass).name("screen").
-            port("swReflectivityTop").equals(1. - emmisivityTop).
-            port("swReflectivityBottom").equals(1. - emmisivityBottom).
-            port("swTransmissivityTop").equals(transmissivityLight).
-            port("swTransmissivityBottom").equals(transmissivityLight).
-            port("lwReflectivityTop").equals(1. - emmisivityTop).
-            port("lwReflectivityBottom").equals(1. - emmisivityBottom).
-            port("lwTransmissivityTop").equals(transmissivityLight).
-            port("lwTransmissivityBottom").equals(transmissivityLight).
+    box(screenClass).name("screen").
+        port("swReflectivityTop").equals(1. - emmisivityTop).
+        port("swReflectivityBottom").equals(1. - emmisivityBottom).
+        port("swTransmissivityTop").equals(transmissivityLight).
+        port("swTransmissivityBottom").equals(transmissivityLight).
+        port("lwReflectivityTop").equals(1. - emmisivityTop).
+        port("lwReflectivityBottom").equals(1. - emmisivityBottom).
+        port("lwTransmissivityTop").equals(transmissivityLight).
+        port("lwTransmissivityBottom").equals(transmissivityLight).
 //            port("U").equals(s->material.U).  // don't trust this
 //            port("specificHeatCapacity").equals(s->material.heatCapacity).  // don't trust this
-            port("transmissivityAir").equals(transmissivityAir).
-            port("state").equals(effect).
-        endbox();
-    return builder.content(BoxBuilder::AmendNone);
+        port("transmissivityAir").equals(transmissivityAir).
+        port("state").equals(effect).
+    endbox();
 }
 
-Box* buildScreens(Screens screens, ScreenPosition position) {
-    QVector<const Screen*> selected;
-    for (int i=0; i < screens.size; ++i) {
-        ScreenPosition pos = screens.array[i].position;
-        bool match =
-                (pos==position) ||
-                ((pos==WholeRoof || pos==FlatRoof) && (position==Roof1 || position==Roof2));
-        if (match)
-            selected << &screens.array[i];
+QString toString(ScreenPosition pos) {
+    switch(pos) {
+    case Roof1: return "roof1";
+    case Roof2: return "roof2";
+    case Side1: return "side1";
+    case Side2: return "side2";
+    case End1: return "end1";
+    case End2: return "end2";
     }
-
-    BoxBuilder builder;
-    builder.box("vg::Screens").name("screens");
-    for (const Screen *screen : selected) {
-        builder.box(buildScreen(screen));
-    }
-    builder.endbox();
-    return builder.content(BoxBuilder::AmendNone);
+    return "";
 }
 
-// Ignore cover parameters from IG user, until they have been checked
-#define SHELTERFACE(X, Y, N) \
-box("vg::ShelterFace").name(#X). \
-    box("vg::ShelterFaceArea").name("area"). \
-    endbox(). \
-    box("vg::Cover").name("cover"). \
-    endbox(). \
-    box(buildScreens(q.screens, Y))
+void buildScreens(Box *parent, ScreenPosition pos, const Query &q) {
+    for (int i=0; i < q.screens.size; ++i) {
+        ScreenPosition screenPos = q.screens.array[i].position;
+        if (screenPos == pos)
+            buildScreen(parent, &q.screens.array[i]);
+    }
+}
+
+void buildShelterFace(Box *parent, ScreenPosition pos, const Query &q) {
+    QString faceName = toString(pos);
+
+    // Ignore cover parameters from IG user until they have been checked
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::ShelterFace").name(faceName).
+        box("vg::ShelterFaceArea").name("area").
+        endbox().
+        box("vg::Cover").name("cover").
+        endbox().
+        box("vg::Screens").name("screens").
+        endbox().
+    endbox();
+    Box *screens = parent->findOne<Box>(faceName + "/screens");
+    buildScreens(screens, pos, q);
+}
 
 void buildConstruction(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
@@ -213,20 +223,150 @@ void buildConstruction(Box *parent, const Query &q) {
             port("reflection").equals(q.construction.internalShading).
         endbox().
         box("vg::Shelter").name("shelter").
-            SHELTERFACE(roof1, Roof1, 0).endbox().
-            SHELTERFACE(roof2, Roof2, 1).endbox().
-            SHELTERFACE(side1, Side1, 2).endbox().
-            SHELTERFACE(side2, Side2, 3).endbox().
-            SHELTERFACE(end1, End1, 4).endbox().
-            SHELTERFACE(end2, End2, 5).endbox().
+        endbox().
+        box().name("floor").
+            newPort("reflectivity").equals(0.6).
+            newPort("Utop").equals(7.5).
+            newPort("Ubottom").equals(0.1).
+            newPort("heatCapacity").equals(42000.).
+        endbox().
+    endbox();
+
+    Box *shelter = parent->findOne<Box>("shelter");
+    buildShelterFace(shelter, Roof1, q);
+    buildShelterFace(shelter, Roof2, q);
+    buildShelterFace(shelter, Side1, q);
+    buildShelterFace(shelter, Side2, q);
+    buildShelterFace(shelter, End1, q);
+    buildShelterFace(shelter, End2, q);
+}
+
+void buildPipe(Box *parent, const HeatPipe *pipe) {
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::PipeForced").name("pipe").
+            port("innerDiameter").equals(pipe->innerDiameter).
+            port("waterVolume").equals(pipe->waterVolume).
+            port("flowRate").equals(value(pipe->flowRate)).
+            port("Tinflow").equals(value(pipe->temperatureInflow)).
+            port("knownToutflow").equals(value(pipe->temperatureOutflow)).
+        endbox();}
+
+void buildPipes(Box *parent, const HeatPipes pipes) {
+    BoxBuilder builder(parent);
+    builder.
+        box("ActuatorHeatPipes").name("heating").
+            box().name("pipes").
+            endbox().
+        endbox();
+    Box *pipesBox =  parent->findOne<Box>("pipes");
+    for (int i=0; i < pipes.size; ++i)
+        buildPipe(pipesBox, &pipes.array[i]);
+}
+
+void buildGrowthLight(Box *parent, const GrowthLight *g) {
+    double propLw = (g->type == Led) ? 0.1 : 0.5;
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::GrowthLight").name("growthLight").
+            port("parPhotonCoef").equals(g->parEfficiency).
+            port("propLw").equals(propLw).
+            port("intensity").equals(g->powerUsage).
+            port("ageCorrectedEfficiency").equals(g->ageCorrectedEfficiency).
+            port("on").equals(g->powerUsage>0.).
+        endbox();
+}
+
+void buildGrowthLights(Box *parent, GrowthLights lights) {
+    BoxBuilder builder(parent);
+    builder.
+        box("vg::GrowthLights").name("growthLights").
+        endbox();
+    Box *growthLights =  parent->findChild<Box*>("growthLights");
+    for (int i=0; i < lights.size; ++i)
+        buildGrowthLight(growthLights, &lights.array[i]);
+}
+
+void buildActuators(Box *parent, const Query &q) {
+    // Use maximum opening value available
+    double opening = 0;
+    std::cout << "buildActuators " << q.vents.size << "\n";
+    for (int i=0; i<q.vents.size; ++i) {
+        Variable var = q.vents.array[i].opening;
+        if (var.origin!=NotAvailable && var.value > opening)
+            opening = std::min(var.value, 1.);
+    }
+
+    BoxBuilder builder(parent);
+    builder.
+    box("Actuators").name("actuators").
+            box("ActuatorVentilation").name("ventilation").
+                port("value").equals(opening).
+            port("minValue").equals(0.).
+            endbox().
+    endbox();
+    Box *actuators = parent->findChild<Box*>("actuators");
+    buildPipes(actuators, q.heatPipes);
+    buildGrowthLights(actuators, q.growthLights);
+}
+
+void buildEnergyBudget(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::EnergyBudget").name("energyBudget").
+    endbox();
+}
+
+void buildEnergyBudgetIndoors(Box *parent, const Query &q) {
+    BoxBuilder builder(parent);
+    builder.
+    box().name("indoors").
+        box("vg::IndoorsVentilation").name("ventilation").
+            port("leakage").equals(q.construction.infiltration).
+        endbox().
+        box("vg::IndoorsTemperature").name("temperature").
         endbox().
     endbox();
 }
 
-//void buildEnergyBudget(Box *parent, const Query &q);
-//void buildWaterBudget(Box *parent, const Query &q);
-//void buildIndoors(Box *parent, const Query &q);
-//void buildCrop(Box *parent, const Query &q);
+void buildWaterBudget(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::WaterBudget").name("waterBudget").
+//        box().name("condensationScreens").
+//            box().name("screen").
+//                newPort("conductance").equals(0.).
+//                newPort("vapourFlux").equals(0.).
+//                newPort("gain").equals(0.).
+//            endbox().
+//        endbox().
+    endbox();
+}
+
+void buildIndoors(Box *parent, const Query &q) {
+    Variable var = q.indoors.co2;
+    double co2 = (var.origin!=NotAvailable) ? var.value : 900.;
+    if (TestNum::eqZero(co2))
+        co2 = 900.;
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::Indoors").name("indoors").
+        box("vg::IndoorsCo2").name("co2").
+            port("outdoorsCo2").equals(co2).
+            port("airFlux").equals(0.).
+            port("injectionRate").equals(0.).
+            port("timeStep").equals(0.).
+        endbox().
+    endbox();
+}
+
+void buildCrop(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::Crop").name("crop").
+    endbox();
+}
+
 
 Box* build(const Query &q) {
     init();
@@ -235,7 +375,7 @@ Box* build(const Query &q) {
     environment().option("dontAutoCreateRecords", true);
     try {
         builder.
-            box("Simulation").name("sim").
+            box("Simulation").name("greenhouse").
                 port("steps").equals(5).
             endbox();
         sim = builder.content();
@@ -243,15 +383,21 @@ Box* build(const Query &q) {
         buildSensor(sim, q);
         buildOutdoors(sim);
         buildConstruction(sim, q);
-//        buildEnergyBudget(sim, q);
-//        buildIndoors(sim, q);
-//        buildWaterBudget(sim, q);
-//        buildCrop(sim, q);
+        buildActuators(sim, q);
+        buildEnergyBudget(sim);
+        buildEnergyBudgetIndoors(sim->findOne<Box>("energyBudget"), q);
+        buildWaterBudget(sim);
+        buildIndoors(sim, q);
+        buildCrop(sim);
     }
     catch (Exception &ex) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
     }
     environment().root(sim);
+    Box *crop = sim->findOne<Box>("greenhouse/crop");
+    std::cout << qPrintable(crop->name()) << "\n";
+    QVector<Box*> children = crop->findMany<Box>("./*");
+    std::cout << children.size() << " children\n";
     return sim;
 }
 
@@ -316,12 +462,11 @@ Response compute(const Query &q) {
         r.indoorsCo2 = root->findOne<Box>("indoors/co2")->port("value")->value<double>();
         r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
         r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
-        r.indoorsPar = root->findOne<Box>("indoors/light")->port("parTotal")->value<double>();
+        r.indoorsPar = root->findOne<Box>("energyBudget")->port("cropParFluxFromAbove")->value<double>();
         snapToZero(r.indoorsPar);
-        QVector<Box*> pipes = root->findMany<Box>("pipes/pipe");
-        r.heating = 0; for (Box *pipe : pipes) r.heating += pipe->port("effect")->value<double>();
+        r.heating = root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>();
         snapToZero(r.heating);
-        r.photosynthesis = root->findOne<Box>("crop/Pg")->port("value")->value<double>();
+        r.photosynthesis = root->findOne<Box>("crop/photosynthesis")->port("Pg")->value<double>();
         snapToZero(r.photosynthesis);
         r.growthLight = root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>();
         snapToZero(r.growthLight);

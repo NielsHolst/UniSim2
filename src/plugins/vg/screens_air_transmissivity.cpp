@@ -9,14 +9,12 @@
 #include <base/exception.h>
 #include <base/publish.h>
 #include <base/test_num.h>
-#include <base/vector_op.h>
 #include "screens_air_transmissivity.h"
 
 #include <base/dialog.h>
 
 using namespace base;
-using namespace TestNum;
-using namespace vector_op;
+using TestNum::eq;
 
 namespace vg {
 
@@ -40,7 +38,9 @@ void ScreensAirTransmissivity::reset() {
     update();
 }
 
-/* R code from screen_energy_combined.R
+/* The solution below led to too high RH due to inefficient ventilation even with a screen crack
+ *
+ * R code from screen_energy_combined.R
     # tr: transmissions [0;1]
     # st: states [0;1]  (1=fully drawn)
     combine = function(tr, st) {
@@ -62,7 +62,6 @@ void ScreensAirTransmissivity::reset() {
         Comb = overlap*(multiplicative - additive) + additive  #combined transmission
       )
     }
-*/
 
 void ScreensAirTransmissivity::update() {
     double sum_st = sum(states);
@@ -81,18 +80,19 @@ void ScreensAirTransmissivity::update() {
         double additive = unscreened + sum(prod)*(1-unscreened)/sum_st;
         value = overlap*(multiplicative - additive) + additive;
     }
-//    if (fullName().contains("screens/airTransmissivity")) {
-//        QString s(fullName() + "\nStates: ");
-//        for (double x : states)
-//            s += QString::number(x) + " ";
-//        s += "\nTrans: ";
-//        for (double x : transmissivities)
-//            s += QString::number(x) + " ";
-//        s += "\nValue: " + QString::number(value);
-
-//        dialog().information(s);
-//    }
 }
+*/
+
+void ScreensAirTransmissivity::update() {
+    // Only screens fully drawn has an effect on air transmissivity
+    value = 1.;
+    for (int i=0; i<_n; ++i) {
+        if (eq(states.at(i), 1.))
+            value *= transmissivities.at(i);
+    }
+}
+
+
 
 } //namespace
 

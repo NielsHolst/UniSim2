@@ -24,18 +24,20 @@ PipeForced::PipeForced(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes outflow temperature and effect");
-    Input(area).imports("construction/geometry[groundArea]",CA);
     Input(Tair).imports("indoors/temperature[value]",CA);
     Input(innerDiameter).equals(43.5).help("Pipe inner diameter").unit("mm");
     Input(waterVolume).equals(7.5).help("Total volume of water in pipes in greenhouse").unit("m3");
     Input(flowRate).equals(20.).help("Water flow rate").unit("m3/h");
+    Input(minTemperature).equals(0.).help("Minimum inflow temperature").unit("oC");
+    Input(maxTemperature).equals(100.).help("Maximum inflow temperature").unit("oC");
+
     Input(Tinflow).equals(60.).help("Temperature of inflowing water").unit("oC");
     Input(k).equals(1.66e-4).help("Heat pipe parameter").unit("K/mm/min");
     Input(b).equals(1.23).help("Heat pipe parameter").unit(">1");
     Input(knownToutflow).help("If zero then Toutflow will be calculated").unit("oC");
     Output(transitTime).help("Transit time of water through pipe").unit("min");
     Output(Toutflow).help("Temperature of outflowing water").unit("oC");
-    Output(effect).help("Effect of pipe per greenhouse area").unit("W/m2");
+    Output(energyFlux).help("Effect of pipe per greenhouse area").unit("W/m2");
 }
 
 void PipeForced::reset() {
@@ -47,21 +49,20 @@ void PipeForced::update() {
     updateTransitTime();
     updateToutflow();
     updateEffect();
-    std::cout
-        << "\nInputs\n"
-        << area << "\n"
-        << Tair << "\n"
-        << innerDiameter << "\n"
-        << waterVolume << "\n"
-        << flowRate << "\n"
-        << Tinflow << "\n"
-        << k << "\n"
-        << b << "\n"
-        << knownToutflow << "\n"
-        << "\nOutputs\n"
-        << transitTime << "\n"
-        << Toutflow << "\n"
-        << effect << "\n";
+//    std::cout
+//        << "\nInputs\n"
+//        << Tair << "\n"
+//        << innerDiameter << "\n"
+//        << waterVolume << "\n"
+//        << flowRate << "\n"
+//        << Tinflow << "\n"
+//        << k << "\n"
+//        << b << "\n"
+//        << knownToutflow << "\n"
+//        << "\nOutputs\n"
+//        << transitTime << "\n"
+//        << Toutflow << "\n"
+//        << effect << "\n";
 }
 
 void PipeForced::updateTransitTime() {
@@ -82,7 +83,7 @@ void PipeForced::updateToutflow() {
 }
 
 void PipeForced::updateEffect() {
-    effect = (Tinflow-Toutflow)*flowRate*CpWater/3600;
+    energyFlux = (Tinflow-Toutflow)*flowRate*CpWater/3600;
 }
 
 

@@ -110,7 +110,6 @@ struct node_grammar : public qi::grammar<Iterator, Skipper, Node()>
         // A name with optional attribute
         transform = name;
         attributed_name %= char_("\\.+") >> name >> -('|' > transform);
-        // Assign with either '"' or '~'
         // A parameter has a name, maybe with attributes, and a value and maybe a distribution
         parameter %= attributed_name > '=' >> value;
         // A node has a class name, maybe an object name, maybe some parameters, and maybe some nodes

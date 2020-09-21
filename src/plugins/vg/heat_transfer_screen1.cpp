@@ -24,16 +24,13 @@ HeatTransferScreen1::HeatTransferScreen1(QString name, QObject *parent)
     port("maxTemperatureRateOfChange")->equals(0.25);
 }
 
-void HeatTransferScreen1::amend() {
-}
-
 void HeatTransferScreen1::update() {
     updateArea();
     updateHeatCapacity();
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
-    if (keepTemperatureConstant)
+    if (keepTemperatureConstant || ++tick_ < 10)
         temperature = temperatureTop = temperatureBottom = indoorsTemperature;
     else
         updateTemperature();

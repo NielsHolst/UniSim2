@@ -1,0 +1,238 @@
+Simulation sim {
+  .iterations = 1
+  .steps = 6288
+  Box random {
+    RandomiserStratified randomiser {
+      .useFixed = TRUE
+    }
+    RandomUniform Cinit {
+      .min   = 0.01
+      .fixed = 0.4
+      .max   = 0.60
+    }
+    RandomUniform Ninit {
+      .min   = 0.011
+      .fixed = 0.15
+      .max   = 0.022
+    }
+    RandomUniform Ainit {
+      .min   = 0.00065 
+      .fixed = 0.00070
+      .max   = 0.00075 
+    }
+    RandomUniform Iden {
+      .min   = 100 
+      .fixed = 500
+      .max   = 900
+    }
+    RandomUniform A0 {
+      .min   = 1 
+      .fixed = 6
+      .max   = 8
+    }
+    RandomUniform m1 {
+      .min   = 0.004520833
+      .fixed = 0.004520833
+      .max   = 0.005445833 
+    }
+    RandomUniform m2 {
+      .min   = 0.0004166667
+      .fixed = 0.00125
+      .max   = 0.001625 
+    }
+    RandomUniform a {
+      .min   = 0.36
+      .fixed = 0.72
+      .max   = 1.08 
+    }
+    RandomUniform b {
+      .min   = 0.14
+      .fixed = 0.28
+      .max   = 0.42 
+    }
+    RandomUniform U0 {
+      .min   = 0.0225
+      .fixed = 0.045
+      .max   = 0.0675 
+    }
+    RandomUniform KX {
+      .min   = 0.002
+      .fixed = 0.004
+      .max   = 0.006 
+    }
+    RandomUniform Jmax { // check værdier
+      .min   = 0.0000616
+      .fixed = 0.00014
+      .max   = 0.0001960
+    }
+    RandomUniform a1 {
+      .min   = 0
+      .fixed = 0.85
+      .max   = 0.85
+    }
+    RandomUniform a2 {
+      .min   = 0
+      .fixed = 0.3
+      .max   = 0.3
+    }
+    RandomUniform eps {
+      .min   = 0
+      .fixed = 0.22
+      .max   = 0.33
+    }
+    RandomUniform gamma {
+      .min   = 0.25
+      .fixed = 0.50
+      .max   = 0.75 
+    }
+  }
+  Box fixed {
+    +Nmin = 0.01
+  }
+  Calendar calendar {
+    .initialDateTime = "2017-09-21 00:05:00"
+    .timeUnit = "h"
+    .latitude = 56.25 
+    // Uncomment lines below in newer versions of UniSim
+    // +dayLength = ./sun[dayLength]
+    // Sun sun {
+    // }
+  }
+  Records env {
+    // .fileName = "env_file_2017.txt"
+    .fileName = "env_file_2017_N0.txt"
+  }
+  Carboncontent carboncontent {
+    .Cinit =  random/Cinit[value]
+    .carbonreservesrate = rateofchangeincarbonreserves[carbonreservesrate]
+  }
+  Carbonexudation carbonexudation {
+    .C = carboncontent[C]
+  }
+  Nitrogencontent nitrogencontent {
+    .Ninit = random/Ninit[value]
+    .nitrogenreservesrate = rateofchangeinnitrogenreserves[nitrogenreservesrate]
+  }
+  Fronderosion fronderosion {
+    .A = area[A]
+    .eps = random/eps[value]
+  }
+  Temperaturedepententrespiration respiration {
+    .T = env[T]
+  }
+  LightInhibition beta {
+    .Pmax = maxphotoreftemp[maxphotosynthesisreftemp]
+    .guessBeta = 1e-9
+    .report = FALSE
+  }  
+  Photosynthesis photo  {
+    .beta = beta[beta]
+  }  
+  Maximalphotosynthesisratereftemp maxphotoreftemp {
+    .T = env[T]
+  }
+  Grossphotosynthesis grossphotosynthesis {
+    .PS = photo[photosynthesis]
+    .beta = beta[beta]
+    .I = env[I]
+  }
+  Nitrateuptakerate nitrateuptakerate {
+    .X = env[N]
+    .N = nitrogencontent[N]
+    .U = env[U]
+    .Nmin = fixed[Nmin]
+    .a    = random/a[value]
+    .b    = random/b[value]
+    .U0   = random/U0[value]
+    .KX   = random/KX[value]
+    .Jmax = random/Jmax[value]
+  }  
+  Seasonalinfluenceongrowthrate fphoto {
+    .dayLength = calendar[dayLength]
+    .maxDayLengthChange = 0.07832
+    .a1 = random/a1[value]
+    .a2 = random/a2[value]
+  }
+  Salinity fsalinity {
+    .S = env[S]
+  }
+  Effectoftemperatureongrowthrate ftemp {
+    .T = env[T]
+  }
+  Effectofsizeongrowthrate farea {
+    .A = area[A]
+    .A0 = random/A0[value]
+    .m1 = random/m1[value]
+    .m2 = random/m2[value]
+  }
+  Arealost arealost {
+    .A = area[A]
+    .C = carboncontent[C]
+  }
+  Area area {
+    .Ainit = random/Ainit[value]
+    .fronderosion = fronderosion[fronderosion]
+    .Alost = arealost[Alost]
+    .u = specificgrowthrate[specificgrowthrate]
+    .Factor = 1
+  }
+  Specificgrowthrate specificgrowthrate {
+    .farea = farea[farea]
+    .fphoto = 1 //fphoto[fphoto]
+    .ftemp = ftemp[ftemp]
+    .fsalinity = fsalinity[fsalinity]
+    .N = nitrogencontent[N]
+    .C = carboncontent[C]
+    .Nmin =  fixed[Nmin] 
+  }
+  Rateofchangeincarbonreserves rateofchangeincarbonreserves {
+    .Gphotosynthesis = grossphotosynthesis[Gphotosynthesis]
+    .Cexudation = carbonexudation[carbonexudation]
+    .Respiration = respiration[respiration]
+    .C = carboncontent[C]
+    .u = specificgrowthrate[specificgrowthrate]
+  }
+  Rateofchangeinnitrogenreserves rateofchangeinnitrogenreserves {
+    .J = nitrateuptakerate[Nuptakerate]
+    .u = specificgrowthrate[specificgrowthrate]
+    .N = nitrogencontent[N]
+  }
+  Rateofchangeoffrondarea rateofchangeoffrondarea {
+    .u = specificgrowthrate[specificgrowthrate]
+    .A = area[A]
+    .fronderosion = fronderosion[fronderosion]
+  }
+  Dryweight dryweight {
+    .A = area[A]
+    .N = nitrogencontent[N]
+    .C = carboncontent[C]
+  }
+  Structuraldryweight structuraldryweight {
+    .A = area[A]
+  }
+  Wetweight wetweight {
+    .A = area[A]
+    .N = nitrogencontent[N]
+    .C = carboncontent[C]
+  }
+  Totalcarbon totalcarbon {
+    .C = carboncontent[C]
+    .Ws = structuraldryweight[Ws]
+  }
+  Totalnitrogen totalnitrogen {
+    .N = nitrogencontent[N]
+    .Ws = structuraldryweight[Ws]
+  }
+  Yieldprm yield {
+    .Iden = random/Iden[value]
+    .Ww = wetweight[Ww]
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ports = (env[N] area[A])
+      }
+    }
+  }
+}

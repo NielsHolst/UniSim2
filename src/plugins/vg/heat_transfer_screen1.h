@@ -15,7 +15,6 @@ class HeatTransferScreen1 : public HeatTransferShelter
 {
 public:
     HeatTransferScreen1(QString name, QObject *parent);
-    void amend();
     void update();
 private:
     // Inputs

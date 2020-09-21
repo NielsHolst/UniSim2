@@ -20,6 +20,7 @@ HeatTransferScreen3::HeatTransferScreen3(QString name, QObject *parent)
 {
     help("holds the radiative parameters of screen layer 3 averaged for all shelter faces");
     Input(keepTemperatureConstant).imports("energyBudget[keepConstantScreenTemperature]", CA);
+    port("condensationRate")->imports("waterBudget/condensationScreens/screen2[vapourFlux]");
     port("maxTemperatureRateOfChange")->equals(0.25);
 }
 
@@ -29,7 +30,7 @@ void HeatTransferScreen3::update() {
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
-    if (keepTemperatureConstant)
+    if (keepTemperatureConstant || ++tick_ < 10)
         temperature = temperatureTop = temperatureBottom = indoorsTemperature;
     else
         updateTemperature();

@@ -25,9 +25,9 @@ Screens::Screens(QString name, QObject *parent)
 
 void Screens::amend() {
     BoxBuilder builder(this);
-    builder.
-    box("ScreensAirTransmissivity").name("airTransmissivity").
-    endbox();
+    if (!findMaybeOne<Box>("./airTransmissivity"))
+        builder.box("vg::ScreensAirTransmissivity").name("airTransmissivity").
+        endbox();
 }
 
 

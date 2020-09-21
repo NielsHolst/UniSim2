@@ -44,6 +44,7 @@ private:
         screenShadeThreshold2,
         screenShadeThresholdBand,
         screenFixed1,
+        screenFixed2,
         screenCrackAtHighRh,
         screenCrackAtHighTemperature,
         screenCrackAtHighTemperatureBand,

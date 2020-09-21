@@ -136,7 +136,7 @@ struct ScreenMaterial {
 };
 
 enum ScreenLayer {Inner, Mid, Outer};
-enum ScreenPosition {WholeRoof, FlatRoof, Roof1, Roof2, Side1, Side2, End1, End2};
+enum ScreenPosition {Roof1, Roof2, Side1, Side2, End1, End2};
 
 struct Screen {
     ScreenMaterial material;

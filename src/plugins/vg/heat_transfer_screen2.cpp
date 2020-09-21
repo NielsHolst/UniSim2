@@ -30,7 +30,7 @@ void HeatTransferScreen2::update() {
     updateRadiativeProperties();
     updateLwEmission();
     updateConvectiveProperties();
-    if (keepTemperatureConstant)
+    if (keepTemperatureConstant || ++tick_ < 10)
         temperature = temperatureTop = temperatureBottom = indoorsTemperature;
     else
         updateTemperature();

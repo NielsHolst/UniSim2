@@ -132,30 +132,30 @@ void EnergyBudget::amend() {
         hasScreen2 = !findMany<Box>("construction/shelter/*/screens/layer2").isEmpty(),
         hasScreen3 = !findMany<Box>("construction/shelter/*/screens/layer3").isEmpty();
     BoxBuilder builder(this);
-    builder.
-    box("HeatTransferSky").name("sky").
-    endbox().
-    box("HeatTransferCover").name("cover").
-    endbox();
-    if (hasScreen1)
-        builder.
-        box("HeatTransferScreen1").name("screen1").
+    if (!findMaybeOne<Box>("./sky"))
+        builder.box("vg::HeatTransferSky").name("sky").
         endbox();
-    if (hasScreen2)
-        builder.
-        box("HeatTransferScreen2").name("screen2").
+    if (!findMaybeOne<Box>("./cover"))
+        builder.box("vg::HeatTransferCover").name("cover").
         endbox();
-    if (hasScreen3)
-        builder.
-        box("HeatTransferScreen3").name("screen3").
+    if (!findMaybeOne<Box>("./screen1") && hasScreen1)
+        builder.box("vg::HeatTransferScreen1").name("screen1").
         endbox();
-    builder.
-    box("HeatTransferPipe").name("pipe").
-    endbox().
-    box("HeatTransferCrop").name("crop").
-    endbox().
-    box("HeatTransferFloor").name("floor").
-    endbox();
+    if (!findMaybeOne<Box>("./screen2") && hasScreen2)
+        builder.box("vg::HeatTransferScreen2").name("screen2").
+        endbox();
+    if (!findMaybeOne<Box>("./screen3") && hasScreen3)
+        builder.box("vg::HeatTransferScreen3").name("screen3").
+        endbox();
+    if (!findMaybeOne<Box>("./pipe"))
+        builder.box("vg::HeatTransferPipe").name("pipe").
+        endbox();
+    if (!findMaybeOne<Box>("./crop"))
+        builder.box("vg::HeatTransferCrop").name("crop").
+        endbox();
+    if (!findMaybeOne<Box>("./floor"))
+        builder.box("vg::HeatTransferFloor").name("floor").
+        endbox();
 }
 
 void EnergyBudget::reset() {

@@ -48,6 +48,7 @@ Setpoints::Setpoints(QString name, QObject *parent)
     ELEMENT(screenShadeThreshold2).unit("").help("");
     ELEMENT(screenShadeThresholdBand).unit("").help("");
     ELEMENT(screenFixed1).unit("").help("");
+    ELEMENT(screenFixed2).unit("").help("");
     LIGHT(growthLightSetting, setting, 1);
     LIGHT(growthLightSetting, setting, 2);
     LIGHT(growthLightSetting, setting, 3);

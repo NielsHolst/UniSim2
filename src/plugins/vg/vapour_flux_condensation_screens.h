@@ -5,24 +5,22 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ACTUATOR_VENTILATION_H
-#define ACTUATOR_VENTILATION_H
+#ifndef VAPOUR_FLUX_CONDENSATION_SCREENS_H
+#define VAPOUR_FLUX_CONDENSATION_SCREENS_H
 
-#include <base/box.h>
+#include "vapour_flux_base.h"
 
 namespace vg {
 
-class ActuatorVentilation : public base::Box
+class VapourFluxCondensationScreens : public VapourFluxBase
 {
 public:
-    ActuatorVentilation(QString name, QObject *parent);
+    VapourFluxCondensationScreens(QString name, QObject *parent);
     void reset();
     void update();
-    double getOpening() const;
-    void setOpening(double opening);
 private:
-    // Inputs
-    double value, minValue, maxValue;
+    // Outputs
+    QVector<double> conductances, gains, vapourFluxes;
 };
 } //namespace
 

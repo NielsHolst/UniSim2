@@ -14,7 +14,6 @@ namespace vg {
 VapourFluxBase::VapourFluxBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(VapourFluxBase);
     help("base class for vapour flux computations");
     Output(conductance).help("Vapour flux conductance").unit("m/s");
     Output(vapourFlux).help("Vapour flux rate").unit("kg/m2 ground/s");

@@ -37,6 +37,8 @@ private:
 protected:
     // Inputs
     double indoorsTemperature;
+    // Data
+    int tick_;
     // Methods
     void updateLwEmission();
     void updateArea();

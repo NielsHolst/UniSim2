@@ -70,6 +70,7 @@ HEADERS +=  \
     leaf_transpiration.h \
     leaf_wind_speed.h \
     outdoors.h \
+    outputs.h \
     pid_controller.h \
     pipe.h \
     pipe_forced.h \
@@ -100,6 +101,7 @@ HEADERS +=  \
     vapour_flux_condensation_screen1.h \
     vapour_flux_condensation_screen2.h \
     vapour_flux_condensation_screen3.h \
+    vapour_flux_condensation_screens.h \
     vapour_flux_transpiration.h \
     vapour_flux_ventilation.h \
     vent.h \
@@ -168,6 +170,7 @@ SOURCES += \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
     outdoors.cpp \
+    outputs.cpp \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \
@@ -198,6 +201,7 @@ SOURCES += \
     vapour_flux_condensation_screen1.cpp \
     vapour_flux_condensation_screen2.cpp \
     vapour_flux_condensation_screen3.cpp \
+    vapour_flux_condensation_screens.cpp \
     vapour_flux_transpiration.cpp \
     vapour_flux_ventilation.cpp \
     vent.cpp \

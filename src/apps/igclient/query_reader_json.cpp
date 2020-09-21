@@ -145,7 +145,7 @@ void QueryReaderJson::parseConstruction(QJsonObject object) {
     _query.construction.length = findDouble(object, "Length");
     _query.construction.spanWidth = findDouble(object, "SpanWidth");
     _query.construction.spanCount = findInt(object, "SpanCount");
-    _query.construction.wallHeight = findDouble(object, "Length");
+    _query.construction.wallHeight = findDouble(object, "WallHeight");
     _query.construction.roofInclination = findDouble(object, "RoofInclination");
     _query.construction.internalShading = findDouble(object, "InternalShading");
     _query.construction.infiltration = findDouble(object, "Infiltration");
@@ -194,8 +194,8 @@ void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     hp.innerDiameter = findDouble(object, "InnerDiameter");
     hp.waterVolume  = findDouble(object, "WaterVolume");
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.temperatureInflow = findVariable(object, "TemperatureInFlow");
-    hp.temperatureOutflow = findVariable(object, "TemperatureOutFlow");
+    hp.temperatureInflow = findVariable(object, "TemperatureInflow");
+    hp.temperatureOutflow = findVariable(object, "TemperatureOutflow");
     _heatPipes.push_back(hp);
 }
 
@@ -214,7 +214,7 @@ void QueryReaderJson::parseVent(QJsonObject object) {
     vent.numberOfVents = findDouble(object, "NumberOfVents");
     vent.maxOpening = findDouble(object, "MaxOpening");
     vent.porosity = findDouble(object, "Porosity");
-    vent.opening = NullVariable; //findVariable(object, "Opening");
+    vent.opening = findVariable(object, "Opening");
     _vents.push_back(vent);
 }
 

@@ -6,6 +6,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/publish.h>
+#include <base/test_num.h>
 #include <base/vector_op.h>
 #include "actuator_ventilation.h"
 
@@ -29,12 +30,21 @@ void ActuatorVentilation::reset() {
     value = minValue;
 }
 
+void ActuatorVentilation::update() {
+    if (TestNum::ltZero(minValue) || TestNum::gt(minValue, 1.))
+        ThrowException("Minimum ventilation opening must be inside [0;1]").value(minValue).context(this);
+    if (value < minValue)
+        value = minValue;
+    else if (value > maxValue)
+        value = maxValue;
+}
+
 double ActuatorVentilation::getOpening() const {
     return value;
 }
 
 void ActuatorVentilation::setOpening(double opening) {
-    value = opening;
+    value = std::max(opening, minValue);
 }
 
 } //namespace

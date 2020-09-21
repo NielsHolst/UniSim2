@@ -391,7 +391,7 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
 
     text << fill << className() << " " << objectName()
          << " {" << postfix
-         << " // #" << order()
+//         << " // #" << order()
          << "\n";
 
     for (Port *port : me->findMany<Port>(".[*]")) {

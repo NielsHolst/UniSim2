@@ -72,4 +72,4 @@ dev.off()
 tiff("fig-3-col.tiff", width=86, height=134, units="mm", res=1200, compression="zip")
 grid.draw(make_plot(col_lines, bw_line_size, theme1))
 dev.off()
-}
+

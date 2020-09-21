@@ -8,8 +8,8 @@
 
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
-CONFIG += debug
-VERSION = 2.3.28
+CONFIG += release
+VERSION = 2.3.29
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 

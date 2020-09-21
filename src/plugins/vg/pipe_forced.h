@@ -20,10 +20,10 @@ public:
     void update();
 private:
     // Inputs
-    double area, Tair, innerDiameter, waterVolume, flowRate, k, b, Tinflow,
-        knownToutflow;
+    double Tair, innerDiameter, waterVolume, flowRate, k, b, Tinflow,
+        minTemperature, maxTemperature, knownToutflow;
     // Outputs
-    double transitTime, Toutflow, effect;
+    double transitTime, Toutflow, energyFlux;
     // Methods
     void updateToutflow();
     void updateTransitTime();

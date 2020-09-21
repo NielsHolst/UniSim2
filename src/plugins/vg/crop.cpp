@@ -27,22 +27,20 @@ void Crop::amend() {
     BoxBuilder builder(this);
 
     if (!findMaybeOne<Box>("./rs"))
-        builder.
-        box("vg::StomatalResistanceRose").name("rs").
+        builder.box("vg::StomatalResistanceRose").name("rs").
         endbox();
-
     if (!findMaybeOne<Box>("./rb"))
         builder.box("vg::BoundaryLayerResistanceStanghellini").name("rb").
         endbox();
-
-    builder.
-    box("vg::LeafTranspiration").name("transpiration").
-    endbox().
-    box("vg::LeafTemperature").name("temperature").
-    endbox().
-    box("vg::LeafPhotosynthesis").name("photosynthesis").
-    endbox();
-
+    if (!findMaybeOne<Box>("./transpiration"))
+        builder.box("vg::LeafTranspiration").name("transpiration").
+        endbox();
+    if (!findMaybeOne<Box>("./temperature"))
+        builder.box("vg::LeafTemperature").name("temperature").
+        endbox();
+    if (!findMaybeOne<Box>("./photosynthesis"))
+        builder.box("vg::LeafPhotosynthesis").name("photosynthesis").
+        endbox();
     if (!findMaybeOne<Box>("./growth"))
         builder.
         box("vg::CropGrowth").name("growth").
