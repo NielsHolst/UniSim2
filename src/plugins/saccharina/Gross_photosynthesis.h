@@ -4,17 +4,17 @@
 
 namespace saccharina {
 
-class Grossphotosynthesis : public base::Box
+class GrossPhotosynthesis : public base::Box
 {
 public:
-    Grossphotosynthesis(QString name, QObject *parent);
+    GrossPhotosynthesis(QString name, QObject *parent);
     void reset();
     void update();
 private:
     // Inputs
-    double PS, alpha, I, beta;
+    double alpha, beta, I, Isat;
     // Outputs
-    double Gphotosynthesis;
+    double value;
 };
 
 }

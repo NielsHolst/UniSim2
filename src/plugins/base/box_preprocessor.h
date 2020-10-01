@@ -39,6 +39,8 @@ private:
     QString backtrack(FileIncludes earlierIncludes) const;
     QString replaceMacros(QString code);
     QMap<QString,QString> extractMacros(QString code);
+    QString extractUsing(QString code);
+    void setUsing(QString pluginName);
 };
 
 }

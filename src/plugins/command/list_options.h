@@ -16,7 +16,8 @@ enum class ListOption{
     Imports,
     Exports,
     Boxes,
-    Recurse
+    Recurse,
+    Plugin
 };
 
 typedef QSet<ListOption> ListOptionSet;

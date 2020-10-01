@@ -1,28 +1,30 @@
 #include <base/publish.h>
-#include "Gross_photosynthesis.h"
+#include "gross_photosynthesis.h"
 
 using namespace base;
 
 namespace saccharina {
 
-PUBLISH(Grossphotosynthesis)
+PUBLISH(GrossPhotosynthesis)
 
-Grossphotosynthesis::Grossphotosynthesis(QString name, QObject *parent)
+GrossPhotosynthesis::GrossPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("Calculates the gross photosynthesis (Eq 10)");
-    Input(PS).equals(0.00144).help("Photosynthesis parameter, auxiliary variable");
-    Input(alpha).equals(0.0000375).help("Photosynthetic efficiency (gCdm−2 h−1(μmol photons m−2 s−1)−1)");
-    Input(I).equals(200).help("Irradiance (PAR), environmental variable");
-    Input(beta).equals(0.000000001).help("Photoinhibition parameter, auxiliary variable (gO2 dm−2 h−1(μmol photons m−2 s−1)−1)");
-    Output(Gphotosynthesis).help("Gross photosynthesis (gC dm−2 h−1)");
+    help("calculates gross photosynthetic rate (eqs. 10-11)");
+    Input(alpha).imports("lightInhibition[alpha]");
+    Input(beta).imports("lightInhibition[beta]");
+    Input(I).imports("env[I]");
+    Input(Isat).equals(200).unit("micromol/m2/s").help("Irradiance for maximal photosynthesis");
+    Output(value).unit("g C/dm2/h").help("Gross photosynthetic rate");
 }
 
-void Grossphotosynthesis::reset() {
+void GrossPhotosynthesis::reset() {
    update();
 }
 
-void Grossphotosynthesis::update() {
-    Gphotosynthesis = PS * (1 - exp(-((alpha * I)/(PS)))) * exp(-(beta/PS));
+void GrossPhotosynthesis::update() {
+    double PS = alpha*Isat/log(1.+alpha/beta);
+    value = PS*(1. - exp(-alpha*I/PS)) * exp(-beta/PS);
 }
+
 }

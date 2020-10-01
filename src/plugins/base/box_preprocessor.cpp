@@ -7,10 +7,13 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMapIterator>
+#include <QSet>
 #include <QString>
 #include "box_preprocessor.h"
 #include "dialog.h"
 #include "exception.h"
+#include "factory_plug_in.h"
+#include "mega_factory.h"
 
 using namespace std;
 
@@ -21,7 +24,11 @@ BoxPreprocessor::BoxPreprocessor()
 }
 
 QString BoxPreprocessor::preprocess(QString filePath) {
+    // Read box script and expand macros
     QString code = readFile(filePath, FileIncludes());
+    // Set using directive and comment it out
+    setUsing(extractUsing(code));
+    code = code.replace("^#using", "// #using");
     // Replace any macros
     return replaceMacros(code);
 }
@@ -65,6 +72,48 @@ QString BoxPreprocessor::expandIncludes(QString sourceFilePath, QString code, Fi
     }
     newCode += code.mid(at);
     return newCode;
+}
+
+QString BoxPreprocessor::extractUsing(QString code) {
+    // Collect the using directives in one set
+    QSet<QString> usingPlugin;
+    Positions includes = findDirective(code, "using");
+    for (Position include : includes) {
+        QString line = code.mid(include.begin, include.end - include.begin);
+        QStringList items = line.split(" ", QString::SkipEmptyParts);
+        if (items.size() != 2)
+            ThrowException("Write '#using <plugin>").value(line);
+        usingPlugin << items.at(1);
+    }
+    // Only zero or one member is legal
+    QString result;
+    switch (usingPlugin.size()) {
+    case 0:
+        result = "";
+        break;
+    case 1:
+        result = usingPlugin.toList().at(0);
+        break;
+    default:
+        ThrowException("Only one #using directive is allowed").
+                value(QStringList(usingPlugin.toList()).join(", "));
+    }
+    return result;
+}
+
+void BoxPreprocessor::setUsing(QString pluginName) {
+    auto plugins = MegaFactory::factories();
+    QStringList pluginNames;
+    for (int i=0; i < plugins.size(); ++i) {
+        pluginNames << plugins.at(i)->id();
+    }
+    if (pluginName.isEmpty())
+        MegaFactory::usingPlugin("");
+    else if (pluginNames.contains(pluginName))
+        MegaFactory::usingPlugin(pluginName);
+    else
+        ThrowException("Plugin name in #using directive does not exist").value(pluginName).
+                hint("Existing plugins:\n" + pluginNames.join("\n"));
 }
 
 BoxPreprocessor::Positions BoxPreprocessor::findDirective(QString code, QString directive) const {

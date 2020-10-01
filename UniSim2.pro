@@ -29,10 +29,10 @@ unisim.depends = command
 #demo.depends = base
 #unisim.depends = demo
 
-SUBDIRS += eq
-eq.subdir = src/plugins/eq
-eq.depends = base
-unisim.depends = eq
+#SUBDIRS += eq
+#eq.subdir = src/plugins/eq
+#eq.depends = base
+#unisim.depends = eq
 
 #SUBDIRS += student
 #student.subdir = src/plugins/student
@@ -43,10 +43,10 @@ unisim.depends = eq
 # Published or in-prep paper plug-ins
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
 
 #SUBDIRS += bmsb
 #bmsb.subdir = src/plugins/bmsb
@@ -137,10 +137,15 @@ unisim.depends = vg
 #resist.depends = base
 #unisim.depends = resist
 
-#SUBDIRS += saccharina
-#saccharina.subdir = src/plugins/saccharina
-#saccharina.depends = base
-#unisim.depends = saccharina
+SUBDIRS += saccharina
+saccharina.subdir = src/plugins/saccharina
+saccharina.depends = base
+unisim.depends = saccharina
+
+SUBDIRS += test
+test.subdir = src/plugins/test
+test.depends = base
+unisim.depends = test
 
 #SUBDIRS += tuta
 #tuta.subdir = src/plugins/tuta

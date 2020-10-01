@@ -802,6 +802,7 @@
 
 <xsl:template match="/"> <box class="Simulation" name="greenhouse">
   <port name="steps" ref="./period[steps]"/>
+  <port name="unattended" value="TRUE"/>
   <xsl:comment> *** SimulationPeriod *** </xsl:comment>
   <box class="SimulationPeriod" name="period">
     <xsl:variable name="beginDate" select="DVV_SETUP/StartTime"/>
@@ -1421,7 +1422,7 @@
       </box>
     </box>
     <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
-    <box class="OutputText">
+    <box class="OutputText" name="text">
       <port name="skipFormats" value="TRUE"/>
       <port name="useLocalDecimalChar" value="TRUE"/>
       <port name="skipInitialRows">

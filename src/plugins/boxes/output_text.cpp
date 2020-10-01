@@ -78,7 +78,7 @@ void OutputText::update() {
 }
 
 void OutputText::debrief() {
-    dialog().information("Data frame written to '" + environment().latestOutputFilePath("txt") + "'");
+    dialog().information("Data frame written to '" + filePath + "'");
     _file.close();
 }
 

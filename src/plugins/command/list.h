@@ -17,9 +17,13 @@ public:
 private:
     // Data
     ListOptionSet _options;
+    QString _path;
     // Methods
     void doExecute();
     void showHelp();
+    void extractOptions();
+    void listBoxes();
+    void listPlugin();
 };
 
 }

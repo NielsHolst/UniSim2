@@ -1,5 +1,5 @@
 #include <base/publish.h>
-#include "Area.h"
+#include "area.h"
 
 using namespace base;
 
@@ -10,29 +10,36 @@ PUBLISH(Area)
 Area::Area(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("Calculates the Area after a certain timespan (dm2)");
-    Input(u).equals(0.18).help("Specific growth rate");
-    Input(Ainit).equals(0.000005).help("Initial Area in dm");
-    Input(fronderosion).equals(0.1).help("Apical frond loss pr day");
-    Input(Alost).equals(0.05).help("Area lost due to subcritical C value (dm)");
-    Input(Factor).equals(1).help("Scaling factor of model");
+    help("calculates the frond area (eq. 1)");
+    Input(initialValue).equals(0.000005).unit("dm2").help("Initial plant area");
+    Input(growthRate).imports("growthRate[value]");
+    Input(lossRateErosion).imports("areaLossErosion[value]");
+    Input(lossRespiration).imports("C[areaLost]");
+    Input(timeStepDays).imports("calendar[timeStepDays]");
     Input(date).imports("calendar[date]");
-    Output(A).help("Area of the algae (dm)");
-    Output(logA).help("Log area");
-    Output(logAOct).help("Log area on 1 October");
+    Output(value).help("Frond area (dm2)");
+    Output(logValue).help("Log10 of frond area");
+    Output(pctGrowth).unit("% per day").help("Percentage increase");
 }
 
 void Area::reset() {
-   A = Ainit;
-   logA = log10(A);
+   value = initialValue;
+   logValue = log10(value);
+   prevDate = QDate();
+   prevValue = value;
 }
 
 void Area::update() {
-   A += (A*(u-fronderosion)-Alost)*Factor;
-   logA = log10(A);
-   if (date.month()==10 && date.day()==1)
-       logAOct = logA;
+   value += value*(growthRate - lossRateErosion)*timeStepDays - lossRespiration;
+   logValue = log10(value);
+   if (prevDate.isNull()) {
+       prevDate = date;
+   }
+   else if (date > prevDate) {
+       pctGrowth = (prevValue>0.) ? 100.*(value-prevValue)/prevValue : 0.;
+       prevDate = date;
+       prevValue = value;
+   }
 }
-
 
 }

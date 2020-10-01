@@ -27,16 +27,17 @@ void TestOutputBuffer::testOk() {
         QFAIL(qPrintable(s));
     }
 
-    Port *value = sim->findOne<Port>("fibo[value]");
-    Track *track = Track::find(Track::Order{value->id(), PortFilter::None});
-    const Vector* vector = track->buffer();
-    const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
+    QFAIL("No track->buffer() method");
+//    Port *value = sim->findOne<Port>("fibo[value]");
+//    Track *track = Track::find(Track::Order{value->id(), PortFilter::None});
+//    const Vector* vector = track->buffer();
+//    const QVector<int> *values = reinterpret_cast<const QVector<int> *>(vector->ptr());
 
-    QCOMPARE(vector->size(), 6);
-    QCOMPARE(values->size(), 6);
-    QVector<int> expected;
-    expected << 1 << 1 << 2 << 3 << 5 << 8;
-    QCOMPARE(*values, expected);
+//    QCOMPARE(vector->size(), 6);
+//    QCOMPARE(values->size(), 6);
+//    QVector<int> expected;
+//    expected << 1 << 1 << 2 << 3 << 5 << 8;
+//    QCOMPARE(*values, expected);
 
     delete sim;
 }

@@ -21,9 +21,9 @@ private:
     double Pmax, Isat, alpha, guessBeta;
     bool report;
     // Outputs
-    double beta, error;
+    double beta, log10beta, error, leftBeta, rightBeta, PmaxResult;
     // Methods
-    void reportBracket(double left, double right) const;
+    void reportBracket(QString text) const;
 };
 
 class Error {

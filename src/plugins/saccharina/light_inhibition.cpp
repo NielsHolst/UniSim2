@@ -16,25 +16,31 @@ PUBLISH(LightInhibition)
 LightInhibition::LightInhibition(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes light inhibition parameter cf. Plat et al. (1980)");
-    Input(Pmax).equals(0.001).unit("carbon/area/time").help("Maximal photosynthetic rate");
-    Input(Isat).equals(200.).unit("mymol/m2/s");
-    Input(alpha).equals(3.75e-5).unit("m2 s/mymol");
-    Input(report).equals(true).help("Report progress on screen");
-    Input(guessBeta).equals(1e-8).unit("mymol/m2/s").help("Initial guess value for beta");
-    Output(beta).unit("mymol/m2/s").help("Light inhibition");
-    Output(error).unit("mymol/m2/s").help("The residual error on beta");
+    help("calculates light inhibition parameter beta (eq. 12)");
+    Input(Pmax).imports("pmax[value]");
+    Input(Isat).equals(200.).unit("micromol/m2/s");
+    Input(alpha).equals(3.75e-5).unit("g C/dm2/h per micromol/m2/s").help("Photosynthetic effectivity");
+    Input(report).equals(false).help("Report progress on screen?");
+    Input(guessBeta).equals(1e-8).unit("micromol/m2/s").help("Initial guess value for beta");
+    Output(beta).unit("micromol/m2/s").help("Light inhibition");
+    Output(log10beta).help("Log10 of beta");
+    Output(error).unit("micromol/m2/s").help("The residual error on beta");
+    Output(leftBeta).unit("micromol/m2/s").help("Lower limit for search window");
+    Output(rightBeta).unit("micromol/m2/s").help("Upper limit for search window");
+    Input(PmaxResult).unit("g C/dm2/h").help("Resulting maximal photosynthesis");
 }
 
 void LightInhibition::reset() {
     beta = guessBeta;
+    log10beta = log10(beta);
 }
 
-void LightInhibition::reportBracket(double left, double right) const {
+void LightInhibition::reportBracket(QString text) const {
     if (report) {
-        QString s("Pmax(leftBeta = %1) = %2, Pmax(rightBeta = %3) = %4");
-        dialog().information(s.arg(left).arg(calcPmax(left))
-                              .arg(right).arg(calcPmax(right)));
+        QString s("%1: Pmax(leftBeta = %2) = %3, Pmax(rightBeta = %4) = %5");
+        dialog().information(s.arg(text)
+                              .arg(leftBeta).arg(calcPmax(leftBeta))
+                              .arg(rightBeta).arg(calcPmax(rightBeta)));
     }
 }
 
@@ -46,28 +52,22 @@ void LightInhibition::update() {
         dialog().information("Bracketing beta...");
     }
 
-    // Find left and right beta to give opposite signs,
-    // thus the optimum will be in between: leftBeta < beta < rightBeta
-    double leftBeta = beta, rightBeta = beta;
+    // Set left and right beta to bracket the solution,
+    // thus the optimum will be inbetween: leftBeta < beta < rightBeta
+    leftBeta = rightBeta = log(beta);
     int i=0;
     const int maxIter = 10;
-    if (calcPmax(beta) < Pmax) {
-        // Move rightBeta farther right
-        do {
-            reportBracket(leftBeta, rightBeta);
-            rightBeta *= 10.;
-        }
-        while (calcPmax(rightBeta) < Pmax && i++ < maxIter);
+    // Move rightBeta farther right
+    while (calcPmax(rightBeta) < Pmax && i++<maxIter) {
+        reportBracket("Move rightBeta right");
+        rightBeta += 2.;
     }
-    else {
-        // Move leftBeta farther left
-        do {
-            reportBracket(leftBeta, rightBeta);
-            leftBeta /= 10.;
-        }
-        while (calcPmax(leftBeta) > Pmax && i++ < maxIter);
+    i = 0;
+    while (calcPmax(leftBeta) > Pmax && i++<maxIter) {
+        reportBracket("Move leftBeta left");
+        leftBeta -= 2.;
     }
-    reportBracket(leftBeta, rightBeta);
+    reportBracket("Final bracket");
 
     // Check bracketing success
     if (i >= maxIter) {
@@ -79,8 +79,11 @@ void LightInhibition::update() {
 
     // Now minimise the error
     QPair<double, double> minimum = minimise(Error(this), leftBeta, rightBeta, 1e-9, 100, this);
-    beta = minimum.first;
-    error = minimum.second;
+    double logBeta = minimum.first;
+    beta = exp(logBeta);
+    PmaxResult = calcPmax(logBeta);
+    error =  PmaxResult - Pmax;
+    log10beta = log10(beta);
 
     // Report result
     if (report) {
@@ -89,8 +92,10 @@ void LightInhibition::update() {
     }
 }
 
-double LightInhibition::calcPmax(double altBeta) const {
+double LightInhibition::calcPmax(double logBeta) const {
+
     double
+        altBeta = exp(logBeta),
         a = alpha*Isat/log(1 + alpha/altBeta),
         b = alpha/(alpha + altBeta),
         c = altBeta/(alpha + altBeta);
@@ -98,7 +103,7 @@ double LightInhibition::calcPmax(double altBeta) const {
 }
 
 double LightInhibition::calcError(double altBeta) const {
-    return fabs(calcPmax(altBeta) - Pmax);
+    return exp(fabs(calcPmax(altBeta) - Pmax));
 }
 
 Error::Error(LightInhibition *caller_)

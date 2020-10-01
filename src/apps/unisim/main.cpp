@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QTextStream>
 #include <base/altova_xml.h>
+#include <base/box.h>
 #include <base/command.h>
 #include <base/dialog_minimal.h>
 #include <base/environment.h>
@@ -123,7 +124,11 @@ int runWithoutDialog(int argc, char *argv[]) {
         if (dialog->errorCount() > 0)
             ThrowException(dialog->getError());
 
-        QString outputFilePath = environment().outputFilePath(".txt", -1 );
+        Box *sim = environment().current();
+        if (!sim)
+            ThrowException("No XML script loaded");
+        Box *outputText = sim->findOne<Box>("output/text");
+        QString outputFilePath = outputText->port("filePath")->value<QString>();
         copyFile(outputFilePath, destinationFilePath(args));
     }
     catch (Exception &ex){

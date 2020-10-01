@@ -12,10 +12,13 @@ public:
     void update();
 private:
     // Inputs
-    double u, Ainit, fronderosion, C, Cmin, Cstruct, Alost, Factor;
+    double initialValue, growthRate, lossRateErosion, lossRespiration, timeStepDays;
     QDate date;
     // Outputs
-    double A, logAOct, logA;
+    double value, logValue, pctGrowth;
+    // Data
+    double prevValue;
+    QDate prevDate;
 };
 
 }

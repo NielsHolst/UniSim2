@@ -118,14 +118,27 @@ QString Environment::homePath() const {
 }
 
 QString Environment::openOutputFile(QFile &file, QString extension) {
+    QString s="Environment::openOutputFile, extension:%1";
+    dialog().information(s.arg(extension));
+
+    // If multiple instances are running there is an off chance that the file path already exists
+    // The forced increment of the counter will most likely but not certainly solve the problem
     QString filePath = outputFilePath(extension);
+    while (QFileInfo::exists(filePath)) {
+        incrementFileCounter();
+        filePath = outputFilePath(extension);
+    }
+
     file.setFileName(filePath);
-    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
     return filePath;
 }
 
 QString Environment::outputFilePath(QString extension, int offset) {
+    QString s="Environment::outputFilePath extension:%1, offset:%2, _latestLoadArg:%3, fileCountervalue():%4";
+    dialog().information(s.arg(extension).arg(offset).arg(_latestLoadArg).arg(fileCountervalue()));
+
     QString fileName = _latestLoadArg;
 
     char numberFilled[16];
@@ -309,9 +322,12 @@ QDir Environment::makeDirAsNeeded(QDir dirNeeded) {
 }
 
 void Environment::incrementFileCounter() {
+    QString s = "Environment::incrementFileCounter(), fileCountervalue():%1";
+    dialog().information(s.arg(fileCountervalue()));
     QSettings settings;
     int number = fileCountervalue();
     settings.setValue(fileCounterKey(), ++number);
+    settings.sync();
 }
 
 int Environment::fileCountervalue() {
@@ -410,10 +426,11 @@ bool Environment::isMac() const {
 }
 
 bool Environment::isWindows() const {
-#ifdef Q_OS_WIN
-    return true;
-#endif
-    return false;
+    bool isWin = false;
+    #ifdef Q_OS_WIN
+        isWin = true;
+    #endif
+    return isWin;
 }
 
 void Environment::initDir() {

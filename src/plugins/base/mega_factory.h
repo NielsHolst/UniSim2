@@ -27,6 +27,7 @@ public:
     static const QList<base::FactoryPlugIn*> &factories();
     static QDir pluginsDir();
     static QStringList qualifiedClassNames(QString className);
+    static void usingPlugin(QString pluginName);
 private:
     // methods
     MegaFactory();
@@ -37,7 +38,7 @@ private:
     static MegaFactory *_me;
     ProductIndex productIndex;
     QList<base::FactoryPlugIn*> _factories;
-    static int productCount;
+    static QString _usingPluginName;
 };
 
 template <class T>
