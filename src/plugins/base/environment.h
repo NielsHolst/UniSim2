@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QObject>
 #include <QMap>
+#include <QStack>
 #include <QVariant>
 #include "computation_step.h"
 #include "convert.h"
@@ -56,6 +57,7 @@ public:
     QString latestOutputFilePath(QString fileExtension) const;
     void latestLoadArg(QString arg);
     QString latestLoadArg() const;
+    QStringList latestLoadArgs() const;
 
     QDir currentBoxScriptFolder() const;
     QString latestInputFilePath() const;
@@ -91,6 +93,7 @@ private:
     QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;
     bool _isFirstInstallation, _isSilent, _isUnattended;
     QMap<QString, QVariant> _options;
+    QStack<QString> _latestLoadArgs;
     // Singleton
     static Environment *_environment;
     friend Environment& environment();

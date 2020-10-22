@@ -194,8 +194,8 @@ void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     hp.innerDiameter = findDouble(object, "InnerDiameter");
     hp.waterVolume  = findDouble(object, "WaterVolume");
     hp.flowRate  = findVariable(object, "FlowRate");
-    hp.temperatureInflow = findVariable(object, "TemperatureInflow");
-    hp.temperatureOutflow = findVariable(object, "TemperatureOutflow");
+    hp.temperatureInflow = findVariable(object, "TemperatureInFlow");
+    hp.temperatureOutflow = findVariable(object, "TemperatureOutFlow");
     _heatPipes.push_back(hp);
 }
 
@@ -259,7 +259,7 @@ ig::ScreenMaterial QueryReaderJson::parseScreenMaterial(QJsonObject object) {
     mat.emmisivityOuter  = findDouble(object, "EmissivityOuter");
     mat.haze  = findDouble(object, "Haze");
     mat.energySaving  = findDouble(object, "EnergySaving");
-    mat.transmissivityAir  = findDouble(object, "TranmissivityAir");
+    mat.transmissivityAir  = findDouble(object, "TransmissivityAir");
     mat.U  = findDouble(object, "UValue");
     mat.heatCapacity = findDouble(object, "HeatCapacity");
     return mat;

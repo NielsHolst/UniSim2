@@ -66,14 +66,14 @@ void EnergyBudgetOptimiser::update() {
     _currentVentilation = actuatorVentilation->getOpening();
     numUpdates = 1;
 
-    if (_currentIndoorsTemperature > setpointVentilation + setPointPrecision &&
-        eq(_currentHeat, pipeTemperatureMin))
+    if (_currentIndoorsTemperature > setpointVentilation + setPointPrecision/* &&
+        eq(_currentHeat, pipeTemperatureMin)*/)
         tooHot();
-    else if (_currentIndoorsTemperature > setpointHeating + setPointPrecision &&
-             ne(_currentHeat, pipeTemperatureMin))
-        tooHot();
+//    else if (_currentIndoorsTemperature > setpointHeating + setPointPrecision &&
+//             ne(_currentHeat, pipeTemperatureMin))
+//        tooHot();
     else if (_currentIndoorsTemperature < setpointHeating - setPointPrecision) {
-        if (eq(_currentIndoorsTemperature, pipeTemperatureMax) &&
+        if (eq(_currentHeat, pipeTemperatureMax) &&
             (eqZero(_currentVentilation) || eq(_currentVentilation,ventilationMin)))
             carryOn(); // Pipes are at maximum T and ventilation is at minimum opening: nothing to do
         else
@@ -87,7 +87,7 @@ void EnergyBudgetOptimiser::update() {
 }
 
 inline double interpolate(double x1, double y1, double x2, double y2, double x) {
-    return (TestNum::eq(x1,x2)) ? y1 : y1 + (y2-y1)/(x2-x1)*(x-x1);
+    return (eq(x1,x2)) ? y1 : y1 + (y2-y1)/(x2-x1)*(x-x1);
 }
 
 void EnergyBudgetOptimiser::tooHot() {

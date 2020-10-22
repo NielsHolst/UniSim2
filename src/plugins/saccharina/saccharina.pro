@@ -9,39 +9,41 @@ BOXES_PLUGIN_NAME = saccharina
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
+    allocation.h \
     area.h \
-    area_loss_erosion.h \
     biomass.h \
-    carbon_reserve.h \
-    exudation.h \
+    demand_carbon_exudation.h \
+    demand_carbon_reserves.h \
+    demand_carbon_respiration.h \
+    demand_carbon_structure.h \
+    demand_nitrogen_reserves.h \
+    demand_nitrogen_structure.h \
     f_area.h \
-    f_carbon.h \
+    f_current.h \
     f_nitrogen.h \
     f_salinity.h \
-    f_temperature.h \
-    gross_photosynthesis.h \
-    growth_rate.h \
-    light_inhibition.h \
-    nitrogen_reserve.h \
-    nitrogen_uptake_rate.h \
-    pmax.h \
-    respiration.h
+    nitrogen_uptake.h \
+    photosynthesis.h \
+    reserves.h \
+    structure.h \
+    trapezoid.h
     
 SOURCES +=  \
+    allocation.cpp \
     area.cpp \
-    area_loss_erosion.cpp \
     biomass.cpp \
-    carbon_reserve.cpp \
-    exudation.cpp \
+    demand_carbon_exudation.cpp \
+    demand_carbon_reserves.cpp \
+    demand_carbon_respiration.cpp \
+    demand_carbon_structure.cpp \
+    demand_nitrogen_reserves.cpp \
+    demand_nitrogen_structure.cpp \
     f_area.cpp \
-    f_carbon.cpp \
+    f_current.cpp \
     f_nitrogen.cpp \
     f_salinity.cpp \
-    f_temperature.cpp \
-    gross_photosynthesis.cpp \
-    growth_rate.cpp \
-    light_inhibition.cpp \
-    nitrogen_reserve.cpp \
-    nitrogen_uptake_rate.cpp \
-    pmax.cpp \
-    respiration.cpp
+    nitrogen_uptake.cpp \
+    photosynthesis.cpp \
+    reserves.cpp \
+    structure.cpp \
+    trapezoid.cpp

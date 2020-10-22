@@ -77,13 +77,13 @@ void StageAndPhase::update() {
 
 
     // Replace zero time step with neglible time step
-    if (timeStep == 0)
+    if (timeStep == 0.)
         timeStep = 1e-12;
-    if (phaseTimeStep == 0)
+    if (phaseTimeStep == 0.)
         phaseTimeStep = 1e-12;
 
     // Replace zero growth with neglible growth
-    if (growthFactor == 0)
+    if (growthFactor == 0.)
         growthFactor = 1e-12;
 
     DistributedDelay2D::UpdateParameters p;

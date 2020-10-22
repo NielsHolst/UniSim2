@@ -65,7 +65,7 @@ convert_all = function(folder) {
 }
 
 copyright = 
-"/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+"/* Copyright 2005-2020 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */"
@@ -75,12 +75,11 @@ convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/boxes")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/bph")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/command")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/conductance")
-convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/eq")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/io")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/student")
 
 copyright = 
-"/* Copyright 2018-2019 by
+"/* Copyright 2018-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Stéphanie Saussure, Norwegian Institute of Bioeconomy Research [stephanie.saussure at nibio.no].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -89,7 +88,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/aphid")
 
 copyright = 
-"/* Copyright 2018-2019 by
+"/* Copyright 2018-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Merijn Moens, Aarhus University [merijnmoens at gmail.com].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -98,7 +97,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/apis")
 
 copyright = 
-"/* Copyright 2018-2019 by
+"/* Copyright 2018-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Byju N. Govindan, University of Minnesota [ngbyju at umn.edu].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -107,7 +106,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/bmsb")
 
 copyright = 
-"/* Copyright 2005-2019 by
+"/* Copyright 2005-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** William Meikle, USDA [william.meikle at usda.gov].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -116,7 +115,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/cmbp")
 
 copyright = 
-"/* Copyright 2016-2019 by
+"/* Copyright 2016-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Antonio Agüera García [antonio.aguera at gmail.com].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -125,7 +124,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/MusselBed")
 
 copyright = 
-"/* Copyright 2016-2019 by
+"/* Copyright 2016-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -134,7 +133,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/PestTox")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Andrew Antaya, University of Arizona [aantaya at email.arizona.edu].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -143,7 +142,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/pinacate")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Kayla Sale, University of Arizona [kayla.sale at email.arizona.edu].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -152,7 +151,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/pollnet")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Isaac Kwesi Abuley , Aarhus University [ikabuley at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -161,7 +160,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/potato")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Christian Nansen, University of California [chrnansen at ucdavis.edu].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -170,7 +169,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/resist")
 
 copyright = 
-"/* Copyright 2012-2019 by
+"/* Copyright 2012-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Clement N. Mweya, National Institute for Medical Research, Tukuyu, Tanzania [cmweya at nimr.or.tz].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -179,7 +178,16 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/rvf")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2019-2020 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Teis Boderskov, Aarhus University [tebo atbios.au.dk]
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/"
+convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/saccharina")
+
+copyright = 
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mohammad Ali Mirhosseini, Tarbiat Modares University, Iran [mirhosseini1989 at gmail.com].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -188,7 +196,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/tuta")
 
 copyright = 
-"/* Copyright 2017-2019 by
+"/* Copyright 2017-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Emily Bick, University of California [enbick at ucdavis.edu].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -197,7 +205,7 @@ copyright =
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/vacuum")
 
 copyright = 
-"/* Copyright 2005-2019 by
+"/* Copyright 2005-2020 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
 ** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].

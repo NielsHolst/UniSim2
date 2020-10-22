@@ -154,15 +154,22 @@ void buildScreen(Box *parent, const Screen *s) {
     bool isRoof = (s->position==Roof1 || s->position==Roof2);
     QString screenClass = isRoof ? "vg::ScreenRoof" : "vg::ScreenWall";
 
+    double reflectivityTop    = 1. - emmisivityTop    - transmissivityLight,
+           reflectivityBottom = 1. - emmisivityBottom - transmissivityLight;
+    TestNum::snapToZero(reflectivityTop);
+    TestNum::snapTo(reflectivityTop, 1.);
+    TestNum::snapToZero(reflectivityBottom);
+    TestNum::snapTo(reflectivityBottom, 1.);
+
     BoxBuilder builder(parent);
     builder.
     box(screenClass).name("screen").
-        port("swReflectivityTop").equals(1. - emmisivityTop).
-        port("swReflectivityBottom").equals(1. - emmisivityBottom).
+        port("swReflectivityTop").equals(reflectivityTop).
+        port("swReflectivityBottom").equals(reflectivityBottom).
         port("swTransmissivityTop").equals(transmissivityLight).
         port("swTransmissivityBottom").equals(transmissivityLight).
-        port("lwReflectivityTop").equals(1. - emmisivityTop).
-        port("lwReflectivityBottom").equals(1. - emmisivityBottom).
+        port("lwReflectivityTop").equals(reflectivityTop).
+        port("lwReflectivityBottom").equals(reflectivityBottom).
         port("lwTransmissivityTop").equals(transmissivityLight).
         port("lwTransmissivityBottom").equals(transmissivityLight).
 //            port("U").equals(s->material.U).  // don't trust this

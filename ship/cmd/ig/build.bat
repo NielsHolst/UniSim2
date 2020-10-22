@@ -1,7 +1,7 @@
 echo on
 cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig
 
-set VERSION=2.3.29
+set VERSION=2.3.30
 REM set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
 set QT_PATH=C:\Qt\5.9.2\mingw53_32
 set PATH=C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig\

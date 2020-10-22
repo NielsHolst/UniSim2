@@ -12,13 +12,9 @@ public:
     void update();
 private:
     // Inputs
-    double initialValue, growthRate, lossRateErosion, lossRespiration, timeStepDays;
-    QDate date;
+    double structuralMass, kA, plantDensity;
     // Outputs
-    double value, logValue, pctGrowth;
-    // Data
-    double prevValue;
-    QDate prevDate;
+    double value, lai;
 };
 
 }

@@ -1,0 +1,20 @@
+Simulation sim {
+  .steps = 35
+  Sequence T {
+    .min = -5
+    .max = 30
+  }
+  DemandCarbonRespiration respiration {
+    .T = T[value]
+    .area = 1
+    .timeStep = 3600
+  }
+ OutputR {
+    PageR {
+      .xAxis = T[value]
+      PlotR {
+        .ports = respiration[value]
+      }
+    }
+  }
+}

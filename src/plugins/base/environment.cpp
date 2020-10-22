@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSet>
 #include <QSettings>
 #include <QStandardPaths>
 #include "box.h"
@@ -47,6 +48,16 @@ Environment::Environment()
     _latestLoadArg = settings.value("environment/latest-load-arg", QString()).toString();
     _latestInputFilePath = QFileInfo(_latestLoadArg).path();
     _latestOutputFilePath["txt"] = settings.value("environment/latest-output-file-path-txt", QString()).toString();
+
+    for (int i=0; i<10; ++i) {
+        QString  key = QString("environment/latest-load-arg-%1").arg(i),
+                 value = settings.value(key).toString();
+        if (value.isEmpty())
+            break;
+        _latestLoadArgs.push(value);
+    }
+    if (_latestLoadArgs.isEmpty() && !_latestLoadArg.isEmpty())
+        _latestLoadArgs.push(_latestLoadArg);
 }
 
 Environment::~Environment() {
@@ -60,7 +71,18 @@ Environment::~Environment() {
     }
     settings.setValue("environment/latest-load-arg", _latestLoadArg);
     settings.setValue("environment/latest-output-file-path-txt", latestOutputFilePath("txt"));
+
+    int i=0;
+    QSet<QString> unique;
+    while (!_latestLoadArgs.isEmpty() && i<10) {
+      QString key = QString("environment/latest-load-arg-%1").arg(i++),
+              value = _latestLoadArgs.pop();
+      if (!unique.contains(value))
+        settings.setValue(key, value);
+      unique << value;
+    }
 }
+
 Box* Environment::root() {
     return _root;
 }
@@ -118,8 +140,8 @@ QString Environment::homePath() const {
 }
 
 QString Environment::openOutputFile(QFile &file, QString extension) {
-    QString s="Environment::openOutputFile, extension:%1";
-    dialog().information(s.arg(extension));
+//    QString s="Environment::openOutputFile, extension:%1";
+//    dialog().information(s.arg(extension));
 
     // If multiple instances are running there is an off chance that the file path already exists
     // The forced increment of the counter will most likely but not certainly solve the problem
@@ -130,14 +152,15 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
     }
 
     file.setFileName(filePath);
-    if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
+//    if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
+    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
     return filePath;
 }
 
 QString Environment::outputFilePath(QString extension, int offset) {
-    QString s="Environment::outputFilePath extension:%1, offset:%2, _latestLoadArg:%3, fileCountervalue():%4";
-    dialog().information(s.arg(extension).arg(offset).arg(_latestLoadArg).arg(fileCountervalue()));
+//    QString s="Environment::outputFilePath extension:%1, offset:%2, _latestLoadArg:%3, fileCountervalue():%4";
+//    dialog().information(s.arg(extension).arg(offset).arg(_latestLoadArg).arg(fileCountervalue()));
 
     QString fileName = _latestLoadArg;
 
@@ -242,6 +265,8 @@ bool Environment::isUnattended() const {
 
 void Environment::latestLoadArg(QString arg) {
     _latestLoadArg = arg;
+    if (_latestLoadArgs.isEmpty() || arg != _latestLoadArgs.top())
+        _latestLoadArgs.push(arg);
     _latestInputFilePath = QFileInfo(_latestLoadArg).path();
 }
 
@@ -258,15 +283,34 @@ QString Environment::latestInputFilePath() const {
     return _latestInputFilePath;
 }
 
+QStringList Environment::latestLoadArgs() const {
+    QStringList latest;
+    for (int i=0; i<_latestLoadArgs.size(); ++i)
+        latest << _latestLoadArgs.at(i);
+    return latest;
+}
+
 QString Environment::inputFileNamePath(QString fileName) const {
-    QDir dir = currentBoxScriptFolder();
+    // First search locally from current folder and upwards in hierarchy
+    QDir local = currentBoxScriptFolder();
     QString fileNamePath;
     bool found;
     do {
-        fileNamePath = dir.absoluteFilePath(fileName);
+        fileNamePath = local.absoluteFilePath(fileName);
         found = QFileInfo(fileNamePath).exists();
         if (found) break;
-    } while (dir.cdUp());
+    } while (local.cdUp());
+
+    // Then look in home folder
+    if (!found) {
+        QDir home(homePath());
+        if (home.cd("input")) {
+            fileNamePath = home.absoluteFilePath(fileName);
+            found = QFileInfo(fileNamePath).exists();
+        }
+    }
+
+    // Done
     return found ?
            QDir::cleanPath(fileNamePath) :
            currentBoxScriptFolder().absoluteFilePath(fileName);
@@ -322,8 +366,8 @@ QDir Environment::makeDirAsNeeded(QDir dirNeeded) {
 }
 
 void Environment::incrementFileCounter() {
-    QString s = "Environment::incrementFileCounter(), fileCountervalue():%1";
-    dialog().information(s.arg(fileCountervalue()));
+//    QString s = "Environment::incrementFileCounter(), fileCountervalue():%1";
+//    dialog().information(s.arg(fileCountervalue()));
     QSettings settings;
     int number = fileCountervalue();
     settings.setValue(fileCounterKey(), ++number);
@@ -494,7 +538,7 @@ void Environment::getDirSettings() {
         _dir[fo] = QDir(settings.value(key, QString(".")).toString());
         if (fo == LastFolder) break;
         fo = Folder(fo+1);
-    }
+    }   
     if (_dir[Atom]==QDir(".") || !_dir[Atom].exists())
         _dir[Atom] = findAtomDir();
     if (_dir[Notepad]==QDir(".") || !_dir[Notepad].exists())

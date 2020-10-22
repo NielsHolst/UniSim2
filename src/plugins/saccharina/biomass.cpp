@@ -7,6 +7,10 @@ namespace saccharina {
 
 PUBLISH(Biomass)
 
+/*
+ * Biomass skal omskrives fuldstændigt
+ */
+
 Biomass::Biomass(QString name, QObject *parent)
     : Box(name, parent)
 {

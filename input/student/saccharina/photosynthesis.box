@@ -1,0 +1,20 @@
+Simulation sim {
+  .steps = 250
+  Sequence I {
+    .min = 0
+    .max = 250
+  }
+  Photosynthesis photosynthesis {
+    .Pmax = 0.00122
+    .alpha = 0.8
+    .I = I[value]
+  }
+ OutputR {
+    PageR {
+      .xAxis = I[value]
+      PlotR {
+        .ports = photosynthesis[value]
+      }
+    }
+  }
+}

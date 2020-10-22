@@ -6,6 +6,7 @@
 #define BASE_CIRCULAR_BUFFER_H
 #include <numeric>
 #include <QVector>
+#include "exception.h"
 
 namespace base {
 
@@ -13,54 +14,75 @@ template <class T>
 class CircularBuffer
 {
 public:
-    // Constructs and clears the cb
+    CircularBuffer();
+    // Constructs with own buffer
     CircularBuffer(QVector<T> *buffer);
-    // Changes the buffer size and clears it
+    // Constructs with external buffer
+    ~CircularBuffer();
+    // Delete own buffer
     void resize(int size);
-    // Empties the cb
+    // Changes the buffer size and clears it
     void clear();
+    // Empties the cb
+    T push(T value);
     // Puts a value at the next empty place in the buffer (if cb is not yet full),
     // else puts the value where tail currently is;
     // returns the value pushed out (lost) from the buffer
-    T push(T value);
-    // The cb is empty just after construction and after clear()
     bool isEmpty() const;
-    // The cb is full if a value has been pushed size number of times
+    // The cb is empty just after construction and after clear()
     bool isFull() const;
-    // Head is the latest value pushed
+    // The cb is full if a value has been pushed size number of times
     T head() const;
-    // Tail is the oldest value pushed
+    // Head is the latest value pushed
     T tail() const;
-    // Index of head in the buffer; equals -1 if buffer is empty
+    // Tail is the oldest value pushed
     int headIndex() const;
-    // Returns value indexed relative to head (at index 0), i.e. and increasing index returns progressively older values
+    // Index of head in the buffer; equals -1 if buffer is empty
     T at(int i) const;
-    // Sets the value at(i); returns the value lost from that position
+    // Returns value indexed relative to head (at index 0), i.e. and increasing index returns progressively older values
     T set(int i, T value);
-    // Sum of buffer contents
+    // Sets the value at(i); returns the value lost from that position
     T sum() const;
-    // Average of buffer contents
+    // Sum of buffer contents
     T average() const;
-    // Minimum value of buffer contents
+    // Average of buffer contents
     T min() const;
-    // Maximum value of buffer contents
+    // Minimum value of buffer contents
     T max() const;
-    // Re-calculate statistics
+    // Maximum value of buffer contents
     void updateStatistics();
+    // Re-calculate statistics
 private:
     // Data
     QVector<T> *_vector;
     int _size, _head, _tail;
     bool _full;
     T _sum, _min, _max;
+    bool _ownsBuffer;
     // Methods
     T replace(T &place, T value);
     int sizeUsed() const;
 };
 
 template <class T>
+CircularBuffer<T>::CircularBuffer()
+{
+    _vector = new QVector<T>;
+    _size = 0;
+    _ownsBuffer = true;
+    clear();
+}
+
+template <class T>
+CircularBuffer<T>::~CircularBuffer()
+{
+    if (_ownsBuffer)
+        delete _vector;
+}
+
+template <class T>
 CircularBuffer<T>::CircularBuffer(QVector<T> *buffer)
-    : _vector(buffer), _size(buffer->size())
+    : _vector(buffer), _size(buffer->size()), _ownsBuffer(false)
 {
     clear();
 }
@@ -83,6 +105,8 @@ void CircularBuffer<T>::clear() {
 
 template <class T>
 T CircularBuffer<T>::push(T value) {
+    if (_size == 0)
+        ThrowException("CircularBuffer has zero size");
     if (_full || _head == -1)
         _tail = (_tail + 1) % _size;
 

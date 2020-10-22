@@ -9,7 +9,7 @@
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.30
+VERSION = 2.3.32
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 
@@ -40,7 +40,7 @@ QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 QMAKE_CXXFLAGS += -Wno-padded
 
 # Compiler options to silence warnings when compiling Boost
-QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-misleading-indentation
 DEFINES += BOOST_ALLOW_DEPRECATED_HEADERS
 
 # Compiler options to silence warnings when compiling under Mac OS X

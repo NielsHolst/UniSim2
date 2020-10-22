@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double N, Nmin, Nmax;
+    double proportion, maxProportion;
     // Outputs
     double value;
 };

@@ -6,8 +6,8 @@
 	<box class="SimulationPeriod" name="period">
 		<!-- <port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="14-03-2020"/> -->
 		<!-- <port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="16-03-2020"/> -->
-		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2020"/>
+		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-03-2020"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-05-2020"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="10:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="1"/>
@@ -658,7 +658,7 @@
 		<box class="OutputText">
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="360"/>
-			<port name="averageN" value="15"/>
+			<!-- <port name="averageN" value="15"/> -->
 		</box>
 	</box>
 </box>

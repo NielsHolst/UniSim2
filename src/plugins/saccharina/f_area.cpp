@@ -26,6 +26,6 @@ void Farea::reset() {
 
 void Farea::update() {
     // Re-scale to max value of 1
-    value = (m1*exp(-sqr(A/A0)) + m2)/(m1 + m2);
+    value = (m1*exp(-sqr(A/A0)) + m2)/m2;
 }
 }

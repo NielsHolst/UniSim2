@@ -1,6 +1,8 @@
 set UNISIM_SHIP=C:\Users\au152367\Documents\QDev\UniSim2\ship
 set UNISIM_BIN=%UNISIM_SHIP%\bin
 
+set QT_ROOT=C:\Qt\5.15.1\mingw81_64
+if exist %QTENV% goto :ok_qt
 set QT_ROOT=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
 if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\5.11.2\mingw53_32

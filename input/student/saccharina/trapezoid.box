@@ -1,0 +1,72 @@
+Simulation sim {
+  .steps = 35
+  Sequence T {
+    .min = -5
+    .max = 30
+  }
+  Trapezoid trapez1 {
+    .T = T[value]
+    .T0    =  2
+    .Topt1 = 10
+    .Topt2 = 18
+    .Tmax  = 24
+  }
+  Trapezoid trapez2 {
+    .T = T[value]
+    .T0    = 10
+    .Topt1 = 10
+    .Topt2 = 18
+    .Tmax  = 18
+  }
+  Trapezoid trapez3 {
+    .T = T[value]
+    .T0    = 10
+    .Topt1 = 15
+    .Topt2 = 15
+    .Tmax  = 18
+  }
+  Trapezoid trapez4 {
+    .T = T[value]
+    .T0    = 15
+    .Topt1 = 15
+    .Topt2 = 15
+    .Tmax  = 15
+  }
+  Trapezoid trapez5 {
+    .T = T[value]
+    .T0    = 0
+    .Topt1 = 0
+    .Topt2 = 0
+    .Tmax  = 0
+  }
+  Trapezoid trapez6 {
+    .T = T[value]
+    .T0    = 0
+    .Topt1 = 0
+    .Topt2 = 20
+    .Tmax  = 30
+  }
+  OutputR {
+    PageR {
+      .xAxis = T[value]
+      PlotR {
+        .ports = trapez1[value]
+      }
+      PlotR {
+        .ports = trapez2[value]
+      }
+      PlotR {
+        .ports = trapez3[value]
+      }
+      PlotR {
+        .ports = trapez4[value]
+      }
+      PlotR {
+        .ports = trapez5[value]
+      }
+      PlotR {
+        .ports = trapez6[value]
+      }
+    }
+  }
+}
