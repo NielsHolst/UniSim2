@@ -4,6 +4,8 @@ Simulation sim {
   Calendar calendar {
     .initialDateTime = 1/1/2009
   }
+  Sun sun {
+  }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"
   }
@@ -12,7 +14,7 @@ Simulation sim {
     .T0 = 10
   }
   DayLengthScale ptTimeStep {
-    .dayLength = calendar[dayLength]
+    .dayLength = sun[dayLength]
     .valueToScale = dayDegrees[step]
   }
   OutputR {

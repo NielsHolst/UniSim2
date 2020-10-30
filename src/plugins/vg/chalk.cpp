@@ -17,7 +17,7 @@ PUBLISH(Chalk)
 Chalk::Chalk(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes average of inputs");
+    help("models reflection caused by whitening");
     Input(setpoint).help("Setpoint for chalk").unit("[0;1]");
     Input(maxReflectance).equals(0.8).help("Maximum reflectance at full chalk coverage").unit("[0;1]");
     Output(value).help("Reflectance caused by chalk").unit("[0;1]");

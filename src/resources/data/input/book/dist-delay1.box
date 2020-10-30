@@ -2,7 +2,7 @@
 Simulation sim {
 	.steps = 500
 	Scenarios scenarios {
-		.fileName = "dist-delay-scenarios-25.txt"
+		.fileName = "dist-delay-scenarios.txt"
 	}
 	Stage delay {
 		.initial = 1

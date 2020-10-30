@@ -19,7 +19,7 @@ PUBLISH(GrowthLight)
 GrowthLight::GrowthLight(QString name, QObject *parent)
     : HeatTransferLayerBase(name, parent)
 {
-    help("models the radiative emittance from growth lights");
+    help("models power use and radiation from growth light");
     Input(on).help("Is light currently switched on?").unit("y|n");
     Input(intensity).help("Power of installed lamps per greenhouse area").unit("W/m2");
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");

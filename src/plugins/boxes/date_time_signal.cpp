@@ -14,7 +14,7 @@ PUBLISH(DateTimeSignal)
 
 DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
     : BaseSignal(name, parent){
-    help("Sets a signal according to date (ignoring year) and time of day");
+    help("sets a signal according to date (ignoring year) and time of day");
     Input(beginDate).equals(QDate(2001,1,1)).help("The beginning of the date interval").unit("d/m/y");
     Input(endDate).equals(QDate(2001,12,31)).help("The end of the date interval [1..366]").unit("d/m/y");
     Input(beginTime).equals(QTime(0,0)).help("The beginning of the time interval [hh:mm]").unit("h:m:s");

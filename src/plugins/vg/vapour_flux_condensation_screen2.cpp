@@ -17,7 +17,7 @@ PUBLISH(VapourFluxCondensationScreen2)
 VapourFluxCondensationScreen2::VapourFluxCondensationScreen2(QString name, QObject *parent)
     : VapourFluxCondensationScreenBase(name, parent, 2)
 {
-    help("models vapour flux condensation on screen layer 2");
+    help("models vapour flux by condensation on screen layer 2");
 }
 
 }

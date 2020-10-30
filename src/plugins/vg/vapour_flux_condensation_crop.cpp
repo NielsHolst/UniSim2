@@ -20,7 +20,7 @@ PUBLISH(VapourFluxCondensationCrop)
 VapourFluxCondensationCrop::VapourFluxCondensationCrop(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    help("models vapour flux through condensation on inside greenhouse surface");
+    help("models vapour flux by condensation on crop");
     Input(lai).imports("greenhouse/crop[lai]",CA);
     Input(cropTemperature).imports("crop/temperature[value]",CA);
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA);

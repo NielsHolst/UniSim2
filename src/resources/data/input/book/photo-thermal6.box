@@ -4,26 +4,31 @@ Simulation sim {
   Calendar calendar {
     .initialDateTime = 1/1/2009
   }
+  Sun sun {
+  }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"
   }
   Box photoThermalTime {
-    +step = ptTimeStep[value]
     DayDegrees dayDegrees {
       .T = weather[Tavg]
       .T0 = 10
     }
     DayLengthScale ptTimeStep {
-      .dayLength = calendar[dayLength]
+      .dayLength = sun[dayLength]
       .valueToScale = dayDegrees[step]
     }
   }
   OutputR {
+    Box p {
+      +ddStep = dayDegrees[step]
+      +ptStep = ptTimeStep[value]
+    }
     PageR {
       .xAxis = calendar[date]
       PlotR {
         .layout = "merged"
-        .ports = (weather[Tavg] photoThermalTime[step] dayDegrees[step])
+        .ports = (weather[Tavg] p[ddStep] p[ptStep])
       }
     }
   }

@@ -35,7 +35,8 @@ void load::doExecute() {
     QString fileName;
     switch (_args.size()) {
     case 1:
-        dialog().loadWithFilePicker();
+          fileName = env.latestLoadArg();
+//        dialog().loadWithFilePicker();
         return;
     case 2:
         fileName = _args.at(1);

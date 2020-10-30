@@ -54,11 +54,6 @@ You download Qt Creator from \url{www.qt.io/download/}. Navigate to the download
 
 The download page will detect your operating system and will arrive at a reasonable suggestion what to download (\iref{fig:qt-recommended}). You finish your task on the web by downloading an installer. Next, run the installer.
 
-%\FloatBarrier
-\section{Run Qt Creator installer}
-
-Accept the default suggestions of the installer, except when you come to \gui{Select Components}. Which components to install differ a bit between operating systems. For Windows see \iref{fig:qt-setup-win-1} and \iref{fig:qt-setup-win-2}. For Mac OS X see \iref{fig:qt-setup-osx};
-
 \begin{figure} [h] % Side-by-side figures
 \centering
 \begin{subfigure}{.5\textwidth}
@@ -71,7 +66,7 @@ Accept the default suggestions of the installer, except when you come to \gui{Se
   \includegraphics[width=.9\textwidth]{graphics/qt-setup-win-2.png}
   \caption{Unused components have been deselected.}
 \end{subfigure}%
-\caption{Deselect all other components than \gui{Qt 5.7} and \gui{Tools}.}
+\caption{Deselect all other components than \gui{Qt 5.7} (or latest version) and \gui{Tools}.}
 \label{fig:qt-setup-win-1}
 \end{figure}
 
@@ -87,9 +82,15 @@ Accept the default suggestions of the installer, except when you come to \gui{Se
   \includegraphics[width=.9\textwidth]{graphics/qt-setup-win-4.png}
   \caption{Unused sub-components have been deselected.}
 \end{subfigure}%
-\caption{Keep only the \gui{MinGW} sub-component of the \gui{Qt 5.7} component.}
+\caption{Keep only the \gui{MinGW} sub-component of the \gui{Qt 5.7} (or latest version) component. Pick the \gui{64-bit} version if available, otherwise the 32-bit version. There is no need to pick both the 32- and 64-bit versions.}
 \label{fig:qt-setup-win-2}
 \end{figure}
+
+\FloatBarrier
+
+\section{Run Qt Creator installer}
+
+Accept the default suggestions of the installer, \emph{except} when you come to \gui{Select Components}. Which components to install differ a bit between operating systems. For Windows see \iref{fig:qt-setup-win-1} and \iref{fig:qt-setup-win-2}. For Mac OS X see \iref{fig:qt-setup-osx};
 
 \begin{figure} [h] % Side-by-side figures
 \centering
@@ -108,11 +109,10 @@ Accept the default suggestions of the installer, except when you come to \gui{Se
   \includegraphics[width=.9\textwidth]{graphics/qt-setup-osx-3.png}
   \caption{Keep only \gui{macOS}.}
 \end{subfigure}%
-\caption{Keep only the \gui{Qt 5.7} and \gui{Tools} components. Inside \gui{Qt 5.7}, keep only the \gui{macOS} sub-component.}
+\caption{Keep only the \gui{Qt 5.7} (or latest version) and \gui{Tools} components. Inside \gui{Qt 5.7} (or latest version), keep only the \gui{macOS} sub-component.}
 \label{fig:qt-setup-osx}
 \end{figure}
 
-%\FloatBarrier
 \section{Final touch}
 Accept the final suggestion of the installer to launch Qt Creator. When Qt Creator has launched, right-click its icon in the dock (OS X) or task bar (Windows). On the pop-up menu click \gui{Options} and put a check mark on \gui{Keep in Dock} (OS X). In Windows select \gui{Pin this program to task bar}. 
 
@@ -127,11 +127,15 @@ For some reason the installer for Windows does not complete its job. The missing
 \item Select \gui{Advanced System Settings}.
 \item Select \gui{Environment Variables}.
 \item Under \gui{System variables} select \gui{Path} and then click \gui{Edit...} (\iref{fig:set-system-path-1}).
-\item The \gui{Path} variable is specified by a list of folder paths separated by semi-colons. It is a good idea to copy and paste it all to a text editor to get an overview of what's already there (this arcane interface is really a Windows embarressment).
-\item The folder likely missing from this list is called \filename{C:/Qt/5.4/mingw491_32/bin} or something similar; the version numbers which will keep incrementing with time. 
+\item The folder likely missing from this list is called \filename{C:/Qt/5.15.1/mingw81_64/bin} or something similar; the version numbers will keep incrementing with time. 
 \item Find out what the corresponding folder is called on your machine. Use File Explorer to browse inside the \filename{C:/Qt} folder and find it.
-\item Return to to \gui{Environment Variables} and add the folder path you just found to the \gui{Path} variable, \eg\ add a semi-colon and then \filename{C:/Qt/5.4/mingw491_32/bin} (\iref{fig:set-system-path-2}).
+\item Return to to \gui{Environment Variables} and add the folder path you just found to the \gui{Path} variable. First, click on \gui{New} then enter the path, \eg\ \filename{C:/Qt/5.15.1/mingw81_64/bin} (\iref{fig:set-system-path-2}).
 \end{enumerate}
+
+The purpose of setting the system path to point to the folder with the Qt libraries is to make it possible to run \US\ by clicking on the executable file \filename{unisim2.exe} found in \filename{\devhome/bin} after you have built from source. However, this might not work; some other program that you installed earlier may also have added a path to its libraries, which may include the Qt libraries but from another Qt version. This chaos is called \emph{DLL hell} (the windows libraries bear the name suffix \filename{.dll}). If you are unlucky, you cannot run \filename{unisim2.exe} directly (you will get a mysterious error message) but only indirectly by running the batch file \filename{run_unisim.bat} found in the \devhome\ folder. Well, it could be worse...
+
+Note, that the DLL hell situation can only occur when you run a \US\ version that you have built yourself. The end-user version is always installed with a copy of all the necessary libraries. Thus it does not need any fiddling with the system path. 
+
 
 \begin{figure}
 \centering
@@ -143,12 +147,14 @@ For some reason the installer for Windows does not complete its job. The missing
 \begin{figure}
 \centering
 \includegraphics[scale=0.8]{graphics/set-system-path-2}
-\caption{Setting the system path on Windows.}
+\caption{Adding a new entry to the system path on Windows.}
 \label{fig:set-system-path-2}
 \end{figure}
 
+\FloatBarrier
+
 \section{Upgrading}
-You will have reason to re-install and thereby upgrade Qt Creator only rarely. People resort to a re-installation, mostly if Qt Creator should stop working for unknown reasons.
+You will have reason to upgrade Qt Creator only rarely. People resort to a re-installation, mostly if Qt Creator should stop working for unknown reasons. In any case, just follow the same steps as for a new installation above.
 
 \section{Getting to work}
 Before you can begin programming with the \US\ programming framework, remember also to install the Boost library (\iref{ch:install-boost}). Find further instructions in the workflow guidelines (\iref{ch:workflow}).

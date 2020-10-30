@@ -14,6 +14,7 @@ HEADERS +=  \
     batch.h \
     clear.h \
     clip.h \
+    command_documentation.h \
     debug.h \
     doc.h \
     edit.h \
@@ -22,7 +23,6 @@ HEADERS +=  \
     go.h \
 #    graph.h \
     help.h \
-    help_class.h \
     latest.h \
     list.h \
     list_options.h \
@@ -48,6 +48,7 @@ SOURCES +=  \
     batch.cpp \
     clear.cpp \
     clip.cpp \
+    command_documentation.cpp \
     debug.cpp \
     doc.cpp \
     edit.cpp \
@@ -56,7 +57,6 @@ SOURCES +=  \
     go.cpp \
 #    graph.cpp \
     help.cpp \
-    help_class.cpp \
     latest.cpp \
     list.cpp \
     list_options.cpp \

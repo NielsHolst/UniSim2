@@ -17,7 +17,7 @@ PUBLISH(ScreenCombination)
 ScreenCombination::ScreenCombination(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("combines screen control setting");
+    help("combines states of screens");
     Input(formula).help("Formula of the form, e.g., 'shade1+energy2'");
     Input(screenControllersPath).equals("controllers/screens").help("Path to controllers");
     Output(value).help("Combined setting").unit("[0;1]");

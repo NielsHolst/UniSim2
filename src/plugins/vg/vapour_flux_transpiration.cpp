@@ -17,7 +17,7 @@ PUBLISH(VapourFluxTranspiration)
 VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    help("computes vapour flux from transpiration");
+    help("computes vapour flux by transpiration");
     port("conductance")->imports("crop/transpiration[conductance]",CA);
     port("vapourFlux")->imports("crop/transpiration[vapourFlux]",CA);
     port("gain")->imports("crop/transpiration[gain]",CA);

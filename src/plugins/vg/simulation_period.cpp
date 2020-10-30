@@ -18,7 +18,7 @@ PUBLISH(SimulationPeriod)
 SimulationPeriod::SimulationPeriod(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("help defining a time interval for the simulation");
+    help("defines a time interval for the simulation");
     Input(weatherFirstDateTime).imports("outdoors/records[firstDateTime]").unit("DateTime");
     Input(beginDate).help("Simulation start date").unit("Date");
     Input(endDate).help("Simulation end date").unit("Date");

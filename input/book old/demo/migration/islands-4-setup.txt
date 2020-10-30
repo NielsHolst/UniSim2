@@ -1,4 +1,0 @@
-.[names]	island[latitude]	island[longitude]
-NewHaven	5.5	20.2
-Exotica	8.2	25.9
-Lampedusa	12.3	17.0

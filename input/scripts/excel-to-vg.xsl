@@ -684,6 +684,8 @@
 </xsl:template>
 
 <xsl:template name="extract-heat-pipe">
+  <xsl:variable name="position" select="Position"/>
+  <xsl:variable name="pipeName" select="concat('pipe', $position)"/>
   <xsl:variable name="materialName" select="'PipeMaterialDesc'"/>
   <xsl:variable name="materialSrc" select="Constants/Parameters[ParameterName=$materialName]/Value" as="node()"/>
   <xsl:variable name="materialValue" select="$materialSrc"/>
@@ -703,7 +705,10 @@
   <xsl:variable name="flowRateSrc" select="Constants/Parameters[ParameterName=$flowRateName]/Value" as="node()"/>
   <xsl:variable name="flowRateValue" select="number(replace($flowRateSrc, ',', '.'))"/>
 
-  <box class="vg::Pipe" name="pipe">
+  <box class="vg::Pipe">
+    <xsl:attribute name="name">
+      <xsl:value-of select="$pipeName"/>
+    </xsl:attribute>
     <port name="density">
       <xsl:attribute name="externalName">
         <xsl:value-of select="$densityName"/>

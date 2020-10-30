@@ -13,6 +13,7 @@ QT += widgets
 HEADERS +=  \
     accumulator.h \
     b.h \
+    boxes_documentation.h \
     briere.h \
     buffer.h \
     calendar.h \
@@ -27,6 +28,7 @@ HEADERS +=  \
 #    food_web_box.h \
     functional_response.h \
     host.h \
+    hump.h \
     layout_r.h \
     maker.h \
     maximum.h \
@@ -87,6 +89,7 @@ HEADERS +=  \
 SOURCES +=  \
     accumulator.cpp \
     b.cpp \
+    boxes_documentation.cpp \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \
@@ -101,6 +104,7 @@ SOURCES +=  \
 #    food_web_box.cpp \
     functional_response.cpp \
     host.cpp \
+    hump.cpp \
     layout_r.cpp \
     maker.cpp \
     maximum.cpp \

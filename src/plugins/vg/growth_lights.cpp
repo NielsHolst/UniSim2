@@ -17,7 +17,7 @@ PUBLISH(GrowthLights)
 GrowthLights::GrowthLights(QString name, QObject *parent)
     : HeatTransferLayerBase(name, parent)
 {
-    help("sums the radiative emittance from several growth lights");
+    help("sums power use and radiation from growth light");
     port("parFluxDown")->imports("./*[parFluxDown]").transform(Sum);
     port("swFluxDown")->imports("./*[swFluxDown]").transform(Sum);
     port("lwFluxDown")->imports("./*[lwFluxDown]").transform(Sum);

@@ -25,6 +25,7 @@ PUBLISH(IndoorsTemperature)
 IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     : Box(name, parent)
 {
+    help("models indoors temperature");
     Input(initTemperature).equals(20.).help("Initial air temperature").unit("oC");
     Input(convectiveInflux).help("Energy influx by convection").unit("W/m2 ground");
     Input(timeStep).imports("calendar[timeStepSecs]");

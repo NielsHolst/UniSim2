@@ -63,11 +63,11 @@ void list::doExecute() {
 }
 
 void list::showHelp() {
-    QString s = "Use one of three formats:\n"
-                "list (which defaults to list . br) -or-\n"
-                "list <path> (which defaults to list <path> br) -or-\n"
-                "list <path> <options> -or-\n"
-                "list P -or-\n"
+    QString s = "Use one of these formats:\n"
+                "list (which defaults to list . br)\n"
+                "list <path> (which defaults to list <path> br)\n"
+                "list <path> <options>\n"
+                "list P\n"
                 "list <plugin> P"
             "\n\n<options> (which can be combined) are\n"
             "p (to show Ports)\n"

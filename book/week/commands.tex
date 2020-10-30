@@ -1,10 +1,10 @@
 \commandsection{clear}       
-Type \code{clear} to clear the \US\ command window. You can still browse the commands that you typed in earlier with the \upkey\ and  \downkey\ keys. You can also clear the windows with the <Ctrl>+L shortcut (this same shortcut works in R too).
+Type \code{clear} to clear the \US\ command window. You can still browse the commands that you typed in earlier with the \upkey\ and  \downkey\ keys. You can also clear the window with the <Ctrl>+L shortcut (this same shortcut works in R too).
 
 \commandsection{clip}
-The \code{run} command (\iref{commands:run}) will copy an R snippet into the clipboard which you are then supposed to paste at the R prompt. However, especially, if a run takes a long time, you may want to do other work while your script is running. Alas, when you at last return to the \US\ prompt to find that, indeed, now the run has finished, you also realise that you have used the clipboard for other purposes, and that R code snippet is gone.
+The \code{run} command (\iref{commands:run}) will copy an R snippet into the clipboard which you are then supposed to paste at the R prompt. However, especially, if a run takes a long time, you may want to do other work while your script is running. Alas, when you at last return to the \US\ prompt to find that, indeed, now the run has finished, you also realise that you have used the clipboard for other purposes, and that the R code snippet is gone.
 
-This is when you are saved by clip:
+This is when you are saved by \code{clip}[:
 \begin{usdialog}
 > clip
 Executable R script copied to clipboard
@@ -47,36 +47,25 @@ Now at Box sim/io
 You will find plenty more examples in \iref{ch:path-expressions}.
 
 \commandsection{help}                            
-You use the \code{help} either on its own or followed by a box class name:
+If you simply write \code{help} then you will get an overview of the help options:
 \begin{usdialog}
 > help 
-clear                  -clears console window
-edit                   -opens box script in editor
-find <path expression%>% -finds objects matching path %\brk% expression
-:
-:
-write                  -writes box script
-> help Sequence
-Sequence produces a sequence of numbers in a [min,max]%\brk% range
-
-Input:
-.by        |update|The sequence value can either be %\brk% updated at 'reset' or 'update'
-.min       |     0|Minimum value in sequence
-.max       |     1|Maximum value in sequence
-
-Output:
-.counter   |      |Current counter in sequence
-.counterMax|      |Number of values in sequence
-.offset    |      |First value of counter, e.g. 0 or 1
-.value     |      |Current value in sequence 
+Use one of these formats:
+help    -- to show this help overview
+help ?  -- to show this help overview
+help c  -- to show all commands
+help p  -- to show all plugins
+help %<%class name>  -- to show specific class documentation
+help %<%plugin name> -- to show specific plugin documentation
 >
 \end{usdialog}
-If you just type \code{help}, you will get a list of all the commands available. With a class name (remember names are case-sensitive), you will get a short description of the class and its input and output ports. For the inputs you will get their default values. 
 
-If you want to see the port values for a specific object of a class, use the \code{list} command(\iref{commands:list});
+If you provide a class name (remember names are case-sensitive), you will get a short description of the class and its input and output ports. For the inputs you will get their default values. 
+
+Note that none of these help commands depend on the currently loaded box script. If you want to inspect the details of a box script then load it and afterwards use the \code{list} command (\iref{commands:list});
 
 \commandsection{list} 
-The \code{list} command has much in common with the \code{find} command (\iref{commands:run}). Both take a path expression (\iref{ch:path-expressions}) as an argument but \code{list} in addition takes a range of one-letter options:
+The \code{list} command has much in common with the \code{find} command (\iref{commands:find}). Both take a path expression (\iref{ch:path-expressions}) as an argument but \code{list} in addition takes a range of one-letter options:
 
 \lstset{numbers=left}
 \begin{usdialog}
@@ -305,95 +294,11 @@ By default \filename{\mytilde/UniversalSimulatorHome} will be the user work fold
 
 \noindent to open the file found in \filename{\mytilde/UniversalSimulatorHome/input/book/butterfly1.box}. See in \iref{commands:set-folder} how to manage folders.
 
-
-\subsection{Where do I put my own box scripts?}
-First of all, it is a good idea to keep all your box scripts neatly organized in a folder structure, together with the input files that your box scripts may rely on, such as weather and scenario files and R scripts (\iref{fig:layout-input-folder}). For this purpose, create sub-folders inside you input folder (\inputfolder), which by default resides in the \filename{\ushome/input} folder (see \iref{commands:set-folder}).
-
-\begin {figure} [ht]
-\centering
-\tikzstyle{every node}=[draw=black,anchor=west]
-\begin{tikzpicture}[%
-  grow via three points={one child at (0.5,-0.7) and
-  two children at (0.5,-0.7) and (0.5,-1.4)},
-  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
-  \node {\ushome}
-   child {node {input (\inputfolder)}
-     child {node {\textcolor{red}{ant}}
-      child {node {\textcolor{red}{scenarios}}}
-     }
-     child [missing] {}
-     child {node {book}
-      child {node {scenarios}}
-     }
-     child [missing] {}
-     child {node {papers}}
-     child {node {\textcolor{red}{lion}}}
-     child {node {scripts}}
-   }
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child {node {output}}
- ;
-\end{tikzpicture}
-\caption{A possible layout of your input folder (\inputfolder) located in \filename{\ushome/input}}. Folder names in red have been added to the default hierarchy of folders with names in black.
-\label{fig:layout-input-folder}
-\end{figure}
-
-In the example  (\iref{fig:layout-input-folder}), you have added the \filename{ant} and \filename{lion} folders to hold box scripts for two different modelling projects. Moreover, you have put a \filename{scenarios} sub-folder inside \filename{ant}. The reason, why you should put your folders inside the \inputfolder\ folder, is that \inputfolder\ holds the \filename{scripts} folder which contains default R scripts (\filename{begin.R} and \filename{end.R}) used by \code{OutputR} boxes.
-
-If you upgrade \US\ to a new version then the existing \ushome\ folder will be reconfigured (as described for the \code{reconfigure} command in \iref{commands:reconfigure}). In effect, the old \ushome\ folder will be backed up, including the folders you may have added. To re-establish your folders you must copy them from the backup to the new \ushome\ folder. Here (\iref{fig:layout-input-folder}) you would need to copy the \filename{ant} and \filename{lion} folders. If you find that you add many sub-folders to \filename{input}, you could ease the migration to new \US\ versions by collection them in one folder (\iref{fig:layout-input-folder-2})
-
-\begin {figure} [ht]
-\centering
-\tikzstyle{every node}=[draw=black,anchor=west]
-\begin{tikzpicture}[%
-  grow via three points={one child at (0.5,-0.7) and
-  two children at (0.5,-0.7) and (0.5,-1.4)},
-  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
-  \node {\ushome}
-   child {node {input (\inputfolder)}
-     child {node {book}
-      child {node {scenarios}}
-     }
-     child [missing] {}
-     child {node {\textcolor{red}{mine}}
-       child {node {\textcolor{red}{ant}}
-        child {node {\textcolor{red}{scenarios}}}
-       }
-       child [missing] {}
-       child {node {\textcolor{red}{lion}}}
-     }
-     child [missing] {}
-     child [missing] {}
-     child [missing] {}
-     child {node {papers}}
-     child {node {scripts}}
-   }
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child [missing] {}
-   child {node {output}}
- ;
-\end{tikzpicture}
-\caption{An alternative layout of your input folder (\inputfolder), where all new folders (in red) have been put inside one folder called \filename{mine}}.
-\label{fig:layout-input-folder-2}
-\end{figure}
-
-If you have downloaded the \US\ source code package, you can find a copy of the \inputfolder\ folder in the \devhomeexplained{input} folder. This is the original location of the input files packed into the \US\ installer file. To lessen the possible reasons for confusion, you will be better off not putting your own input files inside \filename{\devhome/input}.
-
 \commandsection{profile}         
 
-This is an experimental command. It will write a list of the time spent in all computation steps of all boxes during the latest simulation run:
+In computer science, a profiler is a program that monitors the execution of another program to collect statistics on how much time is spent in different portions of the code. If your box script takes a long time to run, you can profile it to pinpoint in which boxes it spends most time.
+
+To do so, just run the \code{profile} command immiately after \code{run} has finished:
 
 \lstset{numbers=left}
 \begin{usdialog}
@@ -406,7 +311,7 @@ Profile information written to 'C:/data/QDev/UniSim2/%\brk%output/butterfly1_001
 \end{usdialog}
 \lstset{numbers=none}
 
-There is yet no support to handle the output file. You must decipher it yourself using R or a spreadsheet.
+The output file is most easily inspected by importing it into a spreadsheet. Each row tells you how much time total was spent executing a certain methods of a certain box. Sort the row by execution time to find the culprit and then see if you can optimise that bit of underlying \CPP\ code.
                 
 \commandsection{quit}
 
@@ -493,7 +398,7 @@ A third side effect of a run is also reported on screen (line 12). That's a snip
 \label{ch:where-is-the-output}
 You will find the output of all your previous runs in the output folder (\outputfolder, see \iref{commands:set-folder}). The output files bear the same name as the box script file, that was run to generate the them, with the addition of a running number. You should find two output files for every run that you have executed:
 \begin{itemize}
-\item a text file (with file name suffix \filename{.txt}) with column-based output data, separated by tab characters, one column for each port selected for output and $n+1$ rows, where $n$ is the number of simulation steps
+\item a text file (with file name suffix \filename{.txt}) with column-based output data, separated by tab characters, one column for each port selected for output and $N(n+1)$ rows, $N$ is the number of iterations (the default is 1), and $n$ is the number of simulation steps
 \item an R file (with file name suffix \filename{.R}) with a function to read the text file and functions to show each and all plots
 \end{itemize}
 The details of these files are described in \iref{ch:view-model-output}.
@@ -527,6 +432,16 @@ The special folder designation \code{HOME} leads you back to the standard user w
 absolute path 'C:/Users/nho/UniversalSimulatorHome'
 > 
 \end{usdialog}
+
+The special folder designation \code{DEV} leads you to the developer folder \devhomefolderexplained:
+
+\begin{usdialog}
+> set folder work DEV
+absolute path 'C:/Users/nho/Documents/dev/UniSim2
+> 
+\end{usdialog}
+
+The \code{DEV} designation will only work for a version of \US\ that you have built from source code yourself.
 
 \subsection{Set the input folder (\inputfolder)}
 \US\ reads input files (\eg\ box scripts) from the \concept{input folder} (\inputfolder). You can find its current location with the \code{set folder input} command:
@@ -651,7 +566,7 @@ Box script written to %\brk%'C:/Users/nho/UniversalSimulatorHome/output/%\brk%bu
 
 This at first does not seem very useful, as you can easily see your original box script by way of the \code{edit} command (\iref{commands:edit}).
 
-However, a box script does not tell you exactly what will be loaded into \US. First of all, you can only see the values of those ports that you mention in the script. You cannot see the full complement of ports defined for each box. For a box such as \code{Records}, the port are created dynamically. Second, some boxes may create additional boxes on their own. For instance, an \code{OutputR} box will always create a \code{TextOutput} box; and a \code{Maker} box can produce any number of additional boxes.
+However, a box script does not tell you exactly what will be loaded into \US. First of all, you can only see the values of those ports that you mention in the script. You cannot see the full complement of ports defined for each box. For a box such as \code{Records}, the ports are created dynamically. Second, some boxes may create additional boxes on their own. For instance, an \code{OutputR} box will always create a \code{TextOutput} box; and a \code{Maker} box can produce any number of additional boxes.
 
 The box script produced by the \code{write} command will contain all the ports and boxes actually present when you run script. Often you want to take a look right away at the generated script. For that you use the \code{write edit} command:
 

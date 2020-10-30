@@ -13,7 +13,6 @@ HEADERS +=  \
     actuator_heat_pipes.h \
     actuator_ventilation.h \
     any_flag.h \
-    average.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
     boundary_layer_resistance_jones_b.h \
@@ -21,24 +20,15 @@ HEADERS +=  \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
     chalk.h \
-    controlled.h \
     controllers.h \
     controller_ventilation_combined.h \
     cover.h \
     crop.h \
-    crop_development.h \
-    crop_mass.h \
     crop_growth.h \
-    crop_lai.h \
-    crop_yield.h \
     diffuse_irradiation_base.h \
     diffuse_irradiation_RE.h \
     energy_budget.h \
     energy_budget_optimiser.h \
-    floor_radiation_absorbed.h \
-    fruit_crop_lai.h \
-    fruit_crop_mass.h \
-    fruit_factor.h \
     geometry.h \
     growth_light_controller.h \
     growth_light.h \
@@ -54,7 +44,6 @@ HEADERS +=  \
     heat_transfer_screen3.h \
     heat_transfer_shelter.h \
     heat_transfer_sky.h \
-    hump.h \
     ig_indoors_humidity.h \
     indoors.h \
     indoors_co2.h \
@@ -87,7 +76,6 @@ HEADERS +=  \
     shelter.h \
     shelter_face.h \
     shelter_face_area.h \
-    shelter_integration.h \
     simulation_period.h \
     sky_temperature.h \
     stomatal_resistance_base.h \
@@ -106,6 +94,7 @@ HEADERS +=  \
     vapour_flux_ventilation.h \
     vent.h \
     ventilated_latent_heat_converter.h \
+    vg_documentation.h \
     water_budget.h
 
 SOURCES += \
@@ -113,7 +102,6 @@ SOURCES += \
     actuator_heat_pipes.cpp \
     actuator_ventilation.cpp \
     any_flag.cpp \
-    average.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
     boundary_layer_resistance_jones_b.cpp \
@@ -121,24 +109,15 @@ SOURCES += \
     boundary_layer_resistance_monteith_unsworth.cpp \
     budget.cpp \
     chalk.cpp \
-    controlled.cpp \
     controllers.cpp \
     controller_ventilation_combined.cpp \
     cover.cpp \
     crop.cpp \
-    crop_development.cpp \
-    crop_mass.cpp \
     crop_growth.cpp \
-    crop_lai.cpp \
-    crop_yield.cpp \
     diffuse_irradiation_base.cpp \
     diffuse_irradiation_RE.cpp \
     energy_budget.cpp \
     energy_budget_optimiser.cpp \
-    floor_radiation_absorbed.cpp \
-    fruit_crop_lai.cpp \
-    fruit_crop_mass.cpp \
-    fruit_factor.cpp \
     geometry.cpp \
     growth_light_controller.cpp \
     growth_light.cpp \
@@ -154,7 +133,6 @@ SOURCES += \
     heat_transfer_screen3.cpp \
     heat_transfer_shelter.cpp \
     heat_transfer_sky.cpp \
-    hump.cpp \
     ig_indoors_humidity.cpp \
     indoors.cpp \
     indoors_co2.cpp \
@@ -187,7 +165,6 @@ SOURCES += \
     shelter.cpp \
     shelter_face.cpp \
     shelter_face_area.cpp \
-    shelter_integration.cpp \
     simulation_period.cpp \
     sky_temperature.cpp \
     stomatal_resistance_base.cpp \
@@ -206,4 +183,5 @@ SOURCES += \
     vapour_flux_ventilation.cpp \
     vent.cpp \
     ventilated_latent_heat_converter.cpp \
+    vg_documentation.cpp \
     water_budget.cpp

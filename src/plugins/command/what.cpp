@@ -24,15 +24,14 @@ what::what(QString name, QObject *parent)
 
 
 void what::doExecute() {
-    Environment &env(environment());
     if (_args.size() > 1)
         ThrowException("'what' takes no arguments");
 
-    QString fileName =  env.latestLoadArg();
+    QString fileName =  environment().latestLoadArg();
     QFileInfo fi(fileName);
     QString msg = "Current script is '" + fileName + "'";
     if (!fi.isAbsolute())
-        msg += "\nfound in your intput folder '" + env.dir(Environment::Input).absolutePath() + "'";
+        msg += "\nInput folder:\n" + environment().folderInfo(Environment::Input);
 
     dialog().information(msg);
 }

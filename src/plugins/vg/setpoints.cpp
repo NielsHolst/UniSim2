@@ -21,7 +21,7 @@ PUBLISH(Setpoints)
 Setpoints::Setpoints(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("combines setpoint values from basic setpoints");
+    help("holds all setpoints");
     ELEMENT(heatingTemperatureNormalRh).unit("oC").help("Normal temperature for heating");
     ELEMENT(heatingTemperatureHighRhMargin).unit("oC").help("Margin for increasing heating setpoint at high RH (above rhMax)");
     ELEMENT(heatingTemperatureLowRhMargin).unit("oC").help("Margin for increasing heating setpoint at low RH (below rhMin)");

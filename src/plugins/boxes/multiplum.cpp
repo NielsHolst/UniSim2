@@ -14,8 +14,8 @@ PUBLISH(Multiplum)
 Multiplum::Multiplum(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes the multiplum of all numbers in a vector");
-    Input(factors).help("Vector of references to numbers");
+    help("computes multiplum of factors");
+    Input(factors).help("Input factors");
     Output(value).help("The multiplum");
 }
 

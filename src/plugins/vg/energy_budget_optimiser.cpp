@@ -66,12 +66,8 @@ void EnergyBudgetOptimiser::update() {
     _currentVentilation = actuatorVentilation->getOpening();
     numUpdates = 1;
 
-    if (_currentIndoorsTemperature > setpointVentilation + setPointPrecision/* &&
-        eq(_currentHeat, pipeTemperatureMin)*/)
+    if (_currentIndoorsTemperature > setpointHeating + setPointPrecision)
         tooHot();
-//    else if (_currentIndoorsTemperature > setpointHeating + setPointPrecision &&
-//             ne(_currentHeat, pipeTemperatureMin))
-//        tooHot();
     else if (_currentIndoorsTemperature < setpointHeating - setPointPrecision) {
         if (eq(_currentHeat, pipeTemperatureMax) &&
             (eqZero(_currentVentilation) || eq(_currentVentilation,ventilationMin)))

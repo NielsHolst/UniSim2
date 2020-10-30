@@ -43,6 +43,7 @@ HEADERS +=  \
     copy_folder.h \
     data_frame.h \
     data_grid.h \
+    documentation.h \
     dialog.h \
     dialog_base.h \
     dialog_minimal.h \
@@ -131,6 +132,7 @@ SOURCES +=  \
     dialog_stub.cpp \
     dialog_widget.cpp \
     distribution.cpp \
+    documentation.cpp \
     environment.cpp \
     exception.cpp \
     exception_context_class.cpp \

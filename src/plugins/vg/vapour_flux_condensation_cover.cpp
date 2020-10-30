@@ -20,7 +20,7 @@ PUBLISH(VapourFluxCondensationCover)
 VapourFluxCondensationCover::VapourFluxCondensationCover(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    help("models vapour flux through condensation on inside greenhouse surface");
+    help("models vapour flux by condensation on inside greenhouse surface");
     Input(coverPerGroundArea).imports("geometry[coverPerGroundArea]");
     Input(coverTemperature).imports("energyBudget/cover[temperature]",CA);
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA);

@@ -17,7 +17,7 @@ PUBLISH(RandomiserStratified)
 RandomiserStratified::RandomiserStratified(QString name, QObject *parent)
     : RandomiserBase(name, parent), variate(nullptr)
 {
-    help("draws random numbers [0;1) by stratified method");
+    help("draws random numbers [0;1) by stratification");
 }
 
 RandomiserStratified::~RandomiserStratified() {

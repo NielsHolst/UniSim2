@@ -1,11 +1,11 @@
-The software of \US\ is divided into several modules. 'Module' is a common name for apps and libraries.The \US\ application is the main module. It cannot work alone but relies on other, so-called \concept{plug-in} libraries. When you install \US, it comes with a standard repertoire of plug-in libraries. All the box classes, that you use to build models in box scripts, are defined in such plug-ins. To add you own box classes to represent starfish, lice, palm trees or whatever, you code your own plug-in. The box classes that you code in your own plug-in (or more plug-ins) will be available for model-building on par with the standard plug-ins. You can also make your plug-ins available to other modellers.
+The \US\ software is divided into several modules. The \US\ application is the main module. It is an executable file but it cannot work alone, as it relies on other modules, so-called \concept{plug-in} libraries. When you install \US, it comes with a standard repertoire of plug-in libraries. All the box classes, that you use to build models in box scripts, are defined in plug-in libraries. To add you own box classes to represent starfish, lice, palm trees or whatever, you code your own plug-in. The box classes that you code in your own plug-in will be available for model-building on par with the standard plug-ins. If you submit your plug-in for inclusion into the standard selection of \US\ plug-ins, it will also become available to other modellers.
 
 \section{Download \protect\US\ source code}
-To code you own plug-in, you need to get used to a certain workflow. You will benefit from downloading the latest version of the \US\ source code quite frequently, as \US\ is undergoing rapid development. You can find the source code at \url{https://github.com/NielsHolst/UniSim2/releases}. Click the \gui{zip} button of the latest release.
+To code you own box classes, you will need to get used to a certain workflow. You will benefit from downloading the latest version of the \US\ source code quite frequently, as \US\ is undergoing rapid development. You can find the source code at \url{https://github.com/NielsHolst/UniSim2/releases}. Click the \gui{zip} button of the latest release.
 
 You should keep a tidy computer not to get source code versions mixed up. Each \US\ version resides in a single folder labelled by the version number(\iref{fig:unisim-versions}). Keep the different versions inside one parent folder, traditionally called \filename{dev}. Whenever you download the latest \US\ source code, unpack it in the \filename{dev} folder.
 
-\US\ source code comes in a zip file with just one item inside, a folder named \filename{UniSim2-2.\em{m.n}}, where \filename{\em{m}} and \filename{\em{n}} are running version numbers. With repeated downloads your \filename{dev} folder will start to fill up with \US\ source of progressing versions (\iref{fig:unisim-versions}). Once in a while you may want to delete folders with older versions.
+\US\ source code comes in a zip file with just one item inside, a folder named \filename{UniSim2-2.\em{m.n}}, where \filename{\em{m}} and \filename{\em{n}} are running version numbers. With repeated downloads your \filename{dev} folder will fill up with \US\ source code of progressing versions (\iref{fig:unisim-versions}). Once in a while you may want to delete folders with older versions.
 
 If you are an experienced programmer, you may prefer to use the git version control system. If so, you git-clone the project once and then keep it updated with git-pull.
 
@@ -23,18 +23,18 @@ If you are an experienced programmer, you may prefer to use the git version cont
    child {node {UniSim2-2.0.14}}
  ;
 \end{tikzpicture}
-\caption{Layout of \US\ source code folders of different versions inside the \filename{dev} folder. You always work inside the most recent (version 2.0.14 in this case). The same \filename{boost} library (\iref{ch:install-boost}) is used by all versions. Create the \filename{dev} folder so that its path contains no spaces: \filename{C:/dev} or \filename{\mytilde/dev} are fine, but \filename{C:/users/John Smith/dev} is not. The \devhome\ symbol is used as a shorthand for the \filename{dev} folder.}
+\caption{Layout of \US\ source code folders of different versions inside the \filename{dev} folder. You always work inside the most recent (version 2.0.14 in this case). The same \filename{boost} library (\iref{ch:install-boost}) is used by all versions. Create the \filename{dev} folder so that its path contains no spaces: \filename{C:/dev} or \filename{\mytilde/dev} are fine, but \filename{C:/users/John Smith/dev} is not.}
 \label{fig:unisim-versions}
 \end{figure}
 
 You will avoid much confusion by keeping your \filename{dev} folder clean always, as exemplified in \iref{fig:unisim-versions}. The \filename{dev} folder itself contains nothing but sub-folders.
 
 \section{Build \protect\US}
-Turning \CPP\ source code into an app and its libraries involves two steps: compile and link. They are usually considered as one step: build, which is also known as 'make'. Programmers in a hurry will mix these terms, and you will hear the words 'compile', 'build' and 'make' interchangeably.
+Turning \CPP\ source code into an app with its libraries involves two steps: compile and link. They are usually considered as one step: build, which is also known as 'make'. Programmers in a hurry will mix these terms, and you will hear the words 'compile', 'build' and 'make' interchangeably.
 
-Information about which \CPP\ files make up the source for a certain app and its libraries are kept in a \concept{project} file. For \US\ you find this file easily in the source code folder, \eg\ in \filename{dev/UniSim2-2.0.14}. The project file always has the same name, regardless of the version. It is \filename{UniSim2.pro}.
+Information about which \CPP\ files make up the source for a certain app and its libraries are kept in a \concept{project} file. For \US\ you find this file easily in the source code folder, \eg\ in \filename{dev/UniSim2-2.0.14} also known as the developer's work folder (\devhomefolderexplained). The project file always has the same name, regardless of the version. It is \filename{UniSim2.pro}.
 
-Qt Creator is the tool we use, both for writing the \CPP\ source and for for building \US. The build system is intelligent. So if you change only a single file then only that file and module will be rebuild. This is important because building the whole \US\ source code is time-consuming. Maybe 5 minutes.
+Qt Creator is the tool we use, both for writing the \CPP\ source and for for building \US. The build system is intelligent. So if you change only a single file then only that file and module will be rebuild. This is important because building the whole \US\ source code is time-consuming. Maybe 10 minutes.
 
 \begin{figure}
 \centering
@@ -43,13 +43,20 @@ Qt Creator is the tool we use, both for writing the \CPP\ source and for for bui
 \label{fig:workflow-build}
 \end{figure}
 
-The build process produces one or more files for each module. The exact file names vary a little between operating systems. The app itself will be named \filename{unisimd} and placed in the binaries folder (\filename{\devhome/UniSim2/bin}). 
+The build process produces one or more files for each module. The exact file names vary a little between operating systems. The app itself will be named \filename{unisim} and placed in the binaries folder (\filename{\devhome/bin}). 
 
-The \US\ base library is compiled into \filename{libuniversal_simulator_based}. On Windows, it is placed in the binaries folder together with the app. On Mac OS X, it is placed in the \filename{\mytilde/lib} folder. Caveat: The \filename{\mytilde/lib} folder must be writable. Otherwise, Qt Creator will stop with an error, when it tries to write the base library file.
+The \US\ base library is compiled into \filename{libuniversal_simulator_base}. On Windows, it is placed in the binaries folder together with the app. On Mac OS X, it is placed in the \filename{\mytilde/lib} folder. Caveat: The \filename{\mytilde/lib} folder must be writable. Otherwise, Qt Creator will stop with an error, when it tries to write the base library file.
 
 The plug-in binaries are all put in the \filename{\devhome/UniSim2/bin/plugins} folder. If you are ever in doubt which modules you just built, you can check the time stamp of these binary files.
 
-Whenever you have downloaded the latest \US\ source code, your first step is to build it in Qt Creator. Only then do you proceed with your own plug-in development. You build the project by opening the \filename{UniSim2} project file in Qt Creator. Accept, if Qt Creator suggests you should configure your project. Then you click Build in the Build menu. When you've got a green bar in the lower right corner, you are done.
+Whenever you have downloaded the latest \US\ source code, your first step is to build it in Qt Creator. Only then do you proceed with your own plug-in development. Before you build, however, you must clean out any remains of earlier builds. You do this by running the batch file \filename{clean.bat} (Windows) or \filename{clean.sh} (Linux, Mac) found in \devhome. You proceed to build the project by opening the \filename{\devhome/UniSim2.pro} project file in Qt Creator. Accept, if Qt Creator suggests you should configure your project. Then you click Build in the Build menu. When you've got a green bar in the lower right corner, you are done. 
+
+If \concept{warnings} appear during the build process that is in general all right. The \CPP\ compilers are under rapid development and it changes, what they choose to flag as suspicious looking code. If you get \concept{errors} during the build, you have failed. Here are some common causes:
+\begin{itemize}
+\item You had \US\ running during build. Close it and build again.
+\item You forgot to install the Boost libraries (\iref{ch:install-boost}).
+\item You have a blank space in the folder path leading to your \devhome\ folder. Move  \devhome\ somewhere else or remove the spaces from the offending folder name, then build again.
+\end{itemize}
 
 \section{Update the source code version}
 You should get used to the procedure for updating the \US\ source code. The problem that you need to resolve every time is to merge your own code (programmed in a previous version, let's say 2.0.14) with that of \US\ itself in a newer version (let's say 2.0.17). The merging is straightforward because you are coding only inside your own plug-in, and the \CPP\ code for each plug-in is located inside its own folder.
@@ -68,7 +75,9 @@ If you are a programmer, you may know how to use the git version control system.
 \item Navigate to the \filename{plugins} source code folder in the newest version (\eg\ \filename{\devhome/UniSm-2.0.17/src/plugins}).
 \item Paste the \filename{student} folder there, overwriting the present \filename{student} folder (\eg\ \filename{\devhome/UniSim-2.0.17/src/plugins/student}).
 \end{enumerate}
-\item Back in Qt Creator you still have the newest \US\ project file open; else open it (\filename{\devhome/UniSim-2.0.17/UniSim2.pro}).
+\item If Qt Creator is open then close all projects and files.
+\item Clean out earlier builds by running \filename{clean.bat} (Windows) or \filename{clean.sh} (Linux and Mac) found in \devhome.
+\item In Qt Creator, open the newest \US\ project file (\eg\ \filename{\devhome/UniSim-2.0.17/UniSim2.pro}).
 \item Build the project. You should get a green bar.
 \item If you get a red bar:
 \begin{enumerate}
@@ -77,9 +86,7 @@ If you are a programmer, you may know how to use the git version control system.
 \end{enumerate}
 \end{enumerate}
 
-After you have completed merging your code into the newest version you just continue working in that version, \ie\ in this example continue with the project in \filename{\devhome/UniSim2-2.0.17}.
-
-Note that your box scripts remain untouched by the update procedure above, as long as you keep them outside the \US\ source folders (\filename{\devhome/UniSim2-2.\em{m.n}}). Hint: Your box scripts most likely are in their default location at \filenameexplained{input}.
+After you have completed merging your code into the newest version you just continue working in that version, \ie\ in this example continue with the project in \filename{\devhome/UniSim2-2.0.17}. Note that your box scripts remain untouched by the update procedure above. Depending on where you put your box scripts, you may need to move them (see \iref{ch:where-box-scripts}).
 
 \section{Run \protect\US}
 When the app and its libraries have been built, the app is ready for execution (also called 'launching'). You can either run the app from within Qt Creator (by way of the Build menu or by clicking the green triangle in the lower left corner), or you can double-click the \US\ app file (found in \filename{\devhome/UniSim2/bin}) in File Explorer (Windows), Finder (OS X) or similar navigation software. The second option launches quicker but in Windows it only works, if you have put the Qt libraries on the system path as described in \iref{ch:build-us}.

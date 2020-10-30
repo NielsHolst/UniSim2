@@ -18,7 +18,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(help_class)
-HELP(help_help_class, "help <class or plug-in name> [x]", "shows class og plug-in documentation")
+HELP(help_help_class, "help <name>", "shows command or class documentation")
 
 help_class::help_class(QString name, QObject *parent)
     : Command(name, parent), _box(0)

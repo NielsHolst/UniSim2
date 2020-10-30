@@ -113,8 +113,12 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
     // Show step in status bar
     switch (step) {
     case ComputationStep::Construct:
+        dialog().message("Construct...");
         if (_root) delete _root;
         _root = _current = nullptr;
+        break;
+    case ComputationStep::Amend:
+        dialog().message("Amending...");
         break;
     case ComputationStep::Start:
         dialog().message("Starting...");
@@ -126,7 +130,7 @@ void Environment::computationStep(ComputationStep step, bool showInDialog) {
         dialog().message("Running...");
         break;
     default:
-        ; // keep current message
+        ;
     }
 }
 
@@ -416,15 +420,17 @@ void Environment::recreateClipboard() {
 
 void Environment::checkInstallation() const {
     if (isNewInstallation()) {
+        // Reconfigure home folder
         dialog().information("New installation detected; reconfiguring HOME folder...");
         Environment *this2 = const_cast<Environment *>(this);
-
         int numErrors = Exception::count();
         Command::submit(QStringList() << "reconfigure", this2);
         bool successful = (numErrors == Exception::count());
         if (successful) {
-            dialog().information("Work folder set to:");
-            Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this2);
+            // Reset work folder to home
+//            dialog().information("Work folder set to:");
+//            Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", this2);
+            // Update the version number
             updateInstallation();
         }
         dialog().writePrompt();

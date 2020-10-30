@@ -169,22 +169,11 @@ void DialogWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void DialogWidget::handleCtrlKey(QKeyEvent *event) {
-    QTextCursor cursor;
     QString s;
     switch (event->key()) {
     case Qt::Key_L:
-//        event->accept();
-//        restoreFont();
-        Command::submit(QStringList() << "clear", this);
-//        handleEscKey();
-
-//        event->accept();
-//        moveCursor(QTextCursor::End);
-//        cursor = getCursor();
-//        setTextCursor(cursor);
-//        Command::submit(QStringList() << "clear", this);
-//        insertText("\n" + _prompt);
-//        submitCommand();
+        insertText("clear");
+        submitCommand();
         break;
     case Qt::Key_Space:
         s = selectFile();
@@ -421,7 +410,6 @@ void DialogWidget::submitCommand() {
     QTextCursor cursor = getCursor();
     cursor.movePosition(QTextCursor::EndOfLine);
     setTextCursor(cursor);
-
     QString line = DialogWidget::line();
     QStringList items = lineItems();
     if (!items.isEmpty())

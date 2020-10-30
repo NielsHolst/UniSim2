@@ -20,7 +20,7 @@ PUBLISH(Screens)
 Screens::Screens(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("adds an airTransmissivity box");
+    help("holds Screen children");
 }
 
 void Screens::amend() {

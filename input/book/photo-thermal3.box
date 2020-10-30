@@ -4,8 +4,10 @@ Simulation sim {
   Calendar calendar {
     .initialDateTime = 1/1/2016
   }
+  Sun sun {
+  }
   DayLengthScale light {
-    .dayLength = calendar[dayLength]
+    .dayLength = sun[dayLength]
   }
   OutputR {
     PageR {

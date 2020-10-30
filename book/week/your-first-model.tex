@@ -9,7 +9,7 @@ When you work with a model, you go through these steps again and again:
 \item Launch the software (\US, R and text editor).
 \item In \US, run the box script that defines your model.
 \item In R, view the model output.
-\item \label{NielsH} In the text editor, make any desired changes to the box script and go back to step 2.
+\item \label{NielsH} In the text editor, make any desired changes to the box script, save, and go back to step 2.
 \end{enumerate}
 
 The box script found in \filenameexplained{book/egg1.box} is a good starting point. To get started, issue the \code{load} command and then the \code{edit} command at the \US\ prompt. Like this:
@@ -37,9 +37,9 @@ Simulation sim {
   }
   OutputR {
     PageR {
-      .xAxis = sim[step]
       .width = 4
       .height = 2.5
+      .xAxis = sim[step]
       PlotR {
         .ports = egg[content]
       }
@@ -60,13 +60,26 @@ We would expect the output to show a declining curve as the eggs hatch. Type \co
 \label{fig:egg1}
 \end{figure}
 
-In the \filename{egg1.box} script, we find examples of five \concept{building blocks} (\code{Simulation, Stage, OutputR, PageR, PlotR}). More precisely, these are different \concept{box classes} defined in the \CPP\ source code. Taken together, all the box classes available for \US\ form a toolbox of building blocks with which to build models. You will later learn how to add your own box classes to the toolbox (\iref{ch:basic-cpp}).
+In the \filename{egg1.box} script, we find examples of five \concept{building blocks} (\code{Simulation, Stage, OutputR, PageR, PlotR}). More precisely, these are different \concept{Box classes} defined in the \CPP\ source code. Taken together, all the \code{Box} classes available for \US\ form a toolbox of building blocks with which to build models. 
 
-Wherever a box class is used in a box script, a \concept{box object} is created. In this box script we explicitly created five objects, one of each class. Two of them have names to identify them: \code{sim} and \code{egg}, while the other three remain unnamed. 
+The toolbox is organised into modules (or plug-ins) each with a selection of \code{Box}'es. To see all the \code{Box}'es available in the \code{boxes} module (thus named, because this is the standard module), type this at the prompt:
 
-Some box objects may create additional box objects. In this case, one additional box was created by the \code{OutputR} box. This is why \US\ reported '6 boxes created' in line 4 of the dialog above.
+\begin{usdialog}
+> help boxes
+\end{usdialog}
 
-You can get a quick overview of all current box objects by the \code{list} command (\iref{commands:list}). Thus you will find that an additional box object of the \code{OutputText} class was created inside the \code{OutputR}:
+To get the details of a particular \code{Box}, type \eg,
+\begin{usdialog}
+> help Sun
+\end{usdialog}
+
+You will later learn how to add your own module with your own \code{Box} classes to the toolbox (\iref{ch:basic-cpp}).
+
+Whenever a \code{Box} \concept{class} is used in a box script, a \code{Box} \concept{object} is created in your computer's memory. In this box script we explicitly created five objects, one of each class. Two of them have names to identify them: \code{sim} and \code{egg}, while the other three remain unnamed. 
+
+Some \code{Box} objects may create additional \code{Box} objects. In this case, one additional \code{Box} was created by the \code{OutputR} box. This is why \US\ reported '6 boxes created' in line 4 of the dialog above.
+
+You can get a quick overview of all current \code{Box} objects by the \code{list} command (\iref{commands:list}). Thus you will find that an additional \code{Box} object of the \code{OutputText} class was created inside the \code{OutputR} box:
 
 \lstset{numbers=left}
 \begin{usdialog}
@@ -104,9 +117,9 @@ The box objects are arranged in a hierarchy, like Chinese boxes, with \code{sim}
 \end{tikzpicture}
 
 \bigskip
-In a box script, such as \filename{egg1.box}, names with a leading dot are examples of \concept{input ports} (\code{.steps, .initial, .duration, .xAxis, .ports}). Note that we write the leading dot in front of a port name, only where we set its value. If we choose not set the value of an input port in the box script, it will retain its default value defined in the \CPP\ source code.
+In a box script, such as \filename{egg1.box}, names with a leading dot are examples of \concept{input ports} (\code{.steps, .initial, .duration, .xAxis, .ports}). Note that we write the leading dot in front of a port name, only when we set its value. If we choose not set the value of an input port in the box script, it will retain its default value defined in the \CPP\ source code.
 
-The first five ports mentioned in \filename{egg1.box} (lines 3, 5-6, 10-11) are set to fixed values while the last two (lines 12 and 14) \concept{refer} to other ports. This means that their value will vary during the simulation, as they track the value of the ports they refer to. 
+The first five ports mentioned in \filename{egg1.box} (lines 3, 5-6, 10-11) are set to fixed values while the last two (lines 12 and 14) \concept{refer} to other ports. We also say that they \concept{import} another port. This means that their value will vary during the simulation, as they track the value of the ports they refer to. 
 
 Ports are referred to by way of path expressions (\iref{ch:path-expressions}). In these two cases, the path simply defines the name of a box object and (in brackets) one of its ports. To write paths like these, you need to know which input and output ports are available for different boxes. You can use the \code{help} command (\iref{commands:help}) to see all the input and output ports available for a class.
 
@@ -252,7 +265,7 @@ The \code{Records} box will seach for the given \code{fileName} first in the sam
 \label{fig:egg4}
 \end{figure}
 
-In \filename{egg4.box} we have also added yet another \code{PlotR} output (lines 23-25) to show the daily average temperature (\code{Tavg}), which is an output port of \code{weather} constructed according to the column heading in the weather input file. This shows at the bottom of \iref{fig:egg4}.
+In \filename{egg4.box} we have also added yet another \code{PlotR} output (lines 25-27) to show the daily average temperature (\code{Tavg}), which is an output port of \code{weather} named after to the column heading in the weather input file. The final outcome of the script is shown in \iref{fig:egg4}.
 
 How did we synchronize the reading of the weather file (which begins 1 January 2009) with the calendar (which begins 1 May 2009)? This synchronization occurs automatically. Try asking for help on the \code{Records} class at the \US\ prompt:
 
@@ -327,7 +340,6 @@ In the output (\iref{fig:egg5}) you will notice that half of the eggs had hatche
 
 The \code{Stage} model implements the \concept{distributed delay} algorithm of which \(k\) is the dispersion parameter (see \iref{ch:physiological-development-stage}). Note that even though the distributed-delay model introduces a spread, it is a deterministic model. Thus every run with the \code{Stage} model will give the same result, unless stochasticity is introduced elsewhere in the box script.
 
-
 \begin{figure} [t]
 \centering
 \includegraphics[scale=0.5]{graphics/egg5}
@@ -336,4 +348,70 @@ The \code{Stage} model implements the \concept{distributed delay} algorithm of w
 \end{figure}
 
 
+\section{Where do I put my own box scripts?}
+\label{ch:where-box-scripts}
+All the box scripts presented in this book are located in the \filename{\inputfolder/book} folder. The default location for this is in the \filename{\ushome/input} folder (see \iref{commands:set-folder}).
+
+There are three different locations where you could place a folder for your own box scripts. That is determined by where you put your \ushome\ folder:
+\begin{enumerate}
+\item In the default location \ushome
+\item In the developer location \devhomefolderexplained
+\item In any other location, \eg\ \filename{C:/users/joe/documents/models}
+\end{enumerate}
+
+Option 1 works immediately. You just need to find the \ushome\ folder on your computer. An easy method is to load a script from this book, then edit it and then choose 'Save as...' in the editor. This will guide you to the \ushome\ folder. The drawback of option 1 is that if you upgrade \US\ to a newer version then the existing \ushome\ folder will be reconfigured (as described for the \code{reconfigure} command in \iref{commands:reconfigure}). In effect, the old \ushome\ folder will be backed up, including the folders you may have added. To re-establish your folders, you must then copy them from the backup to the new \ushome\ folder.
+
+Option 2 will be an option only later on, when you have installed the source code package for \US. It makes sense to use that option because then you will have all your source code and box scripts in one place. However, it has the drawback that when you upgrade the \US\ source code to a newer version, you will need to move your box scripts to that newer version.
+
+Option 3 has neither of the drawbacks above. You can keep your box scripts in the same location irrespective of any upgrades of \US. However, since the \filename{book} folder (containing all the box scripts for this book) will not be found inside your own folder, you can no longer immediately run the box scripts found in this book with this option. You will need to swap between different work folders:
+
+For each of the options above, you can set the \ushome\ folder with the corresponding command (\cf\ \iref{commands:set-folder}):
+\begin{enumerate}
+\item \codenobox{set folder work HOME}
+\item \codenobox{set folder work DEV}
+\item \codenobox{set folder work C:/users/joe/documents/models}.
+\end{enumerate}
+
+Let's say you chose option 3 for the location of your \ushome\ folder, and that you evoked command 3 above to achieve that. Then if you wanted to study a script from this book, you should first evoke command 1. This again gives you access to all the book scripts. When your book studies are finished, you return to your own place by evoking command 3.
+
+I suggest you stick to the default of putting your scripts inside a sub-folder of \ushome\ named \filename{input}, \eg\ in \filename{C:/users/joe/documents/models/input}. It is a good idea to keep all your box scripts neatly organized in a folder structure, together with the input files that your box scripts may rely on, such as weather and scenario files and R scripts. For this purpose, create sub-folders inside your input folder \inputfolder (\iref{fig:layout-input-folder}).
+
+\begin {figure} [ht]
+\centering
+\tikzstyle{every node}=[draw=black,anchor=west]
+\begin{tikzpicture}[%
+  grow via three points={one child at (0.5,-0.7) and
+  two children at (0.5,-0.7) and (0.5,-1.4)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+  \node {\ushome}
+   child {node {input \inputfolder}
+     child {node {\textcolor{red}{ant}}
+      child {node {\textcolor{red}{scenarios}}}
+     }
+     child [missing] {}
+     child {node {book}
+      child {node {scenarios}}
+     }
+     child [missing] {}
+     child {node {papers}}
+     child {node {\textcolor{red}{lion}}}
+     child {node {scripts}}
+   }
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child [missing] {}
+   child {node {output \outputfolder}}
+ ;
+\end{tikzpicture}
+\caption{A possible layout of your input folder (\inputfolder) located in \filename{\ushome/input} when working with option 1 or 2 (see text). Folder names in red have been added to the default hierarchy of folders with names in black.}
+\label{fig:layout-input-folder}
+\end{figure}
+
+In this example, you have added the \filename{ant} and \filename{lion} folders to hold box scripts for two different modelling projects. Moreover, you have put a \filename{scenarios} sub-folder inside \filename{ant}.
+
+If you have downloaded the \US\ source code package, you will find a copy of the \filename{\ushome/input} folder in the \filename{\devhome/input} folder. This is the original location of the input files packed into the \US\ installer file. It is all right for you to put your box scripts inside the \filename{\devhome/input} folder. That's option 2 above.
 

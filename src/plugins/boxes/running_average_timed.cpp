@@ -22,7 +22,7 @@ PUBLISH(RunningAverageTimed)
 RunningAverageTimed::RunningAverageTimed(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes running average");
+    help("computes running average in time window");
     Input(initial).help("Value of running average at reset");
     Input(input).help("The input to average");
     Input(timeWindow).equals(1).help("Time window to average over in units of timeUnit").unit("int>0");

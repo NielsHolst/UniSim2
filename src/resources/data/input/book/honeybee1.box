@@ -2,12 +2,10 @@
 Simulation {
   .steps = 13
   Sequence dayLength {
-    +dayLength = .[value]
     .min = 5
     .max = 18
   }
   ProportionalSignal fecundity {
-    +eggsPerDay = .[signal]
     .input = dayLength[value]
     .minSignal = 0
     .maxSignal = 1500
@@ -15,23 +13,27 @@ Simulation {
     .thresholdBand = 4
   }
   OutputR {
-    +dottedLine = "geom_point(size=2)"
+    Box p {
+      +dayLength  = dayLength[value]
+      +eggsPerDay = fecundity[value]
+      +dottedLine = "geom_point(size=2)"
+    }
     PageR {
       .width = 4
       .height = 2.5
       .xAxis = dayLength[value]
       PlotR {
-        .ports = fecundity[signal]
-        .ggplot = ../..[dottedLine]
+        .ports = fecundity[value]
+        .ggplot = p[dottedLine]
       }
     }
     PageR {
       .width = 4
       .height = 2.5
-      .xAxis = dayLength[dayLength]
+      .xAxis = p[dayLength]
       PlotR {
-        .ports = fecundity[eggsPerDay]
-        .ggplot = ../..[dottedLine]
+        .ports = p[eggsPerDay]
+        .ggplot = p[dottedLine]
       }
     }
   }

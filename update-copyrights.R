@@ -76,7 +76,6 @@ convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/bph")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/command")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/conductance")
 convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/io")
-convert_all("/Users/au152367/Documents/QDev/UniSim2/src/plugins/student")
 
 copyright = 
 "/* Copyright 2018-2020 by

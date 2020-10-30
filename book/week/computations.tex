@@ -10,7 +10,7 @@ If you are completely new to programming, the R prompt will demonstrate a few ba
 While some operations are intuitive others require getting used to. For example, the hat ($\wedge$) exponentiates and double-percentage (\code{\%\%}) finds the remainder of a division:
 
 \begin{rscript}
-> x^2
+> x^2 $a^x$
 [1] 25
 > x%\%\%%3
 [1] 2
@@ -54,7 +54,7 @@ Any box needs to be created (step 1) but the following steps are optional. The p
 
 For the generic \code{Box} base class, these steps all default to do nothing. In effect you have a box void of any functionality. To create a new class of boxes with some desired functionality, you derive the new class from \code{Box} in \CPP\ using \code{Box} as the base class. This is an object-oriented mechanism known as  inheritance.
 
-While box construction is carried out by the constructor method in \CPP\, the remaining steps have a corresponding virtual function. To code the update step, for example, you write \CPP\ code for the \code{update} method of your class.
+While box construction is carried out by the constructor method in \CPP, the remaining steps have a corresponding virtual function. To code the update step, for example, you write \CPP\ code for the \code{update} method of your class.
 
 When you issue the \uscom{load} command at the \US\ prompt, all boxes defined in the box script will be created and amended (steps 1-2). With the \uscom{run} command, all three steps (1-3) are carried out so, in addition, the root box will be run (step 3). 
 

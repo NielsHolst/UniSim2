@@ -19,7 +19,7 @@ PUBLISH(WaterBudget)
 WaterBudget::WaterBudget(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("collects all water vapour fluxes");
+    help("holds all water vapour fluxes");
     Input(conductance).imports("./*[conductance]");
     Input(vapourFlux).imports("./*[vapourFlux]");
     Input(gain).imports("./*[gain]");

@@ -19,7 +19,7 @@ PUBLISH(RunningAverage)
 RunningAverage::RunningAverage(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes running average");
+    help("computes running average by no. of steps");
     Input(initial).help("Value of running average at reset");
     Input(input).help("The input to average");
     Input(count).equals(1).help("Number of steps to average over").unit(">0");

@@ -23,7 +23,7 @@ Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent)
 {
     Class(Stage);
-    help("delays inflow to emerge as a time-distributed outflow");
+    help("models a distributed delay");
     Input(inflow).help("Amount of inflow");
     Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
     Output(outflow).help("Outflow emerging from the stage");

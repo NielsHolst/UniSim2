@@ -1,25 +1,18 @@
 You need R to see \US\ output. In fact, if you are a modeller, you need R for may other purposes as well. You can use either the basic \concept{R GUI} or the later addition \concept{R Studio}. Most users seem to prefer R Studio of which the free license version will suffice.
 
-The basic R GUI has the slight advantage that when you paste code at its command prompt (which you do quite frequently in connection with \US), the pasted code is executed immediately. In R Studio you have to hit the \returnkey\ key after pasting to get the code executed.
+The basic R GUI has the slight advantage that when you paste code at its command prompt (which you do quite frequently in connection with \US), the pasted code is executed immediately. In R Studio you have to hit the \returnkey\ key after pasting to get the code executed. Moreover, R GUI will show you the simulation output more quickly than R Studio.
 
 \section{First time installation}
-The installation is straightforward. First install the basic R software found at \url{www.r-project.org}. Then install R Studio found at \url{www.rstudio.com}.
+The installation is straightforward. First install the basic R software found at \url{www.r-project.org}. Then, optionally, install R Studio found at \url{www.rstudio.com}.
 
-There are many books introducing R but I have only been satisfied with this one:
-\textit{R for Everyone} by J.P. Lander. You will find it immensely useful. 
+There are many books introducing R but I have only been satisfied with one \citep{Landers17}. You will find it immensely useful. 
 
 \section{Install R packages}
-Output from \US\ is processed by a few  R packages which you need to install, once you have installed R. You can run the following code in R to install these packages:
-
-\begin{rscript}
-> install.packages(c("ggplot2","gridExtra",
-	"lubridate","plyr","reshape2","scales")) 
-\end{rscript}
-For your convenience, you can find a script to install all needed packages in  \filenameexplained{scripts/install_packages.R}. Open that file and execute it at the R prompt.
+Output from \US\ is processed by a few  R packages which you need to install, once you have installed R. For your convenience, you can find a script to install all needed packages in  \filenameexplained{scripts/install_packages.R}. Open that file and run it at the R prompt.
 
 \section{Updating R}
 To update R, you first install the newer version like in a first-time installation. After that you will have a copy of any older R versions together with the newest one. 
 
 You will need to re-install the packages in the new version, at least on Windows. If you have installed many packages, this can be a hazzle. You can find guidance on the web how to migrate installed packages from an older R installation to a newer one.
 
-Ultimately, you should probably uninstall the older R versions to keep a tidy computer.
+However, you should probably uninstall the older R versions complete, before installing a new version with new packages, to keep a tidy computer.

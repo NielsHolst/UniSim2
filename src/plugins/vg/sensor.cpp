@@ -20,7 +20,7 @@ PUBLISH(Sensor)
 Sensor::Sensor(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes average of inputs");
+    help("provides sensor inputs");
     Input(indoorsTemperatureIn).equals(missing);
     Input(indoorsRhIn).equals(missing);
     Input(indoorsCo2In).equals(missing);

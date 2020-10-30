@@ -18,7 +18,7 @@ PUBLISH(VapourFluxVentilation)
 VapourFluxVentilation::VapourFluxVentilation(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    help("models vapour flux through air exchange");
+    help("models vapour flux by air exchange");
     Input(timeStep).imports("calendar[timeStepSecs]");
     Input(airInflux).imports("indoors/ventilation[relative]", CA);
     Input(averageHeight).imports("geometry[averageHeight]", CA);

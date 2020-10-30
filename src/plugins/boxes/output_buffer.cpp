@@ -15,7 +15,7 @@ OutputBuffer::OutputBuffer(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
     Class(OutputBuffer);
-    help("keeps output in memory buffer");
+    help("keeps output in a memory buffer");
 }
 
 }

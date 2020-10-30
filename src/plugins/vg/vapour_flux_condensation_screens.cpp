@@ -19,7 +19,7 @@ PUBLISH(VapourFluxCondensationScreens)
 VapourFluxCondensationScreens::VapourFluxCondensationScreens(QString name, QObject *parent)
     : VapourFluxBase(name, parent)
 {
-    help("sums the vapour fluxes over all screens in child boxes");
+    help("sums the vapour fluxes over all child boxes");
     Input(conductances).imports("./*[conductance]");
     Input(vapourFluxes).imports("./*[vapourFlux]");
     Input(gains).imports("./*[gain]");

@@ -20,7 +20,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(batch)
-HELP(batch, "batch", "runs a batch of box scripts")
+HELP(batch, "batch", "runs a batch of box scripts and writes plots to PNG files")
 
 batch::batch(QString name, QObject *parent)
     : Command(name, parent)
@@ -38,10 +38,6 @@ void batch::doExecute() {
 
 void batch::getArguments() {
     switch (_args.size()) {
-    case 1:
-        _relativePath = ".";
-        _fileMask = "*.box";
-    break;
     case 2:
         _relativePath = _args[1];
         _fileMask = "*.box";
@@ -51,7 +47,8 @@ void batch::getArguments() {
         _fileMask = _args[2];
         break;
     default:
-        ThrowException("Write: batch <path relative to input> <file mask>");
+        ThrowException("Write: batch <path relative to input>"
+                       "   or: batch <path relative to input> <file mask>");
     }
 }
 

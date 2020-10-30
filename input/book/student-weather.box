@@ -10,7 +10,7 @@ Simulation sim {
   OutputR {
     PageR {
       PlotR {
-        .ports = weather[T]
+        .ports = weather[Tavg]
       }
     }
   }

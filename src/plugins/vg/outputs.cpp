@@ -62,6 +62,10 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(actLight3).importsMaybe("actuators/growthLights/growthLight3[on]");
     Output(actLightPower).imports("actuators/growthLights[powerUsage]");
     Output(actLightPar).imports("actuators/growthLights[parFluxDown]");
+    Output(actPipeTempIn1).importsMaybe("actuators/heating/pipes/pipe1[inflowTemperature]");
+    Output(actPipeTempIn2).importsMaybe("actuators/heating/pipes/pipe2[inflowTemperature]");
+    Output(actPipeTempOut1).importsMaybe("actuators/heating/pipes/pipe1[outflowTemperature]");
+    Output(actPipeTempOut2).importsMaybe("actuators/heating/pipes/pipe2[outflowTemperature]");
     Output(actScreen1).importsMaybe("actuators/screens/layer1[value]");
     Output(actScreen2).importsMaybe("actuators/screens/layer2[value]");
     Output(actScreen3).importsMaybe("actuators/screens/layer3[value]");
@@ -87,8 +91,8 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(totalGrowthLightEnergy).imports("budget[growthLightsEnergy]");
     Output(totalParAbsorbed).imports("budget[parAbsorbedTotal]");
     Output(totalCo2).imports("budget[co2Total]");
-//    Output(thermostatAction).imports("energyBudgetOptimiser[action]");
-//    Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
+    // Output(thermostatAction).imports("energyBudgetOptimiser[action]");
+    // Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
 }
 
 void Outputs::initialize() {
