@@ -32,7 +32,7 @@ public:
     virtual void finishProgress() = 0;
     virtual void information(QString s) = 0;
     virtual QTextEdit* textEdit();
-    virtual void loadWithFilePicker();
+//    virtual void loadWithFilePicker();
 
     virtual void restoreFont() {}
     virtual void setFont(QString, int) {}

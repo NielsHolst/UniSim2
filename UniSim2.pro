@@ -4,7 +4,7 @@
 TEMPLATE = subdirs
 
 #
-# Required modules
+# Modules required for source code release
 #
 
 SUBDIRS += unisim
@@ -24,72 +24,42 @@ command.subdir = src/plugins/command
 command.depends = base
 unisim.depends = command
 
-#SUBDIRS += demo
-#demo.subdir = src/plugins/demo
-#demo.depends = base
-#unisim.depends = demo
-
-#SUBDIRS += eq
-#eq.subdir = src/plugins/eq
-#eq.depends = base
-#unisim.depends = eq
-
 SUBDIRS += student
 student.subdir = src/plugins/student
 student.depends = base
 unisim.depends = student
 
 #
-# Published or in-prep paper plug-ins
+# Modules required for end-user release
 #
 
 #SUBDIRS += aphid
 #aphid.subdir = src/plugins/aphid
 #aphid.depends = base
 #unisim.depends = aphid
-
-#SUBDIRS += bmsb
-#bmsb.subdir = src/plugins/bmsb
-#bmsb.depends = base
-#unisim.depends = bmsb
-
+#
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp
 #cmbp.depends = base
 #unisim.depends = cmbp
-
-###SUBDIRS += io
-###io.subdir = src/plugins/io
-###io.depends = base
-###unisim.depends = io
-
+#
 #SUBDIRS += MusselBed
 #MusselBed.subdir = src/plugins/MusselBed
 #MusselBed.depends = base
 #unisim.depends = MusselBed
-
+#
 #SUBDIRS += PestTox
 #PestTox.subdir = src/plugins/PestTox
 #PestTox.depends = base
 #unisim.depends = PestTox
-
-###SUBDIRS += rvf
-###rvf.subdir = src/plugins/rvf
-###rvf.depends = base
-###unisim.depends = rvf
-
-#SUBDIRS += vacuum
-#vacuum.subdir = src/plugins/vacuum
-#vacuum.depends = base
-#unisim.depends = vacuum
-
+#
 #SUBDIRS += vg
 #vg.subdir = src/plugins/vg
 #vg.depends = base
 #unisim.depends = vg
 
 #
-# Optional plug-ins
+# Modules under (re-)construction
 #
 
 #SUBDIRS += apis
@@ -102,11 +72,6 @@ unisim.depends = student
 #ave.depends = base
 #unisim.depends = ave
 
-#SUBDIRS += bph
-#bph.subdir = src/plugins/bph
-#bph.depends = base
-#unisim.depends = bph
-
 #SUBDIRS += bmsb
 #bmsb.subdir = src/plugins/bmsb
 #bmsb.depends = base
@@ -116,6 +81,11 @@ unisim.depends = student
 #conductance.subdir = src/plugins/conductance
 #conductance.depends = base
 #unisim.depends = conductance
+
+#SUBDIRS += io
+#io.subdir = src/plugins/io
+#io.depends = base
+#unisim.depends = io
 
 #SUBDIRS += pinacate
 #pinacate.subdir = src/plugins/pinacate
@@ -137,6 +107,11 @@ unisim.depends = student
 #resist.depends = base
 #unisim.depends = resist
 
+#SUBDIRS += rvf
+#rvf.subdir = src/plugins/rvf
+#rvf.depends = base
+#unisim.depends = rvf
+
 #SUBDIRS += saccharina
 #saccharina.subdir = src/plugins/saccharina
 #saccharina.depends = base
@@ -147,8 +122,6 @@ unisim.depends = student
 #test.depends = base
 #unisim.depends = test
 
-#SUBDIRS += tuta
-#tuta.subdir = src/plugins/tuta
-#tuta.depends = base
-#unisim.depends = tuta
+
+
 

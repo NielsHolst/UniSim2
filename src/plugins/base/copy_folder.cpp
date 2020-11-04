@@ -28,14 +28,11 @@ namespace {
 
 }
 
-void copyFolder(QDir source, QDir destination) {
+void copyFolder(QDir source, QDir destination, QString sourceText) {
     if (destination.exists())
         renameFolder(destination);
-    QString msg = "Copying '%1' to '%2'";
-    QString sourcePath = (source.absolutePath() == ":/data") ?
-                "default data" : source.absolutePath(),
-            destinationPath = destination.absolutePath();
-    dialog().information(msg.arg(sourcePath).arg(destinationPath));
+    QString msg = "Copying %1 to %2\n";
+    dialog().information(msg.arg(sourceText).arg(destination.absolutePath()));
     copyFolderHard(source, destination);
 }
 

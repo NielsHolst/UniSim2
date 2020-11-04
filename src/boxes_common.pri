@@ -9,7 +9,7 @@
 # Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.34
+VERSION = 2.3.35
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 

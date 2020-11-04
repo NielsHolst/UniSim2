@@ -189,12 +189,8 @@ plot_effects = function(stats) {
     PrevOrder = 1:n
   )
   M = join(M,N)
-  print(M)
   prev_order = M$PrevOrder
-  print(prev_order)
-  print(levels(stats$Input))
   stats$Input = reorder_levels(stats$Input, prev_order)
-  print(levels(stats$Input))
   stats$Input = reorder_levels(stats$Input, n:1)
   # Now plot
   dodge = position_dodge(width = 0.9)
@@ -275,26 +271,21 @@ plot_sobol_convergence = function() {
 }
 
 plot_sobol_indices = function() {
-  # f = function(a_plot) {
-    # open_plot_window()
-    # print(a_plot)
-  # }
-  
-  file_name = paste0(output_file_base_name(), "_sobol-indices.Rdata")
-  if (reuseData) {
+  reuse_sensitivity_analysis_output = FALSE
+  file_name = paste0(box_script_folder, "/", output_file_base_name(), "_sobol-indices.Rdata")
+  if (reuse_sensitivity_analysis_output) {
     load(file_name)
   } else { 
     n_outputs = length(output_names())
     print(paste0("Bootstrapping (n=", sobol_B, ")..."))
     B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
     S = ddply(B, .(Output), sobol_statistics)
-    print(paste("Saving Sobol' indices for later reuse in", file_name))
-    save(S, file=file_name)
+    # print(paste("Saving Sobol' indices for later reuse in", file_name))
+    # save(S, file=file_name)
   }
   
   plots = dlply(subset(S, Input!="Sum"), .(Output), plot_effects)
   plots
-  # l_ply(plots, f)
 }
 
 

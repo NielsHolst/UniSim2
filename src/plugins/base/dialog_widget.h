@@ -32,7 +32,7 @@ public:
     void errorImpl(QString s);
     void setFont(QString family, int pt);
     QFont font();
-    void loadWithFilePicker();
+//    void loadWithFilePicker();
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

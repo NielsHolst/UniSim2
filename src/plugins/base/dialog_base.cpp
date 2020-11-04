@@ -50,8 +50,8 @@ QTextEdit* DialogBase::textEdit() {
     return nullptr;
 }
 
-void DialogBase::loadWithFilePicker() {
-}
+//void DialogBase::loadWithFilePicker() {
+//}
 
 void DialogBase::message(QString s) {
     _message = s;

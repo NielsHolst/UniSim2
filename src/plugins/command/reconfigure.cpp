@@ -24,7 +24,7 @@ reconfigure::reconfigure(QString name, QObject *parent)
 }
 
 void reconfigure::doExecute() {
-    copyFolder(source(), destination());
+    copyFolder(source(), destination(), "default input scripts");
 }
 
 QDir reconfigure::source() {

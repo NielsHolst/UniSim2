@@ -28,11 +28,12 @@ public:
     static QDir pluginsDir();
     static QStringList qualifiedClassNames(QString className);
     static void usingPlugin(QString pluginName);
+    static QStringList find(QString className);
 private:
     // methods
     MegaFactory();
     static MegaFactory* me();
-    static QObject* createObject(QString className, QString objectName, QObject *parent=0);
+    static QObject* createObject(QString className, QString objectName, QObject *parent=nullptr);
     // data
     typedef QMultiMap<QString, FactoryPlugIn*> ProductIndex;
     static MegaFactory *_me;

@@ -1,0 +1,18 @@
+#define RANDOMISER = RandomiserStratified
+Simulation sim {
+  .iterations = 30 
+  .steps =  273 // end of september
+  .silent = TRUE
+  Box settings {
+    +doSensitivityAnalysis = FALSE
+    +bootstrapSize = 0 // no bootstrapping
+  }
+  #include "aphid-fungus-model.part.box" 
+  OutputR {
+    .end = "3-end.R"
+    OutputText uncertainty {
+        +cadaverPressure = withFungus/diagnostics/cadaverDays[value]
+      .ports = (biocontrol[*]|end .[cadaverPressure]|end)
+    }
+  }  
+}

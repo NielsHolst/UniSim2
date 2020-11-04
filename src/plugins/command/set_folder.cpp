@@ -3,6 +3,8 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QApplication>
+#include <QDir>
+#include <QFileInfo>
 #include <base/command_help.h>
 #include <base/publish.h>
 #include <base/dialog.h>
@@ -39,7 +41,6 @@ void set_folder::doExecute() {
         break;
     default:
         ThrowException("Too many arguments").value(_args.join(" "));
-        return;
     }
 }
 
@@ -75,9 +76,16 @@ void set_folder::setFolder(QString folderType, QString folderPath) {
     else if (folderPath == "DEV") {
         QString relativePath = environment().isMac() ? "/../../../.." : "/..";
         folderPath = QApplication::applicationDirPath() + relativePath;
+        QDir srcDir = QDir(folderPath + "/src");
+        if (!srcDir.exists())
+            ThrowException("Could not find the development folder").
+                    hint("You must run the unisim.exe that you built yourself (found in the bin folder) to use 'set folder work DEV'");
     }
     environment().dir(folder, folderPath);
-    showFolder(folderType);
+    if (folder == Environment::Work)
+        showAllFolders();
+    else
+        showFolder(folderType);
 }
 
 }

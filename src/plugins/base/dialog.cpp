@@ -24,11 +24,6 @@ QTextEdit* Dialog::textEdit() {
     return _widget;
 }
 
-void Dialog::loadWithFilePicker() {
-    if (_widget)
-        _widget->loadWithFilePicker();
-}
-
 void Dialog::setFont(QString family, int pt) {
     _widget->setFont(family, pt);
 }
@@ -39,7 +34,7 @@ QFont Dialog::font() {
 
 void Dialog::writePrompt() {
     _widget->writePrompt();
-;}
+}
 
 QProgressBar* Dialog::progressBar() {
     return _widget->progressBar();

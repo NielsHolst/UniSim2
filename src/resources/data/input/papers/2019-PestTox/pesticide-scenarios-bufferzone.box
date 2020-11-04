@@ -9,6 +9,8 @@ Simulation sim {
     .initialDateTime = 13/3/2012
     .latitude = 14.02
   }
+  Sun sun {
+  }
   Records weather {
     .fileName = "weather/Pathumthani.txt"
   }

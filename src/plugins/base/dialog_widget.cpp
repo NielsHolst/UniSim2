@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QApplication>
+#include <QMessageBox>
 #include <QFileDialog>
 #include <QFont>
 #include <QFontDatabase>
@@ -178,16 +179,14 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     case Qt::Key_Space:
         s = selectFile();
         if (!s.isEmpty()) {
+            // If load or run with folder argument then remove the argument,
+            // since the folder with be supplied with s
             QStringList items = lineItems();
-            if (items.size() > 1) {
+            if (items.size() > 1 && (items.at(0)=="load" || items.at(0)=="run")) {
                 clearLine();
-                items.removeAt(items.size() - 1);
-                items << s;
-                s = items.join(" ");
+                insertText(items.at(0));
             }
-            else {
-                s.prepend(" ");
-            }
+            s.prepend(" ");
             insertText(s);
             submitCommand();
         }
@@ -198,29 +197,30 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
     }
 }
 
-void DialogWidget::loadWithFilePicker() {
-    QString s = selectFile();
-    if (!s.isEmpty()) {
-        s.prepend(" ");
-        insertText(s);
-        submitCommand();
-    }
-}
-
 QString DialogWidget::selectFile() {
+    // Check command
     QStringList items = lineItems();
+    bool fileDialog   = items.at(0)=="load" || items.at(0)=="run";
+    bool folderDialog = items.size()==3 && items.at(0)=="set" && items.at(1)=="folder" && items.at(2)=="work";
+    if (!(fileDialog || folderDialog)) {
+        QMessageBox::warning(this, "Wrong command", "Use <Ctrl>+<space> only together with 'load', 'run' or 'set folder work'");
+        return QString();
+    }
+    // Extract paths
     QString writtenPath = (items.size() > 1) ? items.last() : "",
             inputPath = environment().resolveDir(Environment::Input).absolutePath(),
-//            latestFile = environment().latestLoadArg(),
-//            latestPath = QFileInfo(latestFile).path(),
             latestPath = environment().latestInputFilePath(),
             usePath = writtenPath.isEmpty() ? latestPath : writtenPath,
             combinedPath = QDir::isAbsolutePath(usePath) ? usePath : inputPath + "/" + usePath,
             path = QDir(combinedPath).exists() ? combinedPath : inputPath;
-    QString filePath = QFileDialog::getOpenFileName(this,
-            "Select a file", path, "Scripts (*.box *.xml)");
-    if (filePath.startsWith(inputPath))
+    // Show dialog box
+    QString filePath = fileDialog ?
+                QFileDialog::getOpenFileName(this, "Select a file", path, "Scripts (*.box *.xml)") :
+                QFileDialog::getExistingDirectory(this, "Select a folder", path);
+    // Remove input path from the beginning
+    if (fileDialog && filePath.startsWith(inputPath))
         filePath = filePath.mid(inputPath.size() + 1);
+    // Put in apostrophes in case of blanks
     if (filePath.contains(" "))
         filePath = "\"" + filePath + "\"";
     return filePath;
@@ -335,12 +335,14 @@ void DialogWidget::writeWelcome() {
                 "\nWelcome to Universal Simulator!" : "\nWelcome back!");
 
     environment().computationStep(ComputationStep::Start);
+    environment().checkInstallation();
 
     information("Saving box script grammar...");
     Command::submit(QStringList() << "save" << "grammar", this);
 
     QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
-                   "\nInput folder:\n  " + environment().folderInfo(Environment::Input);
+                   "\nInput folder:\n  " + environment().folderInfo(Environment::Output) +
+                   "\nOutput folder:\n  " + environment().folderInfo(Environment::Input);
 
     QString latestFile = environment().latestLoadArg();
     if (latestFile.contains(" "))

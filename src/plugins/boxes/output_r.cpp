@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <QDir>
 #include <QMap>
 #include <QMapIterator>
 #include <QSet>
@@ -32,9 +33,6 @@ OutputR::OutputR(QString name, QObject *parent)
     sideEffects("writes an R script to the output folder\ncopies an R script to the clipboard");
     Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
     Input(end).equals("scripts/end.R").help("Name of R script(s) run after auto-generated R script");
-    Input(graphicsFormat).equals("none").help("Format of graphics output file; intended for use in your own end script");
-    Input(destinationFolder).help("If this path to a folder is set, all outputs will be copied there");
-    Input(textOutputFilePath).imports("./*[filePath]").help("Name of text output file, including absolute path");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
@@ -46,10 +44,6 @@ OutputR::OutputR(QString name, QObject *parent)
 }
 
 void OutputR::amend() {
-//    if (_pages.empty()) {
-//        Box *page = MegaFactory::create<>("PageR", "", this);
-//        page->amend();
-//    }
     // Create text output if not present
     if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
         Box *textOutput = MegaFactory::create<>("OutputText", "", this);
@@ -60,13 +54,6 @@ void OutputR::amend() {
 }
 
 void OutputR::initialize() {
-    // Find destination folder if set
-    _hasDestination = !destinationFolder.isEmpty();
-    if (_hasDestination) {
-        _destinationDir = QDir(destinationFolder);
-        if (!_destinationDir.exists())
-            ThrowException("Destination folder does not exist").value(destinationFolder).context(this);
-    }
     // Check that only one OutputR objects exists
     QVector<OutputR*> outputs = findMany<OutputR>("*");
     if (outputs.size() > 1)
@@ -75,6 +62,9 @@ void OutputR::initialize() {
                 context(this);
     // Open file for R script
     openFile();
+    // Getting the output path for .txt output
+    _filePathTxt = environment().outputFilePath(".txt");
+    _filePathTxt.replace("\\", "/");
 }
 
 void OutputR::reset() {
@@ -94,10 +84,7 @@ QString OutputR::toScript() {
     for (PageR *page : _pages)
         s += page->toScript();
     s += "plot_all <- function(df) {\n";
-//    bool skipDefaultPage = (_pages.size() > 1);
     for (PageR *page : _pages) {
-//        if (skipDefaultPage && page->objectName()=="default")
-//            continue;
         s += "  " + page->functionName() + "(df)\n";
     }
     s += "}\n";
@@ -105,8 +92,6 @@ QString OutputR::toScript() {
     s += "\nfigures <- function(df) {\n  Pages = list(";
     bool first = true;
     for (PageR *page : _pages) {
-//        if (skipDefaultPage && page->objectName()=="default")
-//            continue;
         if (!first)
             s += ", ";
         first = false;
@@ -156,64 +141,35 @@ void OutputR::openFile() {
 }
 
 void OutputR::copyToClipboard() {
-    // Write Rcode to clipboard
-    QString output = makeOutputRCode(true);
+    QString output = makeOutputRCode();
     environment().copyToClipboard(output);
-
-    // Write Rcode to file as well
-    if (_hasDestination) {
-        output = makeOutputRCode(false);
-        QString fileName = QFileInfo(environment().latestLoadArg()).baseName() + ".R",
-                fileNamePath = _destinationDir.absoluteFilePath(fileName);
-        QFile file(fileNamePath);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream str(&file);
-            str << output;
-            file.close();
-        }
-        else {
-            ThrowException("Cannot open destination file").value(fileNamePath).context(this);
-        }
-    }
 }
 
-QString OutputR::makeOutputRCode(bool forClipboard) {
-    // Set up names for R and txt output files
-    QString ofp = textOutputFilePath, //environment().outputFilePath(".txt"),
-            outputFileName = forClipboard ? ofp : QFileInfo(ofp).fileName(),
-            RFileName = forClipboard ? _filePathR : QFileInfo(_filePathR).fileName();
-    // Copy output files to destination folder if set
-    if (_hasDestination) {
-        copyFileToDestination(ofp);
-        if (numPages>0) copyFileToDestination(_filePathR);
-    }
+QString OutputR::makeOutputRCode() {
     // Put together R code
     QString s;
-    s += "setwd(\"" + _destinationDir.absolutePath() + "\")\n";
     s += "keepPages = " + convert<QString>(keepPages) + "; ";
-    s += "keepVariables = " + convert<QString>(keepVariables) + "; ";
+    s += "keepVariables = " + convert<QString>(keepVariables) + "\n";
     s += "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() +  "\"\n";
+    s += "output_file_name  = \"" + _filePathTxt  + "\"\n";
     s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
-    if (numPages>0) s += "source(\"" + RFileName + "\")\n";
-    s += "output_file_name = \"" + outputFileName + "\"\n";
-    s += "graphicsFormat = \"" + graphicsFormat + "\"; ";
-    s += "reuseData = FALSE\n";
+    if (numPages>0) s += "source(\"" + _filePathR + "\")\n";
     if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
     s += endScripts().join("");
     return s;
 }
 
-void OutputR::copyFileToDestination(QString sourceFilePath) {
-    QString fileName = QFileInfo(sourceFilePath).fileName(),
-            destFilePath = _destinationDir.absolutePath() + "/" + fileName;
-    if (QFile::exists(destFilePath))
-        QFile::remove(destFilePath);
-    bool ok = QFile::copy(sourceFilePath, destFilePath);
-    if (!ok) {
-        ThrowException("Could not copy file to destination").
-            value(sourceFilePath + " -> " + destFilePath);
-    }
-}
+//void OutputR::copyFileToDestination(QString sourceFilePath) {
+//    QString fileName = QFileInfo(sourceFilePath).fileName(),
+//            destFilePath = _destinationDir.absolutePath() + "/" + fileName;
+//    if (QFile::exists(destFilePath))
+//        QFile::remove(destFilePath);
+//    bool ok = QFile::copy(sourceFilePath, destFilePath);
+//    if (!ok) {
+//        ThrowException("Could not copy file to destination").
+//            value(sourceFilePath + " -> " + destFilePath);
+//    }
+//}
 
 QStringList OutputR::endScripts() {
     QStringList scripts;

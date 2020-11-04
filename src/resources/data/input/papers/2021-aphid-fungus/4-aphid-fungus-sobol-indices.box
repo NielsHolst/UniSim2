@@ -1,0 +1,59 @@
+#define RANDOMISER = RandomiserSobolSequence
+Simulation sim {
+  // Runs at ~4 iterations per second
+  // 425984 iterations used in paper
+  // 832 iterations for a quicker demonstration
+  .iterations = 832
+  .steps =  273 // end of september
+  .silent = TRUE
+  Box settings {
+    // Set bootstrapSize to 100 for a quick demonstration; a value of 10000 used in paper
+    +doSensitivityAnalysis = TRUE
+    +bootstrapSize = 100
+  }
+  #include "aphid-fungus-model.part.box" 
+  OutputR {
+    .end = "4-end.R"
+    Box outputs {
+      +aphidPressureWithoutF   = biocontrol[aphidPressureWithoutF]
+      +aphidPressureWithF      = biocontrol[aphidPressureWithF] 
+      +yieldWithoutF           = biocontrol[yieldWithoutF] 
+      +yieldWithF              = biocontrol[yieldWithF]
+      +maxCadaverDensity       = biocontrol[maxCadaverDensity]
+      +maxCadaverDensityCropGS = biocontrol[maxCadaverDensityCropGS]
+      +aphidPressureDifference = biocontrol[aphidPressureDifference]
+      +yieldDifference         = biocontrol[yieldDifference]
+      +cadaverPressure         = withFungus/diagnostics/cadaverDays[value]
+      +percentageCadavers      = withFungus/diagnostics/percentageCadavers[value]
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .maxData = 10
+        .ggplot = "geom_smooth(colour='yellow')"
+      }
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }
+    PageR {
+      .xAxis = random/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolIndices"
+      }
+    }
+  }
+}

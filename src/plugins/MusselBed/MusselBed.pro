@@ -9,7 +9,7 @@ BOXES_PLUGIN_NAME = MusselBed
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS += \
-#    functional_response_g_b.h \
+    MusselBed_documentation.h \
     functional_response_g_b.h \
     mussel.h \
     mussel_growth_rate.h \
@@ -24,7 +24,7 @@ HEADERS += \
     starfish_temp_scale.h
 
 SOURCES += \
-#    functional_response_g_b.cpp \
+    MusselBed_documentation.cpp \
     functional_response_g_b.cpp \
     mussel.cpp \
     mussel_growth_rate.cpp \

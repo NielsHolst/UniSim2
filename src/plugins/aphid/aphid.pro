@@ -9,6 +9,7 @@ BOXES_PLUGIN_NAME = aphid
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
+  aphid_documentation.h \
   aphid_immigration.h \
   aphid_index.h \
   aphid_juvenile_survival.h \
@@ -27,6 +28,7 @@ HEADERS +=  \
   yield.h
 
 SOURCES +=  \
+  aphid_documentation.cpp \
   aphid_immigration.cpp \
   aphid_index.cpp \
   aphid_juvenile_survival.cpp \

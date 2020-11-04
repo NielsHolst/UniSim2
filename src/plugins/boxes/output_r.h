@@ -30,7 +30,7 @@ public:
     void addRCode(QString s);
 private:
     // Input
-    QString begin, destinationFolder, graphicsFormat, textOutputFilePath;
+    QString begin;
     bool popUp, keepPages, keepVariables, useLocalDecimalChar;
     double width, height;
     QVector<QString> end;
@@ -40,11 +40,10 @@ private:
     int numPages;
 
     // Data
-    bool _hasDestination;
     QDir _destinationDir;
     QVector<PageR*> _pages;
     QFile _file;
-    QString _filePathR;
+    QString _filePathR, _filePathTxt;
     QStringList _RCodes;
 
     // Methods
@@ -52,8 +51,8 @@ private:
     void openFile();
     void writeScript();
     void copyToClipboard();
-    void copyFileToDestination(QString filePath);
-    QString makeOutputRCode(bool forClipboard);
+//    void copyFileToDestination(QString filePath);
+    QString makeOutputRCode();
     QString toFigureListElement(PageR *page);
     QStringList endScripts();
 };

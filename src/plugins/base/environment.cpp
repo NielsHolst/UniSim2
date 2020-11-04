@@ -156,16 +156,13 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
     }
 
     file.setFileName(filePath);
-//    if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
-    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
+    if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
+//    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(filePath).context(this);
     return filePath;
 }
 
 QString Environment::outputFilePath(QString extension, int offset) {
-//    QString s="Environment::outputFilePath extension:%1, offset:%2, _latestLoadArg:%3, fileCountervalue():%4";
-//    dialog().information(s.arg(extension).arg(offset).arg(_latestLoadArg).arg(fileCountervalue()));
-
     QString fileName = _latestLoadArg;
 
     char numberFilled[16];
@@ -223,9 +220,10 @@ QString Environment::folderInfo(Folder folder) {
         info = info.arg(folderDir.absolutePath());
     }
     if (!resolvedDir.exists()) {
-        if (folder == Output)
-            info += "\n  '" + resolvedDir.absolutePath() +  "' will be created when needed";
-        else{
+        if (folder == Output) {
+//            info += "\n  '" + resolvedDir.absolutePath() +  "' will be created when needed";
+        }
+        else {
             bool shouldExist = (folder == Input) ||
                                (folder != Input && folderDir.dirName() != PATH_NOT_SET);
             if (shouldExist)
@@ -433,7 +431,6 @@ void Environment::checkInstallation() const {
             // Update the version number
             updateInstallation();
         }
-        dialog().writePrompt();
     }
 }
 

@@ -13,7 +13,7 @@ library(stringr)
 if (!keepPages) graphics.off ()
 if (!keepVariables) {
   del = ls(all=TRUE) 
-  del = del[del!="box_script_folder"]
+  del = del[!(del %in% c("box_script_folder", "output_file_name"))]
   rm(list=del)
 }
 

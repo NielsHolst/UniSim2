@@ -256,7 +256,17 @@ CONVERT_STRING_TO_VECTOR(QTime)
 
 template<> bool convert(QDate)              { ThrowException("Cannot convert Date to Bool"); }
 template<> char convert(QDate)              { ThrowException("Cannot convert Date to Char"); }
-template<> QString convert(QDate source)    { return source.toString("yyyy/M/d"); }
+template<> QString convert(QDate source) {
+    QString s;
+    if (hasAnyYear(source)) {
+        s = "*/%1/%2";
+        s = s.arg(source.month()).arg(source.day());
+    }
+    else {
+        s = source.toString("yyyy/M/d");
+    }
+    return s;
+}
 template<> QDate convert(QDate source)      { return source; }
 template<> QDateTime convert(QDate source)  { return QDateTime(source); }
 template<> QTime convert(QDate)             { ThrowException("Cannot convert Date to Time"); }

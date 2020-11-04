@@ -39,7 +39,7 @@ void help::doExecute() {
 }
 
 void help::processArgument(QString argument) {
-    if (argument=="c" || argument=="C")
+    if (argument=="c" || argument=="C" || argument=="command")
         showCommands();
     else if (argument=="p" || argument=="P")
         showPlugins();
@@ -50,9 +50,22 @@ void help::processArgument(QString argument) {
             showPlugin();
         else if (createBox(argument))
             showClass();
-        else
-            dialog().error("Unknown name\n"
+        else {
+            QStringList pluginNames = MegaFactory::find(argument);
+            int n = pluginNames.size();
+            if (n==0) {
+                dialog().error("Unknown name\n"
                            "Write: 'help ?' to see the possible command formats");
+            }
+            else if (n==1) {
+                dialog().error("Unexpected error constructing " + argument + " in factory " + pluginNames.first());
+            }
+            else {
+                for (int i=0; i<n; ++i)
+                    pluginNames[i] += "::" + argument;
+                dialog().error("Pick a specific class:\n" + pluginNames.join("\n"));
+            }
+        }
 
     }
 }
@@ -148,8 +161,9 @@ void help::showPlugin() {
     // Collect info on classes
     LineInfo info;
     for (QString name : _plugIn->inventory()) {
-        createBox(name);
-        Q_ASSERT(_box);
+        createBox(_plugIn->id() + "::" + name);
+        if (!_box)
+            ThrowException("Cannot create object of class '" + name + "'");
         info.addLine(name, _box->help());
     }
     QStringList all = headerLines + info.combined();

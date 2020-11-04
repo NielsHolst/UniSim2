@@ -9,6 +9,7 @@ BOXES_PLUGIN_NAME = cmbp
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS += \
+    cmbp_documentation.h \
     dev_rate.h \
     emigration.h \
     exponential_peak.h \
@@ -19,6 +20,7 @@ HEADERS += \
     survival_by_density.h
 		
 SOURCES += \
+    cmbp_documentation.cpp \
     dev_rate.cpp \
     emigration.cpp \
     exponential_peak.cpp \

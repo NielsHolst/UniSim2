@@ -19,7 +19,7 @@ SoilTemperature::SoilTemperature(QString name, QObject *parent)
     help("manages soil temperature");
     Input(Tmin).unit("°C").imports("weather[Tmin]").help("Daily minimum temperature");
     Input(Tmax).unit("°C").imports("weather[Tmax]").help("Daily maximum temperature");
-    Input(dayLength).unit("h").imports("calendar[dayLength]").help("Day length");
+    Input(dayLength).unit("h").imports("sun[dayLength]").help("Day length");
 
     Output(value).unit("°C").help("Soil temperature");
 }

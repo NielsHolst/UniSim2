@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QPluginLoader>
 #include <QSettings>
+#include <QStringList>
 #include "box.h"
 #include "construction_step.h"
 #include "dialog.h"
@@ -19,7 +20,7 @@
 
 namespace base {
 
-MegaFactory *MegaFactory::_me = 0;
+MegaFactory *MegaFactory::_me = nullptr;
 QString MegaFactory::_usingPluginName;
 
 MegaFactory::MegaFactory() {
@@ -135,5 +136,13 @@ MegaFactory* MegaFactory::me() {
     }
     return _me;
 }
+
+ QStringList MegaFactory::find(QString className) {
+     QStringList names;
+     auto factories = me()->productIndex.values(className);
+     for (auto factory : factories)
+         names << factory->id();
+     return names;
+ }
 
 } //namespace

@@ -22,6 +22,7 @@ HEADERS += \
     loss_rate_total.h \
     macropore_flow.h \
     organic_carbon_water_partitioning.h \
+    PestTox_documentation.h \
     primary_distribution_air.h \
     primary_distribution_base.h \
     primary_distribution_leaf.h \
@@ -52,6 +53,7 @@ SOURCES += \
     loss_rate_total.cpp \
     macropore_flow.cpp \
     organic_carbon_water_partitioning.cpp \
+    PestTox_documentation.cpp \
     primary_distribution_air.cpp \
     primary_distribution_base.cpp \
     primary_distribution_leaf.cpp \
