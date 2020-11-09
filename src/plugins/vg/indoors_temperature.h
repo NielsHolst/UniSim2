@@ -19,7 +19,7 @@ public:
     void reset() final;
     void update() final;
     double getTemperature() const;
-    void setTemperature(double value);
+    void setTemperature(double newValue);
 protected:
     // Inputs
     double initTemperature, convectiveInflux,

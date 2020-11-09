@@ -22,7 +22,7 @@ private:
     // Inputs
     double roofArea, sideWallsArea, endWallsArea, gablesArea, groundArea;
     // Outputs
-    double value, relativeArea, areaPerGround, screensMaxState;
+    double value, relativeArea, areaPerGround;
 
 };
 } //namespace

@@ -29,7 +29,6 @@ private:
         skyRadiationAbsorbedRate, skySwRadiationAbsorbedRate, skyLwRadiationAbsorbedRate,
         ventilationEnergyRate,
         convectionEnergyRate,
-        airInflux,
         groundArea,
         indoorsAh, outdoorsAh,
         soilEnergyRate,

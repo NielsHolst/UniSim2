@@ -27,7 +27,7 @@ private:
         state;
     QVector<double> airTransmissivities, areas;
     // Outputs
-    double relative, absolute,
+    double relative,
         airTransmissivity,
         relativeArea, fluxLeak, fluxWind, fluxTemp;
 };

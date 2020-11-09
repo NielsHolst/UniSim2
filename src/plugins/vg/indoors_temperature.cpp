@@ -68,8 +68,8 @@ double IndoorsTemperature::getTemperature() const {
     return value;
 }
 
-void IndoorsTemperature::setTemperature(double value) {
-    value = value;
+void IndoorsTemperature::setTemperature(double newValue) {
+    value = newValue;
 }
 
 } //namespace

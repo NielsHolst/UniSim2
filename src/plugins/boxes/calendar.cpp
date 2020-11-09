@@ -19,8 +19,6 @@ using namespace phys_math;
 
 namespace boxes {
 
-constexpr double RAD = PI/180.;
-
 PUBLISH(Calendar)
 
 Calendar::Calendar(QString name, QObject *parent)
