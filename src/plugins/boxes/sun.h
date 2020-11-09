@@ -25,7 +25,7 @@ private:
     // outputs
     QTime sunrise, sunset;
     double dayLength,
-        sinb, azimuth, solarConstant, angot;
+        sinb, solarConstant, angot;
     bool isDay, isNight;
 };
 

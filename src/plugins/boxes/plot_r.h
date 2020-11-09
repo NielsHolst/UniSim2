@@ -27,7 +27,7 @@ public:
     QString toScript();
 private:
     // Inputs
-    bool hide, showDistributions;
+    bool hide;
     QVector<QString> ports;
     QString layout, guideTitle, end, endCode, type, ggplot, transform;
     int maxData, ncol, nrow, iteration, fontSize;

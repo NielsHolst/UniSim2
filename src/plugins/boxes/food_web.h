@@ -21,7 +21,7 @@ private:
     double timeStep;
 
     // Inputs (indirect)
-    int _nPredators, _nPrey, _nParasites, _nHosts;
+    int _nPredators, _nPrey;
     QStringList _predatorNames, _preyNames;
     base::Matrix2D<base::Box*> _foodWeb;
     base::Matrix2D<const double*> _a, _g;

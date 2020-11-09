@@ -20,7 +20,6 @@ using namespace phys_math;
 namespace boxes {
 
 constexpr double RAD = PI/180.;
-constexpr double DEGREES = 1./RAD;
 
 PUBLISH(Calendar)
 

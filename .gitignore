@@ -6,6 +6,7 @@
 *.autosave
 *.DS*
 *.o
+*.rc
 moc_*
 .qmake*
 *.app

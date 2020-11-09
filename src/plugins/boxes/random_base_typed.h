@@ -14,6 +14,7 @@ template <class T> class RandomBaseTyped : public RandomBase
 {
 public: 
     RandomBaseTyped(QString name, QObject *parent);
+    using RandomBase::update;
     void update(base::Port *port);
 
 protected:

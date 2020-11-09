@@ -6,12 +6,13 @@
 # include("$$_PRO_FILE_PWD_/../../boxes_common.pri") 
 #-------------------------------------------------
 
-# Build one or the other version
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.35
+VERSION = 2.3.36
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
+CONFIG += skip_target_version_ext   # Simplify suffix on Mac
+CONFIG += sdk_no_version_check      # Avoid SDK check on Mac
 
 # Set suffix 'd' for debug version
 CONFIG(debug, debug|release) {
@@ -47,7 +48,7 @@ DEFINES += BOOST_ALLOW_DEPRECATED_HEADERS
 # Compiler options to silence warnings when compiling under Mac OS X
 MY_HASH = $$LITERAL_HASH
 NO_PRAGMA_MESSAGES = $$join(MY_HASH, , -Wno-\\, pragma-messages)
-macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override
+macx:QMAKE_CXXFLAGS += $${NO_PRAGMA_MESSAGES} -Wno-inconsistent-missing-override -Wno-unknown-warning-option
 
 # Compiler options to silence warnings when compiling under Win and Linux
 !macx:QMAKE_CXXFLAGS += -Wno-unknown-pragmas
