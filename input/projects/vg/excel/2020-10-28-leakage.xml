@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <DVV_SETUP>
 	<StartTime>01-01-2020</StartTime>
-	<StopTime>31-12-2020</StopTime>
-	<TimeStep>2</TimeStep>
+	<StopTime>31-01-2020</StopTime>
+	<TimeStep>3</TimeStep>
 	<DVVSimName>Simulation performed 15:52 30-01-19</DVVSimName>
 	<DVVSimDesc>hej</DVVSimDesc>
-	<DescriptionLong>NoScreen5</DescriptionLong>
-	<DescriptionShort>0.5</DescriptionShort>
+	<DescriptionLong>leak0.00</DescriptionLong>
+	<DescriptionShort>leak0.00</DescriptionShort>
 	<Longitude>10.5</Longitude>
 	<Latitude>55.5</Latitude>
-	<XMLFileName>C:\Virtual Greenhouse Development\VG Files\NoScreen0.5.xml</XMLFileName>
-	<ExcelFileName>C:\Virtual Greenhouse Development\200917 VG.xlsm</ExcelFileName>
+	<XMLFileName>C:\Virtual Greenhouse Development\VG Files\File1.xml</XMLFileName>
+	<ExcelFileName>C:\Virtual Greenhouse Development\201021 VG.xlsm</ExcelFileName>
 	<XMLVersion>1.5</XMLVersion>
-	<XMLDate>28-09-2020 11:44:37</XMLDate>
+	<XMLDate>28-10-2020 12:50:03</XMLDate>
 	<Weather>
 		<File>../input/sel_dk.txt</File>
 	</Weather>
@@ -33,7 +33,7 @@
 		<Constants>
 			<Parameters>
 				<ParameterName>Length</ParameterName>
-				<Value>100</Value>
+				<Value>125</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>SpanSize</ParameterName>
@@ -41,7 +41,7 @@
 			</Parameters>
 			<Parameters>
 				<ParameterName>NumberOfSpans</ParameterName>
-				<Value>25</Value>
+				<Value>20</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>Orientation</ParameterName>
@@ -53,7 +53,7 @@
 			</Parameters>
 			<Parameters>
 				<ParameterName>TrempelHeight</ParameterName>
-				<Value>6</Value>
+				<Value>4</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>RoofPitch</ParameterName>
@@ -65,11 +65,11 @@
 			</Parameters>
 			<Parameters>
 				<ParameterName>leakage</ParameterName>
-				<Value>0.001</Value>
+				<Value>0</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>HeatPipeConvection</ParameterName>
-				<Value>0.5</Value>
+				<Value>0.84</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>floor-Uindoors</ParameterName>
@@ -81,11 +81,11 @@
 			</Parameters>
 			<Parameters>
 				<ParameterName>floor-heatCapacity</ParameterName>
-				<Value>5000</Value>
+				<Value>10000</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>floor-reflectance</ParameterName>
-				<Value>0.5</Value>
+				<Value>0.1</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>priceHeat</ParameterName>
@@ -325,7 +325,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>PaneMaterial</ParameterName>
-						<Value>Soil</Value>
+						<Value>Concrete</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneTransmission</ParameterName>
@@ -337,15 +337,15 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.2</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwTransmission</ParameterName>
-						<Value>0.9</Value>
+						<Value>0.2</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>PaneLwReflection</ParameterName>
-						<Value>0.1</Value>
+						<Value>0</Value>
 					</Parameters>
 				</Constants>
 			</Pane>
@@ -408,23 +408,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -439,23 +439,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -470,23 +470,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -501,23 +501,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -532,23 +532,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -563,23 +563,23 @@
 					</Parameters>
 					<Parameters>
 						<ParameterName>Transmission</ParameterName>
-						<Value>0.35</Value>
+						<Value>0.15</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionOutwards</ParameterName>
-						<Value>0.65</Value>
+						<Value>0.53</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>ReflectionInwards</ParameterName>
-						<Value>0.02275</Value>
+						<Value>0.00795</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>U</ParameterName>
-						<Value>3.3</Value>
+						<Value>2.6</Value>
 					</Parameters>
 					<Parameters>
 						<ParameterName>Porosity</ParameterName>
-						<Value>0.03</Value>
+						<Value>0.01</Value>
 					</Parameters>
 				</Constants>
 			</Screen>
@@ -1310,7 +1310,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>MaxHeatAddHighRH</ParameterName>
-						<Value>2</Value>
+						<Value>0</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1318,7 +1318,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>MaxHeatAddLowRH</ParameterName>
-						<Value>2</Value>
+						<Value>0</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1326,7 +1326,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>rhMaxBand</ParameterName>
-						<Value>5</Value>
+						<Value>0</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1334,7 +1334,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>rhMinBand</ParameterName>
-						<Value>5</Value>
+						<Value>0</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1470,7 +1470,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>screenEnergyThreshold1</ParameterName>
-						<Value>5</Value>
+						<Value>10</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1542,7 +1542,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>crackScreenHighHumidity</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.001</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1550,7 +1550,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>crackScreenHighTemperature</ParameterName>
-						<Value>0.1</Value>
+						<Value>0.001</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1602,10 +1602,10 @@
 				<VentTemp>5</VentTemp>
 				<MaxRelHmd>90</MaxRelHmd>
 				<MinRelHmd>50</MinRelHmd>
-				<MaxHeatAddHighRH>2</MaxHeatAddHighRH>
-				<MaxHeatAddLowRH>2</MaxHeatAddLowRH>
-				<rhMaxBand>5</rhMaxBand>
-				<rhMinBand>5</rhMinBand>
+				<MaxHeatAddHighRH>0</MaxHeatAddHighRH>
+				<MaxHeatAddLowRH>0</MaxHeatAddLowRH>
+				<rhMaxBand>0</rhMaxBand>
+				<rhMinBand>0</rhMinBand>
 				<CO2Setpoint>900</CO2Setpoint>
 				<CO2Capacity>10</CO2Capacity>
 				<CO2VentilationThreshold>0.1</CO2VentilationThreshold>
@@ -1622,7 +1622,7 @@
 				<screenActive1>no screen</screenActive1>
 				<screenActive2>no screen</screenActive2>
 				<screenActive3>no screen</screenActive3>
-				<screenEnergyThreshold1>5</screenEnergyThreshold1>
+				<screenEnergyThreshold1>10</screenEnergyThreshold1>
 				<screenEnergyThreshold2>5</screenEnergyThreshold2>
 				<screenEnergyThresholdBand>5</screenEnergyThresholdBand>
 				<screenShadeThreshold1>500</screenShadeThreshold1>
@@ -1631,8 +1631,8 @@
 				<screenFixed1>0</screenFixed1>
 				<screenFixed2>0</screenFixed2>
 				<ShadingAgentReduction>0</ShadingAgentReduction>
-				<crackScreenHighHumidity>0.1</crackScreenHighHumidity>
-				<crackScreenHighTemperature>0.1</crackScreenHighTemperature>
+				<crackScreenHighHumidity>0.001</crackScreenHighHumidity>
+				<crackScreenHighTemperature>0.001</crackScreenHighTemperature>
 				<crackScreenHighTemperatureBand>0</crackScreenHighTemperatureBand>
 				<crackVentilation>0.05</crackVentilation>
 				<crackVentilationTemperatureMin>-5</crackVentilationTemperatureMin>

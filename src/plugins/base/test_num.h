@@ -84,7 +84,7 @@ inline void snapToZero(double &n, double feps = 1e-6) {
 inline void assureEqZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
     if (eqZero(n, feps))
         n = 0.;
-    if (n != 0)
+    if (n != 0.)
         ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
 }
 
