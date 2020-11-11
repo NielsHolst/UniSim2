@@ -20,7 +20,7 @@ VapourFluxVentilation::VapourFluxVentilation(QString name, QObject *parent)
 {
     help("models vapour flux by air exchange");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Input(airInflux).imports("indoors/ventilation[relative]", CA);
+    Input(airInflux).imports("indoors/ventilation[flux]", CA);
     Input(averageHeight).imports("geometry[averageHeight]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]",CA);
     Input(outdoorsAh).imports("outdoors[ah]",CA);

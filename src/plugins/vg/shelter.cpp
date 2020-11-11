@@ -9,6 +9,7 @@
 #include <base/publish.h>
 #include <base/vector_op.h>
 #include "shelter.h"
+#include <base/vector_op.h>
 
 using std::max;
 using namespace base;
@@ -21,6 +22,11 @@ Shelter::Shelter(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("models the greenhouse shelter");
+    Input(airTransmissivities).imports("./*/screens/airTransmissivity[value]", CA).
+            help("Air transmissivity through screens for each shelter face");
+    Input(areas).imports("./*/area[value]", CA).
+            help("Area of each shelter face");
+    Output(screensAirTransmissivity).help("Total net transmissivity of screens").unit("[0;1]");
 }
 
 void Shelter::amend() {
@@ -37,5 +43,10 @@ void Shelter::amendShelter(BoxBuilder &builder, QString shelterName) {
     if (!findMaybeOne<Box>("./" + shelterName))
         builder.box("ShelterFace").name(shelterName).endbox();
 }
+
+void Shelter::update() {
+    screensAirTransmissivity = vector_op::weightedAverage(airTransmissivities, areas, this);
+}
+
 } //namespace
 

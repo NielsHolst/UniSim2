@@ -31,7 +31,7 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     Input(timeStep).imports("calendar[timeStepSecs]");
     Input(groundArea).imports("geometry[groundArea]", CA);
     Input(volume).imports("geometry[volume]", CA);
-    Input(airInflux).imports("indoors/ventilation[relative]", CA);
+    Input(airInflux).imports("indoors/ventilation[flux]", CA);
     Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
     Output(value).help("Current air temperature").unit("oC");
     Output(advectiveEnergyFlux).help("Energy exchanged with outdoors by air exchange").unit("W/m2");

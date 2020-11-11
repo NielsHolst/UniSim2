@@ -5,27 +5,25 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef INDOORS_VENTILATION_H
-#define INDOORS_VENTILATION_H
+#ifndef LEAKAGE_VENTILATION_H
+#define LEAKAGE_VENTILATION_H
 
 #include <base/box.h>
 
 namespace vg {
 
-class IndoorsVentilation : public base::Box
+class LeakageVentilation : public base::Box
 {
 public:
-    IndoorsVentilation(QString name, QObject *parent);
+    LeakageVentilation(QString name, QObject *parent);
     void reset();
     void update();
-
 private:
     // Inputs
-    double fluxLeak, fluxVent;
-    // Outputs
+    double leakage, windSpeed, screensAirTransmissivity;
+    // Output
     double flux;
 };
-
 } //namespace
 
 

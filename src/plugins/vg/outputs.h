@@ -94,6 +94,7 @@ private:
         totalGrowthLightEnergy,
         totalParAbsorbed,
         totalCo2;
+    int thermostateUpdates;
     QString thermostatAction, thermostatSolution;
     void lookupPort(QString path);
 };

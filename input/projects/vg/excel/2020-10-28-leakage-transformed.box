@@ -6,9 +6,12 @@ Simulation greenhouse {
     .min = 0
     .max = 0.5
   }
+  // Box leakage {
+    // +value = 0.1
+  // }
   SimulationPeriod period {
     .beginDate = 2020/1/1
-    .endDate = 2020/1/10
+    .endDate = 2020/12/31
     .timeStep = 3
     .timeUnit = "m"
   }
@@ -331,7 +334,7 @@ Simulation greenhouse {
         .reverseOrder = TRUE
         Box default {
           +flagIsUp = TRUE
-          +signal = 0.0
+          +signal = 10.0 //***
         }
       }
       PrioritySignal rhMin {
@@ -360,7 +363,7 @@ Simulation greenhouse {
         .reverseOrder = TRUE
         Box default {
           +flagIsUp = TRUE
-          +signal = 0.05
+          +signal = 1.0  // ***
         }
       }
       PrioritySignal crackVentilationTemperatureMin {
@@ -666,14 +669,14 @@ Simulation greenhouse {
         +value = setpoints[screenFixed1]
       }
     }
-    ProportionalSignal co2Capacity { //amended
-      .input = actuators/ventilation[value]
-      .threshold = setpoints[co2VentilationThreshold]
-      .thresholdBand = setpoints[co2VentilationBand]
-      .minSignal = 0.0
-      .maxSignal = setpoints[co2Capacity]
-      .increasingSignal = FALSE
-    }
+    // ProportionalSignal co2Capacity { //amended
+      // .input = actuators/ventilation[value]
+      // .threshold = setpoints[co2VentilationThreshold]
+      // .thresholdBand = setpoints[co2VentilationBand]
+      // .minSignal = 0.0
+      // .maxSignal = setpoints[co2Capacity]
+      // .increasingSignal = FALSE
+    // }
     Box growthLights { //amended
       GrowthLightController growthLight1 { //amended
         .setting = setpoints[growthLightSetting1]
@@ -800,7 +803,10 @@ Simulation greenhouse {
     }
     Box indoors {
       vg::IndoorsVentilation ventilation {
-        .leakage = leakage[value]
+        .fluxLeak = ./leakage[flux]
+        vg::LeakageVentilation leakage{
+          .leakage = leakage[value]
+        }
       }
       vg::IndoorsTemperature temperature {
       }
@@ -851,11 +857,11 @@ Simulation greenhouse {
   vg::Budget budget {
   }
   OutputR output {
-    .end = "2020-10-28-leakage.R"
+    // .end = "2020-10-28-leakage.R"
     vg::Outputs p {
     }
     OutputText text {
-      .ports = (leakage[value] leakage[counter] leakage[offset] output/p[*]|end)
+      .ports = (calendar[dateTime] output/p[*])
       .skipInitialRows = 480
       .useLocalDecimalChar = TRUE
     }

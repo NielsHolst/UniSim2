@@ -60,16 +60,17 @@ void Controllers::amend() {
             endbox().
         endbox();
 
-    if (!findMaybeOne<Box>("./co2Capacity"))
-        builder.
-        box("ProportionalSignal").name("co2Capacity").
-            port("input").imports("actuators/ventilation[value]").
-            port("threshold").imports("setpoints[co2VentilationThreshold]").
-            port("thresholdBand").imports("setpoints[co2VentilationBand]").
-            port("maxSignal").imports("setpoints[co2Capacity]").
-            port("minSignal").equals(0).
-            port("increasingSignal").equals(false).
-        endbox();
+//  Introduce this again later. Maybe use the signal to modulate the desiredValue for the co2Injection PID controller
+//    if (!findMaybeOne<Box>("./co2Capacity"))
+//        builder.
+//        box("ProportionalSignal").name("co2Capacity").
+//            port("input").imports("actuators/ventilation[value]").
+//            port("threshold").imports("setpoints[co2VentilationThreshold]").
+//            port("thresholdBand").imports("setpoints[co2VentilationBand]").
+//            port("maxSignal").imports("setpoints[co2Capacity]").
+//            port("minSignal").equals(0).
+//            port("increasingSignal").equals(false).
+//        endbox();
 
     if (!findMaybeOne<Box>("./growthLights"))
         builder.

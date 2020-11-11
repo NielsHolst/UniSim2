@@ -53,9 +53,9 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(spScreenCrack).imports("setpoints/screenCrack[value]");
     Output(spCo2).imports("setpoints[co2Setpoint]");
     Output(actHeatingPower).imports("actuators/heating[energyFluxTotal]");
-    Output(actVentilation).imports("actuators/ventilation[value]");
-    Output(airTransmissivityScreens).imports("indoors/ventilation[airTransmissivity]");
-    Output(airFluxTotal).imports("indoors/ventilation[relative]");
+    Output(actVentilation).imports("actuators/ventilation[relative]");
+    Output(airTransmissivityScreens).imports("shelter[screensAirTransmissivity]");
+    Output(airFluxTotal).imports("indoors/ventilation[flux]");
     Output(airFluxPower).imports("indoors/temperature[advectiveEnergyFlux]");
     Output(actLight1).importsMaybe("actuators/growthLights/growthLight1[on]");
     Output(actLight2).importsMaybe("actuators/growthLights/growthLight2[on]");
@@ -91,8 +91,9 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(totalGrowthLightEnergy).imports("budget[growthLightsEnergy]");
     Output(totalParAbsorbed).imports("budget[parAbsorbedTotal]");
     Output(totalCo2).imports("budget[co2Total]");
-    // Output(thermostatAction).imports("energyBudgetOptimiser[action]");
-    // Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
+    Output(thermostateUpdates).imports("energyBudgetOptimiser[numUpdates]");
+    Output(thermostatAction).imports("energyBudgetOptimiser[action]");
+    Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
 }
 
 void Outputs::initialize() {

@@ -18,11 +18,17 @@ public:
     ActuatorVentilation(QString name, QObject *parent);
     void reset();
     void update();
-    double getOpening() const;
-    void setOpening(double opening);
+    double getFlux() const;
+    void setFlux(double newFlux);
 private:
     // Inputs
-    double value, minValue, maxValue;
+    double minFlux, maxFlux,
+        windCoef, temperatureCoef,
+        windSpeed, outdoorsTemperature, indoorsTemperature,
+        effectiveVentArea, groundArea,
+        screensAirTransmissivity;
+    // Output
+    double flux, relative;
 };
 } //namespace
 

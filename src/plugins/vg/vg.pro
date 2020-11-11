@@ -58,6 +58,7 @@ HEADERS +=  \
     leaf_temperature.h \
     leaf_transpiration.h \
     leaf_wind_speed.h \
+    leakage_ventilation.h \
     outdoors.h \
     outputs.h \
     pid_controller.h \
@@ -147,6 +148,7 @@ SOURCES += \
     leaf_temperature.cpp \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
+    leakage_ventilation.cpp \
     outdoors.cpp \
     outputs.cpp \
     pid_controller.cpp \

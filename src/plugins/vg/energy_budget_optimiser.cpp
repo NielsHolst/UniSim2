@@ -34,16 +34,16 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
 {
     help("optimises energy budget control");
     Input(deltaPipeTemperature).equals(4.).unit("K").help("Exploratory change in pipe temperature");
-    Input(deltaVentilation).equals(0.1).unit("K").help("Exploratory change in ventilation opening");
+    Input(deltaVentilation).equals(0.1).unit("/h").help("Exploratory change in ventilation flux");
     Input(setPointPrecision).equals(0.1).unit("K").help("Precision of setpoints");
     Input(setpointHeating).imports("setpoints/heatingTemperature[value]", CA);
     Input(setpointVentilation).imports("setpoints/ventilationTemperature[value]", CA);
     Input(pipeTemperature).imports("actuators/heating[temperature]", CA);
     Input(pipeTemperatureMin).imports("actuators/heating[minTemperature]", CA);
     Input(pipeTemperatureMax).imports("actuators/heating[maxTemperature]", CA);
-    Input(ventilation).imports("actuators/ventilation[value]", CA);
-    Input(ventilationMin).imports("actuators/ventilation[minValue]", CA);
-    Input(ventilationMax).imports("actuators/ventilation[maxValue]", CA);
+    Input(ventilation).imports("actuators/ventilation[flux]", CA);
+    Input(ventilationMin).imports("actuators/ventilation[minFlux]", CA);
+    Input(ventilationMax).imports("actuators/ventilation[maxFlux]", CA);
     Input(precision).equals(1.0).help("Precision of numerical integration");
     Output(action).help("Action taken").unit("text");
     Output(solution).help("Solution quality").unit("text");
@@ -63,7 +63,7 @@ void EnergyBudgetOptimiser::initialize() {
 void EnergyBudgetOptimiser::update() {
     _currentIndoorsTemperature = indoorsTemperature->getTemperature();
     _currentHeat = actuatorHeatPipes->getTemperature();
-    _currentVentilation = actuatorVentilation->getOpening();
+    _currentVentilation = actuatorVentilation->getFlux();
     numUpdates = 1;
 
     if (_currentIndoorsTemperature > setpointHeating + setPointPrecision)
@@ -79,7 +79,7 @@ void EnergyBudgetOptimiser::update() {
         carryOn();
 
     changePipeTemperature = actuatorHeatPipes->getTemperature() - _currentHeat;
-    changeVentilation     = actuatorVentilation->getOpening() - _currentVentilation;
+    changeVentilation     = actuatorVentilation->getFlux() - _currentVentilation;
 }
 
 inline double interpolate(double x1, double y1, double x2, double y2, double x) {
@@ -121,7 +121,7 @@ void EnergyBudgetOptimiser::tooHot() {
                indoorsTemperature1 = _currentIndoorsTemperature,
                ventilation2 = std::min(ventilation + deltaVentilation, 1.),
                indoorsTemperature2;
-        actuatorVentilation->setOpening(ventilation2);
+        actuatorVentilation->setFlux(ventilation2);
         updateDependents();
         indoorsTemperature2 = indoorsTemperature->getTemperature();
 
@@ -130,7 +130,7 @@ void EnergyBudgetOptimiser::tooHot() {
             double ventilation3 = interpolate(indoorsTemperature1, ventilation1,
                                               indoorsTemperature2, ventilation2,
                                               setpointHeating);
-            actuatorVentilation->setOpening(ventilation3);
+            actuatorVentilation->setFlux(ventilation3);
             updateDependents();
             solution = "Interpolated";
         }
@@ -153,7 +153,7 @@ void EnergyBudgetOptimiser::tooCold() {
                indoorsTemperature1 = _currentIndoorsTemperature,
                ventilation2 = std::max(ventilation - deltaVentilation, ventilationMin),
                indoorsTemperature2;
-        actuatorVentilation->setOpening(ventilation2);
+        actuatorVentilation->setFlux(ventilation2);
         updateDependents();
         indoorsTemperature2 = indoorsTemperature->getTemperature();
 
@@ -162,7 +162,7 @@ void EnergyBudgetOptimiser::tooCold() {
             double ventilation3 = interpolate(indoorsTemperature1, ventilation1,
                                               indoorsTemperature2, ventilation2,
                                               setpointVentilation);
-            actuatorVentilation->setOpening(ventilation3);
+            actuatorVentilation->setFlux(ventilation3);
             updateDependents();
             solution = "Interpolated";
         }

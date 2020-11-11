@@ -5,12 +5,13 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/phys_math.h>
 #include <base/publish.h>
-#include <base/test_num.h>
 #include <base/vector_op.h>
 #include "actuator_ventilation.h"
 
 using namespace base;
+using namespace phys_math;
 using namespace vector_op;
 
 namespace vg {
@@ -20,31 +21,43 @@ PUBLISH(ActuatorVentilation)
 ActuatorVentilation::ActuatorVentilation(QString name, QObject *parent)
 	: Box(name, parent)
 {
-    help("sets current vent opening");
-    Input(value).help("Current opening of vents").unit("[0;1]");
-    Input(minValue).imports("setpoints/crackVentilation[value]", CA).help("Minimum opening of vents").unit("[0;1]");
-    Input(maxValue).equals(1.).help("Maximum opening of vents").unit("[0;1]");
+    help("sets air flux through vents");
+    Input(minFlux).imports("setpoints/crackVentilation[value]", CA).help("Minimum air flux through vents").unit("/h");
+    Input(windCoef).equals(50.).help("Proportionality of air flux with windspeed").unit("/h/(m/s)");
+    Input(temperatureCoef).equals(14.).help("Proportionality of air flux with temperature diffence").unit("/h/K");
+    Input(windSpeed).imports("outdoors[windSpeed]", CA);
+    Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
+    Input(indoorsTemperature).imports("indoors/temperature[value]", CA);
+    Input(effectiveVentArea).imports("shelter/*/vent[effectiveArea]").transform(Sum);
+    Input(groundArea).imports("construction/geometry[groundArea]", CA);
+    Input(screensAirTransmissivity).imports("shelter[screensAirTransmissivity]", CA);
+    Output(flux).help("Current air flux through vents").unit("/h");
+    Output(maxFlux).help("Maximum air flux through vents").unit("/h");
+    Output(relative).help("Flux as proportion of max. at fully open vents").unit("[0;1]");
 }
 
 void ActuatorVentilation::reset() {
-    value = minValue;
+    flux = minFlux;
 }
 
 void ActuatorVentilation::update() {
-    if (TestNum::ltZero(minValue) || TestNum::gt(minValue, 1.))
-        ThrowException("Minimum ventilation opening must be inside [0;1]").value(minValue).context(this);
-    if (value < minValue)
-        value = minValue;
-    else if (value > maxValue)
-        value = maxValue;
+    // Compute the max. possible ventilation flux
+    double ventEffect  = screensAirTransmissivity*effectiveVentArea/groundArea,
+           maxFluxWind = ventEffect*windCoef*windSpeed,
+           maxFluxTemp = ventEffect*temperatureCoef*std::max(indoorsTemperature-outdoorsTemperature, 0.);
+    maxFlux = sqrt(p2(maxFluxWind) + p2(maxFluxTemp));
+    // Set flux within bounds
+    flux = minmax(minFlux, flux, maxFlux);
+    relative = (maxFlux < 0.001) ? 0. : flux/maxFlux;
 }
 
-double ActuatorVentilation::getOpening() const {
-    return value;
+double ActuatorVentilation::getFlux() const {
+    return flux;
 }
 
-void ActuatorVentilation::setOpening(double opening) {
-    value = std::max(opening, minValue);
+void ActuatorVentilation::setFlux(double newFlux) {
+    flux = newFlux;
+    update();
 }
 
 } //namespace
