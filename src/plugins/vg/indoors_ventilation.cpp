@@ -20,7 +20,7 @@ IndoorsVentilation::IndoorsVentilation(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes total air flux from outdoors to indoors");
-    Input(fluxLeak).imports("leakage[flux]", CA);
+    Input(fluxLeak).imports("./leakage[flux]", CA);
     Input(fluxVent).imports("actuators/ventilation[flux]", CA);
     Output(flux).help("Total air flux").unit("/h");
 }

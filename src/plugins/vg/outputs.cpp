@@ -18,6 +18,7 @@ Outputs::Outputs(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("defines all model outputs");
+    Input(onlyNumbers).equals(true).unit("bool").help("Include only number outputs?");
     Output(skyT).imports("outdoors[skyTemperature]");
     Output(outdoorsT).imports("outdoors[temperature]");
     Output(outdoorsRh).imports("outdoors[rh]");
@@ -69,6 +70,7 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(actScreen1).importsMaybe("actuators/screens/layer1[value]");
     Output(actScreen2).importsMaybe("actuators/screens/layer2[value]");
     Output(actScreen3).importsMaybe("actuators/screens/layer3[value]");
+    Output(actScreen1HeatCapacity).importsMaybe("energyBudget/screen1[heatCapacity]");
     Output(actCo2).imports("actuators/co2Injection[value]");
     Output(vapourFluxTranspiration).imports("waterBudget/transpiration[vapourFlux]");
     Output(vapourFluxCondensationCrop).imports("waterBudget/condensationCrop[vapourFlux]");
@@ -91,12 +93,14 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(totalGrowthLightEnergy).imports("budget[growthLightsEnergy]");
     Output(totalParAbsorbed).imports("budget[parAbsorbedTotal]");
     Output(totalCo2).imports("budget[co2Total]");
-    Output(thermostateUpdates).imports("energyBudgetOptimiser[numUpdates]");
-    Output(thermostatAction).imports("energyBudgetOptimiser[action]");
-    Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
 }
 
-void Outputs::initialize() {
+void Outputs::amend() {
+    if (!onlyNumbers) {
+        Output(thermostatState).imports("energyBudgetOptimiser[state]");
+        Output(thermostatAction).imports("energyBudgetOptimiser[action]");
+        Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
+    }
 }
 
 

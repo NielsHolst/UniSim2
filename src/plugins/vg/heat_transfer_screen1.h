@@ -7,18 +7,14 @@
 */
 #ifndef HEAT_TRANSFER_SCREEN1_H
 #define HEAT_TRANSFER_SCREEN1_H
-#include "heat_transfer_shelter.h"
+#include "heat_transfer_screen_base.h"
 
 namespace vg {
 
-class HeatTransferScreen1 : public HeatTransferShelter
+class HeatTransferScreen1 : public HeatTransferScreenBase
 {
 public:
     HeatTransferScreen1(QString name, QObject *parent);
-    void update();
-private:
-    // Inputs
-    bool keepTemperatureConstant;
 };
 
 } //namespace

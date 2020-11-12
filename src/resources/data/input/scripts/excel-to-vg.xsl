@@ -1362,17 +1362,19 @@
     </box>
     <box name="indoors">
       <box class="vg::IndoorsVentilation" name="ventilation">
-        <port name="leakage">
-          <xsl:attribute name="externalName">
-            <xsl:value-of select="$leakageName"/>
-          </xsl:attribute>
-          <xsl:attribute name="source">
-            <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
-          </xsl:attribute>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$leakageValue"/>
-          </xsl:attribute>
-        </port>
+        <box class="vg::LeakageVentilation" name="leakage">
+          <port name="leakage">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$leakageName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($leakageSrc)"/>
+            </xsl:attribute>
+            <xsl:attribute name="value">
+              <xsl:value-of select="$leakageValue"/>
+            </xsl:attribute>
+          </port>
+        </box>
       </box>
       <box class="vg::IndoorsTemperature" name="temperature">
       </box>

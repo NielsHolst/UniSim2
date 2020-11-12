@@ -63,8 +63,11 @@ void Screen::update() {
 void Screen::updateByState(double state) {
     if (state<0. || state>1.)
         ThrowException("Screen state out of [0;1] bounds").value(state).context(this);
+    // Prevent numeric precision problems
+    if (state < 1e-3)
+        state = 0.;
+    // Adjust screen area by state
     area = maxArea*state;
-//    heatCapacity = specificHeatCapacity*area;
     updateAbsorptivities();
     ADJUST_BY_STATE(swReflectivityTop);
     ADJUST_BY_STATE(swReflectivityBottom);

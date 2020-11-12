@@ -33,12 +33,14 @@ HEADERS +=  \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
+    heat_sink.h \
     heat_transfer_layer_base.h \
     heat_transfer_layer_parameters.h \
     heat_transfer_cover.h \
     heat_transfer_crop.h \
     heat_transfer_floor.h \
     heat_transfer_pipe.h \
+    heat_transfer_screen_base.h \
     heat_transfer_screen1.h \
     heat_transfer_screen2.h \
     heat_transfer_screen3.h \
@@ -123,12 +125,14 @@ SOURCES += \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
+    heat_sink.cpp \
     heat_transfer_layer_base.cpp \
     heat_transfer_layer_parameters.cpp \
     heat_transfer_cover.cpp \
     heat_transfer_crop.cpp \
     heat_transfer_floor.cpp \
     heat_transfer_pipe.cpp \
+    heat_transfer_screen_base.cpp \
     heat_transfer_screen1.cpp \
     heat_transfer_screen2.cpp \
     heat_transfer_screen3.cpp \

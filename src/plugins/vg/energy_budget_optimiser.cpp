@@ -34,7 +34,7 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
 {
     help("optimises energy budget control");
     Input(deltaPipeTemperature).equals(4.).unit("K").help("Exploratory change in pipe temperature");
-    Input(deltaVentilation).equals(0.1).unit("/h").help("Exploratory change in ventilation flux");
+    Input(deltaVentilation).equals(0.3).unit("/h").help("Exploratory change in ventilation flux");
     Input(setPointPrecision).equals(0.1).unit("K").help("Precision of setpoints");
     Input(setpointHeating).imports("setpoints/heatingTemperature[value]", CA);
     Input(setpointVentilation).imports("setpoints/ventilationTemperature[value]", CA);
@@ -45,6 +45,7 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
     Input(ventilationMin).imports("actuators/ventilation[minFlux]", CA);
     Input(ventilationMax).imports("actuators/ventilation[maxFlux]", CA);
     Input(precision).equals(1.0).help("Precision of numerical integration");
+    Output(state).help("State of greenhouse cliamte").unit("text");
     Output(action).help("Action taken").unit("text");
     Output(solution).help("Solution quality").unit("text");
     Output(changePipeTemperature).help("Change in pipe temperature").unit("K");
@@ -61,23 +62,43 @@ void EnergyBudgetOptimiser::initialize() {
 
 
 void EnergyBudgetOptimiser::update() {
+    // Get status of greenhouse climate
     _currentIndoorsTemperature = indoorsTemperature->getTemperature();
     _currentHeat = actuatorHeatPipes->getTemperature();
     _currentVentilation = actuatorVentilation->getFlux();
+    // Diagnose state
+    State state;
+    if (fabs(_currentIndoorsTemperature - setpointVentilation) < setPointPrecision)
+        state = OnSetpointVentilation;
+    else if (fabs(_currentIndoorsTemperature - setpointHeating) < setPointPrecision)
+        state = OnSetpointHeating;
+    else if (_currentIndoorsTemperature > setpointVentilation)
+        state = GreenhouseTooHot;
+    else if (_currentIndoorsTemperature < setpointHeating)
+        state = GreenhouseTooCold;
+    else if (_currentHeat > pipeTemperatureMin)
+        state = NeedlessHeating;
+    else if (_currentVentilation > ventilationMin)
+        state = NeedlessCooling;
+    else state = CarryOn;
+    // Regulate state
     numUpdates = 1;
-
-    if (_currentIndoorsTemperature > setpointHeating + setPointPrecision)
+    switch (state) {
+    case GreenhouseTooHot:
+    case NeedlessHeating:
         tooHot();
-    else if (_currentIndoorsTemperature < setpointHeating - setPointPrecision) {
-        if (eq(_currentHeat, pipeTemperatureMax) &&
-            (eqZero(_currentVentilation) || eq(_currentVentilation,ventilationMin)))
-            carryOn(); // Pipes are at maximum T and ventilation is at minimum opening: nothing to do
-        else
-            tooCold();
+        break;
+    case GreenhouseTooCold:
+    case NeedlessCooling:
+        tooCold();
+        break;
+    case OnSetpointVentilation:
+    case OnSetpointHeating:
+    case CarryOn:
+        break;
     }
-    else
-        carryOn();
-
+    EnergyBudgetOptimiser::state = toString(state);
+    // Register change in greenhouse climate
     changePipeTemperature = actuatorHeatPipes->getTemperature() - _currentHeat;
     changeVentilation     = actuatorVentilation->getFlux() - _currentVentilation;
 }
@@ -119,7 +140,7 @@ void EnergyBudgetOptimiser::tooHot() {
         action = "HotIncrVent";
         double ventilation1 = ventilation,
                indoorsTemperature1 = _currentIndoorsTemperature,
-               ventilation2 = std::min(ventilation + deltaVentilation, 1.),
+               ventilation2 = std::min(ventilation + deltaVentilation, ventilationMax),
                indoorsTemperature2;
         actuatorVentilation->setFlux(ventilation2);
         updateDependents();
@@ -218,6 +239,22 @@ void EnergyBudgetOptimiser::updateDependents() {
 void EnergyBudgetOptimiser::carryOn() {
     action = "Keep";
     solution = "WithinBounds";
+}
+
+#define STR(x) case x: s = #x; break
+
+QString EnergyBudgetOptimiser::toString(State state) {
+    QString s;
+    switch(state) {
+        STR(GreenhouseTooHot);
+        STR(GreenhouseTooCold);
+        STR(NeedlessHeating);
+        STR(NeedlessCooling);
+        STR(OnSetpointVentilation);
+        STR(OnSetpointHeating);
+        STR(CarryOn);
+    }
+    return s;
 }
 
 } //namespace

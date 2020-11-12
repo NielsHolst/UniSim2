@@ -5,20 +5,22 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/publish.h>
-#include <base/vector_op.h>
-#include "heat_transfer_screen2.h"
-
-using namespace base;
+#ifndef HEAT_TRANSFER_SCREEN_BASE_H
+#define HEAT_TRANSFER_SCREEN_BASE_H
+#include "heat_transfer_shelter.h"
 
 namespace vg {
 
-PUBLISH(HeatTransferScreen2)
-
-HeatTransferScreen2::HeatTransferScreen2(QString name, QObject *parent)
-    : HeatTransferScreenBase(name, parent, "shelter/*/screens/layer2")
+class HeatTransferScreenBase : public HeatTransferShelter
 {
-}
+public:
+    HeatTransferScreenBase(QString name, QObject *parent, QString path);
+    void update() final;
+private:
+    double coverArea;
+};
 
 } //namespace
 
+
+#endif

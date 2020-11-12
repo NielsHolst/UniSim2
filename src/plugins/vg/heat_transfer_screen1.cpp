@@ -16,24 +16,8 @@ namespace vg {
 PUBLISH(HeatTransferScreen1)
 
 HeatTransferScreen1::HeatTransferScreen1(QString name, QObject *parent)
-    : HeatTransferShelter(name, parent, "shelter/*/screens/layer1", "Net")
+    : HeatTransferScreenBase(name, parent, "shelter/*/screens/layer1")
 {
-    help("holds the radiative parameters of screen layer 1 averaged for all shelter faces");
-    Input(keepTemperatureConstant).imports("energyBudget[keepConstantScreenTemperature]", CA);
-    port("condensationRate")->imports("waterBudget/condensationScreens/screen1[vapourFlux]");
-    port("maxTemperatureRateOfChange")->equals(0.25);
-}
-
-void HeatTransferScreen1::update() {
-    updateArea();
-    updateHeatCapacity();
-    updateRadiativeProperties();
-    updateLwEmission();
-    updateConvectiveProperties();
-    if (keepTemperatureConstant || ++tick_ < 10)
-        temperature = temperatureTop = temperatureBottom = indoorsTemperature;
-    else
-        updateTemperature();
 }
 
 } //namespace

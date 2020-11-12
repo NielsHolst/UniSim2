@@ -23,7 +23,7 @@ Geometry::Geometry(QString name, QObject *parent)
 {
     help("defines the greenhouse geometry");
     Input(orientation).equals(90.).help("Compass direction of greenhouse long axis").unit("[0;360]");
-    Input(numSpans).equals(1).help("Number of spans").unit("-");;
+    Input(numSpans).equals(1).help("Number of spans").unit("-");
     Input(spanWidth).equals(40.).help("Width of a span").unit("m");
     Input(length).equals(100.).help("Length of side wall").unit("m");
     Input(height).equals(2.5).help("Wall height").unit("m");

@@ -18,10 +18,10 @@
 
 using namespace base;
 
-//#define LOG(x) dialog().information(x);
+//#define LOG(x) if (step==81439) dialog().information(x);
 #define LOG(x)
 
-//#define LOG1(x) dialog().information(QString("EnergyBudget ") + #x + " " + QString::number(x));
+//#define LOG1(x) if (step==81439) dialog().information(QString("EnergyBudget ") + #x + " " + QString::number(x));
 #define LOG1(x)
 
 namespace vg {
@@ -116,6 +116,7 @@ EnergyBudget::EnergyBudget(QString name, QObject *parent)
     Input(soilTemperature).imports("outdoors[soilTemperature]");
     Input(timeStep).imports("calendar[timeStepSecs]");
     Input(precision).equals(1e-3).help("Precision of numerical integration");
+    Input(step).imports("/*[step]").help("For debugging");
 //    Input(precision).imports("../*[precision]").help("Precision of numerical integration");
     Output(Uinside).help("Total inside U-value (cover inside + screens)").unit("W/K/m2 ground");
     Output(Uoutside).help("Total outside U-value (cover outside").unit("W/K/m2 ground");

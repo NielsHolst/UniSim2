@@ -44,6 +44,7 @@ private:
         pipeEnergyFluxConvection,
         precision;
     bool withCrop, keepConstantScreenTemperature;
+    int step;
     // Outputs
     double Uinside, Uoutside;
     mutable double cropParFluxFromAbove, cropParFluxFromBelow;

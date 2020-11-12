@@ -36,7 +36,8 @@ private:
         ventilation, ventilationMin, ventilationMax,
         precision;
     // Outputs
-    QString action, solution;
+    enum State{GreenhouseTooHot, GreenhouseTooCold, NeedlessHeating, NeedlessCooling, OnSetpointVentilation, OnSetpointHeating, CarryOn};
+    QString state, action, solution;
     double changePipeTemperature, changeVentilation;
     int numUpdates;
     // Data
@@ -50,6 +51,7 @@ private:
     void tooCold();
     void carryOn();
     void updateDependents();
+    QString toString(State state);
 };
 
 } //namespace

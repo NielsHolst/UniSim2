@@ -5,20 +5,30 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/publish.h>
-#include <base/vector_op.h>
-#include "heat_transfer_screen2.h"
+#ifndef HEAT_SINK_H
+#define HEAT_SINK_H
+#include <base/box.h>
 
-using namespace base;
 
 namespace vg {
 
-PUBLISH(HeatTransferScreen2)
+class IndoorsTemperature;
 
-HeatTransferScreen2::HeatTransferScreen2(QString name, QObject *parent)
-    : HeatTransferScreenBase(name, parent, "shelter/*/screens/layer2")
+class HeatSink : public base::Box
 {
-}
+public: 
+    HeatSink(QString name, QObject *parent);
+    void initialize();
+    void reset();
+    void update();
+private:
+    // Inputs
+    double indoorsTemperature, setpointVentilation, averageHeight, dt;
+    // Outputs
+    double value;
+    // Data
+    IndoorsTemperature *indoorsTemperatureBox;
+};
 
 } //namespace
-
+#endif

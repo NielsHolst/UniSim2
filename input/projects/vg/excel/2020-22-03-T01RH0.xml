@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <DVV_SETUP>
 	<StartTime>01-01-2020</StartTime>
-	<StopTime>31-01-2020</StopTime>
+	<StopTime>31-12-2020</StopTime>
 	<TimeStep>3</TimeStep>
 	<DVVSimName>Simulation performed 15:52 30-01-19</DVVSimName>
 	<DVVSimDesc>hej</DVVSimDesc>
-	<DescriptionLong>leak0.00</DescriptionLong>
-	<DescriptionShort>leak0.00</DescriptionShort>
+	<DescriptionLong>Tempa 01RH0</DescriptionLong>
+	<DescriptionShort>T01RH0</DescriptionShort>
 	<Longitude>10.5</Longitude>
 	<Latitude>55.5</Latitude>
-	<XMLFileName>C:\Virtual Greenhouse Development\VG Files\File1.xml</XMLFileName>
-	<ExcelFileName>C:\Virtual Greenhouse Development\201021 VG.xlsm</ExcelFileName>
+	<XMLFileName>C:\Virtual Greenhouse Development\VG Files\T01RH0.xml</XMLFileName>
+	<ExcelFileName>C:\Virtual Greenhouse Development\201028 VG.xlsm</ExcelFileName>
 	<XMLVersion>1.5</XMLVersion>
-	<XMLDate>28-10-2020 12:50:03</XMLDate>
+	<XMLDate>03-11-2020 07:49:30</XMLDate>
 	<Weather>
 		<File>../input/sel_dk.txt</File>
 	</Weather>
@@ -61,11 +61,11 @@
 			</Parameters>
 			<Parameters>
 				<ParameterName>UwindSlope</ParameterName>
-				<Value>1</Value>
+				<Value>1.2</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>leakage</ParameterName>
-				<Value>0</Value>
+				<Value>0.1</Value>
 			</Parameters>
 			<Parameters>
 				<ParameterName>HeatPipeConvection</ParameterName>
@@ -1278,7 +1278,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>HeatingTemp</ParameterName>
-						<Value>20</Value>
+						<Value>12</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1286,7 +1286,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>VentTemp</ParameterName>
-						<Value>5</Value>
+						<Value>24</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1446,7 +1446,7 @@
 				<Constants>
 					<Parameters>
 						<ParameterName>screenActive1</ParameterName>
-						<Value></Value>
+						<Value>shade1+energy1</Value>
 					</Parameters>
 				</Constants>
 			</Setpoint>
@@ -1598,8 +1598,8 @@
 			<From_date>01-01-2020</From_date>
 			<HourPeriod1>
 				<FromTime>0</FromTime>
-				<HeatingTemp>20</HeatingTemp>
-				<VentTemp>5</VentTemp>
+				<HeatingTemp>12</HeatingTemp>
+				<VentTemp>24</VentTemp>
 				<MaxRelHmd>90</MaxRelHmd>
 				<MinRelHmd>50</MinRelHmd>
 				<MaxHeatAddHighRH>0</MaxHeatAddHighRH>
@@ -1619,7 +1619,7 @@
 				<AssLightOn3>40</AssLightOn3>
 				<AssLightOff3>600</AssLightOff3>
 				<AssLightActive3>0</AssLightActive3>
-				<screenActive1>no screen</screenActive1>
+				<screenActive1>shade1+energy1</screenActive1>
 				<screenActive2>no screen</screenActive2>
 				<screenActive3>no screen</screenActive3>
 				<screenEnergyThreshold1>10</screenEnergyThreshold1>

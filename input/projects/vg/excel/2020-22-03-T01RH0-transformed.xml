@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box xmlns:ecolmod="http://www.ecolmod.org" class="Simulation" name="greenhouse">
+	<!-- <port name="steps" value="81439"/> -->
 	<port name="steps" ref="./period[steps]"/>
 	<port name="unattended" value="TRUE"/>
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-01-2020"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2020"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="3"/>
@@ -49,7 +50,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -88,7 +89,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -127,7 +128,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -160,7 +161,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -193,7 +194,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -226,7 +227,7 @@
 					<port name="lwTransmissivityTop" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="lwTransmissivityBottom" externalName="PaneLwTransmission" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="0.9"/>
 					<port name="UwindMinimum" externalName="PaneUValue" source="/DVV_SETUP/Greenhouse/Panes/Pane/Constants/Parameters/Value" value="6.5"/>
-					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1"/>
+					<port name="UwindSlope" externalName="UwindSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="1.2"/>
 					<port name="UwindExponent" externalName="UwindExponent" source="Fixed" value="0.8"/>
 				</box>
 				<box class="vg::Screens" name="screens">
@@ -263,7 +264,7 @@
 				<port name="reverseOrder" value="TRUE"/>
 				<box name="default">
 					<newPort name="flagIsUp" value="TRUE"/>
-					<newPort name="signal" externalName="HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="20.0"/>
+					<newPort name="signal" externalName="HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="12.0"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="heatingTemperatureHighRhMargin">
@@ -313,7 +314,7 @@
 				<port name="reverseOrder" value="TRUE"/>
 				<box name="default">
 					<newPort name="flagIsUp" value="TRUE"/>
-					<newPort name="signal" externalName="VentTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<newPort name="signal" externalName="VentTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="24.0"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="crackVentilationNormalTemperature">
@@ -568,7 +569,7 @@
 				<port name="minValue" value="0"/>
 				<port name="maxValue" ref="setpoints[maxScreen]"/>
 				<box class="ScreenCombination" name="desiredValue">
-					<port name="formula" externalName="screenActive1" value=""/>
+					<port name="formula" externalName="screenActive1" value="shade1+energy1"/>
 				</box>
 				<box class="PidController" name="controller">
 					<port name="desiredValue" ref="../desiredValue[value]"/>
@@ -626,11 +627,12 @@
 	</box>
 	<!-- *** Climate variables *** -->
 	<box class="vg::EnergyBudgetOptimiser" name="energyBudgetOptimiser">
+    <port name="deltaVentilation" value="0.2"/>
 		<box class="vg::EnergyBudget" name="energyBudget"/>
 		<box name="indoors">
 			<box class="vg::IndoorsVentilation" name="ventilation">
 				<box class="vg::LeakageVentilation" name="leakage">
-					<port name="leakage" externalName="leakage" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="0"/>
+					<port name="leakage" externalName="leakage" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="0.1"/>
 				</box>
 			</box>
 			<box class="vg::IndoorsTemperature" name="temperature"/>
@@ -647,7 +649,9 @@
 	<box class="vg::Budget" name="budget"/>
 	<!-- *** Output *** -->
 	<box class="OutputR" name="output">
-		<box class="vg::Outputs" name="p"/>
+		<box class="vg::Outputs" name="p">
+				<port name="onlyNumbers" value="FALSE"/>
+    </box>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/>
 			<box class="PlotR">
@@ -656,10 +660,8 @@
 			</box>
 		</box>
 		<box class="OutputText" name="text">
-			<port name="skipFormats" value="TRUE"/>
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="480"/>
-			<port name="averageN" value="20"/>
 		</box>
 	</box>
 </box>

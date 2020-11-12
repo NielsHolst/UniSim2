@@ -17,8 +17,10 @@ class Outputs : public base::Box
 {
 public:
     Outputs(QString name, QObject *parent);
-    void initialize();
+    void amend();
 private:
+    // Inputs
+    bool onlyNumbers;
     // Outputs
     double
         skyT,
@@ -72,6 +74,7 @@ private:
         actScreen1,
         actScreen2,
         actScreen3,
+        actScreen1HeatCapacity,
         actCo2,
         vapourFluxTranspiration,
         vapourFluxCondensationCrop,
@@ -95,7 +98,7 @@ private:
         totalParAbsorbed,
         totalCo2;
     int thermostateUpdates;
-    QString thermostatAction, thermostatSolution;
+    QString thermostatState, thermostatAction, thermostatSolution;
     void lookupPort(QString path);
 };
 } //namespace

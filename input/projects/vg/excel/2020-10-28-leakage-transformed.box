@@ -1,14 +1,19 @@
 Simulation greenhouse {
-  .iterations = 6
+  .iterations = 5
   .steps = ./period[steps]
-  Sequence leakage {
-    .by = "reset"
-    .min = 0
-    .max = 0.5
-  }
-  // Box leakage {
-    // +value = 0.1
+  // Sequence leakage {
+    // .by = "reset"
+    // .min = 0
+    // .max = 0.5
   // }
+  Box leakage {
+    +value = 0.3
+  }
+  Sequence deltaVentilation {
+    .by = "reset"
+    .min = 0.1
+    .max = 0.9
+  }
   SimulationPeriod period {
     .beginDate = 2020/1/1
     .endDate = 2020/12/31
@@ -787,6 +792,7 @@ Simulation greenhouse {
     }
   }
   vg::EnergyBudgetOptimiser energyBudgetOptimiser {
+    .deltaVentilation = deltaVentilation[value]
     vg::EnergyBudget energyBudget {
       vg::HeatTransferSky sky { //amended
       }
