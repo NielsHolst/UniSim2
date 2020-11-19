@@ -1,8 +1,10 @@
+// day-degrees.box
 Simulation {
-  .steps = 200
-  Sequence temperature {
+  .steps = temperature[steps]
+  SequenceByStep temperature {
     .min = 0
     .max = 40
+    .by = 0.2
   }
   Box dayDegrees {
     DayDegrees {

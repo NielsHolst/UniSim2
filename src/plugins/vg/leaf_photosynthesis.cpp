@@ -21,18 +21,13 @@ PUBLISH(LeafPhotosynthesis)
 LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes light capture and photosynthetic rate");
-    Input(parAbsorbed).imports("energyBudget/crop[parAbsorbed]");
-    Input(lai).imports("..[lai]",CA);
-    Input(k).imports("energyBudget/crop[swK]",CA);
-    Input(canopyReflectivity).imports("energyBudget/crop[swReflectivityTop]",CA);
+    help("computes single-leaf light capture and photosynthetic rate");
+    Input(parAbsorbed).unit("umol/m2/s").help("Absorbed PAR");
     Input(Pgmax).imports("./lightResponse[Pgmax]",CA);
     Input(lue).imports("./lightResponse[lue]",CA);
-    Input(RdLeaf).imports("./lightResponse[Rd]",CA);
-
-    Output(Pn).help("Net assimilation rate").unit("g CO2/ground m2/h");
-    Output(Pg).help("Gross assimilation rate").unit("g CO2/ground m2/h");
-    Output(Rd).help("Dark respiration rate").unit("g CO2/ground m2/h");
+    Input(Rd).imports("./lightResponse[Rd]",CA);
+    Output(Pg).help("Gross assimilation rate").unit("mg CO2/m2/s");
+    Output(Pn).help("Net assimilation rate").unit("mg CO2/m2/s");
 }
 
 void LeafPhotosynthesis::amend() {
@@ -44,32 +39,7 @@ void LeafPhotosynthesis::amend() {
 }
 
 void LeafPhotosynthesis::update() {
-    // From Goudriaan & van Laar (1994) but scaled to parAbsorbed,
-    // i.e. the total PAR sbcorbed by the canopy has been computed elsewhere
-
-    // Compute proportionality to achieve parAbsorbed
-    double proportionality(0);
-    for (int i= 0; i<3; ++i) {
-        double laic = xGauss3[i]*lai;
-        proportionality += (1.-canopyReflectivity)*k*exp(-k*laic)*lai*wGauss3[i];
-    }
-    proportionality = parAbsorbed/proportionality;
-
-    // Integrate photosynthesis
-    Pg = parAbsorbed = 0.;
-    for (int i= 0; i<3; ++i) {
-        double
-            laic = xGauss3[i]*lai,
-            absorbed = proportionality*(1.-canopyReflectivity)*k*exp(-k*laic)*lai,
-            photosynthesis = (Pgmax > 0) ? Pgmax*(1.-exp(-absorbed*lue/Pgmax)) : 0.;
-        Pg += wGauss3[i]*photosynthesis;
-        parAbsorbed += wGauss3[i]*absorbed;
-    }
-    Pg *= lai;
-    Rd = RdLeaf*lai;
-    // Convert to g CO2/m2/h]
-    Pg *= 3.6;
-    Rd *= 3.6;
+    Pg = (Pgmax > 0) ? Pgmax*(1.-exp(-parAbsorbed*lue/Pgmax)) : 0.;
     Pn = Pg - Rd;
 }
 

@@ -135,6 +135,8 @@ void OutputR::writeScript() {
 void OutputR::openFile() {
     _filePathR = environment().outputFilePath(".R");
     _filePathR.replace("\\", "/");
+    if (_file.isOpen())
+        _file.close();
     _file.setFileName(_filePathR);
     if ( !_file.open(QIODevice::WriteOnly | QIODevice::Text) )
         ThrowException("Cannot open file for output").value(_filePathR).context(this);

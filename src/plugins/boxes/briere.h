@@ -2,8 +2,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef BRIERE
-#define BRIERE
+#ifndef BRIERE_H
+#define BRIERE_H
 #include <base/physiological_time.h>
 
 namespace boxes {

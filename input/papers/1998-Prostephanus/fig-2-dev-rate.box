@@ -1,8 +1,9 @@
 Simulation sim {
-  .steps = 100
-  Sequence T {
+  .steps = T[steps]
+  SequenceByStep T {
     .min = 15
     .max = 40
+    .by = 0.25
   }
   Box pt {
     DevRate egg {

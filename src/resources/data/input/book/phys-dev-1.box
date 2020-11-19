@@ -1,10 +1,9 @@
 // phys-dev-1.box
 Simulation sim {
+  .iterations = k[iterations]
   .steps = 60
-  .iterations = 5
-  Sequence k {
-    .by = "reset"
-    .values = (1 2 3 10 25)
+  SeriesByIteration k {
+    .numbers = (1 2 3 10 25)
   }
   Stage distDelay {
     .initial = 100 

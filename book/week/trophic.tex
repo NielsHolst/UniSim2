@@ -69,20 +69,18 @@ The \filenameexplained{book/func-resp/func-resp-bg.box} script demonstrates how 
 \begin{boxscript}
 // func-resp-gb.box
 Simulation {
-  .steps = 100
-  .iterations = 3
-  Sequence predator {
-    .by = "reset"
-    .values = (1 2 5)
+  .iterations = predator[iterations]
+  .steps = prey[steps]
+  SeriesByIteration predator {
+    .numbers = (1 2 5)
   }
-  Sequence demand {
-    .by = "reset"
-    .values = (10 20 50)
+  SeriesByIteration demand {
+    .numbers = (10 20 50)
   }
-  Sequence prey {
-    .by = "update"
+  SequenceByStep prey {
     .min = 0
     .max = 100
+    .by = 1
   }
   FunctionalResponse funcResp {
     .attacker = predator[value]
@@ -99,9 +97,7 @@ Simulation {
 }\end{boxscript}
 \lstset{numbers=none}
 
-The idea is to show the functional response function \eqref{eq:funcresp} with prey density $X=$ 0 to 100, together with three predator densities $Y=$ 1, 2 and 5, and with fixed rates of demand $d=10$ and attack $\alpha=0.8$. This is achieved by running 3 iterations (line 4) each with 100 steps (line 3).
-
-One \code{Sequence} box (lines 5-8) specifies the three predator densities and another, the corresponding demands (lines 9-12). Their value changes every time the model is \code{reset} (lines 6 and 10). All boxes are reset once at the beginning of each iteration of which we've got three (line 4).
+The idea is to show the functional response function \eqref{eq:funcresp} with prey density $X=$ 0 to 100, together with three predator densities $Y=$ 1, 2 and 5, and with fixed rates of demand $d=10$ and attack $\alpha=0.8$. One \code{SequenceByIteration} box (lines 5-7) specifies the three predator densities and another, the corresponding demands (lines 8-10). The \code{value} output of \code{predator} and \code{demand} will step forward with each iteration of the simulation. Since they hold three values, there will be three iterations, as told the \code{Simulation} object in line 3.
 
 \begin{figure} [ht]
 \centering
@@ -110,7 +106,7 @@ One \code{Sequence} box (lines 5-8) specifies the three predator densities and a
 \label{fig:func-resp-gb}
 \end{figure}
 
-Yet another \code{Sequence} box (lines 13-17) specifies the range of prey densities by the minimum and maximum values. This sequence of numbers is updated at every \code{update} (line 14) which occurs for every step, of which we've got 100 (line 3).
+A \code{SequenceByStep} box \code{prey} (lines 11-15) specifies the range of prey densities from minimum to maximum. The \code{value} output of \code{prey} will step forward by every step of the simulation by an increment of 1 (line 14) to produce the numbers 0,1,...,100. This will happen three times, once for each iteration of the simulation.
 
 The search efficacy ($s$) is computed \eqref{eq:lotvol2} from the attack rate ($\alpha$) and the time step ($\Delta t$) which defaults to 1 in the \code{FunctionalResponse} box. You can type \code{help FunctionalResponse} at the \US\ prompt to see the default input values. 
 
@@ -167,24 +163,21 @@ The box script below follows the previous example, only now the predator's energ
 \begin{boxscript}
 // func-resp-energy-budget.box
 Simulation {
-  .steps = 100
-  .iterations = 3
-  Sequence predator {
-    .by = "reset"
-    .values = (1 2 5)
+  .iterations = predator[iterations]
+  .steps = prey[steps]
+  SeriesByIteration predator {
+    .numbers = (1 2 5)
   }
-  Sequence demand {
-    .by = "reset"
-    .values = (10 20 50)
+  SeriesByIteration demand {
+    .numbers = (10 20 50)
   }
-  Sequence respiration {
-    .by = "reset"
-    .values = (1 2 5)
+  SeriesByIteration respiration {
+    .numbers = (1 2 5)
   }
-  Sequence prey {
-    .by = "update"
+  SequenceByStep prey {
     .min = 0
     .max = 100
+    .by = 1
   }
   Box param {
     +conversionCost = 0.15
@@ -219,9 +212,9 @@ Simulation {
 } \end{boxscript}
 \lstset{numbers=none}
 
-Four parameters are used both in the demand and supply budgets. For convenience and to guard against inconsistency, we create two additional inputs to set thes parameter values for $\beta$ and $\lambda$ (lines 23-34). They are both inside a \code{param} box which has no other function than holding these parameters.
+Four parameters are used both in the demand and supply budgets. For convenience and to guard against inconsistency, we create two additional inputs to set these parameter values for $\beta$ and $\lambda$ (lines 20-21). They are both inside a \code{param} box which has no other function than holding these parameters.
 
-The \code{DemandBudget} (lines 26-31) implements the energy budget \eqref{eq:demandbudget} with these inputs:
+The \code{DemandBudget} (lines 23-28) implements the energy budget \eqref{eq:demandbudget} with these inputs:
 \begin{itemize}
 \item \codenobox{demandNet} ($\Delta D_{net}$)
 \item \codenobox{demandResp} ($z$)
@@ -234,9 +227,9 @@ The \code{DemandBudget} (lines 26-31) implements the energy budget \eqref{eq:dem
 \item \codenobox{demandGross} ($\Delta D_{gross}$)
 \end{itemize}
 
-This \code{demandGross} output enters the functional response (line 35) which computes the gross supply \code{supplyGross}.
+This \code{demandGross} output enters the functional response (line 32) which computes the gross supply \code{supplyGross}.
 
-The \code{SupplyBudget} (lines 38-44) implements the energy budget \eqref{eq:supplybudget}, in terms of how the gross supply is distributed among the expenditures. It shares four of its inputs with the \code{DemandBudget}. In addition it needs to know the gross supply (line 39). Its outputs are
+The \code{SupplyBudget} (lines 38-44) implements the energy budget \eqref{eq:supplybudget}, in terms of how the gross supply is distributed among the expenditures. It shares four of its inputs with the \code{DemandBudget}. In addition it needs to know the gross supply (line 36). Its outputs are
 
 \begin{itemize}
 \item \codenobox{supplyNet} ($\Delta S_{net}$)

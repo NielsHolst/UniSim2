@@ -1,12 +1,12 @@
 // dist-delay1.box
 Simulation sim {
-	.iterations = 50
+	.iterations = k[iterations]
 	.steps = 1000
 	.silent = TRUE
-	Sequence k {
+	SequenceByIteration k {
 		.min = 1
 		.max = 50
-		.by = "reset"
+		.by = 1
 	}
 	Stage delay {
 		.initial = 1

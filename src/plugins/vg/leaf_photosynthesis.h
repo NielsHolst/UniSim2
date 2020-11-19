@@ -22,11 +22,9 @@ private:
     // Inputs
     double
         parAbsorbed,
-        lai, k,
-        canopyReflectivity,
-        Pgmax, lue, RdLeaf;
+        Pgmax, lue, Rd;
     // Outputs
-    double Pg, Pn, Rd;
+    double Pg, Pn;
 };
 } //namespace
 

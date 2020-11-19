@@ -24,7 +24,7 @@ LeafLightResponseProcesses::LeafLightResponseProcesses(QString name, QObject *pa
     help("models various processes of leaf light response");
     Input(Tleaf).imports("../../../temperature[value]",CA).unit("oC");
     Input(rhoChl).equals(0.45).help("Chlorophyll density").unit("unit?");
-    Input(concEnzyme).equals(87).help("Enzyme concentration").unit("unit?");
+    Input(concEnzyme).equals(87.).help("Enzyme concentration").unit("unit?");
     Input(KC25).equals(310.).help("Rubisco carboxylation at 25C").unit("my bar");
     Input(KO25).equals(155.).help("Rubisco oxygenation at 25C").unit("mbar");
     Output(VCmax).help("Maximum carboxylation rate ").unit("mu mol e-/m2/s");

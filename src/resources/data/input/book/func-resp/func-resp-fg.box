@@ -1,19 +1,17 @@
 // func-resp-fg.box
 Simulation {
+  .iterations = attacker[iterations]
   .steps = 100
-  .iterations = 3
-  Sequence attacker {
-    .by = "reset"
-    .values = (1 2 5)
+  SeriesByIteration attacker {
+    .numbers = (1 2 5)
   }
-  Sequence demand {
-    .by = "reset"
-    .values = (10 20 50)
+  SeriesByIteration demand {
+    .numbers = (10 20 50)
   }
-  Sequence host {
-    .by = "update"
+  SequenceByStep host {
     .min = 0
     .max = 100
+    .by = 1
   }
   SuperFunctionalResponse funcResp {
     .attacker = attacker[value]

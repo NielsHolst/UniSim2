@@ -1,9 +1,10 @@
 // honeybee1.box
 Simulation {
-  .steps = 13
-  Sequence dayLength {
+  .steps = dayLength[steps]
+  SequenceByStep dayLength {
     .min = 5
     .max = 18
+    .by = 1
   }
   ProportionalSignal fecundity {
     .input = dayLength[value]

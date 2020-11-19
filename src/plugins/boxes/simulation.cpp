@@ -2,6 +2,10 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <boost/numeric/conversion/cast.hpp>
+#include <QElapsedTimer>
+#include <QFile>
+#include <QTextStream>
 #include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -12,9 +16,6 @@
 #include <base/timer.h>
 #include <base/track.h>
 #include "simulation.h"
-
-#include <QFile>
-#include <QTextStream>
 
 using namespace base;
 
@@ -68,7 +69,7 @@ void Simulation::run() {
     if (silent)
         dialog().information("Running silently...");
     hasError = false;
-    QTime time;
+    QElapsedTimer time;
     try {
         time.start();
 //        Track::effectuateOrders();
@@ -94,11 +95,9 @@ void Simulation::run() {
             {
                 show(time);
                 updateFamily();
-//                Track::updateAll();
             }
             environment().computationStep(ComputationStep::Cleanup);
             cleanupFamily();
-//            Track::cleanupAll();
         }
         environment().computationStep(ComputationStep::Debrief);
         debriefFamily();
@@ -109,10 +108,10 @@ void Simulation::run() {
     }
     // environment().computationStep(ComputationStep::Ready);
     dialog().finishProgress();
-    executionTime = time.elapsed();
+    executionTime = boost::numeric_cast<int>(time.elapsed());
 }
 
-void Simulation::show(QTime time) {
+void Simulation::show(QElapsedTimer time) {
     DialogBase::ProgressInfo info;
     info.time = time;
     info.step = step;

@@ -368,7 +368,6 @@
           <!-- <xsl:value-of select="concat('actuators/screens/', $name, '[value]')"/> -->
         <!-- </xsl:attribute> -->
       </port>
-      <box class="vg::ScreensAirTransmissivity" name="airTransmissivity"/>
     </box>
   </xsl:if>
 </xsl:template>
@@ -695,9 +694,6 @@
   <xsl:variable name="diameterName" select="'InnerDiameter'"/>
   <xsl:variable name="diameterSrc" select="Constants/Parameters[ParameterName=$diameterName]/Value" as="node()"/>
   <xsl:variable name="diameterValue" select="number(replace($diameterSrc, ',', '.'))"/>
-  <xsl:variable name="minTemperatureName" select="'CommonReturnTemperature'"/>
-  <xsl:variable name="minTemperatureSrc" select="Constants/Parameters[ParameterName=$minTemperatureName]/Value" as="node()"/>
-  <xsl:variable name="minTemperatureValue" select="number(replace($minTemperatureSrc, ',', '.'))"/>
   <xsl:variable name="maxTemperatureName" select="'CommonFlowTemperature'"/>
   <xsl:variable name="maxTemperatureSrc" select="Constants/Parameters[ParameterName=$maxTemperatureName]/Value" as="node()"/>
   <xsl:variable name="maxTemperatureValue" select="number(replace($maxTemperatureSrc, ',', '.'))"/>
@@ -743,14 +739,8 @@
       </xsl:attribute>
     </port>
     <port name="minTemperature">
-      <xsl:attribute name="externalName">
-        <xsl:value-of select="$minTemperatureName"/>
-      </xsl:attribute>
-      <xsl:attribute name="source">
-        <xsl:value-of select="ecolmod:generateXPath($minTemperatureSrc)"/>
-      </xsl:attribute>
-      <xsl:attribute name="value">
-        <xsl:value-of select="$minTemperatureValue"/>
+      <xsl:attribute name="ref">
+        <xsl:value-of select="concat('setpoints/elementary/minPipeTemperature', $position, '[value]')"/>
       </xsl:attribute>
     </port>
     <port name="maxTemperature">
@@ -1109,6 +1099,16 @@
       <box class="PrioritySignal"  name="heatingTemperatureLowRhMargin">
         <xsl:call-template name="extract-setpoints">
           <xsl:with-param name="climateSetpointName" select="'MaxHeatAddLowRH'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="minPipeTemperature1">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'minPipeTemperature1'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal"  name="minPipeTemperature2">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'minPipeTemperature2'"/>
         </xsl:call-template>
       </box>
       <box class="PrioritySignal"  name="rhMax">

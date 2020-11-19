@@ -37,7 +37,7 @@ void load::doExecute() {
     case 1:
           fileName = env.latestLoadArg();
 //        dialog().loadWithFilePicker();
-        return;
+        break;
     case 2:
         fileName = _args.at(1);
         break;

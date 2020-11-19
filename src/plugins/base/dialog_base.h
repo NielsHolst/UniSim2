@@ -9,7 +9,7 @@
 #include <QObject>
 #include <QStack>
 #include <QString>
-#include <QTime>
+#include <QElapsedTimer>
 
 class QProgressBar;
 class QTextEdit;
@@ -22,7 +22,7 @@ public:
     DialogBase(QObject *parent);
 
     struct ProgressInfo{
-        QTime time;
+        QElapsedTimer time;
         int step, steps, iteration, iterations;
     };
     void resetProgress();

@@ -12,6 +12,7 @@ HEADERS +=  \
     actuators.h \
     actuator_heat_pipes.h \
     actuator_ventilation.h \
+    ah_from_rh.h \
     any_flag.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
@@ -19,6 +20,7 @@ HEADERS +=  \
     boundary_layer_resistance_stanghellini.h \
     boundary_layer_resistance_monteith_unsworth.h \
     budget.h \
+    canopy_photosynthesis.h \
     chalk.h \
     controllers.h \
     controller_ventilation_combined.h \
@@ -84,6 +86,7 @@ HEADERS +=  \
     stomatal_resistance_base.h \
     stomatal_resistance_rose.h \
     stomatal_resistance_tomato.h \
+    total_radiation_from_par.h \
     utilities.h \
     vapour_flux_base.h \
     vapour_flux_condensation_cover.h \
@@ -104,6 +107,7 @@ SOURCES += \
     actuators.cpp \
     actuator_heat_pipes.cpp \
     actuator_ventilation.cpp \
+    ah_from_rh.cpp \
     any_flag.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
@@ -111,6 +115,7 @@ SOURCES += \
     boundary_layer_resistance_stanghellini.cpp \
     boundary_layer_resistance_monteith_unsworth.cpp \
     budget.cpp \
+    canopy_photosynthesis.cpp \
     chalk.cpp \
     controllers.cpp \
     controller_ventilation_combined.cpp \
@@ -176,6 +181,7 @@ SOURCES += \
     stomatal_resistance_base.cpp \
     stomatal_resistance_rose.cpp \
     stomatal_resistance_tomato.cpp \
+    total_radiation_from_par.cpp \
     utilities.cpp \
     vapour_flux_base.cpp \
     vapour_flux_condensation_cover.cpp \

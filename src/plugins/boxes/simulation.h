@@ -35,7 +35,7 @@ private:
     bool hasError;
     QString errorMsg;
     // Methods
-    void show(QTime time);
+    void show(QElapsedTimer time);
 };
 
 }

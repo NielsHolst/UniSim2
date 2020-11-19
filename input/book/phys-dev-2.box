@@ -1,10 +1,9 @@
 // phys-dev-2.box
 Simulation sim {
+  .iterations = growthFactor[iterations]
   .steps = 60
-  .iterations = 3
-  Sequence growthFactor {
-    .by = "reset"
-    .values = (0.2 1 2)
+  SeriesByIteration growthFactor {
+    .numbers = (0.2 1 2)
   }
   Stage distDelay {
     .initial = 100 

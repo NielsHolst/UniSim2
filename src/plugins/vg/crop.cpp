@@ -39,7 +39,7 @@ void Crop::amend() {
         builder.box("vg::LeafTemperature").name("temperature").
         endbox();
     if (!findMaybeOne<Box>("./photosynthesis"))
-        builder.box("vg::LeafPhotosynthesis").name("photosynthesis").
+        builder.box("vg::CanopyPhotosynthesis").name("photosynthesis").
         endbox();
     if (!findMaybeOne<Box>("./growth"))
         builder.

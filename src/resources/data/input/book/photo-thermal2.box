@@ -1,9 +1,10 @@
 // book/photo-thermal2.box
 Simulation sim {
-  .steps = 24
-  Sequence dayLength {
+  .steps = dayLength[steps]
+  SequenceByStep dayLength {
     .min = 0
     .max = 24
+    .by = 1
   }
   DayLengthScale light {
     .dayLength = dayLength[value]

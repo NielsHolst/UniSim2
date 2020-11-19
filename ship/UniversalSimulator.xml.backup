@@ -1,7 +1,7 @@
 <project>
     <shortName>UniversalSimulator</shortName>
-    <fullName>UniversalSimulator</fullName>
-    <version>2.3.37</version>
+    <fullName>Universal Simulator</fullName>
+    <version>2.3.39</version>
     <installerFilename></installerFilename>
     <licenseFile>builder-input/gpl-3.0.txt</licenseFile>
     <leftImage>builder-input/squirrel 163x314.png</leftImage>
@@ -40,7 +40,7 @@
                     <description>Program Files</description>
                     <destination>${installdir}</destination>
                     <name>programfileswindowslinux</name>
-                    <platforms>windows linux</platforms>
+                    <platforms>windows-x64 linux</platforms>
                     <distributionFileList>
                         <distributionDirectory>
                             <origin>bin</origin>

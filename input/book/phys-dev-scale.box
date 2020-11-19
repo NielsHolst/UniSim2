@@ -1,9 +1,10 @@
-// phys-dev-6.box
+// phys-dev-scale.box
 Simulation sim {
-  .steps = 125
-  Sequence temperature {
+  .steps = temperature[steps]
+  SequenceByStep temperature {
     .min = 12
-    .max = 37   
+    .max = 37
+    .by = 0.2
   }
   DayDegrees dayDegrees {
     .T0 = 14.2

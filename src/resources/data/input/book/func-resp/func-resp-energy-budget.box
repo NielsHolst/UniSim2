@@ -1,23 +1,20 @@
 // func-resp-energy-budget.box
 Simulation {
-  .steps = 100
-  .iterations = 3
-  Sequence predator {
-    .by = "reset"
-    .values = (1 2 5)
+  .iterations = predator[iterations]
+  .steps = prey[steps]
+  SeriesByIteration predator {
+    .numbers = (1 2 5)
   }
-  Sequence demand {
-    .by = "reset"
-    .values = (10 20 50)
+  SeriesByIteration demand {
+    .numbers = (10 20 50)
   }
-  Sequence respiration {
-    .by = "reset"
-    .values = (1 2 5)
+  SeriesByIteration respiration {
+    .numbers = (1 2 5)
   }
-  Sequence prey {
-    .by = "update"
+  SequenceByStep prey {
     .min = 0
     .max = 100
+    .by = 1
   }
   Box param {
     +conversionCost = 0.15

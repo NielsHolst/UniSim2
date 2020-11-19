@@ -1,19 +1,17 @@
 // func-resp-gb-fg.box
 Simulation {
+  .iterations = attacker[iterations]
   .steps = 200
-  .iterations = 3
-  Sequence attacker {
-    .by = "reset"
-    .values = (1 2 5)
+  SeriesByIteration attacker {
+    .numbers = (1 2 5)
   }
-  Sequence demand {
-    .by = "reset"
-    .values = (10 20 50)
+  SeriesByIteration demand {
+    .numbers = (10 20 50)
   }
-  Sequence resource {
-    .by = "update"
+  SequenceByStep resource {
     .min = 0
     .max = 200
+    .by = 1
   }
   FunctionalResponse gb {
     .attacker = attacker[value]

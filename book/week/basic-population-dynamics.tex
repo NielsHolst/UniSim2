@@ -299,10 +299,11 @@ To make certain that the fecundity sub-model works as expected, we will start ou
 \begin{boxscript}
 // honeybee1.box
 Simulation {
-  .steps = 13
-  Sequence dayLength {
+  .steps = dayLength[steps]
+  SequenceByStep dayLength {
     .min = 5
     .max = 18
+    .by = 1
   }
   ProportionalSignal fecundity {
     .input = dayLength[value]
@@ -340,7 +341,7 @@ Simulation {
 \end{boxscript}
 \lstset{numbers=none}
 
-A \code{Sequence} box is used to produce a linear series of numbers. In this case, it runs from 5 (line 5) to 18 (line 6). The length of the sequence is $n+1$, where $n$ is the value of the \code{steps} port found in the the \code{Simulation} box (line 3). This is a consequence of how \code{Simulation} works. When you run a box script, \code{Simulation} first resets all the boxes in the script and then updates them $n$ = \code{steps} times. Hence, the output from this simulation, when represented as a data frame in R, will hold 14 rows with a \code{value} column running through the values 5, 6, \ldots, 17,18. 
+A \code{SequenceByStep} box is used to produce a linear series of numbers. For every \code{step} in the \code{Simulation}, it will produce the next value in the sequence. In this case, it goes from 5 (line 5) to 18 (line 6) by steps of length 1 (line 7). Hence, the output from this simulation, when represented as a data frame in R, will hold 14 rows with a \code{value} column running through the values 5, 6, \ldots, 17,18. A \code{SequenceByStep} box has an output \code{steps} which tells how many steps the simulation will need to go through to run through the whole sequence. This output is used as an input to the \code{Simulation} (line 3). Remember that in box scripts, children (\eg\ \code{dayLength}) are updated before parents (\eg\ the \code{Simulation} object), so the \code{Simulation} object will get this information in time.
 
 \begin{figure} [b]
   \centering
@@ -354,9 +355,9 @@ A \code{Sequence} box is used to produce a linear series of numbers. In this cas
   \label{fig:honeybee1}
 \end{figure}
 
-The \code{ProportionalSignal} box was originally developed as a building block to model process engineering with \US, but it turned out to be a versatile building block for rapid prototype modelling in general, \ie\ as a first approximation before caring for the details. It computes an output \code{value} based on minimum and maximum values (lines 10-11); the input names \code{minSignal} and \code{maxSignal} indicate  the engineering origin of this box. Its \code{value} changes linearly inside that range depending on the \code{input} (line 9). The linear slope begins at the input \code{threshold} (line 12) and spans over a width called the \code{thresholdBand} (line 13).
+The \code{ProportionalSignal} box was originally developed as a building block to model process engineering with \US, but it turned out to be a versatile building block for rapid prototype modelling in general, \ie\ as a first approximation before caring for the details. It computes an output \code{value} based on minimum and maximum values (lines 11-12); the input names \code{minSignal} and \code{maxSignal} indicate  the engineering origin of this box. Its \code{value} changes linearly inside that range depending on the \code{input} (line 9). The linear slope begins at the input \code{threshold} (line 13) and spans over a width called the \code{thresholdBand} (line 14).
 
-The plot (\iref{fig:honeybee1}) has been augmented with dots on top of the lines through the addition of a \code{geom_point} to the ggplot (lines 19, 27 and 36). The \code{dottedLine} is defined inside a box that we simply call \code{p} for brevity (and maybe lack of imagination). It is seen how fecundity changes with day length as expected. The two plots, produced by two different \code{PageR} objects (lines 21-29 and 30-38) are identical except for their axis labels. The plot on the right in \iref{fig:honeybee1} demonstrates the improved readability achieved by suitably named blind ports (lines 17-18), \code{dayLength} on the \xaxis\ and \code{eggsPerDay} on the \yaxis. The use of aptly named blind ports is a common practice for overruling default axis names.
+The plot (\iref{fig:honeybee1}) has been augmented with dots on top of the lines through the addition of a \code{geom_point} to the ggplot (lines 20, 28 and 37). The \code{dottedLine} is defined inside a box that we simply call \code{p} for brevity (and maybe lack of imagination). It is seen how fecundity changes with day length as expected. The two plots, produced by two different \code{PageR} objects (lines 22-30 and 31-39) are identical except for their axis labels. The plot on the right in \iref{fig:honeybee1} demonstrates the improved readability achieved by suitably named blind ports (lines 18-19), \code{dayLength} on the \xaxis\ and \code{eggsPerDay} on the \yaxis. The use of aptly named blind ports is a common practice for overruling default axis names.
 
 In R you can also verify the output directly, if you take a look at the \code{sim} data frame:
 

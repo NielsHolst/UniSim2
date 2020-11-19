@@ -1,0 +1,56 @@
+Simulation greenhouse {
+  .iterations = settings[iterations]
+  .steps = 10
+  .silent = TRUE
+  Combinations settings {
+    +windSpeed = 0.1
+    SequenceByIteration parAbsorbed {
+      .min = 0
+      .max = 1500
+      .by = 50
+    }
+    SequenceByIteration co2 {
+      .min = 400
+      .max = 1600
+      .by = 50
+    }
+    SequenceByIteration temperature {
+      .min = 0
+      .max = 40
+      .by = 1
+    }
+    SequenceByIteration rh {
+      .min = 20
+      .max = 100
+      .by = 5
+    }
+  }
+  Box leaf {
+    vg::StomatalResistanceRose rs { 
+      .co2 = settings/co2[value]
+      .rh  = settings/rh[value]
+      .lai = 1
+    }
+    vg::BoundaryLayerResistanceStanghellini rb { 
+      .indoorsTemperature = settings/temperature[value]
+      .leafTemperature    = settings/temperature[value]
+      .leafWindSpeed      = settings[windSpeed]
+    }
+    vg::LeafPhotosynthesis photosynthesis { 
+      .parAbsorbed = settings/parAbsorbed[value]
+      vg::LeafLightResponse lightResponse { 
+        .Tleaf = settings/temperature[value]
+        .co2Air = settings/co2[value]
+        LeafLightResponseProcesses processes { 
+          .Tleaf = settings/temperature[value]
+        }
+      }
+    }
+  }
+  OutputR {
+    .end = "single_leaf_end.R"
+    OutputText {
+      .ports = (settings/*[value] photosynthesis[Pgmax]|end)
+    }
+  }
+}
