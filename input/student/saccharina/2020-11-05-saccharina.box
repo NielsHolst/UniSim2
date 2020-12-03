@@ -1,0 +1,198 @@
+Simulation sim {
+  .steps = 6288
+  Calendar calendar {
+    .initialDateTime = "2017-09-21 00:00:00"
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Records env {
+    .fileName = "env_file_2017.txt"
+  }
+  Structure structure {
+    Stage ageing {
+      .initial = 0.00125 // initial g structure
+      .inflow = allocation[structuralMassGrowth]
+      .instantLossRate = allocation[structuralMassLossRate]
+      .duration = 400
+      .k = 10
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .timeStepDays = calendar[timeStepDays]
+        .T0 = 0
+        .T = env[T]
+      }
+    }
+    Accumulator respired {
+      .change = allocation[structuralMassLoss]
+    }
+  }
+  Area area {
+  }
+  Box reserves {
+    Reserves carbon {
+      .initialProportion = 0.8
+      .maxProportion = 0.8
+      .allocatedProportion = allocation[reservesProportionC]
+    }
+    Reserves nitrogen {
+      .initialProportion = 0.022
+      .maxProportion = 0.022
+      .allocatedProportion = allocation[reservesProportionN]
+    }
+  }
+  Box demand {
+    Box carbon {
+      DemandCarbonStructure structure {
+        .maxGrowthRate = 0.01 //0.0006 // calibrated
+        .fTemp     = ./fTemp[value]
+        .fSalinity = ./fSalinity[value]
+        .fArea     = ./fArea[value]
+        Trapezoid fTemp {
+          .T = env[T]
+          .T0    = -2
+          .Topt1 = 10 
+          .Topt2 = 15
+          .Tmax  = 24
+        }
+        Fsalinity fSalinity {
+        }
+        Farea fArea {
+        }
+      }
+      DemandCarbonRespiration respiration {
+      }
+      DemandCarbonReserves reserves {
+      }
+      DemandCarbonExudation exudation {
+        .gamma = 0.001 // calibrated
+      }
+    }
+    Sum carbonTotal {
+      .values = ../carbon/*[value]
+    }
+    Accumulator baseRespiration {
+      .change = ../carbon/respiration[value]
+    }
+    Box nitrogen {
+      DemandNitrogenStructure structure {
+      }
+      DemandNitrogenReserves reserves {
+      }
+    }
+    Sum nitrogenTotal {
+      .values = ../nitrogen/*[value]
+    }
+  }
+  Box supply {
+    Photosynthesis photosynthesis {
+      .k = 0.6
+      .alpha = 2.69
+      .fTemp  = ./fTemp[value]
+      .fNitrogen = ./fNitrogen[value]
+      // .I = 0
+      Trapezoid fTemp {
+        .T = env[T]
+        .T0    = -2
+        .Topt1 = 10
+        .Topt2 = 15
+        .Tmax  = 24
+      }
+      Fnitrogen fNitrogen {
+      }
+    }
+    NitrogenUptake nitrogenUptake {
+      .beta = 1e4
+      Fcurrent fCurrent {
+      }
+    }
+  }
+  Allocation allocation {
+  }
+
+  Accumulator exuded {
+  .change = allocation[supplyCarbonExudation]
+}
+  Biomass biomass {
+  }
+  OutputR output {
+    .keepPages = FALSE
+    +monthBreaks = "scale_x_datetime(breaks = date_breaks('months'), labels = date_format('%b'))"
+    Box value {
+      +structuralMass = structure[mass]
+      +area = area[value]
+      +reservesC = reserves/carbon[proportion]
+      +reservesN = reserves/nitrogen[proportion]
+      +exuded = exuded[value]
+      +baseRespiration = baseRespiration[value]
+      +senescenceRate = ageing[outflow]
+    }
+    PageR {
+      .title = "Environment"
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ports = (env[T] env[S] env[N] env[I] env[U])
+        .ggplot = output[monthBreaks]
+      }
+    }
+    // PageR {
+      // .title = "Demands"
+      // .xAxis = calendar[dateTime]
+      // PlotR {
+        // .ports = (demand/carbon/*[value] demand/carbonTotal[value] demand/nitrogen/*[value] demand/nitrogenTotal[value])
+        // .ggplot = output[monthBreaks]
+      // }
+    // }
+    PageR {
+      .title = "Scaling factors"
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ports = (demand/carbon/structure/*[value] photosynthesis/*[value] nitrogenUptake/*[value])
+        .ggplot = output[monthBreaks]
+      }
+    }
+    PageR {
+      .title = "Nitrogen"
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ports = (nitrogenUptake[sdRatio] nitrogenUptake[J])
+        .ggplot = output[monthBreaks]
+      }
+    }
+    // PageR {
+      // .title = "Allocation"
+      // .xAxis = calendar[dateTime]
+      // PlotR {
+        // .ports = (allocation[sdCarbon] allocation[sdNitrogen])
+        // .ggplot = output[monthBreaks]
+      // }
+    // }
+    // PageR {
+      // .title = "Allocation"
+      // .xAxis = calendar[dateTime]
+      // PlotR {
+        // .ports = (allocation[MC0] allocation[MC1] allocation[MC2] allocation[MN0]
+          // allocation[reservesProportionC] allocation[reservesProportionN])
+        // .ggplot = output[monthBreaks]
+      // }
+    // }
+    PageR {
+      .title = "Growth"
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ggplot = output[monthBreaks]
+        .ports = (output/value[structuralMass] allocation[structuralMassGrowth] allocation[structuralMassLossRate] output/value[exuded] 
+                  structure[senescent] output/value[baseRespiration] output/value[area]  output/value[reservesC] output/value[reservesN]
+                  area[lai] photosynthesis[Iabsorbed] photosynthesis[sdRatio] nitrogenUptake[sdRatio] value[senescenceRate])
+        .ncol = 3
+      }
+    }
+	PageR {
+      .title = "Biomass"
+      .xAxis = calendar[dateTime]
+      PlotR {
+        .ggplot = output[monthBreaks]
+        .ports = (biomass[nitrogenPct] biomass[Dryweight] biomass[DryweightprHour])
+      }
+    }
+  }
+}

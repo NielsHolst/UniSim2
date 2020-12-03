@@ -1,30 +1,30 @@
 #define RANDOMISER = RandomiserSobolSequence
 Simulation sim {
-  // Runs at ~4 iterations per second
-  // 425984 iterations used in paper
-  // 832 iterations for a quicker demonstration
-  .iterations = 832
+  // 212992 iterations used in paper (~8hrs)
+  //  13312 iterations for a quicker demonstration (~30min)
+  .iterations = 212992
   .steps =  273 // end of september
   .silent = TRUE
+  .unattended = TRUE
   Box settings {
     // Set bootstrapSize to 100 for a quick demonstration; a value of 10000 used in paper
     +doSensitivityAnalysis = TRUE
-    +bootstrapSize = 100
+    +bootstrapSize = 10000
   }
   #include "aphid-fungus-model.part.box" 
   OutputR {
     .end = "4-end.R"
     Box outputs {
-      +aphidPressureWithoutF   = biocontrol[aphidPressureWithoutF]
-      +aphidPressureWithF      = biocontrol[aphidPressureWithF] 
-      +yieldWithoutF           = biocontrol[yieldWithoutF] 
-      +yieldWithF              = biocontrol[yieldWithF]
-      +maxCadaverDensity       = biocontrol[maxCadaverDensity]
-      +maxCadaverDensityCropGS = biocontrol[maxCadaverDensityCropGS]
-      +aphidPressureDifference = biocontrol[aphidPressureDifference]
-      +yieldDifference         = biocontrol[yieldDifference]
-      +cadaverPressure         = withFungus/diagnostics/cadaverDays[value]
-      +percentageCadavers      = withFungus/diagnostics/percentageCadavers[value]
+      +aphidPressureWithoutF       = biocontrol[aphidPressureWithoutF]
+      +aphidPressureWithF          = biocontrol[aphidPressureWithF] 
+      +yieldWithoutF               = biocontrol[yieldWithoutF] 
+      +yieldWithF                  = biocontrol[yieldWithF]
+      +maxCadaverDensity           = biocontrol[maxCadaverDensity]
+      +maxCadaverDensityCropGS     = biocontrol[maxCadaverDensityCropGS]
+      +maxPercentageCadavers       = biocontrol[maxPercentageCadavers]
+      +maxPercentageCadaversCropGS = biocontrol[maxPercentageCadaversCropGS]
+      +aphidPressureDifference     = biocontrol[aphidPressureDifference]
+      +yieldDifference             = biocontrol[yieldDifference]
     }
     PageR {
       .xAxis = random/*[value]

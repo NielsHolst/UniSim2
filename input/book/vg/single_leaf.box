@@ -7,22 +7,22 @@ Simulation greenhouse {
     SequenceByIteration parAbsorbed {
       .min = 0
       .max = 1500
-      .by = 50
+      .by = 500
     }
     SequenceByIteration co2 {
       .min = 400
       .max = 1600
-      .by = 50
+      .by = 400
     }
     SequenceByIteration temperature {
       .min = 0
       .max = 40
-      .by = 1
+      .by = 5
     }
     SequenceByIteration rh {
       .min = 20
       .max = 100
-      .by = 5
+      .by = 20
     }
   }
   Box leaf {
@@ -50,7 +50,7 @@ Simulation greenhouse {
   OutputR {
     .end = "single_leaf_end.R"
     OutputText {
-      .ports = (settings/*[value] photosynthesis[Pgmax]|end)
+      .ports = (settings/*[value] photosynthesis[Pgmax]|end photosynthesis[Pn]|end)
     }
   }
 }

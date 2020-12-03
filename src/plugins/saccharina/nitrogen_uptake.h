@@ -12,10 +12,9 @@ public:
     void update();
 private:
     // Inputs
-    double nitrogenDemand, fCurrent,
-        N, KN;
+    double beta, demand, area, lai, fCurrent, N, timeStepSecs;
     // Outputs
-    double supply, sdRatio;
+    double supply, sdRatio, J;
 };
 
 }

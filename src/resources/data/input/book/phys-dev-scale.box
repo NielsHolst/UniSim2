@@ -7,12 +7,14 @@ Simulation sim {
     .by = 0.2
   }
   DayDegrees dayDegrees {
+    .timeStepDays = 1
     .T0 = 14.2
     .Topt = 29
     .Tmax = 35
     .T = temperature[value]
   }
   Briere briere {
+    .timeStepDays = 1
     .T0 = 14.2
     .Tmax = 35
     .a = 2.836e-5

@@ -22,7 +22,9 @@ private:
     friend class Screens;
 
     // Inputs
-    double haze, transmissivityAir, state;
+    double haze, transmissivityAir, state,
+        ventilation,
+        Uair, UstateExponent, UventilationSlope;
     // Outputs
     double
         swReflectivityTopNet, swReflectivityBottomNet,
@@ -37,6 +39,7 @@ private:
 //        heatCapacity;
     // Methods
     void updateByState(double state);
+    void updateU();
     virtual double computeMaxArea() = 0;
 };
 

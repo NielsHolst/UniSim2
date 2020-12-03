@@ -30,7 +30,6 @@ ActuatorVentilation::ActuatorVentilation(QString name, QObject *parent)
     Input(indoorsTemperature).imports("indoors/temperature[value]", CA);
     Input(effectiveVentArea).imports("shelter/*/vent[effectiveArea]").transform(Sum);
     Input(groundArea).imports("construction/geometry[groundArea]", CA);
-    Input(screensAirTransmissivity).imports("shelter[screensAirTransmissivity]", CA);
     Output(flux).help("Current air flux through vents").unit("/h");
     Output(maxFlux).help("Maximum air flux through vents").unit("/h");
     Output(relative).help("Flux as proportion of max. at fully open vents").unit("[0;1]");
@@ -42,7 +41,7 @@ void ActuatorVentilation::reset() {
 
 void ActuatorVentilation::update() {
     // Compute the max. possible ventilation flux
-    double ventEffect  = screensAirTransmissivity*effectiveVentArea/groundArea,
+    double ventEffect  = effectiveVentArea/groundArea,
            maxFluxWind = ventEffect*windCoef*windSpeed,
            maxFluxTemp = ventEffect*temperatureCoef*std::max(indoorsTemperature-outdoorsTemperature, 0.);
     maxFlux = sqrt(p2(maxFluxWind) + p2(maxFluxTemp));

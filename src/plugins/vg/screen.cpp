@@ -22,6 +22,10 @@ Screen::Screen(QString name, QObject *parent)
     Input(haze).equals(1.).help("Proportion of direct light transmitted as diffuse light (not used)").unit("[0;1]");
     Input(transmissivityAir).equals(0.37).help("Air transmissivity when fully drawn").unit("[0;1]");
     Input(state).equals(0.).help("Proportion drawn (0=fully withdrawn; 1=fully drawn").unit("[0;1]");
+    Input(ventilation).imports("indoors/ventilation[flux]");
+    Input(Uair).imports("shelter[Uair]");
+    Input(UstateExponent).imports("shelter[screenUstateExponent]");
+    Input(UventilationSlope).imports("shelter[screenUventilationSlope]");
     port("Utop")->equals(1.247);
     port("Ubottom")->equals(1.247);
     port("heatCapacity")->equals(2280.);
@@ -81,8 +85,20 @@ void Screen::updateByState(double state) {
     ADJUST_BY_STATE(swAbsorptivityBottom);
     ADJUST_BY_STATE(lwAbsorptivityTop);
     ADJUST_BY_STATE(lwAbsorptivityBottom);
-    UtopNet = (Utop == 0.) ? infinity() : Utop/state;
-    UbottomNet = (Ubottom == 0.) ? infinity() : Ubottom/state;
+    updateU();
+}
+
+void Screen::updateU() {
+    double adj = exp(-UventilationSlope*ventilation),
+           Rair = 1./Uair,
+           Rtop = adj*(1./Utop + Rair*pow(state, UstateExponent)),
+           Rbottom = adj/Ubottom;
+    // R-values are relative to screen m2
+    // Convert to relative to shelter face m2
+    Rtop *= state;
+    Rbottom *= state;
+    UtopNet = 1./Rtop;
+    UbottomNet = 1./Rbottom;
 }
 
 } //namespace

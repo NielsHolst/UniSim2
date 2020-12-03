@@ -72,7 +72,7 @@ void LeafLightResponse::update() {
 double LeafLightResponse::potentialLightUseEfficiency() {
     double alpha = (1-frParAbs)/2;  // Electron yield of absorbed photons at lowlight intensity:
                                     // 2 electrons per absorbed photon [umol e-/umol photons]
-    return (MCo2/4)*alpha;          // [mg CO2/umol photons]
+    return MCo2/4*alpha;          // [mg CO2/umol photons]
 }
 
 double LeafLightResponse::darkRespirationRate() {

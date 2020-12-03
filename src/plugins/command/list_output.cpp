@@ -96,8 +96,8 @@ void ListOutput::toString(base::Port *port, int level) {
                         (port->access()==PortAccess::Input) ? "." : "~",
                 assignment = port->valueAsString();
         if (port->type() == Char || port->type() == String) {
-            if (assignment.size() > 13)
-                assignment = assignment.left(10) + "...";
+//            if (assignment.size() > 13)
+//                assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
         }
         if (!port->unit().isEmpty())

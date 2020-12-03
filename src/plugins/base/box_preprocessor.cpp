@@ -52,25 +52,34 @@ QString BoxPreprocessor::readFile(QString filePath, FileIncludes earlierIncludes
 }
 
 QString BoxPreprocessor::expandIncludes(QString sourceFilePath, QString code, FileIncludes earlierIncludes) {
-    Positions includes = findDirective(code, "include");
+    // New code is collated while the original code is unchanged
     QString newCode;
-    int at = 0;
+    // Find all includes in this file
+    Positions includes = findDirective(code, "include");
+    bool hasIncludes = !includes.isEmpty();
+    // If file has includes then the new code runs until the first include
+    if (hasIncludes)
+        newCode = code.mid(0, includes.at(0).begin-1);
+    // Replace every include with included file
     for (Position include : includes) {
-        newCode += code.mid(at, include.begin-1);
-        at = include.end;
+        // Extract the include file path
         QString line = code.mid(include.begin, include.end - include.begin),
                 includeFilePath = extractIncludeFilePath(line);
+        // Append the include to check list
         FileInclude newFileInclude = FileInclude{sourceFilePath, includeFilePath};
-//        dialog().information(sourceFilePath + " includes\n" + includeFilePath);
         checkCyclicIncludes(newFileInclude, earlierIncludes);
         earlierIncludes << newFileInclude;
+        // Append code from included file, embraced in comments
         QString paths = "(" + sourceFilePath + " -> " + includeFilePath + ")\n";
         newCode +=
-                "\n// Begin include " + paths +
+                "\n// begin-include " + paths +
                 readFile(includeFilePath, earlierIncludes) +
-                "\n// End include "  + paths;
+                "\n// end-include "  + paths;
     }
+    // If file had include we are new at the end of the last include, or else we are still at the beginning
+    int at = hasIncludes ? includes.last().end : 0;
     newCode += code.mid(at);
+    // Return the new code
     return newCode;
 }
 
@@ -80,7 +89,7 @@ QString BoxPreprocessor::extractUsing(QString code) {
     Positions includes = findDirective(code, "using");
     for (Position include : includes) {
         QString line = code.mid(include.begin, include.end - include.begin);
-        QStringList items = line.split(" ", QString::SkipEmptyParts);
+        QStringList items = line.split(" ", Qt::SkipEmptyParts);
         if (items.size() != 2)
             ThrowException("Write '#using <plugin>").value(line);
         usingPlugin << items.at(1);
@@ -92,11 +101,11 @@ QString BoxPreprocessor::extractUsing(QString code) {
         result = "";
         break;
     case 1:
-        result = usingPlugin.toList().at(0);
+        result = usingPlugin.values().at(0);
         break;
     default:
         ThrowException("Only one #using directive is allowed").
-                value(QStringList(usingPlugin.toList()).join(", "));
+                value(QStringList(usingPlugin.values()).join(", "));
     }
     return result;
 }
@@ -162,7 +171,8 @@ QString BoxPreprocessor::extractIncludeFilePath(QString includeLine) const {
 
 void BoxPreprocessor::checkCyclicIncludes(FileInclude newFileInclude, FileIncludes earlierIncludes) const {
     for (FileInclude fileInclude : earlierIncludes) {
-        if (fileInclude.includeFilePath == newFileInclude.includeFilePath) {
+        if (fileInclude.includeFilePath == newFileInclude.includeFilePath &&
+            fileInclude.sourceFilePath  == newFileInclude.sourceFilePath) {
             ThrowException("Cyclical include").value(fileInclude.sourceFilePath).
                     hint(backtrack(earlierIncludes));
         }

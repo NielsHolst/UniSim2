@@ -24,6 +24,7 @@ public:
     void update();
 private:
     // Inputs
+    double screenAirExponent, Uair, screenUstateExponent, screenUventilationSlope, screenPerfection;
     QVector<double> airTransmissivities, areas;
     // Outputs
     double screensAirTransmissivity;

@@ -29,28 +29,28 @@ void Controllers::amend() {
         box().name("screens").
             box("ProportionalSignal").name("energy1").
                 port("increasingSignal").equals(false).
-                port("maxSignal").equals(1).
+                port("maxSignal").imports("setpoints[maxScreen]").
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenEnergyThreshold1]").
                 port("thresholdBand").imports("setpoints[screenEnergyThresholdBand]").
             endbox().
             box("ProportionalSignal").name("energy2").
                 port("increasingSignal").equals(false).
-                port("maxSignal").equals(1).
+                port("maxSignal").imports("setpoints[maxScreen]").
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenEnergyThreshold2]").
                 port("thresholdBand").imports("setpoints[screenEnergyThresholdBand]").
             endbox().
             box("ProportionalSignal").name("shade1").
                 port("increasingSignal").equals(true).
-                port("maxSignal").equals(1).
+                port("maxSignal").imports("setpoints[maxScreen]").
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenShadeThreshold1]").
                 port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").
             endbox().
             box("ProportionalSignal").name("shade2").
                 port("increasingSignal").equals(true).
-                port("maxSignal").equals(1).
+                port("maxSignal").imports("setpoints[maxScreen]").
                 port("input").imports("outdoors[radiation]").
                 port("threshold").imports("setpoints[screenShadeThreshold2]").
                 port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").

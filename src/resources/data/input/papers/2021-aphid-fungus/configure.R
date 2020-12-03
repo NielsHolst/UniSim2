@@ -34,8 +34,8 @@ theme1 = theme(
 )
 
 # Set (and create as needed) the folders for figures and output data
-output_figures_folder = paste(box_script_folder, "output-figures", sep="/")
-output_data_folder    = paste(box_script_folder, "output-data", sep="/")
+output_figures_folder = "/Users/au152367/Documents/PAPERS/2021/aphids-fungi/sim"
+output_data_folder    = "/Users/au152367/Documents/PAPERS/2021/aphids-fungi/sim"
 
 if (!dir.exists(output_figures_folder)) dir.create(output_figures_folder, TRUE, TRUE)
 if (!dir.exists(output_data_folder))    dir.create(output_data_folder,    TRUE, TRUE)

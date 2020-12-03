@@ -21,10 +21,13 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
     Input(cropGrowthStage).help("Current crop growth stage").unit("Zadoks");
     Input(aphidPressureWithoutF).help("Accumulated aphid pressure without fungus").unit("aphid-days");
     Input(aphidPressureWithF).help("Accumulated aphid pressure with fungus").unit("aphid-days");
+    Input(percentageCadavers).help("Cadaver prevalence").unit("%");
     Input(yieldWithoutF).help("Relative yield without fungus").unit("[0;1]");
     Input(yieldWithF).help("Relative yield witt fungus").unit("[0;1]");
     Output(maxCadaverDensity).help("Maximum cadaver density").unit("per tiller");
     Output(maxCadaverDensityCropGS).help("Crop growth stage at maximum cadaver density").unit("Zadoks");
+    Output(maxPercentageCadavers).help("Maximum cadaver prevalence").unit("%");
+    Output(maxPercentageCadaversCropGS).help("Crop growth stage at maximum cadaver prevalence").unit("Zadoks");
     Output(aphidPressureDifference).help("Difference in aphid pressure caused by fungus").unit("aphid-days");
     Output(yieldDifference).help("Improvement in relative yield when controlled").unit("[0;1]");
 }
@@ -33,6 +36,10 @@ void Biocontrol::update() {
     if (cadaverDensity > maxCadaverDensity) {
         maxCadaverDensity = cadaverDensity;
         maxCadaverDensityCropGS = cropGrowthStage;
+    }
+    if (percentageCadavers > maxPercentageCadavers) {
+        maxPercentageCadavers = percentageCadavers;
+        maxPercentageCadaversCropGS = cropGrowthStage;
     }
     aphidPressureDifference = aphidPressureWithoutF - aphidPressureWithF;
     yieldDifference = yieldWithF - yieldWithoutF;

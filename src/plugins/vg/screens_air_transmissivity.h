@@ -20,6 +20,7 @@ public:
     void update();
 private:
     // Inputs
+    double screenAirExponent;
     QVector<double> states, transmissivities;
     // Outputs
     double value;

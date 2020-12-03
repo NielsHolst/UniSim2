@@ -10,7 +10,7 @@ PhysiologicalTime::PhysiologicalTime(QString name, QObject *parent)
     : Box(name, parent) {
     Class(PhysiologicalTime);
     Input(T).imports("weather[Tavg]");
-    Input(timeStepDays).equals(1).help("Length of a time steps in days");
+    Input(timeStepDays).imports("calendar[timeStepDays]").help("Length of a time steps in days");
     Input(resetTotal).equals(false).help("Reset total to zero?");
     Input(isTicking).equals(true).help("Are day-degrees being computed? Else step will be zero");
     Output(step).help("Increment in day-degrees");

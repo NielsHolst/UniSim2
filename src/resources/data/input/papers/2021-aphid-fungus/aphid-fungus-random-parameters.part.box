@@ -1,0 +1,65 @@
+// 
+// This box script cannot run alone; it must be included in another box script.
+//
+  Box random {
+    $RANDOMISER randomiser {
+      .doSensitivityAnalysis = sim/settings[doSensitivityAnalysis]
+      .bootstrapSize = sim/settings[bootstrapSize]
+    }
+    RandomUniformInt fileNumber {
+      .min = 1
+      .fixed = 1
+      .max = weatherFiles[numFiles]
+    }
+    RandomNormal cropAtStart {
+      .min = 10
+      .fixed = 20
+      .max = 30 
+    }
+    RandomNormal cropHalfways {
+      .min = 750 
+      .fixed = 800
+      .max = 850 
+    }
+    RandomUniformInt k {
+      .min = 15
+      .fixed = 15
+      .max = 30
+    }
+    RandomNormal propExposedImmigrants {
+      .min = 0.1
+      .fixed = 0.5
+      .max = 0.7
+    }
+    RandomNormal lethalTime {
+      // 2019/08/06: Lethal time for nymphs and adults are the same
+      .min = 50 
+      .fixed = 73
+      .max = 115
+    }
+    RandomNormal immunityCost {
+      .min = 0
+      .fixed = 0.2
+      .max = 0.4
+    }
+    RandomNormal cadaverDuration {
+      .min = 48 
+      .fixed = 80
+      .max = 112 
+    }
+    RandomNormal timeAcceleration {
+      .min=1
+      .fixed=2
+      .max=3
+    }
+    RandomNormal sporulationOn {
+      .min = 80 
+      .fixed = 90
+      .max = 99 
+    }
+    RandomNormal transmissionEfficiency {
+      .min = 0.05
+      .fixed = 0.1728
+      .max = 0.5 
+    }
+  }

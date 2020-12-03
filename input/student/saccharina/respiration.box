@@ -1,8 +1,9 @@
 Simulation sim {
-  .steps = 35
-  Sequence T {
+  .steps = T[steps]
+  SequenceByStep T {
     .min = -5
     .max = 30
+    .by = 0.5
   }
   DemandCarbonRespiration respiration {
     .T = T[value]

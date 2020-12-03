@@ -1,5 +1,4 @@
 #include <base/publish.h>
-#include <base/test_num.h>
 #include "photosynthesis.h"
 
 using namespace base;
@@ -33,7 +32,7 @@ void Photosynthesis::reset() {
 void Photosynthesis::update() {
     const double c = 3600e-6;
     Iabsorbed = I*(1. - exp(-k*lai))/plantDensity;
-    supply = TestNum::eqZero(demand) ?
+    supply = (demand<1e-16) ?  // Accept smaller demands 19/11/2020
                 0. :
                 demand*(1. - exp(-alpha*Iabsorbed*fTemp*fNitrogen*c/demand));
     sdRatio = (demand==0.) ? 0. : supply/demand;

@@ -12,12 +12,10 @@ public:
     void update();
 private:
     // Inputs
-    double kA, Cstruct, Nstruct, kdw, A, C, N;
+    double structuralMass, structuralMassGrowth, kA, Cstruct, Nstruct, kdw, kN, kC, Nmin, Cmin, C, N, plantDensity, ropeDensity;
     // Outputs
-    double structure,
-        carbonReserve, nitrogenReserve,
-        carbonTotal, nitrogenTotal, CNratio, nitrogenPct,
-        total, totalWetWeight;
+    double Dryweight, Wetweight, carbonTotal, nitrogenTotal,
+    nitrogenPct, carbonPct, DryweightprAlgae, DryweightprHour, DryweightYieldprmeter, WetweightYieldprmeter, CNratio;
 };
 
 }

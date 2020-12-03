@@ -51,7 +51,7 @@ private:
         growthLightSetting1,       growthLightSetting2,       growthLightSetting3,
         growthLightThresholdLow1,  growthLightThresholdLow2,  growthLightThresholdLow3,
         growthLightThresholdHigh1, growthLightThresholdHigh2, growthLightThresholdHigh3,
-        screenCrack;
+        screenCrack, screenPerfection;
 private:
     double maxScreen;
 };

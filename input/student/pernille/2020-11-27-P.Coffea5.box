@@ -1,0 +1,81 @@
+// P.Coffea5.box
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2001
+  }
+  Records weather {
+    .fileName = "CBB/weatherdata/Campinas.txt"
+	.cycle = TRUE // data genbruges 
+  }
+  
+  Box Parasitoid {
+    DayDegrees time {
+        .T0 = 16.02 // 13,7 Gutierrez et al., 1998. 16,02 Rodriguez et al., 2017
+        .Topt = 25
+        .Tmax = 33.64 // Rodriguez et al., 2017. 32 Gutierrez et al., 1998
+        .T = weather[Tavg]
+	}	
+	OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/9/* // 1 september any year
+      .xOff = 30/9/* // 30th of September //Vieira, 2008
+      .valueOn = 0.1 // immigration rate adult/plant/day Gutierrez et al., 1998
+      .valueOff = 0
+      
+    }
+    Stage adult {
+      .inflow|sum = ../../pupa[outflow] | immigration[value]
+      .duration = 3 
+      .timeStep = 1
+      .growthFactor = 17.1 // R0 = 18 eggs. Sex ratio 20:1. (Ro = 18*0,05 = 0,9. 0,9-18= 17,1) // Feldhege 1992. 0,6 Rodriguez et al., 2017
+    }
+    Stage oviposition {
+      .inflow = ../adult[inflow]   
+      .duration = ../adult[duration]   
+      .timeStep = ../adult[timeStep]   
+      .growthFactor = 17.1 // R0 = 18 eggs. Sex ratio 20:1. (Ro = 18*0,05 = 0,9. 0,9-18= 17,1) // Feldhege 1992. 0,6 Rodriguez et al., 2017
+    }
+    Stage egg {
+      .inflow = ../oviposition[outflow]   
+      .duration = 36
+      .timeStep = ../time[step]  
+     
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 276
+      .timeStep = ../time[step]
+      
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 324
+      .timeStep = ../time[step]
+    
+    }
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 3  
+      +monthBreaks = "scale_x_datetime(
+                        breaks = date_breaks('2 months'),
+                        labels = date_format('%b')
+                      )"  
+      PlotR {
+        .ports = *[content]
+        .ggplot = ..[monthBreaks]
+      }
+      PlotR {
+        .ports = *[outflowTotal]
+        .ggplot = ..[monthBreaks]
+      }
+      PlotR {  
+        +immigration = immigration[value]
+        .ports = (calendar[date]  .[immigration] weather[Tavg])
+        .ggplot = ..[monthBreaks]
+      }
+    }
+  }
+}

@@ -20,7 +20,6 @@ LeakageVentilation::LeakageVentilation(QString name, QObject *parent)
     help("computes air flux by leakage");
     Input(leakage).equals(1).help("Infiltration rate at a wind speed of 4 m/s").unit("/h");
     Input(windSpeed).imports("outdoors[windSpeed]", CA);
-    Input(screensAirTransmissivity).imports("shelter[screensAirTransmissivity]", CA);
     Output(flux).help("Air flux by leakage").unit("/h");
 }
 
@@ -29,7 +28,7 @@ void LeakageVentilation::reset() {
 }
 
 void LeakageVentilation::update() {
-    flux = screensAirTransmissivity*leakage*windSpeed/4.;
+    flux = leakage*windSpeed/4.;
 }
 
 } //namespace

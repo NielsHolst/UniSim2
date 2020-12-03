@@ -20,7 +20,7 @@ public:
     void update();
 private:
     // Inputs
-    double leakage, windSpeed, screensAirTransmissivity;
+    double leakage, windSpeed;
     // Output
     double flux;
 };

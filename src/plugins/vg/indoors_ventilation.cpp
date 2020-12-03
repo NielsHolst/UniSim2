@@ -22,6 +22,7 @@ IndoorsVentilation::IndoorsVentilation(QString name, QObject *parent)
     help("computes total air flux from outdoors to indoors");
     Input(fluxLeak).imports("./leakage[flux]", CA);
     Input(fluxVent).imports("actuators/ventilation[flux]", CA);
+    Input(screensAirTransmissivity).imports("shelter[screensAirTransmissivity]", CA);
     Output(flux).help("Total air flux").unit("/h");
 }
 
@@ -30,7 +31,7 @@ void IndoorsVentilation::reset() {
 }
 
 void IndoorsVentilation::update() {
-    flux = sqrt(p2(fluxLeak) + p2(fluxVent));
+    flux = screensAirTransmissivity*sqrt(p2(fluxLeak) + p2(fluxVent));
 }
 
 } //namespace

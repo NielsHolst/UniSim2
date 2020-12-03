@@ -392,7 +392,7 @@
 </xsl:template>
 
 <xsl:template name="extract-shelter-face">
-  <xsl:param name="position"/>
+  <xsl:param name="position"/>  
   <box class="vg::ShelterFaceArea" name="area"/>
   <xsl:call-template name="extract-cover">
     <xsl:with-param name="cover" select="DVV_SETUP/Greenhouse/Panes/Pane[Position=$position]"/>
@@ -996,6 +996,77 @@
       </port>
     </box>
     <box class="vg::Shelter" name="shelter">
+      <xsl:variable name="screenAirExponentName" select="'screenAirExponent'"/>
+      <xsl:variable name="screenAirExponentSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$screenAirExponentName]/Value" as="node()"/>
+      <xsl:variable name="screenAirExponentValue" select="number(replace($screenAirExponentSrc, ',', '.'))"/>
+      <xsl:variable name="UairName" select="'screenUair'"/>
+      <xsl:variable name="UairSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$UairName]/Value" as="node()"/>
+      <xsl:variable name="UairValue" select="number(replace($UairSrc, ',', '.'))"/>
+      <xsl:variable name="screenUstateExponentName" select="'screenUstateExponent'"/>
+      <xsl:variable name="screenUstateExponentSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$screenUstateExponentName]/Value" as="node()"/>
+      <xsl:variable name="screenUstateExponentValue" select="number(replace($screenUstateExponentSrc, ',', '.'))"/>
+      <xsl:variable name="screenUventilationSlopeName" select="'screenUventilationSlope'"/>
+      <xsl:variable name="screenUventilationSlopeSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$screenUventilationSlopeName]/Value" as="node()"/>
+      <xsl:variable name="screenUventilationSlopeValue" select="number(replace($screenUventilationSlopeSrc, ',', '.'))"/>
+      <xsl:variable name="screenPerfectionName" select="'screenPerfection'"/>
+      <xsl:variable name="screenPerfectionSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$screenPerfectionName]/Value" as="node()"/>
+      <xsl:variable name="screenPerfectionValue" select="number(replace($screenPerfectionSrc, ',', '.'))"/>
+
+      <port name="screenAirExponent">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$screenAirExponentName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($screenAirExponentSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$screenAirExponentValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="Uair">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$UairName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($UairSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$UairValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="screenUstateExponent">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$screenUstateExponentName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($screenUstateExponentSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$screenUstateExponentValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="screenUventilationSlope">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$screenUventilationSlopeName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($screenUventilationSlopeSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$screenUventilationSlopeValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="screenPerfection">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$screenPerfectionName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($screenPerfectionSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$screenPerfectionValue"/>
+        </xsl:attribute>
+      </port>
       <box class="vg::ShelterFace" name="roof1">
         <xsl:call-template name="extract-shelter-face">
           <xsl:with-param name="position" select="1"/>

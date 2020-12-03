@@ -14,7 +14,7 @@
 	<XMLVersion>1.5</XMLVersion>
 	<XMLDate>15-11-2020 08:35:45</XMLDate>
 	<Weather>
-		<File>C:\Virtual Greenhouse Development\VG Weather\DNK_Dry.txt</File>
+		<File>../input/sel_dk.txt</File>
 	</Weather>
 	<Designed_for>
 		<Line1>Terra Consulting</Line1>
@@ -60,9 +60,27 @@
 				<Value>26</Value>
 			</Parameters>
 			<Parameters>
-				<ParameterName>UwindSlope</ParameterName>
+				<ParameterName>UwindSlope</ParameterName>  <!-- cover -->
 				<Value>1.2</Value>
 			</Parameters>
+      
+			<Parameters>
+				<ParameterName>screenAirExponent</ParameterName>
+				<Value>4</Value>
+			</Parameters>
+			<Parameters>
+				<ParameterName>screenUstateExponent</ParameterName>
+				<Value>32</Value>
+			</Parameters>
+			<Parameters>
+				<ParameterName>screenUventilationSlope</ParameterName>
+				<Value>2</Value>
+			</Parameters>
+			<Parameters>
+				<ParameterName>screenUair</ParameterName>
+				<Value>2.27</Value>
+			</Parameters>
+      
 			<Parameters>
 				<ParameterName>leakage</ParameterName>
 				<Value>1</Value>

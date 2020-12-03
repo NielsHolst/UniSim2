@@ -20,10 +20,12 @@ private:
     double
         cadaverDensity, cropGrowthStage,
         aphidPressureWithoutF, aphidPressureWithF,
+        percentageCadavers,
         yieldWithoutF, yieldWithF;
     // Outputs
     double aphidPressureDifference, yieldDifference,
-        maxCadaverDensity, maxCadaverDensityCropGS;
+        maxCadaverDensity, maxCadaverDensityCropGS,
+        maxPercentageCadavers, maxPercentageCadaversCropGS;
 };
 
 }

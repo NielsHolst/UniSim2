@@ -37,6 +37,10 @@
 			<port name="reflection" externalName="GreenhouseReductionFactorLight" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="0.1"/>
 		</box>
 		<box class="vg::Shelter" name="shelter">
+			<port name="screenAirExponent" externalName="screenAirExponent" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="4"/>
+			<port name="Uair" externalName="screenUair" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="2.27"/>
+			<port name="screenUstateExponent" externalName="screenUstateExponent" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="32"/>
+			<port name="screenUventilationSlope" externalName="screenUventilationSlope" source="/DVV_SETUP/Greenhouse/Constants/Parameters/Value" value="2"/>
 			<box class="vg::ShelterFace" name="roof1">
 				<box class="vg::ShelterFaceArea" name="area"/>
 				<box class="vg::Cover" name="cover">
@@ -666,6 +670,7 @@
 		<box class="OutputText" name="text">
 			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="480"/>
+			<port name="averageN" value="20"/>
 		</box>
 	</box>
 </box>

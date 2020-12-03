@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double maxGrowthRate, structuralMass, fTemp, fSalinity, fArea, timeStep;
+    double maxGrowthRate, proportionC, structuralMass, fTemp, fSalinity, fArea, timeStep;
     // Outputs
     double value;
 };

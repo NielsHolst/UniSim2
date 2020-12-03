@@ -24,6 +24,7 @@ ScreensAirTransmissivity::ScreensAirTransmissivity(QString name, QObject *parent
     : Box(name, parent)
 {
     help("computes total air transmissivity through screens");
+    Input(screenAirExponent).imports("shelter[screenAirExponent]");
     Input(states).imports("../*[state]").unit("[0;1]");
     Input(transmissivities).imports("../*[transmissivityAir]").unit("[0;1]");
 
@@ -84,11 +85,11 @@ void ScreensAirTransmissivity::update() {
 */
 
 void ScreensAirTransmissivity::update() {
-    // Only screens fully drawn has an effect on air transmissivity
     value = 1.;
     for (int i=0; i<_n; ++i) {
-        if (eq(states.at(i), 1.))
-            value *= transmissivities.at(i);
+        const double &state(states.at(i)),
+                     &trans(transmissivities.at(i));
+        value *= trans + (1.-trans)*pow((1.-state), 1./screenAirExponent);
     }
 }
 

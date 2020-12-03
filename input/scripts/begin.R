@@ -10,8 +10,8 @@ library(splines)
 library(stringr)
 
 
-if (!keepPages) graphics.off ()
-if (!keepVariables) {
+if (exists("keepPages") && !keepPages) graphics.off ()
+if (exists("keepVariables") && !keepVariables) {
   del = ls(all=TRUE) 
   del = del[!(del %in% c("box_script_folder", "output_file_name"))]
   rm(list=del)

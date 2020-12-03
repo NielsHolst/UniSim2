@@ -25,8 +25,7 @@ private:
     double minFlux, maxFlux,
         windCoef, temperatureCoef,
         windSpeed, outdoorsTemperature, indoorsTemperature,
-        effectiveVentArea, groundArea,
-        screensAirTransmissivity;
+        effectiveVentArea, groundArea;
     // Output
     double flux, relative;
 };

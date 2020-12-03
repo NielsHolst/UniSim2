@@ -26,7 +26,7 @@ CropGrowth::CropGrowth(QString name, QObject *parent)
 
 void CropGrowth::update() {
     double dt = 3600*timeStepSecs;
-    netGrowthRate = Pn*30./44.;
+    netGrowthRate = Pn*30./44.;  // g CH20 from g CO2
     netGrowthAllocation = netGrowthRate*dt;
 }
 

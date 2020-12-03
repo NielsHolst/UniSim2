@@ -19,7 +19,7 @@ Scenarios::Scenarios(QString name, QObject *parent)
 {
     help("runs scenarios from a text file");
     Input(fileName).help("Text file with columns, one for each output produced. One iteration is run for each line").equals("scenarios.txt");
-    Input(title).help("Name of column that holds title of scenarion (optional)");
+    Input(title).help("Name of column that holds title of scenario (optional)");
     Output(atEnd).help("Has last iteration run?");
 }
 

@@ -35,7 +35,7 @@ Setpoints::Setpoints(QString name, QObject *parent)
     ELEMENT(crackVentilationTemperatureMinBand).unit("oC").help("Crack start closing at low temperature (T<crackVentTempMin+crackVentTempMinBand)");
     ELEMENT(screenCrackAtHighRh).unit("[0;1]").help("Max. screen crack opening at high RH (RH>=rhMax+rhMaxBand)");
     ELEMENT(screenCrackAtHighTemperature).unit("[0;1]").help("Max. screen crack opening at high T (T>=ventTemp+screenCrackAtHighTempBand)");
-    ELEMENT(screenCrackAtHighTemperatureBand).unit("oC").help("Crack starts opening at high T (T>ventTemp)");;
+    ELEMENT(screenCrackAtHighTemperatureBand).unit("oC").help("Crack starts opening at high T (T>ventTemp)");
     ELEMENT(co2Capacity).unit("g/m2/h").help("Max. CO2 injection rate");
     ELEMENT(co2Setpoint).unit("ppm").help("Desired CO2 concentration");
     ELEMENT(co2VentilationThreshold).unit("[0;1]").help("CO2 injection rate falls below capacity at ventilation above this threshold");
@@ -59,6 +59,7 @@ Setpoints::Setpoints(QString name, QObject *parent)
     LIGHT(growthLightThresholdHigh, thresholdHigh, 2);
     LIGHT(growthLightThresholdHigh, thresholdHigh, 3);
     Input(screenCrack).imports("./screenCrack[value]",CA).unit("[0;1]").help("Screen crack held open");
+    Input(screenPerfection).imports("shelter[screenPerfection]");
     Output(maxScreen).unit("[0;1]").help("Max. setting of screen");
 }
 
@@ -117,7 +118,7 @@ void Setpoints::amend() {
             port("input").imports("indoors/humidity[rh]",CA).
             port("threshold").imports("../..[rhMax]",CA).
             port("thresholdBand").imports("../..[rhMaxBand]",CA).
-            port("increasingSignal").equals(false).
+            port("increasingSignal").equals(true).
             port("minSignal").equals(0.).
             port("maxSignal").imports("../..[screenCrackAtHighRh]",CA).
         endbox().
@@ -125,7 +126,7 @@ void Setpoints::amend() {
             port("input").imports("indoors/temperature[value]",CA).
             port("threshold").imports("../../ventilationTemperature[value]",CA).
             port("thresholdBand").imports("../..[screenCrackAtHighTemperatureBand]",CA).
-            port("increasingSignal").equals(false).
+            port("increasingSignal").equals(true).
             port("minSignal").equals(0.).
             port("maxSignal").imports("../..[screenCrackAtHighTemperature]",CA).
         endbox().
@@ -137,7 +138,7 @@ void Setpoints::reset() {
 }
 
 void Setpoints::update() {
-    maxScreen = 1. - screenCrack;
+    maxScreen = screenPerfection*(1. - screenCrack);
 }
 
 } //namespace

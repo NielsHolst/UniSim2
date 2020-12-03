@@ -21,7 +21,8 @@ public:
 
 private:
     // Inputs
-    double fluxLeak, fluxVent;
+    double fluxLeak, fluxVent,
+        screensAirTransmissivity;
     // Outputs
     double flux;
 };
