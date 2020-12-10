@@ -16,7 +16,7 @@ DemandNitrogenReserves::DemandNitrogenReserves(QString name, QObject *parent)
     Input(structuralMass).imports("structure[mass]");
     Input(structProportionC).imports("sim/structure[proportionC]");
     Input(demandStructureC).imports("demand/carbon/structure[value]");
-    Output(value).unit("g C").help("Demand for nitrogen reserves ");
+    Output(value).unit("g N").help("Demand for nitrogen reserves ");
 }
 
 void DemandNitrogenReserves::reset() {

@@ -12,9 +12,9 @@ public:
     void update();
 private:
     // Inputs
-    double beta, demand, area, lai, fCurrent, N, timeStepSecs;
+    double beta, demand, area, lai, fCurrent, N, timeStepSecs, dryWeight;
     // Outputs
-    double supply, sdRatio, J;
+    double supply, sdRatio, J, V, B;
 };
 
 }

@@ -23,23 +23,19 @@ Biomass::Biomass(QString name, QObject *parent)
     Input(kdw).equals(0.0785).help("Dry weight to wet weight ratio");
     Input(kN).equals(2.72).help("Mass of nitrogen reserves per gram nitrogen");
     Input(kC).equals(2.1213).help("Mass of carbon reserves per gram nitrogen");
-    Input(Nmin).equals(0.01).help("minimum N reserve");
-    Input(Cmin).equals(0.01).help("minimum C reserve");
     Input(C).imports("reserves/carbon[proportion]");
     Input(N).imports("reserves/nitrogen[proportion]");
-    Input(plantDensity).equals(1.).unit("per m2").help("Plant density");
-    Input(ropeDensity).equals(1.).unit("per m2").help("rope density");
-    Output(Dryweight).unit("g DW").help("Dryweight");
-    Output(DryweightprHour).unit("g DW").help("Dryweight");
-    Output(Wetweight).unit("g DW").help("Wetweight");
-    Output(carbonTotal).unit("g C").help("Carbon total weight");
-    Output(nitrogenTotal).unit("g N").help("Nitrogen total weight");
-    Output(nitrogenPct).unit("%").help("Percentage nitrogen content (by dry weight)");
+    Input(plantDensity).equals(1.).unit("per m rope").help("Plant density");
+    Output(dryWeight).unit("g DW").help("Dry weight per plant");
+    Output(dryWeightGrowth).unit("g DW/h").help("Dry weight growth increment");
+    Output(wetWeight).unit("g WW").help("Wet weight per plant");
+    Output(carbonWeight).unit("g C").help("Carbon total weight");
+    Output(nitrogenWeight).unit("g N").help("Nitrogen total weight");
     Output(carbonPct).unit("%").help("Percentage carbon content (by dry weight)");
-    Output(DryweightprAlgae).unit("g DW pr algae").help("g DW per individual algae");
-    Output(DryweightYieldprmeter).unit("g DW pr m cultivation rope").help("g DW pr m cultivation rope");
-    Output(WetweightYieldprmeter).unit("g WW pr m cultivation rope").help("g WW pr m cultivation rope");
+    Output(nitrogenPct).unit("%").help("Percentage nitrogen content (by dry weight)");
     Output(CNratio).help("C/N ratio");
+    Output(dryWeightYield).unit("g DW per m rope").help("Standing yield (dry weight)");
+    Output(wetWeightYield).unit("g WW per m rope").help("Standing yield (wet weight)");
 }
 
 void Biomass::reset() {
@@ -48,18 +44,18 @@ void Biomass::reset() {
 
 void Biomass::update() {
 
-   Dryweight = structuralMass * (1 + (C-Cmin)*kC + Cmin + (N-Nmin)*kN + Nmin);
-   DryweightprHour = structuralMassGrowth * (1 + (C-Cmin)*kC + Cmin + (N-Nmin)*kN + Nmin);
-   Wetweight = structuralMass * ((1/kdw) + (C-Cmin)*kC + Cmin + (N-Nmin)*kN + Nmin);
-   carbonTotal = structuralMass * (C + Cstruct);
-   nitrogenTotal = structuralMass * (N + Nstruct);
-   CNratio = (nitrogenTotal>0.) ? carbonTotal/nitrogenTotal : 0.;
-   nitrogenPct = (Dryweight>0.) ? 100.*nitrogenTotal/Dryweight : 0.;
-   carbonPct = (Dryweight>0.) ? 100.*carbonTotal/Dryweight : 0.;
-   DryweightprAlgae = Dryweight/plantDensity;
-   DryweightYieldprmeter = Dryweight/ropeDensity;
-   WetweightYieldprmeter = Wetweight/ropeDensity;
+   dryWeight = structuralMass * (1 + C*kC + N*kN);
+   dryWeightGrowth = structuralMassGrowth * (1 + C*kC + N*kN);
+   wetWeight = structuralMass * ((1/kdw) + C*kC + N*kN);
+   carbonWeight = structuralMass * (C + Cstruct);
+   nitrogenWeight = structuralMass * (N + Nstruct);
+   carbonPct = (dryWeight>0.) ? 100.*(carbonWeight/dryWeight) : 0.;
+   nitrogenPct = (dryWeight>0.) ? 100.*(nitrogenWeight/dryWeight) : 0.;
+   CNratio = (nitrogenWeight>0.) ? carbonWeight/nitrogenWeight : 0.;
+   dryWeightYield = dryWeight*plantDensity;
+   wetWeightYield = wetWeight*plantDensity;
 }
 
 
 }
+

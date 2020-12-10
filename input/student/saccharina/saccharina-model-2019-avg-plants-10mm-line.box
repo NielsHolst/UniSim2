@@ -1,0 +1,11 @@
+Simulation sim {
+  .steps = 6377
+  Box setup {
+    +trial   = "Average plants 2019-2020 on 10 mm line"
+    +envFile = "weather/env_file_2019-AVG.txt"
+    +obsFile = "alge-obs-2019-AVG-vandrette-liner-100m.txt"
+    +endR    = "saccharina-end.R"
+    +initialDateTime = "2019-10-16"
+  }
+  #include "saccharina-model.part.box"
+}

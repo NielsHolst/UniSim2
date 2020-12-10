@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double m1, A, m2, A0;
+    double A, a50, aSlope, aMax;
     // Outputs
     double value;
 };

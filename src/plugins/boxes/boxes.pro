@@ -19,6 +19,7 @@ HEADERS +=  \
     calendar.h \
     combinations.h \
     date.h \
+    date_split.h \
     day_degrees.h \
     date_time_signal.h \
     demand_budget.h \
@@ -102,6 +103,7 @@ SOURCES +=  \
     calendar.cpp \
     combinations.cpp \
     date.cpp \
+    date_split.cpp \
     date_time_signal.cpp \
     day_degrees.cpp \
     demand_budget.cpp \

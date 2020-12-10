@@ -33,7 +33,6 @@ void Scenarios::amend() {
 }
 
 void Scenarios::initialize() {
-    ExceptionContext(this);
     // Set simulation to stop after last scenario
     Box *sim = findMaybeOne<Box>("/*<Simulation>");
     if (sim) {

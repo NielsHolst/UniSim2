@@ -1,0 +1,11 @@
+Simulation sim {
+  .steps = 6377
+  Box setup {
+    +trial   = "Large plants 2019-2020"
+    +envFile = "weather/env_file_2019_2020.txt"
+    +obsFile = "alge-obs_2019_2020.txt"
+    +endR = "saccharina-end.R"
+    +initialDateTime = "2019-10-03"
+  }
+  #include "saccharina-model.part.box"
+}

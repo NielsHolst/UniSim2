@@ -19,7 +19,7 @@ private:
     // Input
     int day, month, year;
     // Output
-    QDate value;
+    QDate date;
 };
 
 }

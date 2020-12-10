@@ -8,11 +8,14 @@ class Structure : public base::Box
 {
 public:
     Structure(QString name, QObject *parent);
+    void reset();
+    void update();
 private:
     // Inputs
-    double proportionC, proportionN;
+    double proportionC, proportionN,
+        initMass, allocation;
     // Outputs
-    double mass, senescent, respired;
+    double mass;
 };
 
 }

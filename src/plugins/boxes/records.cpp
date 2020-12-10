@@ -38,7 +38,7 @@ Records::Records(QString name, QObject *parent)
     Output(currentDate).help("Date stamp of the current outputs");
     Output(nextDate).help("Date stamp of the next outputs");
     Output(currentTime).help("Time stamp of the current outputs");
-    Output(nextTime).help("Time stamp of the next outputs");;
+    Output(nextTime).help("Time stamp of the next outputs");
 
     _currentColumnValues = new QVector<double>;
     _nextColumnValues = new QVector<double>;
@@ -98,7 +98,7 @@ void Records::readLineItems() {
     while (!_file.atEnd() && line.isEmpty()) {
         line = QString(_file.readLine().simplified());
     }
-    _lineItems = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+    _lineItems = line.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
     _pastLastLine = _lineItems.isEmpty();
 }
 
@@ -128,9 +128,6 @@ void Records::initialize() {
     readLineItems(); // skip labels
     advanceFirstLine();
     firstDateTime = currentDateTime;
-//    dialog().information("firstDateTime    A "   + convert<QString>(firstDateTime) +
-//                         "\ncurrentDateTime  A " + convert<QString>(currentDateTime) +
-//                         "\ncalendarDateTime A " + convert<QString>(calendarDateTime));
     while (!_pastLastLine)
         advanceLine();
     lastDateTime = currentDateTime;
@@ -178,10 +175,10 @@ void Records::advanceTime() {
 }
 
 void Records::extractValues() {
-    if (!_pastLastLine && _lineItems.size() != _columnNames.size())
-        ThrowException("Number of items in records file does not match number of column names").
-                        value(_lineItems.join(" ")).context(this);
-
+    if (!_pastLastLine && _lineItems.size() != _columnNames.size()) {
+        QString s = "Number of items in records file (%1) does not match number of column names";
+        ThrowException(s.arg(fileName)).value(_columnNames.join(";")).value2(_lineItems.join(";")).context(this);
+    }
     try {
         for (int i = 0; i < _lineItems.size(); ++i) {
             if (i == _dateColumn)

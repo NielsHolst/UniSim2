@@ -1,0 +1,30 @@
+Simulation sim {
+  .steps = setup[steps]
+  Box parameters {
+    +Cinit = 0.8        // inital carbon proportion (g/g sw)
+    +Ninit = 0.044      //0.022 inital nitrogen proportion (g/g sw)
+    +Winit = 0.00125    // initial weight of the structural mass (g)
+    +aMax = 3.3     // Growth rate adjustment parameter
+    +a50 = 3.0      //Growth rate adjustment parameter
+    +g = 0.001          //Maximal growth rate
+    +alpha = 2.69 //photosynthetic effectivity
+    +beta = 1.4 //Efficiency of nitrogen uptake
+    +k = 0.6 // light extinction coefficient
+    +gamma = 0.0001 //Exudation rate
+    +uMin = 0.28 //Minimum value of current equation
+    +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
+    +demandT0 = -2 // Minimum Temperature where growth stops
+    +demandTopt1 = 5 // Lower optimal temperature for growth 
+    +demandTopt2 = 15 // Upper optimal temperature for growth
+    +demandTmax = 24 // Maximal Temperature where growth  stops
+    +supplyT0 = -2 // Minimum Temperature where  photosynthesis stops
+    +supplyTopt1 = 5 // Lower optimal temperature for photosynthesis
+    +supplyTopt2 = 15 // Upper optimal temperature for photosynthesis
+    +supplyTmax = 24 // Maximal Temperature where photosynthesis stops
+    +duration = 400 //Number of degree days before the tissue erodes
+  }
+  Scenarios setup {
+    .fileName = "saccharina-scenarios.txt"
+  }
+  #include "saccharina-model.part.box"
+}

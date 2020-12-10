@@ -19,13 +19,13 @@ private:
         supplyCarbonTotal, supplyNitrogenTotal,
         demandCarbonRespiration,
         demandCarbonStructure, demandNitrogenStructure,
-        proportionExuded;
+        proportionExuded, demandErosion;
     // Outputs
     double
         MC0, MC1, MC2, MC3,
         MN0, MN1,
         supplyCarbonStructure, supplyCarbonExudation,
-        structuralMassGrowth, structuralMassLoss, structuralMassLossRate,
+        structuralMassGrowth, structuralMassLoss,
         reservesProportionC, reservesProportionN,
         sdCarbon, sdNitrogen;
 

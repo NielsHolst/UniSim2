@@ -19,7 +19,7 @@ Date::Date(QString name, QObject *parent)
     Input(day).equals(1).help("Day of month").unit("[1;31]");
     Input(month).equals(1).help("Month").unit("[1;12]");
     Input(year).equals(1).help("Year").unit("Integer");
-    Output(value).help("The date constructed");
+    Output(date).help("The date constructed");
 }
 
 
@@ -28,10 +28,10 @@ void Date::reset() {
 }
 
 void Date::update() {
-    value = QDate(year, month, day);
-    if (!value.isValid()) {
+    date = QDate(year, month, day);
+    if (!date.isValid()) {
         QString s("%1/%2/%3");
-        ThrowException("Invalid data (y/m/d").value(s.arg(year).arg(month).arg(year)) .context(this);
+        ThrowException("Invalid date (y/m/d").value(s.arg(year).arg(month).arg(year)) .context(this);
     }
 }
 

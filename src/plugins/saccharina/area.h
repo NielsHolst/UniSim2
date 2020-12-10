@@ -12,9 +12,9 @@ public:
     void update();
 private:
     // Inputs
-    double structuralMass, kA, plantDensity;
+    double structuralMass, plantDensity, l, aa, ab;
     // Outputs
-    double value, lai;
+    double value, length, lai, kA;
 };
 
 }

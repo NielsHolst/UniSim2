@@ -12,14 +12,13 @@ PUBLISH(DemandCarbonRespiration)
 DemandCarbonRespiration::DemandCarbonRespiration(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("calculates temperature-dependent respiration rate (eq.14)");
-    Input(r1).unit("g C/dm2/h").equals(0.0002785).help("Respiration rate at T = TR1");
-    Input(TAR).unit("K").equals(11033).help("Arrhenius temperature for respiration");
-    Input(TR1).unit("K").equals(285).help("Reference temperature for respiration");
+    help("calculates temperature-dependent respiration rate");
+    Input(resp20).equals(0.000573 ).unit("h-1").help("Respiration rate at 20 oC");
+    Input(Q10).equals(1.05).help("For Q10 rule");
+    Input(dryWeight).imports("biomass[dryWeight]");
     Input(T).imports("env[T]");
-    Input(area).imports("area[value]");
     Input(timeStep).imports("calendar[timeStepSecs]");
-    Output(value).unit("g C/dm2/h").help("Respiration rate");
+    Output(value).unit("g C").help("Respiration rate");
 }
 
 void DemandCarbonRespiration::reset() {
@@ -27,8 +26,9 @@ void DemandCarbonRespiration::reset() {
 }
 
 void DemandCarbonRespiration::update() {
-    double TK = T + T0;
-    value = r1 * exp(TAR/TR1 - TAR/TK)*area*timeStep/3600.;
+    double respRate = resp20*pow(Q10, (T-20.)/10.),
+           dt = timeStep/3600.;
+    value = 12./180.*respRate*dryWeight*dt;
 }
 
 }

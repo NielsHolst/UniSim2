@@ -38,11 +38,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 
 # Compiler options to silence warnings
-QMAKE_CXXFLAGS += -Wno-padded
+QMAKE_CXXFLAGS += -Wno-padded -Wno-int-in-bool-context
 
 # Compiler options to silence warnings when compiling Boost
-QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations
-#-Wno-misleading-indentation (only available in newer gcc vesions?)
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-deprecated-copy
+#-Wno-misleading-indentation (only available in newer gcc versions?)
 DEFINES += BOOST_ALLOW_DEPRECATED_HEADERS
 
 # Compiler options to silence warnings when compiling under Mac OS X

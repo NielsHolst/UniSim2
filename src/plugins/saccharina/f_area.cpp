@@ -12,12 +12,12 @@ PUBLISH(Farea)
 Farea::Farea(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("calculates the effect of frond area on growth rate (eq. 3)");
-    Input(m1).equals(0.7).help("Growth rate adjustment");
-    Input(m2).equals(0.3).help("Growth rate adjustment parameter");
-    Input(A0).equals(2).unit("dm2").help("Growth rate adjustment parameter");
+    help("calculates factor for accelerate growth of small plants");
     Input(A).imports("area[value]");
-    Output(value).unit("[0;1]").help("Growth factor adjustment for area");
+    Input(a50).equals(3.).unit("dm2").help("Area at which erosion reaches 50%");
+    Input(aSlope).equals(3.).help("Slope at A50");
+    Input(aMax).equals(3.3);
+    Output(value).unit(">=1").help("Growth factor adjustment for area");
 }
 
 void Farea::reset() {
@@ -25,8 +25,8 @@ void Farea::reset() {
 }
 
 void Farea::update() {
-    // Re-scale to max value of 1
-    value = m1*exp(-sqr(A/A0))+m2;
+    value = (A == 0.) ? aMax : 1. + (aMax - 1.)/(1. + exp(aSlope*(log(A) - log(a50))));
 }
+
 }
 

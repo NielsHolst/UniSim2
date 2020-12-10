@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double r1, TAR, TR1, T, area, timeStep;
+    double resp20, Q10, dryWeight, T, timeStep;
     // Outputs
     double value;
 };
