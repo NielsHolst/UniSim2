@@ -1,22 +1,22 @@
 Simulation sim {
-  // Run from 1 Oct to 1 Jul = 273 days = 6552 hours
-  .steps = 6552
-  .iterations = 4
+  .iterations = 1536
+  .steps = 5900
+  .silent = TRUE
+  .unattended = TRUE
   Box parameters {
-    +Cinit = 0.8 // inital carbon proportion (g/g sw)
-    +Ninit = 0.044 //0.022 inital nitrogen proportion (g/g sw)
-    +Winit = 0.00125 // initial weight of the structural mass (g)
-    +fAreaMax = 3.3 // Growth rate adjustment parameter
-    +fArea50 = 3.0 //Growth rate adjustment parameter
-    +fAreaSlope = 3.0 // Growth rate adjustment parameter
-    +g = 0.001 //Maximal growth rate
-    +alpha = 2.69 //photosynthetic effectivity
-    +beta = 1.4 //Efficiency of nitrogen uptake
-    +k = 0.6 // light extinction coefficient
+    +Cinit = 0.8        // inital carbon proportion (g/g sw)
+    +Ninit = 0.044      //0.022 inital nitrogen proportion (g/g sw)
+    +Winit = 0.00125    // initial weight of the structural mass (g)
+    +aMax = 3.3     // Growth rate adjustment parameter
+    +a50 = 3.0      //Growth rate adjustment parameter
     +gamma = 0.0001 //Exudation rate
     +uMin = 0.28 //Minimum value of current equation
     +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
-    +Emax = 0.0003 //Maximal constant fraction of frond lost due to erosion
+    +shape = 0.6
+    // +Emax = 0.
+    // +alpha = 0.269
+    // +beta = 0.001
+    +frondAngle = 30.
     +demandT0 = -2 // Minimum Temperature where growth stops
     +demandTopt1 = 5 // Lower optimal temperature for growth 
     +demandTopt2 = 15 // Upper optimal temperature for growth
@@ -26,30 +26,85 @@ Simulation sim {
     +supplyTopt2 = 15 // Upper optimal temperature for photosynthesis
     +supplyTmax = 24 // Maximal Temperature where photosynthesis stops
     +duration = 400 //Number of degree days before the tissue erodes
-    +degreeK = 10 //Tissue erosion parameter
-    +degreeT0 = 4 //Temperature when the tissue starts to age (pick up degree days)
+    +g = ./g[value]
+    +Emax = ./Emax[value]
+    +alpha = ./alpha[value]
+    +beta = ./beta[value]
+    // +frondAngle = ./frondAngle[value]
+    RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = TRUE
+      .bootstrapSize = 10000
+    }
+    RandomLogUniform g {
+      .min = 0.0001
+      .max = 0.0075
+    }
+    RandomLogUniform Emax {
+      .min = 0.00001
+      .max = 0.001
+    }
+    RandomUniform alpha {
+      .min = 1.2
+      .max = 2.0
+    }
+    RandomUniform beta {
+      .min = 0.0001
+      .max = 0.03
+    }
+    // RandomUniform frondAngle {
+      // .min = 0.
+      // .max = 60.
+    // }
   }
-  Box random {
-    RandomiserStratified randomiser {
-    }
-    SelectFile envFiles {
-      .folder = "env"
-      .filter = "*.txt"
-      .showFileNames = TRUE
-    }
-    RandomUniformInt fileNumber {
-      .min = 1
-      .fixed = 1
-      .max = random/envFiles[numFiles]
-    }
+  Box setup {
+    +endR = "saccharina-SA-end.R"
+    +fileNamePath = "env/env_file_2019_2020.txt"
+    +initialDateTime = 2019/10/03
+    +obsFile = "obs/alge-obs-2019-AVG-vandrette-liner-100m.txt"
+    +trial = "Average plants 2019-2020 on 10 mm line"
   }
-  SelectFile setup {
-    +endR = "saccharina-scenarios-end.R"
-    +initialDateTime = 1/10/2000 // Year will be overriden by year in Records env
-    .folder = "env"
-    .filter = "*.txt"
-    .selectFileNumber = random/fileNumber[value]
-    .showFileNames = FALSE
-  } 
   #include "saccharina-model.part.box"
+  OutputR {
+    // .end = "saccharina-SA-end.R"
+    Box outputs {
+      +yieldSumSq = calibration[yieldSumSq]
+      +pctNSumSq  = calibration[pctNSumSq]
+      +pctCSumSq  = calibration[pctCSumSq]
+    }
+    // PageR {
+      // .xAxis = calendar[dateTime]
+      // PlotR {
+        // .ports = (../../outputs[*] parameters[g] allocation[*])
+      // }
+    // }
+    PageR {
+      .xAxis = parameters/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .maxData = 500
+        .ggplot = "geom_smooth(colour='yellow')"
+      }
+    }
+    PageR {
+      .xAxis = parameters/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }
+    PageR {
+      .xAxis = parameters/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolIndices"
+      }
+    }
+  }
 }

@@ -12,9 +12,9 @@ public:
     void update();
 private:
     // Inputs
-    double structuralMass, plantDensity, l, aa, ab;
+    double structuralMass, plantDensity, frondAngle, l, aa, ab;
     // Outputs
-    double value, length, lai, kA;
+    double value, length, lai, crownZoneArea, kA;
 };
 
 }

@@ -13,6 +13,7 @@
     .allocation = allocation[structuralMassGrowth]
   }     
   Area area {
+    .plantDensity = 200
   }
   Box reserves {
     Reserves carbon {
@@ -22,7 +23,7 @@
     }
     Reserves nitrogen {
       .initialProportion = parameters[Ninit]
-      .maxProportion = 0.044 //0.022
+      .maxProportion = 0.073 // 0.044 //0.022
       .allocatedProportion = allocation[reservesProportionN]
     }
   }
@@ -48,6 +49,8 @@
         }
       }
       DemandCarbonRespiration respiration {
+        .resp20 = 0.00072
+        .Q10 = 1.5
       }
       DemandCarbonReserves reserves {
       }
@@ -55,6 +58,7 @@
         .gamma = parameters[gamma]
       }
       DemandCarbonErosion erosion {
+        .eMax = parameters[Emax]
       }
     }
     Sum carbonTotal {
@@ -72,7 +76,6 @@
   }
   Box supply {
     Photosynthesis photosynthesis {
-      .k = parameters[k]
       .alpha = parameters[alpha]
       .fTemp  = ./fTemp[value]
       .fNitrogen = ./fNitrogen[value]
@@ -85,6 +88,7 @@
       }
       Fnitrogen fNitrogen {
         .minValue = parameters[fNitrogenMin]
+        .shape = parameters[shape]
       }
     }
     NitrogenUptake nitrogenUptake {
@@ -97,6 +101,10 @@
   Allocation allocation {
   }
   Biomass biomass {
+    .plantDensity = area[plantDensity]
+  }
+  Calibration calibration {
+    .obsFileName = setup[obsFile]
   }
   Box total {
     Accumulator growth {
@@ -113,18 +121,5 @@
     }
     Accumulator structuralLoss {
       .change = allocation[structuralMassLoss]
-    }
-  }
-  OutputR output {
-    .end = setup[endR]
-    Box value {
-      +area = area[value]
-    }
-    OutputText {
-      .ports = (calendar[dateTime] output/value[area] biomass[dryWeight]
-                 fArea[value] fNitrogen[value] structure/fTemp[value] fSalinity[value] fCurrent[value] photosynthesis[sdRatio]
-                 total/*[value]
-                 biomass[dryWeight] biomass[carbonPct] biomass[nitrogenPct]
-                 setup[envFile] setup[obsFile] setup[trial])
     }
   }

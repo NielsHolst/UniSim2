@@ -33,6 +33,7 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("optimises energy budget control");
+    Input(hasHeatSink).equals(false).help("Include a heat sink that soaks up excess heat?");
     Input(deltaPipeTemperature).equals(4.).unit("K").help("Exploratory change in pipe temperature");
     Input(deltaVentilation).equals(0.3).unit("/h").help("Exploratory change in ventilation flux");
     Input(setPointPrecision).equals(0.1).unit("K").help("Precision of setpoints");
@@ -51,6 +52,15 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
     Output(changePipeTemperature).help("Change in pipe temperature").unit("K");
     Output(changeVentilation).help("Change in ventilation opening").unit("[0;1]");
     Output(numUpdates).help("No. of energy budget updates");
+}
+
+void EnergyBudgetOptimiser::amend() {
+    if (hasHeatSink) {
+        BoxBuilder builder(this);
+        builder.
+        box("vg::HeatSink").name("heatSink").
+        endbox();
+    }
 }
 
 void EnergyBudgetOptimiser::initialize() {

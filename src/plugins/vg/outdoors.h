@@ -24,11 +24,10 @@ private:
     // Inputs
     double temperature, skyTemperature, windSpeed, rh,
     radiation, propPar, propUv,
-    diffuseRadiation,
     co2, soilTemperature;
 
     // Outputs
-    double directRadiation, propDirectRadiation, ah, sh;
+    double par, ah, sh;
 
 };
 } //namespace

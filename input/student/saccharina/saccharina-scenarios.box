@@ -1,18 +1,21 @@
 Simulation sim {
   .steps = setup[steps]
   Box parameters {
+    +alpha = 1.5 // 2.69 //photosynthetic effectivity
+    +beta  = 0.0015 // 0.014 //Efficiency of nitrogen uptake
+    +gamma = 0.007 //Exudation rate
+    +g     = 0.0005          //Maximal growth rate
+    +Emax  = 0. // 0.0003 //Maximal constant fraction of frond lost due to erosion
+
+    +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
+    +shape = 1.0
+
     +Cinit = 0.8        // inital carbon proportion (g/g sw)
     +Ninit = 0.044      //0.022 inital nitrogen proportion (g/g sw)
     +Winit = 0.00125    // initial weight of the structural mass (g)
     +aMax = 3.3     // Growth rate adjustment parameter
     +a50 = 3.0      //Growth rate adjustment parameter
-    +g = 0.001          //Maximal growth rate
-    +alpha = 2.69 //photosynthetic effectivity
-    +beta = 1.4 //Efficiency of nitrogen uptake
-    +k = 0.6 // light extinction coefficient
-    +gamma = 0.0001 //Exudation rate
     +uMin = 0.28 //Minimum value of current equation
-    +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
     +demandT0 = -2 // Minimum Temperature where growth stops
     +demandTopt1 = 5 // Lower optimal temperature for growth 
     +demandTopt2 = 15 // Upper optimal temperature for growth
@@ -21,10 +24,26 @@ Simulation sim {
     +supplyTopt1 = 5 // Lower optimal temperature for photosynthesis
     +supplyTopt2 = 15 // Upper optimal temperature for photosynthesis
     +supplyTmax = 24 // Maximal Temperature where photosynthesis stops
-    +duration = 400 //Number of degree days before the tissue erodes
   }
   Scenarios setup {
     .fileName = "saccharina-scenarios.txt"
   }
   #include "saccharina-model.part.box"
+  OutputR output {
+    .end = setup[endR]
+    Box value {
+      +area = area[value]
+      +yield = biomass[wetWeightYield]
+    }
+    OutputText {
+      .ports = (calendar[dateTime] output/value[area] output/value[yield] biomass[dryWeight]
+                 fArea[value] fNitrogen[value] structure/fTemp[value] fSalinity[value] nitrogenUptake[V] fCurrent[value] photosynthesis[sdRatio]
+                 env[T]
+                 total/*[value]
+                 biomass[dryWeight] biomass[carbonPct] biomass[nitrogenPct]
+                 reserves/nitrogen[proportion] reserves/nitrogen[maxProportion] reserves/carbon[proportion] reserves/carbon[maxProportion]
+                 setup[envFile] setup[obsFile] setup[trial]
+                 calibration[yieldSumSq] calibration[pctNSumSq] calibration[pctCSumSq])
+    }
+  }
 }

@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double area, lai, plantDensity, k,
+    double crownZoneArea, lai, frondAngle, plantDensity,
         demand, alpha, fTemp, fNitrogen, I;
     // Outputs
     double supply, sdRatio, Iabsorbed;

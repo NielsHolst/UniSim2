@@ -7,20 +7,25 @@ plot_calibration = function(M) {
   obs_trial = as.character(unique(M$trial))
   print(paste("Reading obs from", obs_file_name,"in",getwd()))
   obs = read.table(obs_file_name, header=TRUE, sep="\t")
-  obs$dateTime = ymd_hms(paste(obs$Date, "12:0:0"))
-
-  ggplot(M, aes(dateTime, area)) +
-    geom_line(colour=unisim_colours[2]) +
-    geom_point(colour=unisim_colours[1], size=3, data=obs) +
-    labs(x="Months", y="Area (dm2)", title=obs_trial) +
+  obs$dateTime = ymd_hms(paste(obs$date, "12:0:0"))
+  vars = c("dateTime","area","yield","nitrogenPct","carbonPct")
+  obs = melt(obs[vars], id.vars="dateTime", value.name="Value", variable.name="Variable")
+  M   = melt(M  [vars], id.vars="dateTime", value.name="Value", variable.name="Variable")
+  obs$Value[obs$Value < 0] = NA
+  
+  ggplot(M, aes(dateTime, Value, colour=Variable)) +
+    geom_line() +
+    geom_point(size=3, data=obs, colour=unisim_colours[5]) +
+    labs(x="Months", y="Value", title=obs_trial) +
     scale_x_datetime(breaks = date_breaks("months"),
-                     labels = date_format("%m"))
+                     labels = date_format("%m")) +
+    facet_wrap(~Variable, ncol=1, scales="free_y") +
+    theme(legend.position='none')
 }
 
 plot_f_scales = function(M) {
-  obs_file_name = unique(M$obsFile)
   obs_trial = unique(M$trial)
-  M = melt(M[c("dateTime", "fArea", "fNitrogen", "fTemp", "fSalinity", "fCurrent", "sdRatio")], id.vars="dateTime", value.name="Factor", variable.name="Scaling")
+  M = melt(M[c("dateTime", "fArea", "V", "fNitrogen", "fTemp", "T", "fSalinity", "fCurrent", "sdRatio")], id.vars="dateTime", value.name="Factor", variable.name="Scaling")
   
   ggplot(M, aes(dateTime, Factor, colour=Scaling)) +
     geom_line() +
@@ -78,7 +83,9 @@ plot_allocation_rates = function(M) {
 plot_state = function(M) {
   obs_file_name = unique(M$obsFile)
   obs_trial = unique(M$trial)
-  M = melt(M[c("dateTime", "dryWeight", "carbonPct", "nitrogenPct")], id.vars="dateTime", value.name="Value", variable.name="Variable")
+  M = melt(M[c("dateTime", "dryWeight", "carbonPct", "nitrogenPct", 
+                "carbon.proportion", "nitrogen.proportion")], 
+                id.vars="dateTime", value.name="Value", variable.name="Variable")
   
   ggplot(M, aes(dateTime, Value, colour=Variable)) +
     geom_line() +
@@ -94,11 +101,11 @@ print_plots = function(plots) {
   print( ggarrange(plotlist=plots, align="hv") )
 }
 
+# print_plots( dlply(sim, .(iteration), plot_allocation_totals) )
+print_plots( dlply(sim, .(iteration), plot_state) )
 
 print_plots( dlply(sim, .(iteration), plot_f_scales) )
-print_plots( dlply(sim, .(iteration), plot_allocation_totals) )
 print_plots( dlply(sim, .(iteration), plot_allocation_rates) )
-print_plots( dlply(sim, .(iteration), plot_state) )
 print_plots( dlply(sim, .(iteration), plot_calibration) )
 
 

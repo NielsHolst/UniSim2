@@ -25,10 +25,12 @@ class EnergyBudgetOptimiser : public base::Box
 {
 public: 
     EnergyBudgetOptimiser(QString name, QObject *parent);
+    void amend();
     void initialize();
     void update();
 private:
     // Inputs
+    bool hasHeatSink;
     double
         deltaPipeTemperature, deltaVentilation,
         setpointHeating, setpointVentilation, setPointPrecision,

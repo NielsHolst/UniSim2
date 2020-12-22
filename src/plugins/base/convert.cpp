@@ -135,12 +135,12 @@ template<> QDateTime convert(long double)   { CANNOT_CONVERT(DateTime, LongDoubl
 //
 
 template<> bool convert(QString source) {
-    if (source == "T" || source == "TRUE")
+    if (source == "1" || source == "T" || source == "TRUE")
         return true;
-    else if (source == "F" || source == "FALSE")
+    else if (source == "0" || source == "F" || source == "FALSE")
         return false;
     else
-        ThrowException("Cannot convert String to Bool. Must be T, F, TRUE or FALSE").value(source);
+        ThrowException("Cannot convert String to Bool. Must be 0, 1, T, F, TRUE or FALSE").value(source);
 }
 
 template<> char convert(QString source) {

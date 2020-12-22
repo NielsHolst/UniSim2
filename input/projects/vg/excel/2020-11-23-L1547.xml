@@ -32,6 +32,10 @@
 		<DatanodeID>999</DatanodeID>
 		<Constants>
 			<Parameters>
+				<ParameterName>HasHeatSink</ParameterName>
+				<Value>1</Value>
+			</Parameters>
+			<Parameters>
 				<ParameterName>Length</ParameterName>
 				<Value>125</Value>
 			</Parameters>

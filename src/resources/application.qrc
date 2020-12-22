@@ -144,6 +144,7 @@
     <file>data/input/papers/2021-aphid-fungus/5-aphid-fungus-scenario-late-enzootic.box</file>
     <file>data/input/papers/2021-aphid-fungus/5-aphid-fungus-scenario-late-epizootic.box</file>
     <file>data/input/papers/2021-aphid-fungus/5-aphid-fungus-scenario-mid.box</file>
+    <file>data/input/papers/2021-aphid-fungus/6-aphid-fungus-scenario-biocontrol.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-model.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-random-parameters.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-scenarios.part.box</file>
@@ -159,6 +160,8 @@
     <file>data/input/papers/2021-aphid-fungus/output-figures/fig-2-colour.tiff</file>
     <file>data/input/papers/2021-aphid-fungus/output-figures/fig-3-bw.tiff</file>
     <file>data/input/papers/2021-aphid-fungus/output-figures/fig-3-col.tiff</file>
+    <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol-end.R</file>
+    <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol.txt</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-Early.txt</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-LateEnzootic.txt</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-LateEpizootic.txt</file>

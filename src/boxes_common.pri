@@ -8,7 +8,7 @@
 
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.46
+VERSION = 2.3.47
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 CONFIG += skip_target_version_ext   # Simplify suffix on Mac
@@ -41,8 +41,7 @@ QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 QMAKE_CXXFLAGS += -Wno-padded -Wno-int-in-bool-context
 
 # Compiler options to silence warnings when compiling Boost
-QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-deprecated-copy
-#-Wno-misleading-indentation (only available in newer gcc versions?)
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-misleading-indentation
 DEFINES += BOOST_ALLOW_DEPRECATED_HEADERS
 
 # Compiler options to silence warnings when compiling under Mac OS X

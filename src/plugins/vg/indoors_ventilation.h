@@ -21,10 +21,10 @@ public:
 
 private:
     // Inputs
-    double fluxLeak, fluxVent,
+    double fluxLeakageAlone, fluxVentilationAlone,
         screensAirTransmissivity;
     // Outputs
-    double flux;
+    double flux, fluxLeakage, fluxVentilation;
 };
 
 } //namespace

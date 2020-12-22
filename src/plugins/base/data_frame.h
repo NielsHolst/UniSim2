@@ -15,7 +15,7 @@ namespace base {
 class DataFrame : public Table
 {
 public:
-    DataFrame(QObject *parent = 0);
+    DataFrame(QObject *parent = nullptr);
     void read(QString fileName, Labelling labelling);
     int numRow() const;
     int numCol() const;
@@ -55,12 +55,12 @@ T DataFrame::operator()(int row, int col) const {
 
 template <class T>
 QVector<T> DataFrame::row(QString rowName) const {
-    return row( ixRow(rowName) );
+    return row<T>( ixRow(rowName) );
 }
 
 template <class T>
 QVector<T> DataFrame::col(QString colName) const {
-    return col( ixCol(colName) );
+    return col<T>( ixCol(colName) );
 }
 
 template <class T>

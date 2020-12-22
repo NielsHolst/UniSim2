@@ -7,7 +7,6 @@ Simulation sim {
     +doSensitivityAnalysis = FALSE
     +bootstrapSize = 0 // no bootstrapping
   }
-  #include "aphid-fungus-weather-files.part.box"
   #include "aphid-fungus-random-parameters.part.box"
   #include "aphid-fungus-model.part.box" 
   OutputR {
@@ -15,5 +14,5 @@ Simulation sim {
     OutputText uncertainty {
       .ports = (calendar[date] cropGrowthStage[value] system/*/density[total] cadavers[content] )
     }
- }  
+  }  
 }

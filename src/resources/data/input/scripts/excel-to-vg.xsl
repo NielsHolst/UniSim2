@@ -1424,11 +1424,25 @@
   </box>
 
   <xsl:comment> *** Climate variables *** </xsl:comment>
+  <xsl:variable name="heatSinkName" select="'HasHeatSink'"/>
+  <xsl:variable name="heatSinkSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$heatSinkName]/Value" as="node()"/>
+  <xsl:variable name="heatSinkValue" select="number(replace($heatSinkSrc, ',', '.'))"/>
   <xsl:variable name="leakageName" select="'leakage'"/>
   <xsl:variable name="leakageSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$leakageName]/Value" as="node()"/>
   <xsl:variable name="leakageValue" select="number(replace($leakageSrc, ',', '.'))"/>
   
   <box class="vg::EnergyBudgetOptimiser" name="energyBudgetOptimiser">
+    <port name="hasHeatSink">
+      <xsl:attribute name="externalName">
+        <xsl:value-of select="$heatSinkName"/>
+      </xsl:attribute>
+      <xsl:attribute name="source">
+        <xsl:value-of select="ecolmod:generateXPath($heatSinkSrc)"/>
+      </xsl:attribute>
+      <xsl:attribute name="value">
+        <xsl:value-of select="$heatSinkValue"/>
+      </xsl:attribute>
+    </port>
     <box class="vg::EnergyBudget" name="energyBudget">
     </box>
     <box name="indoors">

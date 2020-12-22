@@ -12,6 +12,7 @@ HEADERS +=  \
     allocation.h \
     area.h \
     biomass.h \
+    calibration.h \
     demand_carbon_erosion.h \
     demand_carbon_exudation.h \
     demand_carbon_reserves.h \
@@ -33,6 +34,7 @@ SOURCES +=  \
     allocation.cpp \
     area.cpp \
     biomass.cpp \
+    calibration.cpp \
     demand_carbon_erosion.cpp \
     demand_carbon_exudation.cpp \
     demand_carbon_reserves.cpp \

@@ -23,7 +23,7 @@ HeatSink::HeatSink(QString name, QObject *parent)
     help("provides an artificial sink for excess heat");
     Input(setpointVentilation).imports("setpoints/ventilationTemperature[value]", CA);
     Input(indoorsTemperature).imports("indoors/temperature[value]", CA);
-    Input(averageHeight).imports("geometry[indoors/temperature]", CA);
+    Input(averageHeight).imports("geometry[averageHeight]", CA);
     Input(dt).imports("calendar[timeStepSecs]", CA);
     Output(value).help("Heat flux to sink").unit("W/m2");
 }
@@ -38,8 +38,12 @@ void HeatSink::reset() {
 
 void HeatSink::update() {
     double deltaT = indoorsTemperature - setpointVentilation;
-    value = (deltaT > 0.) ? CpAirVol*deltaT*averageHeight/dt : 0.;  // (J/m3/K) * K * m / s = W/m2
-    indoorsTemperatureBox->setTemperature(setpointVentilation);
+    if (deltaT > 0.) {
+        value =  CpAirVol*deltaT*averageHeight/dt;  // (J/m3/K) * K * m / s = W/m2
+        indoorsTemperatureBox->setTemperature(setpointVentilation);
+    }
+    else
+        value = 0.;
 }
 
 } //namespace

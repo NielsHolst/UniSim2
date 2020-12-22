@@ -22,7 +22,8 @@ DemandCarbonRespiration::DemandCarbonRespiration(QString name, QObject *parent)
 }
 
 void DemandCarbonRespiration::reset() {
-   update();
+   // biomass[dryWeight] has not yet been set
+   value = 0.;
 }
 
 void DemandCarbonRespiration::update() {

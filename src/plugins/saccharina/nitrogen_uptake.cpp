@@ -16,7 +16,6 @@ NitrogenUptake::NitrogenUptake(QString name, QObject *parent)
     Input(beta).equals(10.).unit("g N/(umol N/L)/h").help("Effiency of nitrogen uptake");
     Input(demand).imports("demand/nitrogenTotal[value]");
     Input(area).imports("area[value]");
-    Input(lai).imports("area[lai]");
     Input(fCurrent).imports("./fCurrent[value]");
     Input(N).imports("env[N]").unit("mmol N/L").help("Water nitrogen concentration");
     Input(timeStepSecs).imports("calendar[timeStepSecs]");
@@ -30,13 +29,15 @@ NitrogenUptake::NitrogenUptake(QString name, QObject *parent)
 
 void NitrogenUptake::reset() {
    update();
+   // biomass[dryWeight] has not yet been set
+   V = 0.;
 }
 
 void NitrogenUptake::update() {
     double dt = timeStepSecs/3600.;
     supply = (demand<1e-16) ?
                 0. :
-                demand*(1. - exp(-beta*lai*N*fCurrent*dt/demand));
+                demand*(1. - exp(-beta*area*N*fCurrent*dt/demand));
     sdRatio = (demand==0.) ? 0. : supply/demand;
     J = supply/area/dt;
     V = supply/dryWeight/(dt/24)*1000000;

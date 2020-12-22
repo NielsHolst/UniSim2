@@ -33,7 +33,7 @@ unisim.depends = student
 # Modules required for end-user release
 #
 
-SUBDIRS += aphid
+#SUBDIRS += aphid
 aphid.subdir = src/plugins/aphid
 aphid.depends = base
 unisim.depends = aphid

@@ -52,7 +52,6 @@ HEADERS +=  \
     indoors.h \
     indoors_co2.h \
     indoors_humidity.h \
-    indoors_light.h \
     indoors_temperature.h \
     indoors_ventilation.h \
     indoors_wind_speed.h \
@@ -147,7 +146,6 @@ SOURCES += \
     indoors.cpp \
     indoors_co2.cpp \
     indoors_humidity.cpp \
-    indoors_light.cpp \
     indoors_temperature.cpp \
     indoors_ventilation.cpp \
     indoors_wind_speed.cpp \

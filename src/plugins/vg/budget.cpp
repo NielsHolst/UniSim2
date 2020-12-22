@@ -27,7 +27,7 @@ Budget::Budget(QString name, QObject *parent)
     Input(skyLwRadiationAbsorbedRate).imports("energyBudget/sky[lwAbsorbed]", CA);
     Input(ventilationEnergyRate).imports("indoors/temperature[advectiveEnergyFlux]", CA);
     Input(convectionEnergyRate).imports("energyBudget/cover[convectiveInflux]", CA);
-//    Input(airInflux).imports("indoors/ventilation[absolute]", CA).unit("m3");
+    Input(heatSinkEnergyRate).importsMaybe("heatSink[value]");
     Input(groundArea).imports("geometry[groundArea]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]", CA);
     Input(outdoorsAh).imports("outdoors[ah]", CA);
@@ -71,6 +71,7 @@ void Budget::update() {
     skyLwRadiationAbsorbed += skyLwRadiationAbsorbedRate*_kiloHour;
     ventilationEnergy    += ventilationEnergyRate*_kiloHour;
     convectionEnergy     += convectionEnergyRate*_kiloHour;
+    heatSinkEnergy       += heatSinkEnergyRate*_kiloHour;
 //    latentHeatEnergy     += latentHeatRate*_kiloHour;
     soilEnergy           += soilEnergyRate*_kiloHour;
     heatingEnergy        += heatingPowerUsage*_kiloHour;
