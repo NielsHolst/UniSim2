@@ -1,0 +1,51 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2019
+  }
+  Records weather {
+    .fileName = "Sokoto_North_Nigeria_TA00460.txt" 
+  }
+  Box cowpea {
+    RGR cowpeagrowthrate {
+      .t1 = 1 //sprouting
+      .t2 = 60 // harvest
+      .LeafArea1 = 1 // what is a meaningful value here ?
+      .LeafArea2 = 600
+    }
+    Increment timex { // this is needed to be able to use exponential growth function to represent LAI
+      .increment = 1
+      .Current = 0
+      .StartDate = 100  // before this day value stays at 0
+      .dayOfYear = calendar[dayOfYear]
+      .EndDate = 160  // after this day value drops to 0
+    }
+    ExponentialGrowth leafareaindex {
+      .a = 0.01 // what would be appropriate value to start from ? 
+      .k = cowpeagrowthrate[value] // k - leaf growth rate
+      .t = timex[value] // value taken from Increment box
+    }
+    LI lightinterception {
+      .dayOfYear = calendar[dayOfYear]
+      .startDate = 213 // 1st of August sprouting - light interception starts. Before this day value stays at 0
+      .endDate = 273 // harvest - light interception drops to 0 has to correspond with the harvest date
+      .k = 0.5  // light extinction coefficient
+      .radiation = weather[I]
+      .LAI = leafareaindex[value]
+    }
+    cowpea::Biomass biomass {
+      .LUE = 0.0072 // 2 g per MJ, 2 g per 277,78 Watts, 0.0072 g per Watt
+      .LightIntercepted = lightinterception[value]
+      .dayOfYear = calendar[dayOfYear]
+      .endDate = 273 // harvest date
+    }
+  }
+ OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      PlotR {
+        .ports = (cowpea/biomass[value])
+      }
+    }
+  }
+}

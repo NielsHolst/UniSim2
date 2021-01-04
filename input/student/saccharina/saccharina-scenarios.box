@@ -2,9 +2,9 @@ Simulation sim {
   .steps = setup[steps]
   Box parameters {
     +alpha = 1.5 // 2.69 //photosynthetic effectivity
-    +beta  = 0.0015 // 0.014 //Efficiency of nitrogen uptake
+    +beta  = 0.0012 // 0.014 //Efficiency of nitrogen uptake
     +gamma = 0.007 //Exudation rate
-    +g     = 0.0005          //Maximal growth rate
+    +g     = 0.00045          //Maximal growth rate
     +Emax  = 0. // 0.0003 //Maximal constant fraction of frond lost due to erosion
 
     +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
@@ -12,6 +12,9 @@ Simulation sim {
 
     +Cinit = 0.8        // inital carbon proportion (g/g sw)
     +Ninit = 0.044      //0.022 inital nitrogen proportion (g/g sw)
+    +Cmax  = 0.8
+    +Nmax  = 0.06
+    
     +Winit = 0.00125    // initial weight of the structural mass (g)
     +aMax = 3.3     // Growth rate adjustment parameter
     +a50 = 3.0      //Growth rate adjustment parameter
@@ -30,15 +33,15 @@ Simulation sim {
   }
   #include "saccharina-model.part.box"
   OutputR output {
-    .end = setup[endR]
+    .end = "saccharina-scenarios-end.R"
     Box value {
       +area = area[value]
       +yield = biomass[wetWeightYield]
     }
     OutputText {
       .ports = (calendar[dateTime] output/value[area] output/value[yield] biomass[dryWeight]
-                 fArea[value] fNitrogen[value] structure/fTemp[value] fSalinity[value] nitrogenUptake[V] fCurrent[value] photosynthesis[sdRatio]
-                 env[T]
+                 fArea[value] fNitrogen[value] structure/fTemp[value] fSalinity[value] nitrogenUptake[V] nitrogenUptake[J] nitrogenUptake[B] fCurrent[value] photosynthesis[sdRatio]
+                 env[T] env[I] env[N] env[U] env[S]
                  total/*[value]
                  biomass[dryWeight] biomass[carbonPct] biomass[nitrogenPct]
                  reserves/nitrogen[proportion] reserves/nitrogen[maxProportion] reserves/carbon[proportion] reserves/carbon[maxProportion]

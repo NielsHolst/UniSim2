@@ -1,0 +1,71 @@
+// coffeeCBB.box 
+Simulation sim {
+  .steps = 1460
+  Calendar calendar {
+    .initialDateTime = 1/9/2001
+  }
+  Records weather {
+    .fileName = "weather/Londrina.txt"
+    .cycle = TRUE // data genbruges 
+  }
+  Box coffee {
+    DayDegrees time {
+      .T0 = 10 // Rodriguez et al., 2011
+      .Topt = 25
+      .T = weather[Tavg]
+    }
+    OnOffByDate pinProduction {  
+      .x = calendar[date]
+      .xOn = 1/9/*  // *vilkårligt år
+      .xOff =  1/1/* 
+      .valueOn = 12
+      .valueOff = 0
+    }
+    Stage pin {
+        .inflow = ../pinProduction[value]
+        .duration = 172 // Rodriguez et al., 2011
+        .timeStep = ../time[step]
+    }
+    Stage green {
+        .inflow = ../pin[outflow]
+        .duration = 1254 // Rodriguez et al., 2011
+        .timeStep = ../time[step]
+    }
+    Stage yellow {
+        .inflow = ../green[outflow]
+        .duration = 2622 // Rodriguez et al., 2011
+        .timeStep = ../time[step]
+    }
+    Stage ripe {
+        .inflow = ../yellow[outflow]
+        .duration = 2836 // Rodriguez et al., 2011
+        .timeStep = ../time[step]
+    }
+    Stage overripe {
+        .inflow = ../ripe[outflow]
+        .duration = 147
+        .timeStep = ../time[step]
+    }
+  }
+  OutputR {
+    Box labels {
+      +pinProduction = pinProduction[value]
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2  
+      +xdate = "scale_x_datetime(
+                  breaks = date_breaks('3 months'),
+                  labels = date_format('%m')
+                 )" 
+      PlotR {  
+        .ports = (weather[Tavg] weather[Rainfall])
+        .ggplot = ..[xdate]
+      }
+      PlotR {
+        .ports = (labels[pinProduction] coffee/*[content])
+        .ggplot = ..[xdate]
+      }
+    }
+  }
+}

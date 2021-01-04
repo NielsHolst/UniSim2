@@ -6,19 +6,16 @@ library(reshape2)
 rm(list=ls(all=TRUE))
 graphics.off()
 
-setwd("C:/Users/au227859/UniversalSimulatorHome/input/teis")
+setwd("/Users/au152367/Documents/QDev/UniSim2/input/student/saccharina/obs")
 
-obs = read.table("alge-obs-2019-AVG.txt", header=TRUE, sep="\t")
+obs = read.table("alge-obs-2019-AVG-CN.txt", header=TRUE, sep="\t")
 obsDate = ymd(obs$Date)
 obs
 
 #Calculate structural dryweight
-
-Cstruct = 0.02
-
-Nstruct = 0.01
-
-obs$StructWeightYieldprmeter = obs$DryweightYieldprmeter - (obs$DryweightYieldprmeter * ((obs$carbonPct/100-Cstruct)+(obs$nitrogenPct/100-Nstruct)))
+kN = 2.72
+kC = 2.12
+obs$StructWeightYieldprmeter = with(obs, DryweightYieldprmeter / (1 + C*kC + N*kN))
 
 # Replace missing densities with average
 n = mean(obs$plantDensity, na.rm=TRUE)
@@ -30,8 +27,6 @@ obs$AvgDryWeight = obs$DryweightYieldprmeter/obs$plantDensity
 obs$AvgStructWeight = obs$StructWeightYieldprmeter/obs$plantDensity
 obs$AvgLength = obs$Length/10
 obs
-
-
 
 ggarrange(
   ggarrange(
@@ -89,6 +84,9 @@ ggplot(M, aes(A, L)) +
   geom_line() +
   labs(x="Area (dm2)", y = "Length (dm)")
 
+#
+# Area as a function of dry weight
+#
 
 model = lm(log(AvgArea) ~ log(AvgDryWeight), obs)
 summary(model)
@@ -99,18 +97,21 @@ b = co[2]
 a
 b
 
-  kA = 0.6  # g/dm2
-  x = (0:100)/10 # g
-  M = data.frame(
-    Weight = x,
-    AreaPowerLaw = a*x^b,
-    AreaFixed = x/kA
-  )
-  M = melt(M, id.vars="Weight", value.name="Area", variable.name="Model")
-  ggplot(M, aes(Weight, Area, colour=Model)) +
-    labs(x="Weight (g)", y="Area (dm2)") +
-    geom_line()
+kA = 0.6  # g/dm2
+x = (0:100)/10 # g
+M = data.frame(
+  Weight = x,
+  AreaPowerLaw = a*x^b,
+  AreaFixed = x/kA
+)
+M = melt(M, id.vars="Weight", value.name="Area", variable.name="Model")
+ggplot(M, aes(Weight, Area, colour=Model)) +
+  labs(x="Dry weight (g)", y="Area (dm2)") +
+  geom_line()
   
+#
+# Area as a function of structural weight
+#
 model = lm(log(AvgArea) ~ log(AvgStructWeight), obs)
 summary(model)
 plot(model,1)

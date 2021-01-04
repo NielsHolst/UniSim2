@@ -22,6 +22,7 @@ Photosynthesis::Photosynthesis(QString name, QObject *parent)
     Input(fTemp).equals(1).unit("[0;1]").help("Temperature scaling on alpha");
     Input(fNitrogen).equals(1).unit("[0;1]").help("Nitrogen scaling on alpha");
     Input(I).imports("env[I]");
+    Input(propI).equals(1.).help("Proportion of I reaching the plant");
     Output(supply).unit("g C").help("Photosynthetic supply");
     Output(sdRatio).unit("[0;1]").help("Supply/Demand ratio");
     Output(Iabsorbed).unit("mu mol PAR / s").help("Radiation absorbed per plant");
@@ -34,7 +35,7 @@ void Photosynthesis::reset() {
 void Photosynthesis::update() {
     const double c = 3600e-6,
                  k = cos(frondAngle/180.*PI);
-    Iabsorbed = I*crownZoneArea/plantDensity*(1. - exp(-k*lai));
+    Iabsorbed = propI*I*crownZoneArea/plantDensity*(1. - exp(-k*lai));
     supply = (demand<1e-16) ?
                 0. :
                 demand*(1. - exp(-alpha*Iabsorbed*fTemp*fNitrogen*c/demand));

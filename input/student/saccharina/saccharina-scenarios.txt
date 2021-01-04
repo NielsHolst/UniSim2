@@ -1,2 +1,2 @@
-endR	fileNamePath	initialDateTime	steps	obsFile	trial
-saccharina-scenarios-end.R	env/env_file_2019_2020.txt	2019-10-03	5856	obs/alge-obs-2019-AVG-vandrette-liner-100m.txt	"Average plants 2019-2020 on 10 mm line"
+fileNamePath	initialDateTime	steps	obsFile	trial
+env/env_file_2019_2020.txt	2019-10-03	5856	obs/alge-obs-2019-AVG-vandrette-liner-100m-CN.txt	"Average plants 2019-2020 on 10 mm line"

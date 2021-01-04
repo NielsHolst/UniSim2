@@ -13,8 +13,8 @@ Area::Area(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("keeps tracks of the frond area");
-    Input(aa).equals(2.72).unit("dm2").help("Power law scaling of weight to area (y=ax^b)");
-    Input(ab).equals(0.75).help("Power law scaling of weight to area (y=ax^b)");
+    Input(a).equals(4.19).unit("dm2").help("Power law scaling of weight to area (y=ax^b)");
+    Input(b).equals(0.785).help("Power law scaling of weight to area (y=ax^b)");
     Input(l).equals(3.5).help("Scaling of length to area");
     Input(structuralMass).imports("structure[mass]");
     Input(plantDensity).equals(1.).unit("per m line").help("No. of plants per m line");
@@ -31,11 +31,11 @@ void Area::reset() {
 }
 
 void Area::update() {
-    double a = aa*pow(structuralMass, ab);
-    length = l*sqrt(a);
-    double Afrond = plantDensity*a,
+    double A = a*pow(structuralMass, b);
+    length = l*sqrt(A);
+    double Afrond = plantDensity*A,
            AZ = cos(frondAngle/180.*PI)*length;
-    value = a;
+    value = A;
     crownZoneArea = AZ/100.;
     lai = (AZ>0.) ? Afrond/AZ : 0.;
     kA = structuralMass/a;

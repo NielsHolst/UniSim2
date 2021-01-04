@@ -1,0 +1,161 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2019
+  }
+  Records weather {
+    .fileName = "Sokoto_North_Nigeria_TA00460.txt" 
+  }
+  Box cowpea {
+    Box cowpeabiomass { //seed germination
+      RGR cowpeagrowthrate {
+        .t1 = 1 //sprouting
+        .t2 = 60 // harvest
+        .LeafArea1 = 1 // what is a meaningful value here ?
+        .LeafArea2 = 600
+      }
+      Increment timex { // this is needed to be able to use exponential growth function to represent LAI
+        .increment = 1
+        .Current = 0
+        .StartDate = 100  // before this day value stays at 0
+        .dayOfYear = calendar[dayOfYear]
+        .EndDate = 160  // after this day value drops to 0
+      }
+      ExponentialGrowth leafareaindex {
+        .a = 0.01 // what would be appropriate value to start from ? 
+        .k = cowpeagrowthrate[value] // k - leaf growth rate
+        .t = timex[value] // value taken from Increment box
+      }
+      LI lightinterception {
+        .dayOfYear = calendar[dayOfYear]
+        .startDate = 213 // 1st of August sprouting - light interception starts. Before this day value stays at 0
+        .endDate = 273 // harvest - light interception drops to 0 has to correspond with the harvest date
+        .k = 0.5  // light extinction coefficient
+        .radiation = weather[I]
+        .LAI = leafareaindex[value]
+      }
+      student::Biomass biomass {
+        .LUE = 0.0072 // 2 g per MJ, 2 g per 277,78 Watts, 0.0072 g per Watt
+        .LightIntercepted = lightinterception[value]
+        .dayOfYear = calendar[dayOfYear]
+        .endDate = 273 // harvest date
+      }
+    } 
+  }
+  Box maruca {   
+    Stage egg {
+      .initial = 32
+      .inflow = supplyBudget[supply] 
+      .growthFactor = 0.21875 // 0.375 towards 12 with a 75% mortality from egg to adult, 0.21875 towards a max larvae content of 7 with a 87.5% mortality from egg to adult; inherent mortality and environmental biotic stress ba et al all the natural enemies
+      .duration = 51.1
+      .timeStep = ./thermaltimeperiod[value]
+      OnOff thermaltimeperiod {
+        .x = calendar[dayOfYear]
+        .xOn = 243   
+        .xOff = 300 // how to figure this date ? 
+        .valueOn = daydegreesMegg[step]
+        .valueOff = 0
+        DayDegrees daydegreesMegg {
+          .T = weather[Tavg]
+          .Topt = 26
+          .T0 = 10.5
+          .Tmax = 34.3
+        }  
+      }  
+    }
+    Stage instars {
+      .inflow = egg[outflow]
+      .duration = 15
+      //.growthFactor = 0.2 // inherent mortality and environmental biotic stress ba et al all the natural enemies
+      .instantLossRate = funcResp2[resourceMortality]
+    }
+    Stage adult { 
+      .inflow = instars[outflow]
+      .duration = 6 // 3 - 10 days ba et al 2019 10 days is not enough to reach 32 as by growthFactor
+    }
+    Stage oviposition {
+      .inflow = instars[outflow]
+      .duration = 6 // try to find thermal time
+      .growthFactor = 32
+    }
+    Ingrams totalDemand {
+      .amount = oviposition[outflowTotal]
+      //.firstgen = firstgen/instars[content]
+      .attackRate = 0.0131 // One M. vitrata larvae consumes 13.1 mg a day
+      .duration = 15 // attacker's duration - instar's duration
+    }
+  }
+  Box pestation {
+      DemandBudget demandBudget { 
+        .netDemand = totalDemand[value] // oviposition outflow * daily consumption rate * instar duration (??? instar duration OR full duration from egg to adult;latter included ???)
+        .conversionCost = -4.089 // total demand/growthFactor e.g. for 32 larva total demand = 6.288g with a daily consumption rate of 0.0131 (daily consumption rate = daily demand); this gives 32 larvae = 6.288g of cowpea 1 g of cowpea = 5.089 larvae 
+      }
+      FunctionalResponse funcResp {
+        .attacker = instars[content]
+        .prey = biomass[value]
+        .demand = ../demandBudget[demand]
+        .attackRate = 0.0131
+      }
+      SupplyBudget supplyBudget {
+        .resourceAcquired = ../funcResp[resourceAcquired]
+        .conversionCost = -4.089
+      }
+    }
+  Box maviNPV {  // 
+    Threshold spray { // if content > threshold then value = application + inflow; if content < threshold then value = inflow;
+      .content = instars[content] // inf instars content reaches 3 then 
+      .threshold = 3
+      .application = 2000000000 //initial application rate; base application rate of 200 l/ha and 10^9 Obs/liter result in 200*10^9 OBs/ha; 84.4% larval mortality greenhouse conditions;...
+      .inflow = replication[outflow]
+    }
+    Stage obs {
+      .inflow = spray[value] // if applicable initial application and or just cadavar outflow; something that triggers inflow at a certain instars[content] value and sends cadav
+      .duration = 14
+    }
+    Stage cadaver {
+      .inflow = supplyBudget2[supply]
+    }
+    Stage replication {
+      .inflow = cadaver[outflow] // something that triggers inflow at a certain instars[content] value and sends cadav
+      .growthFactor = 5000000  //  10^9 OBs per liter is 10^6 per/ml, which results in 5*10^6 OBs/larva 
+    }
+  Box virusation {
+      DemandBudget demandBudget2 { 
+        .netDemand = replication[outflow]// oviposition outflow * daily consumption rate * instar duration (??? instar duration OR full duration from egg to adult;latter included ???)
+    //.conversionCost = -5000000 // dose of 10^6 MaviNMPV OBs per ml give a 5 * 10^6 per larva 
+      }
+      FunctionalResponse funcResp2 {
+        .attacker = obs[content]
+        .resource = instars[content]
+        .demand = ../demandBudget2[demand]
+        .attackRate = 0.844 // 84.4% larval mortality how to turn it into an attack rate?
+      }
+      SupplyBudget supplyBudget2 {
+        .resourceAcquired = ../funcResp2[resourceAcquired]
+    //.conversionCost = -5000000
+      }
+    }  
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (egg[inflowTotal] egg[content] instars[inflow] instars[content] adult[content])
+      }
+    }
+    PageR {
+      PlotR {
+        .ports = (totalDemand[value] demandBudget[demand] supplyBudget[supply])
+      }
+    }
+    PageR {
+      PlotR {
+        .ports = (leafareaindex[value] lightinterception[value] biomass[value] biomass[BiomassIncrementCurrent])
+      }
+    }
+    PageR {
+      PlotR {
+        .ports = (obs[inflow] obs[content] funcResp2[resourceMortality] spray[value] cadaver[outflow] demandBudget2[demand] supplyBudget2[supply] funcResp2[searchRate] funcResp2[resourceAcquired])
+      }
+    }  
+  }
+}

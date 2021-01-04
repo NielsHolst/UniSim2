@@ -7,6 +7,7 @@ graphics.off()
 
 setwd("/Users/au152367/Documents/QDev/UniSim2/input/student/saccharina/obs")
 fileName = "alge-obs-2019-AVG-vandrette-liner-100m.txt"
+# fileName = "alge-obs-2019-AVG.txt"
 
 obs = read.table(fileName, header=TRUE, sep="\t")
 obs = subset(obs, carbonPct>0 & nitrogenPct>0)

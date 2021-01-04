@@ -7,10 +7,6 @@ namespace saccharina {
 
 PUBLISH(Biomass)
 
-/*
- * Biomass skal omskrives fuldstændigt
- */
-
 Biomass::Biomass(QString name, QObject *parent)
     : Box(name, parent)
 {
@@ -51,8 +47,8 @@ void Biomass::update() {
    nitrogenPct = (dryWeight>0.)      ? 100.*(nitrogenWeight/dryWeight) : 0.;
    CNratio     = (nitrogenWeight>0.) ? carbonWeight/nitrogenWeight     : 0.;
 
-   wetWeight = structuralMass * ((1/kdw) + C*kC + N*kN);
-//   wetWeight = dryWeight/kdw;
+//   wetWeight = structuralMass * ((1/kdw) + C*kC + N*kN);
+   wetWeight = dryWeight/kdw;
 
    dryWeightYield = dryWeight*plantDensity;
    wetWeightYield = wetWeight*plantDensity;

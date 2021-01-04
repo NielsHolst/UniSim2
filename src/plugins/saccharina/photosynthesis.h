@@ -13,7 +13,7 @@ public:
 private:
     // Inputs
     double crownZoneArea, lai, frondAngle, plantDensity,
-        demand, alpha, fTemp, fNitrogen, I;
+        demand, alpha, fTemp, fNitrogen, I, propI;
     // Outputs
     double supply, sdRatio, Iabsorbed;
 };

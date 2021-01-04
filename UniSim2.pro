@@ -87,6 +87,11 @@ unisim.depends = vg
 #conductance.depends = base
 #unisim.depends = conductance
 
+SUBDIRS += cowpea
+cowpea.subdir = src/plugins/cowpea
+cowpea.depends = base
+unisim.depends = cowpea
+
 #SUBDIRS += io
 #io.subdir = src/plugins/io
 #io.depends = base

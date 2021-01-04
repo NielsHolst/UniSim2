@@ -18,12 +18,12 @@
   Box reserves {
     Reserves carbon {
       .initialProportion = parameters[Cinit]
-      .maxProportion = 0.8
+      .maxProportion = parameters[Cmax]
       .allocatedProportion = allocation[reservesProportionC]
     }
     Reserves nitrogen {
       .initialProportion = parameters[Ninit]
-      .maxProportion = 0.073 // 0.044 //0.022
+      .maxProportion = parameters[Nmax]
       .allocatedProportion = allocation[reservesProportionN]
     }
   }
@@ -79,6 +79,7 @@
       .alpha = parameters[alpha]
       .fTemp  = ./fTemp[value]
       .fNitrogen = ./fNitrogen[value]
+      .propI = 0.5
       Trapezoid fTemp {
         .T = env[T]
         .T0    = parameters[supplyT0]
@@ -102,6 +103,8 @@
   }
   Biomass biomass {
     .plantDensity = area[plantDensity]
+    .Cstruct = 0.21
+    .Nstruct = 0.02
   }
   Calibration calibration {
     .obsFileName = setup[obsFile]
