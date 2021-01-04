@@ -55,6 +55,7 @@ private:
     void saveFont();
     QTextCursor getCursor();
     void writeWelcome();
+    void showNews();
     void insertText(QString text, QColor color = QColor("black"));
     int numLines();
     int linePosition(int i);

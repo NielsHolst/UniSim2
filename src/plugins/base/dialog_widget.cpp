@@ -59,7 +59,6 @@ DialogWidget::~DialogWidget() {
     saveFont();
 }
 
-
 void DialogWidget::saveFont() {
     QTextCursor cursor = textCursor();
     QTextCharFormat format = cursor.charFormat();
@@ -352,9 +351,23 @@ void DialogWidget::writeWelcome() {
     _history.add("load " + latestFile);
     information(info);
 
+    showNews();
+
     environment().computationStep(ComputationStep::Ready);
 }
 
+void DialogWidget::showNews() {
+    QSettings settings;
+    bool librNews = settings.value("command/libr", true).toBool();
+    if (librNews) {
+        QString msg = "\nNEWS\nThe new libr command shows code to install the packages needed in R. Copy and paste to R as needed.\n";
+        dialog().information(msg);
+        writePrompt();
+        insertText("libr");
+        submitCommand();
+        settings.setValue("command/libr", false);
+    }
+}
 
 void DialogWidget::insertText(QString text, QColor color) {
     setTextColor(color);
@@ -408,7 +421,7 @@ void DialogWidget::clearLine() {
     }
 }
 
-void DialogWidget::submitCommand() {
+void DialogWidget:: submitCommand() {
     QTextCursor cursor = getCursor();
     cursor.movePosition(QTextCursor::EndOfLine);
     setTextCursor(cursor);

@@ -24,6 +24,7 @@ HEADERS +=  \
 #    graph.h \
     help.h \
     latest.h \
+    libr.h \
     list.h \
     list_options.h \
     list_output.h \
@@ -58,6 +59,7 @@ SOURCES +=  \
 #    graph.cpp \
     help.cpp \
     latest.cpp \
+    libr.cpp \
     list.cpp \
     list_options.cpp \
     list_output.cpp \
