@@ -27,8 +27,11 @@ Path::Path(const QObject *context)
 Path::Path(QString path, const QObject *context)
     : Path(context)
 {
-//    cout << "Path ctor: " << qPrintable(path) << "\n";
-    _originalPaths << path.split("|", QString::SkipEmptyParts);
+    #if QT_VERSION >= 0x050E00
+      _originalPaths << path.split("|", Qt::SkipEmptyParts);
+    #else
+      _originalPaths << path.split("|", QString::SkipEmptyParts);
+    #endif
 }
 
 Path::Path(QStringList paths, const QObject *context)

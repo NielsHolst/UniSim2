@@ -203,7 +203,11 @@ void DataGrid::readLineItems() {
     while (!file.atEnd() && line.isEmpty()) {
         line = QString(file.readLine().trimmed());
     }
-    lineItems = line.split("\t", QString::SkipEmptyParts);
+    #if QT_VERSION >= 0x050E00
+        lineItems = line.split("\t", Qt::SkipEmptyParts);
+    #else
+        lineItems = line.split("\t", QString::SkipEmptyParts);
+    #endif
     pastLastLine = lineItems.isEmpty();
 }
 

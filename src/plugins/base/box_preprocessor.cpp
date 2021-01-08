@@ -89,10 +89,10 @@ QString BoxPreprocessor::extractUsing(QString code) {
     Positions includes = findDirective(code, "using");
     for (Position include : includes) {
         QString line = code.mid(include.begin, include.end - include.begin);
-        #if QT_VERSION < 0x051400
-            QStringList items = line.split(" ", QString::SkipEmptyParts);
-        #else
+        #if QT_VERSION >= 0x050E00
             QStringList items = line.split(" ", Qt::SkipEmptyParts);
+        #else
+            QStringList items = line.split(" ", QString::SkipEmptyParts);
         #endif
         if (items.size() != 2)
             ThrowException("Write '#using <plugin>").value(line);

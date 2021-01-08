@@ -98,7 +98,11 @@ void Records::readLineItems() {
     while (!_file.atEnd() && line.isEmpty()) {
         line = QString(_file.readLine().simplified());
     }
-    _lineItems = line.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
+    #if QT_VERSION >= 0x050E00
+      _lineItems = line.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
+    #else
+      _lineItems = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+    #endif
     _pastLastLine = _lineItems.isEmpty();
 }
 

@@ -330,8 +330,8 @@ void DialogWidget::writePrompt() {
 }
 
 void DialogWidget::writeWelcome() {
-    information(environment().isFirstInstallation() ?
-                "\nWelcome to Universal Simulator!" : "\nWelcome back!");
+    bool isFirstInstallation = environment().isFirstInstallation();
+    information(isFirstInstallation ? "\nWelcome to Universal Simulator!" : "\nWelcome back!");
 
     environment().computationStep(ComputationStep::Start);
     environment().checkInstallation();
@@ -351,22 +351,31 @@ void DialogWidget::writeWelcome() {
     _history.add("load " + latestFile);
     information(info);
 
-    showNews();
-
+    if (isFirstInstallation)
+        showRHint("\n-=- Get R ready! -=-\nThis seems like your first meeting with Universal Simulator. "
+                  "Below you see the packages that you will need in R. "
+                  "Before you proceed, make certain that the packages below are installed in R. "
+                  "You can copy and paste the lines below to R to install everyrhing needed. "
+                  "Use the libr command whenever you want to see this list again. ");
+    else
+        showNews();
     environment().computationStep(ComputationStep::Ready);
 }
 
 void DialogWidget::showNews() {
     QSettings settings;
     bool librNews = settings.value("command/libr", true).toBool();
-    if (librNews) {
-        QString msg = "\nNEWS\nThe new libr command shows code to install the packages needed in R. Copy and paste to R as needed.\n";
-        dialog().information(msg);
-        writePrompt();
-        insertText("libr");
-        submitCommand();
-        settings.setValue("command/libr", false);
-    }
+    if (librNews)
+        showRHint("\nNEWS\nThe new libr command shows code to install the packages needed in R. Copy and paste to R as needed.");
+}
+
+void DialogWidget::showRHint(QString intro) {
+    QSettings settings;
+    dialog().information(intro + "\n");
+    writePrompt();
+    insertText("libr");
+    submitCommand();
+    settings.setValue("command/libr", false);
 }
 
 void DialogWidget::insertText(QString text, QColor color) {

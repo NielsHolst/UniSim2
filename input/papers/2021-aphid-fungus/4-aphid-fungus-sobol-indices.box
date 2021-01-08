@@ -16,16 +16,21 @@ Simulation sim {
   OutputR {
     .end = "4-end.R"
     Box outputs {
-      +aphidPressureWithoutF       = biocontrol[aphidPressureWithoutF]
-      +aphidPressureWithF          = biocontrol[aphidPressureWithF] 
-      +yieldWithoutF               = biocontrol[yieldWithoutF] 
-      +yieldWithF                  = biocontrol[yieldWithF]
-      +maxCadaverDensity           = biocontrol[maxCadaverDensity]
-      +maxCadaverDensityCropGS     = biocontrol[maxCadaverDensityCropGS]
-      +maxPercentageCadavers       = biocontrol[maxPercentageCadavers]
-      +maxPercentageCadaversCropGS = biocontrol[maxPercentageCadaversCropGS]
+      // +aphidPressureWithoutF       = biocontrol[aphidPressureWithoutF]
+      // +aphidPressureWithF          = biocontrol[aphidPressureWithF] 
+      // +yieldWithoutF               = biocontrol[yieldWithoutF] 
+      // +yieldWithF                  = biocontrol[yieldWithF]
+      // +maxCadaverDensity           = biocontrol[maxCadaverDensity]
+      // +maxCadaverDensityCropGS     = biocontrol[maxCadaverDensityCropGS]
+      +maxCadaverDensityPercentage = biocontrol[maxCadaverDensityPercentage]
+      // +maxPercentageCadavers       = biocontrol[maxPercentageCadavers]
+      // +maxPercentageCadaversCropGS = biocontrol[maxPercentageCadaversCropGS]
+      // +maxPercentageCadaversDensity= biocontrol[maxPercentageCadaversDensity]
       +aphidPressureDifference     = biocontrol[aphidPressureDifference]
       +yieldDifference             = biocontrol[yieldDifference]
+      +percentageCadaversGs43      = biocontrol[percentageCadaversGs43]
+      +percentageCadaversGs61      = biocontrol[percentageCadaversGs61]
+      +percentageCadaversGs73      = biocontrol[percentageCadaversGs73]
     }
     PageR {
       .xAxis = random/*[value]
@@ -33,7 +38,7 @@ Simulation sim {
       .height = 4
       PlotR {
         .ports = ../../outputs[*]|end
-        .maxData = 10
+        .maxData = 300
         .ggplot = "geom_smooth(colour='yellow')"
       }
     }

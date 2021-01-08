@@ -60,7 +60,7 @@ QStringList SaveGrammarBase::classNames() {
         if (factory->id() != "command")
             names.unite( QSet<QString>::fromList(factory->inventory()) );
     }
-    QStringList sorted = names.toList();
+    QStringList sorted = names.values();
     sorted.sort();
     return sorted;
 }
@@ -70,7 +70,7 @@ QStringList SaveGrammarBase::portNames() {
     QSet<QString> names = collectPortNames(environment().root());
 
     // Create an object of each class
-    Box *root = new Box("root", 0);
+    Box *root = new Box("root", nullptr);
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
         if (factory->id() != "command") {
             for (QString className : factory->inventory()) {

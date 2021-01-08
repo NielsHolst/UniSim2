@@ -24,8 +24,9 @@ private:
         yieldWithoutF, yieldWithF;
     // Outputs
     double aphidPressureDifference, yieldDifference,
-        maxCadaverDensity, maxCadaverDensityCropGS,
-        maxPercentageCadavers, maxPercentageCadaversCropGS;
+        maxCadaverDensity, maxCadaverDensityCropGS, maxCadaverDensityPercentage,
+        maxPercentageCadavers, maxPercentageCadaversCropGS, maxPercentageCadaversDensity,
+        percentageCadaversGs43, percentageCadaversGs61, percentageCadaversGs73;
 };
 
 }

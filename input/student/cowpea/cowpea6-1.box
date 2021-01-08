@@ -1,0 +1,103 @@
+Simulation sim {
+  .steps = 150
+  Calendar calendar {
+    .initialDateTime = 25/7/2019
+  }
+  Records weather {
+    .fileName = "Sokoto_North_Nigeria_TA00460.txt"
+    .cycle = TRUE  // Goes back to 1 Jan after 31 Dec
+  }
+  Box cowpea {    
+    Stage preVegetative { // seed germination
+      .initial = 100
+      .duration = 35
+      .timeStep = ./time[value]      
+      OnOff time {
+        .x = calendar[dayOfYear]
+        .xOn = 213 // 1st of August
+        .xOff = 273
+        .valueOn = ./daydegrees[step]
+        DayDegrees daydegrees {
+          .T = weather[Tavg]
+          .T0 = 8
+        }
+      }
+    }
+    Stage vegetative { // seedling emergence,leaf appearance, first visible bud
+      .inflow = ../preVegetative[outflow]
+      .duration = 423
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 11
+      }
+    }
+    Stage reproductive { //first open flower, first ripe pod
+      .inflow = ../vegetative[outflow]
+      //.duration = 1490
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+  }  
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 4
+      +monthBreaks = "geom_line(size = 1.1) +
+              scale_x_datetime(
+                      breaks = date_breaks('1 months'),
+                      labels = date_format('%m')
+                      ) +
+              ylim(0,NA)"
+      PlotR {
+        .ports = *[inflow]
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"
+        }
+      PlotR {
+        .ports = *[content]
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"
+        }
+      PlotR {
+        .ports = *[outflow]
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"
+        }      
+      PlotR {
+        .ports = (weather[Tavg])
+        .ggplot = ..[monthBreaks]
+        }
+      }
+    PageR {
+      .xAxis = calendar[date]
+      //.ncol = 3
+      +monthBreaks = "geom_line(size = 1.1) +
+              scale_x_datetime(
+                      breaks = date_breaks('4 months'),
+                      labels = date_format('%b')
+                      ) +
+              ylim(0,NA)"
+      
+      PlotR {
+        .ports = (preVegetative[growth])
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"  
+      }
+      PlotR {
+        .ports = (vegetative[growth])
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"  
+      }  
+      PlotR {
+        .ports = (reproductive[growth])
+        .ggplot = ..[monthBreaks]
+        //.transform = "log10"  
+      }
+      }
+  }  
+}
+

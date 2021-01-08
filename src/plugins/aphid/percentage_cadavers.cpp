@@ -19,15 +19,12 @@ PercentageCadavers::PercentageCadavers(QString name, QObject *parent)
     help("computes percentage of cadavers");
     Input(aphidDensity).help("Current density of aphids").unit("per tiller");
     Input(cadaverDensity).help("Current density of cadavers").unit("per tiller");
-    Output(value).help("Percentage cadavers out of aphids+cadavers").unit("[0;1]");
+    Output(value).help("Percentage cadavers out of aphids+cadavers").unit("%");
 }
 
 void PercentageCadavers::update() {
-    double total = aphidDensity + cadaverDensity,
-           percentage = (total > 0.) ? cadaverDensity/total : 0.;
-    if (percentage > value) {
-        value = percentage;
-    }
+    double total = aphidDensity + cadaverDensity;
+    value = (total > 0.) ? 100.*cadaverDensity/total : 0.;
 }
 
 }

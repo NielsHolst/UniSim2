@@ -101,7 +101,11 @@ BoxBuilder& BoxBuilder::rnd(QString value) {
     if (!_currentPort)
         ThrowException("BoxBuilder: rnd declaration out of context");
     value = value.simplified();
-    QStringList items = value.split(" ", QString::SkipEmptyParts);
+    #if QT_VERSION >= 0x050E00
+        QStringList items = value.split(" ", Qt::SkipEmptyParts);
+    #else
+        QStringList items = value.split(" ", QString::SkipEmptyParts);
+    #endif
     if (items.empty())
         ThrowException("Missing distribution parameters").context(_currentPort);
 

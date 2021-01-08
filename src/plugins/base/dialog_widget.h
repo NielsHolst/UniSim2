@@ -56,6 +56,7 @@ private:
     QTextCursor getCursor();
     void writeWelcome();
     void showNews();
+    void showRHint(QString intro);
     void insertText(QString text, QColor color = QColor("black"));
     int numLines();
     int linePosition(int i);

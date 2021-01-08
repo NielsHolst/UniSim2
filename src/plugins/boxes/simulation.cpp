@@ -127,6 +127,8 @@ void Simulation::cleanup() {
 }
 
 void Simulation::debrief() {
+    if (unattended)
+        dialog().information("The simulation has finished in unattended mode. Write 'clip' at the prompt before pasting the outputs to R.");
     dialog().finishProgress();
 }
 
