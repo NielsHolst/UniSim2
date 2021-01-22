@@ -19,11 +19,17 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
     help("estimates biocontrol effects");
     Input(cadaverDensity).help("Current density of cadavers").unit("per tiller");
     Input(cropGrowthStage).help("Current crop growth stage").unit("Zadoks");
+    Input(aphidDensityWithoutF).help("Current aphid density without fungus").unit("per tiller");
+    Input(aphidDensityWithF).help("Current aphid density with fungus").unit("per tiller");
     Input(aphidPressureWithoutF).help("Accumulated aphid pressure without fungus").unit("aphid-days");
     Input(aphidPressureWithF).help("Accumulated aphid pressure with fungus").unit("aphid-days");
     Input(percentageCadavers).help("Cadaver prevalence").unit("%");
     Input(yieldWithoutF).help("Relative yield without fungus").unit("[0;1]");
     Input(yieldWithF).help("Relative yield witt fungus").unit("[0;1]");
+    Output(maxAphidDensityWithoutF).help("Maximum aphid density without fungus").unit("per tiller");
+    Output(maxAphidDensityCropGSWithoutF).help("Crop growth stage at maximum aphid density without fungus").unit("per tiller");
+    Output(maxAphidDensityWithF).help("Maximum aphid density with fungus").unit("per tiller");
+    Output(maxAphidDensityCropGSWithF).help("Crop growth stage at maximum aphid density with fungus").unit("per tiller");
     Output(maxCadaverDensity).help("Maximum cadaver density").unit("per tiller");
     Output(maxCadaverDensityCropGS).help("Crop growth stage at maximum cadaver density").unit("Zadoks");
     Output(maxCadaverDensityPercentage).help("Cadaver prevalence at maximum cadaver density").unit("%");
@@ -35,9 +41,20 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
     Output(percentageCadaversGs43).help("Percentage cadavers at GS 43").unit("%");
     Output(percentageCadaversGs61).help("Percentage cadavers at GS 61").unit("%");
     Output(percentageCadaversGs73).help("Percentage cadavers at GS 73").unit("%");
+    Output(maxPrevalence).help("Peak percentage cadavers before emigration").unit("%");
+    Output(maxPrevalenceCropGS).help("Crop growth stage at peak percentage cadavers before emigration").unit("Zadoks");
+    Output(maxPrevalenceDensity).help("Cadaver density at peak percentage cadavers before emigration").unit("per tiller");
 }
 
 void Biocontrol::update() {
+    if (aphidDensityWithoutF > maxAphidDensityWithoutF) {
+        maxAphidDensityWithoutF = aphidDensityWithoutF;
+        maxAphidDensityCropGSWithoutF = cropGrowthStage;
+    }
+    if (aphidDensityWithF > maxAphidDensityWithF) {
+        maxAphidDensityWithF = aphidDensityWithF;
+        maxAphidDensityCropGSWithF = cropGrowthStage;
+    }
     if (cadaverDensity > maxCadaverDensity) {
         maxCadaverDensity = cadaverDensity;
         maxCadaverDensityCropGS = cropGrowthStage;
@@ -47,6 +64,11 @@ void Biocontrol::update() {
         maxPercentageCadavers = percentageCadavers;
         maxPercentageCadaversCropGS = cropGrowthStage;
         maxPercentageCadaversDensity = cadaverDensity;
+    }
+    if (percentageCadavers > maxPrevalence && cropGrowthStage < 80.) {
+        maxPrevalence = percentageCadavers;
+        maxPrevalenceCropGS = cropGrowthStage;
+        maxPrevalenceDensity = cadaverDensity;
     }
     aphidPressureDifference = aphidPressureWithoutF - aphidPressureWithF;
     yieldDifference = yieldWithF - yieldWithoutF;

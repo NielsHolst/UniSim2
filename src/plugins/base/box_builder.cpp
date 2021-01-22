@@ -166,7 +166,7 @@ BoxBuilder& BoxBuilder::attribute(QString name, QString value) {
 BoxBuilder& BoxBuilder::X(QString value) { return attribute(#X, value); }
 
 SET_ATTRIBUTE_DIRECT(format)
-SET_ATTRIBUTE_DIRECT(label)
+//SET_ATTRIBUTE_DIRECT(label)
 SET_ATTRIBUTE_DIRECT(transform)
 
 BoxBuilder& BoxBuilder::transform(PortTransform value) {

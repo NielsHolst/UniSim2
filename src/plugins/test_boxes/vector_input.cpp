@@ -3,7 +3,7 @@
 
 using namespace base;
 
-namespace test {
+namespace test_boxes {
 
 PUBLISH(VectorInput)
 

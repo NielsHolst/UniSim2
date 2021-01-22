@@ -9,7 +9,7 @@ using namespace std;
 using namespace base;
 
 void TestPortBuffer::init() {
-    sim = 0;
+    sim = nullptr;
 }
 
 void TestPortBuffer::cleanup() {

@@ -13,7 +13,8 @@
     .allocation = allocation[structuralMassGrowth]
   }     
   Area area {
-    .plantDensity = 200
+    .plantDensity = parameters[plantDensity]
+    .frondAngle = parameters[frondAngle]
   }
   Box reserves {
     Reserves carbon {
@@ -36,21 +37,22 @@
         .fArea     = ./fArea[value]
         Trapezoid fTemp {
           .T = env[T]
-          .T0    = parameters[demandT0]
-          .Topt1 = parameters[demandTopt1]
-          .Topt2 = parameters[demandTopt2]
-          .Tmax  = parameters[demandTmax]
+          .T0    = parameters[T0]
+          .Topt1 = parameters[Topt1]
+          .Topt2 = parameters[Topt2]
+          .Tmax  = parameters[Tmax]
         }
         Fsalinity fSalinity {
         }
         Farea fArea {
           .aMax = parameters[aMax]
-          .a50  = parameters[a50]   
+          .a50  = parameters[a50]
+          .aSlope = parameters[aSlope]
         }
       }
       DemandCarbonRespiration respiration {
-        .resp20 = 0.00072
-        .Q10 = 1.5
+        .resp20 = parameters[resp20]
+        .Q10 = parameters[Q10]
       }
       DemandCarbonReserves reserves {
       }
@@ -58,7 +60,8 @@
         .gamma = parameters[gamma]
       }
       DemandCarbonErosion erosion {
-        .eMax = parameters[Emax]
+        .eMax = parameters[eMax]
+        .e50 = parameters[e50]
       }
     }
     Sum carbonTotal {
@@ -79,13 +82,12 @@
       .alpha = parameters[alpha]
       .fTemp  = ./fTemp[value]
       .fNitrogen = ./fNitrogen[value]
-      .propI = 0.5
       Trapezoid fTemp {
         .T = env[T]
-        .T0    = parameters[supplyT0]
-        .Topt1 = parameters[supplyTopt1]
-        .Topt2 = parameters[supplyTopt2]
-        .Tmax  = parameters[supplyTmax]
+        .T0    = parameters[T0]
+        .Topt1 = parameters[Topt1]
+        .Topt2 = parameters[Topt2]
+        .Tmax  = parameters[Tmax]
       }
       Fnitrogen fNitrogen {
         .minValue = parameters[fNitrogenMin]
@@ -101,7 +103,7 @@
   }
   Allocation allocation {
   }
-  Biomass biomass {
+  saccharina::Biomass biomass {
     .plantDensity = area[plantDensity]
     .Cstruct = 0.21
     .Nstruct = 0.02

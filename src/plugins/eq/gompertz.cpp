@@ -23,8 +23,8 @@ Gompertz::Gompertz(QString name, QObject *parent)
     Input(x).help("Vector of current x-values");
     Input(x0).equals(10).help("Value of x at the lower fractile (y0)");
     Input(y0).equals(0.05).help("The lower fractile ]0;1]");
-    Input(x1).equals(90).help("Value of x at the upper fractile (y1)");;;
-    Input(y1).equals(0.95).help("The upper fractile ]0;1]");;
+    Input(x1).equals(90).help("Value of x at the upper fractile (y1)");
+    Input(y1).equals(0.95).help("The upper fractile ]0;1]");
     Input(dx).equals(one).help("By how much is x increasing? dx must be a vector macthing x or, a scalar");
     Output(dy).help("By how much will y increase in response to the increase in x (dx)? Will match size of x and dx" );
 }
@@ -38,7 +38,7 @@ void Gompertz::reset() {
     CHECK_Y(y1);
     double A = log(-log(y0)),
            B = log(-log(y1));
-    _b = (B-A)/(x0-x1),
+    _b = (B-A)/(x0-x1);
     _a = exp(A + _b*x0);
 
     dy.resize(x.size());

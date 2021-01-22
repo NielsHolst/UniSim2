@@ -3,7 +3,7 @@
 
 using namespace base;
 
-namespace test {
+namespace test_boxes {
 
 PUBLISH(ModelA)
 
@@ -12,10 +12,10 @@ ModelA::ModelA(QString name, QObject *parent)
 {
     Input(input1);
     Input(input2);
-    Input(input3).track();
-    Input(input4).track();
-    Output(output1).track();
-    Output(output2).track();
+    Input(input3);
+    Input(input4);
+    Output(output1);
+    Output(output2);
     Output(output3);
     Output(output4);
 }

@@ -16,19 +16,22 @@ PUBLISH(Calibration)
 Calibration::Calibration(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("keeps tracks of the frond area");
+    help("calculates deviation from observations");
     Input(obsFileName).help("Name of file with observations");
     Input(date).imports("calendar[date]");
+    Input(area).imports("area[value]");
     Input(yield).imports("biomass[wetWeightYield]");
     Input(pctN).imports("biomass[nitrogenPct]");
     Input(pctC).imports("biomass[carbonPct]");
-    NamedOutput("yieldSumSq",     output.yield.sumSq).help("Sum of squares of model residuals");
-    NamedOutput("pctNSumSq",      output.pctN.sumSq).help("Sum of squares of model residuals");
-    NamedOutput("pctCSumSq",      output.pctC.sumSq).help("Sum of squares of model residuals");
+    NamedOutput("areaSumSq",  output.area.sumSq).help("Sum of squares of model residuals");
+    NamedOutput("yieldSumSq", output.yield.sumSq).help("Sum of squares of model residuals");
+    NamedOutput("pctNSumSq",  output.pctN.sumSq).help("Sum of squares of model residuals");
+    NamedOutput("pctCSumSq",  output.pctC.sumSq).help("Sum of squares of model residuals");
 }
 
 void Calibration::reset() {
     // Clear buffers
+    output.area.clear();
     output.yield.clear();
     output.pctN.clear();
     output.pctC.clear();
@@ -38,6 +41,7 @@ void Calibration::reset() {
     obs.read(fileNamePath, Table::ColumnLabelled);
     // Extract columns
     dates = obs.col<QDate>("date");
+    output.area.obs  = obs.col<double>("area");
     output.yield.obs = obs.col<double>("yield");
     output.pctN.obs  = obs.col<double>("nitrogenPct");
     output.pctC.obs  = obs.col<double>("carbonPct");
@@ -48,6 +52,7 @@ void Calibration::reset() {
 void Calibration::update() {
     // Collect predictions by obs date
     if (row < dates.size() && date == dates.at(row)) {
+        output.area.update(area);
         output.yield.update(yield);
         output.pctN .update(pctN);
         output.pctC .update(pctC);

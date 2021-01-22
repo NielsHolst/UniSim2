@@ -2,7 +2,7 @@
 #define MODEL_A_H
 #include <base/box.h>
 
-namespace test {
+namespace test_boxes {
 
 class ModelA : public base::Box
 {

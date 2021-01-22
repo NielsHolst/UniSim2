@@ -2,7 +2,7 @@
 #define AREA_H
 #include <base/box.h>
 
-namespace test {
+namespace test_boxes {
 
 class Area : public base::Box
 {

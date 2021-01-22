@@ -13,7 +13,7 @@ DemandCarbonRespiration::DemandCarbonRespiration(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("calculates temperature-dependent respiration rate");
-    Input(resp20).equals(0.000573 ).unit("h-1").help("Respiration rate at 20 oC");
+    Input(resp20).equals(0.000573).unit("h-1").help("Respiration rate at 20 oC");
     Input(Q10).equals(1.05).help("For Q10 rule");
     Input(dryWeight).imports("biomass[dryWeight]");
     Input(T).imports("env[T]");

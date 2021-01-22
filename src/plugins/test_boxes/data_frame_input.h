@@ -2,7 +2,7 @@
 #define DATA_FRAME_INPUT_H
 #include <base/box.h>
 
-namespace test {
+namespace test_boxes {
 
 class DataFrameInput : public base::Box
 {

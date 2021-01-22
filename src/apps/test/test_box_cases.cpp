@@ -1,13 +1,15 @@
+#include <iostream>
 #include <base/box.h>
 #include <base/box_builder.h>
 #include <base/exception.h>
 #include "test_box_cases.h"
 
 using namespace base;
+using namespace std;
 
 namespace TestBoxCases {
 
-    int sum2;
+    static int sum2;
 
     Box* case1() {
         BoxBuilder builder;
@@ -24,7 +26,7 @@ namespace TestBoxCases {
                         newPort("v1").
                     endbox().
                     box().name("c").
-                        newPort("v2").rnd("normal 10 2").
+                        newPort("v2").
                     endbox().
                 endbox().
                 box().name("A2").
@@ -117,15 +119,21 @@ namespace TestBoxCases {
 
     Box* case5a() {
         BoxBuilder builder;
-        builder.
-            box("Simulation").name("test_box_cases_3a").
-                port("steps").equals(2).
-                box("ModelA").name("A").
-                    port("input2").imports(".[input1]").
-                endbox().
-                box("OutputR").
-                endbox().
-            endbox();
+        try {
+            builder.
+                box("Simulation").name("test_box_cases_3a").
+                    port("steps").equals(2).
+                    box("ModelA").name("A").
+                        port("input2").imports(".[input1]").
+                    endbox().
+                    box("OutputR").
+                    endbox().
+                endbox();
+        }
+        catch(Exception &ex) {
+            QString s = "Unexpected exception: " + ex.what() + "\n";
+            cout << (qPrintable(s));
+        }
         return builder.content();
     }
 

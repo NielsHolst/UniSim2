@@ -38,7 +38,7 @@ void Area::update() {
     value = A;
     crownZoneArea = AZ/100.;
     lai = (AZ>0.) ? Afrond/AZ : 0.;
-    kA = structuralMass/a;
+    kA = structuralMass/A;
 }
 
 }

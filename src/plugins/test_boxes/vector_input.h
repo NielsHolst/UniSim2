@@ -3,7 +3,7 @@
 #include <QVector>
 #include <base/box.h>
 
-namespace test {
+namespace test_boxes {
 
 class VectorInput : public base::Box
 {

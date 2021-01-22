@@ -1,32 +1,31 @@
 Simulation sim {
   .steps = setup[steps]
   Box parameters {
+    +plantDensity = 400
     +alpha = 1.5 // 2.69 //photosynthetic effectivity
     +beta  = 0.0012 // 0.014 //Efficiency of nitrogen uptake
-    +gamma = 0.007 //Exudation rate
-    +g     = 0.00045          //Maximal growth rate
-    +Emax  = 0. // 0.0003 //Maximal constant fraction of frond lost due to erosion
-
+    +gamma = 0.0023 //0.007 Exudation rate
+    +g     = 0.0005 //Maximal growth rate
+    +eMax     = 0.0003 // maximal erosion rate
+    +e50 = 1.4 //size of the sporophyte when the erosion is 50% of max
+    +frondAngle = 30 //Frond angle to the horizon
     +fNitrogenMin = 0.5 // Lower bound of nitrogen effect on photosynthesis
-    +shape = 1.0
-
+    +shape = 1.0 //shape of the effect of nitrogen on photosynthesis
+    +resp20 = 0.000573 //Respiration at 20 degrees
+    +Q10 = 1.05 //Q10 of respiration
     +Cinit = 0.8        // inital carbon proportion (g/g sw)
     +Ninit = 0.044      //0.022 inital nitrogen proportion (g/g sw)
-    +Cmax  = 0.8
-    +Nmax  = 0.06
-    
+    +Cmax  = 0.8 //maximal proportion of C pr g structural mass
+    +Nmax  = 0.06 //Maximal proportion of nitrogen pr g structural mass
     +Winit = 0.00125    // initial weight of the structural mass (g)
     +aMax = 3.3     // Growth rate adjustment parameter
     +a50 = 3.0      //Growth rate adjustment parameter
+    +aSlope = 3 //Slope of the effect of area on growth rate
     +uMin = 0.28 //Minimum value of current equation
-    +demandT0 = -2 // Minimum Temperature where growth stops
-    +demandTopt1 = 5 // Lower optimal temperature for growth 
-    +demandTopt2 = 15 // Upper optimal temperature for growth
-    +demandTmax = 24 // Maximal Temperature where growth  stops
-    +supplyT0 = -2 // Minimum Temperature where  photosynthesis stops
-    +supplyTopt1 = 5 // Lower optimal temperature for photosynthesis
-    +supplyTopt2 = 15 // Upper optimal temperature for photosynthesis
-    +supplyTmax = 24 // Maximal Temperature where photosynthesis stops
+    +T0 = -2 // Minimum Temperature where growth stops
+    +Topt1 = 5 // Lower optimal temperature for growth 
+    +Topt2 = 15 // Upper optimal temperature for growth
+    +Tmax = 24 // Maximal Temperature where growth  stops
   }
   Scenarios setup {
     .fileName = "saccharina-scenarios.txt"
@@ -40,7 +39,7 @@ Simulation sim {
     }
     OutputText {
       .ports = (calendar[dateTime] output/value[area] output/value[yield] biomass[dryWeight]
-                 fArea[value] fNitrogen[value] structure/fTemp[value] fSalinity[value] nitrogenUptake[V] nitrogenUptake[J] nitrogenUptake[B] fCurrent[value] photosynthesis[sdRatio]
+                 fArea[value] fNitrogen[value] structure/fTemp[value] exudation[exudation] fSalinity[value] nitrogenUptake[V] nitrogenUptake[J] nitrogenUptake[B] fCurrent[value] photosynthesis[sdRatio]
                  env[T] env[I] env[N] env[U] env[S]
                  total/*[value]
                  biomass[dryWeight] biomass[carbonPct] biomass[nitrogenPct]

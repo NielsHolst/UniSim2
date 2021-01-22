@@ -23,8 +23,9 @@ UniqueName::UniqueName(QVector<Port*> ports) {
 }
 
 void UniqueName::addEntry(Port *port, PortFilter filter) {
-    bool hasLabel = (!port->label().isEmpty());
-    QString label = hasLabel ? port->label() : port->objectName();
+//    bool hasLabel = (!port->label().isEmpty());
+//    QString label = hasLabel ? port->label() : port->objectName();
+    QString label = port->objectName();
     if (filter != PortFilter::None)
         label += "." + convert<QString>(filter);
     _entries << Entry{label, _nextEntry++, port};

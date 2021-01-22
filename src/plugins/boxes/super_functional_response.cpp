@@ -20,7 +20,7 @@ SuperFunctionalResponse::SuperFunctionalResponse(QString name, QObject *parent)
     Input(host).help("Resource density").unit("#hosts");
     Input(demand).help("Number of attacks demanded").unit("#attacks");
     Input(attackRate).help("#attacks per #host per #attacker per time unit");
-    Input(timeStep).equals(1).help("Time step").unit("Time unit"),
+    Input(timeStep).equals(1).help("Time step").unit("Time unit");
     Output(supply).help("Number of attacks accomplished").unit("#attacks");
     Output(hostsAttacked).help("The number of hosts attacked").unit("#hosts");
     Output(propHostsAttacked).help("Proportion of hosts attacked").unit("[0;1]");

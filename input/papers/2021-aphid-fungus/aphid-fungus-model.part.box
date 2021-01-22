@@ -292,6 +292,8 @@
   Biocontrol biocontrol {
     .cadaverDensity = withFungus/infectious/cadavers[content]
     .cropGrowthStage = cropGrowthStage[value]
+    .aphidDensityWithoutF = withoutFungus/density[total]
+    .aphidDensityWithF = withFungus/density[total]
     .aphidPressureWithoutF = withoutFungus/diagnostics/aphidDays[value] 
     .aphidPressureWithF = withFungus/diagnostics/aphidDays[value] 
     .yieldWithoutF = withoutFungus/diagnostics/yield[yield] 

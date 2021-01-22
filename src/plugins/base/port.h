@@ -72,7 +72,7 @@ public:
     Port& help(QString value);
     Port& unit(QString value);
     Port& format(QString value);
-    Port& label(QString value);
+//    Port& label(QString value);
     Port& transform(QString value);
     Port& transform(PortTransform t);
     Port& isBlind(bool on);
@@ -81,7 +81,7 @@ public:
     QString help() const;
     QString unit() const;
     QString format() const;
-    QString label() const;
+//    QString label() const;
     PortTransform transform() const;
     bool isBlind() const;
     bool isReference() const;

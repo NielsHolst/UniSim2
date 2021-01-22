@@ -14,7 +14,7 @@ private:
     // Inputs
     QString obsFileName;
     QDate date;
-    double yield, pctN, pctC;
+    double area, yield, pctN, pctC;
     // Data
     QDate nextDate;
     QVector<QDate> dates;
@@ -28,7 +28,7 @@ private:
         void update(double predicted);
     };
     struct {
-        Output yield, pctN, pctC;
+        Output area, yield, pctN, pctC;
     } output;
     int row;
 };

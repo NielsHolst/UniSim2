@@ -21,7 +21,7 @@ class Box;
 class BoxBuilder
 {
 public:
-    BoxBuilder(Box *parent=0);
+    BoxBuilder(Box *parent=nullptr);
     ~BoxBuilder();
     void clear();
     // Box
@@ -48,7 +48,7 @@ public:
     BoxBuilder& attribute(QString name, QString value);
     // Attributes direct
     BoxBuilder& format(QString value);
-    BoxBuilder& label(QString la);
+//    BoxBuilder& label(QString la);
     BoxBuilder& transform(QString tr);
     BoxBuilder& transform(PortTransform value);
     // Set value

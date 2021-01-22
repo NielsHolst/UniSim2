@@ -271,23 +271,16 @@ plot_sobol_convergence = function() {
 }
 
 plot_sobol_indices = function() {
-  reuse_sensitivity_analysis_output = FALSE
-  file_name = paste0(box_script_folder, "/", output_file_base_name(), "_sobol-indices.Rdata")
-  if (reuse_sensitivity_analysis_output) {
-    load(file_name)
-  } else { 
-    n_outputs = length(output_names())
-    print(paste0("Bootstrapping (n=", sobol_B, ")..."))
-    B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
-    S = ddply(B, .(Output), sobol_statistics)
-    # print(paste("Saving Sobol' indices for later reuse in", file_name))
-    # save(S, file=file_name)
-  }
-  
+  file_name = "sobol-indices.Rdata"
+  n_outputs = length(output_names())
+  print(paste0("Bootstrapping (n=", sobol_B, ")..."))
+  B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
+  S = ddply(B, .(Output), sobol_statistics)
+  print(paste("Saving Sobol' indices for later reuse in", file_name))
+  save(S, file=file_name)
   plots = dlply(subset(S, Input!="Sum"), .(Output), plot_effects)
   plots
 }
-
 
 
 

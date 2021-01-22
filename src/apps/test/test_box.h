@@ -8,7 +8,6 @@ class TestBox : public QObject
     Q_OBJECT
 private slots:
     void testCreate();
-    void testNoRun();
     void testVectorInput();
     void testSiblingImport();
     void testParentImport();

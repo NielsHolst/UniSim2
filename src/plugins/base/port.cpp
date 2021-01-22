@@ -29,7 +29,7 @@ Port::Port(QString name, QObject *parent)
     _id = _index.size();
     _index << this;
     _attributes["format"] = "";
-    _attributes["label"] = "";
+//    _attributes["label"] = "";
     _attributes["help"] = "";
     _attributes["unit"] = "";
     _attributes["transform"] = convert<QString>(PortTransform::Identity);
@@ -119,10 +119,10 @@ Port& Port::format(QString value) {
     return *this;
 }
 
-Port& Port::label(QString value) {
-    _attributes["label"] = value;
-    return *this;
-}
+//Port& Port::label(QString value) {
+//    _attributes["label"] = value;
+//    return *this;
+//}
 
 Port& Port::transform(QString value) {
     _attributes["transform"] = value;
@@ -160,9 +160,9 @@ QString Port::format() const {
     return _attributes.value("format");
 }
 
-QString Port::label() const {
-    return _attributes.value("label");
-}
+//QString Port::label() const {
+//    return _attributes.value("label");
+//}
 
 PortTransform Port::transform() const {
     return convert<PortTransform>(_attributes.value("transform"));

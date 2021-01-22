@@ -340,8 +340,8 @@ void DialogWidget::writeWelcome() {
     Command::submit(QStringList() << "save" << "grammar", this);
 
     QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
-                   "\nInput folder:\n  " + environment().folderInfo(Environment::Output) +
-                   "\nOutput folder:\n  " + environment().folderInfo(Environment::Input);
+                   "\nInput folder:\n  " + environment().folderInfo(Environment::Input) +
+                   "\nOutput folder:\n  " + environment().folderInfo(Environment::Output);
 
     QString latestFile = environment().latestLoadArg();
     if (latestFile.contains(" "))

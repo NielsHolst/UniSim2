@@ -24,8 +24,8 @@ AphidImmigration::AphidImmigration(QString name, QObject *parent)
     Input(propExposedImmigrants).help("Proportion of infected immigrants").unit("[0;1]");
     Input(k).help("Has to match k of the receiving StageAndPhase box").unit("positive int");
     Output(total).help("Total immigration rate").unit("per tiller d-1");
-    Output(susceptible).help("Immigration rate of susceptible aphids").unit("per tiller d-1");;
-    Output(exposed).help("Immigration rate of exposed aphids").unit("per tiller d-1");;
+    Output(susceptible).help("Immigration rate of susceptible aphids").unit("per tiller d-1");
+    Output(exposed).help("Immigration rate of exposed aphids").unit("per tiller d-1");
 }
 
 void AphidImmigration::reset() {

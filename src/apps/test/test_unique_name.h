@@ -8,7 +8,6 @@ class TestUniqueName : public QObject
     Q_OBJECT
 private slots:
     void testMany();
-    void testSandy();
 };
 
 DECLARE_TEST(TestUniqueName)

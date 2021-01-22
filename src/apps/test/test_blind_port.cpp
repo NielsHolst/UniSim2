@@ -11,10 +11,9 @@ using namespace base;
 
 void TestBlindPort::testFormat() {
     bool excepted(false);
-    Box *sim;
     try {
         Command::submit(QStringList() << "run" << "blind-port-format.box", nullptr);
-        sim = environment().root();
+        environment().root();
     }
     UNEXPECTED
     QCOMPARE(dialog().errorCount(), 0);
@@ -23,11 +22,4 @@ void TestBlindPort::testFormat() {
     std::cout << "*** " << qPrintable(file.filePath()) << "\n"
               << qPrintable(file.columnLabels().join(" - ")) << "\n"
               << qPrintable(file.columnFormats().join(" - ")) << "\n";
-
-//    QStringList values = file.column("f");
-//    QCOMPARE(values.size(), 20);
-//    QSet<QString> set;
-//    for (QString value : values.toVector())
-//        set << value;
-//    QCOMPARE(set.size(), 5);
 }

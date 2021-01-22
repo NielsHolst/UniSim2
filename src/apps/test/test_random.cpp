@@ -76,33 +76,30 @@ void TestRandom::testDrawAt() {
     QCOMPARE(f1, f2);
     QCOMPARE(g1, g2);
 
-    QFAIL("No Track::updateAll() method");
-    // The atUpdate and atUserUpdate must have changed
-//    try {
-//        environment().computationStep(ComputationStep::Update);
-//        sim->updateFamily();
-//        Track::updateAll();
-//        a3 = a->value<double>();
-//        b3 = b->value<double>();
-//        c3 = c->value<double>();
-//        d3 = d->value<double>();
-//        e3 = e->value<double>();
-//        f3 = f->value<double>();
-//        g3 = g->value<double>();
-//    }
-//    UNEXPECTED
-//    QCOMPARE(a2, a3);
-//    QCOMPARE(b2, b3);
-//    QVERIFY(c2!=c3);
-//    QCOMPARE(e2, d3); //latest value in atUserReset
-//    QCOMPARE(e2, e3);
-//    QVERIFY(f2!=f3);
-//    QVERIFY(g2!=g3);
-//    QVERIFY(f3!=g3);
+    try {
+        environment().computationStep(ComputationStep::Update);
+        sim->updateFamily();
+        a3 = a->value<double>();
+        b3 = b->value<double>();
+        c3 = c->value<double>();
+        d3 = d->value<double>();
+        e3 = e->value<double>();
+        f3 = f->value<double>();
+        g3 = g->value<double>();
+    }
+    UNEXPECTED
+    QCOMPARE(a2, a3);
+    QCOMPARE(b2, b3);
+    QVERIFY(c2!=c3);
+    QCOMPARE(e2, d3); //latest value in atUserReset
+    QCOMPARE(e2, e3);
+    QVERIFY(f2!=f3);
+    QVERIFY(g2!=g3);
+    QVERIFY(f3!=g3);
 
-//    // Must run OK
-//    try {
-//        sim->run();
-//    }
-//    UNEXPECTED
+    // Must run OK
+    try {
+        sim->run();
+    }
+    UNEXPECTED
 }

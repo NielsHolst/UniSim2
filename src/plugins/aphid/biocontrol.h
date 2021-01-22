@@ -19,14 +19,18 @@ private:
     // Inputs
     double
         cadaverDensity, cropGrowthStage,
+        aphidDensityWithoutF, aphidDensityWithF,
         aphidPressureWithoutF, aphidPressureWithF,
         percentageCadavers,
         yieldWithoutF, yieldWithF;
     // Outputs
     double aphidPressureDifference, yieldDifference,
+        maxAphidDensityWithoutF, maxAphidDensityCropGSWithoutF,
+        maxAphidDensityWithF, maxAphidDensityCropGSWithF,
         maxCadaverDensity, maxCadaverDensityCropGS, maxCadaverDensityPercentage,
         maxPercentageCadavers, maxPercentageCadaversCropGS, maxPercentageCadaversDensity,
-        percentageCadaversGs43, percentageCadaversGs61, percentageCadaversGs73;
+        percentageCadaversGs43, percentageCadaversGs61, percentageCadaversGs73,
+        maxPrevalence, maxPrevalenceCropGS, maxPrevalenceDensity;
 };
 
 }

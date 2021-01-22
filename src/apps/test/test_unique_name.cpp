@@ -7,6 +7,7 @@
 #include "test_unique_name.h"
 
 using namespace base;
+using namespace std;
 
 void TestUniqueName::testMany() {
     BoxBuilder builder;
@@ -36,7 +37,7 @@ void TestUniqueName::testMany() {
             newPort("d").
             newPort("c").
             newPort("b").
-            newPort("x").label("y").
+            newPort("y").
         endbox().
         box().name("D").
             newPort("a").
@@ -72,55 +73,3 @@ void TestUniqueName::testMany() {
     delete builder.content();
 }
 
-void TestUniqueName::testSandy() {
-    BoxBuilder builder;
-    builder.
-    box("Simulation").name("sandy_test").
-        port("steps").equals(100).
-        port("step").
-        box("Sequence").name("seq").
-            port("min").equals(10).
-            port("max").equals(30).
-            port("value").label("x").
-        endbox().
-        box("Sandy").name("A").
-            port("x").imports("seq[value]").
-            port("a").equals(0).
-            port("b").equals(0).
-            port("value").label("A").
-        endbox().
-        box("Sandy").name("B").
-            port("x").imports("seq[value]").
-            port("a").equals(0.5).
-            port("b").equals(0.5).
-            port("value").label("B").
-        endbox().
-        box("Sandy").name("C").
-            port("x").imports("seq[value]").
-            port("a").equals(1).
-            port("b").equals(1).
-        endbox().
-        box("Sandy").name("D").
-            port("x").imports("seq[value]").
-            port("a").equals(5).
-            port("b").equals(5).
-        endbox().
-        box("Sandy").name("E").
-            port("x").imports("seq[value]").
-            port("a").equals(2).
-            port("b").equals(1).
-        endbox().
-        box("Sandy").name("F").
-            port("x").imports("seq[value]").
-            port("a").equals(4).
-            port("b").equals(0.5).
-        endbox().
-    endbox();
-
-    Path path("*<Port>");
-    QVector<Port*> ports = path.resolveMany<Port>();
-    UniqueName unique(ports);
-    QStringList names = unique.resolve(), expected;
-    std::cout << qPrintable(names.join("\n"));
-    delete builder.content();
-}

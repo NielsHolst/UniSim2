@@ -12,7 +12,7 @@ public:
     void update();
 private:
     // Inputs
-    double gamma, reservesProportion, structuralMass, demandStructure, timeStepSecs;
+    double gamma, reservesProportion, structuralMass, demandStructure, timeStepSecs, exudation, wetWeight;
     // Outputs
     double value, proportion;
 };

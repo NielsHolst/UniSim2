@@ -27,8 +27,9 @@ QString BoxPreprocessor::preprocess(QString filePath) {
     // Read box script and expand macros
     QString code = readFile(filePath, FileIncludes());
     // Set using directive and comment it out
+    MegaFactory::usingPlugin("");
     setUsing(extractUsing(code));
-    code = code.replace("^#using", "// #using");
+    code = code.replace("#using", "// #using");
     // Replace any macros
     return replaceMacros(code);
 }

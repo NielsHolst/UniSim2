@@ -12,7 +12,7 @@ using std::unique_ptr;
 using namespace base;
 
 void TestBox::testCreate() {
-    auto mother = new Box("Mother",0),
+    auto mother = new Box("Mother",nullptr),
         boy = new Box("Boy", mother),
         daughter = new Box("Daughter", mother);
     QCOMPARE(mother->objectName(), QString("Mother"));
@@ -21,18 +21,6 @@ void TestBox::testCreate() {
     QCOMPARE(fullName(mother), QString("/Mother"));
     QCOMPARE(fullName(boy), QString("/Mother/Boy"));
     delete mother;
-}
-
-void TestBox::testNoRun() {
-    unique_ptr<Box> lion( MegaFactory::create<Box>("Lion", "king", 0) );
-    bool excepted{false};
-    try {
-        lion->run();
-    }
-    catch(Exception &) {
-        excepted = true;
-    }
-    QVERIFY(excepted);
 }
 
 void TestBox::testVectorInput() {
@@ -56,10 +44,16 @@ void TestBox::testVectorInput() {
 }
 
 void TestBox::testSiblingImport() {
+    bool excepted = false;
     Box *root = TestBoxCases::case5a();
-    root->amendFamily();
-    root->initializeFamily();
-    root->deleteLater();
+    try {
+        root->amendFamily();
+        root->initializeFamily();
+        root->deleteLater();
+    }
+    catch (Exception &) {
+        excepted = true;    }
+    QVERIFY(excepted);
 }
 
 void TestBox::testParentImport() {

@@ -17,22 +17,14 @@ command.subdir = src/plugins/command
 command.depends = base
 test.depends = command
 
-#SUBDIRS += distribution
-#distribution.subdir = src/plugins/distribution
-#distribution.depends = base
-
 SUBDIRS += demo
 demo.subdir = src/plugins/demo
 demo.depends = base
 test.depends = demo
 
-#SUBDIRS += eq
-#eq.subdir = src/plugins/eq
-#eq.depends = base
-
-#SUBDIRS += savanna
-#savanna.subdir = src/plugins/savanna
-#savanna.depends = base
+SUBDIRS += eq
+eq.subdir = src/plugins/eq
+eq.depends = base
 
 #SUBDIRS += student
 #student.subdir = src/plugins/student
@@ -42,6 +34,6 @@ test.depends = demo
 #vg.subdir = src/plugins/vg
 #vg.depends = base
 
-#SUBDIRS += test_boxes
-#test_boxes.subdir = src/plugins/test_boxes
-#test_boxes.depends = base
+SUBDIRS += test_boxes
+test_boxes.subdir = src/plugins/test_boxes
+test_boxes.depends = base

@@ -26,11 +26,9 @@ HEADERS +=  \
     test_calendar.h \
     test_circle_buffer.h \
     test_command.h \
-#    test_conditional.h \
     test_convert.h \
     test_copy_folder.h \
     test_data_frame.h \
-    test_distribution.h \
     test_eq.h \
     test_general_split.h \
     test_history.h \
@@ -42,20 +40,16 @@ HEADERS +=  \
     test_output_text.h \
     test_path.h \
     test_phys_math.h \
-#    test_population.h \
     test_port.h \
     test_port_buffer.h \
     test_port_type.h \
     test_port_value_op.h \
     test_random.h \
     test_random_order.h \
-    test_savanna.h \
     test_save_grammar.h \
     test_scenarios.h \
     test_simulation.h \
-    test_track.h \
     test_unique_name.h \
-    test_vector.h \
     test_vector_op.h \
     test_vector_sum.h \
     test_vectorization.h \
@@ -75,11 +69,9 @@ SOURCES +=  \
     test_calendar.cpp \
     test_circle_buffer.cpp \
     test_command.cpp \
-#    test_conditional.cpp \
     test_convert.cpp \
     test_copy_folder.cpp \
     test_data_frame.cpp \
-    test_distribution.cpp \
     test_eq.cpp \
     test_general_split.cpp \
     test_history.cpp \
@@ -91,20 +83,16 @@ SOURCES +=  \
     test_output_text.cpp \
     test_path.cpp \
     test_phys_math.cpp \
-#    test_population.cpp \
     test_port.cpp \
     test_port_buffer.cpp \
     test_port_type.cpp \
     test_port_value_op.cpp \
     test_random.cpp \
     test_random_order.cpp \
-    test_savanna.cpp \
     test_save_grammar.cpp \
     test_scenarios.cpp \
     test_simulation.cpp \
-    test_track.cpp \
     test_unique_name.cpp \
-    test_vector.cpp \
     test_vector_op.cpp \
     test_vector_sum.cpp \
     test_vectorization.cpp
