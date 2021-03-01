@@ -1,4 +1,10 @@
-﻿#include <base/publish.h>
+/* Copyright 2018-2021 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Byju N. Govindan, University of Minnesota [ngbyju at umn.edu].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
+ï»¿#include <base/publish.h>
 #include "exppoly2_surv_rate.h"
 #include <math.h>
 
@@ -12,7 +18,7 @@ ExpPoly2SurvRate::ExpPoly2SurvRate(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimate the stage-specific daily survival rate using ExpPoly2 (ExpPolynomial) model; later replace daily rate to hourly rate");
-        Input(dailytempC).equals(17).help("Temperature (°C)");
+        Input(dailytempC).equals(17).help("Temperature (Â°C)");
         Input(a0).equals(13.41368).help("Estimate of coefficient a0)");
         Input(a1).equals(-1.25998).help("Estimate of coefficient a1");
         Input(a2).equals(0.02423).help("Estimate of coefficient a2");

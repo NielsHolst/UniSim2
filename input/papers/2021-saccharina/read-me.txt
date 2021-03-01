@@ -1,0 +1,45 @@
+Box scripts
+===========
+- saccharina-scenarios.box runs a simulation for each of the scenarios defined in the scenarios file, either saccharina-scenarios-all.txt or saccharina-scenarios-one.txt, You can change this in the box script.
+
+- saccharina-SA-complete.box runs a sensitivity analysis on all uncertain parameters; 24 hours execution time! Change no.of iterations for a quicker demo.
+
+- saccharina-SA-fixed.box runs a sensitivity analysis only on the sensitive (identified above) uncertain parameters. The other uncertain parameters has been fixed; 4 days execution time! Change no.of iterations for a quicker demo.
+
+- saccharina-model.part.box is a part script included (i.e., shared) by the scripts above. It defined the model.
+
+Main R scripts
+==============
+- saccharina-scenarios-end.R is invoked by the saccharina-scenarios.box script to show simulation outputs.
+
+Sub-folder env
+==============
+Contains environment variables driving all box scripts. The environment file is coupled with the simulation in the scenarios file.
+
+Sub-folder obs
+==============
+Contains observations which are plotted together with simulations by the saccharina-scenarios-end.R script. The observation file is coupled with the simulation in the scenarios file.
+
+Sub-folder analysis
+===================
+Contains the outputs from the time-consuming sensitivity analyses: saccharina-SA-complete.box and saccharina-SA-fixed.box. You must change the 
+
+The R scripts carry out the following tasks:
+
+- calibrate.R finds the best fitting parameter values
+
+- compute-obs-C-N.R checks that the Cstruct and Nstruct have plausible values (using obs files) and computes proportion C and N (later used for calibration). As a side-effect, propC and propN columns are added to the obs files.
+
+- setup.R loads the standard Universal Simulator variables and functions, which are used by the other R scripts.
+
+- saccharina-SA-complete.R uses the files:
+-- saccharina-SA-complete.part.R
+-- saccharina-SA-complete.Rdata
+-- saccharina-SA-complete-S.Rdata
+
+- saccharina-SA-fixed.R uses the files:
+-- saccharina-SA-fixed.part.R
+-- saccharina-SA-fixed.Rdata
+-- saccharina-SA-fixed-S.Rdata
+
+Both the R scrips above reproduces the output produced by the corresponding R scripts: saccharina-SA-complete.box and saccharina-SA-fixed.box. However, they work on the output files produced by those box scripts and copied here. Thus you only have to run these time-consuming box scripts once.

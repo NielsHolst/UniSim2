@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by
+/* Copyright 2005-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
 ** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].
@@ -22,8 +22,19 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
     port("swFluxDown")->imports("./*[swFluxDown]").transform(Sum);
     port("lwFluxDown")->imports("./*[lwFluxDown]").transform(Sum);
     port("area")->imports("construction/geometry[groundArea]",CA);
-    Output(currentlyOn).imports("./*[currentlyOn]").transform(Any).help("Is any growth light on?");
-    Output(powerUsage).imports("./*[powerUsage]").transform(Sum);
+    Input(lightsCurrentlyOn).imports("./*[currentlyOn]");
+    Input(lightsPowerUsage).imports("./*[powerUsage]");
+    Output(currentlyOn).help("Is any growth light on?");
+    Output(powerUsage).help("Sum of growth lights' power usages");
+}
+
+void GrowthLights::update() {
+    currentlyOn = false;
+    powerUsage = 0.;
+    for (bool on : lightsCurrentlyOn)
+        currentlyOn = (currentlyOn || on);
+    for (double usage : lightsPowerUsage)
+        powerUsage += usage;
 }
 
 } //namespace

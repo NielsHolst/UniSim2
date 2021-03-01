@@ -401,10 +401,10 @@ Box* build(const Query &q) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
     }
     environment().root(sim);
-    Box *crop = sim->findOne<Box>("greenhouse/crop");
-    std::cout << qPrintable(crop->name()) << "\n";
-    QVector<Box*> children = crop->findMany<Box>("./*");
-    std::cout << children.size() << " children\n";
+//    Box *crop = sim->findOne<Box>("greenhouse/crop");
+//    std::cout << qPrintable(crop->name()) << "\n";
+//    QVector<Box*> children = crop->findMany<Box>("./*");
+//    std::cout << children.size() << " children\n";
     return sim;
 }
 

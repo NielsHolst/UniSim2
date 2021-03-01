@@ -10,18 +10,25 @@ library(splines)
 library(stringr)
 
 
+skip_formats = exists("output_skip_formats")
 if (exists("keepPages") && !keepPages) graphics.off ()
 if (exists("keepVariables") && !keepVariables) {
   del = ls(all=TRUE) 
-  del = del[!(del %in% c("box_script_folder", "output_file_name"))]
+  del = del[!(del %in% c("box_script_folder", "output_file_name", "saveAsDataFrame","skip_formats"))]
   rm(list=del)
 }
 
-skip_formats = exists("output_skip_formats")
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
-#                   red       blue      green     violet    orange    brown     pink      grey 
-unisim_colours = c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf','#999999') 
+red = '#e41a1c'
+blue = '#377eb8'
+green = '#4daf4a'
+violet = '#984ea3'
+orange = '#ff7f00'
+brown = '#a65628'
+pink = '#f781bf'
+grey = '#999999'
+unisim_colours = c(red,blue,green,violet,orange,brown,pink,grey) 
 
 unisim_colour = function(i) { 
   strtoi(c(
@@ -124,6 +131,11 @@ unique_names = function(col_names) {
   M = adply(M, 1, F)
   changed = any(as.character(col_names) != as.character(M$UniqueName))
   if (changed) unique_names(M$UniqueName) else M$UniqueName
+}
+
+simplify_col_names = function(M) {
+  colnames(M) = unique_names(colnames(M))
+  M
 }
 
 read_output = function(file_path) {
@@ -381,5 +393,11 @@ plot_histogram = function(df, ports, bins, ncol, nrow) {
     theme(legend.position="none")    
 }
 
-
+# Convert text output to data frame
+if (exists("saveAsDataFrame") && saveAsDataFrame) {
+  sim = read_output(output_file_name)
+  file_name_R = paste0(output_file_folder(), "/", output_file_base_name(), ".Rdata")
+  print(paste("Writing sim data frame to", file_name_R))
+  save(sim, file=file_name_R)
+}
 

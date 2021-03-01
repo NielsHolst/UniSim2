@@ -1,10 +1,11 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QApplication>
 #include <QProgressBar>
 #include <QTextEdit>
+#include <QtWinExtras/QWinTaskbarProgress>
 #include "dialog_base.h"
 #include "exception.h"
 
@@ -33,16 +34,24 @@ void DialogBase::resetProgress() {
 void DialogBase::updateProgress(const ProgressInfo &info) {
     double progress = double(info.step + (info.iteration-1)*info.steps)/info.steps/info.iterations;
     if (progress > _nextShowProgress) {
+        double total = static_cast<double>(info.time.elapsed())/progress;
+        int maximum = static_cast<int>(total)/1000,
+            value = static_cast<int>(info.time.elapsed())/1000;
         QProgressBar *bar = progressBar();
         if (bar) {
             bar->setFormat(" %p% of %ms");
-            double total = info.time.elapsed()/progress;
-            bar->setMaximum(static_cast<int>(total)/1000);
-            bar->setValue(static_cast<int>(info.time.elapsed())/1000);
+            bar->setMaximum(maximum);
+            bar->setValue(value);
             bar->show();
-            qApp->processEvents();
-            _nextShowProgress += 0.01;
         }
+        QWinTaskbarProgress *taskbar = winProgressTaskbar();
+        if (taskbar) {
+            taskbar->setMaximum(maximum);
+            taskbar->setValue(value);
+            taskbar->show();
+        }
+        qApp->processEvents();
+        _nextShowProgress += 0.01;
     }
 }
 

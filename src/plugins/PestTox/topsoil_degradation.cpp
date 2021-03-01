@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -22,7 +22,7 @@ TopsoilDegradation::TopsoilDegradation(QString name, QObject *parent)
     Input(inflow).unit("g a.i/ha").equals(0.).help("Inflow as pesticide deposition in the soil");
     Input(DT50).unit("day").equals(10.).help("Biodegradation half-life");
     Input(Sp).equals(0.).help("Soil porosity");
-    Input(Tsoil).unit("°C").equals(25.).help("Soil temperature");
+    Input(Tsoil).unit("Â°C").equals(25.).help("Soil temperature");
     Input(Vrsmc).equals(0.5).help("Reference soil moisture content");
     Input(rf).equals(0.7).help("Exponential response factor for the influence of moisture content on biodegradation rate");
     Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");

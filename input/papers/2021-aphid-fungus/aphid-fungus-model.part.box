@@ -75,9 +75,12 @@
         +nymphs|sum = ../*/nymph/*[content] 
         +adults|sum = ../*/adult/*[content] 
         +total |sum = ../*/*/*[content]     
+        +exposed|sum = ../exposed/*/*[content]
+        +cadavers  = ../exposed/succumbed[count]      
       }
       AphidImmigration immigration {
         .cropGrowthStage = cropGrowthStage[value]
+        .toCropGrowthStage = 69
         .immigrationRate = 0.02
         .propExposedImmigrants = random/propExposedImmigrants[value]
         .k = random/k[value]
@@ -231,7 +234,7 @@
         CadaverConversion succumbed {
           .succumbedApterousNymphs = .../nymph/apterous[phaseOutflow]
           .succumbedAlateNymphs    = .../nymph/alate[phaseOutflow]  
-          .succumbedApterousAdult  = .../adult/apterous[phaseOutflow]
+          .succumbedApterousAdults   = .../adult/apterous[phaseOutflow]
           .succumbedAlateAdults    = .../adult/alate[phaseOutflow]   
         }
       } // exposed
@@ -239,7 +242,7 @@
         OnOff isSporulating {
           .x = weather[RHmax]
           .xOn = random/sporulationOn[value]
-          .xOff = 100 // ? why not 0 when it is off?
+          .xOff = 999 
         }
         CadaverTime time {
           .isSporulating = ../isSporulating[isOn]
@@ -265,9 +268,10 @@
         Accumulator cadaverDays {
           .change = ../../infectious/cadavers[content]
         }
-        PercentageCadavers percentageCadavers {
-          .aphidDensity = ../../density[total]
-          .cadaverDensity = ../../infectious/cadavers[content]
+        Prevalence prevalence {
+          .aphidDensity    = ../../density[total]
+          .exposedDensity   = ../../density[exposed]
+          .cadaverDensity = ../../density[cadavers]
         }
         ThresholdNorway thresholdNorway {
           .aphids = ../../density[total]
@@ -290,14 +294,14 @@
   } // system
 
   Biocontrol biocontrol {
-    .cadaverDensity = withFungus/infectious/cadavers[content]
-    .cropGrowthStage = cropGrowthStage[value]
-    .aphidDensityWithoutF = withoutFungus/density[total]
-    .aphidDensityWithF = withFungus/density[total]
     .aphidPressureWithoutF = withoutFungus/diagnostics/aphidDays[value] 
     .aphidPressureWithF = withFungus/diagnostics/aphidDays[value] 
+
     .yieldWithoutF = withoutFungus/diagnostics/yield[yield] 
-    .percentageCadavers = withFungus/diagnostics/percentageCadavers[value]
     .yieldWithF = withFungus/diagnostics/yield[yield] 
+    
+    .cropGrowthStage = cropGrowthStage[value]
+    .prevalence = withFungus/diagnostics/prevalence[exposed]
+    .cadaverPrevalence = withFungus/diagnostics/prevalence[cadavers]
   }
 

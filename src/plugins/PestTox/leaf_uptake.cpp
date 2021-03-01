@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -21,7 +21,7 @@ LeafUptake::LeafUptake(QString name, QObject *parent)
 {
     help("manages fate of pesticide on crop or leaf surface due to uptake");
     Input(leafType).equals("NonWaxy").help("either 'Waxy' or 'NonWaxy'");
-    Input(Tair).unit("°C").imports("weather[Tavg]").help("Air temperature");
+    Input(Tair).unit("Â°C").imports("weather[Tavg]").help("Air temperature");
     Input(MV).imports("applications[molarVolume]").help("Molar volume");
 }
 

@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -14,7 +14,7 @@ PUBLISH(FunctionalResponse)
 
 FunctionalResponse::FunctionalResponse(QString name, QObject *parent)
     : Box(name, parent) {
-    help("computes a Gutierrez-Baumgärtner functional response");
+    help("computes a Gutierrez-BaumgÃ¤rtner functional response");
     Input(attacker).help("Attacker density").unit("#predators");
     Input(prey).help("Resource density").unit("#prey");
     Input(demandGross).help("Gross demand of attacker").unit("#prey");

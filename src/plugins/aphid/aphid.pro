@@ -21,7 +21,7 @@ HEADERS +=  \
   crop_growth_stage.h \
   crop_is_growing.h \
   infection_rate.h \
-  percentage_cadavers.h \
+  prevalence.h \
   threshold_base.h \
   threshold_norway.h \
   threshold_sweden.h \
@@ -40,7 +40,7 @@ SOURCES +=  \
   crop_growth_stage.cpp \
   crop_is_growing.cpp \
   infection_rate.cpp \
-  percentage_cadavers.cpp \
+  prevalence.cpp \
   threshold_base.cpp \
   threshold_norway.cpp \
   threshold_sweden.cpp \

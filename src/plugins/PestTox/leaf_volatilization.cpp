@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -22,8 +22,8 @@ LeafVolatilization::LeafVolatilization(QString name, QObject *parent)
     help("manages fate of pesticide on crop or leaf surface due to volatilization");
     Input(VP).unit("Pa").imports("applications[vapourPressure]").help("Vapour pressure of the pesticide at reference temperature");
     Input(Ea).unit("kJ/mol").imports("applications[activationEnergyVolatilization]").help("Activation energy");
-    Input(Tref).unit("°C").imports("applications[Tref]").help("Reference temperature");
-    Input(Tair).unit("°C").imports("weather[Tavg]").help("Daily average air temperature");
+    Input(Tref).unit("Â°C").imports("applications[Tref]").help("Reference temperature");
+    Input(Tair).unit("Â°C").imports("weather[Tavg]").help("Daily average air temperature");
     Input(load).unit("g a.i/ha").imports("onCrop[load]").help("Current concentration of the pesticide on crop or leaf surface");
 
     Output(Tcorrection).unit("scalar").help("Temperature correction factor");

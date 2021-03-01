@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/data_frame.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -75,7 +81,7 @@ void Calibration::Output::update(double predicted) {
         if (obs.at(i) >= 0.)
             sumSq += sqr(obs.at(i) - pred.at(i));
     }
-    sumSq = (sumSq==0.) ? -30. : log(sumSq);
+    sumSq = log10(sumSq+0.01) + 2.;
 }
 
 }

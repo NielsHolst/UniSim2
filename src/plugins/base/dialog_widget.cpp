@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -15,6 +15,8 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QtWinExtras/QWinTaskbarProgress>
+#include <QtWinExtras/QWinTaskbarButton>
 #include "command.h"
 #include "dialog_widget.h"
 #include "environment.h"
@@ -28,7 +30,9 @@ namespace base {
 
 DialogWidget::DialogWidget(QMainWindow *parent)
     : QTextEdit(parent),
+      _parent(parent),
       _init(false),
+      _winProgressTaskbar(nullptr),
       _prompt("> "),
       _informationColor(QColor("blue")),
       _errorColor(QColor("red")),
@@ -134,8 +138,15 @@ QProgressBar* DialogWidget::progressBar() {
     return _progressBar;
 }
 
+QWinTaskbarProgress* DialogWidget::winProgressTaskbar() {
+    // Will be nullptr if not runnings on Windows
+    return _winProgressTaskbar;
+}
+
 void DialogWidget::finished() {
     _progressBar->hide();
+    if (_winProgressTaskbar)
+        _winProgressTaskbar->reset();
     qApp->processEvents();
 }
 
@@ -158,6 +169,32 @@ void DialogWidget::information(QString s) {
 void DialogWidget::errorImpl(QString s) {
     insertText("\n" + s, _errorColor);
     repaint();
+}
+
+void DialogWidget::showEvent(QShowEvent *event) {
+    // See https://doc.qt.io/qt-5/qtwinextras-musicplayer-example.html
+    // and QWinTaskbarButton help
+    QWidget::showEvent(event);
+    if (environment().isWindows() && !_winProgressTaskbar) {
+        QWinTaskbarButton *taskbarButton = new QWinTaskbarButton(this);
+        QWindow *window = _parent->windowHandle();
+        if (window) {
+            taskbarButton->setWindow(window);
+            _winProgressTaskbar = taskbarButton->progress();
+        }
+    }
+}
+
+void DialogWidget::focusInEvent(QFocusEvent *event) {
+    QTextEdit::focusInEvent(event);
+//    if (_winProgressTaskbar && _winProgressTaskbar->value() == _winProgressTaskbar->maximum())
+//        _winProgressTaskbar->reset();
+    _isInFocus = true;
+}
+
+void DialogWidget::focusOutEvent(QFocusEvent *event) {
+    QTextEdit::focusOutEvent(event);
+    _isInFocus = false;
 }
 
 void DialogWidget::keyPressEvent(QKeyEvent *event) {

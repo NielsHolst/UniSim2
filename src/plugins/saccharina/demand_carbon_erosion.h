@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef DEMAND_CARBON_EROSION_H
 #define DEMAND_CARBON_EROSION_H
 #include <base/box.h>
@@ -12,8 +18,7 @@ public:
     void update();
 private:
     // Inputs
-    double A, e50, eSlope, eMax, timeStepSecs,
-        proportionC, kA;
+    double areaErosion, proportionC, kA;
     // Outputs
     double value;
 };

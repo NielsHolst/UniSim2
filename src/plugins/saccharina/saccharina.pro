@@ -11,6 +11,7 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 HEADERS +=  \
     allocation.h \
     area.h \
+    area_erosion.h \
     biomass.h \
     calibration.h \
     demand_carbon_erosion.h \
@@ -18,6 +19,7 @@ HEADERS +=  \
     demand_carbon_reserves.h \
     demand_carbon_respiration.h \
     demand_carbon_structure.h \
+    demand_nitrogen_erosion.h \
     demand_nitrogen_reserves.h \
     demand_nitrogen_structure.h \
     f_area.h \
@@ -27,12 +29,14 @@ HEADERS +=  \
     nitrogen_uptake.h \
     photosynthesis.h \
     reserves.h \
+    saccharina_documentation.h \
     structure.h \
     trapezoid.h
     
 SOURCES +=  \
     allocation.cpp \
     area.cpp \
+    area_erosion.cpp \
     biomass.cpp \
     calibration.cpp \
     demand_carbon_erosion.cpp \
@@ -40,6 +44,7 @@ SOURCES +=  \
     demand_carbon_reserves.cpp \
     demand_carbon_respiration.cpp \
     demand_carbon_structure.cpp \
+    demand_nitrogen_erosion.cpp \
     demand_nitrogen_reserves.cpp \
     demand_nitrogen_structure.cpp \
     f_area.cpp \
@@ -49,5 +54,6 @@ SOURCES +=  \
     nitrogen_uptake.cpp \
     photosynthesis.cpp \
     reserves.cpp \
+    saccharina_documentation.cpp \
     structure.cpp \
     trapezoid.cpp

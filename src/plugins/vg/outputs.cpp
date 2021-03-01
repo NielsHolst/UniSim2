@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by
+/* Copyright 2005-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Oliver Koerner, Leibniz-Institute of Vegetable and Ornamental Crops [koerner at igzev.de] and
 ** Jesper M. Aaslyng, Danish Technological Instutute [jeaa at teknologisk.dk].

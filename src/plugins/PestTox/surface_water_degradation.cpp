@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -23,7 +23,7 @@ SurfaceWaterDegradation ::SurfaceWaterDegradation (QString name, QObject *parent
     Input(inflow).unit("g a.i/ha").equals(0.).help("Inflow as runoff from the field");
     Input(inflow2).unit("g a.i/ha").equals(0.).help("Inflow as spray drift off-field edge");
     Input(DT50).unit("day").equals(4.5).help("Biodegradation half-life");
-    Input(Tw).unit("°C").imports("soilTemperature[value]").help("Water temperature (assumed to be the same as soil temperature)");
+    Input(Tw).unit("Â°C").imports("soilTemperature[value]").help("Water temperature (assumed to be the same as soil temperature)");
     Input(pondWidth).unit("m").equals(1.).help("Width of the pond or channel");
     Input(pondHeight).unit("m").equals(1.).help("Height of the pond or channel");
     Input(pondLength).unit("m").equals(1.).help("Length of the pond or channel");

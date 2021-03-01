@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -29,7 +29,7 @@ ZValues::ZValues(QString name, QObject *parent)
     Input(fw).unit("fraction").equals(0.25).help("Fraction of water in the soil");
     Input(fs).unit("fraction").equals(0.5).help("Fraction of solids in the soil");
     Input(KocpH).unit("L/kg").equals(5.678e-6).help("pH-dependent organic carbon-water partitioning coefficient");
-    Input(Tair).unit("°C").imports("weather[Tavg]").help("Daily average air temperature");
+    Input(Tair).unit("Â°C").imports("weather[Tavg]").help("Daily average air temperature");
     Input(R).unit("J/mol/K").equals(8.3145).help("Gas constant");
     Input(Sp).equals(0.5).help("Soil porosity");
     Input(farea).unit("m2").equals(100.).help("Area of the whole field");

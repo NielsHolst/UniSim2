@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QProgressDialog>
+#include <QtWinExtras/QWinTaskbarProgress>
 #include "dialog_minimal.h"
 
 namespace base {
@@ -31,6 +32,10 @@ DialogMinimal::DialogMinimal(QObject *parent)
 QProgressBar* DialogMinimal::progressBar() {
     Q_ASSERT(_progressBar);
     return _progressBar;
+}
+
+QWinTaskbarProgress* DialogMinimal::winProgressTaskbar() {
+    return nullptr;
 }
 
 void DialogMinimal::finishProgress() {

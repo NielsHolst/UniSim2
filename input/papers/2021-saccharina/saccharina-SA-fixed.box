@@ -1,0 +1,134 @@
+Simulation sim {
+  // Execution time: 2,300 iterations per hour
+  .iterations =  212992
+  .steps = 5856
+  .silent = TRUE
+  .unattended = TRUE
+  Box parameters {
+    // Parameters defining the system
+    +plantDensity     = 400
+    +Cinit            = 0.8     
+    +Ninit            = 0.044   
+    // Parameters fixed from literature
+    +Cmax             = 0.8     
+    +Nmax             = 0.06    
+    +uMin             = 0.28    
+    +T0               = -2      
+    +Tmax             = 24      
+    +kC               = 2.12
+    // Influential parameters identified by the complete sensitivity analysis
+    +alpha            = ./alpha[value]
+    +beta             = ./beta[value]
+    +gamma            = ./gamma[value]
+    +g                = ./g[value]
+    +eMax             = ./eMax[value]
+    +e50              = ./e50[value]
+    +aMax             = ./aMax[value]
+    +a50              = ./a50[value]
+    +Winit            = ./Winit[value]
+    +resMaxRelDemand  = ./resMaxRelDemand[value]
+    +fNitrogenMin     = ./fNitrogenMin[value]
+    // Non-influential parameters identified by th sensitivity analysis
+    +aSlope           = 3.0
+    +frondAngle       = 30
+    +Pmax             = 999
+    +Q10              = 1.05
+    +resp20           = 0.000573
+    +Topt1            = 5
+    +Topt2            = 15
+    RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = TRUE
+      .bootstrapSize = 10000
+    }
+    RandomUniform alpha {
+      .min = 1.4
+      .max = 2.0
+    }
+    RandomUniform beta {
+      .min = 0.0006
+      .max = 0.00402
+    }
+    RandomUniform  gamma {
+      .min = 0.001
+      .max = 0.003
+    }
+    RandomUniform  g{
+      .min = 0.00005
+      .max = 0.00519
+    }
+    RandomUniform  eMax {
+      .min = 0.00013
+      .max = 0.0005
+    }
+    RandomUniform  e50 {
+      .min = 0.5
+      .max = 4.0
+    }
+    RandomUniform fNitrogenMin {
+      .min = 0.3
+      .max = 0.6
+    }
+    RandomUniform aMax {
+      .min = 1.67
+      .max = 5.00
+    }
+    RandomUniform a50 {
+      .min = 0.05
+      .max = 6.00
+    }
+    RandomUniform Winit {
+      .min = 3.88e-5 
+      .max = 0.00388
+    }
+    RandomUniform resMaxRelDemand {
+      .min =  0.1
+      .max = 30
+    }
+  }
+  Box setup {
+    +endR = "saccharina-SA-end.R"
+    +fileNamePath = "env/env_file_2019-AVG.txt"
+    +initialDateTime = 2019/10/03
+    +obsFile = "obs/alge-obs-2019-AVG-vandrette-liner-100m-CN.txt"
+    +trial = "Average plants 2019-2020 on 10 mm line"
+  }
+  #include "saccharina-model.part.box"
+  OutputR {
+    .saveAsDataFrame = TRUE
+    Box outputs {
+      +areaSumSq  = calibration[areaSumSq]
+      +yieldSumSq = calibration[yieldSumSq]
+      +pctNSumSq  = calibration[pctNSumSq]
+      +pctCSumSq  = calibration[pctCSumSq]
+    }
+      PageR {
+      .xAxis = parameters/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .maxData = 500
+        .ggplot = "geom_smooth(colour='yellow')"
+      }
+    }
+    PageR {
+      .xAxis = parameters/*[value]
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }
+    PageR {
+      .xAxis = parameters/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = ../../outputs[*]|end
+        .type = "SobolIndices"
+      }
+    }
+  }
+}

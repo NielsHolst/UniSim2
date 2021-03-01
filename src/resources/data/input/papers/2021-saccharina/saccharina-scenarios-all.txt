@@ -1,0 +1,3 @@
+fileNamePath	initialDateTime	steps	obsFile	trial
+env/env_file_2019-AVG.txt	2019-10-16	6377	obs/alge-obs-2019-AVG-CN.txt	"Average plants 2019-2020 on 4 mm line"
+env/env_file_2019_2020.txt	2019-10-03	6377	obs/alge-obs-2019-AVG-vandrette-liner-100m-CN.txt	"Average plants 2019-2020 on 10 mm line"

@@ -150,16 +150,6 @@
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-scenarios.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-weather-files.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/configure.R</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/fig-2-bw.tiff</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/fig-2-colour.tiff</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/sim-13312.Rdata</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/sim-N1024-B100.Rdata</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/sim-N1024-B10000.Rdata</file>
-    <file>data/input/papers/2021-aphid-fungus/output-data/sim-N64-B100.Rdata</file>
-    <file>data/input/papers/2021-aphid-fungus/output-figures/fig-2-bw.tiff</file>
-    <file>data/input/papers/2021-aphid-fungus/output-figures/fig-2-colour.tiff</file>
-    <file>data/input/papers/2021-aphid-fungus/output-figures/fig-3-bw.tiff</file>
-    <file>data/input/papers/2021-aphid-fungus/output-figures/fig-3-col.tiff</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol-end.R</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol.txt</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-Early.txt</file>
@@ -262,6 +252,32 @@
     <file>data/input/papers/2021-musselbed/starfish-mussel-scenarios-1.box</file>
     <file>data/input/papers/2021-musselbed/starfish-mussel-scenarios-2.box</file>
     <file>data/input/papers/2021-musselbed/starfish-mussel.box</file>
+    <file>data/input/papers/2021-saccharina/analysis/calibrate.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/compute-obs-C-N.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete-S.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.part.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed-S.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.part.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/setup.R</file>
+    <file>data/input/papers/2021-saccharina/env/env_file_2017.txt</file>
+    <file>data/input/papers/2021-saccharina/env/env_file_2019-AVG.txt</file>
+    <file>data/input/papers/2021-saccharina/env/env_file_2019_2020.txt</file>
+    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-CN.txt</file>
+    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-vandrette-liner-100m-CN.txt</file>
+    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-vandrette-liner-100m.txt</file>
+    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG.txt</file>
+    <file>data/input/papers/2021-saccharina/read-me.txt</file>
+    <file>data/input/papers/2021-saccharina/saccharina-model.part.box</file>
+    <file>data/input/papers/2021-saccharina/saccharina-SA-complete.box</file>
+    <file>data/input/papers/2021-saccharina/saccharina-SA-fixed.box</file>
+    <file>data/input/papers/2021-saccharina/saccharina-scenarios-all.txt</file>
+    <file>data/input/papers/2021-saccharina/saccharina-scenarios-end.R</file>
+    <file>data/input/papers/2021-saccharina/saccharina-scenarios-one.txt</file>
+    <file>data/input/papers/2021-saccharina/saccharina-scenarios.box</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end-batch.R</file>

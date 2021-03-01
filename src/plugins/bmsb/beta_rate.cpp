@@ -1,4 +1,10 @@
-﻿#include <base/publish.h>
+/* Copyright 2018-2021 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Byju N. Govindan, University of Minnesota [ngbyju at umn.edu].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
+ï»¿#include <base/publish.h>
 #include "beta_rate.h"
 #include <math.h>
 
@@ -12,7 +18,7 @@ BetaRate::BetaRate(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimate the stage-specific daily developmental rate using Briere2 model; later replace daily rate to hourly rate");
-        Input(dailytempC).equals(17).help("Temperature (°C)");
+        Input(dailytempC).equals(17).help("Temperature (Â°C)");
         Input(mu).equals(-3.6875).help("mu");
         Input(Tb).equals(19.5904).help("Estimate of basal temperature)");
         Input(Tc).equals(36.777).help("Estimate of ceiling temperature");

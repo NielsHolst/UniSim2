@@ -24,19 +24,22 @@
 
 8.Execute batch file ***as administrator***.
 
-(9). Upload installer from C:\data\QDev\UniSim2\ship to ecolmod.org/download (~37 Mb) med FileZilla.
+9. Copy installer to sites\ecolmod2\static\download. 
 
-(10). Update ecolmod.org/download.html.
+10. Update sites\ecolmod2\content\download.md.
 
-11. In Bash:
-cd /c/users/au152367/Documents/QDev/UniSim2
+11. Open PowerShell in sites\ecolmod2 and run hugo.
+
+12. Upload ecolmod2\public using FileZilla.
+
+13. In Bash: cd /c/users/au152367/Documents/QDev/UniSim2
 
 > git commit -F "../commit-msg.txt"
 > git tag 2.3.n
 > git push origin master --tags
 - Note this pushes both source code changes and tags
 
-12. Do not erase the src/resources folder. This is part of the commit and is used by the subsequent build on Mac OS (and Linux).
+14. Do not erase the src/resources folder. This is part of the commit and is used by the subsequent build on Mac OS (and Linux).
 
 (B) Mac OS X
 ============

@@ -61,6 +61,7 @@ copy Qt5PrintSupport.dll %UNISIM_BIN%
 copy qt5test.dll %UNISIM_BIN%
 copy Qt5Widgets.dll %UNISIM_BIN%
 copy qt5xmlpatterns.dll %UNISIM_BIN%
+copy Qt5WinExtras.dll %UNISIM_BIN%
 popd
 echo = Create Qt plugin folders =
 pushd %UNISIM_BIN%

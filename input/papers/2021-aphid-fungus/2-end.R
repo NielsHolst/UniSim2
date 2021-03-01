@@ -10,17 +10,17 @@ bw_lines = c('black', 'grey')
 col_line_size = c(1,1)
 bw_line_size = c(1,1)
 
+
 # Pick columns to plot
 M = sim[,c("iteration", 
            "Date",
-           "value", 
-           "withFungus.density.total",
-           "withFungus.infectious.cadavers.content")]
-colnames(M) = c("Iteration", "Date", "CropGrowthStage", "Aphids", "Cadavers")
-M1 = melt(M, id.vars = c("Iteration", "Date"), 
+           "CropGS", 
+           "Aphids",
+           "Cadavers")]
+M1 = melt(M, id.vars = c("iteration", "Date"), 
           measure.vars = c("Aphids", "Cadavers"),
           value.name="Density", variable.name="Population")
-M2 = melt(M, id.vars = c("Iteration", "CropGrowthStage"), 
+M2 = melt(M, id.vars = c("iteration", "CropGS"), 
           measure.vars = c("Aphids", "Cadavers"),
           value.name="Density", variable.name="Population")
 levels(M2$Population) = c("Live aphids", "Cadavers")
@@ -29,7 +29,7 @@ make_plot = function(tint_lines, line_size, a_theme) {
   from_date = as.POSIXct(dmy("1/5/2001"))
   to_date   = as.POSIXct(dmy("31/8/2001"))
   P = grid.arrange(
-    ggplot(M1, aes(x=Date, y=Density, colour=Population, size=Population, group=interaction(Iteration,Population))) +
+    ggplot(M1, aes(x=Date, y=Density, colour=Population, size=Population, group=interaction(iteration,Population))) +
       geom_line(alpha=0.5) +
       scale_colour_manual(values=tint_lines, name="") + 
       scale_size_manual(values=line_size, name="") +
@@ -41,9 +41,10 @@ make_plot = function(tint_lines, line_size, a_theme) {
             plot.margin = unit(c(8,5,5,5), "mm")
            )
     ,
-    ggplot(M2, aes(x=CropGrowthStage, y=Density, colour=Population, size=Population, group=interaction(Iteration,Population))) +
+    ggplot(M2, aes(x=CropGS, y=Density, colour=Population, size=Population, group=interaction(iteration,Population))) +
       geom_line(alpha=0.5) +
       scale_colour_manual(values=tint_lines, name="") + 
+      geom_vline(xintercept=80) +
       scale_size_manual(values=line_size, name="") +
       labs(x="Crop growth stage (Zadoks scale)", y=NULL) +
       scale_x_continuous(breaks = 10*(3:9), limits=c(30,90)) +
@@ -52,6 +53,28 @@ make_plot = function(tint_lines, line_size, a_theme) {
       theme(legend.position = "bottom", 
             legend.direction = "horizontal",
             plot.margin = unit(c(0,5,5,5), "mm")
+           )
+    ,
+    ggplot(sim, aes(x=CropGS, y=Prevalence, group=iteration)) +
+      geom_line(alpha=0.5, colour=unisim_colours[1]) +
+      geom_vline(xintercept=80) +
+      labs(x="Crop growth stage (Zadoks scale)", y="Prevalence (%)") +
+      scale_x_continuous(breaks = 10*(3:9), limits=c(30,90)) +
+      theme_classic() +
+      a_theme +
+      theme(legend.position = "none",
+            plot.margin = unit(c(8,5,5,5), "mm")
+           )
+    ,
+    ggplot(sim, aes(x=CropGS, y=CadaverPrevalence, group=iteration)) +
+      geom_line(alpha=0.5, colour=unisim_colours[4]) +
+      geom_vline(xintercept=80) +
+      labs(x="Crop growth stage (Zadoks scale)", y="Cadaver prevalence (%)") +
+      scale_x_continuous(breaks = 10*(3:9), limits=c(30,90)) +
+      theme_classic() +
+      a_theme +
+      theme(legend.position = "none",
+            plot.margin = unit(c(8,5,5,5), "mm")
            )
     ,
     ncol=1

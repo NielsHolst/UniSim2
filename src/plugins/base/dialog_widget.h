@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -13,6 +13,7 @@
 class QMainWindow;
 class QProgressBar;
 class QTextDocument;
+class QWinTaskbarProgress;
 
 namespace base {
 
@@ -25,6 +26,7 @@ public:
     void init();
     void restoreFont();
     QProgressBar* progressBar();
+    QWinTaskbarProgress* winProgressTaskbar();
     void finished();
     void message(QString s);
     void information(QString s);
@@ -34,16 +36,21 @@ public:
     QFont font();
 //    void loadWithFilePicker();
 protected:
-    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) override;
+    void focusInEvent(QFocusEvent * event) override;
+    void focusOutEvent(QFocusEvent * event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 private slots:
     void receivedFocus(QWidget *old, QWidget *now);
 private:
     // Data
-    bool _init;
+    QMainWindow *_parent;
+    bool _init, _isInFocus;
     History _history;
     QTextDocument *_textDocument;
     QProgressBar *_progressBar;
+    QWinTaskbarProgress *_winProgressTaskbar;
     QString _prompt;
     QColor _informationColor, _errorColor;
     bool _firstInformation, _gotoEnd;

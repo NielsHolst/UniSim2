@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -19,7 +19,7 @@ TopsoilVolatilization::TopsoilVolatilization(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("manages topsoil volatilization");
-    Input(Tair).unit("°C").imports("weather[Tavg]").help("Daily average air temperature");
+    Input(Tair).unit("Â°C").imports("weather[Tavg]").help("Daily average air temperature");
     Input(MV).unit("cm3/mol").equals(140.83).help("Molar volume of the pesticide");
     Input(BLair).unit("m").equals(0.00475).help("Thickness of the air boundary layer for the evaporation");
     Input(Pd).unit("m").equals(0.01).help("Penetration depth");

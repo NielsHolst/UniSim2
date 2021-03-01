@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Antonio Agüera García [antonio.aguera at gmail.com].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -6,7 +6,7 @@
 */
 
 /* ##STARFISH SEARCH TEMPERATURE SCALING: this function scales starfish mussel biomass demand to the current
-   temperature at step. Function yielded from Antonio AgÃ¼era, et al. 2012. Winter feeding activity of the common starfish (Asterias rubens L.):
+   temperature at step. Function yielded from Antonio AgÃƒÂ¼era, et al. 2012. Winter feeding activity of the common starfish (Asterias rubens L.):
    The role of temperature and shading, Journal of Sea Research, Volume 72, August 2012, Pages 106-112,
    (http://www.sciencedirect.com/science/article/pii/S1385110112000159)*/
 

@@ -1,4 +1,4 @@
-/* Copyright 2016-2019 by
+/* Copyright 2016-2021 by
 ** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
 ** Mwema Felix, Tropical Pesticides Research Institute, Tanzania [mwema.mwema at tpri.go.tz.].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
@@ -18,7 +18,7 @@ WaterViscosity::WaterViscosity(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("manages viscosity of water");
-    Input(temperature).unit("°C").equals(25.).help("Daily soil temperature");
+    Input(temperature).unit("Â°C").equals(25.).help("Daily soil temperature");
 
     Output(value).unit("centipoise").help("Viscosity of water");
 }

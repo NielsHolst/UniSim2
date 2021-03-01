@@ -1,3 +1,4 @@
+#include <base/publish.h>
 #include "student_documentation.h"
 
 using namespace base;

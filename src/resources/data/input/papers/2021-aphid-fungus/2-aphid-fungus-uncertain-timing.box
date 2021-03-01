@@ -11,8 +11,15 @@ Simulation sim {
   #include "aphid-fungus-model.part.box" 
   OutputR {
     .end = "2-end.R"
+    Box outputs {
+      +CropGS            = cropGrowthStage[value]
+      +Aphids            = withFungus/density[total]
+      +Cadavers          = withFungus/infectious/cadavers[content]
+      +Prevalence        = withFungus/diagnostics/prevalence[exposed] 
+      +CadaverPrevalence = withFungus/diagnostics/prevalence[cadavers]
+    }
     OutputText uncertainty {
-      .ports = (calendar[date] cropGrowthStage[value] system/*/density[total] cadavers[content] )
+      .ports = (calendar[date] ../outputs[*])
     }
   }  
 }

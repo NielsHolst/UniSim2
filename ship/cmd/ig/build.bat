@@ -1,9 +1,10 @@
 echo on
 cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig
 
-set VERSION=2.3.30
+set VERSION=2.3.51
 REM set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
-set QT_PATH=C:\Qt\5.9.2\mingw53_32
+REM set QT_PATH=C:\Qt\5.9.2\mingw53_32
+set QT_PATH=C:\Qt\5.15.1\mingw81_32
 set PATH=C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig\
 
 set IGLIB_BIN=iglib\bin
@@ -53,9 +54,11 @@ copy bin\Qt5PrintSupport.dll %IGLIB_BIN%
 copy bin\Qt5Test.dll %IGLIB_BIN%
 copy bin\Qt5Widgets.dll %IGLIB_BIN%
 copy bin\Qt5XmlPatterns.dll %IGLIB_BIN%
+copy bin\Qt5WinExtras.dll %UNISIM_BIN%
 
 echo = Copy C++ libraries =
 copy bin\libgcc_s_dw2-1.dll %IGLIB_BIN%
+copy bin\libgcc_s_seh-1.dll %UNISIM_BIN%
 copy "bin\libstdc++-6.dll" %IGLIB_BIN%
 copy bin\libwinpthread-1.dll %IGLIB_BIN%
 popd

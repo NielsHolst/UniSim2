@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -9,8 +9,11 @@
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/publish.h>
+#include <base/test_num.h>
 #include "food_web.h"
+
 using namespace base;
+using namespace TestNum;
 
 namespace boxes {
 
@@ -67,7 +70,7 @@ void FoodWeb::computeOutputs() {
             info("_s", j, _s(i,j));
         }
     }
-    // (2) For every attacker j, compute the supply obtained ΔS_ij from each of its resources i by eq. 12.
+    // (2) For every attacker j, compute the supply obtained Î”S_ij from each of its resources i by eq. 12.
     _Stotal.fill(0.);
     _sdRatio.fill(0.);
     for (int j=0; j<_nPredators; ++j) {
@@ -103,7 +106,7 @@ void FoodWeb::computeOutputs() {
         double D = FoodWeb::D(j);
         _sdRatio[j] = D==0. ? 0. : _Stotal.at(j)/D;
     }
-    //(3) For every attacker j, compute the loss incured -ΔX_ij on each of its resources i by eq. 13.
+    //(3) For every attacker j, compute the loss incured -Î”X_ij on each of its resources i by eq. 13.
     _XlossTotal.fill(0);
     _mortality.fill(0.);
     for (int j=0; j<_nPredators; ++j) {
@@ -114,7 +117,11 @@ void FoodWeb::computeOutputs() {
         }
     }
     for (int i=0; i<_nPrey; ++i) {
-        _mortality[i] = X(i)==0. ? 0. : _XlossTotal[i]/X(i);
+        // Use snapTo for numerical inaccuracy at small numbers
+        snapTo(_XlossTotal[i], X(i));
+        double mortality = (X(i)==0.) ? 0. :_XlossTotal[i]/X(i);
+        snapTo(mortality, .1);
+        _mortality[i] =  mortality;
         info("_XlossTotal", i, _XlossTotal[i]);
         info("_mortality", i, _mortality[i]);
      }
@@ -126,7 +133,7 @@ void FoodWeb::pushOutputs() {
 }
 
 inline QStringList setToList(QSet<QString> set) {
-    QStringList list = QStringList(set.toList());
+    QStringList list = QStringList(set.values());
     list.sort();
     return list;
 }
@@ -186,7 +193,7 @@ void FoodWeb::collectInputs() {
         if (densityPaths.size() > 1) {
             ThrowException("Prey with same name must refer to the same source density").
                     value(_preyNames.at(i)).
-                    value2(QStringList(densityPaths.toList()).join(",")).
+                    value2(QStringList(densityPaths.values()).join(",")).
                     context(this);
         }
         Q_ASSERT(!prey.isEmpty());
@@ -224,7 +231,7 @@ void FoodWeb::createOutputs() {
             NamedOutput("s" + suffix, _s(i,j));
             NamedOutput("supply" + suffix, _S(i,j));
             NamedOutput("loss" + suffix, _Xloss(i,j));
-        };
+        }
     }
 
     // Create predator output ports

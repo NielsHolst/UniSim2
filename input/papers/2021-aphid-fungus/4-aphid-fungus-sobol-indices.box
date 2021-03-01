@@ -1,8 +1,7 @@
 #define RANDOMISER = RandomiserSobolSequence
 Simulation sim {
-  // 212992 iterations used in paper (~8hrs)
-  //  13312 iterations for a quicker demonstration (~30min)
-  .iterations = 212992
+  // Runs at 26,000 iterations per hour
+  .iterations =  106496
   .steps =  273 // end of september
   .silent = TRUE
   .unattended = TRUE
@@ -16,20 +15,15 @@ Simulation sim {
   OutputR {
     .end = "4-end.R"
     Box outputs {
-      +maxAphidDensityWithoutF       = biocontrol[maxAphidDensityWithoutF]
-      +maxAphidDensityCropGSWithoutF = biocontrol[maxAphidDensityCropGSWithoutF]
-      +maxAphidDensityWithF          = biocontrol[maxAphidDensityWithF]
-      +maxAphidDensityCropGSWithF    = biocontrol[maxAphidDensityCropGSWithF]
-      +maxCadaverDensityPercentage   = biocontrol[maxCadaverDensityPercentage]
-      +maxPercentageCadavers         = biocontrol[maxPercentageCadavers]
-      +maxPercentageCadaversCropGS   = biocontrol[maxPercentageCadaversCropGS]
-      +aphidPressureDifference       = biocontrol[aphidPressureDifference]
-      +yieldDifference               = biocontrol[yieldDifference]
-      +percentageCadaversGs43        = biocontrol[percentageCadaversGs43]
-      +percentageCadaversGs61        = biocontrol[percentageCadaversGs61]
-      +percentageCadaversGs73        = biocontrol[percentageCadaversGs73]
-      +maxPrevalence                 = biocontrol[maxPrevalence]
-      +maxPrevalenceCropGS           = biocontrol[maxPrevalenceCropGS]
+      +aphidPressureDifference = biocontrol[aphidPressureDifference]
+      +yieldDifference         = biocontrol[yieldDifference]
+      +percentageCadaversGs43  = biocontrol[percentageCadaversGs43]
+      +percentageCadaversGs61  = biocontrol[percentageCadaversGs61]
+      +percentageCadaversGs73  = biocontrol[percentageCadaversGs73]
+      +maxCadaverPrevalence    = biocontrol[maxCadaverPrevalence]
+      +maxCadaverPrevalenceGS  = biocontrol[maxCadaverPrevalenceGS]
+      +maxPrevalence           = biocontrol[maxPrevalence]
+      +maxPrevalenceGS         = biocontrol[maxPrevalenceGS]
     }
     PageR {
       .xAxis = random/*[value]

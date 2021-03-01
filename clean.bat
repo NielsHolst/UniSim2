@@ -10,7 +10,18 @@ rmdir /S /Q output
 rmdir /S /Q bin
 rmdir /S /Q ship\bin
 rmdir /S /Q ship\cmd\ig\bin
+
 copy UniSim2.pro CopyUniSim2.pro
 del UniSim2.pro.*
 del UniSim2.pro.*.*
 ren CopyUniSim2.pro UniSim2.pro
+
+copy ig.pro copy_ig.pro
+del ig.pro.*
+del ig.pro.*.*
+ren copy_ig.pro ig.pro
+
+copy test.pro copy_test.pro
+del test.pro.*
+del test.pro.*.*
+ren copy_test.pro test.pro

@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -34,7 +34,7 @@ SeedBank::SeedBank(QString name, QObject *parent)
     Input(cropLaiExp).equals(0.04282); /*
           "Exponent @I a in the equation to calculate @F cropEffectOnEmergence, "
           "@Math{ y = exp(-ax sup{5 over 2}) }, "
-          "where @I x is the leaf area index Â½of the current @F {Crop} */
+          "where @I x is the leaf area index Ã‚Â½of the current @F {Crop} */
     Input(dormantInflow); /*
           "Use this to set the daily inflow of dormant seeds into the seed bank (seeds per m @Sup 2 per day). "
           "You cannot put non-dormant seeds into the seed bank */

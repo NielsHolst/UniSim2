@@ -6,6 +6,7 @@
 #include <base/environment.h>
 #include <base/version.h>
 #include "main_window.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

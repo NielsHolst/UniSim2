@@ -8,7 +8,7 @@
 
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.48
+VERSION = 2.3.52
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 CONFIG += skip_target_version_ext   # Simplify suffix on Mac
@@ -24,7 +24,7 @@ else {
 
 # What we are building
 CONFIG += c++17
-QT += core widgets
+QT += core widgets winextras
 
 # Turn warnings off in debug mode
 #CONFIG(debug, debug|release) {

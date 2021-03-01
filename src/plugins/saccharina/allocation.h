@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef ALLOCATION_H
 #define ALLOCATION_H
 #include <base/box.h>
@@ -19,12 +25,13 @@ private:
         supplyCarbonTotal, supplyNitrogenTotal,
         demandCarbonRespiration,
         demandCarbonStructure, demandNitrogenStructure,
-        proportionExuded, demandErosion;
+        proportionExuded,
+        demandCarbonErosion, demandNitrogenErosion;
     // Outputs
     double
         MC0, MC1, MC2, MC3,
         MN0, MN1,
-        supplyCarbonStructure, supplyCarbonExudation,
+        supplyCarbonStructure, supplyCarbonExudation, supplyCarbonReserves,
         structuralMassGrowth, structuralMassLoss,
         reservesProportionC, reservesProportionN,
         sdCarbon, sdNitrogen;

@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/publish.h>
 #include "demand_carbon_structure.h"
 
@@ -11,7 +17,7 @@ DemandCarbonStructure::DemandCarbonStructure(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("calculates demand for structural growth");
-    Input(maxGrowthRate).equals(0.0075).unit("h-1").help("Maximum relative growth rate");
+    Input(maxGrowthRate).equals(0.0075).unit("h-1 dm-2").help("Maximum relative growth rate");
     Input(proportionC).imports("sim/structure[proportionC]");
     Input(structuralMass).imports("sim/structure[mass]");
     Input(fTemp).equals(1.).help("Temperature scaling of growth rate");

@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/publish.h>
 #include "biomass.h"
 
@@ -18,9 +24,10 @@ Biomass::Biomass(QString name, QObject *parent)
     Input(Nstruct).equals(0.01).unit("g N/g structure").help("Amount of structurally bound nitrogen");
     Input(kdw).equals(0.0785).help("Dry weight to wet weight ratio");
     Input(kN).equals(2.72).help("Mass of nitrogen reserves per gram nitrogen");
-    Input(kC).equals(2.1213).help("Mass of carbon reserves per gram carbon");
+    Input(kC).equals(2.12).help("Mass of carbon reserves per gram carbon");
     Input(C).imports("reserves/carbon[proportion]");
     Input(N).imports("reserves/nitrogen[proportion]");
+    Input(date).imports("calendar[date]");
     Output(dryWeight).unit("g DW").help("Dry weight per plant");
     Output(dryWeightGrowth).unit("g DW/h").help("Dry weight growth increment");
     Output(wetWeight).unit("g WW").help("Wet weight per plant");
@@ -31,10 +38,13 @@ Biomass::Biomass(QString name, QObject *parent)
     Output(CNratio).help("C/N ratio");
     Output(dryWeightYield).unit("g DW per m rope").help("Standing yield (dry weight)");
     Output(wetWeightYield).unit("g WW per m rope").help("Standing yield (wet weight)");
+    Output(growthRatePct).unit("% per d").help("Percentage growth in dry weight");
 }
 
 void Biomass::reset() {
-   update();
+    curDate = date;
+    update();
+    previousDryWeight = dryWeight;
 }
 
 void Biomass::update() {
@@ -47,11 +57,17 @@ void Biomass::update() {
    nitrogenPct = (dryWeight>0.)      ? 100.*(nitrogenWeight/dryWeight) : 0.;
    CNratio     = (nitrogenWeight>0.) ? carbonWeight/nitrogenWeight     : 0.;
 
-//   wetWeight = structuralMass * ((1/kdw) + C*kC + N*kN);
    wetWeight = dryWeight/kdw;
 
    dryWeightYield = dryWeight*plantDensity;
    wetWeightYield = wetWeight*plantDensity;
+
+   if (date > curDate) {
+       curDate = date;
+       double dW = dryWeight - previousDryWeight;
+       growthRatePct = (previousDryWeight==0.) ? 0. : 100.*dW/previousDryWeight;
+       previousDryWeight = dryWeight;
+   }
 }
 
 

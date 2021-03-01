@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #include <base/phys_math.h>
 #include <base/publish.h>
 #include "area.h"
@@ -13,10 +19,11 @@ Area::Area(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("keeps tracks of the frond area");
-    Input(a).equals(4.19).unit("dm2").help("Power law scaling of weight to area (y=ax^b)");
-    Input(b).equals(0.785).help("Power law scaling of weight to area (y=ax^b)");
+    Input(a).equals(2.72).unit("dm2").help("Power law scaling of weight to area (y=ax^b)"); //4.19 2.72
+    Input(b).equals(0.747).help("Power law scaling of weight to area (y=ax^b)"); // 0.785 0.747
     Input(l).equals(3.5).help("Scaling of length to area");
     Input(structuralMass).imports("structure[mass]");
+    Input(dryWeight).imports("biomass[dryWeight]");
     Input(plantDensity).equals(1.).unit("per m line").help("No. of plants per m line");
     Input(frondAngle).unit("[0:90]").equals(30.).help("Angle of from to horizontal");
     Output(value).unit("dm2/plant").help("Frond area");
@@ -27,11 +34,15 @@ Area::Area(QString name, QObject *parent)
 }
 
 void Area::reset() {
-    update();
+    updateByWeight(structuralMass);
 }
 
 void Area::update() {
-    double A = a*pow(structuralMass, b);
+    updateByWeight(dryWeight);
+}
+
+void Area::updateByWeight(double w) {
+    double A = a*pow(w, b);
     length = l*sqrt(A);
     double Afrond = plantDensity*A,
            AZ = cos(frondAngle/180.*PI)*length;

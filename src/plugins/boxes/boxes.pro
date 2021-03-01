@@ -82,6 +82,7 @@ HEADERS +=  \
     sine_wave_temperature.h \
     sliding_signal.h \
     solar_time.h \
+    split.h \
     stage_base.h \
     stage.h \
     stage_and_phase.h \
@@ -164,6 +165,7 @@ SOURCES +=  \
     sine_wave_temperature.cpp \
     sliding_signal.cpp \
     solar_time.cpp \
+    split.cpp \
     stage_base.cpp \
     stage.cpp \
     stage_and_phase.cpp \

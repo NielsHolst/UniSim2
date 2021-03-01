@@ -1,3 +1,9 @@
+/* Copyright 2020-2021 by
+** Teis Boderskov,.Aarhus University [tebo@bios.au.dk] and
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] 
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
 #ifndef PHOTOSYNTHESIS_H
 #define PHOTOSYNTHESIS_H
 #include <base/box.h>
@@ -12,10 +18,11 @@ public:
     void update();
 private:
     // Inputs
-    double crownZoneArea, lai, frondAngle, plantDensity,
-        demand, alpha, fTemp, fNitrogen, I, propI;
+    double crownZoneArea, lai, area, frondAngle, plantDensity,
+        demand, alpha, fTemp, fNitrogen, I, timeStepSecs,
+        Pmax;
     // Outputs
-    double supply, sdRatio, Iabsorbed;
+    double supply, sdRatio, Iabsorbed, P;
 };
 
 }

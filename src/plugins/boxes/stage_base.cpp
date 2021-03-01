@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -15,7 +15,7 @@ using namespace base;
 namespace boxes {
 
 StageBase::StageBase(QString name, QObject *parent)
-    : Box(name, parent), _ddBase(0)
+    : Box(name, parent), _ddBase(nullptr)
 {
     Input(initial).help("Initial amount of inflow");
     Input(k).equals(30).help("Distribution parameter; use small k for larger dispersion in output");

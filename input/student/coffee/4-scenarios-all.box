@@ -1,0 +1,292 @@
+// scenarios_all.box 
+Simulation sim {
+  .steps = 1095
+  Scenarios scenarios {
+    .fileName = "CBB/weatherdata/RCP.txt"
+    .title = "FileName" 
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2006
+  }
+  Records weather {
+    .fileName = scenarios[FileName]	
+  }
+  Box coffee {
+    Box time { 
+      // +step = ./arabica[step]
+      +step = ./robusta[step]
+      DayDegrees arabica {
+        .T0 = 10 // Rodriguez et al., 2011
+        .Topt = 20 // optimal temperature 18-21. degrees Magrach and Ghazoul, 2015
+        .T = weather[Tavg]
+      }
+      DayDegrees robusta {
+        .T0 = 10 // Rodriguez et al., 2011
+        .Topt = 25 // optimal temperature 22-28 degrees. Magrach and Ghazoul, 2015
+        .T = weather[Tavg]  
+      }  
+    }
+    OnOffByDate pinProduction {  
+      .x = calendar[date]
+      .xOn = 1/9/*  // *vilkårligt år
+      .xOff =  1/1/* 
+      .valueOn = 12 // Rodriguez et al., 2011
+      .valueOff = 0
+    }
+    Stage pin {
+      .inflow = ../pinProduction[value]
+      .duration = 172 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+    }
+    Stage green {
+      .inflow = ../pin[outflow]
+      .duration = 1254 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/green[mortality]
+    }
+    Stage yellow {
+      .inflow = ../green[outflow]
+      .duration = 2622 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/yellow[mortality]
+    }
+    Split fate {
+      .whole = ../yellow[outflow]
+      .proportions = (0.95 0.05)
+    }
+    Stage harvest {
+      .inflow = ../fate[piece_0]
+      .duration = 7
+      .timeStep = 1
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/ripe[mortality]
+    }
+    Stage ripe {
+      .inflow = ../fate[piece_1]
+      .duration = 2836 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/ripe[mortality]
+    }
+    Stage overripe {
+      .inflow = ../ripe[outflow]
+      .duration = 147
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/overripe[mortality]
+    }
+  }
+  Box CBB {
+    OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/11/*    // 1st of november in any year
+      .xOff =  1/7/*  // 1st of July in any year
+      .valueOn = 0.25
+      .valueOff = 0
+    }
+    DayDegrees time {
+      .T0 = 11.25 // Gutierrez et al., 1998. 14.9 Jaramillo et. at., 2011
+      .Topt = 26 // 23-30 degrees Jaramillo et. at., 2011
+      .Tmax = 32 // Jaramillo et. at., 2011
+      .T = weather[Tavg]
+    }
+    RainMortality rainMortality   {
+      .beta = 0.00025
+      .rain = weather[Rainfall]  
+      .timeStep = ../time[step]  
+    }
+    Stage egg {
+      .inflow = ../reproduction/oviposition[outflow]
+      .duration = 52 // 52 Gutierrez et al., 1998 . 44,15 Jaramillo et. at., 2009
+      .timeStep = ../time[step]  
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage larva1 {
+      .inflow = ../egg[outflow]
+      .duration = 46.54 // Larval stage 256 Gutierrez et al., 1998. 20.77 Jaramillo et. at., 2009
+      .timeStep = ../time[step]  
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage larva2 {
+      .inflow = ../larva1[outflow]
+      .duration = 209.46 // 46.54 + 209.46 =256 Gutierrez et al., 1998. 110.06 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage prepupa {
+      .inflow = ../larva2[outflow]
+      .duration = 30.25 // pupa stage 72. Gutierrez et al., 1998. 25.83 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage pupa {
+      .inflow = ../prepupa [outflow]
+      .duration =  41.75 // 30.25 + 41.75 = 72. Gutierrez et al., 1998. 61.66  Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Box searchingAdults {
+      +content|sum = CBB/pupa[outflow] | immigration[value]
+    }
+    Stage preOviposition {
+      .inflow = web/CBB[supply]
+      // .duration = 8 // range 5-10 days Gutierrez et al., 1998. 
+      // .timeStep = 1
+      .duration =  232 //  544.73-312.47  Rodriguez et al., 2017
+      .timeStep = ../time[step]
+      .instantLossRate = parasitoidResponse[propHostsAttacked]
+    }
+    Box reproduction {
+      Stage oviposition {
+        .inflow = ../../preOviposition[outflow]
+        // .duration = 20 // 20 days Gutierrez et al., 1998.
+        // .timeStep = 1
+        .duration =  515 // 827.00-312.47 Rodriguez et al., 2017
+        .timeStep = ../../time[step]
+        .growthFactor = 121.5 // R0= 135 eggs. Sex ratio 10:1. (R0= 135*0,1 = 13,5. 13,5-135= 121,5)
+        .instantLossRate = ../../rainMortality[value]
+      }
+    }
+  }
+  Box parasitoid {
+    OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/11/* // 1 november any year
+      .xOff = 1/7/* //  Vieira, 2008
+      .valueOn = 0.25 // immigration rate adult/plant/day Gutierrez et al., 1998
+      .valueOff = 0
+      
+    }
+    DayDegrees time {
+        .T0 = 13.7 // 13,7 Gutierrez et al., 1998. 16,02 Rodriguez et al., 2017
+        .Topt = 25
+        .Tmax = 32 // Rodriguez et al., 2017. 32 Gutierrez et al., 1998
+        .T = weather[Tavg]
+    }  
+    Stage egg {
+      .inflow = parasitoidResponse[hostsAttacked] // if only one larva survives per host; use parasitoidResponse[supply] if all larvae survive
+      .duration = 36
+      .timeStep = ../time[step]  
+     
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 240
+      .timeStep = ../time[step]
+      
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 48
+      .timeStep = ../time[step]
+    
+    }
+    Stage adult {
+      .inflow|sum = ../../pupa[outflow] | immigration[value]
+      .duration = 3
+      .timeStep = 1
+    }
+    Box reproduction {
+      Stage oviposition {
+        .inflow = ../../adult[inflow]   
+        .duration = ../../adult[duration]   
+        .timeStep = ../../adult[timeStep]   
+        .growthFactor = 14
+      }
+    }
+  }
+
+  FoodWeb web {
+    Predator CBB {
+      .density = CBB/searchingAdults[content]
+      .demand  = CBB/searchingAdults[content] // Every beetle demands one berry
+      Prey green {
+        .density = coffee/green[content]
+        .attackRate = 0.054
+      }
+      Prey yellow {
+        .density = coffee/yellow[content]
+        .attackRate = 0.57
+      }
+      Prey ripe {
+        .density = coffee/ripe[content]
+        .attackRate = 0.61
+      }
+      Prey overripe {
+        .density = coffee/overripe[content]
+        .attackRate = 0.61
+      }
+    }
+    SuperFunctionalResponse parasitoidResponse {
+    .attacker = parasitoid/adult[content]
+    .host = CBB/preOviposition[content]
+    .demand = parasitoid/reproduction/oviposition[outflow]
+    .attackRate = 0.95
+    .timeStep = parasitoid/adult[timeStep]
+ 
+   }
+  }
+  OutputR output {
+    .end = "4-scenarios-all-end.R"
+    .keepPages = FALSE
+    +xdate = "scale_x_datetime(
+                breaks = date_breaks('1 year'),
+                labels = date_format('%y')
+               )" 
+    +logy  = "scale_x_datetime(
+                breaks = date_breaks('1 year'),
+                labels = date_format('%y')
+               ) +
+               scale_y_continuous(
+                breaks = 10^(0:3),
+                trans = 'log1p'
+               )"  
+    OutputText { 
+      .ports = (calendar[date] adult[outflowTotal])
+	  
+    }  
+    Box labels {
+      +pinProduction = pinProduction[value]  
+      +rainMortality = rainMortality[value] 
+      +harvest       = harvest[outflowTotal]
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 3
+      PlotR {  
+        .ports = (weather[Tavg] weather[Rainfall])
+        .ggplot = output[xdate]
+      }
+      PlotR {  
+        .ports = labels[rainMortality]
+        .ggplot = output[xdate]
+      }
+      PlotR {  
+        .ports = labels[harvest]
+        .ggplot = output[xdate]
+      }
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 3
+      PlotR {
+        .ports = coffee/*[content]
+        .ggplot = output[xdate]
+        .layout = "merged"
+      }
+      PlotR {
+        .ports = CBB/*[content]
+        .ggplot = output[logy]
+        .layout = "merged"
+      }
+      PlotR {
+        .ports = parasitoid/*[content]
+        .ggplot = output[logy]
+        .layout = "merged"
+      }
+    }
+  }
+}

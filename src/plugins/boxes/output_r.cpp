@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -35,6 +35,7 @@ OutputR::OutputR(QString name, QObject *parent)
     Input(end).equals("scripts/end.R").help("Name of R script(s) run after auto-generated R script");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
+    Input(saveAsDataFrame).equals(false).help("Save output as R data frame too?");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Input(skipSteps).help("Number of steps to skip in the output");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
@@ -99,6 +100,8 @@ QString OutputR::toScript() {
     }
     s += ")\n}\n";
 
+    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
+
     return s;
 }
 
@@ -150,13 +153,13 @@ void OutputR::copyToClipboard() {
 QString OutputR::makeOutputRCode() {
     // Put together R code
     QString s;
+    s += "saveAsDataFrame = " + convert<QString>(saveAsDataFrame) + "; ";
     s += "keepPages = " + convert<QString>(keepPages) + "; ";
     s += "keepVariables = " + convert<QString>(keepVariables) + "\n";
     s += "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() +  "\"\n";
     s += "output_file_name  = \"" + _filePathTxt  + "\"\n";
     s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
     if (numPages>0) s += "source(\"" + _filePathR + "\")\n";
-    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
     s += endScripts().join("");
     return s;
 }

@@ -1,0 +1,168 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2019
+  }
+  Records weather {
+  .fileName = "Sokoto_North_Nigeria_TA00460.txt"
+  }
+  Box cowpea1 {    
+    Stage preVegetative { // seed germination
+      .initial = 1
+      .duration = 35
+      .timeStep = ./time[value]      
+      OnOff time {
+        .x = calendar[dayOfYear]
+        .xOn = 213 // 1st of August. Season starts depending on the rainy season dates and cultivar, table 9 in "Doc1 cowpea and X".
+        .xOff = 273
+        .valueOn = ./daydegrees[step]
+        DayDegrees daydegrees {
+          .T = weather[Tavg]
+          .T0 = 8
+          .Topt = 35
+          .Tmax = 43
+        }
+      }
+    }
+    Stage seedling { // seedling emergence 
+      .inflow = ../preVegetative[outflow]
+      .duration = 43
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 11
+      }
+    }
+    Stage vegetative { //leaf appearance 30-60, first visible bud min val 350-580; minimum values used
+      .inflow = ../seedling[outflow]
+      .duration = 380
+      .growthFactor = 40 // number of flowers for high yielding early maturity cowpea variety
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 28
+      }
+    }
+    Stage flowering { //first open flower 550-830; minimum value used
+      .inflow = ../vegetative[outflow]
+      .duration = 550
+      .timeStep = ./daydegrees[step]
+      .instantLossRate = web[mortality_flowers]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 27
+        .Tmax = 36
+      }
+    }
+    Stage maturity { //first ripe pod 940-1130; minimum value used
+      .inflow = ../flowering[outflow]
+      .duration = 940
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        
+      }
+    }
+  }
+  Box maruca { 
+    +flowersPerLarva = 5
+    ThresholdSignal immigration {
+      .input = flowering[content]
+      .threshold = 1
+      .signalFlagged = 10
+      .signalUnflagged = 0
+    }
+    Stage adult { 
+//      .inflow|sum = ../immigration[value] | ../pupa[outflow]  // vector of 2 numbers
+      .inflow = ../immigration[value]
+      .duration = 6 // 3 - 10 days ba et al 2019 
+    }
+    Stage oviposition {
+      .inflow = ../adult[inflow]
+      .duration = ../adult[duration]
+      .growthFactor = 400 // proportional signal?
+    }
+    Stage egg {
+      .inflow = oviposition[outflow]
+      .duration = 51.1
+      .growthFactor = 0.02
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10.5
+        .Tmax = 34.3
+      }
+    }  
+    // PotentialLarvae potentialLarvae {
+      // .supplyOfFlowers = web[supply_larvae]
+      // .flowersPerLarva = maruca[flowersPerLarva]
+      // // value: resulting number of larvae
+    // }
+    Stage larva {
+      .inflow = potentialLarvae[value]
+      .duration = 234.7
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10
+        .Tmax = 29.3
+      }
+    }
+    Stage pupa {
+      .inflow = larva[outflow]
+      .duration = 116.5
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10.9
+        .Tmax = 29.3
+      }
+    }
+  }
+  FoodWeb web {
+    // FlowerDemand demand {
+      // .density = maruca/eggs[outflow]
+      // .flowersPerLarva = maruca[flowersPerLarva]
+      // // outflow [value]  unit=flowers
+    // }
+    Predator larvae {
+      .density = maruca/eggs[outflow]
+      .demand  = ../demand[value] 
+      Prey flowers {
+        .density = cowpea1/flowering[content]
+        .attackRate = 0.95
+      }
+    }
+  }
+  OutputR {
+    Box outputs {
+      +immigration = immigration[value]
+      +eggsPerDay  = oviposition[outflow]
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      +monthBreaks = "geom_line(size = 1.1) +
+              scale_x_datetime(
+                      breaks = date_breaks('1 months'),
+                      labels = date_format('%b')
+                      ) +
+              ylim(0,NA)"
+      PlotR {
+        .ports = (cowpea1/*[content])
+        .ggplot = ..[monthBreaks]
+      }
+      PlotR {
+        .ports = (outputs[immigration] maruca/*[content] outputs[eggsPerDay] )
+        .ggplot = ..[monthBreaks]
+      }
+    }
+  }  
+}
+

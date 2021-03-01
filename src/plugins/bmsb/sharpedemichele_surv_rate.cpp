@@ -1,4 +1,10 @@
-﻿#include <base/publish.h>
+/* Copyright 2018-2021 by
+** Niels Holst, Aarhus University [niels.holst at agro.au.dk] and
+** Byju N. Govindan, University of Minnesota [ngbyju at umn.edu].
+** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
+** See: www.gnu.org/licenses/lgpl.html
+*/
+ï»¿#include <base/publish.h>
 #include "sharpedemichele_surv_rate.h"
 
 using namespace base;
@@ -11,7 +17,7 @@ SharpeDeMicheleSurvRate::SharpeDeMicheleSurvRate(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimate the stage-specific daily survival rate using SharpeDeMichele model; later replace daily rate to hourly rate");
-        Input(dailytempC).equals(17).help("Temperature (in °C), must covert to Kelvin (237.16° K = 0°C)");
+        Input(dailytempC).equals(17).help("Temperature (in Â°C), must covert to Kelvin (237.16Â° K = 0Â°C)");
         Input(Phi).equals(9.889e+0).help("A coversion factor with no thermodyamic meaning");
         Input(HA).equals(6.404e+03).help("Enthalpy of activation of the reaction that is catalyzed by the enzyme (cal/mol)");
         Input(SL).equals(-7.920e+02).help("Change in entropy associated with low-temperature inactivation of the enzyme (cal/deg/mol)");

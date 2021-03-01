@@ -1,0 +1,263 @@
+  Simulation sim {
+  .iterations = 15
+  .steps = 3650 // 10 years, first 3 years discarded in summary
+  Box random {
+    RandomiserMonteCarlo randomiser {   
+    }
+    RandomUniform CBB_fecundity {
+      .min = 30
+      .max = 300
+    }
+    RandomUniform CBB_egg_duration{
+      .min = 44.15
+      .max = 52
+    }
+    RandomUniform CBB_preOviposition_duration {
+      .min = 50
+      .max = 125
+    }
+    RandomUniform parasitoid_T0 {
+        .min = 13.7
+        .max = 16.02
+    }  
+    RandomUniform parasitoid_fecundity {
+     .min = 14  // Sæt selv disse værdier
+     .max = 20  //
+    }
+  }
+  Calendar calendar {
+    .initialDateTime = 1/1/2006
+  }
+  Records weather {
+    .fileName = "CBB/weatherdata/brazil_RCP85.txt"
+  }
+  Box coffee {
+    Box time { 
+      // +step = ./arabica[step]
+      +step = ./robusta[step]
+      DayDegrees arabica {
+        .T0 = 10 // Rodriguez et al., 2011
+        .Topt = 20 // optimal temperature 18-21. degrees Magrach and Ghazoul, 2015
+        .T = weather[Tavg]
+      }
+      DayDegrees robusta {
+        .T0 = 10 // Rodriguez et al., 2011
+        .Topt = 25 // optimal temperature 22-28 degrees. Magrach and Ghazoul, 2015
+        .T = weather[Tavg]  
+      }  
+    }
+    OnOffByDate pinProduction {  
+      .x = calendar[date]
+      .xOn = 1/9/*  // *vilkårligt år
+      .xOff =  1/1/* 
+      .valueOn = 12 // Rodriguez et al., 2011
+      .valueOff = 0
+    }
+    Stage pin {
+      .inflow = ../pinProduction[value]
+      .duration = 172 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+    }
+    Stage green {
+      .inflow = ../pin[outflow]
+      .duration = 1254 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/green[mortality]
+    }
+    Stage yellow {
+      .inflow = ../green[outflow]
+      .duration = 2622 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/yellow[mortality]
+    }
+    Split fate {
+      .whole = ../yellow[outflow]
+      .proportions = (0.95 0.05)
+    }
+    Stage harvest {
+      .inflow = ../fate[piece_0]
+      .duration = 7
+      .timeStep = 1
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/ripe[mortality]
+    }
+    Stage ripe {
+      .inflow = ../fate[piece_1]
+      .duration = 2836 // Rodriguez et al., 2011
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/ripe[mortality]
+    }
+    Stage overripe {
+      .inflow = ../ripe[outflow]
+      .duration = 147
+      .timeStep = ../time[step]
+      .zeroLimit = 1e-6
+      .instantLossRate = web/CBB/overripe[mortality]
+    }
+  }
+  Box CBB {
+    OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/11/*    // 1st of november in any year
+      .xOff =  1/7/*  // 1st of July in any year
+      .valueOn = 0.25
+      .valueOff = 0
+    }
+    DayDegrees time {
+      .T0 = 11.25 // Gutierrez et al., 1998. 14.9 Jaramillo et. at., 2011
+      .Topt = 26 // 23-30 degrees Jaramillo et. at., 2011
+      .Tmax = 32 // Jaramillo et. at., 2011
+      .T = weather[Tavg]
+    }
+    RainMortality rainMortality   {
+      .beta = 0.00025
+      .rain = weather[Rainfall]  
+      .timeStep = ../time[step]  
+    }
+    Stage egg {
+      .inflow = ../reproduction/oviposition[outflow]
+      .duration = random/CBB_egg_duration[value]
+      .timeStep = ../time[step]  
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage larva1 {
+      .inflow = ../egg[outflow]
+      .duration = 46.54 // Larval stage 256 Gutierrez et al., 1998. 20.77 Jaramillo et. at., 2009
+      .timeStep = ../time[step]  
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage larva2 {
+      .inflow = ../larva1[outflow]
+      .duration = 209.46 // 46.54 + 209.46 =256 Gutierrez et al., 1998. 110.06 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage prepupa {
+      .inflow = ../larva2[outflow]
+      .duration = 30.25 // pupa stage 72. Gutierrez et al., 1998. 25.83 Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Stage pupa {
+      .inflow = ../prepupa [outflow]
+      .duration =  41.75 // 30.25 + 41.75 = 72. Gutierrez et al., 1998. 61.66  Jaramillo et. at., 2009
+      .timeStep = ../time[step]
+      .instantLossRate = ../rainMortality[value]
+    }
+    Box searchingAdults {
+      +content|sum = CBB/pupa[outflow] | immigration[value]
+    }
+    Stage preOviposition {
+      .inflow = web/CBB[supply]
+      // .duration = 8 // range 5-10 days Gutierrez et al., 1998. 
+      // .timeStep = 1
+      .duration =  random/CBB_preOviposition_duration[value]
+      .timeStep = ../time[step]
+      .instantLossRate = parasitoidResponse[propHostsAttacked]
+    }
+    Box reproduction {
+      Stage oviposition {
+        .inflow = ../../preOviposition[outflow]
+        // .duration = 20 // 20 days Gutierrez et al., 1998.
+        // .timeStep = 1
+        .duration =  515 // 827.00-312.47 Rodriguez et al., 2017
+        .timeStep = ../../time[step]
+        .growthFactor = random/CBB_fecundity[value]
+        .instantLossRate = ../../rainMortality[value]
+      }
+    }
+  }
+  Box parasitoid {
+    OnOffByDate immigration {  
+      .x = calendar[date]
+      .xOn = 1/11/* // 1 november any year
+      .xOff = 1/7/* //  Vieira, 2008
+      .valueOn = 0.25 // immigration rate adult/plant/day Gutierrez et al., 1998
+      .valueOff = 0
+      
+    }
+    DayDegrees time {
+        .T0 = random/parasitoid_T0[value]
+        .Topt = 25
+        .Tmax = 32 // Rodriguez et al., 2017. 32 Gutierrez et al., 1998
+        .T = weather[Tavg]
+    }  
+    Stage egg {
+      .inflow = parasitoidResponse[hostsAttacked] // if only one larva survives per host; use parasitoidResponse[supply] if all larvae survive
+      .duration = 36
+      .timeStep = ../time[step]  
+     
+    }
+    Stage larva {
+      .inflow = ../egg[outflow]
+      .duration = 240
+      .timeStep = ../time[step]
+      
+    }
+    Stage pupa {
+      .inflow = ../larva[outflow]
+      .duration = 48
+      .timeStep = ../time[step]
+    
+    }
+    Stage adult {
+      .inflow|sum = ../../pupa[outflow] | immigration[value]
+      .duration = 3
+      .timeStep = 1
+    }
+    Box reproduction {
+      Stage oviposition {
+        .inflow = ../../adult[inflow]   
+        .duration = ../../adult[duration]   
+        .timeStep = ../../adult[timeStep]   
+        .growthFactor = random/parasitoid_fecundity[value]
+      }
+    }
+  }
+
+  FoodWeb web {
+    Predator CBB {
+      .density = CBB/searchingAdults[content]
+      .demand  = CBB/searchingAdults[content] // Every beetle demands one berry
+      Prey green {
+        .density = coffee/green[content]
+        .attackRate = 0.054
+      }
+      Prey yellow {
+        .density = coffee/yellow[content]
+        .attackRate = 0.57
+      }
+      Prey ripe {
+        .density = coffee/ripe[content]
+        .attackRate = 0.61
+      }
+      Prey overripe {
+        .density = coffee/overripe[content]
+        .attackRate = 0.61
+      }
+    }
+    SuperFunctionalResponse parasitoidResponse {
+    .attacker = parasitoid/adult[content]
+    .host = CBB/preOviposition[content]
+    .demand = parasitoid/reproduction/oviposition[outflow]
+    .attackRate = 0.95
+    .timeStep = parasitoid/adult[timeStep]
+ 
+   }
+  }
+  CoffeeSummary summary {
+    .harvestTotalOutflow = harvest[outflowTotal]
+  }
+  OutputR output {
+    PageR {
+      .xAxis = sim[iteration]|end
+      PlotR {  
+        .ports = (summary[average] summary[sd])
+      }
+    }
+  }
+}

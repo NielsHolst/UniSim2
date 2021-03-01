@@ -262,7 +262,6 @@ sobol_statistics = function(B, num_digits=2) {
   f = function(x) c(x,x-1)
   row_numbers = c(sapply(2*row_ordering, f))
   M = M[row_numbers,]
-  # rownames(M) = NULL
   M
 }
 
@@ -270,24 +269,26 @@ plot_sobol_convergence = function() {
   plot_against_sample_size()
 }
 
-plot_sobol_indices = function() {
-  reuse_sensitivity_analysis_output = FALSE
-  file_name = paste0(box_script_folder, "/", output_file_base_name(), "_sobol-indices.Rdata")
-  if (reuse_sensitivity_analysis_output) {
-    load(file_name)
-  } else { 
+plot_sobol_indices = function(in_file="") {
+  S = NULL
+  # Read saved S
+  if (nchar(in_file) > 0) {
+    load(in_file)
+    S <<- S
+  # Compute S
+  } else {
     n_outputs = length(output_names())
     print(paste0("Bootstrapping (n=", sobol_B, ")..."))
     B = adply(1:n_outputs, 1, sobol_bootstrap, n=sobol_B)
     S = ddply(B, .(Output), sobol_statistics)
-    # print(paste("Saving Sobol' indices for later reuse in", file_name))
-    # save(S, file=file_name)
+    # Save S to file
+    file_name_R = paste0(output_file_folder(), "/", output_file_base_name(), "-S.Rdata")
+    print(paste("Writing S data frame to", file_name_R))
+    save(S, file=file_name_R)
   }
-  
   plots = dlply(subset(S, Input!="Sum"), .(Output), plot_effects)
   plots
 }
-
 
 
 

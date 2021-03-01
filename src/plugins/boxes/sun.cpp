@@ -1,4 +1,4 @@
-/* Copyright 2005-2019 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
+/* Copyright 2005-2021 by Niels Holst, Aarhus University [niels.holst at agro.au.dk].
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
@@ -28,7 +28,7 @@ Sun::Sun(QString name, QObject *parent)
     Input(latitude).imports("calendar[latitude]");
     Input(dayOfYear).imports("calendar[dayOfYear]");
     Input(time).imports("calendar[time]");
-    Output(dayLength).help("Astronomic day length").unit("h");;
+    Output(dayLength).help("Astronomic day length").unit("h");
     Output(sinb).help("Sine of solar height over the horizon").unit("[-1;1]");
     Output(sunrise).help("Time of sunrise").unit("h:m:s");
     Output(sunset).help("Time of sunset").unit("h:m:s");
