@@ -2,8 +2,8 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef VG_GENERAL_H
-#define VG_GENERAL_H
+#ifndef PHYS_MATH_H
+#define PHYS_MATH_H
 #include <limits>
 #include <math.h>
 #include <stdlib.h>

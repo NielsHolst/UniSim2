@@ -2,7 +2,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QStringListIterator>
 #include <QTextStream>
 #include "environment.h"
 #include "exception.h"
@@ -44,10 +43,8 @@ void SaveGrammarNotepad::writeClasses() {
 
 void SaveGrammarNotepad::writePorts() {
     QStringList decoratedPortNames;
-    QStringListIterator it(portNames());
-    while (it.hasNext()) {
-        QString s = it.next();
-        decoratedPortNames << "." + s; // << "["  + s + "]"; does not highlight port
+    for (QString portName : portNames()) {
+        decoratedPortNames << "." + portName;
     }
     _output = _output.replace("#Keywords3", decoratedPortNames.join(sep));
 }

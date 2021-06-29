@@ -38,7 +38,7 @@ void BoundaryLayerResistanceMonteithUnsworth::setRbH2O() {
     double dTemp = fabs(leafTemperature - indoorsTemperature);
     gbH2Oforced = 1./( 300*sqrt(leafDimension/leafWindSpeed) );
     gbH2Ofree = 1./( 1000*pow(leafDimension/dTemp, 0.25) );
-    rbH2O = 1./(gbH2Oforced + gbH2Ofree);
+    rH2O = 1./(gbH2Oforced + gbH2Ofree);
 }
 
 } //namespace

@@ -18,11 +18,11 @@ public:
     void update();
 private:
     // Inputs
-    double crownZoneArea, lai, area, frondAngle, plantDensity,
-        demand, alpha, fTemp, fNitrogen, I, timeStepSecs,
+    double area, frondAngle, Iabsorbed,
+        demand, alpha, fTemp, fNitrogen, timeStepSecs,
         Pmax;
     // Outputs
-    double supply, sdRatio, Iabsorbed, P;
+    double supply, sdRatio, P, Punlimited;
 };
 
 }

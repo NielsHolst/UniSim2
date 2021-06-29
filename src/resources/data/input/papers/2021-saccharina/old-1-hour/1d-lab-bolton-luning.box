@@ -1,0 +1,105 @@
+Simulation sim {
+  .iterations = 32
+  .steps = 161 // = 7*24-6; stop at the end of the final day  
+  .silent = TRUE
+  Box parameters {
+    // Parameters fixed from literature
+    +CmaxYoung  = 0.23  
+    +CmaxMature = 1.10
+    +Nmax       = 0.077
+  }
+  Box parameters {
+    // Parameters defining the system
+    +maturity         = 0  // Young plants
+    +Cinit            = ../parameters[CmaxYoung] // Young plants
+    +Ninit            = ../parameters[Nmax]      // Well-fed plants
+    // +Winit            = 0.001 // This gives an initial length = 6.5 cm (5-8 cm in experiment)
+    +Winit            = 0.01 // This gives an initial length = 6.5 cm (5-8 cm in experiment)
+    +kg               = 3.3  
+    // Parameters fixed from literature
+    +uMin             = 0.28    
+    +T0               = -2      
+    +Tmax             = 24      
+    // Parameters to estimate from lab experiments
+    +alpha            = ./alpha[value]
+    +beta             = ./beta[value]
+    +gamma            = ./gamma[value]
+    +g                = ./g[value]
+    +Pmax             = ./Pmax[value] 
+    +fNitrogenMin     = ./fNitrogenMin[value]
+    // Non-influential parameters identified by complete sensitivity analysis
+    +Q10              = 1.05
+    +resp20           = 0.000573
+    +Topt1            = 2.5
+    +Topt2            = 16.5
+    // Parameters irrelevant to lab experiments
+    // no erosion
+    +eMax             = 0 
+    +e50              = 0 
+    // no area effects on maturity
+    +a50              = 3
+    +aSlope           = 3
+    // no canopy model
+    +frondAngle       = 0
+    +plantDensity     = 1
+    
+    // Just randomise without a sensitivity analysis
+    RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = FALSE
+    }
+
+    // Parameters to estimate from lab experiments
+    RandomUniform alpha {
+      .min = 1.4
+      .max = 2.0
+    }
+    RandomUniform beta {
+      .min = 0.0006
+      .max = 0.00402
+    }
+    RandomUniform  gamma {
+      .min = 0.001
+      .max = 0.003
+    }
+    RandomUniform g {
+      .min = 0.001
+      .max = 0.03
+    }
+    RandomUniform Pmax {
+      .min = 0.00037
+      .max = 0.00180
+    }
+    RandomUniform fNitrogenMin {
+      .min = 0.3
+      .max = 0.6
+    }
+  }
+  Box setup {
+    +fileNamePath = "env/dummy.txt"
+    +initialDateTime = 01/01/2017
+    +obsFile = ""
+  }
+  ControlledEnvironment env {
+    .temperature = 10
+    .irradiation = 50
+    .nitrogen = 0.5 // mM
+    .salinity = 35
+    .current = 999
+    .lightHours = 18
+  }
+  #define LIGHT_ABSORPTION = LightAbsorptionLeaf
+  #include "saccharina-model.part.box"
+  LabCalibration labCalibration {
+  }
+  OutputR {
+    .end = "1d-lab-bolton-luning-end.R"
+     Box output {
+      +C = reserves/carbon[proportion]
+      +N = reserves/nitrogen[proportion]
+      +area = area[value]
+    }
+    OutputText {
+      .ports = (sim[step] env[I] output[*])
+    }
+  }
+}

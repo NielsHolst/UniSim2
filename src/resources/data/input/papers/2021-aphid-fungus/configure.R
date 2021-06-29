@@ -17,7 +17,7 @@ draw_key_polygon3 <- function(data, params, size) {
 GeomArea$draw_key = draw_key_polygon3
 
 # Define themes
-theme1 = theme(
+theme1 = theme_classic() + theme(
   axis.title = element_text(size=9),
   axis.title.y = element_text(margin = margin(r=4, unit="points")),
   axis.title.y.right = element_text(margin = margin(l=5, unit="points")),
@@ -32,6 +32,9 @@ theme1 = theme(
   legend.box.spacing = unit(0, "points"),
   plot.margin = margin(10,10,10,10)
 )
+
+# Colour scales
+grey_scale = c("grey","#A0A0A0")
 
 # Set (and create as needed) the folders for figures and output data
 output_figures_folder = "/Users/au152367/Documents/PAPERS/2021/aphids-fungi/sim"

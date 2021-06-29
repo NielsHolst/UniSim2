@@ -3,8 +3,8 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <iostream>
-#include <QtWinExtras/QWinTaskbarProgress>
 #include "dialog_stub.h"
+#include "win_taskbar_progress.h"
 
 namespace base {
 

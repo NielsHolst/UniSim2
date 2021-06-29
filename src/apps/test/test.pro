@@ -41,10 +41,9 @@ HEADERS +=  \
     test_path.h \
     test_phys_math.h \
     test_port.h \
-    test_port_buffer.h \
     test_port_type.h \
     test_port_value_op.h \
-    test_random.h \
+    test_proportions.h \
     test_random_order.h \
     test_save_grammar.h \
     test_scenarios.h \
@@ -84,10 +83,9 @@ SOURCES +=  \
     test_path.cpp \
     test_phys_math.cpp \
     test_port.cpp \
-    test_port_buffer.cpp \
     test_port_type.cpp \
     test_port_value_op.cpp \
-    test_random.cpp \
+    test_proportions.cpp \
     test_random_order.cpp \
     test_save_grammar.cpp \
     test_scenarios.cpp \

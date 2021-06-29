@@ -5,6 +5,7 @@
 #include <iostream>
 #include <QtAlgorithms>
 #include <QDir>
+#include <QRegularExpression>
 #include <QTime>
 #include <base/convert.h>
 #include <base/exception.h>
@@ -99,9 +100,9 @@ void Records::readLineItems() {
         line = QString(_file.readLine().simplified());
     }
     #if QT_VERSION >= 0x050E00
-      _lineItems = line.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
+      _lineItems = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
     #else
-      _lineItems = line.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+      _lineItems = line.split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
     #endif
     _pastLastLine = _lineItems.isEmpty();
 }

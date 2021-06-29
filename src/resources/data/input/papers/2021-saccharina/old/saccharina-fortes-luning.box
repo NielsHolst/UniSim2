@@ -1,0 +1,130 @@
+Simulation sim {
+  .iterations = 4096
+  .steps = 168
+  .silent = TRUE
+  Box parameters {
+    // Parameters defining the system
+    +plantDensity     = 1
+    +Cinit            = 0.9  /// ***    
+    +Ninit            = 0.06 // well-fed plants   
+    // Parameters fixed from literature
+    +Cmax             = 0.9 /// ***   
+    +Nmax             = 0.06    
+    +uMin             = 0.28    
+    +T0               = -2      
+    +Tmax             = 24      
+    +kC               = 2.12
+    // Influential parameters identified by complete sensitivity analysis
+    +alpha            = ./alpha[value]
+    +beta             = ./beta[value]
+    +gamma            = ./gamma[value]
+    +g                = ./g[value]
+    +eMax             = 0 // not erosion in lab
+    +e50              = 0
+    +aMax             = 1
+    +a50              = 99999
+    +Winit            = 0.061 // This gives an initial length = 3 dm
+    // +resMaxRelDemand  = ./resMaxRelDemand[value]
+    +fNitrogenMin     = ./fNitrogenMin[value]
+    // Non-influential parameters identified by complete sensitivity analysis
+    +aSlope           = 3
+    +frondAngle       = 0
+    +Pmax             = ./Pmax[value] 
+    +Q10              = ./Q10[value]
+    +resp20           = ./resp20[value]
+    +Topt1            = ./Topt1[value]
+    +Topt2            = ./Topt2[value]
+    RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = FALSE
+    }
+    RandomUniform alpha {
+      .min = 0.010  // 0.01 // 1.4
+      .max = 0.055  // 1.0  // 2.0
+    }
+    RandomUniform beta {
+      .min = 0.0006
+      .max = 0.00402
+    }
+    RandomUniform  gamma {
+      .min = 0.001
+      .max = 0.003
+    }
+    RandomUniform  g {
+      // .min = 0.001
+      // .max = 0.03
+      .min = 0.0058
+      .max = 0.0074
+    }
+    RandomUniform  eMax {
+      .min = 0.00013
+      .max = 0.0005
+    }
+    RandomUniform  e50 {
+      .min = 0.5
+      .max = 4.0
+    }
+    RandomUniform fNitrogenMin {
+      .min = 0.3
+      .max = 0.6
+    }
+    RandomUniform resp20 {
+      .min = 0.000382
+      .max = 0.000764
+    }
+    RandomUniform Q10 {
+      .min = 1.0
+      .max = 1.1
+    }
+    RandomUniform Topt1 {
+      .min = 0
+      .max = 5
+    }
+    RandomUniform Topt2 {
+      .min = 15
+      .max = 18
+    }
+    RandomUniform Winit {
+      .min = 3.88e-5 
+      .max = 0.00388
+    }
+    RandomUniform Pmax {
+      // .min = 0.00037
+      // .max = 0.00180
+      .min = 0.00081
+      .max = 0.00180
+    }
+    RandomUniform irradiation {
+      .min = 0
+      .max = 250
+    }
+  }
+  Box setup {
+    +fileNamePath = "env/dummy.txt"
+    +initialDateTime = 01/01/2017
+    +obsFile = ""
+  }
+  ControlledEnvironment env {
+    .temperature = 10
+    .irradiation = parameters/irradiation[value] //110  // Fig. 7.
+    .nitrogen = 0.5 // mM
+    .salinity = 35
+    .current = 999
+    .lightHours = 18
+  }
+  #include "saccharina-model.part.box"
+  LabCalibration labCalibration {
+  }
+  OutputR {
+    // .end = "saccharina-fortes-luning-end.R"
+    .end = "saccharina-fortes-luning-light-response-end.R"
+     Box out {
+      +C = reserves/carbon[proportion]
+      +N = reserves/nitrogen[proportion]
+      +fArea = fArea[value]
+      +irradiation = parameters/irradiation[value]
+    }
+    OutputText {
+      .ports = (parameters[*]|end labCalibration[rLength]|end out[*]|end )
+    }
+ }
+}

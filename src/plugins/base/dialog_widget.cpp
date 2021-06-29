@@ -15,14 +15,13 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextDocument>
-#include <QtWinExtras/QWinTaskbarProgress>
-#include <QtWinExtras/QWinTaskbarButton>
 #include "command.h"
 #include "dialog_widget.h"
 #include "environment.h"
 #include "exception.h"
 #include "general.h"
 #include "mega_factory.h"
+#include "win_taskbar_progress.h"
 
 #include <QMessageBox>
 
@@ -143,10 +142,18 @@ QWinTaskbarProgress* DialogWidget::winProgressTaskbar() {
     return _winProgressTaskbar;
 }
 
+const History* DialogWidget::history() const {
+    return &_history;
+}
+
 void DialogWidget::finished() {
     _progressBar->hide();
-    if (_winProgressTaskbar)
-        _winProgressTaskbar->reset();
+    #if QT_VERSION < 0x060000
+        if (_winProgressTaskbar) {
+            _winProgressTaskbar->reset();
+            _winProgressTaskbar->hide();
+        }
+    #endif
     qApp->processEvents();
 }
 
@@ -175,20 +182,20 @@ void DialogWidget::showEvent(QShowEvent *event) {
     // See https://doc.qt.io/qt-5/qtwinextras-musicplayer-example.html
     // and QWinTaskbarButton help
     QWidget::showEvent(event);
-    if (environment().isWindows() && !_winProgressTaskbar) {
-        QWinTaskbarButton *taskbarButton = new QWinTaskbarButton(this);
-        QWindow *window = _parent->windowHandle();
-        if (window) {
-            taskbarButton->setWindow(window);
-            _winProgressTaskbar = taskbarButton->progress();
+    #if QT_VERSION < 0x060000
+        if (environment().isWindows() && !_winProgressTaskbar) {
+            QWinTaskbarButton *taskbarButton = new QWinTaskbarButton(this);
+            QWindow *window = _parent->windowHandle();
+            if (window) {
+                taskbarButton->setWindow(window);
+                _winProgressTaskbar = taskbarButton->progress();
+            }
         }
-    }
+    #endif
 }
 
 void DialogWidget::focusInEvent(QFocusEvent *event) {
     QTextEdit::focusInEvent(event);
-//    if (_winProgressTaskbar && _winProgressTaskbar->value() == _winProgressTaskbar->maximum())
-//        _winProgressTaskbar->reset();
     _isInFocus = true;
 }
 
@@ -236,10 +243,10 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
 QString DialogWidget::selectFile() {
     // Check command
     QStringList items = lineItems();
-    bool fileDialog   = items.at(0)=="load" || items.at(0)=="run";
+    bool fileDialog   = items.at(0)=="load" || items.at(0)=="run" || items.at(0)=="debug";
     bool folderDialog = items.size()==3 && items.at(0)=="set" && items.at(1)=="folder" && items.at(2)=="work";
     if (!(fileDialog || folderDialog)) {
-        QMessageBox::warning(this, "Wrong command", "Use <Ctrl>+<space> only together with 'load', 'run' or 'set folder work'");
+        QMessageBox::warning(this, "Wrong command", "Use <Ctrl>+<space> only together with 'load', 'run', 'debug' or 'set folder work'");
         return QString();
     }
     // Extract paths
@@ -474,6 +481,7 @@ void DialogWidget:: submitCommand() {
     QString line = DialogWidget::line();
     QStringList items = lineItems();
     if (!items.isEmpty()) {
+        _history.add(line);
         try {
             Command::submit(items, this);
         }
@@ -481,9 +489,6 @@ void DialogWidget:: submitCommand() {
             dialog().error("Could not execute command: " + items.join(" "));
         }
     }
-    if (!line.isEmpty())
-        _history.add(line);
-
     writePrompt();
 }
 

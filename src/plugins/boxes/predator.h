@@ -13,14 +13,12 @@ class Predator : public base::Box
 {
 public: 
     Predator(QString name, QObject *parent);
-    void amend();
+    void setFoodWebImports();
 private:
     // Inputs
     double density, demand;
     // Outputs
     double supply, sdRatio;
-    // Methods
-    void setFoodWebImports();
 };
 
 } //namespace

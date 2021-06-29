@@ -380,7 +380,6 @@ namespace local {
 	void writeSimulation(QXmlStreamWriter *xw)
 	{
 		xw->setAutoFormatting(true);
-		xw->setCodec("ISO-8859-1");
 		xw->writeStartDocument();
 	
 		xw->writeStartElement("simulation");

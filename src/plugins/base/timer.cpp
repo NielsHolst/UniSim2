@@ -16,7 +16,7 @@ Timer::Timer(QObject *parent)
 void Timer::addProfile(QString name) {
     if (_lookup.contains(name))
         ThrowException("Timer already present").value(name).context(this);
-    _lookup[name] = Watch{QTime(), 0};
+    _lookup[name] = Watch{QElapsedTimer(), 0};
     _ordered << name;
 }
 

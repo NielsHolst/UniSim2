@@ -1,0 +1,205 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2019
+  }
+  Records weather {
+  .fileName = "Sokoto_North_Nigeria_TA00460.txt"
+  }
+  Box cowpea1 {    
+    Stage preVegetative { // seed germination // 130 333 per hectare = 130 333 per 10 000 m2 = 13,0333 plants per square meter base density; double is shown to increase yield by 69% in early and medium mautring varieties in Nigerian Savannas. 
+      .initial = 1
+      .duration = 35
+      .timeStep = ./time[value]      
+      OnOff time {
+        .x = calendar[dayOfYear]
+        .xOn = 213 // 1st of August. Season starts depending on the rainy season dates and cultivar, table 9 in "Doc1 cowpea and X".
+        .xOff = 273
+        .valueOn = ./daydegrees[step]
+        DayDegrees daydegrees {
+          .T = weather[Tavg]
+          .T0 = 8
+          .Topt = 35
+          .Tmax = 43
+        }
+      }
+    }
+    Stage seedling { // seedling emergence 
+      .inflow = ../preVegetative[outflow]
+      .duration = 43
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 11
+      }
+    }
+    Stage vegetative { //leaf appearance 30-60, first visible bud min val 350-580; minimum values used
+      .inflow = ../seedling[outflow]
+      .duration = 380
+      .growthFactor = 520 // 40 * 13 number of flowers for high yielding early maturity cowpea variety 40 * density 13 or 26 = 520 or 
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 28
+      }
+    }
+    Stage flowering { //first open flower 550-830; minimum value used
+      .inflow = ../vegetative[outflow]
+      .duration = 550
+      .timeStep = ./daydegrees[step]
+      .instantLossRate = web[mortality_flowers]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 27
+        .Tmax = 36
+      }
+    }
+    Stage maturity { //first ripe pod 940-1130; minimum value used
+      .inflow = ../flowering[outflow]
+      .duration = 940
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        
+      }
+    }
+  }
+  Box maruca { 
+    +flowersPerLarva = 5
+    ThresholdSignal immigration {
+      .input = flowering[content]
+      .threshold = 1
+      .signalFlagged = 0.1 // daily inflow per m2
+      .signalUnflagged = 0
+    }
+    Stage adult { 
+	  .inflow|sum = ../immigration[value] | ../pupa[outflow]  // vector of 2 numbers
+      .duration = 6 // 3 - 10 days ba et al 2019 
+    }
+    Stage oviposition {
+      .inflow = ../adult[inflow]
+      .duration = ../adult[duration]
+      .growthFactor = 400 
+    }
+    Stage egg {
+      .inflow = ../oviposition[outflow]
+      .duration = 51.1
+      .growthFactor = 0.02
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10.5
+        .Tmax = 34.3
+      }
+    }  
+	PotentialLarva potentialLarva { // realised larva based on the available flowers
+      .supplyOfFlowers = web[supply_larvae] 
+      .flowersPerLarva = maruca[flowersPerLarva]
+      // outflow [value] resulting number of larvae
+    }
+    Stage larva {
+      .inflow = potentialLarva[value]
+      .duration = 234.7
+      .timeStep = ./time[step]
+	  .instantLossRate = ataragamaeResponse[propHostsAttacked]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10
+        .Tmax = 29.3
+      }
+    }
+    Stage pupa {
+      .inflow = larva[outflow]
+      .duration = 116.5
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10.9
+        .Tmax = 29.3
+      }
+    }
+  }
+  Box ataragamae { //parasitoid Apanteles taragamae
+    ThresholdSignal immigration {
+      .input = maruca/larva[content]
+      .threshold = 1
+      .signalFlagged = 0.1 // daily inflow per m2
+      .signalUnflagged = 0
+    }
+    Stage adult { 
+	  .inflow|sum = ../immigration[value] | ../cocoon[outflow]  // vector of 2 numbers
+      .duration = 12 // 5 days for male + female average at 29 degrees oC danon 2012; 12 days for male + female average accross 5 temeperatures danon 2010;
+    }
+    Stage oviposition {
+      .inflow = ../adult[inflow]
+      .duration = ../adult[duration]
+      .growthFactor = 24 // pro ovigenic danon 2012; 60 on average accros 5 temperatures danon 2010; 33.9% female on average accross 5 temperatures danon 2010
+    }
+    Stage egg {
+      .inflow = ataragamaeResponse[hostsAttacked] // into super functresp demand   ; parasitoidResponse[hostsAttacked] // if only one larva survives per host;
+      .duration = 8 // avg for 1 2 3 day old larvae parazitized danon 2010
+    }  
+    Stage cocoon {
+      .inflow = ../egg[outflow]
+      .duration = 5 // avg for 1 2 3 day old larvae parazitized danon 2010;
+    }
+  }
+  FoodWeb web {
+	FlowerDemand demand { // potential larva demand in flowers
+	  .density = maruca/egg[outflow]
+	  .flowersPerLarva = maruca[flowersPerLarva]
+	  // outflow [value]  unit=flowers
+	}
+    Predator larvae {
+      .density = maruca/egg[outflow]
+      .demand  = ../demand[value] 
+      Prey flowers {
+        .density = cowpea1/flowering[content]
+        .attackRate = 0.95
+      }
+    }
+  }
+  SuperFunctionalResponse ataragamaeResponse {
+    .attacker = ataragamae/adult[content]
+    .host = maruca/larva[content]
+    .demand = ataragamae/oviposition[outflow]
+    .attackRate = 0.95
+  }
+  OutputR {
+    Box outputs {
+      +MarucaImmigration = maruca/immigration[value]
+	  +AtaragamaeImmigration = ataragamae/immigration[value]
+      +eggsPerDay  = maruca/oviposition[outflow]
+	  +hostsParasitizedPerDay = ataragamae/egg[outflow]
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 3
+      +monthBreaks = "geom_line(size = 1.1) +
+              scale_x_datetime(
+                      breaks = date_breaks('1 months'),
+                      labels = date_format('%b')
+                      ) +
+              ylim(0,NA)"
+      PlotR {
+        .ports = (cowpea1/*[content] cowpea1/maturity[outflowTotal])
+        .ggplot = ..[monthBreaks]
+      }
+      PlotR {
+        .ports = (outputs[MarucaImmigration] maruca/*[content] outputs[eggsPerDay])
+        .ggplot = ..[monthBreaks]
+      }
+	  PlotR {
+		.ports = (outputs[AtaragamaeImmigration] ataragamae/*[content] outputs[hostsParasitizedPerDay])
+		.ggplot = ..[monthBreaks]
+	  }
+    }  
+  }  
+}
+

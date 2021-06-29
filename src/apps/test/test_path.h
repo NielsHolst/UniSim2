@@ -49,10 +49,7 @@ private slots:
     void testResolveInvalid();
     void testIndirections();
 
-    void testDistribution();
-
     // Test from box scripts
-    void testDistributionFromScript();
     void testCombination();
 };
 

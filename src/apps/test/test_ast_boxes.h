@@ -18,7 +18,6 @@ private slots:
     void testWhitespaceInVector();
     void testWhitespaceInPath();
     void testTransform();
-    void testDistribution();
 private:
     base::BoxBuilder *builder;
     base::BoxReaderBase *reader;

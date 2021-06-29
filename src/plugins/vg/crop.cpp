@@ -20,17 +20,17 @@ Crop::Crop(QString name, QObject *parent)
 {
     help("holds crop parameters");
     Input(lai).equals(3.).unit("m2/m2").help("Leaf area index");
-    Input(coverage).equals(0.9).unit("[0;1]").help("Proportion of floor area with crop");
+    Input(coverage).equals(1.0).unit("[0;1]").help("Proportion of floor area with crop");
 }
 
 void Crop::amend() {
     BoxBuilder builder(this);
 
-    if (!findMaybeOne<Box>("./rs"))
-        builder.box("vg::StomatalResistanceRose").name("rs").
+    if (!findMaybeOne<Box>("./leafWindSpeed"))
+        builder.box("vg::LeafWindSpeed").name("leafWindSpeed").
         endbox();
-    if (!findMaybeOne<Box>("./rb"))
-        builder.box("vg::BoundaryLayerResistanceStanghellini").name("rb").
+    if (!findMaybeOne<Box>("./boundaryLayerResistance"))
+        builder.box("vg::BoundaryLayerResistanceStanghellini").name("boundaryLayerResistance").
         endbox();
     if (!findMaybeOne<Box>("./transpiration"))
         builder.box("vg::LeafTranspiration").name("transpiration").

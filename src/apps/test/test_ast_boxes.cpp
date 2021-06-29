@@ -120,20 +120,5 @@ void TestAstBoxes::testTransform() {
     QCOMPARE(all2->value<bool>(), true);
 }
 
-void TestAstBoxes::testDistribution() {
-    bool excepted(false);
-    Box *root;
-    Port *input1, *input2;
-    try {
-        reader->parse(inputFilePath("ast_distribution.box"));
-        root = builder->content();
-        root->run();
-        input1 = root->findOne<Port>("a[input1]");
-        input2 = root->findOne<Port>("a[input2]");
-    }
-    UNEXPECTED
-    QCOMPARE(input1->value<int>(), 20);
-    QCOMPARE(input2->value<int>(), 25);
-}
 
 

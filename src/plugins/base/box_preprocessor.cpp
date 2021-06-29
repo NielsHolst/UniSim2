@@ -149,7 +149,7 @@ bool BoxPreprocessor::isComment(QString s) const {
     // Search backwards for comment slashes in this line
     bool comment = false;
     for (int i = s.size()-2; i>=0; --i) {
-        if (s.at(i) == "\n")
+        if (s.at(i) == QChar::CarriageReturn)
             break;
         else if (s.mid(i,i+1) == "//") {
             comment = true;

@@ -34,9 +34,9 @@ Budget::Budget(QString name, QObject *parent)
     Input(soilEnergyRate).imports("energyBudget/floor[conductiveInflux]", CA);
     Input(heatingPowerUsage).imports("actuators/heating[energyFluxTotal]",CA).unit("W/m2");
     Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
-    Input(parAbsorbed).imports("photosynthesis[parAbsorbed]").unit("umol/s/m2");
+    Input(parAbsorbed).imports("energyBudget/crop[parAbsorbed]", CA).unit("umol/s/m2");
     Input(co2Flux).imports("actuators/co2Injection[value]",CA).unit("g/m2/h");
-    Input(dt).imports("calendar[timeStepSecs]").unit("s");
+    Input(dt).imports("calendar[timeStepSecs]", CA).unit("s");
     Output(skyIrradiation).help("Accumulated sunlight irradiation").unit("kWh/m2");
     Output(skyRadiationAbsorbed).help("Accumulated radiation lost to the sky").unit("kWh/m2");
     Output(skySwRadiationAbsorbed).help("Accumulated sw radiation lost to the sky").unit("kWh/m2");

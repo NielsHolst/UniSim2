@@ -46,7 +46,7 @@ enum PortType {
 };
 
 template <class T> PortType typeOf() { return Null; }
-template <> inline PortType typeOf<QStringList>() { ThrowException("Use QVector<QString> instead of QStringList for ports"); }
+//template <> inline PortType typeOf<QStringList>() { ThrowException("Use QVector<QString> instead of QStringList for ports"); }
 #define TYPEOF(X,Y) \
     template <> inline PortType typeOf<X>() { return Y; } \
     template <> inline PortType typeOf<Vector##Y>() { return Y##Vector; }
@@ -72,7 +72,7 @@ bool isScalar(PortType type);
 bool isVector(PortType type);
 PortType asVector(PortType type);
 PortType asScalar(PortType type);
-PortType deducePortType(QString s);
+PortType deducePortTypeFromString(QString s);
 
 }
 

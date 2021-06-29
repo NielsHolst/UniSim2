@@ -233,7 +233,7 @@ template<> QStringList convert(QVector<long long int> source);
 template<> QStringList convert(QVector<float> source);
 template<> QStringList convert(QVector<double> source);
 template<> QStringList convert(QVector<long double> source);
-template<> QStringList convert(QVector<QString> source);
+//template<> QStringList convert(QVector<QString> source);
 template<> QStringList convert(QVector<QDate> source);
 template<> QStringList convert(QVector<QTime> source);
 template<> QStringList convert(QVector<QDateTime> source);

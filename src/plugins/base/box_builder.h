@@ -54,7 +54,6 @@ public:
     // Set value
     template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value, bool ignore=false);
-    BoxBuilder& equals(QString value, bool ignore=false);
     BoxBuilder& equals(const char *value, bool ignore=false);
     // State
     const Box* currentBox() const;
@@ -79,14 +78,11 @@ template <class T> BoxBuilder& BoxBuilder::data(T *valuePtr) {
     return *this;
 }
 
-#define BOXBUILDER_EQUALS \
-    if (!ignore && !_currentPort) \
-        ThrowException("BoxBuilder: 'equals' must follow 'port'"); \
-    _currentPort->equals(value); \
-    return *this
-
 template <class T> BoxBuilder& BoxBuilder::equals(T value, bool ignore) {
-    BOXBUILDER_EQUALS;
+    if (!ignore && !_currentPort)
+        ThrowException("BoxBuilder: 'equals' must follow 'port'");
+    _currentPort->equals(value);
+    return *this;
 }
 
 }

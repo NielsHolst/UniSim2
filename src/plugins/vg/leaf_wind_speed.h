@@ -21,7 +21,7 @@ public:
 
 protected:
     // Inputs
-    double indoorsWindSpeedMinimum, indoorsWindSpeed, lai;
+    double indoorsWindSpeedMinimum, indoorsWindSpeed;
     // Outputs
     double value;
 };

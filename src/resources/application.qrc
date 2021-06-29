@@ -150,6 +150,10 @@
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-scenarios.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-weather-files.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/configure.R</file>
+    <file>data/input/papers/2021-aphid-fungus/fig-2-end(0).R</file>
+    <file>data/input/papers/2021-aphid-fungus/fig-2-end(1).R</file>
+    <file>data/input/papers/2021-aphid-fungus/fig-2-end.R</file>
+    <file>data/input/papers/2021-aphid-fungus/fig-2.box</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol-end.R</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-biocontrol.txt</file>
     <file>data/input/papers/2021-aphid-fungus/scenario-Early.txt</file>
@@ -252,32 +256,98 @@
     <file>data/input/papers/2021-musselbed/starfish-mussel-scenarios-1.box</file>
     <file>data/input/papers/2021-musselbed/starfish-mussel-scenarios-2.box</file>
     <file>data/input/papers/2021-musselbed/starfish-mussel.box</file>
+    <file>data/input/papers/2021-saccharina/0-saccharina-model.part.box</file>
+    <file>data/input/papers/2021-saccharina/1a-lab-bolton-luning.box</file>
+    <file>data/input/papers/2021-saccharina/analysis/area-allometry.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/area.R</file>
     <file>data/input/papers/2021-saccharina/analysis/calibrate.R</file>
-    <file>data/input/papers/2021-saccharina/analysis/compute-obs-C-N.R</file>
-    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete-S.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/chapman-growth-rate.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/development.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/fit_by_eye.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/f_area.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/f_current.r</file>
+    <file>data/input/papers/2021-saccharina/analysis/gevaert-et-al-2001.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/gevaert-et-al-2001.txt</file>
+    <file>data/input/papers/2021-saccharina/analysis/g_model.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/maturity-model-gevaert-sep-c-pct.Rdata</file>
+    <file>data/input/papers/2021-saccharina/analysis/maturity-model.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/plot-C-N.R</file>
+    <file>data/input/papers/2021-saccharina/analysis/plot-leaf-area(0).R</file>
     <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.part.R</file>
     <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.R</file>
-    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-complete.Rdata</file>
-    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed-S.Rdata</file>
     <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.part.R</file>
     <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.R</file>
-    <file>data/input/papers/2021-saccharina/analysis/saccharina-SA-fixed.Rdata</file>
     <file>data/input/papers/2021-saccharina/analysis/setup.R</file>
+    <file>data/input/papers/2021-saccharina/carbon-fixed-end.R</file>
+    <file>data/input/papers/2021-saccharina/carbon-fixed.box</file>
+    <file>data/input/papers/2021-saccharina/env/carbon-fixed.txt</file>
+    <file>data/input/papers/2021-saccharina/env/dummy.txt</file>
     <file>data/input/papers/2021-saccharina/env/env_file_2017.txt</file>
     <file>data/input/papers/2021-saccharina/env/env_file_2019-AVG.txt</file>
     <file>data/input/papers/2021-saccharina/env/env_file_2019_2020.txt</file>
-    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-CN.txt</file>
-    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-vandrette-liner-100m-CN.txt</file>
-    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG-vandrette-liner-100m.txt</file>
-    <file>data/input/papers/2021-saccharina/obs/alge-obs-2019-AVG.txt</file>
-    <file>data/input/papers/2021-saccharina/read-me.txt</file>
-    <file>data/input/papers/2021-saccharina/saccharina-model.part.box</file>
-    <file>data/input/papers/2021-saccharina/saccharina-SA-complete.box</file>
-    <file>data/input/papers/2021-saccharina/saccharina-SA-fixed.box</file>
-    <file>data/input/papers/2021-saccharina/saccharina-scenarios-all.txt</file>
-    <file>data/input/papers/2021-saccharina/saccharina-scenarios-end.R</file>
-    <file>data/input/papers/2021-saccharina/saccharina-scenarios-one.txt</file>
-    <file>data/input/papers/2021-saccharina/saccharina-scenarios.box</file>
+    <file>data/input/papers/2021-saccharina/old/7-best-fit-end.R</file>
+    <file>data/input/papers/2021-saccharina/old/g-small-vs-big.R</file>
+    <file>data/input/papers/2021-saccharina/old/read-me.txt</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-bolton-luning (0).box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-bolton-luning-end(0).R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-chapman(0).box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-chapman-end.R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-chapman.box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning(0).box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning-end(0).R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning-light-response-end(0).R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning-light-response-end.R</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-SA-complete.box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-SA-fixed.box</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-scenarios-all.txt</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-scenarios-one.txt</file>
+    <file>data/input/papers/2021-saccharina/old/saccharina-scenarios.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/0-lab-end-functions.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/0-lab-end-histogram.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1a-lab-bolton-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1a-lab-bolton-luning-M2.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1a-lab-bolton-luning-sim.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1a-lab-bolton-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1b-lab-bolton-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1c-lab-bolton-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1d-lab-bolton-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/1d-lab-bolton-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2a-lab-chapman-et-al-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2a-lab-chapman-et-al.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2b-lab-chapman-et-al-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2b-lab-chapman-et-al-sim.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2b-lab-chapman-et-al.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/2c-lab-chapman-et-al.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3a-lab-fortes-luning-end.r</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3a-lab-fortes-luning-sim.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3a-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3b-lab-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3b-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/3c-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4a-lab-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4a-lab-fortes-luning-M1.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4a-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4b-lab-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4b-lab-fortes-luning-M1.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4b-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4c-lab-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4c-lab-fortes-luning-M1.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4c-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4d-lab-fortes-luning-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4d-lab-fortes-luning-M1-A.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4d-lab-fortes-luning.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4x-lab-fortes-luning-all(0).R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/4x-lab-fortes-luning-all.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/5-SA-complete.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/6-calibrate.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/7-best-fit-end.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/7-best-fit.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/8-check-C-budget.R</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/saccharina-model.part.box</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/sim-2-maturity.Rdata</file>
+    <file>data/input/papers/2021-saccharina/old-1-hour/sim-3-maturity.Rdata</file>
     <file>data/input/scripts/begin-sobol.R</file>
     <file>data/input/scripts/begin.R</file>
     <file>data/input/scripts/end-batch.R</file>

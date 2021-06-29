@@ -13,6 +13,7 @@ HEADERS +=  \
     cowpea_population.h \
     degrees_to_days.h \
     exponential_growth.h \
+    flower_demand.h \
     food_web_population.h \
     in_grams.h \
     in_grams2.h \
@@ -20,6 +21,7 @@ HEADERS +=  \
     increment.h \
     initial_biomass.h \
     li.h \
+    potential_larva.h \
     rgr.h \
     single_biomass.h \
     threshold.h 
@@ -29,6 +31,7 @@ SOURCES +=  \
     cowpea_population.cpp \
     degrees_to_days.cpp \
     exponential_growth.cpp \
+    flower_demand.cpp \
     food_web_population.cpp \
     in_grams.cpp \
     in_grams2.cpp \
@@ -36,6 +39,7 @@ SOURCES +=  \
     increment.cpp \
     initial_biomass.cpp \
     li.cpp \
+    potential_larva.cpp \
     rgr.cpp \
     single_biomass.cpp \
     threshold.cpp 

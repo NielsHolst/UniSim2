@@ -1,0 +1,20 @@
+Simulation sim {
+  .steps = 135
+  Calendar calendar {
+  }
+  Records env {
+    .fileName = "env/carbon-fixed.txt"
+    .overrideCalendarDateTime = TRUE
+  }
+  Stage carbon {
+    .inflow = env[CarbonFixed]
+    .duration = 50
+    
+  }
+  OutputR {
+    .end = "carbon-fixed-end.R"
+    OutputText {
+      .ports = (calendar[date] env[CarbonFixed] carbon[content])
+    }
+  }
+}

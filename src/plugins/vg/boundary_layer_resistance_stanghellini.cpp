@@ -25,9 +25,16 @@ BoundaryLayerResistanceStanghellini::BoundaryLayerResistanceStanghellini(QString
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
 }
 
+void BoundaryLayerResistanceStanghellini::reset() {
+    rH2O = stanghellini(0., 0.1);
+}
+
 void BoundaryLayerResistanceStanghellini::setRbH2O() {
-    double dTemp = fabs(leafTemperature - indoorsTemperature);
-    rbH2O = 1174*sqrt(leafDimension)/pow(leafDimension*dTemp + 207*sqr(leafWindSpeed), 0.25);
+    rH2O = stanghellini(fabs(leafTemperature - indoorsTemperature), leafWindSpeed);
+}
+
+double BoundaryLayerResistanceStanghellini::stanghellini(double dTemp, double u) {
+    return 1174*sqrt(leafDimension)/pow(leafDimension*dTemp + 207*sqr(u), 0.25);
 }
 
 } //namespace

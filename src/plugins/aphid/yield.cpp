@@ -17,10 +17,10 @@ Yield::Yield(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("estimates yield loss due to S. avenae");
-    Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");;
+    Input(cropGrowthStage).help("Crop growth stage").unit("Zadoks");
     Input(aphidIndex).help("Aphid density index of Entwistle-Dixon-Wratten ");
     Output(yield).help("Yield relative to uninfested crop").unit("[0;1]");
-    Output(loss).help("Proportional yield loss due to aphids").unit("[0;1]");;
+    Output(loss).help("Proportional yield loss due to aphids").unit("[0;1]");
     Output(lossRate).help("Loss rate").unit("d-1");
 }
 

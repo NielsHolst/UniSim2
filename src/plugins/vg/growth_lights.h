@@ -15,11 +15,16 @@ namespace vg {
 class GrowthLights : public HeatTransferLayerBase {
 public:
     GrowthLights(QString name, QObject *parent);
+    void amend();
     void update();
 private:
     // Inputs
     QVector<bool> lightsCurrentlyOn;
-    QVector<double> lightsPowerUsage;
+    QVector<double>
+        lightsParFluxDown,
+        lightsSwFluxDown,
+        lightsLwFluxDown,
+        lightsPowerUsage;
     // Outputs
     bool currentlyOn;
     double powerUsage;

@@ -4,7 +4,6 @@
 */
 #include <algorithm>
 #include <iostream>
-#include <QRegExp>
 #include "box.h"
 #include "exception.h"
 #include "general.h"
@@ -130,17 +129,17 @@ QString Path::normalise(int ix) {
 }
 
 void Path::validateName(QString name) {
-    validate(QRegExp("[_A-Za-z0-9]+|\\*"), name);
+    validate(QRegularExpression("[_A-Za-z0-9]+|\\*"), name);
 }
 
 void Path::validateStep(QString step) {
-    validate(QRegExp("([_A-Za-z0-9]+:?)|\\*|\\.|\\.\\.|\\.\\.\\."), step);
+    validate(QRegularExpression("([_A-Za-z0-9]+:?)|\\*|\\.|\\.\\.|\\.\\.\\."), step);
 }
 
-void Path::validate(QRegExp rx, QString s) {
+void Path::validate(QRegularExpression rx, QString s) {
     QString value = "'%1'' in '%2'";
-    if (!rx.exactMatch(s))
-        ThrowException("Bad path format").value(value.arg(s).arg(_current.originalPath)).context(_originalContext);
+    if (!rx.match(s).hasMatch())
+        ThrowException("Bad path format").value(value.arg(s, _current.originalPath)).context(_originalContext);
 }
 
 QString Path::normaliseFirstBox(QString s) {

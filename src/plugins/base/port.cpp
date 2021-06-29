@@ -9,6 +9,8 @@
 #include "track.h"
 #include "vectorize.h"
 
+#include "dialog.h"
+
 namespace base {
 
 QVector<Port*> Port::_index;
@@ -39,9 +41,9 @@ Port& Port::equals(const char *value) {
     return equals(QString(value));
 }
 
-Port& Port::equals(QStringList value) {
-    return equals(value.toVector());
-}
+//Port& Port::equals(QStringList value) {
+//    return equals(value.toVector());
+//}
 
 Port& Port::imports(QString pathToPort, Caller caller) {
     if (_isReference)
@@ -461,10 +463,6 @@ bool Port::hasImport() const {
     return _mode!=PortMode::Fixed && !_importPath.isEmpty();
 }
 
-bool Port::hasDistribution() const {
-    return Path("children::*<Distribution>", this).resolveMaybeOne<>(this);
-}
-
 bool Port::isValueOverridden() const {
     return _valueOverridden;
 }
@@ -533,6 +531,17 @@ QString Port::dump() {
         s += QString::number(port->id()) + ": " + port->fullName() + "\n";
     }
     return s;
+}
+
+template <> void Port::deducePortType(QString value) {
+    if (_valueType == Null)
+        _valueType = deducePortTypeFromString(value);
+//    if (_valueType == Null) {
+//        _valueType = String;
+//    }
+//    if (_valueType == Null) {
+//        dialog().information(QString("Port::deducePortType is Null: ") + value);
+//    }
 }
 
 }

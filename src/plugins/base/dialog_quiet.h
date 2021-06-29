@@ -6,6 +6,7 @@
 #define BASE_DIALOG_QUIET_H
 
 #include "dialog_base.h"
+#include "win_taskbar_progress.h"
 
 namespace base {
 

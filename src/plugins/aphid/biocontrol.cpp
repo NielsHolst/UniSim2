@@ -28,7 +28,7 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
     Input(cadaverPrevalence).help("Prevalence of cadavers").unit("%");
 
     Output(aphidPressureDifference).help("Difference in aphid pressure caused by fungus").unit("aphid-days");
-    Output(yieldDifference).help("Improvement in relative yield when controlled").unit("[0;1]");
+    Output(yieldImprovement).help("Improvement in yield when controlled").unit("%-points");
 
     Output(percentageCadaversGs43).help("Percentage cadavers at GS 43").unit("%");
     Output(percentageCadaversGs61).help("Percentage cadavers at GS 61").unit("%");
@@ -43,7 +43,7 @@ Biocontrol::Biocontrol(QString name, QObject *parent)
 
 void Biocontrol::update() {
     aphidPressureDifference = aphidPressureWithoutF - aphidPressureWithF;
-    yieldDifference = yieldWithF - yieldWithoutF;
+    yieldImprovement = 100.*(yieldWithF - yieldWithoutF);
 
     if (cropGrowthStage > 43. && percentageCadaversGs43==0.)
         percentageCadaversGs43 = cadaverPrevalence;

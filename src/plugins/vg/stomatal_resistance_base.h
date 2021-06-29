@@ -21,7 +21,7 @@ public:
 
 private:
     // Outputs
-    double rsH2O, rsCo2;
+    double rH2O, rCo2;
     // Methods
     virtual double resetRsH2O() = 0;
     virtual double updateRsH2O() = 0;

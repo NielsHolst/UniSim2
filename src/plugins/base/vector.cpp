@@ -148,6 +148,8 @@ int Vector::size() const {
 }
 
 QString Vector::toString(int row, QString separator) const {
+    QVector<QString> x;
+
     Q_ASSERT(row > -1);
     QStringList sl;
     switch(_vectorType) {
@@ -159,7 +161,20 @@ QString Vector::toString(int row, QString separator) const {
     CASE_TO_STRING(float, Float, row, separator)
     CASE_TO_STRING(double, Double, row, separator)
     CASE_TO_STRING(long double, LongDouble, row, separator)
-    CASE_TO_STRING(QString, String, row, separator)
+//    CASE_TO_STRING(QString, String, row, separator)
+
+            case String:
+            Q_ASSERT(row < VECTOR_PTR(QString)->size());
+            return convert<QString>( VECTOR_PTR(QString)->at(row) );
+
+            case StringVector:
+            Q_ASSERT(row < VECTOR_PTR(QVector<QString>)->size());
+            x = reinterpret_cast<QVector<QVector<QString>>*>(_vectorPtr)->at(row);
+//            sl = convert<QStringList>(x);
+            return sl.join(separator);
+break;
+
+
     CASE_TO_STRING(QDate, Date, row, separator)
     CASE_TO_STRING(QTime, Time, row, separator)
     CASE_TO_STRING(QDateTime, DateTime, row, separator)

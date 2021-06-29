@@ -14,14 +14,15 @@ class History
 public:
     History(int bufferSize = 100);
     void add(QString entry);
-    QString previous();
+    QString previous() const;
     QString next();
 private:
-    int _bufferSize, _last, _index;
+    int _bufferSize, _last;
+    mutable int _index;
     bool _isFull;
     QVector<QString> _buffer;
-    int inc(int &i);
-    int decr(int &i);
+    int inc(int &i) const;
+    int decr(int &i) const;
 };
 
 }

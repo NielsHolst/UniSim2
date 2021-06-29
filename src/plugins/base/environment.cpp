@@ -482,8 +482,8 @@ bool Environment::isWindows() const {
 
 void Environment::initDir() {
     _dir[Work] = QDir(homePath());
-    _dir[Input] = "input";
-    _dir[Output] = "output";
+    _dir[Input] = QDir("input");
+    _dir[Output] = QDir("output");
     _dir[Atom] = findAtomDir();
     _dir[Notepad] = findNotepadDir();
     _dir[Graphviz] = findGraphvizDir();

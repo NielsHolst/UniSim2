@@ -6,8 +6,8 @@
 #include <exception.h>
 #include "vector_op.h"
 
-#define CHECK_SIZE(X) \
-    if (X.size() != n) ThrowException("Vectors must be of equal size"). \
+#define CHECK_SIZE(func, X) \
+    if (X.size() != n) ThrowException(QString("In ") + func + ": Vectors must be of equal size"). \
                        value2(X.size()).value1(n).context(context_)
 
 namespace vector_op {
@@ -17,7 +17,7 @@ namespace vector_op {
 //
 void add(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
-    CHECK_SIZE(x);
+    CHECK_SIZE("add", x);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
@@ -33,7 +33,7 @@ void add(Vec &v, const Scalar &x) {
 
 void subtract(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
-    CHECK_SIZE(x);
+    CHECK_SIZE("subtract", x);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
@@ -49,7 +49,7 @@ void subtract(Vec &v, const Scalar &x) {
 
 void multiply(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
-    CHECK_SIZE(x);
+    CHECK_SIZE("multiply", x);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n)
@@ -65,7 +65,7 @@ void multiply(Vec &v, const Scalar &x) {
 
 void inverse(Vec &v, const Vec &x, QObject *context_) {
     int i = 0, n = v.size();
-    CHECK_SIZE(x);
+    CHECK_SIZE("inverse", x);
     double *receiver = v.data();
     const double *sender = x.data();
     while (i++ < n) {
@@ -81,7 +81,7 @@ void inverse(Vec &v, const Vec &x, QObject *context_) {
 
 void sum(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
-    CHECK_SIZE(y);
+    CHECK_SIZE("sum", y);
     v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
@@ -101,7 +101,7 @@ void sum(Vec &v, const Vec &x, const Scalar &y) {
 
 void difference(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
-    CHECK_SIZE(y);
+    CHECK_SIZE("difference", y);
     v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
@@ -130,7 +130,7 @@ void difference(Vec &v, const Scalar &x, const Vec &y) {
 
 void product(Vec &v, const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
-    CHECK_SIZE(y);
+    CHECK_SIZE("product", y);
     v.resize(n);
     double *receiver = v.data();
     const double *sender1 = x.data();
@@ -233,7 +233,7 @@ int whichMin(const Vec &x) {
 
 double weightedAverage(const Vec &x, const Vec &weights, QObject *context_) {
     int i = 0, n = x.size();
-    CHECK_SIZE(weights);
+    CHECK_SIZE("weightedAverage", weights);
     double weightedSum = 0, sumOfWeights = 0;
     const double *sender1 = x.data();
     const double *sender2 = weights.data();
@@ -241,12 +241,12 @@ double weightedAverage(const Vec &x, const Vec &weights, QObject *context_) {
         sumOfWeights += *sender2;
         weightedSum += *sender1++ * *sender2++;
     }
-    return (sumOfWeights == 0) ? 0. : weightedSum/sumOfWeights;
+    return (sumOfWeights == 0.) ? 0. : weightedSum/sumOfWeights;
 }
 
 double sumOfProducts(const Vec &x, const Vec &y, QObject *context_) {
     int i = 0, n = x.size();
-    CHECK_SIZE(y);
+    CHECK_SIZE("sumOfProducts",y);
     double receiver = 0;
     const double *sender1 = x.data();
     const double *sender2 = y.data();

@@ -1,7 +1,9 @@
 # Set the working directory to point to your input folder
 setwd("/Users/au152367/Documents/QDev/UniSim2/input")
 source("papers/2021-saccharina/analysis/setup.R")
-load(  "papers/2021-saccharina/analysis/sim-SA-complete.Rdata")
+load(  "papers/2021-saccharina/analysis/saccharina-SA-complete_0009.Rdata")
+
+simplify_col_names
 
 # Find best fit for each sum of squares
 minArea  = min(sim$areaSumSq)

@@ -1,21 +1,23 @@
 #include <iostream>
 #include <QDir>
 #include <base/box.h>
+#include <base/box_builder.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/test_num.h>
 #include <base/mega_factory.h>
+#include <base/phys_math.h>
 #include "test_calendar.h"
 
 using std::cout;
 using namespace base;
+using phys_math::PI;
 
 const QDate WEATHER_DATE = QDate(2009, 9, 1);
-const double PI = 3.14159;
 
 /*
 NOAA Solar Position Calculator
-[http://www.srrb.noaa.gov/highlights/sunrise/azel.html]
+[https://www.esrl.noaa.gov/gmd/grad/solcalc/]
 
 Boston:			+42 32" Lat +71 03" Lon (+42.533, +71.050)
 Buenos Aires:	-34 36" Lat +58 27" Lon (-34.600, +58.450)
@@ -37,10 +39,10 @@ void TestCalendar::initTestCase() {
     locations.append(Location("Helsinki",       +60.167, +24.967));
 
     // Check dates of all seasons
-    dates.append(QDateTime(QDate(2010, 1,15)));
-    dates.append(QDateTime(QDate(2010, 4,15)));
-    dates.append(QDateTime(QDate(2010, 7,15)));
-    dates.append(QDateTime(QDate(2010,10,15)));
+    dates.append(QDate(2010, 1,15).startOfDay());
+    dates.append(QDate(2010, 4,15).startOfDay());
+    dates.append(QDate(2010, 7,15).startOfDay());
+    dates.append(QDate(2010,10,15).startOfDay());
 
     // Check night, morning and afternoon
     hours.append(1.);
@@ -139,14 +141,21 @@ void TestCalendar::initTestCase() {
 }
 
 void TestCalendar::init() {
-    calendar = MegaFactory::create<Box>("boxes::Calendar", "calendar", 0);
-    calendar->amendFamily();
-    calendar->initializeFamily();
+    BoxBuilder builder;
+    builder.
+    box("Simulation").name("sim").
+        box("Calendar").name("calendar").
+        endbox().
+        box("Sun").name("sun").
+        endbox().
+    endbox();
+    sim = builder.content();
+    calendar = sim->findOne<Box>("calendar");
+    sun = sim->findOne<Box>("sun");
 }
 
 void TestCalendar::cleanup() {
-    delete calendar;
-    calendar = 0;
+    delete sim;
 }
 
 void TestCalendar::testSolarElevation() {
@@ -160,8 +169,9 @@ void TestCalendar::testSolarElevation() {
                     QTime initialTime = QTime(0,0,0).addSecs(astroSecs);
                     QDateTime initialDateTime = QDateTime(dates[da].date(), initialTime);
                     calendar->port("initialDateTime")->equals(initialDateTime);
-                    calendar->reset();
-                    double sinb = calendar->port("sinb")->value<double>();
+                    sim->initializeFamily();
+                    sim->resetFamily();
+                    double sinb = sun->port("sinb")->value<double>();
                     double estSolarElev = asin(sinb)/PI*180.;
     //                cout << lo << " "
     //                    << da << " "
@@ -184,13 +194,14 @@ void TestCalendar::testDayLength() {
         for (int lo = 0; lo < locations.size(); ++lo) {
             calendar->port("latitude")->equals(locations[lo].latitude);
             calendar->port("initialDateTime")->equals(QDate(2010, 1, 1));
-            calendar->reset();
+            sim->initializeFamily();
+            sim->resetFamily();
             for (int da = 0; da < dates.size(); ++da) {
                 while (calendar->port("date")->value<QDate>() < dates[da].date()) {
-                    calendar->update();
+                    sim->updateFamily();
                 }
             double trueDayLength = QTime(0,0,0).secsTo(dayLength[lo][da])/60./60.;
-            double estDayLength = calendar->port("dayLength")->value<double>();
+            double estDayLength = sun->port("dayLength")->value<double>();
     //        cout << "Day length deviation (h)" << lo << ": " << (estDayLength - trueDayLength) << "\n";
             QVERIFY(fabs(estDayLength - trueDayLength) < 0.5);
             }
@@ -205,8 +216,9 @@ void TestCalendar::testAngot() {
     try {
         calendar->port("latitude")->equals(50);
         calendar->port("initialDateTime")->equals(QDateTime(QDate(2001,1,30), QTime(14,0,0)));
-        calendar->reset();
-        double angot = calendar->port("angot")->value<double>();
+        sim->initializeFamily();
+        sim->resetFamily();
+        double angot = sun->port("angot")->value<double>();
         cout << angot << "\n";
         QVERIFY(TestNum::eq(angot, 414.2890));
     }
@@ -218,12 +230,13 @@ void TestCalendar::testAngot() {
 
 void TestCalendar::testDaySteps() {
     try {
-        calendar->reset();
         QDate initialDate = calendar->port("initialDateTime")->value<QDateTime>().date();
+        sim->initializeFamily();
+        sim->resetFamily();
 
         const int n = 7;
         for (int i = 0; i < n; ++i){
-            calendar->update();
+            sim->updateFamily();
         }
         QCOMPARE(initialDate.addDays(n), calendar->port("date")->value<QDate>());
     }
@@ -238,11 +251,12 @@ void TestCalendar::testHourSteps() {
         calendar->port("timeUnit")->equals('h');
         calendar->port("timeStep")->equals(4);
         calendar->port("initialDateTime")->equals(initialDateTime);
-        calendar->reset();
+        sim->initializeFamily();
+        sim->resetFamily();
 
         const int n = 8;
         for (int i = 0; i < n; ++i){
-            calendar->update();
+            sim->updateFamily();
         }
         //Expected: 12h + 8*4h = 44h = 1d 20h
         QCOMPARE(calendar->port("date")->value<QDate>(), initialDateTime.addDays(1).date());

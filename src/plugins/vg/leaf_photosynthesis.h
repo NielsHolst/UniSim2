@@ -16,15 +16,15 @@ class LeafPhotosynthesis : public base::Box
 {
 public:
     LeafPhotosynthesis(QString name, QObject *parent);
-    void amend();
+    void initialize();
     void update();
 private:
     // Inputs
-    double
-        parAbsorbed,
-        Pgmax, lue, Rd;
+    double leafAj, leafAr;
     // Outputs
-    double Pg, Pn;
+    double An, Ag, Ar;
+    // Data
+    double _wGauss;
 };
 } //namespace
 

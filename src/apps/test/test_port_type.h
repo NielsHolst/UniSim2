@@ -9,8 +9,6 @@ class TestPortType : public QObject
 private slots:
     void testInt();
     void testDate();
-    void testIntVector();
-    void testDateVector();
 
     void testDeduceBool();
     void testDeduceChar();
@@ -22,7 +20,10 @@ private slots:
     void testDeduceTime();
     void testDeduceQString();
 
-//    void testCreateBool();
+    void testDeduceBoolVector();
+    void testDeduceIntVector();
+    void testDeduceDoubleVector();
+    void testDeduceDateVector();
 };
 
 DECLARE_TEST(TestPortType)

@@ -14,62 +14,68 @@ void TestPortType::testDate() {
     QCOMPARE(typeOf<QDate>(), Date);
 }
 
-void TestPortType::testIntVector() {
-
-}
-
-void TestPortType::testDateVector() {
-    QCOMPARE(deducePortType("(31/12/2001)"), DateVector);
-    QCOMPARE(deducePortType("(31/12/2001 2001/12/31 /12/31/2001)"), DateVector);
-    QCOMPARE(deducePortType("(31/12/2001 2001/12/31 /12/31/2001 x)"), StringVector);
-}
-
 void TestPortType::testDeduceBool() {
-    PortType type = deducePortType("TRUE");
+    PortType type = deducePortTypeFromString("TRUE");
     QCOMPARE(type, Bool);
-//    QCOMPARE(deducePortType("(TRUE FALSE)"), BoolVector);
 }
 
 
 void TestPortType::testDeduceChar() {
-    QCOMPARE(deducePortType("X"), Char);
-    QCOMPARE(deducePortType(" "), Char);
+    QCOMPARE(deducePortTypeFromString("X"), Char);
+    QCOMPARE(deducePortTypeFromString(" "), Char);
 }
 
 void TestPortType::testDeduceInt(){
-    PortType type = deducePortType("123");
+    PortType type = deducePortTypeFromString("123");
     QCOMPARE(type, Int);
 }
 
 void TestPortType::testDeduceIntOneChar(){
-    PortType type = deducePortType("7");
+    PortType type = deducePortTypeFromString("7");
     QCOMPARE(type, Int);
 }
 
 void TestPortType::testDeduceDouble() {
-    PortType type = deducePortType("3.14");
+    PortType type = deducePortTypeFromString("3.14");
     QCOMPARE(type, Double);
 }
 
 void TestPortType::testDeduceDate() {
-    QCOMPARE(deducePortType("31/12/2001"), Date);
-    QCOMPARE(deducePortType("2001/12/31"), Date);
-    QCOMPARE(deducePortType("/12/31/2001"), Date);
+    QCOMPARE(deducePortTypeFromString("31/12/2001"), Date);
+    QCOMPARE(deducePortTypeFromString("2001/12/31"), Date);
+    QCOMPARE(deducePortTypeFromString("/12/31/2001"), Date);
 }
 
 void TestPortType::testDeduceDateTime() {
-    QCOMPARE(deducePortType("31/12/2001 9:35"), DateTime);
+    QCOMPARE(deducePortTypeFromString("31/12/2001 9:35"), DateTime);
 }
 
 void TestPortType::testDeduceTime() {
-    QCOMPARE(deducePortType("9:35"), Time);
+    QCOMPARE(deducePortTypeFromString("9:35"), Time);
 }
 
 void TestPortType::testDeduceQString() {
-    QCOMPARE(deducePortType(""), String);
-    QCOMPARE(deducePortType("True"), String);
-    QCOMPARE(deducePortType("(a b "), String);
-    QCOMPARE(deducePortType("a38"), String);
+    QCOMPARE(deducePortTypeFromString(""), String);
+    QCOMPARE(deducePortTypeFromString("True"), String);
+    QCOMPARE(deducePortTypeFromString("(a b "), String);
+    QCOMPARE(deducePortTypeFromString("a38"), String);
 }
 
+void TestPortType::testDeduceBoolVector() {
+    QCOMPARE(deducePortTypeFromString("(TRUE FALSE)"), BoolVector);
+}
+void TestPortType::testDeduceIntVector() {
+    QCOMPARE(deducePortTypeFromString("(7 13 -5 0)"), IntVector);
+}
+
+void TestPortType::testDeduceDoubleVector() {
+    QCOMPARE(deducePortTypeFromString("(10.0 30.0 20.0)"), DoubleVector);
+    QCOMPARE(deducePortTypeFromString("(7 13 -5 0.2)"), DoubleVector);
+}
+
+void TestPortType::testDeduceDateVector() {
+    QCOMPARE(deducePortTypeFromString("(31/12/2001)"), DateVector);
+    QCOMPARE(deducePortTypeFromString("(31/12/2001 2001/12/31 /12/31/2001)"), DateVector);
+    QCOMPARE(deducePortTypeFromString("(31/12/2001 2001/12/31 /12/31/2001 x)"), StringVector);
+}
 

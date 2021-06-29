@@ -3,6 +3,7 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
+#include <QTimeZone>
 #include <base/exception.h>
 #include <base/port.h>
 #include "test_port.h"
@@ -268,8 +269,8 @@ const char CHAR = 'X';
 const QDate DATE = QDate(2001,2,10);
 const int TIME_HOURS = 11;
 const QTime TIME = QTime(TIME_HOURS, 0);
-const QDateTime DATE_TIME = QDateTime(DATE);
-const QDateTime DATE_AND_TIME = QDateTime(DATE, TIME);
+const QDateTime DATE_TIME = QDateTime(DATE, TIME);
+const QDateTime DATE_TIME_MIDNIGHT = QDateTime(DATE, QTime(0,0), QTimeZone("UTC"));
 
 // Convert to bool
 CONV2(Bool, bool, BOOL, Bool, bool, true)
@@ -371,7 +372,7 @@ CONV2(Double, double, 7, Float, float, 7.)
 CONV2(LongDouble, long double, 7., Float, float, 7.)
 CONV2(Date, QDate, DATE, Float, float, 41.)
 CONV2(Time, QTime, TIME, Float, float, TIME_HOURS*1.)
-CONV2(DateTime, QDateTime, DATE_TIME, Float, float, 41.)
+CONV2(DateTime, QDateTime, DATE_TIME, Float, float, 41.4583320618) // actual numerical imprecision
 CONV2(String, QString, QString::number(7), Float, float, 7.)
 CONV2_FAIL(LongDouble, long double, MAX_LONG_DOUBLE, Float, float, Overflow)
 CONV2_FAIL(String, QString, QString("7a"), Float, float, SyntaxError)
@@ -387,7 +388,7 @@ CONV2(Double, double, 7, Double, double, 7.)
 CONV2(LongDouble, long double, 3.12, Double, double, 3.12)
 CONV2(Date, QDate, DATE, Double, double, 41.)
 CONV2(Time, QTime, TIME, Double, double, TIME_HOURS*1.)
-CONV2(DateTime, QDateTime, DATE_TIME, Double, double, 41.)
+CONV2(DateTime, QDateTime, DATE_TIME, Double, double, 41.+11./24.)
 CONV2(String, QString, QString::number(7), Double, double, 7.)
 CONV2_FAIL(LongDouble, long double, MAX_LONG_DOUBLE, Double, double, Overflow)
 CONV2_FAIL(String, QString, QString("7a"), Double, double, SyntaxError)
@@ -403,7 +404,7 @@ CONV2(Double, double, 7, LongDouble, long double, 7.0L)
 CONV2(LongDouble, long double, 3.12L, LongDouble, long double, 3.12L)
 CONV2(Date, QDate, DATE, LongDouble, long double, 41.0L)
 CONV2(Time, QTime, TIME, LongDouble, long double, TIME_HOURS*1.0L)
-CONV2(DateTime, QDateTime, DATE_TIME, LongDouble, long double, 41.0L)
+CONV2(DateTime, QDateTime, DATE_TIME, LongDouble, long double, 41.0L+11.0L/24.0L)
 CONV2(String, QString, QString::number(7), LongDouble, long double, 7.0L)
 CONV2_FAIL(String, QString, QString("7a"), LongDouble, long double, SyntaxError)
 
@@ -434,7 +435,7 @@ CONV2(Double, double, TIME_HOURS, Time, QTime, TIME)
 CONV2(LongDouble, long double, TIME_HOURS, Time, QTime, TIME)
 CONV2_FAIL(Date, QDate, DATE, Time, QTime, )
 CONV2(Time, QTime, TIME, Time, QTime, TIME)
-CONV2(DateTime, QDateTime, DATE_AND_TIME, Time, QTime, TIME)
+CONV2(DateTime, QDateTime, DATE_TIME, Time, QTime, TIME)
 CONV2(String, QString, "11:00:00", Time, QTime, TIME)
 CONV2_FAIL(String, QString, "11-00", Time, QTime, SyntaxError)
 CONV2_FAIL(String, QString, "30:30", Time, QTime, Illegal)
@@ -449,9 +450,9 @@ CONV2_FAIL(LongLongInt, long long int, 41, DateTime, QDateTime, )
 CONV2_FAIL(Float, float, 41, DateTime, QDateTime, )
 CONV2_FAIL(Double, double, 41, DateTime, QDateTime, )
 CONV2_FAIL(LongDouble, long double, 41, DateTime, QDateTime, )
-CONV2(Date, QDate, DATE, DateTime, QDateTime, DATE_TIME)
+CONV2(Date, QDate, DATE, DateTime, QDateTime, DATE_TIME_MIDNIGHT)
 CONV2_FAIL(Time, QTime, TIME, DateTime, QDateTime, )
-CONV2(DateTime, QDateTime, DATE_AND_TIME, DateTime, QDateTime, DATE_AND_TIME)
-CONV2(String, QString, "10/2/2001 11:00:00", DateTime, QDateTime, DATE_AND_TIME)
+CONV2(DateTime, QDateTime, DATE_TIME, DateTime, QDateTime, DATE_TIME)
+CONV2(String, QString, "10/2/2001 11:00:00", DateTime, QDateTime, DATE_TIME)
 CONV2_FAIL(String, QString, "13/13/2001", DateTime, QDateTime, Illegal)
 CONV2_FAIL(String, QString, "", DateTime, QDateTime, Empty)

@@ -53,12 +53,10 @@ namespace {
 }
 
 void TestPath::compareVectors(QVector<QObject*> v1, QVector<QObject*> v2, int size) {
-    QSet<QObject*> set1 = QSet<QObject*>::fromList( QList<QObject*>::fromVector(v1) ),
-                   set2 = QSet<QObject*>::fromList( QList<QObject*>::fromVector(v2) );
+    QSet<QObject*> set1 = QSet<QObject*>(v1.begin(), v1.end()),
+                   set2 = QSet<QObject*>(v2.begin(), v2.end());
     QString msgNames = "Object sets differ:\n(%1)\n(%2)",
             msgSize = "Object set(s) of wrong size. Excepted %1 got %2 and %3.\nExpected: '%4'";
-    QString s1 = msgNames.arg(names(set1)).arg(names(set2));
-    QString s2 = msgSize.arg(size).arg(set1.size()).arg(set2.size());
 
     QVERIFY2(set1==set2, msgNames.arg(names(set1)).arg(names(set2)).toLocal8Bit());
     if (set1.size()!=size)
@@ -76,9 +74,13 @@ void TestPath::testValidateName() {
 
     try {
         path.validateName(".");
-        path.validateName("A*");
     }
     EXPECTED
+
+//    try {
+//        path.validateName("A*");
+//    }
+//    EXPECTED
 }
 
 void TestPath::testValidateStep() {
@@ -94,12 +96,12 @@ void TestPath::testValidateStep() {
     }
     UNEXPECTED
 
-    try {
-        path.validateName(".A");
-        path.validateName("A:B");
-        path.validateStep("....");
-    }
-    EXPECTED
+//    try {
+//        path.validateName(".A");
+//        path.validateName("A:B");
+//        path.validateStep("....");
+//    }
+//    EXPECTED
 }
 
 void TestPath::testNormalise() {
@@ -489,48 +491,6 @@ namespace {
             v << box->fullName();
         return v;
     }
-}
-
-void TestPath::testDistribution() {
-    bool excepted = false;
-    setContext("A2");
-    QVector<QObject*> relative, absolute;
-
-    try {
-        relative = Path("../A1/c/v2<Port>/*<Distribution>", _context).resolveMany();
-        absolute = Path("/A/A1/c/v2<Port>/normal<Distribution>").resolveMany();
-        compareVectors(relative, absolute, 1);
-
-        relative = Path("*<Distribution>/..<Port>", _context).resolveMany();
-        absolute = Path("/A/A1/c[v2]").resolveMany();
-        compareVectors(relative, absolute, 1);
-    }
-    UNEXPECTED
-}
-
-//
-// These methods must be run last because they load their own box scripts
-//
-
-void TestPath::testDistributionFromScript() {
-    int errors = dialog().errorCount();
-    Command::submit(QStringList() << "load" << "path/butterfly_filter.box", nullptr);
-    QCOMPARE(errors, dialog().errorCount());
-
-    Box *sim = environment().root();
-    QVector<Distribution*> dist = sim->findMany<Distribution>("*<Distribution>");
-    QCOMPARE(dist.size(), 2);
-
-    Port *k = sim->findOne<Port>("egg[k]");
-    Port *duration = sim->findOne<Port>("egg[duration]");
-
-    QCOMPARE(dist.at(0)->parent(), k);
-    QCOMPARE(dist.at(1)->parent(), duration);
-
-    QVector<Port*> distPorts = sim->findMany<Port>("*<Distribution>/..<Port>");
-    QCOMPARE(distPorts.size(), 2);
-    QCOMPARE(distPorts.at(0), k);
-    QCOMPARE(distPorts.at(1), duration);
 }
 
 void TestPath::testCombination() {

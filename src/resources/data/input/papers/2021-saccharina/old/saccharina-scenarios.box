@@ -1,0 +1,66 @@
+Simulation sim {
+  .steps = setup[steps]
+  Box parameters {
+    // Parameters defining the system
+    +plantDensity     = 400
+    +Cinit            = 0.8     
+    +Ninit            = 0.044   
+    // Parameters fixed from literature
+    +Cmax             = 0.8     
+    +Nmax             = 0.07
+    +uMin             = 0.28    
+    +T0               = -2      
+    +Tmax             = 24      
+    // Influential parameters fixed by calibration
+    +alpha            = 1.733400                              // 1.70
+    +beta             = 0.002460                              // 0.00385
+    +gamma            = 0.001580                              // 0.00147
+    +g                = 0.01                              // 0.00111
+    +eMax             = 0.000362                              // 0.000395
+    +e50              = 3.559080                              // 1.34
+    +aMax             = 3.3                              // 1.94
+    +a50              = 3.669970                              // 0.894
+    +Winit            = 0.000110                              // 0.000691
+    +resMaxRelDemand  = 0.245996                         //27.6
+    // Non-influential parameters fixed by sensitivity analysis
+    +frondAngle       = 56.757800                                    // 30 
+    +fNitrogenMin     =  0.473730                                    // 0.5
+    +resp20           =  0.000640                                    // 0.000573 
+    +Q10              =  1.035250                                    // 1.05 
+    +Topt1            =  3.129880                                   // 5 
+    +Topt2            = 16.948200                                   // 15 
+    +Pmax             =  0.001416                                    // 999
+    +aSlope           =  2.807620                                    // 3.0 
+  }
+
+  Scenarios setup {
+    // Choose one or the other file
+    .fileName = "saccharina-scenarios-one.txt"
+    // .fileName = "saccharina-scenarios-all.txt"
+  }
+  
+  #define LIGHT_ABSORPTION = LightAbsorptionCanopy
+  #include "saccharina-model.part.box"
+  
+  OutputR output {
+    .end = "saccharina-scenarios-end.R"
+    Box value {
+      +area = area[value]
+      +yield = biomass[wetWeightYield]
+      +sdN =  nitrogenUptake[sdRatio]
+    }
+    OutputText {
+      .ports = (calendar[dateTime] output/value[area] output/value[yield] biomass[dryWeight]
+                 fArea[value] fNitrogen[value] structure/fTemp[value] exudation[exudation] fSalinity[value] 
+                 nitrogenUptake[V] nitrogenUptake[J] nitrogenUptake[B] fCurrent[value] photosynthesis[sdRatio]
+                 env[T] env[I] env[N] env[U] env[S]
+                 total/*[value]
+                 ../value[sdN]
+                 biomass[dryWeight] biomass[carbonPct] biomass[nitrogenPct] biomass[growthRatePct] biomass[nitrogenUptakeRate]
+                 reserves/nitrogen[proportion] reserves/nitrogen[maxProportion] reserves/carbon[proportion] reserves/carbon[maxProportion]
+                 allocation[supplyCarbonStructure] allocation[supplyCarbonReserves] allocation[supplyCarbonExudation]
+                 setup[envFile] setup[obsFile] setup[trial]
+                 calibration[yieldSumSq] calibration[pctNSumSq] calibration[pctCSumSq])
+    }
+  }
+}

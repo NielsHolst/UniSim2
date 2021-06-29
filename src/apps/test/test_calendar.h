@@ -41,7 +41,7 @@ private:
     QTime dayLength[4][4];
     double solarElev[4][4][3];
 
-    base::Box *calendar;
+    base::Box *sim, *calendar, *sun;
 };
 
 DECLARE_TEST(TestCalendar)

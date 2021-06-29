@@ -26,7 +26,7 @@ void setVersion(char *argv[]) {
 }
 
 bool readContent() {
-    file.setFileName(pathProject() + "/ship/unisim2_install_builder.xml");
+    file.setFileName(pathProject() + "/ship/UniversalSimulator.xml");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         cout << "Could not open file " << qPrintable(file.fileName());
         return false;

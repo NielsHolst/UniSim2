@@ -49,7 +49,7 @@ void Shelter::amendShelter(BoxBuilder &builder, QString shelterName) {
 }
 
 void Shelter::update() {
-    screensAirTransmissivity = vector_op::weightedAverage(airTransmissivities, areas, this);
+    screensAirTransmissivity = airTransmissivities.isEmpty() ? 0. : vector_op::weightedAverage(airTransmissivities, areas, this);
 }
 
 } //namespace

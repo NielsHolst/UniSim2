@@ -12,7 +12,7 @@ PUBLISH(Prey)
 
 Prey::Prey(QString name, QObject *parent)
     : Box(name, parent) {
-    help("holds the prey parameters for interaction with the parent Predator");
+    help("defines the prey parameters for interaction with the parent Predator");
     Input(density).help("Density");
     Input(attackRate).help("Attack rate").unit("per predator per time unit");
     Input(gainFactor).equals(1.).help("Conversion of resource into supply units").unit("supply/resource");
@@ -20,12 +20,8 @@ Prey::Prey(QString name, QObject *parent)
     Output(mortality).help("Mortality caused by predators");
 }
 
-void Prey::amend() {
-    setFoodWebImports();
-}
-
 void Prey::setFoodWebImports() {
-    Box *web = findOne<Box>("ancestors::*<FoodWeb>");
+    Box *web = findOne<Box>("../../pp");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("loss")->imports(prefix + "[loss" + suffix + "]");

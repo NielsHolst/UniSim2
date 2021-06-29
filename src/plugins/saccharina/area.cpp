@@ -19,8 +19,12 @@ Area::Area(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("keeps tracks of the frond area");
-    Input(a).equals(2.72).unit("dm2").help("Power law scaling of weight to area (y=ax^b)"); //4.19 2.72
-    Input(b).equals(0.747).help("Power law scaling of weight to area (y=ax^b)"); // 0.785 0.747
+//    Input(a).equals(2.72).unit("dm2").help("Power law scaling of weight to area (y=ax^b)"); //4.19 2.72
+//    Input(b).equals(0.747).help("Power law scaling of weight to area (y=ax^b)"); // 0.785 0.747
+//    Input(a).equals(3.69).unit("dm2").help("Power law scaling of weight to area (y=ax^b)"); //4.19 2.72
+//    Input(b).equals(0.788).help("Power law scaling of weight to area (y=ax^b)"); // 0.785 0.747
+    Input(a).equals(0.116).unit("per dm2 per g struct").help("Scaling of weight to area; y=x/(ax+b)");
+    Input(b).equals(0.114).unit("per dm2").help("Scaling of weight to area; y=x/(ax+b)");
     Input(l).equals(3.5).help("Scaling of length to area");
     Input(structuralMass).imports("structure[mass]");
     Input(dryWeight).imports("biomass[dryWeight]");
@@ -38,17 +42,18 @@ void Area::reset() {
 }
 
 void Area::update() {
-    updateByWeight(dryWeight);
+    updateByWeight(structuralMass);
 }
 
 void Area::updateByWeight(double w) {
-    double A = a*pow(w, b);
+//    double A = a*pow(w, b);
+    double A = w/(a*w + b);
     length = l*sqrt(A);
     double Afrond = plantDensity*A,
            AZ = cos(frondAngle/180.*PI)*length;
     value = A;
-    crownZoneArea = AZ/100.;
-    lai = (AZ>0.) ? Afrond/AZ : 0.;
+    crownZoneArea = AZ/10.; // m * dm * m/10dm = m2
+    lai = (AZ>0.) ? Afrond/100/AZ : 0.; //dm2 / (100 dm2/m2) / m2 = 1
     kA = structuralMass/A;
 }
 

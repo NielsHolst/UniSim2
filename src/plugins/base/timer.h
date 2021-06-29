@@ -9,7 +9,7 @@
 #include <QPair>
 #include <QString>
 #include <QStringList>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QVector>
 
 namespace base {
@@ -30,7 +30,7 @@ public:
     };
     QString report(QString separator="\n") const;
 private:
-    typedef QPair<QTime,int> Watch;
+    typedef QPair<QElapsedTimer,int> Watch;
     QMap<QString, Watch> _lookup;
     QStringList _ordered;
 };

@@ -22,7 +22,12 @@ private:
     // data
     const base::FactoryPlugIn* _plugIn;
     base::Box *_box;
-    int _colWidthName, _colWidthValue, _colWidthUnit;
+    #if QT_VERSION < 0x060000
+        int       _colWidthName, _colWidthValue, _colWidthUnit;
+    #else
+        qsizetype _colWidthName, _colWidthValue, _colWidthUnit;
+    #endif
+
     // methods
     void doExecute();
     void processArgument(QString argument);

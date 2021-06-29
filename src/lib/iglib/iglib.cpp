@@ -172,9 +172,8 @@ void buildScreen(Box *parent, const Screen *s) {
         port("lwReflectivityBottom").equals(reflectivityBottom).
         port("lwTransmissivityTop").equals(transmissivityLight).
         port("lwTransmissivityBottom").equals(transmissivityLight).
-//            port("U").equals(s->material.U).  // don't trust this
-//            port("specificHeatCapacity").equals(s->material.heatCapacity).  // don't trust this
         port("transmissivityAir").equals(transmissivityAir).
+        port("ventilation").equals(0.).
         port("state").equals(effect).
     endbox();
 }
@@ -252,6 +251,7 @@ void buildPipe(Box *parent, const HeatPipe *pipe) {
     BoxBuilder builder(parent);
     builder.
         box("vg::PipeForced").name("pipe").
+            port("Tair").imports("sensor[indoorsTemperature]").
             port("innerDiameter").equals(pipe->innerDiameter).
             port("waterVolume").equals(pipe->waterVolume).
             port("flowRate").equals(value(pipe->flowRate)).
@@ -297,7 +297,6 @@ void buildGrowthLights(Box *parent, GrowthLights lights) {
 void buildActuators(Box *parent, const Query &q) {
     // Use maximum opening value available
     double opening = 0;
-    std::cout << "buildActuators " << q.vents.size << "\n";
     for (int i=0; i<q.vents.size; ++i) {
         Variable var = q.vents.array[i].opening;
         if (var.origin!=NotAvailable && var.value > opening)
@@ -308,8 +307,8 @@ void buildActuators(Box *parent, const Query &q) {
     builder.
     box("Actuators").name("actuators").
             box("ActuatorVentilation").name("ventilation").
-                port("value").equals(opening).
-            port("minValue").equals(0.).
+                port("minFlux").equals(0.).
+                port("indoorsTemperature").imports("sensor[indoorsTemperature]").
             endbox().
     endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
@@ -329,7 +328,9 @@ void buildEnergyBudgetIndoors(Box *parent, const Query &q) {
     builder.
     box().name("indoors").
         box("vg::IndoorsVentilation").name("ventilation").
-            port("leakage").equals(q.construction.infiltration).
+            box("vg::LeakageVentilation").name("leakage").
+                port("leakage").equals(q.construction.infiltration).
+            endbox().
         endbox().
         box("vg::IndoorsTemperature").name("temperature").
         endbox().
@@ -432,10 +433,10 @@ Response testMultiplum(const Query &q) {
 Response compute(const Query &q) {
     const bool debug = false;
     const bool run = true;
+    bool excepted(false);
+    Response r;
 
     init();
-    Response r;
-    bool excepted(false);
 
     // Build model from root, (write script) and run
     Box *root(nullptr);
@@ -485,6 +486,21 @@ Response compute(const Query &q) {
         std::cout << ex.what().toStdString() << "\n";
     }
 
+    return r;
+}
+
+Response blankResponse() {
+    Response r;
+    r.indoorsCo2 = 100.1;
+    r.indoorsRh = 100.2;
+    r.indoorsTemperature = 100.3;
+    r.indoorsPar = 100.4;
+    r.growthLight = 100.5;
+    r.heating = 100.6;
+    r.photosynthesis = 100.7;
+    r.costEfficiency = 100.8;
+    r.grayMoldRisk = 100.9;
+    r.daysToHarvest = 100.10;
     return r;
 }
 

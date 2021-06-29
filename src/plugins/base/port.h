@@ -56,7 +56,7 @@ public:
     template <class T> Port& data(T *valuePtr);
     template <class T> Port& equals(T value);
     Port& equals(const char *value);
-    Port& equals(QStringList value);
+//    Port& equals(QStringList value);
     Port& imports(QString pathToPort, Caller caller=Caller());
     Port& importsMaybe(QString pathToPort, QString fallBackValue=QString(), Caller caller=Caller());
     Port& access(PortAccess acc);
@@ -115,7 +115,6 @@ public:
     PortAccess access() const;
     bool hasImport() const;
     bool hasSelfImport() const;
-    bool hasDistribution() const;
     bool isValueOverridden() const;
     QString importPath() const;
     QVector<Port*> importPorts() const;
@@ -140,18 +139,12 @@ template <class T> Port& Port::data(T *valuePtr) {
     return *this;
 }
 
-// It the value type is unknown then it must be deduced from its value or C++ type
-template <class T> void Port::deducePortType(T value) {
+// It the value type is unknown then it must be deduced from its string value or C++ type
+template <> void Port::deducePortType(QString value);
+
+template <class T> void Port::deducePortType(T) {
     if (_valueType == Null) {
-        if (hasDistribution())
-            // If port has a distribution attached, it must be a double
-            _valueType = Double;
-        else if (typeOf<T>() == String)
-            // Superflous conversion to QString to avoid compilation type conflict
-            _valueType = base::deducePortType(convert<QString>(value));
-        else
-            // Just use its C++ type
-            _valueType = typeOf<T>();
+        _valueType = typeOf<T>();
     }
 }
 

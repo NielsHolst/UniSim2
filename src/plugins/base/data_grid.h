@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QMap>
 #include <QPair>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QVector>
 #include "convert.h"
@@ -31,7 +32,8 @@ public:
     int columnNumber() const;
     QStringList rowNames() const;
     QStringList columnNames() const;
-    int findColumn(QString colName, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+    int findColumn(QString colName,
+                   QRegularExpression::PatternOption op = QRegularExpression::CaseInsensitiveOption) const;
     QStringList row(int row) const;
     QStringList row(const QStringList &rowKeys) const;
     QList<int> rowIndices(const KeySubset &rowKeys) const;

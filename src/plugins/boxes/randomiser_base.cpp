@@ -70,9 +70,9 @@ void RandomiserBase::fillMatrices() {
         for (int col = 0; col < k; ++col) {
             RandomBase *variable = randomVariables.at(col),
                        *variableB_ = variableB(variable);
-            variable->reset();
+            variable->resetFamily();
             A(row, col) = variable->port("value")->value<double>();
-            variableB_->reset();
+            variableB_->resetFamily();
             B(row, col) =
             C(row,col) = variableB_->port("value")->value<double>();
         }
@@ -133,8 +133,6 @@ void RandomiserBase::findRandomVariables(){
             randomVariables << candidate;
     }
     numVariables = randomVariables.size();
-    if (numVariables == 0)
-        ThrowException("You must have at least one Random box as a sibling of a Randomiser").context(this);
 }
 
 void RandomiserBase::setBaseSampleSize() {

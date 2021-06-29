@@ -75,6 +75,7 @@
         +nymphs|sum = ../*/nymph/*[content] 
         +adults|sum = ../*/adult/*[content] 
         +total |sum = ../*/*/*[content]     
+        +susceptible|sum = ../susceptible/*/*[content]
         +exposed|sum = ../exposed/*/*[content]
         +cadavers  = ../exposed/succumbed[count]      
       }

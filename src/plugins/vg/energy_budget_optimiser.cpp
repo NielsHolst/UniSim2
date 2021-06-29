@@ -55,7 +55,7 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
 }
 
 void EnergyBudgetOptimiser::amend() {
-    if (hasHeatSink) {
+    if (hasHeatSink & !findMaybeOne<Box>("./heatSink")) {
         BoxBuilder builder(this);
         builder.
         box("vg::HeatSink").name("heatSink").

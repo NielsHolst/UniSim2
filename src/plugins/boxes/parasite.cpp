@@ -13,19 +13,19 @@ PUBLISH(Parasite)
 
 Parasite::Parasite(QString name, QObject *parent)
     : Box(name, parent) {
-    help("holds the demand and supply of a parasite");
+    help("defines the demand and supply of a parasite");
     Input(density).help("Density");
     Input(demand).help("Amount of resource needed");
-    Input(supplyTotal).help("Total amount of resource acquired");
-    Input(supplyFromHost).help("Amount of resource acquired from each prey");
-    Input(sdRatio).help("Total supply/demand ratio").unit("[0;1]");
+    Output(supply).help("Total amount of resource acquired");
+    Output(sdRatio).help("Total supply/demand ratio").unit("[0;1]");
 }
 
-void Parasite::initialize() {
-    QVector<Box*> hosts = findMany<Box>("./*<Host>");
-    supplyFromHost.fill(0, hosts.size());
-    QString s = "Parasite %1 has %2 host(s)";
-    dialog().information(s.arg(objectName()).arg(hosts.size()));
+void Parasite::setFoodWebImports() {
+    Box *web = findOne<Box>("../pp");
+    QString prefix = web->fullName(),
+            suffix = "_" + name();
+    port("supply")->imports(prefix + "[supply" + suffix + "]");
+    port("sdRatio")->imports(prefix + "[sdRatio" + suffix + "]");
 }
 
 } //namespace

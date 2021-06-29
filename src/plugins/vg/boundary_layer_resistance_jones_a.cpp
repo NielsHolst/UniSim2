@@ -28,7 +28,7 @@ void BoundaryLayerResistanceJonesA::setRbH2O() {
            rbH2Olaminar = 1000./gbH2O,
            fTurbulence = 1.5;
 
-    rbH2O = rbH2Olaminar/fTurbulence;
+    rH2O = rbH2Olaminar/fTurbulence;
 }
 
 } //namespace

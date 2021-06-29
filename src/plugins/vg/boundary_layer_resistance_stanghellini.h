@@ -16,9 +16,12 @@ class BoundaryLayerResistanceStanghellini : public BoundaryLayerResistanceBase
 {
 public:
     BoundaryLayerResistanceStanghellini(QString name, QObject *parent);
+    void reset();
     void setRbH2O();
     // Inputs
     double leafTemperature, indoorsTemperature;
+    // Methods
+    double stanghellini(double dTemp, double u);
 };
 } //namespace
 

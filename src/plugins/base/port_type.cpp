@@ -119,11 +119,13 @@ namespace {
             else if (bIsCompatible)
                 return a;
             // Find lowest common type
-            QSet<PortType> A = QSet<PortType>::fromList(_rules.value(a)),
-                           B = QSet<PortType>::fromList(_rules.value(b)),
+            Rule aRules = _rules.value(a),
+                 bRules = _rules.value(b);
+            QSet<PortType> A = QSet<PortType>(aRules.begin(), aRules.end()),
+                           B = QSet<PortType>(bRules.begin(), bRules.end()),
                            C = A.intersect(B);
             Q_ASSERT(!C.isEmpty());
-            QList<PortType> candidates = QList<PortType>::fromSet(C);
+            QList<PortType> candidates = QList<PortType>(C.begin(),C.end());
             std::sort(candidates.begin(), candidates.end());
             return candidates.first();
         }
@@ -144,15 +146,15 @@ namespace {
         if (list.isEmpty())
             return StringVector;
         QList<PortType> types;
-        for (QString s : list)
-            types << deducePortType(s);
+        for (QString &s : list)
+            types << deducePortTypeFromString(s);
         return asVector(common(types));
     }
 }
 
-PortType deducePortType(QString s) {
+PortType deducePortTypeFromString(QString s) {
     if (isVector(s)) return deducePortTypeVector(s);
-    if (isType<bool>(s)) return Bool;
+    if (isType<bool>(s) && s!="0" && s!="1") return Bool;
     if (isType<int>(s)) return Int;
     if (isType<long int>(s)) return LongInt;
     if (isType<long long int>(s)) return LongLongInt;

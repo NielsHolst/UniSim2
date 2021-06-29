@@ -19,7 +19,7 @@ page_2 <- function(df, ...) {
 page_3 <- function(df, ...) {
   open_plot_window(5, 7)
   grid.arrange(
-    grobs= plot_sobol_indices(in_file="papers/2021-saccharina/analysis/saccharina-SA-fixed-S.Rdata"),
+grobs=        plot_sobol_indices(in_file="papers/2021-saccharina/analysis/saccharina-SA-fixed-S.Rdata"),
     ...,
     nrow = NULL,
     ncol = NULL
@@ -34,7 +34,4 @@ plot_all <- function(df) {
 figures <- function(df) {
   Pages = list(Page = list(Grob=page_1(df), Width=10, Height=4), Page = list(Grob=page_2(df), Width=10, Height=4), Page = list(Grob=page_3(df), Width=5, Height=7))
 }
-
-sobol_k = 11; sobol_N = 512; sobol_B = 10000
-source("C:/Users/au152367/Documents/QDev/UniSim2/input/scripts/begin-sobol.R")
-
+sobol_k = 11; sobol_N = 16384; sobol_B = 10000

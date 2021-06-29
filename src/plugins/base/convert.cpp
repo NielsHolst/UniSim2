@@ -4,6 +4,7 @@
 */
 #include <QLocale>
 #include <QStringList>
+#include <QTimeZone>
 #include "any_year.h"
 #include "convert.h"
 
@@ -20,7 +21,11 @@ namespace {
 
 void setLocale(QString localeName) {
     _localeName = localeName.toLower();
-    _outputDecimalCharacter = (_localeName=="local") ? QLocale().decimalPoint() : QChar('.');
+    #if QT_VERSION < 0x060000
+        _outputDecimalCharacter = (_localeName=="local") ? QLocale().decimalPoint() : QChar('.');
+    #else
+        _outputDecimalCharacter = (_localeName=="local") ? QLocale().decimalPoint().at(0) : QChar('.');
+    #endif
     _locale = QLocale();
     _locale.setNumberOptions(QLocale::OmitGroupSeparator);
 }
@@ -268,7 +273,7 @@ template<> QString convert(QDate source) {
     return s;
 }
 template<> QDate convert(QDate source)      { return source; }
-template<> QDateTime convert(QDate source)  { return QDateTime(source); }
+template<> QDateTime convert(QDate source)  { return QDateTime(source, QTime(), QTimeZone(0)); }
 template<> QTime convert(QDate)             { ThrowException("Cannot convert Date to Time"); }
 
 //
@@ -310,15 +315,17 @@ template<> QStringList convert(QVector<long long int> source)   { VECTOR_CONVERT
 template<> QStringList convert(QVector<float> source)           { VECTOR_CONVERT_STRINGLIST(float); }
 template<> QStringList convert(QVector<double> source)          { VECTOR_CONVERT_STRINGLIST(double); }
 template<> QStringList convert(QVector<long double> source)     { VECTOR_CONVERT_STRINGLIST(long double); }
-template<> QStringList convert(QVector<QString> source)         { return QStringList(source.toList()); }
+template<> QStringList convert(QVector<QString> source)         {
+    return QStringList(QList<QString>(source.begin(), source.end()));
+}
 template<> QStringList convert(QVector<QDate> source)           { VECTOR_CONVERT_STRINGLIST(QDate); }
 template<> QStringList convert(QVector<QTime> source)           { VECTOR_CONVERT_STRINGLIST(QTime); }
 template<> QStringList convert(QVector<QDateTime> source)       { VECTOR_CONVERT_STRINGLIST(QDateTime); }
 
 //
 // Vector conversions from QStringList
+//  (defined in header file)
 //
-
 
 //
 // Vector conversions to QString
@@ -335,7 +342,10 @@ template<> QString convert(QVector<long long int> source)   { VECTOR_CONVERT_STR
 template<> QString convert(QVector<float> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<double> source)          { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<long double> source)     { VECTOR_CONVERT_STRING; }
-template<> QString convert(QVector<QString> source)         { VECTOR_CONVERT_STRING; }
+template<> QString convert(QVector<QString> source)         {
+    QStringList list = QStringList( QList<QString>(source.begin(), source.end()) );
+    return "(" + list.join(" ") + ")";
+}
 template<> QString convert(QVector<QDate> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QTime> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QDateTime> source)       { VECTOR_CONVERT_STRING; }

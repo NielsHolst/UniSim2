@@ -27,6 +27,7 @@ public:
     void restoreFont();
     QProgressBar* progressBar();
     QWinTaskbarProgress* winProgressTaskbar();
+    const History* history() const;
     void finished();
     void message(QString s);
     void information(QString s);

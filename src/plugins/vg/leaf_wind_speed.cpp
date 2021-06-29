@@ -22,7 +22,6 @@ LeafWindSpeed::LeafWindSpeed(QString name, QObject *parent)
     help("computes leaf wind speed");
     Input(indoorsWindSpeedMinimum).equals(0.025).help("Minimum indoors wind speed [m/s]").unit("m/s");
     Input(indoorsWindSpeed).imports("indoors/windSpeed[value]",CA).unit("m/s");
-    Input(lai).imports("crop[lai]",CA).unit("m2/m2");
     Output(value).help("Wind speed at leaf level").unit("m/s");
 }
 

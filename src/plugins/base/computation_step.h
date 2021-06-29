@@ -5,6 +5,7 @@
 #ifndef BASE_COMPUTATION_STEP_H
 #define BASE_COMPUTATION_STEP_H
 
+#include "convert.h"
 #include "exception.h"
 
 namespace base {
@@ -15,8 +16,10 @@ template<class T> T convert(ComputationStep) {
     ThrowException("Cannot convert ComputationStep");
     return T();
 }
-
 template<> QString convert(ComputationStep step);
+
+template<> ComputationStep convert(QString source);
+
 
 }
 #endif

@@ -1,0 +1,13 @@
+Simulation test {
+  .steps = 50
+  Maximum maximum {
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (maximum[count] maximum[value])
+      }
+    }
+  }
+}
+  

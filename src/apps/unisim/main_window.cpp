@@ -1,6 +1,6 @@
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QSettings>
+#include <QScreen>
 #include <QtWidgets>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -25,10 +25,10 @@ void MainWindow::restore() {
         restoreGeometry(settings.value("main_window/geometry").toByteArray());
     else {
         // Get screen dimensions
-        QDesktopWidget *desktop = QApplication::desktop();
-        QRect screen = desktop->availableGeometry(this);
-        int W = screen.width(),
-            H = screen.height();
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect rect = screen->availableGeometry();
+        int W = rect.width(),
+            H = rect.height();
         // Position within screen
         QPoint position = QPoint(W/4, H/4);
         QSize size = QSize(W/2, H/2);

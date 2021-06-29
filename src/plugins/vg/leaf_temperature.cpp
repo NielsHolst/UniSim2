@@ -29,8 +29,8 @@ LeafTemperature::LeafTemperature(QString name, QObject *parent)
     help("models leaf temperature");
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(indoorsRh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
-    Input(rsH2O).imports("../rs[rsH2O]",CA).unit("s/m");
-    Input(rbH2O).imports("../rb[rbH2O]",CA).unit("s/m");
+    Input(rsH2O).imports("../photosynthesis/*/stomatalResistance[rH2O]",CA).transform(Mean).unit("s/m2");
+    Input(rbH2O).imports("../boundaryLayerResistance[rH2O]",CA).unit("s/m2");
     Input(radiationAbsorbed).imports("energyBudget/crop[absorbed]",CA).unit("W/m2");
     Input(lai).imports("/*/crop[lai]", CA);
     Output(value).help("Leaf temperature").unit("oC");

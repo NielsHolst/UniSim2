@@ -22,6 +22,7 @@ private:
     QDate date;
     double area, yield, pctN, pctC;
     // Data
+    bool noObservations;
     QDate nextDate;
     QVector<QDate> dates;
     struct Output {

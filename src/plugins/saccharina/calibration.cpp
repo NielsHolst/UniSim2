@@ -36,6 +36,10 @@ Calibration::Calibration(QString name, QObject *parent)
 }
 
 void Calibration::reset() {
+    // Check for observations
+    noObservations = obsFileName.isEmpty();
+    if (noObservations)
+        return;
     // Clear buffers
     output.area.clear();
     output.yield.clear();
@@ -57,7 +61,7 @@ void Calibration::reset() {
 
 void Calibration::update() {
     // Collect predictions by obs date
-    if (row < dates.size() && date == dates.at(row)) {
+    if (!noObservations && row < dates.size() && date == dates.at(row)) {
         output.area.update(area);
         output.yield.update(yield);
         output.pctN .update(pctN);

@@ -175,16 +175,8 @@ BoxBuilder& BoxBuilder::transform(PortTransform value) {
 
 // Set value
 
-BoxBuilder& BoxBuilder::equals(QString value, bool ignore) {
-//    // Handle a parenthesized string as a string vector
-//    if (isParenthesized(value))
-//        return equals( base::split(deEmbrace(value)).toVector() );
-    // Or else, handle simply as a string
-    BOXBUILDER_EQUALS;
-}
-
-BoxBuilder& BoxBuilder::equals(const char *value, bool) {
-    return equals(QString(value));
+BoxBuilder& BoxBuilder::equals(const char *value, bool ignore) {
+    return equals(QString(value), ignore);
 }
 
 // State

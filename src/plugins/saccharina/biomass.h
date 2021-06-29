@@ -23,10 +23,10 @@ private:
     // Outputs
     double dryWeight, wetWeight, carbonWeight, nitrogenWeight,
         nitrogenPct, carbonPct, dryWeightGrowth, dryWeightYield, wetWeightYield, CNratio,
-        growthRatePct;
+        growthRatePct, nitrogenUptakeRate;
     // Data
     QDate curDate;
-    double previousDryWeight;
+    double previousDryWeight, previousNitrogenWeight;
 };
 
 }

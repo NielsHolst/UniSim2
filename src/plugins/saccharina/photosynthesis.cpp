@@ -19,22 +19,19 @@ Photosynthesis::Photosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("calculates the rate of photosynthesis");
-    Input(crownZoneArea).imports("area[value]");
-    Input(lai).imports("area[lai]");
+    Input(Iabsorbed).imports("../lightAbsorption[value]");
     Input(area).imports("area[value]");
     Input(frondAngle).imports("area[frondAngle]");
-    Input(plantDensity).imports("area[plantDensity]");
     Input(demand).imports("demand/carbonTotal[value]");
     Input(alpha).unit("g C/mol PAR").help("Photosynthetic efficiency ");
     Input(fTemp).equals(1).unit("[0;1]").help("Temperature scaling on alpha");
     Input(fNitrogen).equals(1).unit("[0;1]").help("Nitrogen scaling on alpha");
-    Input(I).imports("env[I]");
     Input(timeStepSecs).imports("calendar[timeStepSecs]");
     Input(Pmax).equals(0.000444).help("Maximum hotosynthetic rate").unit("g C/dm2/h");
     Output(supply).unit("g C").help("Photosynthetic supply");
     Output(sdRatio).unit("[0;1]").help("Supply/Demand ratio");
-    Output(Iabsorbed).unit("mu mol PAR / s").help("Radiation absorbed per plant");
     Output(P).unit("g C/dm2/h").help("Photosynthetic rate");
+    Output(Punlimited).unit("g C/dm2/h").help("Photosynthetic rate, if unlimited by Pmax");
 }
 
 
@@ -43,15 +40,13 @@ void Photosynthesis::reset() {
 }
 
 void Photosynthesis::update() {
-    const double c = 3600e-6,
-                 k = cos(frondAngle/180.*PI);
-    Iabsorbed = I*crownZoneArea/plantDensity*(1. - exp(-k*lai));
+    const double c = 3600e-6;
     supply = (demand<1e-16) ?
                 0. :
                 demand*(1. - exp(-alpha*Iabsorbed*fTemp*fNitrogen*c/demand));
 
     double dt = timeStepSecs/3600.;
-    P = supply/area/dt;
+    P = Punlimited = supply/area/dt;
     if (P>Pmax) {
         P = Pmax;
         supply = P*area*dt;

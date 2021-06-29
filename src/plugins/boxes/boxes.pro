@@ -27,7 +27,9 @@ HEADERS +=  \
     distributed_delay.h \
     distributed_delay_2d.h \
     food_web.h \
-#    food_web_box.h \
+    food_web_calc_base.h \
+    food_web_calc_parasite_host.h \
+    food_web_calc_predator_prey.h \
     functional_response.h \
     host.h \
     hump.h \
@@ -48,6 +50,7 @@ HEADERS +=  \
     page_r.h \
     parasite.h \
     plot_r.h \
+    pop_up.h \
     population.h \
     predator.h \
     prey.h \
@@ -112,7 +115,9 @@ SOURCES +=  \
     distributed_delay.cpp \
     distributed_delay_2d.cpp \
     food_web.cpp \
-#    food_web_box.cpp \
+    food_web_calc_base.cpp \
+    food_web_calc_parasite_host.cpp \
+    food_web_calc_predator_prey.cpp \
     functional_response.cpp \
     host.cpp \
     hump.cpp \
@@ -132,6 +137,7 @@ SOURCES +=  \
     page_r.cpp \
     parasite.cpp \
     plot_r.cpp \
+    pop_up.cpp \
     population.cpp \
     predator.cpp \
     prey.cpp \

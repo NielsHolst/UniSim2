@@ -19,9 +19,9 @@ BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, QObject *
     Class(BoundaryLayerResistanceBase);
     help("base class to compute bounday layer resistance");
     Input(leafDimension).equals(25./1000.).help("Description of leaf geometry").unit("mm");
-    Input(leafWindSpeed).imports("indoors/windSpeed[value]",CA).unit("m/s");
-    Output(rbH2O).help("The boundary layer resistance against water vapour").unit("s/m");
-    Output(rbCo2).help("The boundary layer resistance against CO2").unit("s/m");
+    Input(leafWindSpeed).imports("../leafWindSpeed[value]",CA).unit("oC");
+    Output(rH2O).help("The boundary layer resistance against water vapour").unit("s/m2");
+    Output(rCo2).help("The boundary layer resistance against CO2").unit("s/m2");
 }
 
 void BoundaryLayerResistanceBase::reset() {
@@ -29,10 +29,8 @@ void BoundaryLayerResistanceBase::reset() {
 }
 
 void BoundaryLayerResistanceBase::update() {
-    if (leafWindSpeed <=0. )
-        ThrowException("Leaf wind speed must be > 0").value(leafWindSpeed).context(this);
     setRbH2O();
-    rbCo2 = rbH2O*1.37;
+    rCo2 = rH2O*1.37;
 }
 
 } //namespace

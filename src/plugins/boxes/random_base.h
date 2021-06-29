@@ -39,7 +39,7 @@ private:
     RandomiserBase *_randomiser;
     bool _setNumStrata;
     // Methods
-    virtual void checkInputs() = 0;
+    virtual void checkInputs(QString text) = 0;
     void setNumStrata();
 protected:
     virtual void updateValue() = 0;

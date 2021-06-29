@@ -24,7 +24,7 @@ DemandCarbonReserves::DemandCarbonReserves(QString name, QObject *parent)
     Input(structuralMass).imports("structure[mass]");
     Input(structProportionC).imports("sim/structure[proportionC]");
     Input(demandStructureC).imports("../structure[value]");
-    Input(maxRelativeDemand).equals(10.);
+//    Input(maxRelativeDemand).equals(10.);
     Output(value).unit("g C").help("Demand for carbon reserves ");
 }
 
@@ -37,9 +37,9 @@ void DemandCarbonReserves::update() {
         curReservesDemand = (maxReservesProportionC - reservesProportionC)*structuralMass,
         growthReservesDemand = maxReservesProportionC/structProportionC*demandStructureC;
     value = curReservesDemand + growthReservesDemand;
-    double maxValue = maxRelativeDemand*demandStructureC;
-    if (value > maxValue)
-            value = maxValue;
+//    double maxValue = maxRelativeDemand*demandStructureC;
+//    if (value > maxValue)
+//            value = maxValue;
 }
 
 }

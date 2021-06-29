@@ -8,7 +8,7 @@
 
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.52
+VERSION = 2.3.55
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 CONFIG += skip_target_version_ext   # Simplify suffix on Mac
@@ -24,11 +24,16 @@ else {
 
 # What we are building
 CONFIG += c++17
-QT += core widgets winextras
+QT += core widgets
 
-# Turn warnings off in debug mode
-#CONFIG(debug, debug|release) {
-#  CONFIG += warn_off
+# Module winextras not yet implemented in Qt version 6
+lessThan(QT_MAJOR_VERSION, 6) {
+    QT += winextras
+}
+
+## Module QRegExp not part of Qt version 6
+#greaterThan(QT_MAJOR_VERSION, 5) {
+#    QT += core5compat
 #}
 
 # Show warning when using deprecated Qt features
@@ -39,6 +44,10 @@ QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 
 # Compiler options to silence warnings
 QMAKE_CXXFLAGS += -Wno-padded -Wno-int-in-bool-context
+
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QMAKE_CXXFLAGS += -Wno-clazy-non-pod-global-static
+}
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-misleading-indentation

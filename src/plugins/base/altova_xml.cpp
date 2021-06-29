@@ -59,7 +59,7 @@ QString AltovaXml::xsltPath() {
 
 QString AltovaXml::altovaPath() {
     QStringList fullPaths;
-    for (QString path : _searchPath) {
+    for (const QString &path : _searchPath) {
         QString fullPath = QFileInfo(path + "/AltovaXML.exe").absoluteFilePath();
         fullPaths << fullPath;
         if (QFile::exists(fullPath))

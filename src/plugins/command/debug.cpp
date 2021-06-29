@@ -9,6 +9,8 @@
 #include <base/publish.h>
 #include "debug.h"
 
+#include <base/dialog.h>
+
 using namespace base;
 
 namespace command {

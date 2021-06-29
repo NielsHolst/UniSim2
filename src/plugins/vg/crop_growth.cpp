@@ -18,16 +18,17 @@ CropGrowth::CropGrowth(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("computes crop growth and energy budget");
-    Input(Pn).imports("../photosynthesis[Pn]",CA);
-    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+    Input(Pn).imports("../photosynthesis[Pn]",CA);                   // g CO2   /m2 ground/h
+    Input(parAbsorbed).imports("energyBudget/crop[parAbsorbed]",CA); // μmol PAR/m2 ground/s
     Output(netGrowthRate).help("Net rate of biomass growth").unit("g/m2/h");
-    Output(netGrowthAllocation).help("Biomass allocated in this time step").unit("g/m2");
+    Output(lue).help("Light use efficiency").unit("g/mol PAR");
 }
 
 void CropGrowth::update() {
-    double dt = 3600*timeStepSecs;
-    netGrowthRate = Pn*30./44.;  // g CH20 from g CO2
-    netGrowthAllocation = netGrowthRate*dt;
+    netGrowthRate = Pn*30./44.;  // g CH20/m2 ground/h
+    lue = (parAbsorbed<1e-3) ? 0. : netGrowthRate/3600. / (parAbsorbed*1e-6);
+    if (lue < 0.)
+        lue = 0.;
 }
 
 } //namespace

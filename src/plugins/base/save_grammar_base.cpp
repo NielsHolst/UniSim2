@@ -57,8 +57,10 @@ QStringList SaveGrammarBase::classNames() {
     QSet<QString> names;
     names << "Box";
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
-        if (factory->id() != "command")
-            names.unite( QSet<QString>::fromList(factory->inventory()) );
+        if (factory->id() != "command") {
+            auto inv = factory->inventory();
+            names.unite(QSet<QString>(inv.begin(), inv.end()));
+        }
     }
     QStringList sorted = names.values();
     sorted.sort();
@@ -92,7 +94,7 @@ QStringList SaveGrammarBase::portNames() {
     root->deleteLater();
 
     // Sort port names
-    QStringList sorted = names.toList();
+    QStringList sorted = QStringList( QList<QString>(names.begin(), names.end()) );
     sorted.sort();
     return sorted;
 }
@@ -112,10 +114,12 @@ QStringList SaveGrammarBase::attributeNames() {
 }
 
 QStringList SaveGrammarBase::transformNames() {
+    QStringList tNames = portTransformNames(),
+                fNames = portFilterNames();
     QSet<QString> names;
-    names.unite(portTransformNames().toSet());
-    names.unite(portFilterNames().toSet());
-    return QStringList(names.toList());
+    names.unite(QSet<QString>(tNames.begin(), tNames.end()));
+    names.unite(QSet<QString>(fNames.begin(), fNames.end()));
+    return QStringList(names.begin(), names.end());
 }
 
 QStringList SaveGrammarBase::constantNames() {

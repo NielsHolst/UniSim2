@@ -18,8 +18,8 @@ DemandCarbonExudation::DemandCarbonExudation(QString name, QObject *parent)
 {
     help("calculates carbon exudation");
     Input(gamma).help("Exudation parameter (h-1)");
-    Input(reservesProportion).imports("reserves/carbon[proportion]");
-    Input(structuralMass).imports("structure[mass]");
+    Input(proportionC).imports("sim/structure[proportionC]");
+    Input(structuralMass).imports("sim/structure[mass]");
     Input(demandStructure).imports("../structure[value]");
     Input(timeStepSecs).imports("calendar[timeStepSecs]");
     Input(wetWeight).imports("biomass[wetWeight]");
@@ -35,7 +35,9 @@ void DemandCarbonExudation::reset() {
 void DemandCarbonExudation::update() {
     double dt = timeStepSecs/3600.;
     proportion = 1. - exp(-gamma*dt);
-    value = proportion*(reservesProportion*structuralMass + demandStructure);
+//    value = proportion*(reservesProportion*structuralMass + demandStructure);
+    value = proportion*proportionC*structuralMass;
+//    value = proportion*reservesProportion*structuralMass;
     exudation = (((value/12.0107)*1000000)/wetWeight)/dt;
 }
 

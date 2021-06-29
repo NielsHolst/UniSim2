@@ -19,8 +19,8 @@ bool hasClassName(const QObject *object);
 
 QString fullName(const QObject *object);
 
-QStringList split(QString s, QObject *context = 0);
-QStringList split(const char *s, QObject *context = 0);
+QStringList split(QString s, QObject *context = nullptr);
+QStringList split(const char *s, QObject *context = nullptr);
 
 bool isApostrophed(QString s);
 bool isParenthesized(QString s);

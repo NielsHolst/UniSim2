@@ -2,6 +2,9 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <QDate>
+#include <QDateTime>
+#include <QTimeZone>
 #include "exception.h"
 #include "initialize.h"
 
@@ -19,7 +22,7 @@ namespace {
 
     template <> QDate zero() { return QDate(2001,1,1); }
     template <> QTime zero() { return QTime(0,0,0); }
-    template <> QDateTime zero() { return QDateTime(QDate(2001,1,1)); }
+    template <> QDateTime zero() { return QDateTime(QDate(2001,1,1), QTime(), QTimeZone(0)); }
 
     template <class T> void zero(QVector<T> &vector) {
         vector.fill(zero<T>());

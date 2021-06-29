@@ -12,16 +12,12 @@ class Prey : public base::Box
 {
 public: 
     Prey(QString name, QObject *parent);
-    void amend();
+    void setFoodWebImports();
 private:
     // Inputs
-    double density,
-        attackRate, gainFactor;
+    double density, attackRate, gainFactor;
     // Outputs
-    double
-        loss, mortality;
-    // Methods
-    void setFoodWebImports();
+    double loss, mortality;
 };
 
 } //namespace

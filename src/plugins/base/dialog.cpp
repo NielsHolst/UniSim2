@@ -3,10 +3,11 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QMainWindow>
-#include <QtWinExtras/QWinTaskbarProgress>
 #include "dialog.h"
 #include "exception.h"
 #include "dialog_widget.h"
+#include "history.h"
+#include "win_taskbar_progress.h"
 
 namespace base {
 
@@ -23,6 +24,10 @@ Dialog::Dialog(QObject *parent)
 
 QTextEdit* Dialog::textEdit() {
     return _widget;
+}
+
+const History* Dialog::history() const {
+    return _widget->history();
 }
 
 void Dialog::setFont(QString family, int pt) {

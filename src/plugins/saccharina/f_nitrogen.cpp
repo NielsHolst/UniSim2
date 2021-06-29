@@ -21,9 +21,9 @@ Fnitrogen::Fnitrogen(QString name, QObject *parent)
 {
     help("calculates the effect of nitrogen reserves on growth rate");
     Input(proportion).imports("reserves/nitrogen[proportion]");
-    Input(maxProportion).imports("reserves/nitrogen[maxProportion]");
-    Input(minValue).equals(0.5).help("Minimum scaling value");
-    Input(shape).equals(1.).help("Shape of curve, linear if shape=1");
+    Input(minValue).equals(0.545).help("Minimum scaling value");
+    Input(slope).equals(7.85).help("Slope of sigmoid curve");
+    Input(n50).equals(0.00756).help("Nitrogen reserves proportion with 50% effect");
     Output(value).unit("[0;1]").help("Scaling of growth rate");
 }
 
@@ -32,7 +32,7 @@ void Fnitrogen::reset() {
 }
 
 void Fnitrogen::update() {
-    value = minValue + (1.-minValue)*pow(proportion/maxProportion, shape);
+    value = minValue + (1.-minValue)/(1 + exp(-slope*(log(proportion) - log(n50))));
 }
 
 }

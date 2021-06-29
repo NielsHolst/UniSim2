@@ -18,7 +18,7 @@ void History::add(QString entry) {
     _index = -1;
 }
 
-QString History::previous() {
+QString History::previous() const {
     // Empty history
     if (_last == -1)
         return QString();
@@ -43,7 +43,7 @@ QString History::next() {
     return _buffer.at(inc(_index));
 }
 
-int History::inc(int &i) {
+int History::inc(int &i) const {
     ++i;
     if (_isFull) {
         if (i == _bufferSize) i = 0;
@@ -54,7 +54,7 @@ int History::inc(int &i) {
     return i;
 }
 
-int History::decr(int &i) {
+int History::decr(int &i) const {
     --i;
     if (_isFull) {
         if (i == -1) i = _bufferSize - 1;

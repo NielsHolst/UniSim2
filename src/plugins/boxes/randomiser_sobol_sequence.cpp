@@ -34,33 +34,33 @@ void RandomiserSobolSequence::inializeGenerator() {
     variate = new Variate(*sobol, distribution);
 }
 
-void RandomiserSobolSequence::checkIterations(int iterations) {
+void RandomiserSobolSequence::checkIterations(int theIterations) {
     int &k(numVariables);
     if (doSensitivityAnalysis) {
-        int N = static_cast<int>(floor(log2(iterations/double(2+k))));
+        int N = static_cast<int>(floor(log2(theIterations/double(2+k))));
         if (N<2)
             N = 2;
         int N1 = (2<<(N-1))*(2+k),
             N2 = (2<<N)*(2+k);
         QString msg("Simulation iterations must equal (2+k)*N (k=%1, N=2^i) to run a sensitivity analysis with a Sobol' sequence for random numbers"),
                 hint("Use instead, for example, %1 or %2 iterations");
-        if (iterations!=N1 && iterations!=N2) {
+        if (theIterations!=N1 && theIterations!=N2) {
             ThrowException(msg.arg(k)).
-                    value(iterations).
+                    value(theIterations).
                     hint(hint.arg(N1).arg(N2)).
                     context(this);
         }
     }
     else {
-        int N = static_cast<int>(floor(log2(iterations)));
+        int N = static_cast<int>(floor(log2(theIterations)));
         if (N<2)
             N = 2;
         int N1 = 2<<(N-1),
             N2 = 2<<N;
         QString hint("Use instead, for example, %1 or %2 iterations");
-        if (iterations!=N1 && iterations!=N2) {
+        if (theIterations!=N1 && theIterations!=N2 && !port("useFixed")->value<bool>()) {
             ThrowException("Simulation iterations must be a power of 2 when a Sobol' sequence is used for random numbers").
-                    value(iterations).
+                    value(theIterations).
                     hint(hint.arg(N1).arg(N2)).
                     context(this);
         }

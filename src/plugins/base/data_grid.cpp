@@ -32,9 +32,9 @@ QStringList DataGrid::columnNames() const {
     return data.columnNamesInOrder;
 }
 
-int DataGrid::findColumn(QString colName, Qt::CaseSensitivity cs) const {
+int DataGrid::findColumn(QString colName, QRegularExpression::PatternOption op) const {
     const QStringList &colNames(columnNames());
-    int colIndex = colNames.indexOf( QRegExp(colName, cs) );
+    int colIndex = colNames.indexOf( QRegularExpression(colName, op) );
     if (colIndex == -1) {
         QString msg = "Could not find column named '%1' among columns: '%2'";
         ThrowException(msg.arg(colName).arg(colNames.join(','))).value(colName).context(this);
@@ -56,7 +56,7 @@ QStringList DataGrid::row(const QStringList &rowKeys) const {
     QString rowKey = joinKeys(rowKeys);
     if (!data.rowIndex.contains(rowKey)) {
         QString msg = "No row with key value '%1' exists in file '%2'";
-        ThrowException(msg.arg(rowKey).arg(filePath)).context(this);;
+        ThrowException(msg.arg(rowKey, filePath)).context(this);
     }
     int row = data.rowIndex.value(rowKey);
     return data.rows.value(row);

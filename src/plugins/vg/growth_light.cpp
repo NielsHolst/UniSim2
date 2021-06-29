@@ -28,7 +28,7 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     Input(minPeriodOn).help("Minimum period that light stays on").unit("m");
     port("area")->imports("construction/geometry[groundArea]",CA);
     Output(periodOn).help("Time since last time light went on").unit("m");
-    Output(currentlyOn).help("Light remains on for the minimum period").unit("y|n");;
+    Output(currentlyOn).help("Light remains on for the minimum period").unit("y|n");
     Output(powerUsage).help("Current power usage").unit("W/m2");
 }
 

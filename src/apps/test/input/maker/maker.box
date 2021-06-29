@@ -1,58 +1,52 @@
 Simulation sim {
-	.iterations = 3
-	.steps = 20
-	demo::Migration migration {
-	}
-	Maker islands {
-		.replicates = 3
-		demo::Island island {
-			.latitude = ./random/latitude[value]
-			.longitude = ./random/longitude[value]
-			Box random {
-				RandomUniform latitude {
-					.min = 10
-					.max = 20 
-					.drawAtUserInitialize = TRUE
-				}
-				RandomUniform longitude {
-					.min = -40
-					.max = -30
-					.drawAtUserInitialize = TRUE
-				}
-			}
-			demo::Population fox {
-				Stage fox {
-					.initial = ./random[value]
-					.duration = 12
-					RandomUniform random {
-						.min = 0
-						.max = 5 
-						.drawAtUserReset = TRUE
-					}
-				}
-			}
-                        demo::Population rabbit {
-				Stage rabbit {
-					.initial = ./random[value]
-					.duration = 4
-					RandomUniform random {
-						.min = 75
-						.max = 125
-						.drawAtUserReset = TRUE
-					}
-				}
-			}
-		}
-	}
-	OutputR {
-		PageR {
-			PlotR {
-				.ports = (*[content])
-			}
-			PlotR {
-				.hide = TRUE
-				.ports = (*[latitude] *[longitude] *[initial])
-			}
-		}
-	}
+  .iterations = 3
+  .steps = 20
+  Box random {
+    RandomiserMonteCarlo randomiser {
+    }
+    RandomUniform latitude {
+      .min = 10
+      .max = 20 
+    }
+    RandomUniform longitude {
+      .min = -40
+      .max = -30
+    }
+    RandomUniform density {
+      .min = 20
+      .max = 50
+    }
+  }
+  Maker islands {
+    .replicates = 3
+    demo::Island island {
+      .latitude = random/latitude[value]
+      .longitude = random/longitude[value]
+      Box random {
+      }
+      demo::Population fox {
+        Stage fox {
+          .initial = random[density]
+          .duration = 12
+        }
+      }
+      demo::Population rabbit {
+        Stage rabbit {
+          .initial = random[density]
+          .duration = 4
+        }
+      }
+    }
+  }
+  OutputR {
+    PageR {
+      PlotR {
+        .ports = (*[content])
+      }
+      PlotR {
+        .hide = TRUE
+        .ports = (*[latitude] *[longitude] *[initial])
+      }
+    }
+  }
 }

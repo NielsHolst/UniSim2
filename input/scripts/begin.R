@@ -18,6 +18,7 @@ if (exists("keepVariables") && !keepVariables) {
   rm(list=del)
 }
 
+theme_set(theme_bw())
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
 red = '#e41a1c'
@@ -40,6 +41,10 @@ unisim_colour = function(i) {
 
 scale_colour_discrete = function(...) {
   scale_colour_manual(..., values = rep(unisim_colours, 10))
+}
+
+scale_fill_discrete = function(...) {
+  scale_fill_manual(..., values = rep(unisim_colours, 10))
 }
 
 scale_linetype_discrete = function(...) {

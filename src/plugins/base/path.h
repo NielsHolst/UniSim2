@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QVector>
 #include "exception.h"
@@ -49,7 +50,7 @@ private:
     void initDirectives();
     template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = nullptr);
     QObjects _resolve(int number = -1, const QObject* caller = nullptr);
-    void validate(QRegExp rx, QString s);
+    void validate(QRegularExpression rx, QString s);
     QString normaliseFirstBox(QString s);
     QString normaliseBox(QString defaultDirective, QString s);
     QStringList splitBox(QString s);
@@ -75,7 +76,12 @@ template<class T> QVector<T*> Path::resolve(int number, const QObject* caller) {
 }
 
 template<class T> T* Path::resolveOne(const QObject* caller) {
-    return resolve<T>(1,caller).at(0);
+    QVector<T*> resolved = resolve<T>(1,caller);
+    if (resolved.isEmpty()) {
+        QString msg{"Found no matches for path; expected one match"};
+        ThrowException(msg).value(_current.originalPath).context(_caller);
+    }
+    return resolved.at(0);
 }
 
 template<class T> T* Path::resolveMaybeOne(const QObject* caller) {

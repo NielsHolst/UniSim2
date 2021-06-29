@@ -20,13 +20,9 @@ public:
 
 private:
     // Inputs
-    double Pn, timeStepSecs;
+    double Pn, parAbsorbed;
     // Outputs
-    double netGrowthRate, netGrowthAllocation;
-//        massRoot, massStem, massLeaf, massFruit,
-//        respRoot, respStem, respLeaf, respFruit,
-    // Methods
-//    double _maintenanceRespirationRate();
+    double netGrowthRate, lue;
 };
 } //namespace
 

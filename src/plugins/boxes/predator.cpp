@@ -5,6 +5,9 @@
 #include <base/dialog.h>
 #include <base/publish.h>
 #include "predator.h"
+
+#include <base/dialog.h>
+
 using namespace base;
 
 namespace boxes {
@@ -13,19 +16,16 @@ PUBLISH(Predator)
 
 Predator::Predator(QString name, QObject *parent)
     : Box(name, parent) {
-    help("holds the demand and supply of a predator");
+    help("defines the demand and supply of a predator");
     Input(density).help("Density");
     Input(demand).help("Amount of resource needed");
     Output(supply).help("Total amount of resource acquired");
     Output(sdRatio).help("Total supply/demand ratio").unit("[0;1]");
-}
-
-void Predator::amend() {
-    setFoodWebImports();
+    dialog().information("Predator::Predator()");
 }
 
 void Predator::setFoodWebImports() {
-    Box *web = findOne<Box>("ancestors::*<FoodWeb>");
+    Box *web = findOne<Box>("../pp");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("supply")->imports(prefix + "[supply" + suffix + "]");

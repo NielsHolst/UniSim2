@@ -18,7 +18,7 @@ public:
     void update();
 private:
     // Inputs
-    double proportion, maxProportion, minValue, shape;
+    double proportion, minValue, n50, slope;
     // Outputs
     double value;
 };

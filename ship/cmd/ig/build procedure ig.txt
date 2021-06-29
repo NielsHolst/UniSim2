@@ -1,12 +1,18 @@
 (A) Windows 32-bit build
 ========================
-1. Run clean.bat.
-2. In Qt Creator:
-- Change CONFIG to release
-- Update the version number
-- Build All
-3. In build.bat
+1. Edit C:\data\QDev\UniSim2\ship\cmd\win\build.bat.
+- Update SUB version number.
+- Run.
+
+2. Run clean.bat.
+
+3. In Qt Creator:
+- Open ig project.
+- Choose 32-bit target.
+- Build.
+
+4. In build.bat for ig:
 - Update the UniSim version number.
 - Check the QT path which may differ between computers.
-4. Run build.bat
+
 5. Zip iglib_2.x.x and upload it to Dropbox.

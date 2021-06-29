@@ -13,11 +13,12 @@ class Parasite : public base::Box
 {
 public: 
     Parasite(QString name, QObject *parent);
-    void initialize();
+    void setFoodWebImports();
 private:
     // Inputs
-    double density, demand, supplyTotal, sdRatio;
-    QVector<double> supplyFromHost;
+    double density, demand;
+    // Outputs
+    double supply, sdRatio;
 };
 
 } //namespace

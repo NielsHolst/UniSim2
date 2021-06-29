@@ -14,6 +14,7 @@ HEADERS +=  \
     actuator_ventilation.h \
     ah_from_rh.h \
     any_flag.h \
+    arrhenius.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
     boundary_layer_resistance_jones_b.h \
@@ -55,9 +56,11 @@ HEADERS +=  \
     indoors_temperature.h \
     indoors_ventilation.h \
     indoors_wind_speed.h \
-    leaf_light_response.h \
-    leaf_light_response_processes.h \
+    intercellular_co2.h \
+    leaf_par_absorbed.h \
     leaf_photosynthesis.h \
+    leaf_photosynthesis_aj.h \
+    leaf_respiration.h \
     leaf_temperature.h \
     leaf_transpiration.h \
     leaf_wind_speed.h \
@@ -67,6 +70,7 @@ HEADERS +=  \
     pid_controller.h \
     pipe.h \
     pipe_forced.h \
+#    random_jmax.h \
     screen.h \
     screen_roof.h \
     screen_wall.h \
@@ -82,9 +86,9 @@ HEADERS +=  \
     shelter_face_area.h \
     simulation_period.h \
     sky_temperature.h \
+    stomatal_resistance_ball_berry.h \
+    stomatal_resistance_ball_berry_opti_full.h \
     stomatal_resistance_base.h \
-    stomatal_resistance_rose.h \
-    stomatal_resistance_tomato.h \
     total_radiation_from_par.h \
     utilities.h \
     vapour_flux_base.h \
@@ -108,6 +112,7 @@ SOURCES += \
     actuator_ventilation.cpp \
     ah_from_rh.cpp \
     any_flag.cpp \
+    arrhenius.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
     boundary_layer_resistance_jones_b.cpp \
@@ -149,9 +154,11 @@ SOURCES += \
     indoors_temperature.cpp \
     indoors_ventilation.cpp \
     indoors_wind_speed.cpp \
-    leaf_light_response.cpp \
-    leaf_light_response_processes.cpp \
+    intercellular_co2.cpp \
+    leaf_par_absorbed.cpp \
     leaf_photosynthesis.cpp \
+    leaf_photosynthesis_aj.cpp \
+    leaf_respiration.cpp \
     leaf_temperature.cpp \
     leaf_transpiration.cpp \
     leaf_wind_speed.cpp \
@@ -161,6 +168,7 @@ SOURCES += \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \
+#    random_jmax.cpp \
     screen.cpp \
     screen_roof.cpp \
     screen_wall.cpp \
@@ -176,9 +184,9 @@ SOURCES += \
     shelter_face_area.cpp \
     simulation_period.cpp \
     sky_temperature.cpp \
+    stomatal_resistance_ball_berry.cpp \
+    stomatal_resistance_ball_berry_opti_full.cpp \
     stomatal_resistance_base.cpp \
-    stomatal_resistance_rose.cpp \
-    stomatal_resistance_tomato.cpp \
     total_radiation_from_par.cpp \
     utilities.cpp \
     vapour_flux_base.cpp \

@@ -20,13 +20,10 @@ public:
     void update();
 private:
     // Inputs
-    double
-        parAbsorbed,
-        lai, k,
-        canopyReflectivity,
-        Pgmax, lue, RdLeaf;
+    double lai, k;
+    QVector<double> leafAn, leafAg;
     // Outputs
-    double Pg, Pn, Rd;
+    double An, Ag, Ar, Pg, Pn, Pr, PgLeaf, PnLeaf, PrLeaf;
 };
 } //namespace
 

@@ -3,12 +3,12 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QLabel>
 #include <QProgressBar>
 #include <QProgressDialog>
-#include <QtWinExtras/QWinTaskbarProgress>
+#include <QScreen>
 #include "dialog_minimal.h"
+#include "win_taskbar_progress.h"
 
 namespace base {
 
@@ -20,9 +20,9 @@ DialogMinimal::DialogMinimal(QObject *parent)
     _progressDialog->setLabel(new QLabel("Running...", _progressDialog));
     _progressDialog->setBar(_progressBar = new QProgressBar);
 
-    QDesktopWidget *desktop = QApplication::desktop();
-    QRect screen = desktop->availableGeometry();
-    int W = screen.width();
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect rect = screen->availableGeometry();
+    int W = rect.width();
     QSize size = _progressDialog->size();
     _progressDialog->resize(W/4, size.height());
 

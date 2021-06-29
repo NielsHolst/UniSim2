@@ -5,7 +5,9 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/box_builder.h>
 #include <base/publish.h>
+#include <base/vector_op.h>
 #include "growth_lights.h"
 
 using namespace base;
@@ -18,23 +20,31 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("sums power use and radiation from growth light");
-    port("parFluxDown")->imports("./*[parFluxDown]").transform(Sum);
-    port("swFluxDown")->imports("./*[swFluxDown]").transform(Sum);
-    port("lwFluxDown")->imports("./*[lwFluxDown]").transform(Sum);
     port("area")->imports("construction/geometry[groundArea]",CA);
-    Input(lightsCurrentlyOn).imports("./*[currentlyOn]");
-    Input(lightsPowerUsage).imports("./*[powerUsage]");
+    Input(lightsCurrentlyOn).imports("./*[currentlyOn]",CA);
+    Input(lightsParFluxDown).imports("./*[parFluxDown]",CA);
+    Input(lightsSwFluxDown).imports("./*[swFluxDown]",CA);
+    Input(lightsLwFluxDown).imports("./*[lwFluxDown]",CA);
+    Input(lightsPowerUsage).imports("./*[powerUsage]",CA);
     Output(currentlyOn).help("Is any growth light on?");
     Output(powerUsage).help("Sum of growth lights' power usages");
 }
 
+void GrowthLights::amend() {
+    BoxBuilder builder(this);
+    QVector<Box*> children = findMany<Box>("./*");
+    if (children.isEmpty())
+        builder.box("GrowthLight").name("noLight").endbox();
+}
+
 void GrowthLights::update() {
     currentlyOn = false;
-    powerUsage = 0.;
     for (bool on : lightsCurrentlyOn)
         currentlyOn = (currentlyOn || on);
-    for (double usage : lightsPowerUsage)
-        powerUsage += usage;
+    parFluxDown = vector_op::sum(lightsParFluxDown);
+    swFluxDown  = vector_op::sum(lightsSwFluxDown);
+    lwFluxDown  = vector_op::sum(lightsLwFluxDown);
+    powerUsage  = vector_op::sum(lightsPowerUsage);
 }
 
 } //namespace

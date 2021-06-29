@@ -80,8 +80,7 @@ HEADERS +=  \
     port_value_op.h \
     product_base.h \
     product.h \
-#    progress_indicator_base.h \
-#    progress_indicator_progress_bar.h \
+    proportions.h \
     random_generator.h \
     random_order.h \
     save_grammar_atom.h \
@@ -100,7 +99,8 @@ HEADERS +=  \
     vector_op.h \
     vector_vector.h \
     vectorize.h \
-    version.h
+    version.h \
+    win_taskbar_progress.h
 
 SOURCES +=  \
     altova_xml.cpp \
@@ -154,8 +154,7 @@ SOURCES +=  \
     port_type.cpp \
     port_value_op.cpp \
     product_base.cpp \
-#    progress_indicator_base.cpp \
-#    progress_indicator_progress_bar.cpp \
+    proportions.cpp \
     random_generator.cpp \
     random_order.cpp \
     save_grammar_atom.cpp \

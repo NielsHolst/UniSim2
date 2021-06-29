@@ -23,16 +23,15 @@ private:
         curReservesProportionC, curReservesProportionN,
         reservesMaxProportionC, reservesMaxProportionN,
         supplyCarbonTotal, supplyNitrogenTotal,
-        demandCarbonRespiration,
+        demandCarbonRespiration, demandCarbonExudation,
         demandCarbonStructure, demandNitrogenStructure,
-        proportionExuded,
         demandCarbonErosion, demandNitrogenErosion;
     // Outputs
     double
         MC0, MC1, MC2, MC3,
         MN0, MN1,
-        supplyCarbonStructure, supplyCarbonExudation, supplyCarbonReserves,
-        structuralMassGrowth, structuralMassLoss,
+        supplyCarbonStructure, supplyCarbonReserves,
+        supplyMassStructure, structuralMassLoss,
         reservesProportionC, reservesProportionN,
         sdCarbon, sdNitrogen;
 

@@ -1,0 +1,141 @@
+// Part of a box script. To be included into another box script.
+  Calendar calendar {
+    .initialDateTime = setup[initialDateTime]
+    .timeStep = 1
+    .timeUnit = "h"
+  }
+  Records env {
+    .fileName = setup[fileNamePath]
+    .overrideCalendarYear = TRUE
+  }
+  Structure structure {
+    .initMass = parameters[Winit]
+    .allocation = allocation[supplyMassStructure]
+  }     
+  Area area {
+    .plantDensity = parameters[plantDensity]
+    .frondAngle = parameters[frondAngle]
+    AreaErosion erosion {
+      .eMax = parameters[eMax]
+      .e50 = parameters[e50]
+    }
+  }
+  ProportionalSignal maturity {
+    .input = area[value]
+    .threshold = parameters[areaYoung]
+    .thresholdBand = parameters[areaBand]
+    .minSignal = 0
+    .maxSignal = 1
+  }
+  Box reserves {
+    Reserves carbon {
+      .initialProportion = parameters[Cinit]
+      .maxProportion = ./max[value]
+      .allocatedProportion = allocation[reservesProportionC]
+      CarbonReservesMax max {
+        .youngMax = parameters[CmaxYoung]
+        .matureMax = parameters[CmaxMature]
+        .maturity = maturity[value]
+      }
+    }
+    Reserves nitrogen {
+      .initialProportion = parameters[Ninit]
+      .maxProportion = parameters[Nmax]
+      .allocatedProportion = allocation[reservesProportionN]
+    }
+  }
+  Box demand {
+    Box carbon {
+      DemandCarbonStructure structure {
+        .maxGrowthRate = ./maxGrowthRate[value]
+        .fTemp     = ./fTemp[value]
+        .fSalinity = ./fSalinity[value]
+        GrowthRate maxGrowthRate {
+          .maturity = maturity[value]
+        }
+        Trapezoid fTemp {
+          .T = env[T]
+          .T0    = parameters[T0]
+          .Topt1 = parameters[Topt1]
+          .Topt2 = parameters[Topt2]
+          .Tmax  = parameters[Tmax]
+        }
+        Fsalinity fSalinity {
+        }
+      }
+      DemandCarbonRespiration respiration {
+        .resp20 = parameters[resp20]
+        .Q10 = parameters[Q10]
+      }
+      DemandCarbonReserves reserves {
+      }
+      DemandCarbonExudation exudation {
+        .gamma = parameters[gamma]
+      }
+      DemandCarbonErosion erosion {
+      }
+    }
+    Sum carbonTotal {
+      .values = ../carbon/*[value]
+    }
+    Box nitrogen {
+      DemandNitrogenStructure structure {
+      }
+      DemandNitrogenReserves reserves {
+      }
+      DemandNitrogenErosion erosion {
+      }
+    }
+    Sum nitrogenTotal {
+      .values = ../nitrogen/*[value]
+    }
+  }
+  Box supply {
+    $LIGHT_ABSORPTION lightAbsorption {
+    }
+    Photosynthesis photosynthesis {
+      .alpha = parameters[alpha]
+      .fTemp  = ./fTemp[value]
+      .fNitrogen = ./fNitrogen[value]
+      .Pmax = parameters[Pmax]
+      Trapezoid fTemp {
+        .T = env[T]
+        .T0    = parameters[T0]
+        .Topt1 = parameters[Topt1]
+        .Topt2 = parameters[Topt2]
+        .Tmax  = parameters[Tmax]
+      }
+      Fnitrogen fNitrogen {
+      }
+    }
+    NitrogenUptake nitrogenUptake {
+      .beta = parameters[beta]
+      Fcurrent fCurrent {
+        .uMin = parameters[uMin]
+      }
+    }
+  }
+  Allocation allocation {
+  }
+  saccharina::Biomass biomass {
+  }
+  Calibration calibration {
+    .obsFileName = setup[obsFile]
+  }
+  Box total {
+    Accumulator growth {
+      .change = allocation[supplyCarbonStructure]
+    }
+    Accumulator exudation {
+      .change = allocation[demandCarbonExudation]
+    }
+    Accumulator erosion {
+      .change = demand/carbon/erosion[value]
+    }
+    Accumulator respiration {
+      .change = demand/carbon/respiration[value]
+    }
+    Accumulator structuralLoss {
+      .change = allocation[structuralMassLoss]
+    }
+  }

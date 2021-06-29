@@ -1,5 +1,0 @@
-Province	Latitude	FileName
-Pathumthani	14.02	weather/Pathumthani.txt
-KamphaengPhet	16.48	weather/KamphaengPhet.txt
-Loei	17.49	weather/Loei.txt
-Phichit	16.27	weather/Phichit.txt

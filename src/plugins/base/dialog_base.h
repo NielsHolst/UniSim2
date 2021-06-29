@@ -10,12 +10,15 @@
 #include <QStack>
 #include <QString>
 #include <QElapsedTimer>
+#include "win_taskbar_progress.h"
 
 class QProgressBar;
 class QTextEdit;
 class QWinTaskbarProgress;
 
 namespace base {
+
+class History;
 
 class DialogBase : public QObject
 {
@@ -34,7 +37,7 @@ public:
     virtual void finishProgress() = 0;
     virtual void information(QString s) = 0;
     virtual QTextEdit* textEdit();
-//    virtual void loadWithFilePicker();
+    virtual const History* history() const;
 
     virtual void restoreFont() {}
     virtual void setFont(QString, int) {}

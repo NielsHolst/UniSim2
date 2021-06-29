@@ -21,7 +21,7 @@ IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
 {
     help("models indoors wind speed");
     Input(ventilation).imports("indoors/ventilation[flux]",CA).unit("m3/m3/h");
-    Input(averageHeight).imports("geometry[volume]",CA).unit("m");
+    Input(averageHeight).imports("geometry[averageHeight]",CA).unit("m");
     Input(minimumValue).equals(0.1).help("Lower bound on value").unit("m/s");
     Output(value).help("Indoors wind speed [m/s]").unit("m/s");
 }

@@ -67,21 +67,21 @@ QString Parameter::toString() const {
     return s;
 }
 
+inline QVector<QString> toStringVector(QString value) {
+    QStringList list = split(value);
+    return QVector<QString>(list.begin(), list.end());
+
+}
+
 void Parameter::addToBuilder(base::BoxBuilder &builder) {
     attributedName.addToBuilder(builder);
     QString val = QString::fromStdString(value),
-            dist,
             fallBackValue;
     if (val.startsWith("?")) {
         int pos = val.indexOf(":");
         Q_ASSERT(pos>1);
         fallBackValue = val.mid(pos+1);
         val = val.mid(1, pos-1);
-    }
-    if (val.contains("@") && !isApostrophed(val) && !isParenthesized(val)) {
-        int pos = val.indexOf("@");
-        dist = deEmbrace(val.mid(pos+1));
-        val = val.left(pos);
     }
 
     if (!fallBackValue.isNull()) {
@@ -90,18 +90,16 @@ void Parameter::addToBuilder(base::BoxBuilder &builder) {
     else if (isApostrophed(val)) {
         val = deEmbrace(val);
         if (isParenthesized(val))
-            builder.equals(split(val));
+            builder.equals(toStringVector(val));
         else
             builder.equals(val);
     }
     else if (isParenthesized(val))
-        builder.equals(split(val));
+        builder.equals(toStringVector(val));
     else if (isValue(val))
         builder.equals(val);
     else
         builder.imports(val);
-    if (!dist.isNull())
-        builder.rnd(dist);
 }
 
 void Node::clear() {

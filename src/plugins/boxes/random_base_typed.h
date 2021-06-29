@@ -22,7 +22,7 @@ protected:
     T fixed, min, max;
     // Outputs
     T value;
-    void checkInputs();
+    void checkInputs(QString text);
 };
 
 template <class ValueType>
@@ -36,9 +36,9 @@ RandomBaseTyped<ValueType>::RandomBaseTyped(QString name, QObject *parent)
 }
 
 template <class ValueType>
-void RandomBaseTyped<ValueType>::checkInputs() {
+void RandomBaseTyped<ValueType>::checkInputs(QString text) {
     if (min >= max)
-        ThrowException("Boundaries must obey min<max").value(min).value2(max).context(this);
+        ThrowException(text + ": Boundaries must obey min<max").value(min).value2(max).context(this);
 }
 
 template <class ValueType>

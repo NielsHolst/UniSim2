@@ -9,6 +9,8 @@
 
 namespace base {
 
+class History;
+
 class DialogWidget;
 
 class Dialog : public DialogBase
@@ -20,6 +22,7 @@ public:
     void finishProgress();
     void information(QString s);
     QTextEdit* textEdit();
+    const History* history() const;
     void setFont(QString family, int pt);
     QFont font();
     void writePrompt();

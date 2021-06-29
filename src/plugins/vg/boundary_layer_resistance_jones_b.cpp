@@ -42,9 +42,9 @@ void BoundaryLayerResistanceJonesB::setRbH2O() {
            vpd = max(svpLeaf - vpAir, 0.),
            gbH2O = max(1000.*evaporation/( 0.622*RhoAir/P0*vpd ), 0.001);
 
-    rbH2O = 1./gbH2O;
-    if (std::isnan(rbH2O)) {
-        ThrowException("BoundaryLayerResistanceJonesB is not a number").context(this);;
+    rH2O = 1./gbH2O;
+    if (std::isnan(rH2O)) {
+        ThrowException("BoundaryLayerResistanceJonesB is not a number").context(this);
     }
 }
 

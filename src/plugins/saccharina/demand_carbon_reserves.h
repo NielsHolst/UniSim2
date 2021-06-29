@@ -19,8 +19,7 @@ public:
 private:
     // Inputs
     double reservesProportionC, maxReservesProportionC,
-        structProportionC, structuralMass, demandStructureC,
-        maxRelativeDemand;
+        structProportionC, structuralMass, demandStructureC;
     // Outputs
     double value;
 };

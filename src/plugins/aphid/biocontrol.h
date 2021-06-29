@@ -24,7 +24,7 @@ private:
         prevalence, cadaverPrevalence;
     // Outputs
     double
-        aphidPressureDifference, yieldDifference,
+        aphidPressureDifference, yieldImprovement,
         percentageCadaversGs43, percentageCadaversGs61, percentageCadaversGs73,
         maxCadaverPrevalence, maxCadaverPrevalenceGS,
         maxPrevalence, maxPrevalenceGS;

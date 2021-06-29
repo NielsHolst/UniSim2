@@ -42,21 +42,21 @@ void RandomBase::initialize() {
     _order->resize(_randomiser->numStrata());
     // Potential first draw
     if (drawAtInitialize) {
-        checkInputs();
+        checkInputs("initialize");
         updateValue();
     }
 }
 
 void RandomBase::reset() {
     if (drawAtReset) {
-        checkInputs();
+        checkInputs("reset");
         updateValue();
     }
 }
 
 void RandomBase::update() {
     if (drawAtUpdate) {
-        checkInputs();
+        checkInputs("update");
         updateValue();
     }
 }

@@ -12,12 +12,13 @@ class Host : public base::Box
 {
 public: 
     Host(QString name, QObject *parent);
+    void setFoodWebImports();
 private:
     // Inputs
-    double density,
-        attackRate, gainFactor,
-        numAttacks, numHostAttacked;
-};
+    double density, attackRate, gainFactor;
+    // Outputs
+    double propAttacked, numAttacked;
+    };
 
 } //namespace
 #endif

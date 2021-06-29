@@ -6,9 +6,9 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/box_builder.h>
-#include <base/publish.h>
-#include <base/test_num.h>
+#include <base/exception.h>
 #include <base/phys_math.h>
+#include <base/publish.h>
 #include "leaf_photosynthesis.h"
 
 using namespace base;
@@ -21,26 +21,31 @@ PUBLISH(LeafPhotosynthesis)
 LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
     : Box(name, parent)
 {
-    help("computes single-leaf light capture and photosynthetic rate");
-    Input(parAbsorbed).unit("umol/m2/s").help("Absorbed PAR");
-    Input(Pgmax).imports("./lightResponse[Pgmax]",CA);
-    Input(lue).imports("./lightResponse[lue]",CA);
-    Input(Rd).imports("./lightResponse[Rd]",CA);
-    Output(Pg).help("Gross assimilation rate").unit("mg CO2/m2/s");
-    Output(Pn).help("Net assimilation rate").unit("mg CO2/m2/s");
+    help("computes canopy photosynthetic rate");
+    Input(leafAj).imports("../Aj[value]");
+    Input(leafAr).imports("../respiration[value]");
+    Output(An).help("Net leaf assimilation rate").unit("μmol CO2/m2 leaf/s");
+    Output(Ag).help("Gross leaf assimilation rate").unit("μmol CO2/m2 leaf/s");
+    Output(Ar).help("Leaf respiration rate").unit("μmol CO2/m2 leaf/s");
 }
 
-void LeafPhotosynthesis::amend() {
-    BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./lightResponse"))
-        builder.
-        box("vg::LeafLightResponse").name("lightResponse").
-        endbox();
+void LeafPhotosynthesis::initialize() {
+    Box *parent = findOne<Box>("..");
+    QString layerName = parent->name();
+    if (layerName == "top")
+        _wGauss = wGauss3[0];
+    else if (layerName == "mid")
+        _wGauss = wGauss3[1];
+    else if (layerName == "bottom")
+        _wGauss = wGauss3[2];
+    else
+        ThrowException("Expected parent called 'top', 'mid' or 'bottom'").value(layerName).context(this);
 }
 
 void LeafPhotosynthesis::update() {
-    Pg = (Pgmax > 0) ? Pgmax*(1.-exp(-parAbsorbed*lue/Pgmax)) : 0.;
-    Pn = Pg - Rd;
+    An = _wGauss*leafAj;
+    Ag = _wGauss*(leafAj + leafAr);
+    Ar = _wGauss*leafAr;
 }
 
 } //namespace

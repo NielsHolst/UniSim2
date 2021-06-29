@@ -188,7 +188,6 @@ void EnergyBudget::reset() {
     cropIndex = stack.size() - 2;
 
     indoorsTemperature = findOne<IndoorsTemperature>("indoors/temperature");
-
     update();
 }
 

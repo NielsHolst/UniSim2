@@ -1,0 +1,14 @@
+Variable;Month;a;b
+DryWeight;MA;0.00583;1.357
+DryWeight;J;0.00608;1.383
+DryWeight;S;0.00030;2.154
+DryWeight;D;0.00013;2.291
+CarbonWeight;MA;1.553;1.342
+CarbonWeight;J;1.137;1.462
+CarbonWeight;S;0.080;2.203
+CarbonWeight;D;0.018;2.480
+NitrogenWeight;MA;0.089;1.491
+NitrogenWeight;J;0.104;1.437
+NitrogenWeight;S;0.005;2.236
+NitrogenWeight;D;0.005;2.197
+

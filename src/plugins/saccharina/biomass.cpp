@@ -18,11 +18,11 @@ Biomass::Biomass(QString name, QObject *parent)
 {
     help("calculates the yield, weight, C and N percent of the system");
     Input(structuralMass).imports("structure[mass]");
-    Input(structuralMassGrowth).imports("allocation[structuralMassGrowth]");
+    Input(structuralMassGrowth).imports("allocation[supplyMassStructure]");
     Input(plantDensity).imports("area[plantDensity]");
-    Input(Cstruct).equals(0.20).unit("g C/g structure").help("Amount of structurally bound carbon");
-    Input(Nstruct).equals(0.01).unit("g N/g structure").help("Amount of structurally bound nitrogen");
-    Input(kdw).equals(0.0785).help("Dry weight to wet weight ratio");
+    Input(Cstruct).equals(0.21).unit("g C/g structure").help("Amount of structurally bound carbon");
+    Input(Nstruct).equals(0.015).unit("g N/g structure").help("Amount of structurally bound nitrogen");
+    Input(kdw).equals(0.0785).help("Dry weight to wet weight ratio for structural mass");
     Input(kN).equals(2.72).help("Mass of nitrogen reserves per gram nitrogen");
     Input(kC).equals(2.12).help("Mass of carbon reserves per gram carbon");
     Input(C).imports("reserves/carbon[proportion]");
@@ -39,12 +39,14 @@ Biomass::Biomass(QString name, QObject *parent)
     Output(dryWeightYield).unit("g DW per m rope").help("Standing yield (dry weight)");
     Output(wetWeightYield).unit("g WW per m rope").help("Standing yield (wet weight)");
     Output(growthRatePct).unit("% per d").help("Percentage growth in dry weight");
+    Output(nitrogenUptakeRate).unit("g N per g DW per d").help("Relative uptake rate of nitrogen");
 }
 
 void Biomass::reset() {
     curDate = date;
     update();
     previousDryWeight = dryWeight;
+    previousNitrogenWeight = nitrogenWeight;
 }
 
 void Biomass::update() {
@@ -64,9 +66,14 @@ void Biomass::update() {
 
    if (date > curDate) {
        curDate = date;
+       // Change in dry weight relattive to dry weight
        double dW = dryWeight - previousDryWeight;
        growthRatePct = (previousDryWeight==0.) ? 0. : 100.*dW/previousDryWeight;
        previousDryWeight = dryWeight;
+       // Change in nitrogen weight relative to dry(!) weight
+       double dN = nitrogenWeight - previousNitrogenWeight;
+       nitrogenUptakeRate = (previousDryWeight==0.) ? 0. : dN/previousDryWeight;
+       previousNitrogenWeight = nitrogenWeight;
    }
 }
 

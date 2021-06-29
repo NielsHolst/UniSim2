@@ -28,11 +28,13 @@ Allocation::Allocation(QString name, QObject *parent)
     Input(reservesMaxProportionN).imports("reserves/nitrogen[maxProportion]");
     Input(supplyCarbonTotal).imports("photosynthesis[supply]");
     Input(supplyNitrogenTotal).imports("nitrogenUptake[supply]");
+
     Input(demandCarbonRespiration).imports("demand/carbon/respiration[value]");
+    Input(demandCarbonExudation).imports("demand/carbon/exudation[value]");
     Input(demandCarbonStructure).imports("demand/carbon/structure[value]");
-    Input(demandNitrogenStructure).imports("demand/nitrogen/structure[value]");
-    Input(proportionExuded).imports("demand/carbon/exudation[proportion]");
     Input(demandCarbonErosion).imports("demand/carbon/erosion[value]");
+
+    Input(demandNitrogenStructure).imports("demand/nitrogen/structure[value]");
     Input(demandNitrogenErosion).imports("demand/nitrogen/erosion[value]");
 
     Output(MC0).unit("g C").help("Metabolic carbon pool step 0");
@@ -42,9 +44,8 @@ Allocation::Allocation(QString name, QObject *parent)
     Output(MN0).unit("g N").help("Metabolic nitrogen pool step 0");
     Output(MN1).unit("g N").help("Metabolic nitrogen pool step 1");
     Output(supplyCarbonStructure).unit("g C").help("Carbon supply to structural growth");
-    Output(supplyCarbonExudation).unit("g C").help("Carbon supply to exudation");
     Output(supplyCarbonReserves).unit("g C").help("Carbon supply to reserves");
-    Output(structuralMassGrowth).unit("g structure").help("Growth in structural mass");
+    Output(supplyMassStructure).unit("g structure").help("Growth in structural mass");
     Output(structuralMassLoss).unit("g structure").help("Loss of structural mass to excess respiration");
     Output(reservesProportionC).unit("[0;1]").help("New proportion of carbon reserves");
     Output(reservesProportionN).unit("[0;1]").help("New proportion of nitrogen reserves");
@@ -61,16 +62,17 @@ inline double min(double a, double b, double c) {
 }
 
 void Allocation::update() {
-    double carbonReservesBefore = curReservesProportionC*structuralMass,
-           carbonReservesAfter;
+    // Keep track of C reserves balance
+    double carbonReservesAfter;
+    // Pool all C
     MC0 = curReservesProportionC*structuralMass + supplyCarbonTotal;
-    MC1 = MC0 - demandCarbonRespiration;
+    // Subtract C respiration and exudation
+    MC1 = MC0 - demandCarbonRespiration - demandCarbonExudation;
     if (MC1 < 0.) {
-        structuralMassGrowth = MC1/structuralProportionC;
-        structuralMassLoss = -structuralMassGrowth;
+        supplyMassStructure = MC1/structuralProportionC;
+        structuralMassLoss = -supplyMassStructure;
         sdCarbon = sdNitrogen =
         supplyCarbonStructure =
-        supplyCarbonExudation =
         MN0 = MN1 = MC2 = MC3 =
         reservesProportionC = 0.;
         reservesProportionN = curReservesProportionN;
@@ -78,22 +80,27 @@ void Allocation::update() {
     }
     else {
         structuralMassLoss = 0.;
+        // Pool all N
         MN0 = curReservesProportionN*structuralMass + supplyNitrogenTotal;
-        sdCarbon   = (demandCarbonStructure==0.) ? 0. : MC1/(1. + proportionExuded)/demandCarbonStructure;
+        // Compute C and N supply/demand ratios for structural growth
+        sdCarbon   = (demandCarbonStructure==0.)   ? 0. : MC1/demandCarbonStructure;
         sdNitrogen = (demandNitrogenStructure==0.) ? 0. : MN0/demandNitrogenStructure;
+        // Compute C supply for structure by most limiting C or N
         supplyCarbonStructure = min(sdCarbon, sdNitrogen, 1.)*demandCarbonStructure;
-        MC2 = MC1 - (1.+proportionExuded)*supplyCarbonStructure;
-        structuralMassGrowth = (supplyCarbonStructure - demandCarbonErosion)/structuralProportionC;
-        MC3 = MC2 - proportionExuded*structuralProportionC*structuralMass;
-        supplyCarbonExudation = proportionExuded*(structuralProportionC*structuralMass + supplyCarbonStructure);
-        // Update reserves
-        double newStructuralMass = structuralMass + structuralMassGrowth;
-        reservesProportionC = minmax(0., MC3/newStructuralMass, reservesMaxProportionC);
-        MN1 = MN0 - structuralMassGrowth*structuralProportionN - demandNitrogenErosion;
+        // Allocate C for structure and erosion
+        MC2 = MC1 - supplyCarbonStructure - demandCarbonErosion;
+        // Translate to growth in structural mass after subtracting demanded C loss
+        supplyMassStructure = (supplyCarbonStructure - demandCarbonErosion)/structuralProportionC;
+        // Update C reserves  (g C per g struct)
+        double newStructuralMass = structuralMass + supplyMassStructure;
+        reservesProportionC = minmax(0., MC2/newStructuralMass, reservesMaxProportionC);
+        // Allocate N for structure and erosion
+        MN1 = MN0 - supplyMassStructure*structuralProportionN - demandNitrogenErosion;
+        // Update N reserves  (g N per g struct)
         reservesProportionN = minmax(0., MN1/newStructuralMass, reservesMaxProportionN);
         carbonReservesAfter = reservesProportionC*newStructuralMass;
     }
-    supplyCarbonReserves = carbonReservesAfter - carbonReservesBefore;
+    supplyCarbonReserves = carbonReservesAfter - curReservesProportionC*structuralMass;
 }
 
 }

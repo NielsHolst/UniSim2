@@ -5,9 +5,9 @@
 #include <QApplication>
 #include <QProgressBar>
 #include <QTextEdit>
-#include <QtWinExtras/QWinTaskbarProgress>
 #include "dialog_base.h"
 #include "exception.h"
+#include "history.h"
 
 namespace base {
 
@@ -44,12 +44,14 @@ void DialogBase::updateProgress(const ProgressInfo &info) {
             bar->setValue(value);
             bar->show();
         }
-        QWinTaskbarProgress *taskbar = winProgressTaskbar();
-        if (taskbar) {
-            taskbar->setMaximum(maximum);
-            taskbar->setValue(value);
-            taskbar->show();
-        }
+        #if QT_VERSION < 0x060000
+            QWinTaskbarProgress *taskbar = winProgressTaskbar();
+            if (taskbar) {
+                taskbar->setMaximum(maximum);
+                taskbar->setValue(value);
+                taskbar->show();
+            }
+        #endif
         qApp->processEvents();
         _nextShowProgress += 0.01;
     }
@@ -59,8 +61,9 @@ QTextEdit* DialogBase::textEdit() {
     return nullptr;
 }
 
-//void DialogBase::loadWithFilePicker() {
-//}
+const History* DialogBase::history() const {
+    return nullptr;
+}
 
 void DialogBase::message(QString s) {
     _message = s;
