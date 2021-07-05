@@ -19,7 +19,7 @@ public:
 
 private:
     // Inputs
-    double g0, leafPhotosynthesis, rh, ca;
+    double g0, g1, leafPhotosynthesis, rh, ca;
     // Methods
     double resetRsH2O();
     double updateRsH2O();

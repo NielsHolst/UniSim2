@@ -32,9 +32,9 @@ LeafRespiration::LeafRespiration(QString name, QObject *parent)
     help("models leaf light and dark respiration");
     Input(leafTemperature).imports("crop/temperature[value]",CA).unit("oC");
     Input(canopyParAbsorbed).imports("energyBudget/crop[parAbsorbed]",CA);
+    Input(RL).imports("crop[lightRespiration]",CA);
     Input(darknessThreshold).equals(5.).help("Threshold for dark respiration").unit("μmol CO2/m2 ground/s");
     Input(Q10).equals(1.92).help("Q10 value");
-    Input(RL).equals(0.29).help("Light respiration at 25 oC").unit("μmol CO2/m2/s");
     Output(value).help("Respiration").unit("μmol CO2/m2/s");
 }
 

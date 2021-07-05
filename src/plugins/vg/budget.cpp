@@ -33,10 +33,13 @@ Budget::Budget(QString name, QObject *parent)
     Input(outdoorsAh).imports("outdoors[ah]", CA);
     Input(soilEnergyRate).imports("energyBudget/floor[conductiveInflux]", CA);
     Input(heatingPowerUsage).imports("actuators/heating[energyFluxTotal]",CA).unit("W/m2");
-    Input(growthLightsPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
+    Input(growthLightPowerUsage).imports("actuators/growthLights[powerUsage]",CA).unit("W/m2");
     Input(parAbsorbed).imports("energyBudget/crop[parAbsorbed]", CA).unit("umol/s/m2");
     Input(co2Flux).imports("actuators/co2Injection[value]",CA).unit("g/m2/h");
+    Input(netGrowthRate).imports("crop/photosynthesis[Pn]",CA).unit("g dry mass/ground m2/h");
     Input(dt).imports("calendar[timeStepSecs]", CA).unit("s");
+
+    Output(growthLightUseEfficiency).help("Biomass produced per growth light energy consumption").unit("g/kWh");
     Output(skyIrradiation).help("Accumulated sunlight irradiation").unit("kWh/m2");
     Output(skyRadiationAbsorbed).help("Accumulated radiation lost to the sky").unit("kWh/m2");
     Output(skySwRadiationAbsorbed).help("Accumulated sw radiation lost to the sky").unit("kWh/m2");
@@ -46,8 +49,9 @@ Budget::Budget(QString name, QObject *parent)
 //    Output(latentHeatEnergy).help("Energy lost by latent heat in air flux").unit("kWh/m2");
     Output(soilEnergy).help("Energy lost to soil by conduction from floor").unit("kWh/m2");
     Output(heatingEnergy).help("Accumulated energy spent on heating").unit("kWh/m2");
-    Output(growthLightsEnergy).help("Accumulated energy spent on growth lights").unit("kWh/m2");
-    Input(parAbsorbedTotal).help("Accumulated PAR absorbed by plants").unit("kmol/m2");
+    Output(growthLightEnergy).help("Accumulated energy spent on growth lights").unit("kWh/m2");
+
+    Output(parAbsorbedTotal).help("Accumulated PAR absorbed by plants").unit("kmol/m2");
     Output(co2Total).help("Accumulated CO2 spent").unit("kg/m2");
 }
 
@@ -55,7 +59,7 @@ void Budget::initialize() {
 }
 
 void Budget::reset() {
-   _kiloHour = dt/3600./1000.;
+   _kiloHour = dt/3600./1000.; // this conversion is for accumulating energy by time step
    _kiloMol = dt*1e-9;
    _prevDate = QDate();
    _hasResetSums = false;
@@ -63,6 +67,7 @@ void Budget::reset() {
 
 void Budget::update() {
     checkNewYear();
+    growthLightUseEfficiency = (growthLightPowerUsage > 0.) ? netGrowthRate / (growthLightPowerUsage*3600./1000.) : 0.;
     // W/m2 = m3/m2 * kg/m3 * J/kg / s;
 //    double latentHeatRate = airInflux/groundArea*(outdoorsAh-indoorsAh)*LHe/dt;
     skyIrradiation       += skyIrradiationRate*_kiloHour;
@@ -75,7 +80,7 @@ void Budget::update() {
 //    latentHeatEnergy     += latentHeatRate*_kiloHour;
     soilEnergy           += soilEnergyRate*_kiloHour;
     heatingEnergy        += heatingPowerUsage*_kiloHour;
-    growthLightsEnergy   += growthLightsPowerUsage*_kiloHour;
+    growthLightEnergy   += growthLightPowerUsage*_kiloHour;
     parAbsorbedTotal     += parAbsorbed*_kiloMol;
     co2Total             += co2Flux*_kiloHour;
 }
@@ -91,7 +96,7 @@ void Budget::checkNewYear()  {
         latentHeatEnergy =
         soilEnergy =
         heatingEnergy =
-        growthLightsEnergy =
+        growthLightEnergy =
         parAbsorbedTotal =
         co2Total = 0.;
     }

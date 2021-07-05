@@ -19,7 +19,9 @@ public:
     void amend();
 private:
     // Inputs
-    double lai, coverage;
+    double lai, coverage,
+        k, gammaStar, Jmax, lightRespiration,
+        ballBerryIntercept, ballBerrySlope;
 };
 } //namespace
 

@@ -85,11 +85,12 @@ private:
         vapourFluxCondensationCover,
         vapourFluxCondensationdScreens,
         vapourFluxVentilation,
-        netPhotosynthesisRate,
-        grossPhotosynthesisRate,
-        darkRespirationRate,
-        cropGrowthRate,
-        lightUseEfficiency,
+        grossAssimilationRate,
+        netAssimilationRate,
+        respirationRate,
+        netGrowthRate,
+        netGrowthRateLeaf,
+        growthLightUseEfficiency,
         totalIrradiation,
         totalSkyAbsorbed,
         totalSkySwAbsorbed,
@@ -104,7 +105,6 @@ private:
         totalCo2;
     int thermostateUpdates;
     QString thermostatState, thermostatAction, thermostatSolution;
-    void lookupPort(QString path);
 };
 } //namespace
 

@@ -17,8 +17,6 @@ public:
 private:
     // Inputs
     QVector<double> numbers;
-    // Outputs
-    int iterations;
 };
 
 }

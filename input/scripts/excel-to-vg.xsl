@@ -1476,6 +1476,27 @@
   <xsl:variable name="coverageName" select="'propAreaCultured'"/>
   <xsl:variable name="coverageSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$coverageName]/Value" as="node()"/>
   <xsl:variable name="coverageValue" select="number(replace($coverageSrc, ',', '.'))"/>
+  <xsl:variable name="kName" select="'k'"/>
+  <xsl:variable name="kSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$kName]/Value" as="node()"/>
+  <xsl:variable name="kValue" select="number(replace($kSrc, ',', '.'))"/>
+  <xsl:variable name="gammaStarName" select="'gammaStar'"/>
+  <xsl:variable name="gammaStarSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$gammaStarName]/Value" as="node()"/>
+  <xsl:variable name="gammaStarValue" select="number(replace($gammaStarSrc, ',', '.'))"/>
+  <xsl:variable name="JmaxName" select="'Jmax'"/>
+  <xsl:variable name="JmaxSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$JmaxName]/Value" as="node()"/>
+  <xsl:variable name="JmaxValue" select="number(replace($JmaxSrc, ',', '.'))"/>
+  <xsl:variable name="BallBerryInterceptName" select="'BallBerryIntercept'"/>
+  <xsl:variable name="BallBerryInterceptSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$BallBerryInterceptName]/Value" as="node()"/>
+  <xsl:variable name="BallBerryInterceptValue" select="number(replace($BallBerryInterceptSrc, ',', '.'))"/>
+
+  <xsl:variable name="lightRespirationName" select="'lightRespiration'"/>
+  <xsl:variable name="lightRespirationSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$lightRespirationName]/Value" as="node()"/>
+  <xsl:variable name="lightRespirationValue" select="number(replace($lightRespirationSrc, ',', '.'))"/>
+
+  <xsl:variable name="BallBerrySlopeName" select="'BallBerrySlope'"/>
+  <xsl:variable name="BallBerrySlopeSrc" select="DVV_SETUP/Greenhouse/Crop/Parameters[ParameterName=$BallBerrySlopeName]/Value" as="node()"/>
+  <xsl:variable name="BallBerrySlopeValue" select="number(replace($BallBerrySlopeSrc, ',', '.'))"/>
+  
   <box class="vg::Crop" name="crop">
     <port name="lai">
         <xsl:attribute name="externalName">
@@ -1497,6 +1518,72 @@
         </xsl:attribute>
         <xsl:attribute name="value">
           <xsl:value-of select="$coverageValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="k">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$kName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($kSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$kValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="gammaStar">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$gammaStarName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($gammaStarSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$gammaStarValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="Jmax">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$JmaxName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($JmaxSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$JmaxValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="lightRespiration">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$lightRespirationName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($lightRespirationSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$lightRespirationValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="ballBerryIntercept">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$BallBerryInterceptName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($BallBerryInterceptSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$BallBerryInterceptValue"/>
+        </xsl:attribute>
+    </port>
+    <port name="ballBerrySlope">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$BallBerrySlopeName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($BallBerrySlopeSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$BallBerrySlopeValue"/>
         </xsl:attribute>
     </port>
   </box>

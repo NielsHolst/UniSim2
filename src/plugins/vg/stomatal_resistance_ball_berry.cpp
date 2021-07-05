@@ -17,7 +17,6 @@ namespace vg {
 
 PUBLISH(StomatalResistanceBallBerry)
 
-constexpr double g1    = 1.64;   // slope (to compute gs_H2O)
 
 /*      Species     g0 RL25  Gs25 Jmax25
 1  plantecophys 0.1000 0.92 42.75 210.00
@@ -32,7 +31,8 @@ StomatalResistanceBallBerry::StomatalResistanceBallBerry(QString name, QObject *
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance after Ball et al. (1987)");
-    Input(g0).equals(0.106).help("Minimum stomatal conductance for CO2");
+    Input(g0).imports("crop[ballBerryIntercept]",CA);
+    Input(g1).imports("crop[ballBerrySlope]",CA);
     Input(leafPhotosynthesis).imports("../leafPhotosynthesis[An]",CA); // μmol CO2 / leaf m2 / s
     Input(rh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
     Input(ca).imports("indoors/co2[value]",CA).unit("ppm");

@@ -21,18 +21,17 @@ CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, QObject *parent)
 {
     help("computes canopy photosynthetic rate");
     Input(lai).imports("/*/crop[lai]",CA);
-    Input(k).imports("energyBudget/crop[swK]",CA);
-    Input(leafAn).imports("./*/leafPhotosynthesis[An]");
-    Input(leafAg).imports("./*/leafPhotosynthesis[Ag]");
+    Input(leafAn).imports("./*/leafPhotosynthesis[An]",CA);
+    Input(leafAg).imports("./*/leafPhotosynthesis[Ag]",CA);
+    Input(growthRespiration).equals(0.3).unit("[0;1]").help("Relative growth respiration");
+
     Output(An).help("Net canopy assimilation rate").unit("μmol CO2/m2 leaf/s");
     Output(Ag).help("Gross canopy assimilation rate").unit("μmol CO2/m2 leaf/s");
     Output(Ar).help("Canopy respiration rate").unit("μmol CO2/m2 leaf/s");
-    Output(Pn).help("Net canopy assimilation rate").unit("g CO2/ground m2/h");
-    Output(Pg).help("Gross canopy assimilation rate").unit("g CO2/ground m2/h");
-    Output(Pr).help("Canopy respiration rate").unit("g CO2/ground m2/h");
-    Output(PnLeaf).help("Net canopy assimilation rate").unit("g CO2/leaf m2/h");
-    Output(PgLeaf).help("Gross canopy assimilation rate").unit("g CO2/leaf m2/h");
-    Output(PrLeaf).help("Canopy respiration rate").unit("g CO2/leaf m2/h");
+
+    Output(Pn).help("Net canopy growth rate").unit("g dry mass/ground m2/h");
+    Output(Pg).help("Gross canopy growth rate").unit("g dry mass/ground m2/h");
+    Output(Pr).help("Canopy respiration rate").unit("g dry mass/ground m2/h");
 }
 
 void CanopyPhotosynthesis::amend() {
@@ -75,13 +74,15 @@ void CanopyPhotosynthesis::update() {
     Pg = Ag*lai;
     Pr = Ar*lai;
     // g CO2/ground m2/h
-    Pn *= 3600*44.01*1e-6;
-    Pg *= 3600*44.01*1e-6;
-    Pr *= 3600*44.01*1e-6;
-    // g CO2/leaf m2/h
-    PnLeaf = Pn*lai;
-    PgLeaf = Pg*lai;
-    PrLeaf = Pr*lai;
+    double a = 3600*44.01*1e-6;
+    Pn *= a;
+    Pg *= a;
+    Pr *= a;
+    // g biomass/ground m2/h
+    double b = (1. - growthRespiration)*30./44.; // (Greenhouse Horticulture, p. 47)
+    Pn *= b;
+    Pg *= b;
+    Pr *= b;
 }
 
 } //namespace

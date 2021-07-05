@@ -22,10 +22,10 @@ LeafParAbsorbed::LeafParAbsorbed(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("computes PAR absorbed by leaf in canopy layer");
-    Input(canopyParAbsorbed).imports("energyBudget/crop[parAbsorbed]",CA); // μmol CO2/m2 ground/s
-    Input(k).imports("../..[k]",CA);
+    Input(parFlux).imports("energyBudget[cropParFluxFromAbove]",CA); // μmol PAR/m2 ground/s
+    Input(k).imports("/*/crop[k]",CA);
     Input(lai).imports("/*/crop[lai]",CA);
-    Output(value).help("PAR absorbed by leaf in canopy layer").unit("μmol CO2/m2 leaf/s");
+    Output(value).help("PAR absorbed by leaf in canopy layer").unit("μmol PAR/m2 leaf/s");
 }
 
 void LeafParAbsorbed::initialize() {
@@ -37,12 +37,14 @@ void LeafParAbsorbed::initialize() {
         _xGauss = xGauss3[1];
     else if (layerName == "bottom")
         _xGauss = xGauss3[2];
+    else if (layerName == "leaf")
+        _xGauss = 1.;
     else
         ThrowException("Expected parent called 'top', 'mid' or 'bottom'").value(layerName).context(this);
 }
 
 void LeafParAbsorbed::update() {
-    value = canopyParAbsorbed*(1. - k*exp(-k*_xGauss*lai));
+    value = parFlux*(1. - k*exp(-k*_xGauss*lai));
 }
 
 } //namespace

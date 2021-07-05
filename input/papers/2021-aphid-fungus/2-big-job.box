@@ -1,7 +1,7 @@
 #define RANDOMISER = RandomiserSobolSequence
 Simulation sim {
   // Runs at 26,000 iterations per hour
-  .iterations =  212992
+  .iterations =  851968 //212992 // Use 13312 iterations for a test run < 1 hour
   .steps =  273 // end of september
   .silent = TRUE
   .unattended = TRUE

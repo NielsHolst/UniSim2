@@ -1,19 +1,35 @@
 #define RANDOMISER = RandomiserSobolSequence
 Simulation sim {
   // Runs at 26,000 iterations per hour
-  .iterations =  212992
+  .iterations =  851968 //212992 // Use 13312 iterations for a test run < 1 hour
   .steps =  273 // end of september
   .silent = TRUE
   .unattended = TRUE
+  .useStopIterations = TRUE
+  .stopIterations = question[notAccepted]
   Box settings {
-    // Set bootstrapSize to 100 for a quick demonstration; a value of 10000 used in paper
     +doSensitivityAnalysis = TRUE
     +bootstrapSize = 10000
   }
   #include "aphid-fungus-random-parameters.part.box"
   #include "aphid-fungus-model.part.box" 
+  PopUp question {
+    .title = "You are about to run a simulation that will last many hours (at ~26,000 simulations per hour)."
+    .text = "Do you want to continue?"
+    .icon = "question"
+    .buttons = "(Yes No)"
+  }
+  PopUp {
+    .when = "debrief"
+    .title = "Congratulations! Your simulation has finally ended."
+    .text = "Remember to fill the clipboard and paste it to R."
+    .details = "1. Close this window.  2. Type 'clip' at the prompt. This fills the clipboard with your output.  3. In R, paste the clipboard contents. This will plot your output.  Note: R will take  5-10 minutes to finish."
+    .icon = "information"
+    .buttons = "OK"
+    .show = question[accepted]
+  }
   OutputR {
-    .end = "4-end.R"
+    .saveAsDataFrame = TRUE
     Box outputs {
       +aphidPressureDifference = biocontrol[aphidPressureDifference]
       +yieldImprovement        = biocontrol[yieldImprovement]

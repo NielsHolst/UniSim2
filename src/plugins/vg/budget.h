@@ -34,11 +34,13 @@ private:
         indoorsAh, outdoorsAh,
         soilEnergyRate,
         heatingPowerUsage,
-        growthLightsPowerUsage,
-         parAbsorbed,
-        co2Flux;
+        growthLightPowerUsage,
+        parAbsorbed,
+        co2Flux,
+        netGrowthRate;
     // Outputs
     double
+        growthLightUseEfficiency,
         skyIrradiation,
         skyRadiationAbsorbed, skySwRadiationAbsorbed, skyLwRadiationAbsorbed,
         ventilationEnergy,
@@ -47,7 +49,7 @@ private:
         latentHeatEnergy,
         soilEnergy,
         heatingEnergy,
-        growthLightsEnergy,
+        growthLightEnergy,
         parAbsorbedTotal,
         co2Total;
     // Data

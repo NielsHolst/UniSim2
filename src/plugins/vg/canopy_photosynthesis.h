@@ -20,10 +20,10 @@ public:
     void update();
 private:
     // Inputs
-    double lai, k;
+    double lai, growthRespiration;
     QVector<double> leafAn, leafAg;
     // Outputs
-    double An, Ag, Ar, Pg, Pn, Pr, PgLeaf, PnLeaf, PrLeaf;
+    double An, Ag, Ar, Pg, Pn, Pr;
 };
 } //namespace
 

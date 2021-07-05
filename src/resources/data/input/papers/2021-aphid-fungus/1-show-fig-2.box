@@ -1,8 +1,6 @@
 #define RANDOMISER = RandomiserStratified
 Simulation sim {
-  .iterations = 1
   .steps =  273 // end of september
-  .silent = FALSE
   Box settings {
     +doSensitivityAnalysis = FALSE
     +bootstrapSize = 0 // no bootstrapping

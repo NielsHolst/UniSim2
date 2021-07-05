@@ -81,11 +81,14 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(vapourFluxCondensationCover).imports("waterBudget/condensationCover[vapourFlux]");
     Output(vapourFluxCondensationdScreens).imports("waterBudget/condensationScreens[vapourFlux]");
     Output(vapourFluxVentilation).imports("waterBudget/ventilation[vapourFlux]");
-    Output(netPhotosynthesisRate).imports("crop/photosynthesis[Pn]");
-    Output(grossPhotosynthesisRate).imports("crop/photosynthesis[Pg]");
-    Output(darkRespirationRate).imports("crop/photosynthesis[Pr]");
-    Output(cropGrowthRate).imports("crop/growth[netGrowthRate]");
-    Output(lightUseEfficiency).imports("crop/growth[lue]");
+
+    Output(grossAssimilationRate).imports("crop/photosynthesis[Ag]");
+    Output(netAssimilationRate).imports("crop/photosynthesis[An]");
+    Output(respirationRate).imports("crop/photosynthesis[Ar]");
+    Output(netGrowthRate).imports("crop/photosynthesis[Pn]");
+    Output(netGrowthRateLeaf).imports("crop/bigLeaf[Pn]");
+    Output(growthLightUseEfficiency).imports("/*/budget[growthLightUseEfficiency]");
+
     Output(totalIrradiation).imports("budget[skyIrradiation]");
     Output(totalSkyAbsorbed).imports("budget[skyRadiationAbsorbed]");
     Output(totalSkySwAbsorbed).imports("budget[skySwRadiationAbsorbed]");
@@ -95,7 +98,7 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(totalSoilEnergy).imports("budget[soilEnergy]");
     Output(totalHeatingEnergy).imports("budget[heatingEnergy]");
     Output(totalHeatSink).importsMaybe("budget[heatSinkEnergy]");
-    Output(totalGrowthLightEnergy).imports("budget[growthLightsEnergy]");
+    Output(totalGrowthLightEnergy).imports("budget[growthLightEnergy]");
     Output(totalParAbsorbed).imports("budget[parAbsorbedTotal]");
     Output(totalCo2).imports("budget[co2Total]");
 }

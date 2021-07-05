@@ -21,7 +21,7 @@ private:
     double
         Pmax, slope, intercept;
     // Outputs
-    double min, max;
+    double min;
 };
 
 }

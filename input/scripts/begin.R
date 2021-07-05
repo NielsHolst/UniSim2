@@ -39,12 +39,13 @@ unisim_colour = function(i) {
   ))
 }
 
+n_rep_colours = 20
 scale_colour_discrete = function(...) {
-  scale_colour_manual(..., values = rep(unisim_colours, 10))
+  scale_colour_manual(..., values = rep(unisim_colours, n_rep_colours))
 }
 
 scale_fill_discrete = function(...) {
-  scale_fill_manual(..., values = rep(unisim_colours, 10))
+  scale_fill_manual(..., values = rep(unisim_colours, n_rep_colours))
 }
 
 scale_linetype_discrete = function(...) {
@@ -55,7 +56,7 @@ scale_linetype_discrete = function(...) {
 check_num_colours = function(list_of_names) {
   unique_names = unique(unlist(list_of_names))
   n = length(unique_names)
-  nmax = 10*length(unisim_colours)
+  nmax = n_rep_colours*length(unisim_colours)
   if (n > nmax) {
     stop(paste0("Too many variables in plot(",n," > ", nmax, ")\n", unique_names))
   }
@@ -88,11 +89,12 @@ is_rstudio = function() {
 }
 
 open_plot_window = function(width=7, height=7) {
-  is_windows = (.Platform$OS.type == "windows")
-  if (!is_rstudio()) {
-    if (is_windows) windows(width=width, height=height) else
-    X11(width=width, height=height, type="cairo") 
-  }
+  dev.new(width=width, height=height, noRStudioGD=TRUE)
+  # is_windows = (.Platform$OS.type == "windows")
+  # if (!is_rstudio()) {
+    # if (is_windows) windows(width=width, height=height) else
+    # X11(width=width, height=height, type="cairo") 
+  # }
 }
 
 unique_names = function(col_names) {

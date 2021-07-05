@@ -20,9 +20,8 @@ public:
 private:
     // Inputs
     double
-        gammastar, Jmax, k,
-        leafTemperature, intercellularCo2, parAbsorbed,
-        RL;
+        gammaStar, Jmax, k,
+        leafTemperature, intercellularCo2, parAbsorbed;
     // Outputs
     double JmaxTemp, J, value, respiration;
     // Methods

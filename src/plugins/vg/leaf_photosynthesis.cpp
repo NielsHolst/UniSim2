@@ -38,6 +38,8 @@ void LeafPhotosynthesis::initialize() {
         _wGauss = wGauss3[1];
     else if (layerName == "bottom")
         _wGauss = wGauss3[2];
+    else if (layerName == "leaf")
+        _wGauss = 1.;
     else
         ThrowException("Expected parent called 'top', 'mid' or 'bottom'").value(layerName).context(this);
 }

@@ -5,24 +5,24 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef CROP_GROWTH_H
-#define CROP_GROWTH_H
+#ifndef BIG_LEAF_PHOTOSYNTHESIS_H
+#define BIG_LEAF_PHOTOSYNTHESIS_H
 
 #include <base/box.h>
 
 namespace vg {
 
-class CropGrowth : public base::Box
+class BigLeafPhotosynthesis : public base::Box
 {
 public:
-    CropGrowth(QString name, QObject *parent);
+    BigLeafPhotosynthesis(QString name, QObject *parent);
+    void amend();
     void update();
-
 private:
     // Inputs
-    double Pn, parAbsorbed;
+    double lai, k, growthRespiration, leafAn, leafAg;
     // Outputs
-    double netGrowthRate, lue;
+    double An, Ag, Ar, Pg, Pn, Pr;
 };
 } //namespace
 

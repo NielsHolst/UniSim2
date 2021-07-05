@@ -20,7 +20,7 @@ public:
     void update();
 private:
     // Inputs
-    double canopyParAbsorbed, k, lai;
+    double parFlux, k, lai;
     // Outputs
     double value;
     // Data

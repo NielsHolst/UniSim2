@@ -15,6 +15,7 @@ HEADERS +=  \
     ah_from_rh.h \
     any_flag.h \
     arrhenius.h \
+    big_leaf_photosynthesis.h \
     boundary_layer_resistance_base.h \
     boundary_layer_resistance_jones_a.h \
     boundary_layer_resistance_jones_b.h \
@@ -27,7 +28,6 @@ HEADERS +=  \
     controller_ventilation_combined.h \
     cover.h \
     crop.h \
-    crop_growth.h \
     diffuse_irradiation_base.h \
     diffuse_irradiation_RE.h \
     energy_budget.h \
@@ -113,6 +113,7 @@ SOURCES += \
     ah_from_rh.cpp \
     any_flag.cpp \
     arrhenius.cpp \
+    big_leaf_photosynthesis.cpp \
     boundary_layer_resistance_base.cpp \
     boundary_layer_resistance_jones_a.cpp \
     boundary_layer_resistance_jones_b.cpp \
@@ -125,7 +126,6 @@ SOURCES += \
     controller_ventilation_combined.cpp \
     cover.cpp \
     crop.cpp \
-    crop_growth.cpp \
     diffuse_irradiation_base.cpp \
     diffuse_irradiation_RE.cpp \
     energy_budget.cpp \

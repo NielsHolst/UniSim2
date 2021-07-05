@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box xmlns:ecolmod="http://www.ecolmod.org" class="Simulation" name="greenhouse">
-	<!-- <port name="steps" value="720"/> -->
 	<port name="steps" ref="./period[steps]"/>
 	<port name="unattended" value="TRUE"/>
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
-		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-07-2020"/>
-		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="08-07-2020"/>
+		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2020"/>
+		<port name="endDate" externalName="None" source="/DVV_SETUP/StopTime" value="31-12-2020"/>
 		<port name="beginTime" externalName="None" source="Fixed" value="00:00:00"/>
-		<port name="endTime" externalName="None" source="Fixed" value="12:00:00"/>
+		<port name="endTime" externalName="None" source="Fixed" value="00:00:00"/>
 		<port name="timeStep" externalName="None" source="/DVV_SETUP/TimeStep" value="3"/>
 		<port name="timeUnit" value="m" externalName="None" source="Fixed"/>
 	</box>
@@ -657,6 +656,12 @@
 	<box class="vg::Crop" name="crop">
 		<port name="lai" externalName="LAI" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="3"/>
 		<port name="coverage" externalName="propAreaCultured" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="0.9"/>
+		<port name="k" externalName="k" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="0.7"/>
+		<port name="gammaStar" externalName="gammaStar" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="48.95"/>
+		<port name="Jmax" externalName="Jmax" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="115.67"/>
+		<port name="lightRespiration" externalName="lightRespiration" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="0.29"/>
+		<port name="ballBerryIntercept" externalName="BallBerryIntercept" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="0.106"/>
+		<port name="ballBerrySlope" externalName="BallBerrySlope" source="/DVV_SETUP/Greenhouse/Crop/Parameters/Value" value="1.64"/>
 	</box>
 	<!-- *** Budget *** -->
 	<box class="vg::Budget" name="budget"/>
@@ -667,16 +672,12 @@
 			<port name="xAxis" value="calendar[dateTime]"/>
 			<box class="PlotR">
 				<port name="ncol" value="4"/>
-				<!-- <port name="ports" value="(crop/*/top/*[*] indoors/humidity[rh] indoors/co2[value])"/> -->
-				<port name="ports" value="(crop/photosynthesis[Ag] crop/photosynthesis[An] crop/photosynthesis[Pg] crop/photosynthesis[Pn]
-        crop/growth[netGrowthRate] crop/growth[parAbsorbed] crop/growth[lue] crop/photosynthesis/top/intercellularCo2[ci])"/>
-				<!-- <port name="ports" value="output/p[*]"/> -->
+				<port name="ports" value="output/p[*]"/>
 			</box>
 		</box>
 		<box class="OutputText" name="text">
-			<port name="useLocalDecimalChar" value="TRUE"/>
 			<port name="skipInitialRows" value="480"/>
-			<!-- <port name="averageN" value="20"/> -->
+			<port name="averageN" value="20"/>
 		</box>
 	</box>
 </box>

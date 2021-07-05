@@ -7,7 +7,7 @@ using namespace base;
 void TestProportions::test1() {
     Proportions prop = new Proportions(this);
     double p=0.2;
-    prop.add(&p);
+    prop.add(p);
     QVector<double>
         P = prop.reconciled(),
         expected;
@@ -19,8 +19,8 @@ void TestProportions::test1() {
 void TestProportions::test2() {
     Proportions prop = new Proportions(this);
     double p=0.2, q=0.6;
-    prop.add(&p);
-    prop.add(&q);
+    prop.add(p);
+    prop.add(q);
     QVector<double>
         P = prop.reconciled(),
         expected;
@@ -33,9 +33,9 @@ void TestProportions::test2() {
 void TestProportions::test3() {
     Proportions prop = new Proportions(this);
     double p=0.2, q=0.6, r=0.5;
-    prop.add(&p);
-    prop.add(&q);
-    prop.add(&r);
+    prop.add(p);
+    prop.add(q);
+    prop.add(r);
     QVector<double>
         P = prop.reconciled(),
         expected;
