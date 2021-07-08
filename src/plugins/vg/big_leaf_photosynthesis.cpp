@@ -53,9 +53,9 @@ void BigLeafPhotosynthesis::update() {
     Ar = Ag - An;
     // g CO2/m2 leaf/h
     double a = 3600*44.01*1e-6;
-    Pn *= a;
-    Pg *= a;
-    Pr *= a;
+    Pn = An*a;
+    Pg = Pg*a;
+    Pr = Pr*a;
     // g biomass/m2 leaf/h
     double b = (1. - growthRespiration)*30./44.; // (Greenhouse Horticulture, p. 47)
     Pn *= b;

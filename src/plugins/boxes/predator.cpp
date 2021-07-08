@@ -21,7 +21,6 @@ Predator::Predator(QString name, QObject *parent)
     Input(demand).help("Amount of resource needed");
     Output(supply).help("Total amount of resource acquired");
     Output(sdRatio).help("Total supply/demand ratio").unit("[0;1]");
-    dialog().information("Predator::Predator()");
 }
 
 void Predator::setFoodWebImports() {

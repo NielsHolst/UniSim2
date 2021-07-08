@@ -121,9 +121,15 @@ namespace {
             // Find lowest common type
             Rule aRules = _rules.value(a),
                  bRules = _rules.value(b);
-            QSet<PortType> A = QSet<PortType>(aRules.begin(), aRules.end()),
-                           B = QSet<PortType>(bRules.begin(), bRules.end()),
-                           C = A.intersect(B);
+            #if QT_VERSION >= 0x050E00
+                QSet<PortType> A = QSet<PortType>(aRules.begin(), aRules.end()),
+                               B = QSet<PortType>(bRules.begin(), bRules.end()),
+                               C = A.intersect(B);
+            #else
+                QSet<PortType> A = QSet<PortType>(aRules.toSet()),
+                               B = QSet<PortType>(bRules.toSet()),
+                               C = A.intersect(B);
+            #endif
             Q_ASSERT(!C.isEmpty());
             QList<PortType> candidates = QList<PortType>(C.begin(),C.end());
             std::sort(candidates.begin(), candidates.end());

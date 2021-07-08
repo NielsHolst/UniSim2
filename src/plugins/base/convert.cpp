@@ -316,7 +316,11 @@ template<> QStringList convert(QVector<float> source)           { VECTOR_CONVERT
 template<> QStringList convert(QVector<double> source)          { VECTOR_CONVERT_STRINGLIST(double); }
 template<> QStringList convert(QVector<long double> source)     { VECTOR_CONVERT_STRINGLIST(long double); }
 template<> QStringList convert(QVector<QString> source)         {
-    return QStringList(QList<QString>(source.begin(), source.end()));
+    #if QT_VERSION >= 0x050E00
+        return QStringList(QList<QString>(source.begin(), source.end()));
+    #else
+        return QStringList(source.toList());
+    #endif
 }
 template<> QStringList convert(QVector<QDate> source)           { VECTOR_CONVERT_STRINGLIST(QDate); }
 template<> QStringList convert(QVector<QTime> source)           { VECTOR_CONVERT_STRINGLIST(QTime); }
@@ -343,7 +347,11 @@ template<> QString convert(QVector<float> source)           { VECTOR_CONVERT_STR
 template<> QString convert(QVector<double> source)          { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<long double> source)     { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QString> source)         {
-    QStringList list = QStringList( QList<QString>(source.begin(), source.end()) );
+    #if QT_VERSION >= 0x050E00
+        QStringList list = QStringList( QList<QString>(source.begin(), source.end()) );
+    #else
+        return QStringList(source.toList());
+    #endif
     return "(" + list.join(" ") + ")";
 }
 template<> QString convert(QVector<QDate> source)           { VECTOR_CONVERT_STRING; }

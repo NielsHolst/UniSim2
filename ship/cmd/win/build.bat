@@ -4,7 +4,7 @@ cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
 rem Set up version
 set MAJOR=2
 set MINOR=3
-set SUB=56
+set SUB=57
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 
@@ -86,14 +86,14 @@ echo = Set installer version number =
 ..\bin\update-installer-project %MAJOR% %MINOR% %SUB%
 if errorlevel 1 goto :end_fail
 
-echo = Build installer =
-pushd %INSTALL_BUILDER_PATH%
-builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml
-popd
+REM echo = Build installer =
+REM pushd %INSTALL_BUILDER_PATH%
+REM builder build \data\QDev\UniSim2\ship\unisim2_install_builder.xml
+REM popd
 
-echo = Restore to debug version =
-..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% debug
-..\bin\update-qt-project %MAJOR% %MINOR% %SUB% debug
+REM echo = Restore to debug version =
+REM ..\bin\update-qt-resources %MAJOR% %MINOR% %SUB% debug
+REM ..\bin\update-qt-project %MAJOR% %MINOR% %SUB% debug
 
 echo *** SUCCESS ***
 pause

@@ -148,11 +148,13 @@ const History* DialogWidget::history() const {
 
 void DialogWidget::finished() {
     _progressBar->hide();
-    #if QT_VERSION < 0x060000
-        if (_winProgressTaskbar) {
-            _winProgressTaskbar->reset();
-            _winProgressTaskbar->hide();
-        }
+    #ifdef Q_OS_WIN
+      #if QT_VERSION < 0x060000
+          if (_winProgressTaskbar) {
+              _winProgressTaskbar->reset();
+              _winProgressTaskbar->hide();
+          }
+      #endif
     #endif
     qApp->processEvents();
 }
@@ -182,15 +184,17 @@ void DialogWidget::showEvent(QShowEvent *event) {
     // See https://doc.qt.io/qt-5/qtwinextras-musicplayer-example.html
     // and QWinTaskbarButton help
     QWidget::showEvent(event);
-    #if QT_VERSION < 0x060000
-        if (environment().isWindows() && !_winProgressTaskbar) {
-            QWinTaskbarButton *taskbarButton = new QWinTaskbarButton(this);
-            QWindow *window = _parent->windowHandle();
-            if (window) {
-                taskbarButton->setWindow(window);
-                _winProgressTaskbar = taskbarButton->progress();
-            }
-        }
+    #ifdef Q_OS_WIN
+      #if QT_VERSION < 0x060000
+          if (environment().isWindows() && !_winProgressTaskbar) {
+              QWinTaskbarButton *taskbarButton = new QWinTaskbarButton(this);
+              QWindow *window = _parent->windowHandle();
+              if (window) {
+                  taskbarButton->setWindow(window);
+                  _winProgressTaskbar = taskbarButton->progress();
+              }
+          }
+      #endif
     #endif
 }
 

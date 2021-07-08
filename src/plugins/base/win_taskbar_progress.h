@@ -7,10 +7,16 @@
 
 #include <QObject>
 
-#if QT_VERSION < 0x060000
-    #include <QtWinExtras/QWinTaskbarProgress>
-    #include <QtWinExtras/QWinTaskbarButton>
-#else
+#ifdef Q_OS_WIN
+    #if QT_VERSION < 0x060000
+        #include <QtWinExtras/QWinTaskbarProgress>
+        #include <QtWinExtras/QWinTaskbarButton>
+    #else
+        #define QWinTaskbarProgress QObject
+    #endif
+#endif
+
+#ifndef Q_OS_WIN
     #define QWinTaskbarProgress QObject
 #endif
 

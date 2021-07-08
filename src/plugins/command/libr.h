@@ -15,6 +15,7 @@ public:
 private:
     // Methods
     void doExecute();
+    QString readRcode();
 };
 
 }

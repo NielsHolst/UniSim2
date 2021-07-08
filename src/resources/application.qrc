@@ -139,25 +139,6 @@
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-scenarios.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/aphid-fungus-weather-files.part.box</file>
     <file>data/input/papers/2021-aphid-fungus/fig-2-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/1-aphid-fungus-example.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/1-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/2-aphid-fungus-uncertain-timing.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/2-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/3-aphid-fungus-uncertain-outcomes.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/3-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/4-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/5-aphid-fungus-scenario-early.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/5-aphid-fungus-scenario-late-enzootic.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/5-aphid-fungus-scenario-late-epizootic.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/5-aphid-fungus-scenario-mid.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/6-aphid-fungus-scenario-biocontrol.box</file>
-    <file>data/input/papers/2021-aphid-fungus/old/configure.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-biocontrol-end.R</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-biocontrol.txt</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-Early.txt</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-LateEnzootic.txt</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-LateEpizootic.txt</file>
-    <file>data/input/papers/2021-aphid-fungus/old/scenario-Mid.txt</file>
     <file>data/input/papers/2021-aphid-fungus/weather/Aarnes_2004.txt</file>
     <file>data/input/papers/2021-aphid-fungus/weather/Aarnes_2005.txt</file>
     <file>data/input/papers/2021-aphid-fungus/weather/Aarnes_2006.txt</file>

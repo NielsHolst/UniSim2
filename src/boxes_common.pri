@@ -8,7 +8,7 @@
 
 # AUTO-CONFIG-BEGIN
 CONFIG += release
-VERSION = 2.3.56
+VERSION = 2.3.57
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 CONFIG += skip_target_version_ext   # Simplify suffix on Mac
@@ -27,14 +27,9 @@ CONFIG += c++17
 QT += core widgets
 
 # Module winextras not yet implemented in Qt version 6
-lessThan(QT_MAJOR_VERSION, 6) {
+win32:lessThan(QT_MAJOR_VERSION, 6) {
     QT += winextras
 }
-
-## Module QRegExp not part of Qt version 6
-#greaterThan(QT_MAJOR_VERSION, 5) {
-#    QT += core5compat
-#}
 
 # Show warning when using deprecated Qt features
 DEFINES += QT_DEPRECATED_WARNINGS

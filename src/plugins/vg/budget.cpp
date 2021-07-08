@@ -39,7 +39,7 @@ Budget::Budget(QString name, QObject *parent)
     Input(netGrowthRate).imports("crop/photosynthesis[Pn]",CA).unit("g dry mass/ground m2/h");
     Input(dt).imports("calendar[timeStepSecs]", CA).unit("s");
 
-    Output(growthLightUseEfficiency).help("Biomass produced per growth light energy consumption").unit("g/kWh");
+    Output(lightUseEfficiency).help("Biomass produced per absorbed light ").unit("g/mol absorbed");
     Output(skyIrradiation).help("Accumulated sunlight irradiation").unit("kWh/m2");
     Output(skyRadiationAbsorbed).help("Accumulated radiation lost to the sky").unit("kWh/m2");
     Output(skySwRadiationAbsorbed).help("Accumulated sw radiation lost to the sky").unit("kWh/m2");
@@ -67,7 +67,7 @@ void Budget::reset() {
 
 void Budget::update() {
     checkNewYear();
-    growthLightUseEfficiency = (growthLightPowerUsage > 0.) ? netGrowthRate / (growthLightPowerUsage*3600./1000.) : 0.;
+    lightUseEfficiency = (netGrowthRate>0. && parAbsorbed>0.) ? netGrowthRate / (parAbsorbed*3600.*1e-6) : 0.;
     // W/m2 = m3/m2 * kg/m3 * J/kg / s;
 //    double latentHeatRate = airInflux/groundArea*(outdoorsAh-indoorsAh)*LHe/dt;
     skyIrradiation       += skyIrradiationRate*_kiloHour;

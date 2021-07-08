@@ -87,7 +87,7 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(respirationRate).imports("crop/photosynthesis[Ar]");
     Output(netGrowthRate).imports("crop/photosynthesis[Pn]");
     Output(netGrowthRateLeaf).imports("crop/bigLeaf[Pn]");
-    Output(growthLightUseEfficiency).imports("/*/budget[growthLightUseEfficiency]");
+    Output(lightUseEfficiency).imports("/*/budget[lightUseEfficiency]");
 
     Output(totalIrradiation).imports("budget[skyIrradiation]");
     Output(totalSkyAbsorbed).imports("budget[skyRadiationAbsorbed]");

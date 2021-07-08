@@ -90,7 +90,7 @@ private:
         respirationRate,
         netGrowthRate,
         netGrowthRateLeaf,
-        growthLightUseEfficiency,
+        lightUseEfficiency,
         totalIrradiation,
         totalSkyAbsorbed,
         totalSkySwAbsorbed,

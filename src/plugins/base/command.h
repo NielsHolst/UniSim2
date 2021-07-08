@@ -12,7 +12,7 @@ namespace base {
 class Command : public QObject
 {
 public:
-    Command(QString name, QObject *parent = 0);
+    Command(QString name, QObject *parent = nullptr);
     void arguments(QStringList args);
     QStringList arguments() const;
     void execute();

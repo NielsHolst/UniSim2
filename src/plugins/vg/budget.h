@@ -40,7 +40,7 @@ private:
         netGrowthRate;
     // Outputs
     double
-        growthLightUseEfficiency,
+        lightUseEfficiency,
         skyIrradiation,
         skyRadiationAbsorbed, skySwRadiationAbsorbed, skyLwRadiationAbsorbed,
         ventilationEnergy,

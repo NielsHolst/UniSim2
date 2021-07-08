@@ -53,8 +53,13 @@ namespace {
 }
 
 void TestPath::compareVectors(QVector<QObject*> v1, QVector<QObject*> v2, int size) {
-    QSet<QObject*> set1 = QSet<QObject*>(v1.begin(), v1.end()),
-                   set2 = QSet<QObject*>(v2.begin(), v2.end());
+    #if QT_VERSION >= 0x050E00
+        QSet<QObject*> set1 = QSet<QObject*>(v1.begin(), v1.end()),
+                       set2 = QSet<QObject*>(v2.begin(), v2.end());
+    #else
+        QSet<QObject*> set1 = QSet<QObject*>(v1.soSet()),
+                       set2 = QSet<QObject*>(v2.toSet());
+    #endif
     QString msgNames = "Object sets differ:\n(%1)\n(%2)",
             msgSize = "Object set(s) of wrong size. Excepted %1 got %2 and %3.\nExpected: '%4'";
 
