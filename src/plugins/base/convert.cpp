@@ -350,9 +350,9 @@ template<> QString convert(QVector<QString> source)         {
     #if QT_VERSION >= 0x050E00
         QStringList list = QStringList( QList<QString>(source.begin(), source.end()) );
     #else
-        return QStringList(source.toList());
+        QStringList list = QStringList(source.toList());
     #endif
-    return "(" + list.join(" ") + ")";
+      return "(" + list.join(" ") + ")";
 }
 template<> QString convert(QVector<QDate> source)           { VECTOR_CONVERT_STRING; }
 template<> QString convert(QVector<QTime> source)           { VECTOR_CONVERT_STRING; }

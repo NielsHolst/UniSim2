@@ -69,8 +69,11 @@ QString Parameter::toString() const {
 
 inline QVector<QString> toStringVector(QString value) {
     QStringList list = split(value);
-    return QVector<QString>(list.begin(), list.end());
-
+    #if QT_VERSION >= 0x050E00
+        return QVector<QString>(list.begin(), list.end());
+    #else
+        return QVector<QString>(QList<QString>(list).toVector());
+    #endif
 }
 
 void Parameter::addToBuilder(base::BoxBuilder &builder) {

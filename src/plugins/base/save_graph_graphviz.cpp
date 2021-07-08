@@ -73,7 +73,11 @@ QList<Port*> SaveGraphGraphviz::uniquePortsToGraph(const Box *box) {
         else if (box==edge.second->parent())
             ports << edge.second;
     }
-    QList<Port*> sorted = QList<Port*>(ports.begin(), ports.end());
+    #if QT_VERSION >= 0x050E00
+        QList<Port*> sorted = QList<Port*>(ports.begin(), ports.end());
+    #else
+        QList<Port*> sorted = QList<Port*>(ports.toList());
+    #endif
     std::sort(sorted.begin(), sorted.end(),
               [](Port *a, Port *b) { return a->objectName() < b->objectName(); });
     return sorted;

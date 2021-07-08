@@ -125,13 +125,14 @@ namespace {
                 QSet<PortType> A = QSet<PortType>(aRules.begin(), aRules.end()),
                                B = QSet<PortType>(bRules.begin(), bRules.end()),
                                C = A.intersect(B);
+                QList<PortType> candidates = QList<PortType>(C.begin(),C.end());
             #else
                 QSet<PortType> A = QSet<PortType>(aRules.toSet()),
                                B = QSet<PortType>(bRules.toSet()),
                                C = A.intersect(B);
+                QList<PortType> candidates = QList<PortType>(C.toList());
             #endif
-            Q_ASSERT(!C.isEmpty());
-            QList<PortType> candidates = QList<PortType>(C.begin(),C.end());
+            Q_ASSERT(!candidates.isEmpty());
             std::sort(candidates.begin(), candidates.end());
             return candidates.first();
         }

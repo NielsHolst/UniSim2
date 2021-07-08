@@ -106,7 +106,11 @@ QStringList FoodWebCalcBase::findNames(QVector<Box*> boxes) {
     QSet<QString> names;
     for (Box *box : boxes)
         names << box->name();
-    QStringList sorted(names.begin(), names.end());
+    #if QT_VERSION >= 0x050E00
+        QStringList sorted(names.begin(), names.end());
+    #else
+        QStringList sorted(names.toList());
+    #endif
     sorted.sort();
     return sorted;
 }
@@ -285,7 +289,11 @@ void FoodWebCalcBase::writeParameters() {
 QString FoodWebCalcBase::na(int count) const {
     QVector<QString> v;
     v.fill("NA", count);
-    QStringList list(v.begin(), v.end());
+    #if QT_VERSION >= 0x050E00
+        QStringList list(v.begin(), v.end());
+    #else
+        QStringList list(v.toList());
+    #endif
     return list.join("\t") + "\t";
 }
 

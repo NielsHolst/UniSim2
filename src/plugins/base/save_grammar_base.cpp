@@ -98,7 +98,11 @@ QStringList SaveGrammarBase::portNames() {
     root->deleteLater();
 
     // Sort port names
-    QStringList sorted = QStringList( QList<QString>(names.begin(), names.end()) );
+    #if QT_VERSION >= 0x050E00
+        QStringList sorted = QStringList( QList<QString>(names.begin(), names.end()) );
+    #else
+        QStringList sorted = QStringList( QList<QString>(names.toList()) );
+    #endif
     sorted.sort();
     return sorted;
 }
@@ -124,11 +128,12 @@ QStringList SaveGrammarBase::transformNames() {
     #if QT_VERSION >= 0x050E00
         names.unite(QSet<QString>(tNames.begin(), tNames.end()));
         names.unite(QSet<QString>(fNames.begin(), fNames.end()));
+        return QStringList(names.begin(), names.end());
     #else
         names.unite(QSet<QString>(tNames.toSet()));
         names.unite(QSet<QString>(fNames.toSet()));
+        return QStringList( QList<QString>(names.toList()) );
     #endif
-    return QStringList(names.begin(), names.end());
 }
 
 QStringList SaveGrammarBase::constantNames() {
