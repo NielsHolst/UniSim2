@@ -157,7 +157,7 @@ namespace boxscript { namespace parser
     auto const date_time_def = date >> lit("T") >> time;
     auto const dots_def = lexeme[x3::repeat(1,3)[x3::string(".")]];
     auto const expression_def = -sign >> operand >> *operation;
-    auto const function_call_def = name >> '(' >> operand > ')';
+    auto const function_call_def = name >> '(' >> expression > ')';
     auto const grouped_expression_def = '(' >> expression > ')';
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
@@ -167,11 +167,11 @@ namespace boxscript { namespace parser
     auto const operand_def = date_time | bare_date_time | date | bare_date | time | number |
                              reference | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
-    auto const operator__def = char_("+")|char_("-")|char_("*")|char_("/")|char_("^");
+    auto const operator__def = char_('+')|char_('-')|char_('*')|char_('/')|char_('^')|char_('|');
     auto const path_def = -char_('/') >> object_name >> *(char_('/') >> object_name);
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
-    auto const qualified_name_def = lexeme[name >> -(x3::string("::") > name)];
+    auto const qualified_name_def = lexeme[name >> -(x3::string("::") > object_name)];
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const reference_def = path >> port;
     auto const sign_def = char_("+")|char_("-");

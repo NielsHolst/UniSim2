@@ -218,3 +218,13 @@ void TestBoxScriptX3::testFunctionCall() {
     UNEXPECTED_EXCEPTION;
     QVERIFY(compare("box_script/function_call.box", result));
 }
+
+void TestBoxScriptX3::testBox() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/box.box");
+    }
+    UNEXPECTED_EXCEPTION;
+    QVERIFY(compare("box_script/box.box", result));
+}

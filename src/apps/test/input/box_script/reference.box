@@ -32,6 +32,13 @@ Simulation sim {
     +g = -..[abc]
     +g = -...[abc]
     +h = XYZ[*]
+    +i = children::X[a]
+    +i = children::*[a]
+    +i = children::..[a]
+    +j = children::X/A[a]
+    +j = children::*/A[a]
+    +j = children::../A[a]
+    +j = -children::../A[a]
   }
 }
 

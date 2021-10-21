@@ -19,6 +19,7 @@ private slots:
     void testDotsError();
     void testQuotedString();
     void testFunctionCall();
+    void testBox();
 };
 
 DECLARE_TEST(TestBoxScriptX3)

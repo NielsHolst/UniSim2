@@ -49,7 +49,7 @@ namespace boxscript { namespace ast
     };
 
     struct FunctionCall : x3::position_tagged {
-        typedef x3::forward_ast<Operand> Argument;
+        typedef x3::forward_ast<Expression> Argument;
 
         std::string name;
         Argument argument;
