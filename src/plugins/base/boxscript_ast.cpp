@@ -18,10 +18,6 @@ namespace boxscript { namespace ast
         return os << '"' << x.stringValue << '"';
     }
 
-    std::ostream& operator<<(std::ostream& os, const Summary& x) {
-        return os << x.stringValue;
-    }
-
     std::ostream& operator<<(std::ostream& os, const Date& x) {
         return os << x.day << "/" << x.month << "/" << x.year;
     }

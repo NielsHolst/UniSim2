@@ -13,7 +13,6 @@ namespace boxscript { namespace ast
 
     struct Expression;
     struct Operand;
-    struct Summary;
 
     typedef x3::forward_ast<Expression> GroupedExpression;
 
@@ -62,14 +61,8 @@ namespace boxscript { namespace ast
         friend std::ostream& operator<<(std::ostream& os, const QuotedString& x);
     };
 
-    struct Summary : x3::position_tagged{
-        std::string stringValue;
-        friend std::ostream& operator<<(std::ostream& os, const Summary& x);
-    };
-
     struct Reference : x3::position_tagged {
         std::string path, port;
-        boost::optional<Summary> summary;
         friend std::ostream& operator<<(std::ostream& os, const Reference& x);
     };
 
@@ -121,7 +114,6 @@ namespace boxscript { namespace ast
     struct Assignment : x3::position_tagged {
         char qualifier;
         std::string portName;
-        boost::optional<Summary> summary;
         char equals;
         Expression expression;
         friend std::ostream& operator<<(std::ostream& os, const Assignment& x);

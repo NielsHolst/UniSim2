@@ -37,10 +37,6 @@ namespace boxscript { namespace parser
     // Rule IDs
     ///////////////////////////////////////////////////////////////////////////
 
-//    struct boxscript_value_class;
-//    struct boxscript_key_value_class;
-//    struct boxscript_inner_class;
-
     struct assignment_class;
     struct bare_date_class;
     struct bare_date_time_class;
@@ -67,7 +63,6 @@ namespace boxscript { namespace parser
     struct quoted_string_class;
     struct reference_class;
     struct sign_class;
-    struct summary_class;
     struct time_class;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -100,7 +95,6 @@ namespace boxscript { namespace parser
     x3::rule<quoted_string_class, ast::QuotedString> const quoted_string = "quoted_string";
     x3::rule<reference_class, ast::Reference> const reference = "reference";
     x3::rule<sign_class, char> const sign = "sign";
-    x3::rule<summary_class, ast::Summary> const summary = "summary";
     x3::rule<time_class, ast::Time> const time = "time";
     boxscript_type const boxscript = "boxscript";
 
@@ -149,7 +143,7 @@ namespace boxscript { namespace parser
         _val(ctx).stringValue = std::string("|") + s;
     };
 
-    auto const assignment_def = (port_prefix > name) >> (-summary > (char_('=')|char_('~'))) > expression;
+    auto const assignment_def = (port_prefix > name) >> (char_('=')|char_('~')) > expression;
     auto const bare_date_def = (integer >> '/' >> integer) [dm] |
                         ('/' >> integer >> '/' >> integer) [md];
     auto const bare_date_time_def = bare_date >> (lit("T")|lit(" ")) >> time;
@@ -179,21 +173,16 @@ namespace boxscript { namespace parser
     auto const port_prefix_def = char_('.')|char_('+');
     auto const qualified_name_def = lexeme[name >> -(x3::string("::") > name)];
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
-    auto const reference_def = path >> port >> -summary;
+    auto const reference_def = path >> port;
     auto const sign_def = char_("+")|char_("-");
-    auto const summary_def = lexeme[lit("|") > name] [pipe_summary];
     auto const time_def = integer >> ':' > integer >> -(':' > integer);
-
-//    auto const single_line_comment = lexeme["//" >> *(char_ - eol) >> (eol|eoi)];
-//    auto const block_comment = lexeme[("/*" >> *(char_ - "*/")) > "*/"];
-//    auto const skipper = x3::space | single_line_comment | block_comment;
 
     BOOST_SPIRIT_DEFINE(
                 assignment, bare_date, bare_date_time, bool_, box, date, date_time,
                 dots, expression, function_call, grouped_expression, integer, joker,
                 name, number, object_name, operand, operation, operator_,
                 path, port, port_prefix, qualified_name, quoted_string, reference, sign,
-                summary, time, boxscript
+                time, boxscript
                 )
 
     ///////////////////////////////////////////////////////////////////////////
@@ -227,7 +216,6 @@ namespace boxscript { namespace parser
     struct quoted_string_class : x3::annotate_on_success {};
     struct reference_class : x3::annotate_on_success {};
     struct sign_class : x3::annotate_on_success {};
-    struct summary_class : x3::annotate_on_success {};
     struct time_class : x3::annotate_on_success {};
 
 
