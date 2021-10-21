@@ -72,7 +72,6 @@ void Simulation::run() {
     QElapsedTimer time;
     try {
         time.start();
-//        Track::effectuateOrders();
         environment().computationStep(ComputationStep::Initialize);
         initializeFamily();
 
@@ -106,7 +105,7 @@ void Simulation::run() {
         hasError = true;
         errorMsg = ex.what();
     }
-    // environment().computationStep(ComputationStep::Ready);
+    environment().computationStep(ComputationStep::Ready);
     dialog().finishProgress();
     executionTime = boost::numeric_cast<int>(time.elapsed());
 }

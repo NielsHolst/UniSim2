@@ -39,6 +39,8 @@ PlotR::PlotR(QString name, QObject *parent)
 }
 
 void PlotR::initialize() {
+    // Chek
+
     // Validate
     convert<LayoutR>(layout);
     if (transform!="" && transform!="log10")
@@ -72,8 +74,13 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (hide || tracks().isEmpty())
+    if (hide)
         return QString();
+
+    if (tracks().isEmpty()) {
+        QStringList strings = QStringList(ports.begin(), ports.end());
+        ThrowException("No matching ports found for this plot").context(this);
+    }
 
     QStringList xLabels;
     for (Track *track : xAxisTracks())

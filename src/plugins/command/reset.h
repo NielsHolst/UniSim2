@@ -14,6 +14,8 @@ public:
     reset(QString name, QObject *parent);
 private:
     void doExecute();
+    void doLoad();
+    void doReset();
 };
 
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QVector>
 #include <base/assign.h>
+#include <base/date_time.h>
 #include <base/port_transform.h>
 #include "test_assign.h"
 
@@ -92,7 +93,7 @@ void TestAssign::testToDoubleFromTime() {
 
 void TestAssign::testToDoubleFromDateTime() {
     double dest;
-    QDateTime source = QDateTime(QDate(2015, 2, 10), QTime(6,0,0));
+    QDateTime source = makeDateTime(QDate(2015, 2, 10), QTime(6,0,0));
     assign(Double, &dest, DateTime, &source, PortTransform::Identity, 0);
     QCOMPARE(dest, 41. + 6./24.);
 }

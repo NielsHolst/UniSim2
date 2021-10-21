@@ -478,14 +478,17 @@
   <xsl:param name="climateSetpointName"/>
   <xsl:param name="correction" select="0"/>
 
+  <xsl:variable name="defaultValue" select="number(replace(DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value, ',', '.'))"/>
+  
   <port name="reverseOrder" value="TRUE"/>
 
   <box name="default">
-      <newPort name="flagIsUp" value="TRUE"/>
       <xsl:choose>
         <xsl:when test="string-length($climateSetpointName)=0">
           <newPort name="signal" value="0.0"/>
+          <newPort name="flagIsUp" value="FALSE"/>
         </xsl:when>
+        
         <xsl:otherwise>
           <xsl:variable name="signalSrc" 
                         select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
@@ -497,17 +500,29 @@
               <xsl:attribute name="source">
                 <xsl:value-of select="'Missing'"/>
               </xsl:attribute>
+              <xsl:attribute name="value">
+                <xsl:value-of select="'0.0'"/>
+              </xsl:attribute>
             </xsl:if>
             <xsl:if test="string-length($signalSrc)!=0">
               <xsl:attribute name="source">
                 <xsl:value-of select="ecolmod:generateXPath($signalSrc)"/>
               </xsl:attribute>
+              <xsl:call-template name="float-value">
+                <xsl:with-param name="value" select="$signalSrc"/>
+                <!-- <xsl:with-param name="correction" select="$correction"/> -->
+              </xsl:call-template>
             </xsl:if>
-            <xsl:call-template name="float-value">
-              <xsl:with-param name="value" select="$signalSrc"/>
-              <!-- <xsl:with-param name="correction" select="$correction"/> -->
-            </xsl:call-template>
           </newPort>
+          
+          <xsl:choose>
+            <xsl:when test="$defaultValue=0">
+              <newPort name="flagIsUp" value="FALSE"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <newPort name="flagIsUp" value="TRUE"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
   </box>
@@ -755,6 +770,238 @@
       </xsl:attribute>
     </port>
   </box>
+</xsl:template>
+
+<xsl:template name="extract-heat-exchanger">
+  <xsl:variable name="inUse" select="Constants/Parameters[ParameterName='HeatExchangerInUse']/Value" as="node()"/>
+  <xsl:variable name="numberName" select="'HeatExchangerNumber'"/>
+  <xsl:variable name="numberSrc" select="Constants/Parameters[ParameterName=$numberName]/Value" as="node()"/>
+  <xsl:variable name="numberValue" select="number(replace($numberSrc, ',', '.'))"/>
+  <xsl:variable name="efficiencyName" select="'HeatExchangerEfficiency'"/>
+  <xsl:variable name="efficiencySrc" select="Constants/Parameters[ParameterName=$efficiencyName]/Value" as="node()"/>
+  <xsl:variable name="efficiencyValue" select="number(replace($efficiencySrc, ',', '.'))"/>
+  <xsl:variable name="maxFlowRateName" select="'HeatExchangerMaxAirFlow'"/>
+  <xsl:variable name="maxFlowRateSrc" select="Constants/Parameters[ParameterName=$maxFlowRateName]/Value" as="node()"/>
+  <xsl:variable name="maxFlowRateValue" select="number(replace($maxFlowRateSrc, ',', '.'))"/>
+  <xsl:variable name="maxPowerUserHeatExchangeName" select="'HeatExchangerLoad'"/>
+  <xsl:variable name="maxPowerUserHeatExchangeSrc" select="Constants/Parameters[ParameterName=$maxPowerUserHeatExchangeName]/Value" as="node()"/>
+  <xsl:variable name="maxPowerUserHeatExchangeValue" select="number(replace($maxPowerUserHeatExchangeSrc, ',', '.'))"/>
+  <xsl:variable name="maxPowerUserParasiticName" select="'HeatExchangerParasitLoad'"/>
+  <xsl:variable name="maxPowerUserParasiticSrc" select="Constants/Parameters[ParameterName=$maxPowerUserParasiticName]/Value" as="node()"/>
+  <xsl:variable name="maxPowerUserParasiticValue" select="number(replace($maxPowerUserParasiticSrc, ',', '.'))"/>
+
+  <xsl:if test="lower-case($inUse)='yes'">
+    <box class="vg::ActuatorHeatExchanger" name="heatExchanger">
+      <port name="number">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$numberName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($numberSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$numberValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="efficiency">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$efficiencyName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($efficiencySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$efficiencyValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxFlowRate">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxFlowRateName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxFlowRateSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxFlowRateValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxPowerUserHeatExchange">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxPowerUserHeatExchangeName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxPowerUserHeatExchangeSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxPowerUserHeatExchangeValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxPowerUserParasitic">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxPowerUserParasiticName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxPowerUserParasiticSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxPowerUserParasiticValue"/>
+        </xsl:attribute>
+      </port>
+    </box>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="extract-heat-pump">
+  <xsl:variable name="inUse" select="Constants/Parameters[ParameterName='HeatPumpInUse']/Value" as="node()"/>
+  <xsl:variable name="numberName" select="'HeatPumpNumber'"/>
+  <xsl:variable name="numberSrc" select="Constants/Parameters[ParameterName=$numberName]/Value" as="node()"/>
+  <xsl:variable name="numberValue" select="number(replace($numberSrc, ',', '.'))"/>
+  <xsl:variable name="maxCoolingPowerName" select="'HeatPumpLoad'"/>
+  <xsl:variable name="maxCoolingPowerSrc" select="Constants/Parameters[ParameterName=$maxCoolingPowerName]/Value" as="node()"/>
+  <xsl:variable name="maxCoolingPowerValue" select="number(replace($maxCoolingPowerSrc, ',', '.'))"/>
+  <xsl:variable name="coolingEfficiencyName" select="'HeatPumpEfficiency'"/>
+  <xsl:variable name="coolingEfficiencySrc" select="Constants/Parameters[ParameterName=$coolingEfficiencyName]/Value" as="node()"/>
+  <xsl:variable name="coolingEfficiencyValue" select="number(replace($coolingEfficiencySrc, ',', '.'))"/>
+  <xsl:variable name="maxFlowRateName" select="'HeatPumpMaxAirFlow'"/>
+  <xsl:variable name="maxFlowRateSrc" select="Constants/Parameters[ParameterName=$maxFlowRateName]/Value" as="node()"/>
+  <xsl:variable name="maxFlowRateValue" select="number(replace($maxFlowRateSrc, ',', '.'))"/>
+  <xsl:variable name="maxPowerUserParasiticName" select="'HeatPumpParasitLoad'"/>
+  <xsl:variable name="maxPowerUserParasiticSrc" select="Constants/Parameters[ParameterName=$maxPowerUserParasiticName]/Value" as="node()"/>
+  <xsl:variable name="maxPowerUserParasiticValue" select="number(replace($maxPowerUserParasiticSrc, ',', '.'))"/>
+
+  <xsl:if test="lower-case($inUse)='yes'">
+    <box class="vg::ActuatorHeatPump" name="heatPump">
+      <port name="number">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$numberName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($numberSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$numberValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxCoolingPower">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxCoolingPowerName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxCoolingPowerSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxCoolingPowerValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="coolingEfficiency">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$coolingEfficiencyName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($coolingEfficiencySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$coolingEfficiencyValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxFlowRate">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxFlowRateName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxFlowRateSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxFlowRateValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxPowerUserParasitic">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxPowerUserParasiticName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxPowerUserParasiticSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxPowerUserParasiticValue"/>
+        </xsl:attribute>
+      </port>
+    </box>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="extract-humidifier">
+  <xsl:variable name="inUse" select="Constants/Parameters[ParameterName='FogInUse']/Value" as="node()"/>
+  <xsl:variable name="efficiencyName" select="'FogEfficiency'"/>
+  <xsl:variable name="efficiencySrc" select="Constants/Parameters[ParameterName=$efficiencyName]/Value" as="node()"/>
+  <xsl:variable name="efficiencyValue" select="number(replace($efficiencySrc, ',', '.'))"/>
+  <xsl:variable name="maxHumidificationName" select="'FogCapacity'"/>
+  <xsl:variable name="maxHumidificationSrc" select="Constants/Parameters[ParameterName=$maxHumidificationName]/Value" as="node()"/>
+  <xsl:variable name="maxHumidificationValue" select="number(replace($maxHumidificationSrc, ',', '.'))"/>
+
+  <xsl:if test="lower-case($inUse)='yes'">
+    <box class="vg::ActuatorHumidifier" name="humidifier">
+      <port name="efficiency">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$efficiencyName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($efficiencySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$efficiencyValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxHumidification">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxHumidificationName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxHumidificationSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxHumidificationValue"/>
+        </xsl:attribute>
+      </port>
+    </box>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="extract-pad-and-fan">
+  <xsl:variable name="inUse" select="Constants/Parameters[ParameterName='PadAndFanInUse']/Value" as="node()"/>
+  <xsl:variable name="efficiencyName" select="'Efficiency'"/>
+  <xsl:variable name="efficiencySrc" select="Constants/Parameters[ParameterName=$efficiencyName]/Value" as="node()"/>
+  <xsl:variable name="efficiencyValue" select="number(replace($efficiencySrc, ',', '.'))"/>
+  <xsl:variable name="maxFlowRateName" select="'MaxFlowRate'"/>
+  <xsl:variable name="maxFlowRateSrc" select="Constants/Parameters[ParameterName=$maxFlowRateName]/Value" as="node()"/>
+  <xsl:variable name="maxFlowRateValue" select="number(replace($maxFlowRateSrc, ',', '.'))"/>
+
+  <xsl:if test="lower-case($inUse)='yes'">
+    <box class="vg::ActuatorPadAndFan" name="padAndFan">
+      <port name="efficiency">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$efficiencyName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($efficiencySrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$efficiencyValue"/>
+        </xsl:attribute>
+      </port>
+      <port name="maxFlowRate">
+        <xsl:attribute name="externalName">
+          <xsl:value-of select="$maxFlowRateName"/>
+        </xsl:attribute>
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($maxFlowRateSrc)"/>
+        </xsl:attribute>
+        <xsl:attribute name="value">
+          <xsl:value-of select="$maxFlowRateValue"/>
+        </xsl:attribute>
+      </port>
+    </box>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template name="actuator-layer">
@@ -1356,6 +1603,26 @@
           <xsl:with-param name="climateSetpointName" select="'screenFixed2'"/>
         </xsl:call-template>
       </box>
+      <box class="PrioritySignal" name="heatExchangersOn">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'HeatExchangersOn'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="heatPumpsOn">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'HeatPumpsOn'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="humidifiersOn">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'FogsOn'"/>
+        </xsl:call-template>
+      </box>
+      <box class="PrioritySignal" name="padAndFansOn">
+        <xsl:call-template name="extract-setpoints">
+          <xsl:with-param name="climateSetpointName" select="'PadAndFansOn'"/>
+        </xsl:call-template>
+      </box>
     </box>
   </box>
   <xsl:comment> *** Controllers *** </xsl:comment>
@@ -1376,24 +1643,118 @@
   <xsl:variable name="heatPipePropConvectionSrc" select="DVV_SETUP/Greenhouse/Constants/Parameters[ParameterName=$heatPipePropConvectionName]/Value" as="node()"/>
   <xsl:variable name="heatPipePropConvectionValue" select="number(replace($heatPipePropConvectionSrc, ',', '.'))"/>
 
+  <xsl:variable name="heatBuffer" select="DVV_SETUP/Greenhouse/HeatBuffer"/>
+  <xsl:variable name="heatBufferSizeName" select="'HeatBufferSize'"/>
+  <xsl:variable name="heatBufferSizeSrc" select="$heatBuffer/Constants/Parameters[ParameterName=$heatBufferSizeName]/Value" as="node()"/>
+  <xsl:variable name="heatBufferSizeValue" select="number(replace($heatBufferSizeSrc, ',', '.'))"/>
+  <xsl:variable name="heatBufferCapacityName" select="'HeatBufferCapacity'"/>
+  <xsl:variable name="heatBufferCapacitySrc" select="$heatBuffer/Constants/Parameters[ParameterName=$heatBufferCapacityName]/Value" as="node()"/>
+  <xsl:variable name="heatBufferCapacityValue" select="number(replace($heatBufferCapacitySrc, ',', '.'))"/>
+
   <box class="vg::Actuators" name="actuators">
+    <box name="heatPumps">
+      <box class="Sum" name="condensationRate">
+        <port name="values" ref="../heatPump[condensationRate]"/>
+      </box>
+      <box class="Sum" name="powerUseCooling">
+        <port name="values" ref="../heatPump[powerUseCooling]"/>
+      </box>
+      <box class="Sum" name="powerUserParasitic">
+        <port name="values" ref="../heatPump[powerUserParasitic]"/>
+      </box>
+      <box class="Sum" name="powerUse">
+        <port name="values" ref="../heatPump[powerUse]"/>
+      </box>
+      <box class="Sum" name="heat">
+        <port name="values" ref="../heatPump[heat]"/>
+      </box>
+      <xsl:for-each select="DVV_SETUP/Greenhouse/HeatPumps/HeatPump">
+        <xsl:call-template name="extract-heat-pump"/>
+      </xsl:for-each>
+    </box>
+    <xsl:if test="string-length($heatBuffer)!=0">
+      <box class="vg::HeatBuffer" name="heatBuffer">
+        <port name="input" ref="../heatPumps/heat[value]"/>
+        <port name="size" externalName="HeatBufferSize" source="Fixed">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$heatBufferSizeName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($heatBufferSizeSrc)"/>
+            </xsl:attribute>
+            <xsl:attribute name="value">
+              <xsl:value-of select="$heatBufferSizeValue"/>
+            </xsl:attribute>
+        </port>
+        <port name="capacity" externalName="HeatBufferCapacity" source="Fixed">
+            <xsl:attribute name="externalName">
+              <xsl:value-of select="$heatBufferCapacityName"/>
+            </xsl:attribute>
+            <xsl:attribute name="source">
+              <xsl:value-of select="ecolmod:generateXPath($heatBufferCapacitySrc)"/>
+            </xsl:attribute>
+            <xsl:attribute name="value">
+              <xsl:value-of select="$heatBufferCapacityValue"/>
+            </xsl:attribute>
+        </port>
+      </box>
+    </xsl:if>
     <box class="ActuatorHeatPipes" name="heating">
-    <port name="propConvection" externalName="propConvection" source="Fixed">
-        <xsl:attribute name="externalName">
-          <xsl:value-of select="$heatPipePropConvectionName"/>
-        </xsl:attribute>
-        <xsl:attribute name="source">
-          <xsl:value-of select="ecolmod:generateXPath($heatPipePropConvectionSrc)"/>
-        </xsl:attribute>
-        <xsl:attribute name="value">
-          <xsl:value-of select="$heatPipePropConvectionValue"/>
-        </xsl:attribute>
-    </port>
+      <port name="propConvection" externalName="propConvection" source="Fixed">
+          <xsl:attribute name="externalName">
+            <xsl:value-of select="$heatPipePropConvectionName"/>
+          </xsl:attribute>
+          <xsl:attribute name="source">
+            <xsl:value-of select="ecolmod:generateXPath($heatPipePropConvectionSrc)"/>
+          </xsl:attribute>
+          <xsl:attribute name="value">
+            <xsl:value-of select="$heatPipePropConvectionValue"/>
+          </xsl:attribute>
+      </port>
       <box name="pipes">
         <xsl:for-each select="DVV_SETUP/Greenhouse/Heatpipes/Heatpipe">
           <xsl:call-template name="extract-heat-pipe"/>
         </xsl:for-each>
       </box>
+    </box>
+    <box name="heatExchangers">
+      <box class="Sum" name="condensationRate">
+        <port name="values" ref="../heatExchanger[condensationRate]"/>
+      </box>
+      <box class="Sum" name="powerUseCooling">
+        <port name="values" ref="../heatExchanger[powerUseCooling]"/>
+      </box>
+      <box class="Sum" name="powerUserParasitic">
+        <port name="values" ref="../heatExchanger[powerUserParasitic]"/>
+      </box>
+      <box class="Sum" name="powerUse">
+        <port name="values" ref="../heatExchanger[powerUse]"/>
+      </box>
+      <xsl:for-each select="DVV_SETUP/Greenhouse/HeatExchangers/HeatExchanger">
+        <xsl:call-template name="extract-heat-exchanger"/>
+      </xsl:for-each>
+    </box>
+    <box name="humidifiers">
+      <box class="Sum" name="coolingPower">
+        <port name="values" ref="../humidifier[coolingPower]"/>
+      </box>
+      <box class="Sum" name="vapourFlux">
+        <port name="values" ref="../humidifier[vapourFlux]"/>
+      </box>
+      <xsl:for-each select="DVV_SETUP/Greenhouse/Fogs/Fog">
+        <xsl:call-template name="extract-humidifier"/>
+      </xsl:for-each>
+    </box>
+    <box name="padAndFans">
+      <box class="Sum" name="coolingPower">
+        <port name="values" ref="../padAndFan[coolingPower]"/>
+      </box>
+      <box class="Sum" name="vapourFlux">
+        <port name="values" ref="../padAndFan[vapourFlux]"/>
+      </box>
+      <xsl:for-each select="DVV_SETUP/Greenhouse/PadAndFans/PadAndFan">
+        <xsl:call-template name="extract-pad-and-fan"/>
+      </xsl:for-each>
     </box>
 
     <box class="ActuatorVentilation" name="ventilation"/>

@@ -28,7 +28,7 @@ constexpr double
     P0 = 101325,                //!< Standard atmospheric pressure = 1 atm (Pa)
     CpAir = 1020,               //!< Specific heat capacity of air (J/kg/K)
     CpWater = 4184,             //!< Specific heat capacity of water (J/kg/K)
-    RhoAir = 1.19,              //!< Density of air at T0 (kg/m3)
+    RhoAir = 1.19,              //!< Density of air at P0 (kg/m3)
     CpAirVol = CpAir*RhoAir,    //!< Volume-specific heat capacity of air (J/m3/K)
     CpWaterVol = CpWater*1000,  //!< Volume-specific heat capacity of water (J/m3/K)
     RhoCo2 = 1.98,              //!< Density of CO2 at T0 (kg/m3)
@@ -74,8 +74,12 @@ double absFromPpmCo2(double temperature, double ppm, double P = P0);
 
 // Other climatic parameters
 double Tdew(double temperature, double rh);
+double Twet(double temperature, double rh);
+double rhFromTwet(double temperature, double Twet);
 double virtualTemperatureFromAh(double temperature, double ah);
-double rhoAir(double temperature);
+double rhoAir(double temperature, double P = P0);
+double enthalpy(double temperature, double sh);
+double evaporationHeat(double temperature);
 
 // Radiation
 double jointEmissivity(double em1, double em2);

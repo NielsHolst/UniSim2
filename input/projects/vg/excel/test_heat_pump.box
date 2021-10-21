@@ -1,0 +1,25 @@
+Simulation {
+  .iterations = temperature[iterations]
+  .steps = rh[steps]
+  SequenceByIteration temperature {
+    .min = 5
+    .max = 35
+    .by = 5
+  }
+  SequenceByStep rh {
+    .min = 30
+    .max = 100
+    .by = 10
+  }
+  HeatPump hp {
+    .groundArea = 1
+    .indoorsTemperature = temperature[value]
+    .indoorsRh = rh[value]
+  }
+  OutputR {
+    .end = "test_heat_pump_end.R"
+    OutputText {
+      .ports = (hp[indoorsTemperature] hp[indoorsRh] hp[condensationRate] hp[powerUseCooling] hp[powerUserParasitic] hp[powerUse] hp[heat])
+    }
+  }
+}

@@ -23,7 +23,6 @@ private:
     void showHelp();
     void extractOptions();
     void listBoxes();
-    void listPlugin();
 };
 
 }

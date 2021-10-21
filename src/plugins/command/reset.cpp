@@ -2,7 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QStandardPaths>
+#include <base/box.h>
 #include <base/command_help.h>
 #include <base/publish.h>
 #include <base/dialog.h>
@@ -16,7 +16,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(reset)
-HELP(reset, "reset folders", "reset folder paths to default")
+HELP(reset, "reset [boxscript]", "reset simulation")
 
 reset::reset(QString name, QObject *parent)
     : Command(name, parent)
@@ -24,19 +24,38 @@ reset::reset(QString name, QObject *parent)
 }
 
 void reset::doExecute() {
-    int n = _args.size();
-    if (n != 2 || _args.at(1) != "folders") {
-        dialog().error("Write: 'reset folders'");
+    if (_args.size() > 2)
+        ThrowException("Command 'reset' takes at most one argument");
+    dialog().resetErrorCount();
+    doLoad();
+    if (dialog().errorCount() == 0)
+        doReset();
+}
+
+void reset::doLoad() {
+    QStringList com;
+    com << "load";
+    switch (_args.size()) {
+    case 1:
+        com << environment().latestLoadArg();
+        break;
+    case 2:
+        com << _args[1];
+    }
+    Command::submit(com, this);
+}
+
+void reset::doReset() {
+    Box *sim = environment().root();
+    if (!sim) {
+        dialog().error("Nothing to reset");
         return;
     }
-    QString documents = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).at(0),
-            home = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).at(0);
-    environment().dir(Environment::Work, documents + "/UniSim");
-    environment().dir(Environment::Input, "./input");
-    environment().dir(Environment::Output, "./output");
-    environment().dir(Environment::Notepad, home + "/AppData/Roaming/Notepad++");
-    environment().dir(Environment::Atom, home + "/.atom/packages/language-boxes/grammars");
-    set_folder::showAllFolders();
+    environment().computationStep(ComputationStep::Initialize);
+    sim->initializeFamily();
+    environment().computationStep(ComputationStep::Reset);
+    sim->resetFamily();
+    environment().computationStep(ComputationStep::Ready);
 }
 
 

@@ -25,6 +25,7 @@ private:
     QString _s;
     bool _listInputs, _listOutputs,
          _listImports, _listExports, _listExportsOnly,
+         _listShort,
          _recurse;
     // Methods
     void toString(base::Box *box, int level);

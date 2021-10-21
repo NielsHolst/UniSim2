@@ -23,7 +23,7 @@ using namespace base;
 namespace command {
 
 PUBLISH(load)
-HELP(load, "load", "loads box script")
+HELP(load, "load", "loads a box script")
 
 load::load(QString name, QObject *parent)
     : Command(name, parent)

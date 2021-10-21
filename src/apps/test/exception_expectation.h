@@ -2,9 +2,10 @@
 #define EXCEPTION_EXPECTATION_H
 #include <exception>
 #include <qtestcase.h>
+#include <base/exception.h>
 
-#define UNEXPECTED \
-catch(const Exception &ex) { \
+#define UNEXPECTED_EXCEPTION \
+catch(const base::Exception &ex) { \
     QString s = "Unexpected exception: " + ex.what(); \
     QFAIL(qPrintable(s)); \
 } \
@@ -16,14 +17,14 @@ catch (...) { \
     QFAIL("Unexpected exception"); \
 } \
 QVERIFY(!excepted); \
-excepted = false;
+excepted = false
 
-#define EXPECTED \
+#define EXPECTED_EXCEPTION \
 catch(const Exception &) { \
     excepted = true; \
 } \
 QVERIFY(excepted); \
-excepted = false;
+excepted = false
 
 
 #endif // EXCEPTION_EXPECTATION_H

@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include <base/command_help.h>
 #include <base/publish.h>
 #include <base/dialog.h>
@@ -21,6 +22,7 @@ PUBLISH(set_folder)
 HELP(set_folder, "set folder", "shows paths for all folder types")
 HELP(set_folder_type, "set folder <folder type>", "shows path for this folder type")
 HELP(set_folder_type_path, "set folder <folder type> <path>", "changes the path for this folder type")
+HELP(set_folder_default, "set folder DEFAULT", "changes all paths to their default value")
 
 set_folder::set_folder(QString name, QObject *parent)
     : Command(name, parent)
@@ -31,7 +33,10 @@ set_folder::set_folder(QString name, QObject *parent)
 void set_folder::doExecute() {
     switch (_args.size()) {
     case 2:
-        showAllFolders();
+        if (_args.at(2)=="DEFAULT")
+            setToDefault();
+        else
+            showAllFolders();
         break;
     case 3:
         showFolder(_args.at(2));
@@ -86,6 +91,17 @@ void set_folder::setFolder(QString folderType, QString folderPath) {
         showAllFolders();
     else
         showFolder(folderType);
+}
+
+void set_folder::setToDefault() {
+    QString documents = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).at(0),
+            home = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).at(0);
+    environment().dir(Environment::Work, documents + "/UniSim");
+    environment().dir(Environment::Input, "./input");
+    environment().dir(Environment::Output, "./output");
+    environment().dir(Environment::Notepad, home + "/AppData/Roaming/Notepad++");
+    environment().dir(Environment::Atom, home + "/.atom/packages/language-boxes/grammars");
+    set_folder::showAllFolders();
 }
 
 }

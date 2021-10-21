@@ -7,6 +7,7 @@
 #include <QTimeZone>
 #include "any_year.h"
 #include "convert.h"
+#include "date_time.h"
 
 #define CANNOT_CONVERT(destT, sourceT) \
 ThrowException("Cannot convert " #sourceT " to " #destT)
@@ -107,8 +108,26 @@ template<> QDate convert(long double)   { CANNOT_CONVERT(Date, LongDouble); }
 // Numerical conversions to Time
 //
 
+namespace {
+    QTime numberToTime(double hours) {
+        int h = static_cast<int>(floor(hours)),
+            m = static_cast<int>(floor(60*(hours-h))),
+            s = static_cast<int>(round(3600*(hours - h - m/60.)));
+        if (s == 60) {
+            ++m;
+            s = 0;
+            if (m == 60) {
+                ++h;
+                m = 0;
+            }
+        }
+        h = h%24;
+        return QTime(h, m, s);
+    }
+}
+
 #define TIME_CONVERT(sourceT) \
-QTime time = QTime(static_cast<int>(source), 0, 0); \
+QTime time = numberToTime(static_cast<double>(source)); \
 if (!time.isValid()) \
     CANNOT_CONVERT(QTime, sourceT); \
 return time
@@ -211,7 +230,7 @@ template<> QDateTime convert(QString source) {
     if (!date.isValid() || parts.isEmpty() || parts.size() > 2)
         ThrowException("Cannot convert String to DateTime").value(source);
 
-    return QDateTime(date, time);
+    return makeDateTime(date, time);
 }
 
 template<> QTime convert(QString source) {
@@ -219,6 +238,8 @@ template<> QTime convert(QString source) {
     QTime time = QTime::fromString(s, "h:m:s");
     if (!time.isValid())
         time = QTime::fromString(s, "h:m");
+    if (!time.isValid())
+        time = numberToTime(convert<double>(s));
     if (!time.isValid())
         ThrowException("Cannot convert String to Time").value(source);
     return time;
@@ -273,7 +294,7 @@ template<> QString convert(QDate source) {
     return s;
 }
 template<> QDate convert(QDate source)      { return source; }
-template<> QDateTime convert(QDate source)  { return QDateTime(source, QTime(), QTimeZone(0)); }
+template<> QDateTime convert(QDate source)  { return makeDateTime(source, QTime(0,0)); }
 template<> QTime convert(QDate)             { ThrowException("Cannot convert Date to Time"); }
 
 //

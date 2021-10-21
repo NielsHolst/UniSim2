@@ -34,17 +34,6 @@ void list::doExecute() {
     // Naked 'list'
     if (_args.isEmpty())
         _path.clear();
-    else if (_args.first() == "P") {
-        // Special case with a 'P' path and possibly options to follow
-        if(_args.size() > 1) {
-            _path = "P";
-            _args.removeAt(0);
-        }
-        // Just 'list P' with no options
-        else {
-            _path.clear();
-        }
-    }
     // Some path and possibly options to follow
     else {
         _path = _args.first();
@@ -55,29 +44,24 @@ void list::doExecute() {
         showHelp();
     else {
         extractOptions();
-        if (_options.contains(ListOption::Plugin))
-            listPlugin();
-        else
-            listBoxes();
+        listBoxes();
     }
 }
 
 void list::showHelp() {
     QString s = "Use one of these formats:\n"
-                "list (which defaults to list . br)\n"
-                "list <path> (which defaults to list <path> br)\n"
+                "list (defaults to list . br)\n"
+                "list <path> (wdefaults to list <path> br)\n"
                 "list <path> <options>\n"
-                "list P\n"
-                "list <plugin> P"
-            "\n\n<options> (which can be combined) are\n"
+            "\n\n<options> (can be combined) are\n"
             "p (to show Ports)\n"
             "i (to show Input ports)\n"
             "o (to show Output ports)\n"
+            "s (to show ports in Short format; combines with pio)\n"
             "m (to show iMported ports)\n"
             "x (to show eXported ports)\n"
             "b (to show Boxes)\n"
-            "r (to show Recursively)\n\n"
-            "P (to show Plugins or boxes inside Plugin)\n";
+            "r (to show Recursively)\n";
      dialog().information(s);
 }
 
@@ -105,31 +89,6 @@ void list::listBoxes() {
     // Show output
     ListOutput output(boxes, _options);
     dialog().information(output.toString());
-}
-
-void list::listPlugin() {
-    // Look up plugin names
-    QStringList names, pluginNames;
-    auto plugins = MegaFactory::factories();
-    for (int i=0; i < plugins.size(); ++i)
-        pluginNames << plugins.at(i)->id();
-    if (_path.isEmpty())
-        names = pluginNames;
-    else {
-        FactoryPlugIn *plugin = nullptr;
-        for (int i=0; i < plugins.size(); ++i) {
-            if (plugins.at(i)->id() == _path) {
-                plugin = plugins.at(i);
-                break;
-            }
-        }
-        if (plugin)
-            names = QStringList(plugin->inventory());
-        else
-            ThrowException("Unknown plugin name").value(_path).
-                    hint("Known plugins:\n" + pluginNames.join("\n"));
-    }
-    dialog().information(names.join("\n"));
 }
 
 }

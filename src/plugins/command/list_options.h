@@ -13,6 +13,7 @@ enum class ListOption{
     Ports,
     Inputs,
     Outputs,
+    Short,
     Imports,
     Exports,
     Boxes,

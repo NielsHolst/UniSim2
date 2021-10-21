@@ -218,9 +218,9 @@ void Records::update() {
 
     for (int i = 0; i < _values.size(); ++i) {
         if (i == _dateColumn || i == _timeColumn) continue;
-        double dx = currentT.secsTo(nextT);
-        double dy = _nextColumnValues->at(i) - _currentColumnValues->at(i);
-        double x = currentT.secsTo(calendarDateTime);
+        double dx = static_cast<double>(currentT.secsTo(nextT)),
+               dy = _nextColumnValues->at(i) - _currentColumnValues->at(i),
+               x = static_cast<double>(currentT.secsTo(calendarDateTime));
         _values[i] = ((dx > 0) ? x*dy/dx : 0.) + _currentColumnValues->at(i);
     }
 }

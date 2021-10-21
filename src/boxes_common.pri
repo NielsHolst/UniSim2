@@ -7,7 +7,7 @@
 #-------------------------------------------------
 
 # AUTO-CONFIG-BEGIN
-CONFIG += release
+CONFIG += debug
 VERSION = 2.3.57
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
@@ -40,9 +40,9 @@ QMAKE_CXXFLAGS += -Wall -Wextra # -Wconversion
 # Compiler options to silence warnings
 QMAKE_CXXFLAGS += -Wno-padded -Wno-int-in-bool-context
 
-greaterThan(QT_MAJOR_VERSION, 5) {
-    QMAKE_CXXFLAGS += -Wno-clazy-non-pod-global-static
-}
+#greaterThan(QT_MAJOR_VERSION, 5) {
+#    QMAKE_CXXFLAGS += -Wno-clazy-non-pod-global-static
+#}
 
 # Compiler options to silence warnings when compiling Boost
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-attributes -Wno-deprecated-declarations -Wno-misleading-indentation
@@ -77,6 +77,8 @@ isEmpty(BOOST_PATH) {
     BOOST_PATH = $$_PRO_FILE_PWD_/../../../../boost
 }
 INCLUDEPATH += $${BOOST_PATH}
+#message("Using boost libraries found in")
+#message($${BOOST_PATH})
 
 # Own libraries that we use, except 'base' does not use itself
 !equals(BOXES_PLUGIN_NAME, "base") {

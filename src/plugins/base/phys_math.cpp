@@ -255,12 +255,67 @@ double Tdew(double temperature, double rh) {
     return (k5*log(vp/k1) - k3) / (log(vp/k1)*k4 - k2) - T0;
 }
 
+//! Compute wet bulb temperature from temperature and r.h.
+/*! See DOI: 10.1175/JAMC-D-11-0143.1
+    \param temperature (oC)
+    \param rh relative humidity (%)
+    \return wet bulb temperature (oC)
+ */
+double Twet(double temperature, double rh) {
+    return temperature*atan(0.151977*sqrt(rh + 8.313659)) +
+           atan(temperature+rh) -
+           atan(rh-1.676331) +
+           0.00391838*pow(rh,1.5)*atan(0.023101*rh) -
+           4.686035;
+}
+
+//! Compute r.h. from temperatur and wet bulb temperature
+/*! See weather.gov/media/epz/wxcalc/rhTdFromWetBulb.pdf
+    \param temperature (oC)
+    \param wet bulb temperature (oC)
+    \return rh relative humidity (%)
+ */
+double rhFromTwet(double temperature, double Twet) {
+    double
+        &T(temperature),
+        es = 6.112*exp(17.67*T   /(T   +243.5)),
+        ew = 6.112*exp(17.67*Twet/(Twet+243.5)),
+        ea = ew - 1013.25*(T - Twet)*0.00066*(1 + 0.00115*Twet);
+    return ea/es*100.;
+}
+
 double virtualTemperatureFromAh(double temperature, double ah) {
     return (temperature+T0)*(1+0.608*shFromAh(ah));
 }
 
-double rhoAir(double T) {
-    return 9.43e-10*p4(T) - 1.51e-7*p3(T) - 2.00e-5*p2(T) - 4.69e-3*T + 1.28;
+//! Compute air density from temperature and pressure
+/*! See chemeurope.com/en/encyclopedia/Density_of_air.html
+    \param temperature (oC)
+    \param air pressure (Pa)
+    \return air density (kg/m3)
+ */
+double rhoAir(double T, double P) {
+    return P/287.058/(T+T0);
+}
+
+//! Compute air enthalpy from temperature and specific humidity
+/*! See sciencing.com/calculate-enthalpy-air-6118694.html
+    \param temperature (oC)
+    \param specific humidity (kg/kg)
+    \return air enthalphy (J/kg)
+ */
+double enthalpy(double temperature, double sh) {
+  return 1.007*temperature - 0.026 + sh*(2501. + 1.84*temperature);
+}
+
+//! Compute heat of evaporation from temperature
+/*! See mychemengmusings.wordpress.com/2019/01/08/handy-equations-to-calculate-heat-of-evaporation-and-condensation-of-water-steam/
+    \param temperature (oC)
+    \return heat of evaporation (J/kg)
+ */
+double evaporationHeat(double temperature) {
+    double y = 193.1 - 10950.*log((374.-temperature)/647.) * pow(374.-temperature,0.785) /(273.+temperature);
+    return y/1000.;
 }
 
 //! Joint of two emissivities
@@ -271,7 +326,7 @@ double rhoAir(double T) {
  */
 
 double jointEmissivity(double em1, double em2) {
-    return (em1==0 || em2==0) ? 0. :
+    return (em1==0. || em2==0.) ? 0. :
            1/(1/em1 + 1/em2 - 1);
 
 }

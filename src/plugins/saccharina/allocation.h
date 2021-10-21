@@ -19,22 +19,47 @@ public:
 private:
     // Inputs
     double
-        structuralProportionC, structuralProportionN, structuralMass,
-        curReservesProportionC, curReservesProportionN,
-        reservesMaxProportionC, reservesMaxProportionN,
-        supplyCarbonTotal, supplyNitrogenTotal,
-        demandCarbonRespiration, demandCarbonExudation,
-        demandCarbonStructure, demandNitrogenStructure,
-        demandCarbonErosion, demandNitrogenErosion;
+    massCStruct,
+    massNStruct,
+    massCRes,
+    massNRes,
+    propCStruct,
+    propNStruct,
+    propCRes,
+    propNRes,
+    optCConc,
+    optNConc,
+    supplyC,
+    supplyN,
+    demandRespirationC,
+    demandGrowthC,
+    demandGrowthN,
+    demandReservesC,
+    demandReservesN,
+    demandCostC,
+    costStruct,
+    costCRes,
+    costNRes;
     // Outputs
     double
-        MC0, MC1, MC2, MC3,
-        MN0, MN1,
-        supplyCarbonStructure, supplyCarbonReserves,
-        supplyMassStructure, structuralMassLoss,
-        reservesProportionC, reservesProportionN,
-        sdCarbon, sdNitrogen;
-
+    supplyRespirationC,
+    supplyGrowthC,
+    supplyGrowthN,
+    supplyReservesC,
+    supplyReservesN,
+    M0C, M1C, M2C, M3C, M4C,
+    M0N, M1N, M2N, M3N,
+    structuralLossC,
+    structuralLossRate,
+    structuralBiomassGain,
+    sdGrowthC, sdGrowthN,
+    sdReservesC, sdReservesN;
+    int reservesIter;
+    // Methods
+    void zeroOut();
+    double biomass(double supplyReservesC, double supplyReservesN) const;
+    double concC(double supplyReservesC, double supplyReservesNGuess) const;
+    double concN(double supplyReservesCGuess, double supplyReservesNGuess) const;
 };
 
 }

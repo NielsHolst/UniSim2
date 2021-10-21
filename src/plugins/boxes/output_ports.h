@@ -20,7 +20,6 @@ public:
     OutputPorts(QString name, QObject *parent);
     void amend() final;
     const QVector<base::Track*> & tracks();
-    void parsePorts();
 private:
     // Inputs
     QVector<QString> ports;

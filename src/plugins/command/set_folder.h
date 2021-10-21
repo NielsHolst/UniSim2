@@ -17,6 +17,7 @@ private:
     void doExecute();
     void showFolder(QString folderType);
     void setFolder(QString folderType, QString folderPath);
+    void setToDefault();
 };
 
 }

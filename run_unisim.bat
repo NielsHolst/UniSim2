@@ -1,2 +1,7 @@
+set cur_dir=%cd%
 call %QT_ROOT%\qtenv2.bat
-C:\Users\au152367\Documents\QDev\UniSim2\bin\unisim.exe
+if exist "%cur_dir%\bin\unisimd.exe" (
+  "%cur_dir%\bin\unisimd.exe"
+) else (
+  "%cur_dir%\bin\unisim.exe"
+)

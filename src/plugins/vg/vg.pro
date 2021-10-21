@@ -10,7 +10,11 @@ include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
     actuators.h \
+    actuator_heat_exchanger.h \
+    actuator_heat_pump.h \
     actuator_heat_pipes.h \
+    actuator_humidifier.h \
+    actuator_pad_and_fan.h \
     actuator_ventilation.h \
     ah_from_rh.h \
     any_flag.h \
@@ -36,6 +40,7 @@ HEADERS +=  \
     growth_light_controller.h \
     growth_light.h \
     growth_lights.h \
+    heat_buffer.h \
     heat_sink.h \
     heat_transfer_layer_base.h \
     heat_transfer_layer_parameters.h \
@@ -108,7 +113,11 @@ HEADERS +=  \
 
 SOURCES += \
     actuators.cpp \
+    actuator_heat_exchanger.cpp \
+    actuator_heat_pump.cpp \
     actuator_heat_pipes.cpp \
+    actuator_humidifier.cpp \
+    actuator_pad_and_fan.cpp \
     actuator_ventilation.cpp \
     ah_from_rh.cpp \
     any_flag.cpp \
@@ -134,6 +143,7 @@ SOURCES += \
     growth_light_controller.cpp \
     growth_light.cpp \
     growth_lights.cpp \
+    heat_buffer.cpp \
     heat_sink.cpp \
     heat_transfer_layer_base.cpp \
     heat_transfer_layer_parameters.cpp \

@@ -36,7 +36,9 @@ HEADERS +=  \
     layout_r.h \
     maker.h \
     maximum.h \
+    mean.h \
     minimum.h \
+    modifier.h \
     multiplum.h \
     numbered_file.h \
     offset_date_time.h \
@@ -125,6 +127,8 @@ SOURCES +=  \
     maker.cpp \
     maximum.cpp \
     minimum.cpp \
+    mean.cpp \
+    modifier.cpp \
     multiplum.cpp \
     numbered_file.cpp \
     offset_date_time.cpp \

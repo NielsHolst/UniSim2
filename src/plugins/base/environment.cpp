@@ -201,7 +201,7 @@ QString Environment::filePath(Folder folder, QString fileName) const {
     if (QFileInfo(fileName).isAbsolute())
         return fileName;
     QString fileNamePath = resolveDir(folder).absoluteFilePath(fileName);
-    if (!QFileInfo(fileNamePath).exists())
+    if (!QFileInfo::exists(fileNamePath))
         ThrowException("Could not find file").value(fileNamePath);
     return fileNamePath;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QCoreApplication>
+#include <QDir>
 #include <base/dialog_stub.h>
 #include <base/environment.h>
 #include <base/object_pool.h>
@@ -7,10 +8,12 @@
 #include "autotest.h"
 
 inline QString inputPath() {
-    // Direct run
-//    return "../src/apps/test/input/";
-    // Debugger run
-    return "C:/Users/au152367/Documents/qdev/UniSim2/src/apps/test/input/";
+    QString path = QCoreApplication::applicationDirPath();
+    QDir dir = QDir(path);
+    dir.cdUp();
+    dir.cd("src/apps/test/input");
+    return dir.absolutePath();
+//    return "C:/Users/au152367/Documents/qdev/UniSim2/src/apps/test/input/";
 }
 
 int main(int argc, char *argv[])

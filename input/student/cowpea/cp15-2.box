@@ -1,0 +1,198 @@
+Simulation sim {
+  .steps = 120
+  Calendar calendar {
+    .initialDateTime = 1/7/2019
+  }
+  Records weather {
+    // .fileName = "C:\Users\john\Desktop\Sokoto_North_Nigeria_TA00460.txt"
+    .fileName = "Sokoto_North_Nigeria_TA00460.txt"
+  }
+  Box plant {
+    Stage vegetative { // from seed germination to open flowers
+      .initial = 1
+      .duration = 661 // Hadley et al. 1983
+      .growthFactor = 50 // amount of flowers per plant in an early maturing cowpea
+      .timeStep = ./time[value]      
+      OnOff time {
+        .x = calendar[dayOfYear]
+        .xOn = 213 // 1st of August. Season starts depending on the rainy season dates and cultivar, table 9 in "Doc1 cowpea and X".
+        .xOff = 365
+        .valueOn = ./daydegrees[step]
+        DayDegrees daydegrees {
+          .T = weather[Tavg]
+          .T0 = 8
+          .Topt = 35
+          .Tmax = 43  // where did i get these values from (facepalm)
+        }
+      }
+    }
+    
+    // reproductive development time in days and stages of cowpea TVu 2723 (early maturing https://my.iita.org/accession2/accession/TVu-2723) according to Ishikawa et al. 2021 
+    // mean duration in DD of photo-insensitive early maturing varieties to ripe pods 1024 DD and to open flowers 661 DD, hence from open flowers to ripe pods is 363 DD Hadley et al. 1983
+    // duration in days to duration in DD is calculated proportionally e.g. from flower to stage one it takes 6 days (Ishikawa 2021), hence it takes 99DD etc.
+    
+    Stage flower { // open flower; attacked by 1-3 Maruca vitrata larvae 
+      .inflow = ../vegetative[outflow]
+      .duration = 99 
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 27
+        .Tmax = 36 // Craufurd et al. 1997 
+      }
+    }   
+    Stage pod1 { 
+      .inflow = ../flower[outflow]
+      .duration = 16.5
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+    Stage pod2 {
+      .inflow = ../pod1[outflow]
+      .duration = 33
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+    Stage pod3 {
+      .inflow = ../pod2[outflow]
+      .duration = 57.75
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+    Stage pod4 {
+      .inflow = ../pod3[outflow]
+      .duration = 156.75
+      .timeStep = ./daydegrees[step]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+  }
+  
+  Box maruca {
+    ThresholdSignal immigration {
+      .input = flower[content]
+      .threshold = 1
+      .signalFlagged = 0.1 // daily inflow per plant
+      .signalUnflagged = 0
+    }
+
+    Stage adult {
+      .inflow|sum = ../immigration[value] | ../pupa[outflow]  // vector of 2 numbers pupaF
+      .duration = 6 // 3 - 10 days ba et al 2019
+      Stage oviposition {
+        .inflow = ..[inflow]
+        .duration = ..[duration]
+        .growthFactor = 200  // 400 eggs per female * 0.5 females per adult
+      }
+    }
+    Stage egg {
+      .inflow = ../adult/oviposition[outflow]
+      .duration = 51.1
+      .growthFactor = 0.02 // huge background mortality
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 10.5
+      }
+    }
+    Stage instar1 {
+      .inflow = ../egg[outflow]
+      .duration = 50.8 // adati el al 20040
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 11.5
+      }
+    }
+    Stage instar2 {
+      .inflow = ../instar1[outflow]
+      .duration = 40.0 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 10.4
+      }
+    }
+    Stage instar3 {
+      .inflow = ../instar2[outflow]
+      .duration = 40.1 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 10.4
+      }
+    }
+    Stage instar4 {
+      .inflow = ../instar3[outflow]
+      .duration = 51.8 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 8.0
+      }
+    }
+    Stage instar5 {
+      .inflow = ../instar4[outflow]
+      .duration = 73.6 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 9.7
+      }
+    }
+    Stage prePupa {
+      .inflow = ../instar5[outflow]
+      .duration = 28.2 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 7.7
+      }
+    }
+    Stage pupa {
+      .inflow = ../prePupa[outflow]
+      .duration = 116.5 // adati el al 2004
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .T0 = 10.9
+      }
+    }
+  }
+
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .width = 10
+      .height = 10
+      .nrow = 2
+      +monthBreaks = "geom_line(size = 1.1) +
+                      scale_x_datetime(
+                      breaks = date_breaks('1 months'),
+                      labels = date_format('%b')
+                      ) + ylim(0,NA)"
+      PlotR {
+        .ports = plant/*[content] 
+        .ggplot = ..[monthBreaks]
+        .layout = "merged"
+      }
+      PlotR {
+        .ports = maruca/*[content]
+        .ggplot = ..[monthBreaks]
+        .layout = "merged"
+      }
+    }
+  }
+}

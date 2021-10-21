@@ -24,13 +24,13 @@ template<> ListOption convert(char c) {
     case 'p': o = ListOption::Ports; break;
     case 'i': o = ListOption::Inputs; break;
     case 'o': o = ListOption::Outputs; break;
+    case 's': o = ListOption::Short; break;
     case 'm': o = ListOption::Imports; break;
     case 'x': o = ListOption::Exports; break;
     case 'b': o = ListOption::Boxes; break;
     case 'r': o = ListOption::Recurse; break;
-    case 'P': o = ListOption::Plugin; break;
     default: ThrowException("Unknown list option")
-                .value(c).hint("Valid options: piomxbr");
+                .value(c).hint("Valid options: psiomxbr");
     }
     return o;
 }

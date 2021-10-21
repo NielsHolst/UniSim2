@@ -17,18 +17,18 @@ command.subdir = src/plugins/command
 command.depends = base
 test.depends = command
 
-SUBDIRS += demo
-demo.subdir = src/plugins/demo
-demo.depends = base
-test.depends = demo
+#SUBDIRS += demo
+#demo.subdir = src/plugins/demo
+#demo.depends = base
+#test.depends = demo
 
-SUBDIRS += eq
-eq.subdir = src/plugins/eq
-eq.depends = base
+#SUBDIRS += eq
+#eq.subdir = src/plugins/eq
+#eq.depends = base
 
-SUBDIRS += student
-student.subdir = src/plugins/student
-student.depends = base
+#SUBDIRS += student
+#student.subdir = src/plugins/student
+#student.depends = base
 
 #SUBDIRS += vg
 #vg.subdir = src/plugins/vg

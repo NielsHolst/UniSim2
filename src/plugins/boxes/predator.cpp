@@ -28,7 +28,7 @@ void Predator::setFoodWebImports() {
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("supply")->imports(prefix + "[supply" + suffix + "]");
-    port("sdRatio")->imports(prefix + "[sdRatio" + suffix + "]");
+    port("sdRatio")->imports(prefix + "[sd_ratio" + suffix + "]");
 }
 
 } //namespace

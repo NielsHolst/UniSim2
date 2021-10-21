@@ -21,6 +21,7 @@ ListOutput::ListOutput(QVector<Box*> boxes, ListOptionSet options)
                    _options.contains(ListOption::Outputs);
     _listImports = _options.contains(ListOption::Imports);
     _listExports = _options.contains(ListOption::Exports);
+    _listShort   = _options.contains(ListOption::Short);
     _recurse     = _options.contains(ListOption::Recurse);
     _listExportsOnly = _listExports && !(_listInputs || _listOutputs || _listImports);
 
@@ -92,18 +93,21 @@ void ListOutput::toString(base::Port *port, int level) {
     QString fill = QString().fill(' ', 2*level);
 
     if (!_listExportsOnly || !port->exportPorts().isEmpty()) {
-        QString prefix = port->isBlind() ? "+" :
-                        (port->access()==PortAccess::Input) ? "." : "~",
+        QString prefix,
                 assignment = port->valueAsString();
+        if (!_listShort)
+            prefix = port->isBlind() ? "+" : (port->access()==PortAccess::Input) ? "." : "~";
         if (port->type() == Char || port->type() == String) {
 //            if (assignment.size() > 13)
 //                assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
         }
-        if (!port->unit().isEmpty())
-            assignment += " " + port->unit();
-        if (port->hasImport())
-            assignment += " <- " + port->importPath();
+        if (!_listShort) {
+            if (!port->unit().isEmpty())
+                assignment += " " + port->unit();
+            if (port->hasImport())
+                assignment += " <- " + port->importPath();
+        }
         _s += fill +
               prefix +
               port->objectName() +
@@ -112,7 +116,7 @@ void ListOutput::toString(base::Port *port, int level) {
               "\n";
     }
 
-    if (_listExports) {
+    if (_listExports && !_listShort) {
         for (Port *importer : port->exportPorts())
             _s += fill + "  >> " + importer->fullName() + "\n";
     }

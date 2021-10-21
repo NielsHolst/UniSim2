@@ -11,6 +11,8 @@ private slots:
     void testIntFromStringList();
     void testDate();
     void testTimeToDouble();
+    void testDoubleToTime();
+    void testStringDoubleToTime();
 };
 
 DECLARE_TEST(TestConvert)

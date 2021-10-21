@@ -69,4 +69,27 @@ void TestConvert::testTimeToDouble() {
     }
 }
 
+void TestConvert::testDoubleToTime() {
+    double hours = 3. + 25./60. + 15./3600.;
+    QTime time;
+    try {
+        time = convert<QTime>(hours);
+        QVERIFY2(time == QTime(3,25,15), qPrintable(time.toString()));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected exception: " + ex.what()));
+    }
+}
+
+void TestConvert::testStringDoubleToTime() {
+    double hours = 3. + 25./60. + 15./3600.;
+    QTime time;
+    try {
+        time = convert<QTime>(QString::number(hours));
+        QVERIFY2(time == QTime(3,25,15), qPrintable(time.toString()));
+    }
+    catch (Exception &ex) {
+        QFAIL(qPrintable("Unexpected exception: " + ex.what()));
+    }
+}
 

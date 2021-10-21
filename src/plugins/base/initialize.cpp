@@ -5,6 +5,7 @@
 #include <QDate>
 #include <QDateTime>
 #include <QTimeZone>
+#include "date_time.h"
 #include "exception.h"
 #include "initialize.h"
 
@@ -22,7 +23,7 @@ namespace {
 
     template <> QDate zero() { return QDate(2001,1,1); }
     template <> QTime zero() { return QTime(0,0,0); }
-    template <> QDateTime zero() { return QDateTime(QDate(2001,1,1), QTime(), QTimeZone(0)); }
+template <> QDateTime zero() { return base::makeDateTime(QDate(2001,1,1), QTime(0,0,0)); }
 
     template <class T> void zero(QVector<T> &vector) {
         vector.fill(zero<T>());
@@ -35,7 +36,7 @@ namespace {
         break; \
     case PortT##Vector: \
         zero(DEST_VECTOR(CppT)); \
-        break;
+        break
 
 namespace base {
 
@@ -55,7 +56,6 @@ void initialize(PortType destT, void *destPtr, QObject *context) {
     CASE_INIT(DateTime, QDateTime);
     case Null:
         ThrowException("Cannot initialize Null").context(context);
-        break;
     }
 }
 

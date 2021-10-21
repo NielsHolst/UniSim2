@@ -25,7 +25,6 @@ FoodWeb::FoodWeb(QString name, QObject *parent)
 }
 
 void FoodWeb::amend() {
-    dialog().information("FoodWeb::amend()");
     Box *pp = MegaFactory::create<>("FoodWebCalcPredatorPrey", "pp", this),
         *ph = MegaFactory::create<>("FoodWebCalcParasiteHost", "ph", this);
     pp->amendFamily();

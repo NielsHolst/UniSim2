@@ -1,0 +1,256 @@
+Simulation sim {
+  .steps = 365
+  Calendar calendar {
+    .initialDateTime = 1/1/2019
+  }
+  Records weather {
+    // .fileName = "C:\Users\john\Desktop\Sokoto_North_Nigeria_TA00460.txt"
+    .fileName = "Sokoto_North_Nigeria_TA00460.txt"
+  }
+  Box cp {
+    Stage vegetative { // from seed germination to open flowers
+      .initial = 1
+      .duration = 661 // Hadley et al. 1983
+      .growthFactor = 50 // amount of flowers per plant in an early maturing cowpea
+      .timeStep = ./time[value]      
+      OnOff time {
+        .x = calendar[dayOfYear]
+        .xOn = 213 // 1st of August. Season starts depending on the rainy season dates and cultivar, table 9 in "Doc1 cowpea and X".
+        .xOff = 273
+        .valueOn = ./daydegrees[step]
+        DayDegrees daydegrees {
+          .T = weather[Tavg]
+          .T0 = 8
+          .Topt = 35
+          .Tmax = 43  // where did i get these values from (facepalm)
+        }
+      }
+    }
+    
+    // reproductive development time in days and stages of cowpea TVu 2723 (early maturing https://my.iita.org/accession2/accession/TVu-2723) according to Ishikawa et al. 2021 
+    // mean duration in DD of photo-insensitive early maturing varieties to ripe pods 1024 DD and to open flowers 661 DD, hence from open flowers to ripe pods is 363 DD Hadley et al. 1983
+    // duration in days to duration in DD is calculated proportionally e.g. from flower to stage one it takes 6 days (Ishikawa 2021), hence it takes 99DD etc.
+    
+    Stage flower { // open flower; attacked by 1-3 Maruca vitrata larvae 
+      .inflow = ../vegetative[outflow]
+      .duration = 99 
+      .timeStep = ./daydegrees[step]
+      .instantLossRate = web1[mortality_flowers]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+        .Topt = 27
+        .Tmax = 36 // Craufurd et al. 1997 
+      }
+    }   
+    Stage pod1 { 
+      .inflow = ../flower[outflow]
+      .duration = 16.5
+      .timeStep = ./daydegrees[step]
+      //.instantLossRate = web2[mortality_pods]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+    Stage pod2 {
+      .inflow = ../pod1[outflow]
+      .duration = 33
+      .timeStep = ./daydegrees[step]
+      //.instantLossRate = web2[mortality_pods]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }
+    Stage pod3 {
+      .inflow = ../pod2[outflow]
+      .duration = 57.75
+      .timeStep = ./daydegrees[step]
+      //.instantLossRate = web2[mortality_pods]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }Stage pod4 {
+      .inflow = ../pod3[outflow]
+      .duration = 156.75
+      .timeStep = ./daydegrees[step]
+      //.instantLossRate = web2[mortality_pods]
+      DayDegrees daydegrees {
+        .T = weather[Tavg]
+        .T0 = 8
+      }
+    }Stage pod5 {
+      .inflow = ../pod4[outflow]
+      //.duration until harvest
+      //.instantLossRate = web2[mortality_pods]
+    }
+  }
+  Box maruca {
+    +flowersPerLarva = 3
+    +podsPerLarva = 3
+    ThresholdSignal immigration {
+      .input = flower[content]
+      .threshold = 1
+      .signalFlagged = 0.1 // daily inflow per plant
+      .signalUnflagged = 0
+    }
+
+    Stage adultF {
+      .inflow|sum = ../immigration[value] | ../pupaF[outflow]  // vector of 2 numbers pupaF
+    .duration = 6 // 3 - 10 days ba et al 2019
+    }
+    Stage oviposition {
+    .inflow = ../adultF[inflow]
+    .duration = ../adultF[duration]
+    .growthFactor = 400 
+    }
+    Stage egg {
+      .inflow = ../oviposition[outflow]
+      .duration = 51.1
+      .growthFactor = 0.02
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        .Topt = 26
+        .T0 = 10.5
+        .Tmax = 34.3
+      }
+    }
+    
+    FoodWeb web1 {
+      DemandPerCapita flowerDemand {
+        .duration = 141.9 // combined duration of the 1 2 3 instar stages in DD
+        .perLarva = 3
+      }
+      Predator larvae1 {
+        .density = maruca/egg[outflow]
+        .demand  = ../flowerDemand[value] 
+        Prey flowers {
+          .density = cp/flower[content]
+          .attackRate = 0.95
+        }
+      }
+    }
+    AgeingIncrement ageingIncrement {
+      .incrementDD | sum = instar1/time[step] | instar2/time[step] | instar3/time[step]
+      .sdRatio = web1[sdRatio_larvae1]
+    }
+    DailyLarvalDemand dailyLarvalDemand {
+      .demandPerCapita = flowerDemand[value]
+      .ageingIncrement = ageingIncrement[value]
+      .larvalDensity | sum = instar1[content] | instar2[content] | instar3[content] 
+    }
+    
+    // instars 1 - 3  are based on available flowers of cowpea
+    Stage instar1 {
+      .inflow = ../potentialLarvaYoung[value]
+      .duration = 51.1 // adati el al 2004
+      .timeStep = ./time[step]
+      //.growthFactor = 
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 10.5
+        //.Tmax = 29.3
+      }
+    }
+    Stage instar2 {
+      .inflow = ../instar1[outflow]
+      .duration = 50.8 // adati el al 2004
+      .timeStep = ./time[step]
+      //.instantLossRate = totalDamage[propTotalByAttackersWithCompeteProper]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 11.5
+        //.Tmax = 29.3
+      }
+    }
+    Stage instar3 {
+      .inflow = ../instar2[outflow]
+      .duration = 40 // adati el al 2004
+      .timeStep = ./time[step]
+      //.instantLossRate = totalDamage[propTotalByAttackersWithCompeteProper]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 10.4
+        //.Tmax = 29.3
+      }
+    }
+    
+    // instars 4 and 5 are based on available green pods (pod 1 2 3 and 4 ?) of cowpea
+    Stage instar4 {
+      .inflow = ../potentialLarvaOld[value]
+      .duration = 51.8 // adati el al 2004
+      .timeStep = ./time[step]
+      //.instantLossRate = totalDamage[propTotalByAttackersWithCompeteProper]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 8
+        //.Tmax = 29.3
+      }
+    }
+    Stage instar5 {
+      .inflow = ../potentialLarvaOld[value]
+      .duration = 73.6 // adati el al 2004
+      .timeStep = ./time[step]
+      //.instantLossRate = totalDamage[propTotalByAttackersWithCompeteProper]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 9.7
+        //.Tmax = 29.3
+      }
+    }
+    
+    Stage pupaAll {
+      .inflow = ../instar5[outflow]
+      .duration = 116.5 // adati el al 2004
+      .growthFactor = 0.5 // sex ratio 1:1
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 10.9
+        //.Tmax = 29.3
+      }
+    }
+    Stage pupaF {
+      .inflow = ../pupaAll[outflow]
+      .duration = 110 // adati el al 2004
+      .growthFactor = 0.5 // sex ratio 1:1
+      .timeStep = ./time[step]
+      DayDegrees time {
+        .T = weather[Tavg]
+        //.Topt = 26 // adati et al. 2004
+        .T0 = 11.2
+        //.Tmax = 29.3
+      }  
+    }
+  }
+  OutputR {
+  Box outputs {}
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      +monthBreaks = "geom_line(size = 1.1) +
+              scale_x_datetime(
+                      breaks = date_breaks('1 months'),
+                      labels = date_format('%b')
+                      ) +
+              ylim(0,NA)"
+      PlotR {
+        .ports = cp/*[content] 
+        .ggplot = ..[monthBreaks]
+      }
+    PlotR {
+        .ports = maruca/*[content] 
+        .ggplot = ..[monthBreaks]
+      }
+    }
+  }
+}

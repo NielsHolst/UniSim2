@@ -30,8 +30,13 @@ void Maker::amend() {
         readDataFrame();
     }
 
-    // Find the one child
-    Box* child = findOne<Box>("./*");
+    // Find the one child; only one child allowed
+    QVector<Box*> children = findMany<Box>("./*");
+    if (children.isEmpty())
+        ThrowException("Maker must have one child; found none").context(this);
+    if (children.size() > 1)
+        ThrowException("Maker must have exactly one child; found more").value(children.size()).context(this);
+    Box* child = children[0];
     if (dynamic_cast<Maker*>(child))
         ThrowException("Maker inside Maker is now allowed").context(this);
 

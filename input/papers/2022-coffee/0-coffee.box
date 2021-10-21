@@ -1,0 +1,36 @@
+Simulation sim {
+  .steps = 2193
+  Calendar calendar {
+    .latitude  = 9.93
+    .longitude = -84.09
+  }
+  Sun sun {
+  }
+  Box env {
+    Records weather {
+      .fileName = "Las_Colinas.txt"
+      .overrideCalendarYear = TRUE
+    }
+    Mean Tavg {
+      .values = weather[Tmin] | weather[Tmax]
+    }
+  }
+  Phenology phenology {
+  }
+  OutputR {
+    PageR {
+      .xAxis = calendar[date]
+      .ncol = 2
+      // PlotR {
+        // .ports = (weather[GR] weather[TMIN] weather[TMAX] weather[VP] weather[WN] weather[RAIN])
+      // }
+      PlotR {
+        .ports = (phenology[DVS] phenology[dDVSMAX] phenology[dDVS] phenology[rDVS] phenology[sensit] phenology[dayFill] phenology[dayFl])
+      }
+      PlotR {
+        .ports = (phenology[Tshade] phenology[TMatB])
+        .layout = "merged"
+      }
+    }
+  }
+}

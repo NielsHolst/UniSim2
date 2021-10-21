@@ -6,11 +6,10 @@
 #define BASE_VECTORIZE_H
 #include <QVector>
 #include "assign.h"
+#include "port.h"
 #include "port_type.h"
 
 namespace base {
-    class Port;
-
     const void* vectorize(PortType destType, const QVector<Port*> &ports);
 
     template <class T> const void* vectorize(const QVector<Port*> &ports) {

@@ -4,6 +4,7 @@
 #include <QTime>
 #include <QDateTime>
 #include <QTimeZone>
+#include <base/date_time.h>
 #include <base/exception.h>
 #include <base/port.h>
 #include "test_port.h"
@@ -269,8 +270,8 @@ const char CHAR = 'X';
 const QDate DATE = QDate(2001,2,10);
 const int TIME_HOURS = 11;
 const QTime TIME = QTime(TIME_HOURS, 0);
-const QDateTime DATE_TIME = QDateTime(DATE, TIME);
-const QDateTime DATE_TIME_MIDNIGHT = QDateTime(DATE, QTime(0,0), QTimeZone("UTC"));
+const QDateTime DATE_TIME = makeDateTime(DATE, TIME);
+const QDateTime DATE_TIME_MIDNIGHT = makeDateTime(DATE, QTime(0,0));
 
 // Convert to bool
 CONV2(Bool, bool, BOOL, Bool, bool, true)

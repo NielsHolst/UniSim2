@@ -33,6 +33,13 @@ HEADERS +=  \
     box_reader_base.h \
     box_reader_boxes.h \
     box_reader_xml.h \
+    boxscript_ast.h \
+    boxscript_ast_adapted.h \
+    boxscript_config.h \
+    boxscript_error_handler.h \
+    boxscript.h \
+    boxscript_def.h \
+    boxscript_skipper.h \
     caller.h \
     circular_buffer.h \
     command.h  \
@@ -43,6 +50,7 @@ HEADERS +=  \
     copy_folder.h \
     data_frame.h \
     data_grid.h \
+    date_time.h \
     documentation.h \
     dialog.h \
     dialog_base.h \
@@ -81,6 +89,7 @@ HEADERS +=  \
     product_base.h \
     product.h \
     proportions.h \
+    psychrolib.h \
     random_generator.h \
     random_order.h \
     save_grammar_atom.h \
@@ -116,6 +125,8 @@ SOURCES +=  \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \
+    boxscript_ast.cpp \
+    boxscript.cpp \
     caller.cpp \
     command.cpp \
     command_help.cpp  \
@@ -125,6 +136,7 @@ SOURCES +=  \
     copy_folder.cpp \
     data_frame.cpp \
     data_grid.cpp \
+    date_time.cpp \
     dialog.cpp \
     dialog_base.cpp \
     dialog_minimal.cpp \
@@ -155,6 +167,7 @@ SOURCES +=  \
     port_value_op.cpp \
     product_base.cpp \
     proportions.cpp \
+    psychrolib.c \
     random_generator.cpp \
     random_order.cpp \
     save_grammar_atom.cpp \
