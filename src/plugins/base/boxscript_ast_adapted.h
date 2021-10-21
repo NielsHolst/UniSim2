@@ -34,7 +34,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Expression, sign, firstOperand, operations
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::FunctionCall, name, argument
+    boxscript::ast::FunctionCall, name, arguments
 )
 BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Operation, operator_, operand

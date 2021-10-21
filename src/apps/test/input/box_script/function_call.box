@@ -5,6 +5,7 @@ Simulation sim {
     +a = sum(x[a]+y[b])
     +a = sum(mean(x[a]+y[b]))*abc[b]^2
     +b = sum(x[a]|y[b])
+    +c = c(x[a], y[b], 123)
   }
 }
 

@@ -52,7 +52,7 @@ namespace boxscript { namespace ast
         typedef x3::forward_ast<Expression> Argument;
 
         std::string name;
-        Argument argument;
+        std::vector<Argument> arguments;
         friend std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
     };
 

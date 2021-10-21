@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "boxscript_ast.h"
 
 namespace boxscript { namespace ast
@@ -51,7 +52,12 @@ namespace boxscript { namespace ast
 
     }
     std::ostream& operator<<(std::ostream& os, const FunctionCall& x) {
-        return os << x.name << "(" << x.argument.get() << ")" ;
+        std::stringstream str;
+        str << x.name << "(";
+        for (auto argument : x.arguments)
+            str << argument.get() << ", ";
+        std::string s = str.str();
+        return os << s.erase(s.length()-2) << ")" ;
     }
 
     std::ostream& operator<<(std::ostream& os, const Operation& x) {

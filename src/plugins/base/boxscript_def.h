@@ -157,7 +157,7 @@ namespace boxscript { namespace parser
     auto const date_time_def = date >> lit("T") >> time;
     auto const dots_def = lexeme[x3::repeat(1,3)[x3::string(".")]];
     auto const expression_def = -sign >> operand >> *operation;
-    auto const function_call_def = name >> '(' >> expression > ')';
+    auto const function_call_def = name >> '(' >> expression % ',' > ')';
     auto const grouped_expression_def = '(' >> expression > ')';
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
