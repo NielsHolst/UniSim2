@@ -24,49 +24,49 @@ command.subdir = src/plugins/command
 command.depends = base
 unisim.depends = command
 
-# SUBDIRS += student
-# student.subdir = src/plugins/student
-# student.depends = base
-# unisim.depends = student
+SUBDIRS += student
+student.subdir = src/plugins/student
+student.depends = base
+unisim.depends = student
 
 #
 # Modules required for end-user release
 #
 
-# SUBDIRS += aphid
-# aphid.subdir = src/plugins/aphid
-# aphid.depends = base
-# unisim.depends = aphid
-#
-# SUBDIRS += cmbp
-# cmbp.subdir = src/plugins/cmbp
-# cmbp.depends = base
-# unisim.depends = cmbp
-#
- SUBDIRS += coffee
- coffee.subdir = src/plugins/coffee
- coffee.depends = base
- unisim.depends = coffee
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
 
-# SUBDIRS += MusselBed
-# MusselBed.subdir = src/plugins/MusselBed
-# MusselBed.depends = base
-# unisim.depends = MusselBed
-#
-# SUBDIRS += PestTox
-# PestTox.subdir = src/plugins/PestTox
-# PestTox.depends = base
-# unisim.depends = PestTox
-#
-#SUBDIRS += saccharina
-#saccharina.subdir = src/plugins/saccharina
-#saccharina.depends = base
-#unisim.depends = saccharina
+SUBDIRS += cmbp
+cmbp.subdir = src/plugins/cmbp
+cmbp.depends = base
+unisim.depends = cmbp
 
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
-#unisim.depends = vg
+SUBDIRS += coffee
+coffee.subdir = src/plugins/coffee
+coffee.depends = base
+unisim.depends = coffee
+
+SUBDIRS += MusselBed
+MusselBed.subdir = src/plugins/MusselBed
+MusselBed.depends = base
+unisim.depends = MusselBed
+
+SUBDIRS += PestTox
+PestTox.subdir = src/plugins/PestTox
+PestTox.depends = base
+unisim.depends = PestTox
+
+SUBDIRS += saccharina
+saccharina.subdir = src/plugins/saccharina
+saccharina.depends = base
+unisim.depends = saccharina
+
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg
 
 #
 # Modules under (re-)construction

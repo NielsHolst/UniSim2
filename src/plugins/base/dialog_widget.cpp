@@ -403,8 +403,8 @@ void DialogWidget::writeWelcome() {
         showRHint("\n-=- Get R ready! -=-\nThis seems like your first meeting with Universal Simulator. "
                   "Below you see the packages that you will need in R. "
                   "Before you proceed, make certain that the packages below are installed in R. "
-                  "You can copy and paste the lines below to R to install everyrhing needed. "
-                  "Use the libr command whenever you want to see this list again. ");
+                  "You can copy and paste the lines below to R to install everything needed. "
+                  "Use the 'libr i' command whenever you want to see this list again. ");
     else
         showNews();
     environment().computationStep(ComputationStep::Ready);
@@ -421,7 +421,7 @@ void DialogWidget::showRHint(QString intro) {
     QSettings settings;
     dialog().information(intro + "\n");
     writePrompt();
-    insertText("libr");
+    insertText("libr i");
     submitCommand();
     settings.setValue("command/libr", false);
 }

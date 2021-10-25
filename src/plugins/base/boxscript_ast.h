@@ -5,8 +5,6 @@
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 
-#include <map>
-
 namespace boxscript { namespace ast
 {
     namespace x3 = boost::spirit::x3;
@@ -109,6 +107,17 @@ namespace boxscript { namespace ast
         Operand firstOperand;
         std::vector<Operation> operations;
         friend std::ostream& operator<<(std::ostream& os, const Expression& x);
+    };
+
+    struct IfExpression : x3::position_tagged {
+        typedef std::vector<Expression> Expressions;
+        typedef Expressions::const_iterator It;
+        typedef std::pair<It,It> ItPair;
+        Expressions expressions;
+        It ifExpression() const;
+        ItPair elsifExpressions() const;
+        It elseExpression() const;
+        friend std::ostream& operator<<(std::ostream& os, const IfExpression& x);
     };
 
     struct Assignment : x3::position_tagged {

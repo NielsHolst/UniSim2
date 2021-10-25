@@ -1,8 +1,13 @@
-set UNISIM_SHIP=C:\Users\au152367\Documents\QDev\UniSim2\ship
+set UNISIM_SHIP=%DOCUMENTS%\QDev\UniSim2\ship
 set UNISIM_BIN=%UNISIM_SHIP%\bin
+if not exist %UNISIM_SHIP% (
+  echo %UNISIM_SHIP% does not exist
+  echo Please set the DOCUMENTS variable
+  goto :end_fail
+)
 
 set QT_ROOT=C:\Qt\5.15.1\mingw81_64
-if exist %QTENV% goto :ok_qt
+if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
 if exist %QT_ROOT% goto :ok_qt
 set QT_ROOT=C:\Qt\5.11.2\mingw53_32
@@ -15,6 +20,7 @@ echo .
 echo Could not find %QT_ROOT%
 echo .
 goto :end_fail
+
 
 :ok_qt
 set QT_BIN=%QT_ROOT%\bin
@@ -80,6 +86,5 @@ exit /B 0
 
 :end_fail
 @echo *** BUILD FAILURE ***
-pause
 exit /B 1
 

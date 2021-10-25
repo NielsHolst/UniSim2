@@ -42,9 +42,6 @@ Phenology::Phenology(QString name, QObject *parent)
 //    Output(SINKPMAXnew).unit("").help();
 }
 
-void Phenology::reset() {
-}
-
 void Phenology::update() {
     // Determine whether beans are filling
     dayFill = (DVS > 0. && DVS < 1.);

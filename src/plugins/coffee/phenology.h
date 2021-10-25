@@ -12,7 +12,6 @@ class Phenology : public base::Box
 {
 public: 
     Phenology(QString name, QObject *parent);
-    void reset();
     void update();
 private:
     // Inputs
