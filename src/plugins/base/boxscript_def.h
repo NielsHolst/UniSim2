@@ -48,7 +48,6 @@ namespace boxscript { namespace parser
     struct expression_class;
     struct function_call_class;
     struct grouped_expression_class;
-    struct if_expression_class;
     struct integer_class;
     struct joker_class;
     struct name_class;
@@ -81,8 +80,6 @@ namespace boxscript { namespace parser
     x3::rule<expression_class, ast::Expression> const expression = "expression";
     x3::rule<function_call_class, ast::FunctionCall> const function_call = "function call";
     x3::rule<grouped_expression_class, ast::Expression> const grouped_expression = "grouped expression";
-    x3::rule<if_expression_class, ast::IfExpression> const if_expression = "if expression";
-//    x3::rule<if_expression_class, std::vector<ast::Expression>> const if_expression = "if expression";
     x3::rule<integer_class, int> const integer = "integer";
     x3::rule<joker_class, std::string> const joker = "joker";
     x3::rule<name_class, std::string> const name = "name";
@@ -90,7 +87,7 @@ namespace boxscript { namespace parser
     x3::rule<object_name_class, std::string> const object_name = "object name";
     x3::rule<operand_class, ast::Operand> const operand = "operand";
     x3::rule<operation_class, ast::Operation> const operation = "operation";
-    x3::rule<operator__class, char> const operator_ = "operator";
+    x3::rule<operator__class, std::string> const operator_ = "operator";
     x3::rule<path_class, std::string> const path = "path";
     x3::rule<port_class, std::string> const port = "port";
     x3::rule<port_prefix_class, char> const port_prefix = "port prefix (. or +)";
@@ -157,10 +154,6 @@ namespace boxscript { namespace parser
     auto const expression_def = -sign >> operand >> *operation;
     auto const function_call_def = name >> '(' >> expression % ',' > ')';
     auto const grouped_expression_def = '(' >> expression > ')';
-//    auto const if_expression_def = lit("if") >> expression >> *expression;
-    auto const if_expression_def = lit("if") >> expression
-                                    >> *(lit("elsif") >> expression)
-                                    >> lit("else") > expression;
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
@@ -169,7 +162,8 @@ namespace boxscript { namespace parser
     auto const operand_def = date_time | bare_date_time | date | bare_date | time | number |
                              reference | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
-    auto const operator__def = char_('+')|char_('-')|char_('*')|char_('/')|char_('^')|char_('|');
+    auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
+                              |x3::string("&&")|x3::string("||")|x3::string("|")|x3::string("?")|x3::string(":");
     auto const path_def = -char_('/') >> object_name >> *(char_('/') >> object_name);
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
@@ -181,7 +175,7 @@ namespace boxscript { namespace parser
 
     BOOST_SPIRIT_DEFINE(
                 assignment, bare_date, bare_date_time, bool_, box, date, date_time,
-                dots, expression, function_call, grouped_expression, if_expression, integer, joker,
+                dots, expression, function_call, grouped_expression, integer, joker,
                 name, number, object_name, operand, operation, operator_,
                 path, port, port_prefix, qualified_name, quoted_string, reference, sign,
                 time, boxscript
@@ -203,7 +197,6 @@ namespace boxscript { namespace parser
     struct expression_class : x3::annotate_on_success {};
     struct function_call_class : x3::annotate_on_success {};
     struct grouped_expression_class : x3::annotate_on_success {};
-    struct if_expression_class : x3::annotate_on_success {};
     struct integer_class : x3::annotate_on_success {};
     struct joker_class : x3::annotate_on_success {};
     struct name_class : x3::annotate_on_success {};

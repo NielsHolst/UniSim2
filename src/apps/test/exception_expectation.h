@@ -26,5 +26,14 @@ catch(const Exception &) { \
 QVERIFY(excepted); \
 excepted = false
 
+#define EXPECTED_EXCEPTION_SHOWN \
+catch(const Exception &ex) { \
+    QString s = "Expected exception:\n" + ex.what(); \
+    std::cout << qPrintable(s) << std::endl; \
+    excepted = true; \
+} \
+QVERIFY(excepted); \
+excepted = false
+
 
 #endif // EXCEPTION_EXPECTATION_H

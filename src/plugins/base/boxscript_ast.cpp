@@ -85,26 +85,6 @@ namespace boxscript { namespace ast
         return os << s.erase(s.length()-2) << ")" ;
     }
 
-    std::ostream& operator<<(std::ostream& os, const IfExpression& expr) {
-        os << "if " << *expr.ifExpression();
-        for (auto it = expr.elsifExpressions().first; it != expr.elsifExpressions().second; ++it)
-            os << " elsif " << *it;
-        os << " else " << *expr.elseExpression();
-        return os;
-    }
-
-    IfExpression::It IfExpression::ifExpression() const {
-        return expressions.begin();
-    }
-
-    IfExpression::ItPair IfExpression::elsifExpressions() const {
-        return std::make_pair(++ifExpression(), --expressions.end());
-    }
-
-    IfExpression::It IfExpression::elseExpression() const {
-        return expressions.end();
-    }
-
     std::ostream& operator<<(std::ostream& os, const Operand& x) {
         bool isGrouped = (x.type() == Operand::Type::GroupedExpression);
         if (isGrouped) os << "(";

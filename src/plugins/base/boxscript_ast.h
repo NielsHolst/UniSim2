@@ -97,7 +97,7 @@ namespace boxscript { namespace ast
     };
 
     struct Operation : x3::position_tagged {
-        char operator_;
+        std::string operator_;
         Operand operand;
         friend std::ostream& operator<<(std::ostream& os, const Operation& x);
     };
@@ -107,17 +107,6 @@ namespace boxscript { namespace ast
         Operand firstOperand;
         std::vector<Operation> operations;
         friend std::ostream& operator<<(std::ostream& os, const Expression& x);
-    };
-
-    struct IfExpression : x3::position_tagged {
-        typedef std::vector<Expression> Expressions;
-        typedef Expressions::const_iterator It;
-        typedef std::pair<It,It> ItPair;
-        Expressions expressions;
-        It ifExpression() const;
-        ItPair elsifExpressions() const;
-        It elseExpression() const;
-        friend std::ostream& operator<<(std::ostream& os, const IfExpression& x);
     };
 
     struct Assignment : x3::position_tagged {

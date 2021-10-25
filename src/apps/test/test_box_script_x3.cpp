@@ -228,3 +228,22 @@ void TestBoxScriptX3::testBox() {
     UNEXPECTED_EXCEPTION;
     QVERIFY(compare("box_script/box.box", result));
 }
+
+void TestBoxScriptX3::testOperator() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/operator.box");
+    }
+    UNEXPECTED_EXCEPTION;
+    QVERIFY(compare("box_script/operator.box", result));
+}
+
+void TestBoxScriptX3::testTooMuch() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/too_much.box");
+    }
+    EXPECTED_EXCEPTION;
+}

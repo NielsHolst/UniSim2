@@ -20,6 +20,8 @@ private slots:
     void testQuotedString();
     void testFunctionCall();
     void testBox();
+    void testOperator();
+    void testTooMuch();
 };
 
 DECLARE_TEST(TestBoxScriptX3)
