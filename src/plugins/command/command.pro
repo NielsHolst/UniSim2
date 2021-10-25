@@ -29,6 +29,7 @@ HEADERS +=  \
     list_options.h \
     list_output.h \
     load.h \
+    load3.h \
     location.h \
     prep.h \
     profile.h \
@@ -64,6 +65,7 @@ SOURCES +=  \
     list_options.cpp \
     list_output.cpp \
     load.cpp \
+    load3.cpp \
     location.cpp \
     prep.cpp \
     profile.cpp \

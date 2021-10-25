@@ -2,14 +2,13 @@
 #include <memory>
 #include <sstream>
 #include <utility>
-#include <boost/spirit/home/x3.hpp>
 #include <QFile>
+#include <boost/spirit/home/x3.hpp>
 #include <base/boxscript.h>
 #include <base/boxscript_ast.h>
-#include <base/boxscript_def.h>  // Needed by parseRule
-#include <base/boxscript_error_handler.h>
 #include <base/boxscript_config.h>
-#include <base/boxscript_skipper.h>
+#include <base/boxscript_def.h>
+#include <base/boxscript_parser.h>
 #include <base/exception.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"
@@ -19,45 +18,16 @@ using namespace std;
 using namespace base;
 namespace x3 = boost::spirit::x3;
 
-typedef shared_ptr<boxscript::ast::boxscript> ParseResult;
+typedef boxscript::parser::Result ParseResult;
 
 ParseResult parse(QString filePath) {
     // Read source
     QFile file;
     openInputFile(file, filePath);
     std::string source = file.readAll().toStdString();
-
-    // Set up iterators
-    using boxscript::parser::iterator_type;
-    iterator_type iter(source.begin());
-    iterator_type const end(source.end());
-
-    // Our AST
-    auto ast = make_shared<boxscript::ast::boxscript>();
-
-    // Our error handler
-    using boxscript::parser::error_handler_type;
-    using boxscript::parser::error_handler_tag;
-    std::stringstream errorMsg;
-    error_handler_type error_handler(iter, end, errorMsg, filePath.toStdString());
-
-    // Our parser
-    auto const parser =
-        x3::with<error_handler_tag>(std::ref(error_handler))
-        [
-            boxscript::boxscript()
-        ];
-
-    // Go forth and parse!
-    bool success = phrase_parse(iter, end, parser, boxscript::parser::skipper, *ast);
-    if (success && iter!=end) {
-        success = false;
-        error_handler(iter, "Error! Expecting end of input here: ");
-    }
-    if (!success)
-        throw base::Exception(QString::fromStdString(errorMsg.str()));
-    return ast;
-};
+    // Parse
+    return boxscript::parser::parse(source, filePath.toStdString());
+}
 
 bool compare(QString filePath, ParseResult result) {
     // Read source

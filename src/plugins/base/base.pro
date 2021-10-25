@@ -33,12 +33,13 @@ HEADERS +=  \
     box_reader_base.h \
     box_reader_boxes.h \
     box_reader_xml.h \
+    boxscript.h \
     boxscript_ast.h \
     boxscript_ast_adapted.h \
     boxscript_config.h \
-    boxscript_error_handler.h \
-    boxscript.h \
     boxscript_def.h \
+    boxscript_error_handler.h \
+    boxscript_parser.h \
     boxscript_skipper.h \
     caller.h \
     circular_buffer.h \
@@ -125,8 +126,9 @@ SOURCES +=  \
     box_reader_base.cpp \
     box_reader_boxes.cpp \
     box_reader_xml.cpp \
-    boxscript_ast.cpp \
     boxscript.cpp \
+    boxscript_ast.cpp \
+    boxscript_parser.cpp \
     caller.cpp \
     command.cpp \
     command_help.cpp  \

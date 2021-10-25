@@ -48,25 +48,25 @@ coffee.subdir = src/plugins/coffee
 coffee.depends = base
 unisim.depends = coffee
 
-SUBDIRS += MusselBed
-MusselBed.subdir = src/plugins/MusselBed
-MusselBed.depends = base
-unisim.depends = MusselBed
-
-SUBDIRS += PestTox
-PestTox.subdir = src/plugins/PestTox
-PestTox.depends = base
-unisim.depends = PestTox
-
-SUBDIRS += saccharina
-saccharina.subdir = src/plugins/saccharina
-saccharina.depends = base
-unisim.depends = saccharina
-
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
-unisim.depends = vg
+#SUBDIRS += MusselBed
+#MusselBed.subdir = src/plugins/MusselBed
+#MusselBed.depends = base
+#unisim.depends = MusselBed
+#
+#SUBDIRS += PestTox
+#PestTox.subdir = src/plugins/PestTox
+#PestTox.depends = base
+#unisim.depends = PestTox
+#
+#SUBDIRS += saccharina
+#saccharina.subdir = src/plugins/saccharina
+#saccharina.depends = base
+#unisim.depends = saccharina
+#
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
+#unisim.depends = vg
 
 #
 # Modules under (re-)construction
