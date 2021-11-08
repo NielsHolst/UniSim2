@@ -15,12 +15,13 @@ HEADERS +=  \
     autotest.h \
     exception_expectation.h \
     input_file_path.h \
-#    test_spirit.h \
+    test_box_script_x3.h \
+    test_expression_operation.h \
+    test_expression_stack.h \
     test_any_year.h \
+#    test_spirit.h \
 #    test_boost_variant.h \
 #    test_box_script.h \
-    test_box_script_x3.h
-
 #    output_file.h \
 #    test_assign.h \
 #    test_ast_boxes.h \
@@ -65,6 +66,8 @@ SOURCES +=  \
     main.cpp \
 #    test_spirit.cpp \
     test_any_year.cpp \
+    test_expression_operation.cpp \
+    test_expression_stack.cpp \
 #    test_boost_variant.cpp \
 #    test_box_script.cpp \
     test_box_script_x3.cpp

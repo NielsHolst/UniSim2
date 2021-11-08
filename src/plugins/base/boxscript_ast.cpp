@@ -85,6 +85,10 @@ namespace boxscript { namespace ast
         return os << s.erase(s.length()-2) << ")" ;
     }
 
+    std::ostream& operator<<(std::ostream& os, const Number& x) {
+        return os << x.get();
+    }
+
     std::ostream& operator<<(std::ostream& os, const Operand& x) {
         bool isGrouped = (x.type() == Operand::Type::GroupedExpression);
         if (isGrouped) os << "(";
@@ -93,6 +97,7 @@ namespace boxscript { namespace ast
         return os;
 
     }
+
     std::ostream& operator<<(std::ostream& os, const Operation& x) {
         return os << x.operator_ << x.operand;
     }

@@ -19,3 +19,4 @@ ship/*.exe
 tmp/
 debug/
 release/
+src/plugins/*/*.rc

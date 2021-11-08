@@ -65,12 +65,11 @@ namespace boxscript { namespace ast
     };
 
     #define TYPE_NAME(x,y) case x : s=#y; break
-    struct Operand : x3::variant<DateTime, BareDateTime, Date, BareDate, Time, double,
-                                 Reference, FunctionCall, Bool, QuotedString, GroupedExpression>,
+
+    struct Number : x3::variant<double, int>,
             x3::position_tagged
     {
-        enum class Type{DateTime=0, BareDateTime=1, Date=2, BareDate=3, Time=4, Double=5,
-                        Reference=6, FunctionCall=7, Bool=8, QuotedString=9, GroupedExpression=10};
+        enum class Type{Double, Int};
         Type type() const {
             return static_cast<Type>(get().which());
         }
@@ -78,6 +77,28 @@ namespace boxscript { namespace ast
             std::string s;
             switch (type()) {
                 TYPE_NAME(Type::Double, Double);
+                TYPE_NAME(Type::Int, Int);
+            }
+            return s;
+        }
+        using base_type::base_type;
+        using base_type::operator=;
+        friend std::ostream& operator<<(std::ostream& os, const Number& x);
+    };
+
+    struct Operand : x3::variant<DateTime, BareDateTime, Date, BareDate, Time, Number,
+                                 Reference, FunctionCall, Bool, QuotedString, GroupedExpression>,
+            x3::position_tagged
+    {
+        enum class Type{DateTime=0, BareDateTime=1, Date=2, BareDate=3, Time=4, Number=5,
+                        Reference=6, FunctionCall=7, Bool=8, QuotedString=9, GroupedExpression=10};
+        Type type() const {
+            return static_cast<Type>(get().which());
+        }
+        std::string typeName() const {
+            std::string s;
+            switch (type()) {
+                TYPE_NAME(Type::Number, Number);
                 TYPE_NAME(Type::Date, Date);
                 TYPE_NAME(Type::Time, Time);
                 TYPE_NAME(Type::DateTime, DateTime);

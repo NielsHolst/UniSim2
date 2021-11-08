@@ -22,6 +22,7 @@ private slots:
     void testBox();
     void testOperator();
     void testTooMuch();
+    void testNumber();
 };
 
 DECLARE_TEST(TestBoxScriptX3)

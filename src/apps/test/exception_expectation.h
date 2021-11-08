@@ -4,6 +4,8 @@
 #include <qtestcase.h>
 #include <base/exception.h>
 
+using namespace base;
+
 #define UNEXPECTED_EXCEPTION \
 catch(const base::Exception &ex) { \
     QString s = "Unexpected exception: " + ex.what(); \
@@ -20,7 +22,7 @@ QVERIFY(!excepted); \
 excepted = false
 
 #define EXPECTED_EXCEPTION \
-catch(const Exception &) { \
+catch(...) { \
     excepted = true; \
 } \
 QVERIFY(excepted); \
@@ -30,6 +32,9 @@ excepted = false
 catch(const Exception &ex) { \
     QString s = "Expected exception:\n" + ex.what(); \
     std::cout << qPrintable(s) << std::endl; \
+    excepted = true; \
+} \
+catch(...) { \
     excepted = true; \
 } \
 QVERIFY(excepted); \

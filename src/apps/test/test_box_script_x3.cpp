@@ -217,3 +217,33 @@ void TestBoxScriptX3::testTooMuch() {
     }
     EXPECTED_EXCEPTION;
 }
+
+void TestBoxScriptX3::testNumber() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/number.box");
+    }
+    UNEXPECTED_EXCEPTION;
+    QVERIFY(compare("box_script/number.box", result));
+
+    boxscript::ast::Box root = result->root;
+    QCOMPARE(root.className, "Simulation");
+    QCOMPARE(root.objectName, "sim");
+
+    std::vector<boxscript::ast::Assignment> ass = root.assignments;
+    QCOMPARE(ass.at(0).portName, "steps");
+    QCOMPARE(ass.at(1).portName, "a");
+
+    boxscript::ast::Operand op0 = ass.at(0).expression.firstOperand,
+                            op1 = ass.at(1).expression.firstOperand;
+    QCOMPARE(op0.type(), boxscript::ast::Operand::Type::Number);
+    QCOMPARE(op1.type(), boxscript::ast::Operand::Type::Number);
+
+    boxscript::ast::Number num0 = boost::get<boxscript::ast::Number>(op0),
+                           num1 = boost::get<boxscript::ast::Number>(op1);
+    QCOMPARE(num0.type(), boxscript::ast::Number::Type::Int);
+    QCOMPARE(num1.type(), boxscript::ast::Number::Type::Double);
+
+
+}

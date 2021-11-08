@@ -21,17 +21,40 @@
 #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 #pragma clang diagnostic ignored "-Woverloaded-shift-op-parentheses"
 
+//namespace boost { namespace spirit { namespace x3
+//{
+
+//template <typename ValueType>
+//struct comma_strict_real_policies : boost::spirit::x3::strict_real_policies<ValueType>
+//{
+//    template <typename Iterator>
+//    static bool
+//    parse_dot(Iterator& first, Iterator const& last)
+//    {
+//        if (first == last || *first != '.')
+//            return false;
+//        ++first;
+//        return true;
+//    }
+//};
+
+//}}}
+
 namespace boxscript { namespace parser
 {
     namespace x3 = boost::spirit::x3;
     using x3::char_;
-    using x3::double_;
+//    using x3::double_;
     using x3::int_;
     using x3::digit;
     using x3::eol;
     using x3::eoi;
     using x3::lexeme;
     using x3::lit; // to ignore string
+    boost::spirit::x3::real_parser<double, boost::spirit::x3::strict_real_policies<double> > const double_ = {};
+
+//    boost::spirit::x3::comma_strict_real_policies<double> const comma_double = {};
+
 
     ///////////////////////////////////////////////////////////////////////////
     // Rule IDs
@@ -83,7 +106,7 @@ namespace boxscript { namespace parser
     x3::rule<integer_class, int> const integer = "integer";
     x3::rule<joker_class, std::string> const joker = "joker";
     x3::rule<name_class, std::string> const name = "name";
-    x3::rule<number_class, double> const number = "number";
+    x3::rule<number_class, ast::Number> const number = "number";
     x3::rule<object_name_class, std::string> const object_name = "object name";
     x3::rule<operand_class, ast::Operand> const operand = "operand";
     x3::rule<operation_class, ast::Operation> const operation = "operation";
@@ -157,7 +180,7 @@ namespace boxscript { namespace parser
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
-    auto const number_def = double_;
+    auto const number_def = double_ | int_;
     auto const object_name_def = qualified_name | joker | dots;
     auto const operand_def = date_time | bare_date_time | date | bare_date | time | number |
                              reference | function_call | bool_ | quoted_string | grouped_expression;

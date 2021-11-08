@@ -25,6 +25,8 @@ HEADERS +=  \
     assign.h \
     ast_boxes.h \
     ast_common.h \
+    bare_date.h \
+    bare_date_time.h \
     base_signal.h \
     box.h \
     box_builder.h \
@@ -64,6 +66,11 @@ HEADERS +=  \
     environment.h \
     exception.h \
     exception_context_class.h \
+    expression_element.h \
+    expression_operand.h \
+    expression_operation.h \
+    expression_operator.h \
+    expression_stack.h \
     factory_plug_in.h \
     food_web_box_base.h \
     general.h \
@@ -150,6 +157,10 @@ SOURCES +=  \
     environment.cpp \
     exception.cpp \
     exception_context_class.cpp \
+    expression_operand.cpp \
+    expression_operation.cpp \
+    expression_operator.cpp \
+    expression_stack.cpp \
     food_web_box_base.cpp \
     general.cpp \
     history.cpp \
