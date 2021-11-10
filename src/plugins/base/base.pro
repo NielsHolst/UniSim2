@@ -92,7 +92,7 @@ HEADERS +=  \
     port_filter.h \
     port_mode.h \
     port_transform.h \
-    port_type.h \
+#    port_type.h \
     port_value_op.h \
     product_base.h \
     product.h \
@@ -176,7 +176,7 @@ SOURCES +=  \
     port_filter.cpp \
     port_mode.cpp \
     port_transform.cpp \
-    port_type.cpp \
+#    port_type.cpp \
     port_value_op.cpp \
     product_base.cpp \
     proportions.cpp \

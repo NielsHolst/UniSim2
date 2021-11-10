@@ -9,7 +9,9 @@
 #include "expression_operation.h"
 #include "expression_operator.h"
 #include "expression_stack.h"
+#include "port.h"
 
+using namespace base;
 using boost::get;
 
 namespace expression {
@@ -42,6 +44,7 @@ void Stack::push(Operand operand) {
     case Operand::Type::BareDate:        _elements.push_back(get<base::BareDate>(operand)); break;
     case Operand::Type::BareDateTime:    _elements.push_back(get<base::BareDateTime>(operand)); break;
     case Operand::Type::String:          _elements.push_back(get<QString>(operand)); break;
+    case Operand::Type::PortPath:        _elements.push_back(get<QString>(operand)); break;
     case Operand::Type::BoolPtr:         _elements.push_back(get<bool*>(operand)); break;
     case Operand::Type::CharPtr:         _elements.push_back(get<char*>(operand)); break;
     case Operand::Type::IntPtr:          _elements.push_back(get<int*>(operand)); break;
@@ -52,6 +55,8 @@ void Stack::push(Operand operand) {
     case Operand::Type::BareDatePtr:     _elements.push_back(get<base::BareDate*>(operand)); break;
     case Operand::Type::BareDateTimePtr: _elements.push_back(get<base::BareDateTime*>(operand)); break;
     case Operand::Type::StringPtr:       _elements.push_back(get<QString*>(operand)); break;
+    case Operand::Type::PortPtr:         _elements.push_back(get<Port*>(operand)); break;
+    case Operand::Type::PortPtrVector:   _elements.push_back(get<QVector<Port*>>(operand)); break;
     }
 }
 
@@ -61,6 +66,21 @@ void Stack::push(Parenthesis parenthesis) {
 
 const Element & Stack::at(int i) const {
     return _elements.at(i);
+}
+
+bool Stack::isEmpty() const {
+    return _elements.empty();
+}
+
+bool Stack::containsPortPaths() const {
+    for (Element el : _elements) {
+        if (el.type() == Element::Type::Operand) {
+           Operand op = get<Operand>(el);
+            if (op.type() == Operand::Type::PortPath)
+                return true;
+        }
+    }
+    return false;
 }
 
 void Stack::evaluate() {

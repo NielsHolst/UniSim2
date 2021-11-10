@@ -3,10 +3,13 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <boost/variant/get.hpp>
+#include <QStringList>
 #include "bare_date.h"
 #include "bare_date_time.h"
 #include "expression_operand.h"
+#include "port.h"
 
+using namespace base;
 using boost::get;
 using base::BareDate;
 using base::BareDateTime;
@@ -15,6 +18,7 @@ namespace expression {
 
 QString Operand::toString() const {
     const Operand &a(*this);
+    QStringList sl;
     switch(a.type()) {
     case Operand::Type::Bool:            return QString::number(get<bool>(a));
     case Operand::Type::Char:            return QString(get<char>(a));
@@ -26,6 +30,7 @@ QString Operand::toString() const {
     case Operand::Type::BareDate:        return get<BareDate>(a).toString("MM/dd");
     case Operand::Type::BareDateTime:    return get<BareDateTime>(a).toString("MM/ddThh:mm:ss");
     case Operand::Type::String:          return get<QString>(a);
+    case Operand::Type::PortPath:        return get<QString>(a);
     case Operand::Type::BoolPtr:         return QString::number(*get<bool*>(a));;
     case Operand::Type::CharPtr:         return QString::number(*get<char*>(a));
     case Operand::Type::IntPtr:          return QString::number(*get<int*>(a));
@@ -36,6 +41,11 @@ QString Operand::toString() const {
     case Operand::Type::BareDatePtr:     return (*get<BareDate*>(a)).toString("MM/dd");
     case Operand::Type::BareDateTimePtr: return (*get<BareDateTime*>(a)).toString("MM/ddThh:mm:ss");
     case Operand::Type::StringPtr:       return (*get<QString*>(a));
+    case Operand::Type::PortPtr:         return (get<Port*>(a)->fullName());
+    case Operand::Type::PortPtrVector:
+        for (Port *port : get<QVector<Port*>>(a))
+            sl << port->fullName();
+        return sl.join("|");
     }
     ThrowException("Unexpected exception");
 }

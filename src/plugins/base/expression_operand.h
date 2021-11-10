@@ -4,15 +4,21 @@
 */
 #ifndef EXPRESSION_OPERAND_H
 #define EXPRESSION_OPERAND_H
+#include <boost/variant/get.hpp>
 #include <boost/variant/variant.hpp>
 #include <QDate>
 #include <QDateTime>
 #include <QTime>
+#include <QVector>
 #include "bare_date.h"
 #include "bare_date_time.h"
 #include "exception.h"
 
 #define TYPE_NAME(X) case Type::X: return #X
+
+namespace base {
+    class Port;
+}
 
 namespace expression {
 
@@ -37,7 +43,9 @@ QDateTime*,
 QTime*,
 base::BareDate*,
 base::BareDateTime*,
-QString*
+QString*,
+base::Port*,
+QVector<base::Port*>
 >;
 
 class Operand : public OperandVariant
@@ -59,6 +67,7 @@ public:
         BareDate,
         BareDateTime,
         String,
+        PortPath,
         BoolPtr,
         CharPtr,
         IntPtr,
@@ -68,7 +77,9 @@ public:
         TimePtr,
         BareDatePtr,
         BareDateTimePtr,
-        StringPtr
+        StringPtr,
+        PortPtr,
+        PortPtrVector
     };
     Type type() const {
         return static_cast<Type>(which());
@@ -85,6 +96,7 @@ public:
         TYPE_NAME(BareDate);
         TYPE_NAME(BareDateTime);
         TYPE_NAME(String);
+        TYPE_NAME(PortPath);
         TYPE_NAME(BoolPtr);
         TYPE_NAME(CharPtr);
         TYPE_NAME(IntPtr);
@@ -95,12 +107,19 @@ public:
         TYPE_NAME(BareDatePtr);
         TYPE_NAME(BareDateTimePtr);
         TYPE_NAME(StringPtr);
+        TYPE_NAME(PortPtr);
+        TYPE_NAME(PortPtrVector);
         }
         ThrowException("Unexpected exception");
         return QString();
     }
     QString toString() const;
+    template<class T> T convert() const;
 };
+
+template<class T> T Operand::convert() const {
+    return static_cast<T>(boost::get<T>());
+}
 
 }
 #endif

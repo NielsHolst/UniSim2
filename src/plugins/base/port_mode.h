@@ -9,7 +9,7 @@
 
 namespace base {
 
-enum class PortMode{Default, Fixed, Referenced, MaybeReferenced};
+enum class PortMode{DefaultFixed, DefaultEvaluated, SetFixed, SetEvaluated};
 
 template<class T> T convert(PortMode) {
     ThrowException("Cannot convert PortMode");

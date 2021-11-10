@@ -16,9 +16,8 @@ namespace base {
 QVector<Port*> Port::_index;
 
 Port::Port(QString name, QObject *parent)
-    : QObject(parent), _valuePtr(nullptr), _valueType(Null), _mode(PortMode::Default),
-      _portValueStep(ComputationStep::Start),
-      _importPath(""), _importPortMustExist(true), _importsResolved(false),
+    : QObject(parent), _mode(PortMode::Default),
+      _importPath(""), _importsResolved(false),
       _access(PortAccess::Input),
       _isReference(false), _reset(false), _valueOverridden(false),
       _isBlind(false)
@@ -28,60 +27,22 @@ Port::Port(QString name, QObject *parent)
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
-    _id = _index.size();
+    _evaluationOrder = _index.size();
     _index << this;
-    _attributes["format"] = "";
-//    _attributes["label"] = "";
-    _attributes["help"] = "";
-    _attributes["unit"] = "";
-    _attributes["transform"] = convert<QString>(PortTransform::Identity);
 }
 
 Port& Port::equals(const char *value) {
     return equals(QString(value));
 }
 
-//Port& Port::equals(QStringList value) {
-//    return equals(value.toVector());
-//}
-
 Port& Port::imports(QString pathToPort, Caller caller) {
-    if (_isReference)
-        return equals(pathToPort);
     _mode = PortMode::Referenced;
-    _portValueStep = environment().computationStep();
-    _importPath = pathToPort;
-    _importPortMustExist = true;
     _importCaller = caller;
-    checkValueOverridden();
     return help("Defaults to " + pathToPort);
-}
-
-Port& Port::importsMaybe(QString pathToPort, QString fallBackValue, Caller caller) {
-    if (_isReference)
-        return equals(pathToPort);
-    _mode = PortMode::MaybeReferenced;
-    _portValueStep = environment().computationStep();
-    _importPath = pathToPort;
-    _fallBackValue = fallBackValue;
-    _importPortMustExist = false;
-    _importCaller = caller;
-    checkValueOverridden();
-    return help("Defaults to " + pathToPort + " (if it exists)");
-}
-
-void Port::checkValueOverridden() {
-    Box *boxParent = dynamic_cast<Box*>(parent());
-    _valueOverridden =  boxParent && !boxParent->underConstruction();
 }
 
 Port& Port::access(PortAccess acc) {
     _access = acc;
-    return *this;
-}
-
-Port& Port::reference() {
-    _isReference = true;
     return *this;
 }
 
@@ -95,44 +56,16 @@ Port& Port::noReset() {
     return *this;
 }
 
-QStringList Port::attributes() {
-    return QStringList(_attributes.keys());
-}
-
 // Set attributes
 
-Port& Port::attribute(QString name, QString value) {
-    _attributes[name] = value;
-    return *this;
-}
 
 Port& Port::help(QString value) {
-    _attributes["help"] = value;
+    _help = value;
     return *this;
 }
 
 Port& Port::unit(QString value) {
-    _attributes["unit"] = value;
-    return *this;
-}
-
-Port& Port::format(QString value) {
-    _attributes["format"] = value;
-    return *this;
-}
-
-//Port& Port::label(QString value) {
-//    _attributes["label"] = value;
-//    return *this;
-//}
-
-Port& Port::transform(QString value) {
-    _attributes["transform"] = value;
-    return *this;
-}
-
-Port& Port::transform(PortTransform tr) {
-    _attributes["transform"] = convert<QString>(tr);
+    _unit = value;
     return *this;
 }
 
@@ -143,39 +76,16 @@ Port& Port::isBlind(bool on) {
 
 // Get attributes
 
-QString Port::attribute(QString name) const {
-    if (_attributes.contains(name))
-        return _attributes.value(name);
-    else
-        ThrowException("Unknown attribute").value(name).context(this);
-}
-
 QString Port::help() const {
-    return _attributes.value("help");
+    return _help;
 }
 
 QString Port::unit() const {
-    return _attributes.value("unit");
-}
-
-QString Port::format() const {
-    return _attributes.value("format");
-}
-
-//QString Port::label() const {
-//    return _attributes.value("label");
-//}
-
-PortTransform Port::transform() const {
-    return convert<PortTransform>(_attributes.value("transform"));
+    return _unit;
 }
 
 bool Port::isBlind() const {
     return _isBlind;
-}
-
-bool Port::isReference() const {
-    return _isReference;
 }
 
 // Names and id
@@ -190,36 +100,13 @@ QString Port::fullName() const {
 }
 
 int Port::id() const {
-    return _id;
+    return _evaluationOrder;
 }
 
 // Change
 
-namespace {
-    PortType deduceTypeFromImportType(PortType importType, PortTransform transform) {
-        if (isScalar(importType))
-            return importType;
-
-        PortType type{Null};
-        switch (transform) {
-            case Identity:
-                type = importType;
-                break;
-            case Sum:
-            case Prod:
-            case Mean:
-            case Min:
-            case Max:
-            case All:
-            case Any:
-                type = asScalar(importType);
-                break;
-            case Copy:
-            case Split:
-                ThrowException("Transform cannot be applied on a vector").value(transform);
-        }
-        return type;
-    }
+void Port::enumerate(int &number) {
+    _evaluationOrder = number++;
 }
 
 void Port::resolveImports() {
@@ -241,21 +128,14 @@ void Port::resolveImports() {
     for (Port *exporter : _importPorts)
         exporter->addExportPort(this);
 
-    // Missing import ports may be an error, otherwise accept and clear the import path
+    // Missing import ports is OK only if this is a vector
     if (_importPorts.isEmpty()) {
         if (isVector(type())) {
             _importPorts.clear();
             return;
         }
-        else if (_importPortMustExist)
-            ThrowException("No matching import ports found").value(_importPath).context(this).caller(_importCaller);
         else {
-            _importPath.clear();
-            if (!_fallBackValue.isEmpty()) {
-                equals(_fallBackValue);
-                _mode = PortMode::Fixed;
-            }
-            return;
+            ThrowException("No imports found").value(_importPath).context(context);
         }
     }
 
@@ -273,19 +153,6 @@ void Port::resolveImports() {
 
     // Set unit to import's
     unit(_importPorts.at(0)->unit());
-}
-
-PortType Port::commonType(const QVector<Port*> &ports) {
-    ports.at(0)->resolveImports();
-    PortType commonType = ports.at(0)->_valueType;
-    QStringList msg;
-    for (Port *port : ports) {
-        port->resolveImports();
-        msg << (port->importPath() +  " has type " + nameOf(port->_valueType));
-        if (port->_valueType != commonType)
-            ThrowException("Imported ports must have same type:\n" + msg.join("\n"));
-    }
-    return commonType;
 }
 
 void Port::resolveImportsAgain() {
@@ -390,32 +257,8 @@ Box *Port::boxParent() {
     return par;
 }
 
-bool Port::hasValue() const {
-    return _valuePtr != nullptr;
-}
-
-#define CASE_VALUE_SIZE(X,Y) \
-    case Y##Vector: \
-        return reinterpret_cast<QVector<X>*>(_valuePtr)->size(); \
-        break
-
-int Port::valueSize() const {
-    switch (_valueType) {
-    CASE_VALUE_SIZE(bool, Bool);
-    CASE_VALUE_SIZE(char, Char);
-    CASE_VALUE_SIZE(int, Int);
-    CASE_VALUE_SIZE(long int, LongInt);
-    CASE_VALUE_SIZE(long long int, LongLongInt);
-    CASE_VALUE_SIZE(float, Float);
-    CASE_VALUE_SIZE(double, Double);
-    CASE_VALUE_SIZE(long double, LongDouble);
-    CASE_VALUE_SIZE(QString, String);
-    CASE_VALUE_SIZE(QDate, Date);
-    CASE_VALUE_SIZE(QDateTime, DateTime);
-    CASE_VALUE_SIZE(QTime, Time);
-    default:
-        return 1;
-    }
+expression::Operand Port::value() const {
+    return _value;
 }
 
 QString Port::valueAsString() const {
@@ -443,12 +286,8 @@ void Port::verifyValue() const {
     }
 }
 
-template <> const void* Port::valuePtr() const {
-    return _valuePtr;
-}
-
-PortType Port::type() const {
-    return _valueType;
+expression::Operand::Type Port::type() const {
+    return _value.type();
 }
 
 PortAccess Port::access() const {
@@ -460,15 +299,7 @@ Track::Order Port::track(PortFilter filter) {
 }
 
 bool Port::hasImport() const {
-    return _mode!=PortMode::Fixed && !_importPath.isEmpty();
-}
-
-bool Port::isValueOverridden() const {
-    return _valueOverridden;
-}
-
-QString Port::importPath() const {
-    return _importPath;
+    return _unresolvedExpression.containsPortPaths();
 }
 
 QVector<Port*> Port::importPorts() const {
@@ -512,36 +343,6 @@ void Port::toText(QTextStream &text, int indentation) const {
          << postfix
 //         << " // " << convert<QString>(_portValueStep)
          << "\n";
-}
-
-void Port::clearIndex() {
-    _index.clear();
-}
-
-Port* Port::find(int id) {
-    if (id > _index.size())
-        ThrowException("Unexpected error: Index out of bounds").
-                value(id).value2(_index.size());
-    return _index[id];
-}
-
-QString Port::dump() {
-    QString s;
-    for (Port *port : _index) {
-        s += QString::number(port->id()) + ": " + port->fullName() + "\n";
-    }
-    return s;
-}
-
-template <> void Port::deducePortType(QString value) {
-    if (_valueType == Null)
-        _valueType = deducePortTypeFromString(value);
-//    if (_valueType == Null) {
-//        _valueType = String;
-//    }
-//    if (_valueType == Null) {
-//        dialog().information(QString("Port::deducePortType is Null: ") + value);
-//    }
 }
 
 }

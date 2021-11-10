@@ -24,6 +24,8 @@ public:
     void evaluate();
     Operand value() { return _value; }
     const Element & at(int i) const;
+    bool isEmpty() const;
+    bool containsPortPaths() const;
     void toPostfix();
     QString toString() const;
 private:

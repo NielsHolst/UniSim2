@@ -10,10 +10,10 @@ namespace base {
 
 template<> QString convert(base::PortMode mode) {
     switch (mode) {
-        CASE_PORT_MODE(Default);
-        CASE_PORT_MODE(Fixed);
-        CASE_PORT_MODE(Referenced);
-        CASE_PORT_MODE(MaybeReferenced);
+        CASE_PORT_MODE(DefaultFixed);
+        CASE_PORT_MODE(DefaultEvaluated);
+        CASE_PORT_MODE(SetFixed);
+        CASE_PORT_MODE(SetEvaluated);
     }
     return QString();
 }
