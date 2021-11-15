@@ -18,11 +18,17 @@ coffeeDocumentation::coffeeDocumentation(QString name, QObject *parent)
 {
     title = "A model of coffee production based on CAF2018";
     authorNames
-            << "Niels Holst";
+            << "Niels Holst"
+            << "Athina Koutouleas"
+            << "Thuan Sarzynski";
     authorInstitutes
-            << "Aarhus University";
+            << "Aarhus University"
+            << "University of Copenhagen"
+            << "SupAgro Montpellier";
     authorEmails
-            << "niels.holst@agro.au.dk";
+            << "niels.holst@agro.au.dk"
+            << "atk@ign.ku.dk"
+            << "thuan.sarzynski@cirad.fr";
 }
 
 } //namespace

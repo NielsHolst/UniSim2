@@ -2,22 +2,24 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ABOVE_GROUND_H
-#define ABOVE_GROUND_H
+#ifndef NITROGEN_SUPPLY_H
+#define NITROGEN_SUPPLY_H
 #include <base/box.h>
 
 namespace coffee {
 
-class AboveGround : public base::Box
+class NitrogenSupply : public base::Box
 {
 public: 
-    AboveGround(QString name, QObject *parent);
+    NitrogenSupply(QString name, QObject *parent);
     void update();
 private:
     // Inputs
-    double dayLength, globRad, kCoffee, laiCoffee, kTree, laiTree;
+    double rootC,
+        efficiency, soilN50,
+        soilNitrogen, timeStep;
     // Outputs
-    double globRadShade, parShade, parShadeAvg, parInterceptedCoffee;
+    double value;
 };
 
 } //namespace

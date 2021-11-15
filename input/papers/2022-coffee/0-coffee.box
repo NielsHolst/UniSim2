@@ -1,5 +1,10 @@
 Simulation sim {
   .steps = 2193
+  Box param {
+    +kExt  = 0.76 // Light extinction coefficient of coffee
+    +kExtT = 0.70 // Light extinction coefficient of crown
+    +laiTree = 2.0
+  }
   Calendar calendar {
     .latitude  = 9.93
     .longitude = -84.09
@@ -12,24 +17,73 @@ Simulation sim {
       .overrideCalendarYear = TRUE
     }
     Mean Tavg {
-      .values = weather[Tmin] | weather[Tmax]
+      .values = weather[Tmin] | weather[Tmax] 
     }
   }
+  SoilWaterThresholds soilWaterThresholds {
+  }
   Phenology phenology {
+  }
+  RainInterception rainInterception {
+  }
+  Box waterFlux {
+    WaterFlux coffee {
+      .potEvaporation   = pet/coffee[potEvaporation]
+      .potTranspiration = pet/coffee[potTranspiration  ]
+    }
+    WaterFlux tree {
+      .potEvaporation   = pet/tree[potEvaporation]
+      .potTranspiration = pet/tree[potTranspiration  ]
+    }
+  }
+  Coffee coffee {
+  }
+  Box pet {
+    Pet coffee {
+      .globRad = aboveGround[globRadShade]
+      .lai = /*/coffee[lai]
+      .interceptedRain = rainInterception[coffee]
+    }
+    Pet tree {
+      .globRad = weather[GlobRad]
+      .lai = param[laiTree]
+      .interceptedRain = rainInterception[tree]
+    }
+  }
+  AboveGround aboveGround {
+  }
+  coffee::Growth growth {
+  }
+  Senescence senescence {
+  }
+  Foliage foliage {
+  }
+  NitrogenSupply nitrogenSupply {
+  }
+  SoilNitrogen soilNitrogen {
+  }
+  WaterBudget waterBudget {
   }
   OutputR {
     PageR {
       .xAxis = calendar[date]
       .title = "Weather"
       PlotR {
-        .ports = (weather[GR] weather[Tmin] weather[Tmax] weather[VP] weather[Wn] weather[Rain])
+        .ports = (weather[GlobRad] weather[Tmin] weather[Tmax] weather[VP] weather[WindSpeed] weather[Rain])
       }
     }
     PageR {
       .xAxis = calendar[date]
       .title = "Phenology sub-model"
       PlotR {
-        .ports = (phenology[DVS] phenology[dDVSMAX] phenology[dDVS] phenology[rDVS] phenology[sensit] phenology[dayFill] phenology[dayFl])
+        .ports = (phenology[growthStage])
+      }
+    }
+    PageR {
+      .xAxis = calendar[date]
+      .title = "Growth sub-model"
+      PlotR {
+        .ports = (growth[gLeafC] growth[gWoodyC] growth[gRootC] growth[gBerryC])
       }
     }
   }

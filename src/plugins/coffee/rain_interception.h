@@ -2,22 +2,23 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ABOVE_GROUND_H
-#define ABOVE_GROUND_H
+#ifndef RAIN_INTERCEPTION_H
+#define RAIN_INTERCEPTION_H
 #include <base/box.h>
 
 namespace coffee {
 
-class AboveGround : public base::Box
+class RainInterception : public base::Box
 {
 public: 
-    AboveGround(QString name, QObject *parent);
+    RainInterception(QString name, QObject *parent);
     void update();
 private:
     // Inputs
-    double dayLength, globRad, kCoffee, laiCoffee, kTree, laiTree;
+    double interceptionCoef,
+        rainfall, laiCoffee, laiTree, timeStep;
     // Outputs
-    double globRadShade, parShade, parShadeAvg, parInterceptedCoffee;
+    double coffee, tree, total;
 };
 
 } //namespace

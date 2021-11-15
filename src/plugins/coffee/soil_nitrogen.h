@@ -2,27 +2,23 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef PHENOLOGY_H
-#define PHENOLOGY_H
+#ifndef SOIL_NITROGEN_H
+#define SOIL_NITROGEN_H
 #include <base/box.h>
 
 namespace coffee {
 
-class Phenology : public base::Box
+class SoilNitrogen : public base::Box
 {
 public: 
-    Phenology(QString name, QObject *parent);
+    SoilNitrogen(QString name, QObject *parent);
     void reset();
     void update();
 private:
     // Inputs
-    int daysSincePlanting, juvenilePeriod;
-    double floweringOnsetTrigger, T0, duration,
-        timeStep, temperature, rainfall;
-    QDate date;
+    double initial, fertilisation, mineralisation, uptake, leaching, emission;
     // Outputs
-    bool isWaitingForRain, isReproductive, isHarvestTime;
-    double growthStage;
+    double value;
 };
 
 } //namespace

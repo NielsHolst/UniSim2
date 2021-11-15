@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <algorithm>
 #include <base/exception.h>
 #include <base/publish.h>
 #include "phenology.h"
@@ -16,66 +17,47 @@ PUBLISH(Phenology)
 Phenology::Phenology(QString name, QObject *parent)
     : Box(name, parent) {
     help("models coffee plant development");
-    Input(day).imports("sim[step]");
+    Input(juvenilePeriod).equals(900).unit("d").help("Period from planting until reproductive");
+    Input(floweringOnsetTrigger).equals(1000.).unit("mm d").help("Trigger based on rainfall and day of year");
+    Input(T0).equals(10.).unit("oC").help("Base temperature for development");
+    Input(duration).equals(2780.).unit("DD").help("Duration of reproductive period");
+    Input(daysSincePlanting).imports("sim[step]");
+    Input(timeStep).imports("calendar[timeStepDays]");
+    Input(rainfall).imports("weather[Rain]");
+    Input(temperature).imports("Tavg[value]");
     Input(date).imports("calendar[date]");
-    Input(delT).imports("calendar[timeStepDays]");
-    Input(rain).imports("weather[Rain]");
-    Input(Tshade).imports("Tavg[value]");
+    Output(growthStage).unit("[0;1]").help("Relative development into reproductive stage");
+    Output(isWaitingForRain).unit("bool").help("Is the plant waiting for rain, to turn reproductive?");
+    Output(isReproductive).unit("bool").help("Is the plant in the reproductive stage?");
+    Output(isHarvestTime).unit("bool").help("Is it harvest time now?");
+}
 
-    Input(rainDoyHi).equals(1000.).unit("mm d").help("Flower trigger");
-    Input(TMatB).equals(10).unit("").help("Base temperature for maturation");
-    Input(TMatT).equals(2780).unit("").help("Thermal time to maturation");
-    Input(DaysPlnOp).equals(900).unit("d").help("Days between start and full productivity");
-//    Input(sinkPMax).equals(3.6).unit("-").help("Sink strength for storage organs");
-//    Input(kSinkPMax).equals(0.8).unit("").help("");
-//    Input(SINKP).equals().unit("").help("");
-
-    Output(DVS).unit("-").help("Development stage");
-    Output(sensit).unit("-").help("Sensitivity to rain");
-    Output(dayFill).unit("bool").help("Are beans filling?");
-    Output(dSensit).unit("").help();
-    Output(rainDoy).unit("").help();
-    Output(dayFl).unit("").help();
-    Output(dDVSMAX).unit("").help();
-    Output(dDVS).unit("").help();
-    Output(rDVS).unit("").help("? Development resetting");
-//    Output(SINKPMAXnew).unit("").help();
+void Phenology::reset() {
+    isWaitingForRain = true;
+    isReproductive = false;
+    isHarvestTime = false;
+    growthStage = 0.;
 }
 
 void Phenology::update() {
-    // Determine whether beans are filling
-    dayFill = (DVS > 0. && DVS < 1.);
+    isHarvestTime = false;
+    isWaitingForRain = isWaitingForRain || date.dayOfYear()==365;
+    double rainIndex = rainfall*date.dayOfYear();
+    isReproductive = isReproductive ||
+           (daysSincePlanting>=juvenilePeriod &&
+            isWaitingForRain &&
+            rainIndex>floweringOnsetTrigger);
 
-    // Make the crop sensitive to rainfall in the beginning of the year
-    int doy = date.dayOfYear();
-    bool isNewYear = (doy==365);
-    if (dayFill)
-      dSensit = -sensit/delT;
-    else if (isNewYear && day > DaysPlnOp)   // accumulated days of plant life
-      dSensit = 1.;
-    else
-      dSensit = 0.;
-
-    // Trigger flowering
-    rainDoy = rain*doy;
-    dayFl = (DVS == 0 && rainDoy > rainDoyHi) ? sensit : 0.;
-
-    // Compute development rate
-    dDVSMAX = (dayFill || dayFl == 1.) ? max(0., min(1., (Tshade - TMatB)/ TMatT)) : 0.;
-    dDVS = (doy > 360 && dDVSMAX > 0.) ? (1.-DVS)/delT : dDVSMAX;
-
-    // Compute development retardation
-    if (DVS >= 1.) {
-      rDVS = DVS/delT;
-//      SINKPMAXnew = sinkPMax - kSinkPMax * SINKP;
+    if (isReproductive) {
+        double devRate = max(0., temperature-T0)/duration;
+        growthStage += devRate;
+        if (growthStage > 1.) {
+            isWaitingForRain = false;
+            isReproductive = false;
+            isHarvestTime = true;
+            growthStage = 0.;
+        }
     }
-    else {
-      rDVS = 0.;
-    }
-
-    // Update state
-    DVS += dDVS - rDVS;
-    sensit += dSensit;
 }
 
 } //namespace

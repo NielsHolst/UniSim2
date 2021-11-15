@@ -33,15 +33,15 @@ unisim.depends = student
 # Modules required for end-user release
 #
 
-SUBDIRS += aphid
-aphid.subdir = src/plugins/aphid
-aphid.depends = base
-unisim.depends = aphid
-
-SUBDIRS += cmbp
-cmbp.subdir = src/plugins/cmbp
-cmbp.depends = base
-unisim.depends = cmbp
+#SUBDIRS += aphid
+#aphid.subdir = src/plugins/aphid
+#aphid.depends = base
+#unisim.depends = aphid
+#
+#SUBDIRS += cmbp
+#cmbp.subdir = src/plugins/cmbp
+#cmbp.depends = base
+#unisim.depends = cmbp
 
 SUBDIRS += coffee
 coffee.subdir = src/plugins/coffee

@@ -2,22 +2,22 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ABOVE_GROUND_H
-#define ABOVE_GROUND_H
+#ifndef SOIL_WATER_THRESHOLDS_H
+#define SOIL_WATER_THRESHOLDS_H
 #include <base/box.h>
 
 namespace coffee {
 
-class AboveGround : public base::Box
+class SoilWaterThresholds : public base::Box
 {
 public: 
-    AboveGround(QString name, QObject *parent);
-    void update();
+    SoilWaterThresholds(QString name, QObject *parent);
+    void reset();
 private:
     // Inputs
-    double dayLength, globRad, kCoffee, laiCoffee, kTree, laiTree;
+    double concWaterMax, propWaterDry, propWaterWilt, propWaterFieldCap, propWaterSaturated;
     // Outputs
-    double globRadShade, parShade, parShadeAvg, parInterceptedCoffee;
+    double dry, wilting, fieldCap, saturated;
 };
 
 } //namespace

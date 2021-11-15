@@ -16,27 +16,26 @@ PUBLISH(AboveGround)
 AboveGround::AboveGround(QString name, QObject *parent)
     : Box(name, parent) {
     help("models light interception");
-    Input(DAYL).imports("sun[dayLength]");
-    Input(solarRadiation).imports("weather[solarRadiation]");
-    Input(KEXT).equals(0.76).help("Light extinction coefficient of coffee");
-    Input(KEXTT).equals(0.7).help("Light extinction coefficient of crown");
-    Input(LAI).equals(3.).help("Coffee LAI (replace with CoffeeLAI sub-model output)");
-    Input(LAIT).equals(2.).help("Tree LAI  (replace with TreeLAI sub-model output)");
-    Output(PARshade).unit("MJ PAR/m2/d").help("Light intensity under the crown");
-    Output(PARav).unit("MJ PAR/m2/d").help("Average light intensity during photoperiod");
-    Output(PARint).unit("MJ PAR/m2/d").help("Total light interception by coffee");
+    Input(dayLength).imports("sun[dayLength]");
+    Input(globRad).imports("weather[GlobRad]");
+    Input(kCoffee).imports("param[kExt]");
+    Input(kTree).imports("param[kExtT]");
+    Input(laiCoffee).imports("/*/coffee[lai]");
+    Input(laiTree).imports("param[laiTree]");
+    Output(globRadShade).unit("MJ/m2/d").help("Sunlight intensity under the crown");
+    Output(parShade).unit("MJ PAR/m2/d").help("PAR intensity under the crown");
+    Output(parShadeAvg).unit("MJ PAR/m2/h").help("Average light intensity during photoperiod");
+    Output(parInterceptedCoffee).unit("MJ PAR/m2/d").help("Total light interception by coffee");
 }
 
 void AboveGround::update() {
+    // Sunlight under the crown
+    globRadShade = globRad*exp(-kTree * laiTree);
     // PAR is half of solar radiation
-    double PAR = 0.5*solarRadiation;
-    // PAR absorbed by crown
-    double PARabsCrown = PAR*(1. - exp(-KEXTT * LAIT));
-    // PAR under the crown
-    PARshade = PAR - PARabsCrown;
+    parShade = 0.5*globRadShade;
     // PAR intercepted by coffee
-    PARav = PARshade/DAYL;
-    PARint = PARshade*(1. - exp(-KEXT*LAI));
+    parShadeAvg = parShade/dayLength;
+    parInterceptedCoffee = parShade*(1. - exp(-kCoffee*laiCoffee));
 }
 
 } //namespace

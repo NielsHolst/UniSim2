@@ -2,22 +2,23 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef ABOVE_GROUND_H
-#define ABOVE_GROUND_H
+#ifndef SENESCENCE_H
+#define SENESCENCE_H
 #include <base/box.h>
 
 namespace coffee {
 
-class AboveGround : public base::Box
+class Senescence : public base::Box
 {
 public: 
-    AboveGround(QString name, QObject *parent);
+    Senescence(QString name, QObject *parent);
     void update();
 private:
     // Inputs
-    double dayLength, globRad, kCoffee, laiCoffee, kTree, laiTree;
+    double ftccLmin, tccLmax, tccR,
+        transpirationRatio, rootC, lai, leafN, leafC;
     // Outputs
-    double globRadShade, parShade, parShadeAvg, parInterceptedCoffee;
+    double dRootC, dLeafN, dLeafC, dLai;
 };
 
 } //namespace
