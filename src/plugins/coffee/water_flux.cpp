@@ -16,15 +16,15 @@ PUBLISH(WaterFlux)
 WaterFlux::WaterFlux(QString name, QObject *parent)
     : Box(name, parent) {
     help("models water flux");
-    Input(rootDepth).equals(1.).unit("m").help("Root depth");
     Input(transpirationCoef).equals(7.1).unit("mm/d").help("Transpiration coefficient");
+    Input(rootDepth).imports("coffee[rootDepth]");
     Input(potEvaporation).unit("mm/d").help("Potential evaporation");
     Input(potTranspiration).unit("mm/d").help("Potential transpiration");
-    Input(concWaterDry).imports("soilWaterThresholds[dry]");
-    Input(concWaterWilt).imports("soilWaterThresholds[wilting]");
-    Input(concWaterFieldCap).imports("soilWaterThresholds[fieldCap]");
-    Input(concWaterSaturated).imports("soilWaterThresholds[saturated]");
-    Input(concWaterMax).imports("soilWaterThresholds[concWaterMax]");
+    Input(concWaterDry).imports("soil/thresholds[dry]");
+    Input(concWaterWilt).imports("soil/thresholds[wilting]");
+    Input(concWaterFieldCap).imports("soil/thresholds[fieldCap]");
+    Input(concWaterSaturated).imports("soil/thresholds[saturated]");
+    Input(concWaterMax).imports("soil/thresholds[concWaterMax]");
     Input(availableWater).imports("waterBudget[availableWater]");
     Input(timeStep).imports("calendar[timeStepDays]");
     Output(evaporation).unit("mm/d").help("Evaporation rate");

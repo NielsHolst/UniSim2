@@ -17,7 +17,7 @@ Senescence::Senescence(QString name, QObject *parent)
     Input(tccLmax).equals(650.).help("Maximum leaf lifespan");
     Input(ftccLmin).equals(0.64).help("Proportional minimum leaf lifespan");
     Input(tccR).help("Average lifespan of roots");
-    Input(transpirationRatio).imports("waterFlux/coffee[transpirationRatio]");
+    Input(transpirationRatio).imports("coffee/waterFlux[transpirationRatio]");
     Input(lai).imports("/*/coffee[lai]");
     Input(rootC).imports("coffee[rootC]");
     Input(leafC).imports("coffee[leafC]");

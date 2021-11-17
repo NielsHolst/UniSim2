@@ -12,13 +12,16 @@ class Coffee : public base::Box
 {
 public: 
     Coffee(QString name, QObject *parent);
+    void reset();
     void update();
 private:
     // Inputs
     bool isHarvestTime;
     double
+        k,
+        rootDepth,
+        slaMax,
         gLai, dLai,
-//        gLeafN, dLeafN,
         gLeafC, dLeafC,
         gWoodyC,
         gRootC, dRootC,
@@ -28,6 +31,7 @@ private:
         lai,
         leafN,
         leafC, woodyC, rootC, berryC,
+        leafC0, woodyC0, rootC0,
         harvestedBerryC;
 };
 

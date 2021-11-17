@@ -20,7 +20,7 @@ private:
         concWaterFieldCap, rootDepth, timeStep, slope,
         rainfall, rainIntercepted,
         laiCoffee, laiTree,
-        evaporationCoffee, evaporationTree,
+        evaporationCoffee,
         transpirationCoffee, transpirationTree;
     // Outputs
     double runoff, drain, availableWater;

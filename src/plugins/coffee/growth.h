@@ -15,8 +15,8 @@ public:
     void update();
 private:
     // Inputs
-    double temperature, avgPar30days, PARav, PARint, transpirationRatio, growthStage,
-        airCo2, KEXT, convEfficiency,
+    double temperature, parAverage30Days, parAverage, parIntercepted, transpirationRatio, growthStage,
+        airCo2, k, convEfficiency,
         sinkLeaf, sinkWoody, sinkRoot,
         sinkBerryMax, sinkBerryCoef;
     // Outputs

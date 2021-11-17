@@ -16,7 +16,7 @@ public:
 private:
     // Inputs
     double temperature, vp, globRad, windSpeed,
-        KEXT, KEXTT,
+        kCoffee, kTree,
         lai, interceptedRain;
     // Outputs
     double potEvaporation, potTranspiration;

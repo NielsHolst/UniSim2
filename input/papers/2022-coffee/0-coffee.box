@@ -1,17 +1,13 @@
 Simulation sim {
   .steps = 2193
-  Box param {
-    +kExt  = 0.76 // Light extinction coefficient of coffee
-    +kExtT = 0.70 // Light extinction coefficient of crown
-    +laiTree = 2.0
-  }
   Calendar calendar {
     .latitude  = 9.93
     .longitude = -84.09
   }
   Sun sun {
   }
-  Box env {
+  Box weather {
+    +Tavg = ./Tavg[value]
     Records weather {
       .fileName = "Las_Colinas.txt"
       .overrideCalendarYear = TRUE
@@ -20,50 +16,53 @@ Simulation sim {
       .values = weather[Tmin] | weather[Tmax] 
     }
   }
-  SoilWaterThresholds soilWaterThresholds {
-  }
-  Phenology phenology {
-  }
-  RainInterception rainInterception {
-  }
-  Box waterFlux {
-    WaterFlux coffee {
-      .potEvaporation   = pet/coffee[potEvaporation]
-      .potTranspiration = pet/coffee[potTranspiration  ]
+  Box soil {
+    SoilWaterThresholds thresholds {
     }
-    WaterFlux tree {
-      .potEvaporation   = pet/tree[potEvaporation]
-      .potTranspiration = pet/tree[potTranspiration  ]
+    SoilNitrogen nitrogen {
+    }
+    RainInterception rainInterception {
+    }
+    WaterBudget waterBudget {
+    }  
+  }
+  Light light {
+  }
+  Box tree {
+    +lai = 2.0
+    +k = 0.70
+    Pet pet {
+      .globRad = light[globRad]
+      .lai = ..[lai]
+      .interceptedRain = rainInterception[tree]
+    }
+    WaterFlux waterFlux {
+      .potEvaporation   = ../pet[potEvaporation]
+      .potTranspiration = ../pet[potTranspiration  ]
     }
   }
   Coffee coffee {
-  }
-  Box pet {
-    Pet coffee {
-      .globRad = aboveGround[globRadShade]
+    Phenology phenology {
+    }
+    coffee::Growth growth {
+    }
+    NitrogenSupply nitrogenSupply {
+    }
+    Foliage foliage {
+    }
+    Senescence senescence {
+    }
+    Pet pet {
+      .globRad = light[globRadShade]
       .lai = /*/coffee[lai]
       .interceptedRain = rainInterception[coffee]
     }
-    Pet tree {
-      .globRad = weather[GlobRad]
-      .lai = param[laiTree]
-      .interceptedRain = rainInterception[tree]
+    WaterFlux waterFlux {
+      .potEvaporation   = ../pet[potEvaporation]
+      .potTranspiration = ../pet[potTranspiration  ]
     }
   }
-  AboveGround aboveGround {
-  }
-  coffee::Growth growth {
-  }
-  Senescence senescence {
-  }
-  Foliage foliage {
-  }
-  NitrogenSupply nitrogenSupply {
-  }
-  SoilNitrogen soilNitrogen {
-  }
-  WaterBudget waterBudget {
-  }
+
   OutputR {
     PageR {
       .xAxis = calendar[date]

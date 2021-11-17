@@ -24,7 +24,7 @@ Phenology::Phenology(QString name, QObject *parent)
     Input(daysSincePlanting).imports("sim[step]");
     Input(timeStep).imports("calendar[timeStepDays]");
     Input(rainfall).imports("weather[Rain]");
-    Input(temperature).imports("Tavg[value]");
+    Input(temperature).imports("weather[Tavg]");
     Input(date).imports("calendar[date]");
     Output(growthStage).unit("[0;1]").help("Relative development into reproductive stage");
     Output(isWaitingForRain).unit("bool").help("Is the plant waiting for rain, to turn reproductive?");

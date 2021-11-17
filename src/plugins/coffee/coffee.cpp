@@ -16,7 +16,13 @@ PUBLISH(Coffee)
 Coffee::Coffee(QString name, QObject *parent)
     : Box(name, parent) {
     help("models coffee growth and development");
+    Input(leafC0).equals(0.05).unit("kg/m2").help("Initial density of leaf carbon");
+    Input(woodyC0).equals(0.05).unit("kg/m2").help("Initial density of woody carbon");
+    Input(rootC0).equals(0.05).unit("kg/m2").help("Initial density of root carbon");
+    Input(k).equals(0.76).unit("m2/m2").help("Light extinction coefficient");
+    Input(rootDepth).equals(1.).unit("m").help("Root depth");
     Input(isHarvestTime).imports("phenology[isHarvestTime]");
+    Input(slaMax).imports("foliage[slaMax]");
     Input(gLai).imports("foliage[gLai]");
     Input(dLai).imports("senescence[dLai]");
 //    Input(dLeafN).imports("senescence[dLeafN]");
@@ -33,6 +39,13 @@ Coffee::Coffee(QString name, QObject *parent)
     Output(rootC );
     Output(berryC);
     Output(harvestedBerryC);
+}
+
+void Coffee::reset() {
+    leafC = leafC0;
+    woodyC = woodyC0;
+    rootC = rootC0;
+    lai = leafC0*slaMax;
 }
 
 void Coffee::update() {

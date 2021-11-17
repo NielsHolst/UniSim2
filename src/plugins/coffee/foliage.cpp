@@ -17,7 +17,7 @@ Foliage::Foliage(QString name, QObject *parent)
     help("models coffee leaves");
     Input(slaMax).equals(27.0).help("Maximum specific leaf area");
     Input(fSlaMin).equals(0.64).unit("[0;1]").help("Lower bound of specific leaf area, relative to slaMax");
-    Input(transpirationRatio).imports("waterFlux/coffee[transpirationRatio]");
+    Input(transpirationRatio).imports("coffee/waterFlux[transpirationRatio]");
     Input(gLeafC).imports("growth[gLeafC]");
     Output(sla).help("Specific leaf area");
     Output(gLai).help("Growth rate of leaf area index");

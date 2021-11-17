@@ -18,7 +18,7 @@ NitrogenSupply::NitrogenSupply(QString name, QObject *parent)
     Input(efficiency).equals(0.002).unit("kg N/kg C/d").help("N uptake efficiency");
     Input(soilN50).equals(0.036).help("Soil N for 50% maximum N uptake");
     Input(rootC).imports("coffee[rootC]");
-    Input(soilNitrogen).imports("soilNitrogen[value]");
+    Input(soilNitrogen).imports("soil/nitrogen[value]");
     Input(timeStep).imports("calendar[timeStepDays]");
     Output(value).unit("kg N/m2").help("Nitrogen uptaken from soil");
 }

@@ -17,14 +17,14 @@ PUBLISH(Growth)
 Growth::Growth(QString name, QObject *parent)
     : Box(name, parent) {
     help("models coffee growth");
-    Input(temperature).imports("Tavg[value]");
-    Input(avgPar30days).imports("weather[AvgPar30]");
-    Input(PARav).imports("aboveGround[parShadeAvg]");
-    Input(PARint).imports("aboveGround[parInterceptedCoffee]");
+    Input(temperature).imports("weather[Tavg]");
+    Input(parAverage).imports("light[parShadeAvg]");
+    Input(parIntercepted).imports("light[parInterceptedCoffee]");
+    Input(parAverage30Days).imports("weather[AvgPar30]");
     Input(growthStage).imports("phenology[growthStage]");
-    Input(transpirationRatio).imports("waterFlux/coffee[transpirationRatio]");
+    Input(transpirationRatio).imports("coffee/waterFlux[transpirationRatio]");
     Input(airCo2).equals(780.).unit("ppm").help("Concentration of CO2 in the air");
-    Input(KEXT).imports("param[kExt]");
+    Input(k).imports("coffee[k]");
     Input(convEfficiency).equals(0.74).unit("kg C/kg C").help("Conversion efficiency");
     Input(sinkLeaf).equals(1.2).unit("-").help("Sink strength of leaves");
     Input(sinkWoody).equals(2.1).unit("-").help("Sink strength of woody tissue (stem+branches)");
@@ -74,7 +74,7 @@ void Growth::update() {
     // 44 = molecular weight of CO2; 2.1, 4.5, and 10.5 are constants related to the stoichiometry
     // for electron transport and CO2 fixation
     double EFF = 44 * JMUMOL/2.1 * (CO2I - GAMMAX) / (4.5*CO2I + 10.5 * GAMMAX); // (g CO2 MJ-1 PAR)
-    double LUECO2 = EFF * PMAX / (EFF * KEXT * PARav + PMAX);     // (g CO2 MJ-1 PAR)
+    double LUECO2 = EFF * PMAX / (EFF * k * parAverage + PMAX);     // (g CO2 MJ-1 PAR)
 
     /*  Carbon assimilation
     The source strength (potential amount of C which can be assimilated by photosynthesis) is computed from the PAR intercepted by the coffee,
@@ -84,10 +84,10 @@ void Growth::update() {
     Finally, the assimilation carbon is modulated by constant growth efficiency */
 
     // Net carbon growth; 12/44 = carbon content of CO2
-    gTotalC = convEfficiency*LUECO2*0.001*12./44.*PARint*transpirationRatio;
+    gTotalC = convEfficiency*LUECO2*0.001*12./44.*parIntercepted*transpirationRatio;
 
     // Adjusted sink strengths
-    sinkBerry = sinkBerryMax*(1. - exp(-sinkBerryCoef*avgPar30days));
+    sinkBerry = sinkBerryMax*(1. - exp(-sinkBerryCoef*parAverage30Days));
     double sinkRootAdj  = sinkRoot*(2-transpirationRatio),
            sinkBerryAdj = sinkBerry*min(2*growthStage, 1.);
 
