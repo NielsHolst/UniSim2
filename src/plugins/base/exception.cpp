@@ -5,11 +5,10 @@
 #include <iostream>
 #include <QDateTime>
 #include <QObject>
-#include "box.h"
-#include "convert.h"
+//#include "box.h"
 #include "exception.h"
-#include "general.h"
-#include "path.h"
+//#include "general.h"
+//#include "path.h"
 
 namespace base {
 
@@ -32,16 +31,16 @@ Exception& Exception::line(int i) {
     return *this;
 }
 
-Exception& Exception::context(const QObject *object) {
+Exception& Exception::context(const QObject *) {
     _contextDescription.clear();
-    if (object) {
-        _contextDescription = fullName(object);
-        const Box *box = dynamic_cast<const Box *>(object);
-        if (!box)
-            box = dynamic_cast<const Box *>(object->parent());
-        if (box)
-            _contextDescription += QString(" (#%1)").arg(box->order());
-    }
+//    if (object) {
+//        _contextDescription = fullName(object);
+//        const Box *box = dynamic_cast<const Box *>(object);
+//        if (!box)
+//            box = dynamic_cast<const Box *>(object->parent());
+//        if (box)
+//            _contextDescription += QString(" (#%1)").arg(box->order());
+//    }
     return *this;
 }
 
@@ -79,11 +78,11 @@ QString Exception::what() const {
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
-    if (_caller.caller())
-        text += QString("\nCalled by %1\n in %2, line %3").
-                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
-    if (!dateTime().isNull())
-        text += "\nCalendar time: " + convert<QString>(dateTime());
+//    if (_caller.caller())
+//        text += QString("\nCalled by %1\n in %2, line %3").
+//                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
+//    if (!dateTime().isNull())
+//        text += "\nCalendar time: " + convert<QString>(dateTime());
     return text;
 }
 
@@ -96,47 +95,47 @@ void Exception::setContext(const QObject *object) {
 }
 
 template <> QString Exception::asString(bool v) {
-    return convert<QString>(v);
+    return v ? "true" : "false";
 }
 
 template <> QString Exception::asString(char v) {
-    return convert<QString>(v);
+    return QString(v);
 }
 
 template <> QString Exception::asString(const char *v) {
-    return convert<QString>(v);
+    return QString(v);
 }
 
 template <> QString Exception::asString(QString v) {
-    return convert<QString>(v);
+    return v;
 }
 
 template <> QString Exception::asString(QDate v) {
-    return convert<QString>(v);
+    return v.toString(Qt::ISODate);
 }
 
 template <> QString Exception::asString(QTime v) {
-    return convert<QString>(v);
+    return v.toString("hh:mm:ss");
 }
 
 template <> QString Exception::asString(QDateTime v) {
-    return convert<QString>(v);
+    return v.toString("yyyy/MM/dd hh:mm:ss");
 }
 
 QDateTime Exception::dateTime() const {
     QDateTime result;
-    try {
-        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
-        if (calendar) {
-            Port *port = calendar->peakPort("dateTime");
-            if (port) {
-                result = port->value<QDateTime>();
-            }
-        }
-    }
-    catch (...) {
-        result = QDateTime();
-    }
+//    try {
+//        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
+//        if (calendar) {
+//            Port *port = calendar->peakPort("dateTime");
+//            if (port) {
+//                result = port->value<QDateTime>();
+//            }
+//        }
+//    }
+//    catch (...) {
+//        result = QDateTime();
+//    }
     return result;
 }
 

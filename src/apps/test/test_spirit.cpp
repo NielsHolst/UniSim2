@@ -11,7 +11,6 @@
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 #include <QFile>
-#include <base/environment.h>
 #include <base/exception.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"

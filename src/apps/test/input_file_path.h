@@ -3,7 +3,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
-#include <base/environment.h>
 #include <base/exception.h>
 
 

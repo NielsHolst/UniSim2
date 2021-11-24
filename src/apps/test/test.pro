@@ -15,98 +15,24 @@ HEADERS +=  \
     autotest.h \
     exception_expectation.h \
     input_file_path.h \
+    test_boost_variant.h \
     test_box_script_x3.h \
-    test_expression_operation.h \
-    test_expression_stack.h \
-    test_any_year.h \
-#    test_spirit.h \
-#    test_boost_variant.h \
-#    test_box_script.h \
-#    output_file.h \
-#    test_assign.h \
-#    test_ast_boxes.h \
-#    test_blind_port.h \
-#    test_box.h \
-#    test_box_builder.h \
-#    test_box_cases.h \
-#    test_calendar.h \
-#    test_circle_buffer.h \
-#    test_command.h \
-#    test_convert.h \
-#    test_copy_folder.h \
-#    test_data_frame.h \
-#    test_eq.h \
-#    test_general_split.h \
-#    test_history.h \
-#    test_maker.h \
-#    test_matrix.h \
-#    test_minimise.h \
-#    test_new_port.h \
-#    test_output_buffer.h \
-#    test_output_text.h \
-#    test_path.h \
-#    test_phys_math.h \
-#    test_port.h \
-##    test_port_transform.h \
-#    test_port_type.h \
-#    test_port_value_op.h \
-#    test_proportions.h \
-#    test_random_order.h \
-#    test_records.h \
-#    test_save_grammar.h \
-#    test_scenarios.h \
-#    test_simulation.h \
-#    test_sum.h \
-#    test_unique_name.h \
-#    test_vector_op.h \
-#    test_vector_sum.h \
-#    test_vectorization.h
+    test_convert_date.h \
+    test_convert_date_time.h \
+    test_convert_time.h \
+    test_convert_vector.h \
+    test_operate.h \
+    test_spirit.h \
+    test_value.h \
 
 SOURCES +=  \
     main.cpp \
-#    test_spirit.cpp \
-    test_any_year.cpp \
-    test_expression_operation.cpp \
-    test_expression_stack.cpp \
-#    test_boost_variant.cpp \
-#    test_box_script.cpp \
-    test_box_script_x3.cpp
-
-#    output_file.cpp \
-#    test_assign.cpp \
-#    test_ast_boxes.cpp \
-#    test_blind_port.cpp \
-#    test_box.cpp \
-#    test_box_builder.cpp \
-#    test_box_cases.cpp \
-#    test_calendar.cpp \
-#    test_circle_buffer.cpp \
-#    test_command.cpp \
-#    test_convert.cpp \
-#    test_copy_folder.cpp \
-#    test_data_frame.cpp \
-#    test_eq.cpp \
-#    test_general_split.cpp \
-#    test_history.cpp \
-#    test_maker.cpp \
-#    test_matrix.cpp \
-#    test_minimise.cpp \
-#    test_new_port.cpp \
-#    test_output_buffer.cpp \
-#    test_output_text.cpp \
-#    test_path.cpp \
-#    test_phys_math.cpp \
-#    test_port.cpp \
-#    test_port_type.cpp \
-#    test_port_value_op.cpp \
-#    test_proportions.cpp \
-#    test_random_order.cpp \
-#    test_records.cpp \
-#    test_save_grammar.cpp \
-#    test_scenarios.cpp \
-#    test_simulation.cpp \
-#    test_sum.cpp \
-#    test_unique_name.cpp \
-#    test_vector_op.cpp \
-#    test_vector_sum.cpp \
-#    test_vectorization.cpp
+    test_boost_variant.cpp \
+    test_box_script_x3.cpp \
+    test_convert_date.cpp \
+    test_convert_date_time.cpp \
+    test_convert_time.cpp \
+    test_convert_vector.cpp \
+    test_operate.cpp \
+    test_spirit.cpp \
+    test_value.cpp \

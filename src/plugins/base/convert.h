@@ -2,272 +2,203 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef BASE_CONVERT
-#define BASE_CONVERT
+#ifndef BASE_CONVERT_H
+#define BASE_CONVERT_H
 
-#include <boost/lexical_cast.hpp>
+#include <typeinfo>
 #include <boost/numeric/conversion/cast.hpp>
-#include <QChar>
 #include <QDate>
 #include <QDateTime>
+#include <QObject>
 #include <QString>
-#include <QStringList>
 #include <QTime>
 #include <QVector>
+#include "bare_date.h"
 #include "exception.h"
-#include "general.h"
-#include "port_type.h"
-
-using boost::numeric_cast;
-using boost::lexical_cast;
-using boost::bad_lexical_cast;
-using boost::bad_numeric_cast;
 
 namespace base {
 
-//
-// Numerical conversions
-//
+using vbool      = QVector<bool>;
+using vint       = QVector<int>;
+using vdouble    = QVector<double>;
+using vQString   = QVector<QString>;
+using vQDate     = QVector<QDate>;
+using vQTime     = QVector<QTime>;
+using vQDateTime = QVector<QDateTime>;
+using vBareDate  = QVector<BareDate>;
 
-extern void setLocale(QString localeName);
-extern QChar outputDecimalCharacter();
-extern QString localeName();
+template <class, template <class> class>
+struct isInstance : public std::false_type {};
 
-#define NUMERIC_CAST(sourceT) \
-try { \
-    return numeric_cast<T>(source); \
-} \
-catch (bad_numeric_cast &ex) { \
-    ThrowException("Could not convert " #sourceT " to " + nameOf(typeOf<T>()) + "\n" + ex.what()); \
-} \
-return T()
+template <class T, template <class> class U>
+struct isInstance<U<T>, U> : public std::true_type {};
 
-template<class T> T convert(bool source)          { NUMERIC_CAST(Bool); }
-template<class T> T convert(char source)          { NUMERIC_CAST(Char); }
-template<class T> T convert(int source)           { NUMERIC_CAST(Int); }
-template<class T> T convert(long int source)      { NUMERIC_CAST(LongInt); }
-template<class T> T convert(long long int source) { NUMERIC_CAST(LongLongInt); }
-template<class T> T convert(float source)         { NUMERIC_CAST(Float); }
-template<class T> T convert(double source)        { NUMERIC_CAST(Double); }
-template<class T> T convert(long double source)   { NUMERIC_CAST(LongDouble); }
-
-//
-// Numerical conversions to Bool
-//
-template<> bool convert(char source);
-template<> bool convert(int source);
-template<> bool convert(long int source);
-template<> bool convert(long long int source);
-template<> bool convert(float source);
-template<> bool convert(double source);
-template<> bool convert(long double source);
-
-//
-// Numerical conversions to String
-//
-
-template<> QString convert(bool source);
-template<> QString convert(char source);
-template<> QString convert(int source);
-template<> QString convert(long int source);
-template<> QString convert(long long int source);
-template<> QString convert(float source);
-template<> QString convert(double source);
-template<> QString convert(long double source);
-
-//
-// Numerical conversions to Date
-//
-
-template<> QDate convert(bool source);
-template<> QDate convert(char source);
-template<> QDate convert(int source);
-template<> QDate convert(long int source);
-template<> QDate convert(long long int source);
-template<> QDate convert(float source);
-template<> QDate convert(double source);
-template<> QDate convert(long double source);
-
-//
-// Numerical conversions to Time
-//
-
-template<> QTime convert(bool source);
-template<> QTime convert(char source);
-template<> QTime convert(int source);
-template<> QTime convert(long int source);
-template<> QTime convert(long long int source);
-template<> QTime convert(float source);
-template<> QTime convert(double source);
-template<> QTime convert(long double source);
-
-//
-// Numerical conversions to DateTime
-//
-
-template<> QDateTime convert(bool source);
-template<> QDateTime convert(char source);
-template<> QDateTime convert(int source);
-template<> QDateTime convert(long int source);
-template<> QDateTime convert(long long int source);
-template<> QDateTime convert(float source);
-template<> QDateTime convert(double source);
-template<> QDateTime convert(long double source);
-
-//
-// Conversions from String
-//
-
-template<class T> T convert(QString source) {
-    try {
-        return lexical_cast<T>(source.trimmed().toStdString());
-    }
-    catch(const bad_lexical_cast &)
-    {
-        ThrowException ("Cannot convert String to " + nameOf(typeOf<T>())).value(source);
-    }
-    return T();
+// Define conversions to type T from type U
+template <class T, class U> T convert(U ) {
+    ThrowException("Type conversion not supported")
+            .value1(QString("From: ") + typeid(U).name())
+            .value2(QString("To  : ") + typeid(T).name());
 }
 
-template<> bool convert(QString source);
-template<> char convert(QString source);
-template<> QString convert(QString source);
-template<> QStringList convert(QString source);
-template<> QDate convert(QString source);
-template<> QDateTime convert(QString source);
-template<> QTime convert(QString source);
-
-//
-// Conversions from String to vector
-//
-
-template<> QVector<bool> convert(QString source);
-template<> QVector<char> convert(QString source);
-template<> QVector<int> convert(QString source);
-template<> QVector<long int> convert(QString source);
-template<> QVector<long long int> convert(QString source);
-template<> QVector<float> convert(QString source);
-template<> QVector<double> convert(QString source);
-template<> QVector<long double> convert(QString source);
-template<> QVector<QString> convert(QString source);
-template<> QVector<QDate> convert(QString source);
-template<> QVector<QDateTime> convert(QString source);
-template<> QVector<QTime> convert(QString source);
-
-//
-// Conversions from C string
-//
-
-template<class T> T convert(const char *s) { return convert<T>(QString(s)); }
-
-//
-// Conversions from QDate
-//
-
-template<class T> T convert(QDate source) { return source.dayOfYear(); }
-template<> bool convert(QDate);
-template<> char convert(QDate);
-template<> QString convert(QDate source);
-template<> QDate convert(QDate source);
-template<> QDateTime convert(QDate source);
-template<> QTime convert(QDate);
-
-//
-// Conversions from QTime
-//
-
-template<class T> T convert(QTime source) {
-    double hours = source.hour() + source.minute()/60. + source.second()/3600.;
-    return numeric_cast<T>(hours);
-}
-template<> bool convert(QTime);
-template<> char convert(QTime);
-template<> QString convert(QTime source);
-template<> QDate convert(QTime source);
-template<> QDateTime convert(QTime source);
-template<> QTime convert(QTime);
-
-//
-// Conversions from QDateTime
-//
-
-template<class T> T convert(QDateTime source) {
-    return convert<T>(source.date()) + convert<T>(source.time())/T(24);
-}
-template<> bool convert(QDateTime);
-template<> char convert(QDateTime);
-template<> QString convert(QDateTime source);
-template<> QDate convert(QDateTime source);
-template<> QDateTime convert(QDateTime source);
-template<> QTime convert(QDateTime);
-
-
-//
-// Vector conversions
-//
-#define CANNOT_CONVERT_VECTOR(sourceT) \
-ThrowException("Could not convert " #sourceT "Vector to " + nameOf(typeOf<T>()))
-
-template<class T> T convert(QVector<bool>)          { CANNOT_CONVERT_VECTOR(Bool); }
-template<class T> T convert(QVector<char>)          { CANNOT_CONVERT_VECTOR(Char); }
-template<class T> T convert(QVector<int>)           { CANNOT_CONVERT_VECTOR(Int); }
-template<class T> T convert(QVector<long int>)      { CANNOT_CONVERT_VECTOR(LongInt); }
-template<class T> T convert(QVector<long long int>) { CANNOT_CONVERT_VECTOR(LongLongInt); }
-template<class T> T convert(QVector<float>)         { CANNOT_CONVERT_VECTOR(Float); }
-template<class T> T convert(QVector<double>)        { CANNOT_CONVERT_VECTOR(Double); }
-template<class T> T convert(QVector<long double>)   { CANNOT_CONVERT_VECTOR(LongDouble); }
-template<class T> T convert(QVector<QString>)       { CANNOT_CONVERT_VECTOR(QString); }
-template<class T> T convert(QVector<QDate>)         { CANNOT_CONVERT_VECTOR(QDate); }
-template<class T> T convert(QVector<QTime>)         { CANNOT_CONVERT_VECTOR(QTime); }
-template<class T> T convert(QVector<QDateTime>)     { CANNOT_CONVERT_VECTOR(QDateTime); }
-
-//
-// Vector conversions to QStringList
-//
-
-template<> QStringList convert(QVector<bool> source);
-template<> QStringList convert(QVector<char> source);
-template<> QStringList convert(QVector<int> source);
-template<> QStringList convert(QVector<long int> source);
-template<> QStringList convert(QVector<long long int> source);
-template<> QStringList convert(QVector<float> source);
-template<> QStringList convert(QVector<double> source);
-template<> QStringList convert(QVector<long double> source);
-//template<> QStringList convert(QVector<QString> source);
-template<> QStringList convert(QVector<QDate> source);
-template<> QStringList convert(QVector<QTime> source);
-template<> QStringList convert(QVector<QDateTime> source);
-
-//
-// Vector conversions from QStringList
-//
-
-template<class T, template<class> class C> C<T> convert(QStringList list) {
-    C<T> result;
-    result.reserve(list.size());
-    for (QString s : list.toVector())
-        result << convert<T>(s);
+// Vectors are converted element-by-element
+template <class T, class U> QVector<T> convertVec(U x) {
+    auto source = x.data();
+    int n = x.size();
+    QVector<T> result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = convert<T>(*source++);
     return result;
 }
 
-//
-// Vector conversions to QString
-//
+template <class T> inline QVector<T> convertVec(QVector<T> x) {
+    return x;
+}
 
-template<> QString convert(QVector<bool> source);
-template<> QString convert(QVector<char> source);
-template<> QString convert(QVector<int> source);
-template<> QString convert(QVector<long int> source);
-template<> QString convert(QVector<long long int> source);
-template<> QString convert(QVector<float> source);
-template<> QString convert(QVector<double> source);
-template<> QString convert(QVector<long double> source);
-template<> QString convert(QVector<QString> source);
-template<> QString convert(QVector<QDate> source);
-template<> QString convert(QVector<QTime> source);
-template<> QString convert(QVector<QDateTime> source);
+#define CONVERT_VECTOR(TYPE, VTYPE) \
+template<> inline VTYPE convert(vbool x)      {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vint x)       {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vdouble x)    {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQString x)   {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQDate x)     {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQTime x)     {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQDateTime x) {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vBareDate x)  {return convertVec<TYPE>(x);}
 
-} // namespace
+// Needed forward declarations
+template<> inline QString convert(QDate x);
+template<> inline QString convert(QTime x);
+template<> inline QString convert(QDateTime x);
+template<> inline QString convert(BareDate x);
 
+template<> inline bool convert(bool x)   {return x;}
+template<> inline bool convert(int x)    {return x;}
+template<> inline bool convert(double x) {return x;}
+template<> inline bool convert(QString x){return !x.isEmpty();}
+template<> inline bool convert(QDate x)  {ThrowException("Cannot convert date to bool")
+                                          .value(convert<QString>(x));
+                                          return false;}
+template<> inline bool convert(QTime x)  {ThrowException("Cannot convert time to bool")
+                                          .value(convert<QString>(x));
+                                          return false;}
+template<> inline bool convert(QDateTime x) {ThrowException("Cannot convert date-time to bool")
+                                          .value(convert<QString>(x));
+                                          return false;}
+template<> inline bool convert(BareDate x)  {ThrowException("Cannot convert bare date to bool")
+                                          .value(convert<QString>(x));
+                                          return false;}
+template<> inline bool convert(const char *x) {return convert<bool>(QString(x));}
+
+template<> inline int convert(bool x)    {return x;}
+template<> inline int convert(int x)     {return x;}
+template<> inline int convert(double x)  {return boost::numeric_cast<int>(x+0.5);}
+template<> inline int convert(QString x) {return x.toInt();}
+template<> inline int convert(QDate x)   {return x.dayOfYear();}
+template<> inline int convert(QTime x)   {return x.hour();}
+template<> inline int convert(QDateTime x) {return x.date().dayOfYear();}
+template<> inline int convert(BareDate x)  {return x.dayOfYear();}
+template<> inline int convert(const char *x)  {return convert<int>(QString(x));}
+
+template<> inline double convert(bool x)   {return x;}
+template<> inline double convert(int x)    {return x;}
+template<> inline double convert(double x) {return x;}
+template<> inline double convert(QString x){return x.toDouble();}
+template<> inline double convert(QDate x)  {return x.dayOfYear();}
+template<> inline double convert(QTime x)  {return x.hour() + x.minute()/60. + x.second()/3600.;}
+template<> inline double convert(QDateTime x)   {return convert<double>(x.date()) +
+                                                        convert<double>(x.time());}
+template<> inline double convert(BareDate x)    {return convert<double>(x);}
+template<> inline double convert(const char *x)  {return convert<double>(QString(x));}
+
+template<> inline QString convert(bool x)   {return QString::number(x);}
+template<> inline QString convert(int x)    {return QString::number(x);}
+template<> inline QString convert(double x) {return QString::number(x);}
+template<> inline QString convert(QString x){return x;}
+template<> inline QString convert(QDate x)  {return x.toString(Qt::ISODate);}
+template<> inline QString convert(QTime x)  {return x.toString("hh:mm:ss");}
+template<> inline QString convert(QDateTime x)    {return convert<QString>(x.date()) +
+                                                   "T" + convert<QString>(x.time());}
+template<> inline QString convert(BareDate x)     {return convert<QString>(x.day()) +
+                                                   "/" + convert<QString>(x.month());}
+template<> inline QString convert(const char *x)  {return QString(x);}
+
+template<> inline QDate convert(bool  )       {ThrowException("Cannot convert bool to date");
+                                               return QDate();}
+template<> inline QDate convert(int  )        {ThrowException("Cannot convert int to date");
+                                               return QDate();}
+template<> inline QDate convert(double  )     {ThrowException("Cannot convert double to date");
+                                               return QDate();}
+template<>        QDate convert(QString x);
+template<> inline QDate convert(QDate x)      {return x;}
+template<> inline QDate convert(QTime x)      {ThrowException("Cannot convert time to date").
+                                               value(convert<QString>(x));
+                                               return QDate();}
+template<> inline QDate convert(QDateTime x)  {return x.date();}
+template<> inline QDate convert(BareDate x)   {ThrowException("Cannot convert bare date to date").
+                                               value(convert<QString>(x));
+                                               return QDate();}
+template<> inline QDate convert(const char *x)  {return convert<QDate>(QString(x));}
+
+template<> inline QTime convert(bool  )       {ThrowException("Cannot convert bool to time");
+                                               return QTime();}
+template<> inline QTime convert(int  )        {ThrowException("Cannot convert int to time");
+                                               return QTime();}
+template<> inline QTime convert(double  )     {ThrowException("Cannot convert double to time");
+                                               return QTime();}
+template<>        QTime convert(QString x);
+template<> inline QTime convert(QDate x)      {ThrowException("Cannot convert date to time").
+                                               value(convert<QString>(x));
+                                               return QTime();}
+template<> inline QTime convert(QTime x)      {return x;}
+template<> inline QTime convert(QDateTime x)  {return x.time();}
+template<> inline QTime convert(BareDate x)   {ThrowException("Cannot convert bare date to time").
+                                               value(convert<QString>(x));
+                                               return QTime();}
+template<> inline QTime convert(const char *x)  {return convert<QTime>(QString(x));}
+
+template<> inline QDateTime convert(bool  )     {ThrowException("Cannot convert bool to date-time");
+                                                 return QDateTime();}
+template<> inline QDateTime convert(int  )      {ThrowException("Cannot convert int to date-time");
+                                                 return QDateTime();}
+template<> inline QDateTime convert(double  )   {ThrowException("Cannot convert double to date-time");
+                                                 return QDateTime();}
+template<>        QDateTime convert(QString x);
+template<> inline QDateTime convert(QDate x)    {return QDateTime(x, QTime(0,0), Qt::UTC);}
+template<> inline QDateTime convert(QTime x)    {ThrowException("Cannot convert time to date-time").
+                                                 value(convert<QString>(x));
+                                                 return QDateTime();}
+template<> inline QDateTime convert(QDateTime x){return x;}
+template<> inline QDateTime convert(BareDate x) {ThrowException("Cannot convert bare date to date-time").
+                                                 value(convert<QString>(x));
+                                                 return QDateTime();}
+template<> inline QDateTime convert(const char *x)  {return convert<QDateTime>(QString(x));}
+
+template<> inline BareDate convert(bool  )         {ThrowException("Cannot convert bool to bare date");
+                                                    return BareDate();}
+template<> inline BareDate convert(int  )          {ThrowException("Cannot convert int to bare date");
+                                                    return BareDate();}
+template<> inline BareDate convert(double  )       {ThrowException("Cannot convert double to bare date");
+                                                    return BareDate();}
+template<>        BareDate convert(QString x);
+template<> inline BareDate convert(QDate x)        {return BareDate(x.month(), x.day());}
+template<> inline BareDate convert(QTime x)        {ThrowException("Cannot convert time to bare date").
+                                                    value(convert<QString>(x));
+                                                    return BareDate();}
+template<> inline BareDate convert(QDateTime x)    {ThrowException("Cannot convert date-time to bare date").
+                                                    value(convert<QString>(x));
+                                                    return BareDate();}
+template<> inline BareDate convert(BareDate x)     {return x;}
+template<> inline BareDate convert(const char *x)  {return convert<BareDate>(QString(x));}
+
+CONVERT_VECTOR(bool     , vbool)
+CONVERT_VECTOR(int      , vint)
+CONVERT_VECTOR(double   , vdouble)
+CONVERT_VECTOR(QString  , vQString)
+CONVERT_VECTOR(QDate    , vQDate)
+CONVERT_VECTOR(QTime    , vQTime)
+CONVERT_VECTOR(QDateTime, vQDateTime)
+CONVERT_VECTOR(BareDate , vBareDate)
+
+
+}
 #endif
-

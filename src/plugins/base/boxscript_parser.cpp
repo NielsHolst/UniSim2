@@ -1,7 +1,7 @@
 #include <QFile>
 #include "boxscript_config.h"
 #include "boxscript_parser.h"
-#include "environment.h"
+//#include "environment.h"
 #include "exception.h"
 
 using namespace base;
