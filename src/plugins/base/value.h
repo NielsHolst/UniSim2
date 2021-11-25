@@ -30,12 +30,12 @@ public:
         BareDate,
         VecBool,
         VecInt,
-        VecDouble
-//        VecString,
-//        VecDate,
-//        VecTime,
-//        VecDateTime,
-//        VecBareDate
+        VecDouble,
+        VecString,
+        VecDate,
+        VecTime,
+        VecDateTime,
+        VecBareDate
     };
 
     Value(            ) {                }
@@ -61,20 +61,20 @@ public:
     Value(QVector<bool>       x) { initialize(x); }
     Value(QVector<int>        x) { initialize(x); }
     Value(QVector<double>     x) { initialize(x); }
-//    Value(QVector<QString>    x) { initialize(x); }
-//    Value(QVector<QDate>      x) { initialize(x); }
-//    Value(QVector<QTime>      x) { initialize(x); }
-//    Value(QVector<QDateTime>  x) { initialize(x); }
-//    Value(QVector<BareDate>   x) { initialize(x); }
+    Value(QVector<QString>    x) { initialize(x); }
+    Value(QVector<QDate>      x) { initialize(x); }
+    Value(QVector<QTime>      x) { initialize(x); }
+    Value(QVector<QDateTime>  x) { initialize(x); }
+    Value(QVector<BareDate>   x) { initialize(x); }
 
     Value(QVector<bool>      *x) { initialize(x); }
     Value(QVector<int>       *x) { initialize(x); }
     Value(QVector<double>    *x) { initialize(x); }
-//    Value(QVector<QString>   *x) { initialize(x); }
-//    Value(QVector<QDate>     *x) { initialize(x); }
-//    Value(QVector<QTime>     *x) { initialize(x); }
-//    Value(QVector<QDateTime> *x) { initialize(x); }
-//    Value(QVector<BareDate>  *x) { initialize(x); }
+    Value(QVector<QString>   *x) { initialize(x); }
+    Value(QVector<QDate>     *x) { initialize(x); }
+    Value(QVector<QTime>     *x) { initialize(x); }
+    Value(QVector<QDateTime> *x) { initialize(x); }
+    Value(QVector<BareDate>  *x) { initialize(x); }
 
     template <class T> void initialize(T *variable)
     // Link to outside variable
@@ -103,6 +103,12 @@ public:
         return static_cast<Type>(_variant.index());
     }
 
+    bool isVector() const
+    // Return if this is a vectored type
+    {
+        return (type() >= Type::VecBool);
+    }
+
     QString typeName() const;
     // Return the value's type name
 
@@ -124,12 +130,12 @@ private:
         ValueTyped<BareDate>,
         ValueTyped<QVector<bool>>,
         ValueTyped<QVector<int>>,
-        ValueTyped<QVector<double>>
-//        ValueTyped<QVector<QString>>,
-//        ValueTyped<QVector<QDate>>,
-//        ValueTyped<QVector<QTime>>,
-//        ValueTyped<QVector<QDateTime>>,
-//        ValueTyped<QVector<BareDate>>
+        ValueTyped<QVector<double>>,
+        ValueTyped<QVector<QString>>,
+        ValueTyped<QVector<QDate>>,
+        ValueTyped<QVector<QTime>>,
+        ValueTyped<QVector<QDateTime>>,
+        ValueTyped<QVector<BareDate>>
     >
     _variant; // Starts out uninitialised (= monostate)
 };
@@ -173,21 +179,21 @@ template <class U> void Value::changeValue(U value)
     case Type::VecDouble:
         std::get<ValueTyped<QVector<double>>>(_variant).changeValue(value);
         break;
-//    case Type::VecString:
-//        std::get<ValueTyped<QVector<QString>>>(_variant).changeValue(value);
-//        break;
-//    case Type::VecDate:
-//        std::get<ValueTyped<QVector<QDate>>>(_variant).changeValue(value);
-//        break;
-//    case Type::VecTime:
-//        std::get<ValueTyped<QVector<QTime>>>(_variant).changeValue(value);
-//        break;
-//    case Type::VecDateTime:
-//        std::get<ValueTyped<QVector<QDateTime>>>(_variant).changeValue(value);
-//        break;
-//    case Type::VecBareDate:
-//        std::get<ValueTyped<QVector<BareDate>>>(_variant).changeValue(value);
-//        break;
+    case Type::VecString:
+        std::get<ValueTyped<QVector<QString>>>(_variant).changeValue(value);
+        break;
+    case Type::VecDate:
+        std::get<ValueTyped<QVector<QDate>>>(_variant).changeValue(value);
+        break;
+    case Type::VecTime:
+        std::get<ValueTyped<QVector<QTime>>>(_variant).changeValue(value);
+        break;
+    case Type::VecDateTime:
+        std::get<ValueTyped<QVector<QDateTime>>>(_variant).changeValue(value);
+        break;
+    case Type::VecBareDate:
+        std::get<ValueTyped<QVector<BareDate>>>(_variant).changeValue(value);
+        break;
     }
 }
 
@@ -203,11 +209,11 @@ template <> const BareDate*  Value::valuePtr() const;
 template <> const QVector<bool>*      Value::valuePtr() const;
 template <> const QVector<int>*       Value::valuePtr() const;
 template <> const QVector<double>*    Value::valuePtr() const;
-//template <> const QVector<QString>*   Value::valuePtr() const;
-//template <> const QVector<QDate>*     Value::valuePtr() const;
-//template <> const QVector<QTime>*     Value::valuePtr() const;
-//template <> const QVector<QDateTime>* Value::valuePtr() const;
-//template <> const QVector<BareDate>*  Value::valuePtr() const;
+template <> const QVector<QString>*   Value::valuePtr() const;
+template <> const QVector<QDate>*     Value::valuePtr() const;
+template <> const QVector<QTime>*     Value::valuePtr() const;
+template <> const QVector<QDateTime>* Value::valuePtr() const;
+template <> const QVector<BareDate>*  Value::valuePtr() const;
 
 template <class U> U Value::value() const
 {
@@ -237,16 +243,16 @@ template <class U> U Value::value() const
         return std::get<ValueTyped<QVector<int>>>(_variant).value<U>();
     case Type::VecDouble:
         return std::get<ValueTyped<QVector<double>>>(_variant).value<U>();
-//    case Type::VecString:
-//        return std::get<ValueTyped<QVector<QString>>>(_variant).value<U>();
-//    case Type::VecDate:
-//        return std::get<ValueTyped<QVector<QDate>>>(_variant).value<U>();
-//    case Type::VecTime:
-//        return std::get<ValueTyped<QVector<QTime>>>(_variant).value<U>();
-//    case Type::VecDateTime:
-//        return std::get<ValueTyped<QVector<QDateTime>>>(_variant).value<U>();
-//    case Type::VecBareDate:
-//        return std::get<ValueTyped<QVector<BareDate>>>(_variant).value<U>();
+    case Type::VecString:
+        return std::get<ValueTyped<QVector<QString>>>(_variant).value<U>();
+    case Type::VecDate:
+        return std::get<ValueTyped<QVector<QDate>>>(_variant).value<U>();
+    case Type::VecTime:
+        return std::get<ValueTyped<QVector<QTime>>>(_variant).value<U>();
+    case Type::VecDateTime:
+        return std::get<ValueTyped<QVector<QDateTime>>>(_variant).value<U>();
+    case Type::VecBareDate:
+        return std::get<ValueTyped<QVector<BareDate>>>(_variant).value<U>();
     }
     return U();
 }

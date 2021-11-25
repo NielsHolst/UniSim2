@@ -7,11 +7,13 @@ class TestOperate : public QObject
 {
     Q_OBJECT
 private slots:
+    void testAdd();
     void testAddNumbers();
     void testAddDate();
     void testAddTime();
     void testAddDateTime();
     void testError();
+    void testVector();
 };
 
 DECLARE_TEST(TestOperate)

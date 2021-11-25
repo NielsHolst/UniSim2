@@ -7,6 +7,9 @@
 using std::get;
 using namespace base;
 
+void TestOperate::testAdd() {
+}
+
 void TestOperate::testAddNumbers() {
     Value a, b, c;
     a = 17;
@@ -66,3 +69,22 @@ void TestOperate::testError() {
     EXPECTED_EXCEPTION;
 }
 
+void TestOperate::testVector() {
+    QVector<int> i;
+    QVector<double> x;
+    i << 4 << 2 << 3;
+    x << 1.1 << 1.3 << 1.5;
+    Value a, b, c;
+
+    a = Value(i) + Value(10);
+    QCOMPARE(a.type(), Value::Type::VecInt);
+    QCOMPARE(a.value<vint>(), vint() << 14 << 12 << 13);
+
+    b = Value(1.8) + Value(i);
+    QCOMPARE(b.type(), Value::Type::VecDouble);
+    QCOMPARE(b.value<vdouble>(), vdouble() << 5.8 << 3.8 << 4.8);
+
+    c = Value(i) + Value(x);
+    QCOMPARE(c.type(), Value::Type::VecDouble);
+    QCOMPARE(c.value<vdouble>(), vdouble() << 5.1 << 3.3 << 4.5);
+}

@@ -5,6 +5,7 @@
 #ifndef BASE_BARE_DATE_H
 #define BASE_BARE_DATE_H
 
+#include <boost/numeric/conversion/cast.hpp>
 #include <QDate>
 
 namespace base {

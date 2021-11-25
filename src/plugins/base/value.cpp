@@ -21,11 +21,11 @@ void Value::copyValue(const Value &x) {
     case Type::VecBool      : changeValue(x.value<QVector<bool     >>()); break;
     case Type::VecInt       : changeValue(x.value<QVector<int      >>()); break;
     case Type::VecDouble    : changeValue(x.value<QVector<double   >>()); break;
-//    case Type::VecString    : changeValue(x.value<QVector<QString  >>()); break;
-//    case Type::VecDate      : changeValue(x.value<QVector<QDate    >>()); break;
-//    case Type::VecTime      : changeValue(x.value<QVector<QTime    >>()); break;
-//    case Type::VecDateTime  : changeValue(x.value<QVector<QDateTime>>()); break;
-//    case Type::VecBareDate  : changeValue(x.value<QVector<BareDate >>()); break;
+    case Type::VecString    : changeValue(x.value<QVector<QString  >>()); break;
+    case Type::VecDate      : changeValue(x.value<QVector<QDate    >>()); break;
+    case Type::VecTime      : changeValue(x.value<QVector<QTime    >>()); break;
+    case Type::VecDateTime  : changeValue(x.value<QVector<QDateTime>>()); break;
+    case Type::VecBareDate  : changeValue(x.value<QVector<BareDate >>()); break;
     }
 }
 
@@ -48,11 +48,11 @@ VALUE_PTR(BareDate , Type::BareDate)
 VALUE_PTR(QVector<bool>     , Type::VecBool)
 VALUE_PTR(QVector<int>      , Type::VecInt)
 VALUE_PTR(QVector<double>   , Type::VecDouble)
-//VALUE_PTR(QVector<QString>  , Type::VecString)
-//VALUE_PTR(QVector<QDate>    , Type::VecDate)
-//VALUE_PTR(QVector<QTime>    , Type::VecTime)
-//VALUE_PTR(QVector<QDateTime>, Type::VecDateTime)
-//VALUE_PTR(QVector<BareDate> , Type::VecBareDate)
+VALUE_PTR(QVector<QString>  , Type::VecString)
+VALUE_PTR(QVector<QDate>    , Type::VecDate)
+VALUE_PTR(QVector<QTime>    , Type::VecTime)
+VALUE_PTR(QVector<QDateTime>, Type::VecDateTime)
+VALUE_PTR(QVector<BareDate> , Type::VecBareDate)
 
 QString Value::typeName() const {
     switch(type()) {
@@ -68,11 +68,11 @@ QString Value::typeName() const {
     case Type::VecBool      : return "VectorOfBool";
     case Type::VecInt       : return "VectorOfInt";
     case Type::VecDouble    : return "VectorOfDouble";
-//    case Type::VecString    : return "VectorOfString";
-//    case Type::VecDate      : return "VectorOfDate";
-//    case Type::VecTime      : return "VectorOfTime";
-//    case Type::VecDateTime  : return "VectorOfDateTime";
-//    case Type::VecBareDate  : return "VectorOfBareDate";
+    case Type::VecString    : return "VectorOfString";
+    case Type::VecDate      : return "VectorOfDate";
+    case Type::VecTime      : return "VectorOfTime";
+    case Type::VecDateTime  : return "VectorOfDateTime";
+    case Type::VecBareDate  : return "VectorOfBareDate";
     }
     return QString();
 }
