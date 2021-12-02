@@ -16,7 +16,7 @@ void TestOperate::testAddNumbers() {
     b = 3.12;
     c = operate::add(a,b);
     QCOMPARE(c.type(), Value::Type::Double);
-    QCOMPARE(c.value<double>(), 20.12);
+    QCOMPARE(c.as<double>(), 20.12);
 }
 
 void TestOperate::testAddDate() {
@@ -25,7 +25,7 @@ void TestOperate::testAddDate() {
     b = 8;
     c = operate::add(a, b);
     QCOMPARE(c.type(), Value::Type::Date);
-    QCOMPARE(c.value<QDate>(), QDate(2021, 1, 1));
+    QCOMPARE(c.as<QDate>(), QDate(2021, 1, 1));
 }
 
 void TestOperate::testAddTime() {
@@ -34,12 +34,12 @@ void TestOperate::testAddTime() {
     b = 8;
     c = operate::add(a, b);
     QCOMPARE(c.type(), Value::Type::Time);
-    QCOMPARE(c.value<QTime>(), QTime(22,15,16));
+    QCOMPARE(c.as<QTime>(), QTime(22,15,16));
 
     d = 8.5;
     c = operate::add(a, d);
     QCOMPARE(c.type(), Value::Type::Time);
-    QCOMPARE(c.value<QTime>(), QTime(22,45,16));
+    QCOMPARE(c.as<QTime>(), QTime(22,45,16));
 }
 
 void TestOperate::testAddDateTime() {
@@ -48,14 +48,14 @@ void TestOperate::testAddDateTime() {
     b = 8;
     c = operate::add(a, b);
     QCOMPARE(c.type(), Value::Type::DateTime);
-    QCOMPARE(c.value<QDateTime>().date(), QDate(2021, 1, 1));
-    QCOMPARE(c.value<QDateTime>().time(), QTime(14,15,16));
+    QCOMPARE(c.as<QDateTime>().date(), QDate(2021, 1, 1));
+    QCOMPARE(c.as<QDateTime>().time(), QTime(14,15,16));
 
     d = 8.5;
     c = operate::add(a, d);
     QCOMPARE(c.type(), Value::Type::DateTime);
-    QCOMPARE(c.value<QDateTime>().date(), QDate(2021, 1, 2));
-    QCOMPARE(c.value<QDateTime>().time(), QTime(02,15,16));
+    QCOMPARE(c.as<QDateTime>().date(), QDate(2021, 1, 2));
+    QCOMPARE(c.as<QDateTime>().time(), QTime(02,15,16));
 }
 
 void TestOperate::testError() {
@@ -78,13 +78,13 @@ void TestOperate::testVector() {
 
     a = Value(i) + Value(10);
     QCOMPARE(a.type(), Value::Type::VecInt);
-    QCOMPARE(a.value<vint>(), vint() << 14 << 12 << 13);
+    QCOMPARE(a.as<vint>(), vint() << 14 << 12 << 13);
 
     b = Value(1.8) + Value(i);
     QCOMPARE(b.type(), Value::Type::VecDouble);
-    QCOMPARE(b.value<vdouble>(), vdouble() << 5.8 << 3.8 << 4.8);
+    QCOMPARE(b.as<vdouble>(), vdouble() << 5.8 << 3.8 << 4.8);
 
     c = Value(i) + Value(x);
     QCOMPARE(c.type(), Value::Type::VecDouble);
-    QCOMPARE(c.value<vdouble>(), vdouble() << 5.1 << 3.3 << 4.5);
+    QCOMPARE(c.as<vdouble>(), vdouble() << 5.1 << 3.3 << 4.5);
 }

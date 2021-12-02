@@ -2,47 +2,45 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include "exception.h"
+#include <map>
 #include "operator.h"
+
+using std::map;
 
 namespace base {
 
-Precedence Precedence::_precedence;
-QMap<Operator,int> Precedence::_precedences;
+static map<Operator,int> precedences =
+{
+   {Operator::Add          , 6},
+   {Operator::Subtract     , 6},
+   {Operator::Multiply     , 7},
+   {Operator::Divide       , 7},
+   {Operator::Negate       , 8},
+   {Operator::Exponentiate , 9},
+   {Operator::And          , 5},
+   {Operator::Or           , 4},
+   {Operator::Not          , 8}
+};
 
-Arity Arity::_arity;
-QMap<Operator,int> Arity::_arities;
-
-Precedence::Precedence() {
-    _precedences[Operator::Add] = 2;
-    _precedences[Operator::Subtract] = 2;
-    _precedences[Operator::Multiply] = 3;
-    _precedences[Operator::Divide] = 3;
-    _precedences[Operator::Negate] = 2;
-    _precedences[Operator::Exponentiate] = 1;
-    _precedences[Operator::And] = 11;
-    _precedences[Operator::Or] = 12;
-    _precedences[Operator::Not] = 2;
-}
+static map<Operator,int> arities =
+{
+   {Operator::Add          , 2},
+   {Operator::Subtract     , 2},
+   {Operator::Multiply     , 2},
+   {Operator::Divide       , 2},
+   {Operator::Negate       , 1},
+   {Operator::Exponentiate , 2},
+   {Operator::And          , 2},
+   {Operator::Or           , 2},
+   {Operator::Not          , 1}
+};
 
 int precedence(Operator op) {
-    return Precedence::_precedences.value(op);
-}
-
-Arity::Arity() {
-    _arities[Operator::Add] = 2;
-    _arities[Operator::Subtract] = 2;
-    _arities[Operator::Multiply] = 2;
-    _arities[Operator::Divide] = 2;
-    _arities[Operator::Negate] = 1;
-    _arities[Operator::Exponentiate] = 1;
-    _arities[Operator::And] = 2;
-    _arities[Operator::Or] = 2;
-    _arities[Operator::Not] = 1;
+    return precedences.at(op);
 }
 
 int arity(Operator op) {
-    return Arity::_arities.value(op);
+    return arities.at(op);
 }
 
 }

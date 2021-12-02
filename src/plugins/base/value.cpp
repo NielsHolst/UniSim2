@@ -6,29 +6,109 @@
 
 namespace base {
 
+QString Value::asStringApostrophed() const {
+    QString s = as<QString>();
+    return (type() == Type::String) ? "\"" + s + "\"" : s;
+}
 
-void Value::copyValue(const Value &x) {
+void Value::reset() {
     switch(type()) {
-    case Type::Uninitialized: _variant = x._variant; break;
-    case Type::Bool         : changeValue(x.value<bool     >()); break;
-    case Type::Int          : changeValue(x.value<int      >()); break;
-    case Type::Double       : changeValue(x.value<double   >()); break;
-    case Type::String       : changeValue(x.value<QString  >()); break;
-    case Type::Date         : changeValue(x.value<QDate    >()); break;
-    case Type::Time         : changeValue(x.value<QTime    >()); break;
-    case Type::DateTime     : changeValue(x.value<QDateTime>()); break;
-    case Type::BareDate     : changeValue(x.value<BareDate >()); break;
-    case Type::VecBool      : changeValue(x.value<QVector<bool     >>()); break;
-    case Type::VecInt       : changeValue(x.value<QVector<int      >>()); break;
-    case Type::VecDouble    : changeValue(x.value<QVector<double   >>()); break;
-    case Type::VecString    : changeValue(x.value<QVector<QString  >>()); break;
-    case Type::VecDate      : changeValue(x.value<QVector<QDate    >>()); break;
-    case Type::VecTime      : changeValue(x.value<QVector<QTime    >>()); break;
-    case Type::VecDateTime  : changeValue(x.value<QVector<QDateTime>>()); break;
-    case Type::VecBareDate  : changeValue(x.value<QVector<BareDate >>()); break;
+    case Type::Uninitialized: break;
+    case Type::Bool         : changeValue(bool     ()); break;
+    case Type::Int          : changeValue(int      ()); break;
+    case Type::Double       : changeValue(double   ()); break;
+    case Type::String       : changeValue(QString  ()); break;
+    case Type::Date         : changeValue(QDate    ()); break;
+    case Type::Time         : changeValue(QTime    ()); break;
+    case Type::DateTime     : changeValue(QDateTime()); break;
+    case Type::BareDate     : changeValue(BareDate ()); break;
+    case Type::VecBool      : changeValue(vbool      (size())); break;
+    case Type::VecInt       : changeValue(vint       (size())); break;
+    case Type::VecDouble    : changeValue(vdouble    (size())); break;
+    case Type::VecString    : changeValue(vQString   (size())); break;
+    case Type::VecDate      : changeValue(vQDate     (size())); break;
+    case Type::VecTime      : changeValue(vQTime     (size())); break;
+    case Type::VecDateTime  : changeValue(vQDateTime (size())); break;
+    case Type::VecBareDate  : changeValue(vBareDate  (size())); break;
     }
 }
 
+int Value::size() const {
+    switch(type()) {
+    case Type::Uninitialized: break;
+    case Type::VecBool      : return as<vbool     >().size(); break;
+    case Type::VecInt       : return as<vint      >().size(); break;
+    case Type::VecDouble    : return as<vdouble   >().size(); break;
+    case Type::VecString    : return as<vQString  >().size(); break;
+    case Type::VecDate      : return as<vQDate    >().size(); break;
+    case Type::VecTime      : return as<vQTime    >().size(); break;
+    case Type::VecDateTime  : return as<vQDateTime>().size(); break;
+    case Type::VecBareDate  : return as<vBareDate >().size(); break;
+    default: return 1;
+    }
+    return 0;
+}
+
+QString Value::outputFormat() const {
+    switch(type()) {
+    case Type::Date:
+    case Type::VecDate: return "ymd"; break;
+    case Type::Time:
+    case Type::VecTime: return "HMS"; break;
+    case Type::DateTime:
+    case Type::VecDateTime: return "ymdHMS"; break;
+    default: ;
+    }
+    return "NA";
+}
+
+
+void Value::assign(const Value &x) {
+    switch(type()) {
+    case Type::Uninitialized: _variant = x._variant; break;
+    case Type::Bool         : changeValue(x.as<bool     >()); break;
+    case Type::Int          : changeValue(x.as<int      >()); break;
+    case Type::Double       : changeValue(x.as<double   >()); break;
+    case Type::String       : changeValue(x.as<QString  >()); break;
+    case Type::Date         : changeValue(x.as<QDate    >()); break;
+    case Type::Time         : changeValue(x.as<QTime    >()); break;
+    case Type::DateTime     : changeValue(x.as<QDateTime>()); break;
+    case Type::BareDate     : changeValue(x.as<BareDate >()); break;
+    case Type::VecBool      : changeValue(x.as<QVector<bool     >>()); break;
+    case Type::VecInt       : changeValue(x.as<QVector<int      >>()); break;
+    case Type::VecDouble    : changeValue(x.as<QVector<double   >>()); break;
+    case Type::VecString    : changeValue(x.as<QVector<QString  >>()); break;
+    case Type::VecDate      : changeValue(x.as<QVector<QDate    >>()); break;
+    case Type::VecTime      : changeValue(x.as<QVector<QTime    >>()); break;
+    case Type::VecDateTime  : changeValue(x.as<QVector<QDateTime>>()); break;
+    case Type::VecBareDate  : changeValue(x.as<QVector<BareDate >>()); break;
+    }
+}
+
+
+bool Value::operator==(const Value &x) const {
+    if (type() == x.type())
+        switch(type()) {
+        case Type::Uninitialized: return true;
+        case Type::Bool         : return as<bool      >() == x.as<bool      >();
+        case Type::Int          : return as<int       >() == x.as<int       >();
+        case Type::Double       : return as<double    >() == x.as<double    >();
+        case Type::String       : return as<QString   >() == x.as<QString   >();
+        case Type::Date         : return as<QDate     >() == x.as<QDate     >();
+        case Type::Time         : return as<QTime     >() == x.as<QTime     >();
+        case Type::DateTime     : return as<QDateTime >() == x.as<QDateTime >();
+        case Type::BareDate     : return as<BareDate  >() == x.as<BareDate  >();
+        case Type::VecBool      : return as<vbool     >() == x.as<vbool     >();
+        case Type::VecInt       : return as<vint      >() == x.as<vint      >();
+        case Type::VecDouble    : return as<vdouble   >() == x.as<vdouble   >();
+        case Type::VecString    : return as<vQString  >() == x.as<vQString  >();
+        case Type::VecDate      : return as<vQDate    >() == x.as<vQDate    >();
+        case Type::VecTime      : return as<vQTime    >() == x.as<vQTime    >();
+        case Type::VecDateTime  : return as<vQDateTime>() == x.as<vQDateTime>();
+        case Type::VecBareDate  : return as<vQDate    >() == x.as<vQDate    >();
+        }
+    return false;
+}
 
 #define VALUE_PTR(cppType, valueType) \
 template <> const cppType* Value::valuePtr() const { \

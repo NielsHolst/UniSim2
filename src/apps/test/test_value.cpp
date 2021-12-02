@@ -32,8 +32,8 @@ void TestValue::testInitializeByValue() {
     b.initialize(3.12);
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 17);
-    QCOMPARE(b.value<double>(), 3.12);
+    QCOMPARE(a.as<int>(), 17);
+    QCOMPARE(b.as<double>(), 3.12);
 
     const int    *x = a.valuePtr<int>();
     const double *y = b.valuePtr<double>();
@@ -42,8 +42,8 @@ void TestValue::testInitializeByValue() {
     b.changeValue(17);
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 3);
-    QCOMPARE(b.value<double>(), 17.0);
+    QCOMPARE(a.as<int>(), 3);
+    QCOMPARE(b.as<double>(), 17.0);
 
     QCOMPARE(*x, 3);
     QCOMPARE(*y, 17.0);
@@ -58,8 +58,8 @@ void TestValue::testInitializeByPointer() {
     b.initialize(&k);
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 17);
-    QCOMPARE(b.value<double>(), 3.12);
+    QCOMPARE(a.as<int>(), 17);
+    QCOMPARE(b.as<double>(), 3.12);
 
     const int    *x = a.valuePtr<int>();
     const double *y = b.valuePtr<double>();
@@ -70,8 +70,8 @@ void TestValue::testInitializeByPointer() {
     QCOMPARE(b.type(), Value::Type::Double);
     QCOMPARE(i, 3);
     QCOMPARE(k, 17.0);
-    QCOMPARE(a.value<int>(), 3);
-    QCOMPARE(b.value<double>(), 17.0);
+    QCOMPARE(a.as<int>(), 3);
+    QCOMPARE(b.as<double>(), 17.0);
 
     QCOMPARE(*x, 3);
     QCOMPARE(*y, 17.0);
@@ -83,8 +83,8 @@ void TestValue::testAssignmentByValue() {
     b = 3.12;
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 17);
-    QCOMPARE(b.value<double>(), 3.12);
+    QCOMPARE(a.as<int>(), 17);
+    QCOMPARE(b.as<double>(), 3.12);
 }
 
 void TestValue::testAssignmentByPointer() {
@@ -95,23 +95,23 @@ void TestValue::testAssignmentByPointer() {
     b = &k;
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 17);
-    QCOMPARE(b.value<double>(), 3.12);
+    QCOMPARE(a.as<int>(), 17);
+    QCOMPARE(b.as<double>(), 3.12);
 }
 
 void TestValue::testAssignmentTwice() {
     Value a;
     a = 117;
-    QCOMPARE(a.value<int>(), 117);
+    QCOMPARE(a.as<int>(), 117);
     a.changeValue(118);
-    QCOMPARE(a.value<int>(), 118);
+    QCOMPARE(a.as<int>(), 118);
     a = 119;
-    QCOMPARE(a.value<int>(), 119);
+    QCOMPARE(a.as<int>(), 119);
 
     // Changing a Value by assignment does not thange the type!
     a = 3.12;
     QCOMPARE(a.type(), Value::Type::Int);
-    QCOMPARE(a.value<int>(), 3);
+    QCOMPARE(a.as<int>(), 3);
 }
 
 void TestValue::testAssignmentToUninitialized() {
@@ -120,8 +120,8 @@ void TestValue::testAssignmentToUninitialized() {
     b = a;
     QCOMPARE(a.type(), Value::Type::String);
     QCOMPARE(b.type(), Value::Type::String);
-    QCOMPARE(a.value<QString>(), QString("abc"));
-    QCOMPARE(b.value<QString>(), QString("abc"));
+    QCOMPARE(a.as<QString>(), QString("abc"));
+    QCOMPARE(b.as<QString>(), QString("abc"));
 }
 
 void TestValue::testBool() {
@@ -133,17 +133,17 @@ void TestValue::testBool() {
         val.initialize(&x);
 
         val.changeValue(8);
-        QCOMPARE(val.value<bool>(), true);
+        QCOMPARE(val.as<bool>(), true);
         QCOMPARE(x, true);
-        QCOMPARE(val.value<int>(), 1);
-        QCOMPARE(val.value<QString>(), QString("1"));
+        QCOMPARE(val.as<int>(), 1);
+        QCOMPARE(val.as<QString>(), QString("1"));
 
         val.changeValue(QString());
-        QCOMPARE(val.value<bool>(), false);
+        QCOMPARE(val.as<bool>(), false);
         QCOMPARE(x, false);
 
         val.changeValue(QString("abc"));
-        QCOMPARE(val.value<bool>(), true);
+        QCOMPARE(val.as<bool>(), true);
         QCOMPARE(x, true);
 
         y = val.valuePtr<bool>();
@@ -158,7 +158,7 @@ void TestValue::testInt() {
 
     int x = 117;
     val.initialize(&x);
-    QCOMPARE(val.value<int>(), 117);
+    QCOMPARE(val.as<int>(), 117);
 
     const int *y = val.valuePtr<int>();
     QCOMPARE(*y, 117);
@@ -171,7 +171,7 @@ void TestValue::testInt() {
     Value val2;
     val.initialize(42);
     QCOMPARE(val.type(), Value::Type::Int);
-    QCOMPARE(val.value<int>(), 42);
+    QCOMPARE(val.as<int>(), 42);
 
     Value a, b;
 
@@ -181,6 +181,6 @@ void TestValue::testInt() {
     b.initialize(&v);
     QCOMPARE(a.type(), Value::Type::Int);
     QCOMPARE(b.type(), Value::Type::Double);
-    QCOMPARE(a.value<int>(), 17);
-    QCOMPARE(b.value<double>(), 3.12);
+    QCOMPARE(a.as<int>(), 17);
+    QCOMPARE(b.as<double>(), 3.12);
 }

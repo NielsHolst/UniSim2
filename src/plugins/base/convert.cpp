@@ -4,6 +4,7 @@
 */
 #include <string>
 #include <boost/spirit/home/x3.hpp>
+#include <QVector>
 #include "convert.h"
 
 namespace x3 = boost::spirit::x3;

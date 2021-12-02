@@ -94,8 +94,14 @@ public:
     template <class T> const T* valuePtr() const;
     // Return pointer in native type T
 
-    template <class U> U value() const;
+    template <class U> U as() const;
     // Get value in compatible type U
+
+    QString asStringApostrophed() const;
+    // Get value converted to string; is value is a string it will be apostrophed
+
+    void reset();
+    // Reset value to default according to its type
 
     Type type() const
     // Return the value's type
@@ -109,12 +115,19 @@ public:
         return (type() >= Type::VecBool);
     }
 
+    int size() const;
+    // Size of vector, or 1 if scalar
+
     QString typeName() const;
     // Return the value's type name
 
-    void copyValue(const Value &x);
-    Value(const Value &x)            { copyValue(x); }
-    Value& operator=(const Value &x) { copyValue(x);  return *this; }
+    QString outputFormat() const;
+    // Format code for value in ouput file
+
+    Value(const Value &x)            { assign(x); }
+    Value& operator=(const Value &x) { assign(x);  return *this; }
+    bool operator==(const Value &x) const;
+    bool operator!=(const Value &x) const  { return !(*this==x); }
     // Copy from another Value but keep my own type
 
 private:
@@ -138,6 +151,7 @@ private:
         ValueTyped<QVector<BareDate>>
     >
     _variant; // Starts out uninitialised (= monostate)
+    void assign(const Value &x);
 };
 
 template <class U> void Value::changeValue(U value)
@@ -215,7 +229,7 @@ template <> const QVector<QTime>*     Value::valuePtr() const;
 template <> const QVector<QDateTime>* Value::valuePtr() const;
 template <> const QVector<BareDate>*  Value::valuePtr() const;
 
-template <class U> U Value::value() const
+template <class U> U Value::as() const
 {
     switch(type()) {
     case Type::Uninitialized:

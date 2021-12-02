@@ -306,57 +306,57 @@ Value add(const Value &a, const Value &b) {
         break;
     case Type::Int:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<int>() + b.value<int>());
-        case Type::Double  : return Value(a.value<int>() + b.value<double>());
-        case Type::Date    : return Value(a.value<int>() + b.value<QDate>());
-        case Type::Time    : return Value(a.value<int>() + b.value<QTime>());
-        case Type::DateTime: return Value(a.value<int>() + b.value<QDateTime>());
-        case Type::BareDate: return Value(a.value<int>() + b.value<BareDate>());
+        case Type::Int     : return Value(a.as<int>() + b.as<int>());
+        case Type::Double  : return Value(a.as<int>() + b.as<double>());
+        case Type::Date    : return Value(a.as<int>() + b.as<QDate>());
+        case Type::Time    : return Value(a.as<int>() + b.as<QTime>());
+        case Type::DateTime: return Value(a.as<int>() + b.as<QDateTime>());
+        case Type::BareDate: return Value(a.as<int>() + b.as<BareDate>());
         default            : ;
         }
         break;
     case Type::Double:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<double>() + b.value<int>());
-        case Type::Double  : return Value(a.value<double>() + b.value<double>());
-        case Type::Date    : return Value(a.value<double>() + b.value<QDate>());
-        case Type::Time    : return Value(a.value<double>() + b.value<QTime>());
-        case Type::DateTime: return Value(a.value<double>() + b.value<QDateTime>());
-        case Type::BareDate: return Value(a.value<double>() + b.value<BareDate>());
+        case Type::Int     : return Value(a.as<double>() + b.as<int>());
+        case Type::Double  : return Value(a.as<double>() + b.as<double>());
+        case Type::Date    : return Value(a.as<double>() + b.as<QDate>());
+        case Type::Time    : return Value(a.as<double>() + b.as<QTime>());
+        case Type::DateTime: return Value(a.as<double>() + b.as<QDateTime>());
+        case Type::BareDate: return Value(a.as<double>() + b.as<BareDate>());
         default            : ;
         }
         break;
     case Type::String:
         switch (b.type()) {
-        case Type::String  : return Value(a.value<QString>() + b.value<QString>());
+        case Type::String  : return Value(a.as<QString>() + b.as<QString>());
         default            : ;
         }
         break;
     case Type::Date:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QDate>() + b.value<int>());
-        case Type::Double  : return Value(a.value<QDate>() + b.value<double>());
+        case Type::Int     : return Value(a.as<QDate>() + b.as<int>());
+        case Type::Double  : return Value(a.as<QDate>() + b.as<double>());
         default            : ;
         }
         break;
     case Type::Time:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QTime>() + b.value<int>());
-        case Type::Double  : return Value(a.value<QTime>() + b.value<double>());
+        case Type::Int     : return Value(a.as<QTime>() + b.as<int>());
+        case Type::Double  : return Value(a.as<QTime>() + b.as<double>());
         default            : ;
         }
         break;
     case Type::DateTime:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QDateTime>() + b.value<int>());
-        case Type::Double  : return Value(a.value<QDateTime>() + b.value<double>());
+        case Type::Int     : return Value(a.as<QDateTime>() + b.as<int>());
+        case Type::Double  : return Value(a.as<QDateTime>() + b.as<double>());
         default            : ;
         }
         break;
     case Type::BareDate:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<BareDate>() + b.value<int>());
-        case Type::Double  : return Value(a.value<BareDate>() + b.value<double>());
+        case Type::Int     : return Value(a.as<BareDate>() + b.as<int>());
+        case Type::Double  : return Value(a.as<BareDate>() + b.as<double>());
         default            : ;
         }
         break;
@@ -367,80 +367,80 @@ Value add(const Value &a, const Value &b) {
         break;
     case Type::VecInt:
         switch (b.type()) {
-        case Type::Int     : return add_vector_scalar<vint>      (a.value<vint>(), b.value<int>());
-        case Type::Double  : return add_vector_scalar<vdouble>   (a.value<vint>(), b.value<double>());
-        case Type::Date    : return add_vector_scalar<vQDate>    (a.value<vint>(), b.value<QDate>());
-        case Type::Time    : return add_vector_scalar<vQTime>    (a.value<vint>(), b.value<QTime>());
-        case Type::DateTime: return add_vector_scalar<vQDateTime>(a.value<vint>(), b.value<QDateTime>());
-        case Type::BareDate: return add_vector_scalar<vBareDate> (a.value<vint>(), b.value<BareDate>());
+        case Type::Int     : return add_vector_scalar<vint>      (a.as<vint>(), b.as<int>());
+        case Type::Double  : return add_vector_scalar<vdouble>   (a.as<vint>(), b.as<double>());
+        case Type::Date    : return add_vector_scalar<vQDate>    (a.as<vint>(), b.as<QDate>());
+        case Type::Time    : return add_vector_scalar<vQTime>    (a.as<vint>(), b.as<QTime>());
+        case Type::DateTime: return add_vector_scalar<vQDateTime>(a.as<vint>(), b.as<QDateTime>());
+        case Type::BareDate: return add_vector_scalar<vBareDate> (a.as<vint>(), b.as<BareDate>());
 
-        case Type::VecInt     : return add_vector_vector<vint>      (a.value<vint>(), b.value<vint>());
-        case Type::VecDouble  : return add_vector_vector<vdouble>   (a.value<vint>(), b.value<vdouble>());
-        case Type::VecDate    : return add_vector_vector<vQDate>    (a.value<vint>(), b.value<vQDate>());
-        case Type::VecTime    : return add_vector_vector<vQTime>    (a.value<vint>(), b.value<vQTime>());
-        case Type::VecDateTime: return add_vector_vector<vQDateTime>(a.value<vint>(), b.value<vQDateTime>());
-        case Type::VecBareDate: return add_vector_vector<vBareDate> (a.value<vint>(), b.value<vBareDate>());
+        case Type::VecInt     : return add_vector_vector<vint>      (a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return add_vector_vector<vdouble>   (a.as<vint>(), b.as<vdouble>());
+        case Type::VecDate    : return add_vector_vector<vQDate>    (a.as<vint>(), b.as<vQDate>());
+        case Type::VecTime    : return add_vector_vector<vQTime>    (a.as<vint>(), b.as<vQTime>());
+        case Type::VecDateTime: return add_vector_vector<vQDateTime>(a.as<vint>(), b.as<vQDateTime>());
+        case Type::VecBareDate: return add_vector_vector<vBareDate> (a.as<vint>(), b.as<vBareDate>());
         default               : ;
         }
         break;
     case Type::VecDouble:
         switch (b.type()) {
-        case Type::Int     : return add_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<int>());
-        case Type::Double  : return add_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<double>());
-        case Type::Date    : return add_vector_scalar<vQDate>    (a.value<vdouble>(), b.value<QDate>());
-        case Type::Time    : return add_vector_scalar<vQTime>    (a.value<vdouble>(), b.value<QTime>());
-        case Type::DateTime: return add_vector_scalar<vQDateTime>(a.value<vdouble>(), b.value<QDateTime>());
-        case Type::BareDate: return add_vector_scalar<vBareDate> (a.value<vdouble>(), b.value<BareDate>());
+        case Type::Int     : return add_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<int>());
+        case Type::Double  : return add_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<double>());
+        case Type::Date    : return add_vector_scalar<vQDate>    (a.as<vdouble>(), b.as<QDate>());
+        case Type::Time    : return add_vector_scalar<vQTime>    (a.as<vdouble>(), b.as<QTime>());
+        case Type::DateTime: return add_vector_scalar<vQDateTime>(a.as<vdouble>(), b.as<QDateTime>());
+        case Type::BareDate: return add_vector_scalar<vBareDate> (a.as<vdouble>(), b.as<BareDate>());
 
-        case Type::VecInt     : return add_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vint>());
-        case Type::VecDouble  : return add_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vdouble>());
-        case Type::VecDate    : return add_vector_vector<vQDate>    (a.value<vdouble>(), b.value<vQDate>());
-        case Type::VecTime    : return add_vector_vector<vQTime>    (a.value<vdouble>(), b.value<vQTime>());
-        case Type::VecDateTime: return add_vector_vector<vQDateTime>(a.value<vdouble>(), b.value<vQDateTime>());
-        case Type::VecBareDate: return add_vector_vector<vBareDate> (a.value<vdouble>(), b.value<vBareDate>());
+        case Type::VecInt     : return add_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return add_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vdouble>());
+        case Type::VecDate    : return add_vector_vector<vQDate>    (a.as<vdouble>(), b.as<vQDate>());
+        case Type::VecTime    : return add_vector_vector<vQTime>    (a.as<vdouble>(), b.as<vQTime>());
+        case Type::VecDateTime: return add_vector_vector<vQDateTime>(a.as<vdouble>(), b.as<vQDateTime>());
+        case Type::VecBareDate: return add_vector_vector<vBareDate> (a.as<vdouble>(), b.as<vBareDate>());
         default               : ;
         }
         break;
     case Type::VecString:
         switch (b.type()) {
-        case Type::String    : return add_vector_scalar<vQString> (a.value<vQString>(), b.value< QString>());
-        case Type::VecString : return add_vector_vector<vQString> (a.value<vQString>(), b.value<vQString>());
+        case Type::String    : return add_vector_scalar<vQString> (a.as<vQString>(), b.as< QString>());
+        case Type::VecString : return add_vector_vector<vQString> (a.as<vQString>(), b.as<vQString>());
         default              : ;
         }
         break;
     case Type::VecDate:
         switch (b.type()) {
-        case Type::Int       : return add_vector_scalar<vQDate> (a.value<vQDate>(), b.value<int>());
-        case Type::Double    : return add_vector_scalar<vQDate> (a.value<vQDate>(), b.value<double>());
-        case Type::VecInt    : return add_vector_vector<vQDate> (a.value<vQDate>(), b.value<vint>());
-        case Type::VecDouble : return add_vector_vector<vQDate> (a.value<vQDate>(), b.value<vdouble>());
+        case Type::Int       : return add_vector_scalar<vQDate> (a.as<vQDate>(), b.as<int>());
+        case Type::Double    : return add_vector_scalar<vQDate> (a.as<vQDate>(), b.as<double>());
+        case Type::VecInt    : return add_vector_vector<vQDate> (a.as<vQDate>(), b.as<vint>());
+        case Type::VecDouble : return add_vector_vector<vQDate> (a.as<vQDate>(), b.as<vdouble>());
         default              : ;
         }
         break;
     case Type::VecTime:
         switch (b.type()) {
-        case Type::Int       : return add_vector_scalar<vQTime> (a.value<vQTime>(), b.value<int>());
-        case Type::Double    : return add_vector_scalar<vQTime> (a.value<vQTime>(), b.value<double>());
-        case Type::VecInt    : return add_vector_vector<vQTime> (a.value<vQTime>(), b.value<vint>());
-        case Type::VecDouble : return add_vector_vector<vQTime> (a.value<vQTime>(), b.value<vdouble>());
+        case Type::Int       : return add_vector_scalar<vQTime> (a.as<vQTime>(), b.as<int>());
+        case Type::Double    : return add_vector_scalar<vQTime> (a.as<vQTime>(), b.as<double>());
+        case Type::VecInt    : return add_vector_vector<vQTime> (a.as<vQTime>(), b.as<vint>());
+        case Type::VecDouble : return add_vector_vector<vQTime> (a.as<vQTime>(), b.as<vdouble>());
         default            : ;
         }
         break;
     case Type::VecDateTime:
         switch (b.type()) {
-        case Type::Int       : return add_vector_scalar<vQDateTime> (a.value<vQDateTime>(), b.value<int>());
-        case Type::Double    : return add_vector_scalar<vQDateTime> (a.value<vQDateTime>(), b.value<double>());
-        case Type::VecInt    : return add_vector_vector<vQDateTime> (a.value<vQDateTime>(), b.value<vint>());
-        case Type::VecDouble : return add_vector_vector<vQDateTime> (a.value<vQDateTime>(), b.value<vdouble>());
+        case Type::Int       : return add_vector_scalar<vQDateTime> (a.as<vQDateTime>(), b.as<int>());
+        case Type::Double    : return add_vector_scalar<vQDateTime> (a.as<vQDateTime>(), b.as<double>());
+        case Type::VecInt    : return add_vector_vector<vQDateTime> (a.as<vQDateTime>(), b.as<vint>());
+        case Type::VecDouble : return add_vector_vector<vQDateTime> (a.as<vQDateTime>(), b.as<vdouble>());
         default              : ;
         }
         break;
     case Type::VecBareDate:
         switch (b.type()) {
-        case Type::Int       : return add_vector_scalar<vBareDate> (a.value<vBareDate>(), b.value<int>());
-        case Type::Double    : return add_vector_scalar<vBareDate> (a.value<vBareDate>(), b.value<double>());
-        case Type::VecInt    : return add_vector_vector<vBareDate> (a.value<vBareDate>(), b.value<vint>());
-        case Type::VecDouble : return add_vector_vector<vBareDate> (a.value<vBareDate>(), b.value<vdouble>());
+        case Type::Int       : return add_vector_scalar<vBareDate> (a.as<vBareDate>(), b.as<int>());
+        case Type::Double    : return add_vector_scalar<vBareDate> (a.as<vBareDate>(), b.as<double>());
+        case Type::VecInt    : return add_vector_vector<vBareDate> (a.as<vBareDate>(), b.as<vint>());
+        case Type::VecDouble : return add_vector_vector<vBareDate> (a.as<vBareDate>(), b.as<vdouble>());
         default              : ;
         }
         break;
@@ -467,15 +467,15 @@ Value subtract(const Value &a, const Value &b) {
         break;
     case Type::Int:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<int>() - b.value<int>());
-        case Type::Double  : return Value(a.value<int>() - b.value<double>());
+        case Type::Int     : return Value(a.as<int>() - b.as<int>());
+        case Type::Double  : return Value(a.as<int>() - b.as<double>());
         default            : ;
         }
         break;
     case Type::Double:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<double>() - b.value<int>());
-        case Type::Double  : return Value(a.value<double>() - b.value<double>());
+        case Type::Int     : return Value(a.as<double>() - b.as<int>());
+        case Type::Double  : return Value(a.as<double>() - b.as<double>());
         default            : ;
         }
         break;
@@ -483,33 +483,33 @@ Value subtract(const Value &a, const Value &b) {
         break;
     case Type::Date:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QDate>() - b.value<int>());
-        case Type::Double  : return Value(a.value<QDate>() - b.value<double>());
-        case Type::Date    : return Value(a.value<QDate>() - b.value<QDate>());
+        case Type::Int     : return Value(a.as<QDate>() - b.as<int>());
+        case Type::Double  : return Value(a.as<QDate>() - b.as<double>());
+        case Type::Date    : return Value(a.as<QDate>() - b.as<QDate>());
         default            : ;
         }
         break;
     case Type::Time:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QTime>() - b.value<int>());
-        case Type::Double  : return Value(a.value<QTime>() - b.value<double>());
-        case Type::Time    : return Value(a.value<QTime>() - b.value<QTime>());
+        case Type::Int     : return Value(a.as<QTime>() - b.as<int>());
+        case Type::Double  : return Value(a.as<QTime>() - b.as<double>());
+        case Type::Time    : return Value(a.as<QTime>() - b.as<QTime>());
         default            : ;
         }
         break;
     case Type::DateTime:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<QDateTime>() - b.value<int>());
-        case Type::Double  : return Value(a.value<QDateTime>() - b.value<double>());
-        case Type::DateTime: return Value(a.value<QDateTime>() - b.value<QDateTime>());
+        case Type::Int     : return Value(a.as<QDateTime>() - b.as<int>());
+        case Type::Double  : return Value(a.as<QDateTime>() - b.as<double>());
+        case Type::DateTime: return Value(a.as<QDateTime>() - b.as<QDateTime>());
         default            : ;
         }
         break;
     case Type::BareDate:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<BareDate>() - b.value<int>());
-        case Type::Double  : return Value(a.value<BareDate>() - b.value<double>());
-        case Type::Date    : return Value(a.value<BareDate>() - b.value<BareDate>());
+        case Type::Int     : return Value(a.as<BareDate>() - b.as<int>());
+        case Type::Double  : return Value(a.as<BareDate>() - b.as<double>());
+        case Type::Date    : return Value(a.as<BareDate>() - b.as<BareDate>());
         default            : ;
         }
         break;
@@ -520,19 +520,19 @@ Value subtract(const Value &a, const Value &b) {
         break;
     case Type::VecInt:
         switch (b.type()) {
-        case Type::Int        : return subtract_vector_scalar<vint>    (a.value<vint>(), b.value<int>());
-        case Type::Double     : return subtract_vector_scalar<vdouble> (a.value<vint>(), b.value<double>());
-        case Type::VecInt     : return subtract_vector_vector<vint>    (a.value<vint>(), b.value<vint>());
-        case Type::VecDouble  : return subtract_vector_vector<vdouble> (a.value<vint>(), b.value<vdouble>());
+        case Type::Int        : return subtract_vector_scalar<vint>    (a.as<vint>(), b.as<int>());
+        case Type::Double     : return subtract_vector_scalar<vdouble> (a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return subtract_vector_vector<vint>    (a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return subtract_vector_vector<vdouble> (a.as<vint>(), b.as<vdouble>());
         default               : ;
         }
         break;
     case Type::VecDouble:
         switch (b.type()) {
-        case Type::Int        : return subtract_vector_scalar<vdouble> (a.value<vdouble>(), b.value<int>());
-        case Type::Double     : return subtract_vector_scalar<vdouble> (a.value<vdouble>(), b.value<double>());
-        case Type::VecInt     : return subtract_vector_vector<vdouble> (a.value<vdouble>(), b.value<vint>());
-        case Type::VecDouble  : return subtract_vector_vector<vdouble> (a.value<vdouble>(), b.value<vdouble>());
+        case Type::Int        : return subtract_vector_scalar<vdouble> (a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return subtract_vector_scalar<vdouble> (a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return subtract_vector_vector<vdouble> (a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return subtract_vector_vector<vdouble> (a.as<vdouble>(), b.as<vdouble>());
         default               : ;
         }
         break;
@@ -540,37 +540,37 @@ Value subtract(const Value &a, const Value &b) {
         break;
     case Type::VecDate:
         switch (b.type()) {
-        case Type::Int       : return subtract_vector_scalar<vQDate> (a.value<vQDate>(), b.value<int>());
-        case Type::Double    : return subtract_vector_scalar<vQDate> (a.value<vQDate>(), b.value<double>());
-        case Type::VecInt    : return subtract_vector_vector<vQDate> (a.value<vQDate>(), b.value<vint>());
-        case Type::VecDouble : return subtract_vector_vector<vQDate> (a.value<vQDate>(), b.value<vdouble>());
+        case Type::Int       : return subtract_vector_scalar<vQDate> (a.as<vQDate>(), b.as<int>());
+        case Type::Double    : return subtract_vector_scalar<vQDate> (a.as<vQDate>(), b.as<double>());
+        case Type::VecInt    : return subtract_vector_vector<vQDate> (a.as<vQDate>(), b.as<vint>());
+        case Type::VecDouble : return subtract_vector_vector<vQDate> (a.as<vQDate>(), b.as<vdouble>());
         default              : ;
         }
         break;
     case Type::VecTime:
         switch (b.type()) {
-        case Type::Int       : return subtract_vector_scalar<vQTime> (a.value<vQTime>(), b.value<int>());
-        case Type::Double    : return subtract_vector_scalar<vQTime> (a.value<vQTime>(), b.value<double>());
-        case Type::VecInt    : return subtract_vector_vector<vQTime> (a.value<vQTime>(), b.value<vint>());
-        case Type::VecDouble : return subtract_vector_vector<vQTime> (a.value<vQTime>(), b.value<vdouble>());
+        case Type::Int       : return subtract_vector_scalar<vQTime> (a.as<vQTime>(), b.as<int>());
+        case Type::Double    : return subtract_vector_scalar<vQTime> (a.as<vQTime>(), b.as<double>());
+        case Type::VecInt    : return subtract_vector_vector<vQTime> (a.as<vQTime>(), b.as<vint>());
+        case Type::VecDouble : return subtract_vector_vector<vQTime> (a.as<vQTime>(), b.as<vdouble>());
         default            : ;
         }
         break;
     case Type::VecDateTime:
         switch (b.type()) {
-        case Type::Int       : return subtract_vector_scalar<vQDateTime> (a.value<vQDateTime>(), b.value<int>());
-        case Type::Double    : return subtract_vector_scalar<vQDateTime> (a.value<vQDateTime>(), b.value<double>());
-        case Type::VecInt    : return subtract_vector_vector<vQDateTime> (a.value<vQDateTime>(), b.value<vint>());
-        case Type::VecDouble : return subtract_vector_vector<vQDateTime> (a.value<vQDateTime>(), b.value<vdouble>());
+        case Type::Int       : return subtract_vector_scalar<vQDateTime> (a.as<vQDateTime>(), b.as<int>());
+        case Type::Double    : return subtract_vector_scalar<vQDateTime> (a.as<vQDateTime>(), b.as<double>());
+        case Type::VecInt    : return subtract_vector_vector<vQDateTime> (a.as<vQDateTime>(), b.as<vint>());
+        case Type::VecDouble : return subtract_vector_vector<vQDateTime> (a.as<vQDateTime>(), b.as<vdouble>());
         default              : ;
         }
         break;
     case Type::VecBareDate:
         switch (b.type()) {
-        case Type::Int       : return subtract_vector_scalar<vBareDate> (a.value<vBareDate>(), b.value<int>());
-        case Type::Double    : return subtract_vector_scalar<vBareDate> (a.value<vBareDate>(), b.value<double>());
-        case Type::VecInt    : return subtract_vector_vector<vBareDate> (a.value<vBareDate>(), b.value<vint>());
-        case Type::VecDouble : return subtract_vector_vector<vBareDate> (a.value<vBareDate>(), b.value<vdouble>());
+        case Type::Int       : return subtract_vector_scalar<vBareDate> (a.as<vBareDate>(), b.as<int>());
+        case Type::Double    : return subtract_vector_scalar<vBareDate> (a.as<vBareDate>(), b.as<double>());
+        case Type::VecInt    : return subtract_vector_vector<vBareDate> (a.as<vBareDate>(), b.as<vint>());
+        case Type::VecDouble : return subtract_vector_vector<vBareDate> (a.as<vBareDate>(), b.as<vdouble>());
         default              : ;
         }
         break;
@@ -592,33 +592,33 @@ Value multiply(const Value &a, const Value &b) {
     switch (a.type()) {
     case Type::Int:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<int>() * b.value<int>());
-        case Type::Double  : return Value(a.value<int>() * b.value<double>());
+        case Type::Int     : return Value(a.as<int>() * b.as<int>());
+        case Type::Double  : return Value(a.as<int>() * b.as<double>());
         default            : ;
         }
         break;
     case Type::Double:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<double>() * b.value<int>());
-        case Type::Double  : return Value(a.value<double>() * b.value<double>());
+        case Type::Int     : return Value(a.as<double>() * b.as<int>());
+        case Type::Double  : return Value(a.as<double>() * b.as<double>());
         default            : ;
         }
         break;
     case Type::VecInt:
         switch (b.type()) {
-        case Type::Int        : return multiply_vector_scalar<vint>      (a.value<vint>(), b.value<int>());
-        case Type::Double     : return multiply_vector_scalar<vdouble>   (a.value<vint>(), b.value<double>());
-        case Type::VecInt     : return multiply_vector_vector<vint>      (a.value<vint>(), b.value<vint>());
-        case Type::VecDouble  : return multiply_vector_vector<vdouble>   (a.value<vint>(), b.value<vdouble>());
+        case Type::Int        : return multiply_vector_scalar<vint>      (a.as<vint>(), b.as<int>());
+        case Type::Double     : return multiply_vector_scalar<vdouble>   (a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return multiply_vector_vector<vint>      (a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return multiply_vector_vector<vdouble>   (a.as<vint>(), b.as<vdouble>());
         default               : ;
         }
         break;
     case Type::VecDouble:
         switch (b.type()) {
-        case Type::Int        : return multiply_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<int>());
-        case Type::Double     : return multiply_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<double>());
-        case Type::VecInt     : return multiply_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vint>());
-        case Type::VecDouble  : return multiply_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vdouble>());
+        case Type::Int        : return multiply_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return multiply_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return multiply_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return multiply_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vdouble>());
         default               : ;
         }
         break;
@@ -642,33 +642,33 @@ Value divide(const Value &a, const Value &b) {
     switch (a.type()) {
     case Type::Int:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<int>() / b.value<int>());
-        case Type::Double  : return Value(a.value<int>() / b.value<double>());
+        case Type::Int     : return Value(a.as<int>() / b.as<int>());
+        case Type::Double  : return Value(a.as<int>() / b.as<double>());
         default            : ;
         }
         break;
     case Type::Double:
         switch (b.type()) {
-        case Type::Int     : return Value(a.value<double>() / b.value<int>());
-        case Type::Double  : return Value(a.value<double>() / b.value<double>());
+        case Type::Int     : return Value(a.as<double>() / b.as<int>());
+        case Type::Double  : return Value(a.as<double>() / b.as<double>());
         default            : ;
         }
         break;
     case Type::VecInt:
         switch (b.type()) {
-        case Type::Int        : return divide_vector_scalar<vint>      (a.value<vint>(), b.value<int>());
-        case Type::Double     : return divide_vector_scalar<vdouble>   (a.value<vint>(), b.value<double>());
-        case Type::VecInt     : return divide_vector_vector<vint>      (a.value<vint>(), b.value<vint>());
-        case Type::VecDouble  : return divide_vector_vector<vdouble>   (a.value<vint>(), b.value<vdouble>());
+        case Type::Int        : return divide_vector_scalar<vint>      (a.as<vint>(), b.as<int>());
+        case Type::Double     : return divide_vector_scalar<vdouble>   (a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return divide_vector_vector<vint>      (a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return divide_vector_vector<vdouble>   (a.as<vint>(), b.as<vdouble>());
         default               : ;
         }
         break;
     case Type::VecDouble:
         switch (b.type()) {
-        case Type::Int        : return divide_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<int>());
-        case Type::Double     : return divide_vector_scalar<vdouble>   (a.value<vdouble>(), b.value<double>());
-        case Type::VecInt     : return divide_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vint>());
-        case Type::VecDouble  : return divide_vector_vector<vdouble>   (a.value<vdouble>(), b.value<vdouble>());
+        case Type::Int        : return divide_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return divide_vector_scalar<vdouble>   (a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return divide_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return divide_vector_vector<vdouble>   (a.as<vdouble>(), b.as<vdouble>());
         default               : ;
         }
         break;
@@ -693,33 +693,33 @@ Value exponentiate(const Value &a, const Value &b) {
     switch (a.type()) {
     case Type::Int:
         switch (b.type()) {
-        case Type::Int     : return Value(ipow(a.value<int>(), b.value<int>()));
-        case Type::Double  : return Value( pow(a.value<int>(), b.value<double>()));
+        case Type::Int     : return Value(ipow(a.as<int>(), b.as<int>()));
+        case Type::Double  : return Value( pow(a.as<int>(), b.as<double>()));
         default            : ;
         }
         break;
     case Type::Double:
         switch (b.type()) {
-        case Type::Int     : return Value(pow(a.value<double>(), b.value<int>()));
-        case Type::Double  : return Value(pow(a.value<double>(), b.value<double>()));
+        case Type::Int     : return Value(pow(a.as<double>(), b.as<int>()));
+        case Type::Double  : return Value(pow(a.as<double>(), b.as<double>()));
         default            : ;
         }
         break;
     case Type::VecInt:
         switch (b.type()) {
-        case Type::Int        : return exp_vector_scalar<vint>    (a.value<vint>(), b.value<int>());
-        case Type::Double     : return exp_vector_scalar<vdouble> (a.value<vint>(), b.value<double>());
-        case Type::VecInt     : return exp_vector_vector<vint>    (a.value<vint>(), b.value<vint>());
-        case Type::VecDouble  : return exp_vector_vector<vdouble> (a.value<vint>(), b.value<vdouble>());
+        case Type::Int        : return exp_vector_scalar<vint>    (a.as<vint>(), b.as<int>());
+        case Type::Double     : return exp_vector_scalar<vdouble> (a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return exp_vector_vector<vint>    (a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return exp_vector_vector<vdouble> (a.as<vint>(), b.as<vdouble>());
         default               : ;
         }
         break;
     case Type::VecDouble:
         switch (b.type()) {
-        case Type::Int        : return exp_vector_scalar<vdouble> (a.value<vdouble>(), b.value<int>());
-        case Type::Double     : return exp_vector_scalar<vdouble> (a.value<vdouble>(), b.value<double>());
-        case Type::VecInt     : return exp_vector_vector<vdouble> (a.value<vdouble>(), b.value<vint>());
-        case Type::VecDouble  : return exp_vector_vector<vdouble> (a.value<vdouble>(), b.value<vdouble>());
+        case Type::Int        : return exp_vector_scalar<vdouble> (a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return exp_vector_scalar<vdouble> (a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return exp_vector_vector<vdouble> (a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return exp_vector_vector<vdouble> (a.as<vdouble>(), b.as<vdouble>());
         default               : ;
         }
         break;
@@ -739,15 +739,15 @@ Value and_(const Value &a, const Value &b) {
     switch (a.type()) {
     case Type::Bool:
         switch (b.type()) {
-        case Type::Bool     : return a.value<bool>() && b.value<bool>();
-        case Type::VecBool  : return and_vector_scalar(b.value<vbool>(), b.value<bool>());
+        case Type::Bool     : return a.as<bool>() && b.as<bool>();
+        case Type::VecBool  : return and_vector_scalar(b.as<vbool>(), b.as<bool>());
         default            : ;
         }
         break;
     case Type::VecBool:
         switch (b.type()) {
-        case Type::Bool     : return and_vector_scalar(b.value<vbool>(), a.value< bool>());
-        case Type::VecBool  : return and_vector_vector(a.value<vbool>(), b.value<vbool>());
+        case Type::Bool     : return and_vector_scalar(b.as<vbool>(), a.as< bool>());
+        case Type::VecBool  : return and_vector_vector(a.as<vbool>(), b.as<vbool>());
         default            : ;
         }
         break;
@@ -767,15 +767,15 @@ Value or_(const Value &a, const Value &b) {
     switch (a.type()) {
     case Type::Bool:
         switch (b.type()) {
-        case Type::Bool     : return a.value<bool>() || b.value<bool>();
-        case Type::VecBool  : return or_vector_scalar(b.value<vbool>(), b.value<bool>());
+        case Type::Bool     : return a.as<bool>() || b.as<bool>();
+        case Type::VecBool  : return or_vector_scalar(b.as<vbool>(), b.as<bool>());
         default            : ;
         }
         break;
     case Type::VecBool:
         switch (b.type()) {
-        case Type::Bool     : return and_vector_scalar(b.value<vbool>(), a.value< bool>());
-        case Type::VecBool  : return or_vector_vector(a.value<vbool>(), b.value<vbool>());
+        case Type::Bool     : return or_vector_scalar(b.as<vbool>(), a.as< bool>());
+        case Type::VecBool  : return or_vector_vector(a.as<vbool>(), b.as<vbool>());
         default            : ;
         }
         break;
@@ -794,9 +794,9 @@ Value not_(const Value &a) {
 
     switch (a.type()) {
     case Type::Bool:
-        return Value(!a.value<bool>());
+        return Value(!a.as<bool>());
     case Type::VecBool:
-        return Value(not_vector(a.value<vbool>()));
+        return Value(not_vector(a.as<vbool>()));
     default: ;
     }
     ThrowException("Incompatible operand for logical 'not'").value("! " + a.typeName());
@@ -812,13 +812,13 @@ Value negate(const Value &a) {
 
     switch (a.type()) {
     case Type::Int:
-        return Value(-a.value<int>());
+        return Value(-a.as<int>());
     case Type::Double:
-        return Value(-a.value<double>());
+        return Value(-a.as<double>());
     case Type::VecInt:
-        return negate_vector(a.value<vint>());
+        return negate_vector(a.as<vint>());
     case Type::VecDouble:
-        return negate_vector(a.value<vdouble>());
+        return negate_vector(a.as<vdouble>());
     default: ;
     }
     ThrowException("Operand cannot be negated").value("- " + a.typeName());

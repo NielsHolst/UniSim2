@@ -21,6 +21,7 @@ HEADERS +=  \
     test_convert_date_time.h \
     test_convert_time.h \
     test_convert_vector.h \
+    test_expression.h \
     test_operate.h \
     test_spirit.h \
     test_value.h \
@@ -33,6 +34,7 @@ SOURCES +=  \
     test_convert_date_time.cpp \
     test_convert_time.cpp \
     test_convert_vector.cpp \
+    test_expression.cpp \
     test_operate.cpp \
     test_spirit.cpp \
     test_value.cpp \

@@ -112,7 +112,11 @@ template<> inline double convert(const char *x)  {return convert<double>(QString
 
 template<> inline QString convert(bool x)   {return QString::number(x);}
 template<> inline QString convert(int x)    {return QString::number(x);}
-template<> inline QString convert(double x) {return QString::number(x);}
+template<> inline QString convert(double x) {QString s = QString::number(x);
+                                             if (!(s.contains(".") || s.contains("inf") || s.contains("e")))
+                                                 s += ".0";
+                                             return s;
+                                            }
 template<> inline QString convert(QString x){return x;}
 template<> inline QString convert(QDate x)  {return x.toString(Qt::ISODate);}
 template<> inline QString convert(QTime x)  {return x.toString("hh:mm:ss");}

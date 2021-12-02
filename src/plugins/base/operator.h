@@ -4,7 +4,6 @@
 */
 #ifndef BASE_OPERATOR_H
 #define BASE_OPERATOR_H
-#include <QMap>
 
 namespace base {
 
@@ -25,22 +24,9 @@ enum class Parenthesis {
     Right
 };
 
-class Precedence {
-    Precedence();
-    static Precedence _precedence;
-    static QMap<Operator,int> _precedences;
-    friend int precedence(Operator op);
-};
-int precedence(Operator op);
+extern int precedence(Operator op);
 
-class Arity {
-    Arity();
-    static Arity _arity;
-    static QMap<Operator,int> _arities;
-    friend int arity(Operator op);
-};
-int arity(Operator op);
-
+extern int arity(Operator op);
 
 }
 #endif

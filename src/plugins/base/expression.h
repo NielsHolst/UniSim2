@@ -18,23 +18,46 @@ public:
     using Element = std::variant<
         Value,
         Operator,
-        Parenthesis
+        Parenthesis,
+        QString         // Unresolved path; must be resolved to Value before evaluation
     >;
+    enum class Type {
+        Value,
+        Operator,
+        Parenthesis,
+        Path
+    };
+    using Stack = std::vector<Element>;
 
     Expression();
     void clear();
+    int size() const     { return _stack.size();}
+    bool isEmpty() const { return _stack.empty();}
     void push(Value value);
     void push(Operator operatr);
     void push(Parenthesis parenthesis);
+    void push(QString path);
+    void close();
+    void resolvePaths();
     void toPostfix();
     Value evaluate();
-    QString toString() const;
+
+    const Stack& original() const;
+    const Stack& stack() const;
+    const Element& at(int i) { return _stack.at(i); }
+    static Type type(const Element& el) { return static_cast<Type>(el.index()); }
+
+    QString originalAsString() const;
+    QString stackAsString() const;
+
 private:
     // Data
-    using Stack = std::vector<Element>;
-    Stack _stack;
+    Stack _stack, _original;
+    bool _isClosed;
     // Methods
+    void checkNotClosed();
     void reduce(Stack &stack);
+    static QString toString(const Stack &stack);
 };
 
 }
