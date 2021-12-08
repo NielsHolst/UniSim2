@@ -4,6 +4,7 @@
 */
 #include <algorithm>
 #include <iostream>
+#include <QSet>
 #include "box.h"
 #include "exception.h"
 #include "general.h"
@@ -37,6 +38,10 @@ Path::Path(QStringList paths, const QObject *context)
     : Path(context)
 {
     _originalPaths = paths;
+}
+
+QString Path::original() const {
+    return _originalPaths.join("|");
 }
 
 void Path::initDirectives() {

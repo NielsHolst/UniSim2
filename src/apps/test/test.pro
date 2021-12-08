@@ -16,6 +16,8 @@ HEADERS +=  \
     exception_expectation.h \
     input_file_path.h \
     test_boost_variant.h \
+    test_box_builder.h \
+    test_box_cases.h \
     test_box_script_x3.h \
     test_convert_date.h \
     test_convert_date_time.h \
@@ -29,6 +31,8 @@ HEADERS +=  \
 SOURCES +=  \
     main.cpp \
     test_boost_variant.cpp \
+    test_box_builder.cpp \
+    test_box_cases.cpp \
     test_box_script_x3.cpp \
     test_convert_date.cpp \
     test_convert_date_time.cpp \

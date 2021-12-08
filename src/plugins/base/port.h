@@ -18,7 +18,6 @@
 //#include "environment.h"
 #include "exception.h"
 #include "port_access.h"
-//#include "track.h"
 
 #include "value.h"
 #include "expression.h"
@@ -31,7 +30,7 @@ class Port : public QObject, public ConstructionStep {
 public:
 private:
     bool
-        _hasDefaultValue,   // Has port retained its default value?
+        _isValueOverridden, // Has the default value been overridden in the BoxScript?
         _doReset,           // Should the value be re-initialised (according to type) at reset?
         _isExtraneous;      // Is this a port declared in external BoxScript?
     PortAccess _access;     // Either input or output
@@ -51,6 +50,8 @@ private:
 public:
     // Configure
     Port(QString name, QObject *parent);
+    Port(const Port &x) : QObject(x.parent()) { assign(x); }
+    Port& operator=(const Port &x)            { assign(x);  return *this; }
     Port& doReset();
     Port& noReset();
     Port& access(PortAccess acc);
@@ -61,8 +62,8 @@ public:
     // Set value
     template <class T> Port& initialize(T *variable);
     template <class T> Port& equals(T fixedValue);
-    template <>        Port& equals(const char *fixedValue);
-    template <>        Port& equals(Value value);
+//    template <>        Port& equals(const char *fixedValue);
+//    template <>        Port& equals(Value value);
     Port& imports(QString pathToPort, Caller caller=Caller());
 
     // Query
@@ -72,13 +73,14 @@ public:
     PortAccess access() const;
     QString unit() const;
     QString help() const;
+    bool isValueOverridden() const;
     int evaluationOrder() const;
     QVector<Port*> importPorts() const;
     QVector<Port*> exportPorts() const;
 
     // Get value
     template <class T> T value() const;
-    template <> Value value() const;
+    const Value& value() const;
     void verifyValue() const;
     const Expression& expression() const;
 
@@ -90,8 +92,10 @@ public:
     void update();
 
     // Output
-    void toText(QTextStream &text, int indentation = 0) const;
-    Track::Order track();
+    void toText(QTextStream &text, int indentation = 0);
+private:
+    void assign(const Port &x);
+    void checkIfValueOverridden();
 };
 
 template <class T> Port& Port::initialize(T *variable) {
@@ -101,6 +105,7 @@ template <class T> Port& Port::initialize(T *variable) {
 
 template <class T> Port& Port::equals(T fixedValue)
 {
+    checkIfValueOverridden();
     _expression.push(Value(fixedValue));
     return *this;
 }

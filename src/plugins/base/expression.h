@@ -7,7 +7,9 @@
 #include <stack>
 #include <variant>
 #include <vector>
+#include <QObject>
 #include "operator.h"
+#include "path.h"
 #include "value.h"
 
 namespace base {
@@ -19,7 +21,7 @@ public:
         Value,
         Operator,
         Parenthesis,
-        QString         // Unresolved path; must be resolved to Value before evaluation
+        Path
     >;
     enum class Type {
         Value,
@@ -29,17 +31,16 @@ public:
     };
     using Stack = std::vector<Element>;
 
-    Expression();
+    Expression(QObject *parent=nullptr);
     void clear();
     int size() const     { return _stack.size();}
     bool isEmpty() const { return _stack.empty();}
     void push(Value value);
     void push(Operator operatr);
     void push(Parenthesis parenthesis);
-    void push(QString path);
+    void push(Path path);
     void close();
     void resolvePaths();
-    void toPostfix();
     Value evaluate();
 
     const Stack& original() const;
@@ -52,12 +53,15 @@ public:
 
 private:
     // Data
+    QObject *_parent;
     Stack _stack, _original;
     bool _isClosed;
     // Methods
+    void toPostfix();
     void checkNotClosed();
     void reduce(Stack &stack);
     static QString toString(const Stack &stack);
+    static QString toString(const Element &element);
 };
 
 }

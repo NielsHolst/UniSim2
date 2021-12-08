@@ -7,7 +7,6 @@
 
 #include <QObject>
 #include <QMap>
-#include <QPair>
 #include <QSet>
 
 namespace base {
@@ -18,45 +17,33 @@ class Port;
 class Track : public QObject
 {
 public:
-    typedef QVector<QString> ParseResult;
-
-    struct Order {
-        int portId;
-        int key() const { return 100*portId; }
-    };
-
-    Track(Port *port);
+    Track(const Port *port);
     void reset();
-
-    Port* port();
-    bool isFiltered() const;
+    const Port* port();
     void uniqueName(QString name);
     QString uniqueName() const;
     QStringList uniqueNameExpanded();
 
     static void clearOrders();
-    static Order takeOrder(Port *port);
+    static void placeOrders(QVector<const Port*> ports);
     static void effectuateOrders();
-    static void resetAll();
 
-    static QList<Track*> all();
-    static Track* find(Order order);
-    static QString dumpOrders();
-    static QString dumpTracks();
-    static ParseResult parseTrackPaths(QVector<QString> paths, QObject *context = 0);
-    static QVector<Order> placeOrders(QVector<QString> paths, Box *context);
+    static QList<Track *> all();
+    static Track* find(int order);
 private:
-    // Static data
-    typedef QMap<Order, Track*> Tracks;
-    static QSet<Order> _orders;
-    static Tracks _tracks;
     // Object data
-    Port *_port;
+    const Port *_port;
     QString _uniqueName;
     const void *_valuePtr;
+
+    // Static data
+    using Orders = QMap<int, const Port*>;
+    using Tracks = QMap<int, Track*>;
+
+    static Orders _orders;
+    static Tracks _tracks;
+
     // Methods
-    static bool areAnyOrdersFiltered();
-    static void replaceUnfilteredOrders();
     static void setUniqueNames();
 
 };

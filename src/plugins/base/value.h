@@ -15,6 +15,8 @@
 
 namespace base {
 
+class Port;
+
 class Value {
 public:
 
@@ -38,43 +40,43 @@ public:
         VecBareDate
     };
 
-    Value(            ) {                }
-    Value(bool       x) { initialize(x); }
-    Value(int        x) { initialize(x); }
-    Value(double     x) { initialize(x); }
-    Value(QString    x) { initialize(x); }
-    Value(QDate      x) { initialize(x); }
-    Value(QTime      x) { initialize(x); }
-    Value(QDateTime  x) { initialize(x); }
-    Value(BareDate   x) { initialize(x); }
-    Value(const char *x) { initialize(QString(x)); }
+    Value(Port *parent=nullptr) : _parent(parent) {}
+    Value(bool        x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(int         x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(double      x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QString     x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QDate       x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QTime       x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QDateTime   x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(BareDate    x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(const char *x, Port *parent=nullptr)  : Value(parent) { initialize(QString(x)); }
 
-    Value(bool      *x) { initialize(x); }
-    Value(int       *x) { initialize(x); }
-    Value(double    *x) { initialize(x); }
-    Value(QString   *x) { initialize(x); }
-    Value(QDate     *x) { initialize(x); }
-    Value(QTime     *x) { initialize(x); }
-    Value(QDateTime *x) { initialize(x); }
-    Value(BareDate  *x) { initialize(x); }
+    Value(bool       *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(int        *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(double     *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QString    *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QDate      *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QTime      *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(QDateTime  *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(BareDate   *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
 
-    Value(QVector<bool>       x) { initialize(x); }
-    Value(QVector<int>        x) { initialize(x); }
-    Value(QVector<double>     x) { initialize(x); }
-    Value(QVector<QString>    x) { initialize(x); }
-    Value(QVector<QDate>      x) { initialize(x); }
-    Value(QVector<QTime>      x) { initialize(x); }
-    Value(QVector<QDateTime>  x) { initialize(x); }
-    Value(QVector<BareDate>   x) { initialize(x); }
+    Value(QVector<bool>       x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<int>        x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<double>     x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QString>    x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QDate>      x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QTime>      x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QDateTime>  x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<BareDate>   x, Port *parent=nullptr) : Value(parent) { initialize(x); }
 
-    Value(QVector<bool>      *x) { initialize(x); }
-    Value(QVector<int>       *x) { initialize(x); }
-    Value(QVector<double>    *x) { initialize(x); }
-    Value(QVector<QString>   *x) { initialize(x); }
-    Value(QVector<QDate>     *x) { initialize(x); }
-    Value(QVector<QTime>     *x) { initialize(x); }
-    Value(QVector<QDateTime> *x) { initialize(x); }
-    Value(QVector<BareDate>  *x) { initialize(x); }
+    Value(QVector<bool>      *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<int>       *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<double>    *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QString>   *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QDate>     *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QTime>     *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<QDateTime> *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<BareDate>  *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
 
     template <class T> void initialize(T *variable)
     // Link to outside variable
@@ -97,8 +99,10 @@ public:
     template <class U> U as() const;
     // Get value in compatible type U
 
-    QString asStringApostrophed() const;
-    // Get value converted to string; is value is a string it will be apostrophed
+    QString asString(bool apostrophed, bool vectorized) const;
+    // Get value converted to string
+    // -apostroped: a string it will be apostrophed
+    // -vectorized: vectors will be shown on c(...) form
 
     void reset();
     // Reset value to default according to its type
@@ -126,9 +130,11 @@ public:
 
     Value(const Value &x)            { assign(x); }
     Value& operator=(const Value &x) { assign(x);  return *this; }
+    // Copy from another Value but keep my own type
+
     bool operator==(const Value &x) const;
     bool operator!=(const Value &x) const  { return !(*this==x); }
-    // Copy from another Value but keep my own type
+    // Compare
 
 private:
     std::variant<
@@ -152,6 +158,7 @@ private:
     >
     _variant; // Starts out uninitialised (= monostate)
     void assign(const Value &x);
+    Port *_parent;
 };
 
 template <class U> void Value::changeValue(U value)
@@ -231,6 +238,7 @@ template <> const QVector<BareDate>*  Value::valuePtr() const;
 
 template <class U> U Value::as() const
 {
+    QVector<const Value*> v;
     switch(type()) {
     case Type::Uninitialized:
         ThrowException("Value is uninitialized");

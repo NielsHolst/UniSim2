@@ -13,16 +13,33 @@ namespace base {
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent),
-      _hasDefaultValue(true),
+      _isValueOverridden(false),
       _doReset(true),
       _isExtraneous(false),
-      _access(PortAccess::Input)
+      _access(PortAccess::Input),
+      _expression(this)
 {
     Class(Port);
     setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
+}
+
+void Port::assign(const Port &x) {
+   _isValueOverridden = x._isValueOverridden;
+   _doReset = x._doReset;
+   _isExtraneous = x._isExtraneous;
+   _access = x._access;
+   _unit = x._unit;
+   _help = x._help;
+   _value = x._value;
+   _expression = x._expression;
+}
+
+void Port::checkIfValueOverridden() {
+    Box *boxParent = dynamic_cast<Box*>(parent());
+    _isValueOverridden =  boxParent && !boxParent->underConstruction();
 }
 
 Port& Port::doReset() {
@@ -52,20 +69,24 @@ Port& Port::help(QString value) {
 
 Port& Port::isExtraneous() {
     _isExtraneous = true;
+    return *this;
 }
 
-template <>
-Port& Port::equals(const char *fixedValue) {
-    return equals(QString(fixedValue));
-}
+//template <>
+//Port& Port::equals(const char *fixedValue) {
+//    return equals(QString(fixedValue));
+//}
 
-template <>
-Port& Port::equals(Value value) {
-    _value = value;
-}
+//template <>
+//Port& Port::equals(Value value) {
+//    checkIfValueOverridden();
+//    _expression.push(value);
+//    return *this;
+//}
 
 Port& Port::imports(QString pathToPort, Caller caller) {
-    _expression.push(pathToPort);
+    checkIfValueOverridden();
+    _expression.push(Path(pathToPort, this));
     _importCaller = caller;
     return help("Defaults to " + pathToPort);
 }
@@ -102,6 +123,10 @@ QString Port::help() const {
     return _help;
 }
 
+bool Port::isValueOverridden() const {
+    return _isValueOverridden;
+}
+
 int Port::evaluationOrder() const {
     return _evaluationOrder;
 }
@@ -114,7 +139,7 @@ QVector<Port*> Port::exportPorts() const {
     return _exportPorts;
 }
 
-template <> Value Port::value() const {
+const Value& Port::value() const {
     return _value;
 }
 
@@ -171,29 +196,18 @@ void Port::update() {
 
 // Access
 
-Track::Order Port::track() {
-    return Track::takeOrder(this);
-}
-
-void Port::toText(QTextStream &text, int indentation) const {
-    QString fill;
+void Port::toText(QTextStream &text, int indentation) {
+    update(); // make certain that _value is initialized
+    QString fill, expression;
     fill.fill(' ', indentation);
     QString prefix =
             (access() == PortAccess::Input) ?
             (_isExtraneous ? "+" : "." ) : "//~";
-    bool showAmended = false;
-    if (constructionStep() == ComputationStep::Amend) {
-        Box *myBox = dynamic_cast<Box*>(parent());
-        showAmended = (myBox && myBox->constructionStep() != ComputationStep::Amend);
-    }
-    QString comment = showAmended ? " //amended" : "";
-
-    QString equalSign = (access() == PortAccess::Input) ? " = " : " == ";
 
     text << fill
          << prefix << objectName()
-         << equalSign << _expression.originalAsString()
-         << comment
+         << " = " << _expression.originalAsString()
+         << "//" + _value.typeName()
          << "\n";
 }
 

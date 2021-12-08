@@ -219,14 +219,14 @@ void Box::initializeFamily() {
     }
     _timer->reset();
     _timer->start("initialize");
+    closeExpressions();
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
             box->initializeFamily();
     }
-    closeExpressions();
-    updateImports();
-    checkSelfImports();
+    updatePorts();
+//    checkSelfImports();
     if (_traceOn)
         dialog().information("initialize " + fullName());
     if (!_ignore) initialize();
@@ -241,7 +241,7 @@ void Box::resetFamily() {
             box->resetFamily();
     }
     resetPorts();
-    updateImports();
+    updatePorts();
     if (_traceOn)
         dialog().information("reset " + fullName());
     if (!_ignore) reset();
@@ -255,7 +255,7 @@ void Box::updateFamily() {
         if (box)
             box->updateFamily();
     }
-    updateImports();
+    updatePorts();
     if (_traceOn)
         dialog().information("update " + fullName());
 
@@ -274,7 +274,7 @@ void Box::cleanupFamily() {
         if (box)
             box->cleanupFamily();
     }
-    updateImports();
+    updatePorts();
     if (_traceOn)
         dialog().information("cleanup " + fullName());
     if (!_ignore) cleanup();
@@ -289,7 +289,7 @@ void Box::debriefFamily() {
         if (box)
             box->debriefFamily();
     }
-    updateImports();
+    updatePorts();
     if (_traceOn)
         dialog().information("debrief " + fullName());
     if (!_ignore) debrief();
@@ -301,6 +301,11 @@ void Box::closeExpressions() {
     for (Port *port : _ports.values()) {
         port->closeExpression();
     }
+}
+
+void Box::updatePorts() {
+    for (Port *port : _ports.values())
+        port->update();
 }
 
 void Box::verifyPorts() {
@@ -318,20 +323,16 @@ void Box::resetPorts() {
 Box* Box::clone(QString name, QObject *parent) {
     Box *myClone = MegaFactory::create<Box>(className(), name, parent);
     myClone->_cloned = true;
+    // Loop through my ports
     for (Port *port : findMany<Port>(".[*]")) {
+        // Find correspondin port in clone
         QString name = port->objectName();
-        // For a blind port, or a port which the clone hasn't got (because it was created in the original's amend):
-        // create it in the clone
-        if (port->isBlind()) {
-            Port *blind = new Port(name, myClone);
-            blind->access(PortAccess::Input).isBlind(true);
-        }
-        else if (!myClone->peakPort(name)) {
-            Port *newPort = new Port(name, myClone);
-            newPort->access(port->access());
-        }
-        // Initialize to same type and value
-        myClone->port(name)->equals( port->value<Value>() );
+        Port *clonedPort = myClone->peakPort(name);
+        // Create port in clone, if not found
+        if (!clonedPort)
+            clonedPort = new Port(name, myClone);
+        // Copy my port to clone
+        *clonedPort = *port;
     }
     return myClone;
 }

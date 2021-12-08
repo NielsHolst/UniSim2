@@ -21,6 +21,7 @@ class Path {
 public:
     Path(QString path, const QObject *context = nullptr);
     Path(QStringList paths, const QObject *context = nullptr);
+    QString original() const;
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
@@ -94,7 +95,8 @@ template<class T> T* Path::resolveMaybeOne(const QObject* caller) {
     ThrowException(msg.arg(objsT.size())).value(_current.originalPath).context(_caller);
 }
 
-template<class T> QVector<T*> Path::resolveMany(const QObject *caller) {
+template<class T>
+QVector<T*> Path::resolveMany(const QObject *caller) {
     return resolve<T>(-1, caller);
 }
 

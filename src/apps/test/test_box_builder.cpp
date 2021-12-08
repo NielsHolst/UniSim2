@@ -1,53 +1,52 @@
 #include <iostream>
 #include <base/box.h>
 #include <base/box_builder.h>
-#include <base/box_output.h>
+#include "exception_expectation.h"
 #include <base/exception.h>
 #include "test_box_builder.h"
 #include "test_box_cases.h"
 
 using namespace base;
 
-void TestBoxBuilder::initTestCase() {
+void TestBoxBuilder::testBuild1() {
+    bool excepted(false);
+    base::Box *tree;
+    QString s;
+    QTextStream str(&s);
+
     try {
         tree = TestBoxCases::case1();
+        tree->toText(str);
     }
-    catch (Exception &ex) {
-        QFAIL(qPrintable(ex.what()));
-    }
-}
+    UNEXPECTED_EXCEPTION;
 
-void TestBoxBuilder::cleanupTestCase() {
+    std::cout
+            << "\n\n"
+            << qPrintable(s)
+            << "\n\n";
     delete tree;
 }
 
-void TestBoxBuilder::testBuild1() {
-    std::cout
-            << "\n\n"
-            << qPrintable(BoxOutput(tree, BoxOutput::Indented).asText())
-            << "\n\n";
-}
-
-void TestBoxBuilder::testMissingRoot() {
-    BoxBuilder builder;
-    bool excepted{false};
-    try {
-        builder.
-            box().name("A").
-                box().name("a").
-                endbox().
-                box().name("b").
-                endbox().
-            endbox().
-            box().name("B").
-                box().name("a").
-                endbox().
-                box().name("b").
-                endbox().
-            endbox();
-    }
-    catch (Exception &) {
-        excepted = true;
-    }
-    QVERIFY(excepted);
-}
+//void TestBoxBuilder::testMissingRoot() {
+//    BoxBuilder builder;
+//    bool excepted{false};
+//    try {
+//        builder.
+//            box().name("A").
+//                box().name("a").
+//                endbox().
+//                box().name("b").
+//                endbox().
+//            endbox().
+//            box().name("B").
+//                box().name("a").
+//                endbox().
+//                box().name("b").
+//                endbox().
+//            endbox();
+//    }
+//    catch (Exception &) {
+//        excepted = true;
+//    }
+//    QVERIFY(excepted);
+//}

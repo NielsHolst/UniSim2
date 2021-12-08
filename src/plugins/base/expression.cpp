@@ -11,8 +11,8 @@ using std::get;
 
 namespace base {
 
-Expression::Expression()
-    : _isClosed(false)
+Expression::Expression(QObject *parent)
+    : _parent(parent), _isClosed(false)
 {
 }
 
@@ -37,14 +37,14 @@ void Expression::push(Parenthesis parenthesis) {
     _stack.push_back(parenthesis);
 }
 
-void Expression::push(QString path) {
+void Expression::push(Path path) {
     checkNotClosed();
     _stack.push_back(path);
 }
 
 void Expression::checkNotClosed() {
     if (_isClosed)
-        ThrowException("You cannot push to a closed stack").value(toString());
+        ThrowException("You cannot push to a closed stack").value(originalAsString()).context(_parent);
 }
 
 void Expression::close() {
@@ -93,11 +93,11 @@ void Expression::toPostfix() {
     // From: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
     for (auto &element : _stack) {
-        switch (element.index()) {
-        case 0: // Value
+        switch (type(element)) {
+        case Type::Value:
             postfix.push_back(element);
             break;
-        case 1: // Operator
+        case Type::Operator:
             if (myStack.empty() || precedence(element) > precedence(myStack.back()))
                 myStack.push_back(element);
             else {
@@ -109,7 +109,7 @@ void Expression::toPostfix() {
                 myStack.push_back(element);
             }
             break;
-        case 2: // Parenthesis
+        case Type::Parenthesis:
             if (isLeft(element))
                 myStack.push_back(element);
             else {
@@ -120,11 +120,11 @@ void Expression::toPostfix() {
                 }
                 myStack.pop_back(); // pop left parenthesis
                 if (myStack.empty())
-                    ThrowException("No matching left parenthesis");
+                    ThrowException("No matching left parenthesis").context(_parent);
             }
             break;
-        case 3: // Path
-            ThrowException("Unresolved path in expression").value(toString());
+        case Type::Path:
+            ThrowException("Unimplemented").value(originalAsString()).context(_parent);
         }
     } // for
     // Pop until stack is empty
@@ -133,6 +133,7 @@ void Expression::toPostfix() {
         myStack.pop_back();
     }
     // Copy result
+    _stack.clear();
     _stack = postfix;
 }
 
@@ -173,48 +174,48 @@ void Expression::reduce(Stack &stack) {
 }
 
 Value Expression::evaluate() {
-    QString s1, s2;
+    if (_stack.size() == 0)
+        ThrowException("Expression is empty").context(_parent);
+
     Stack myStack;
-    for (Element &element : _stack) {
-        myStack.push_back(element);
-        if (isOperator(element)) {
-            s1 = toString(myStack);
-            reduce(myStack);
-            s2 = toString(myStack);
-        }
+    Element result;
+    if (_stack.size() == 1) {
+        result = _stack.front();
     }
-    // The result should one element left in the stack
-    if (myStack.size() == 0)
-        ThrowException("Too many operators in expression").value(stackAsString());
-    if (myStack.size() > 1)
-        ThrowException("Too few operators in expression").value(stackAsString());
+    else {
+        for (Element &element : _stack) {
+            myStack.push_back(element);
+            if (Expression::type(element) == Expression::Type::Operator)
+                reduce(myStack);
+        }
+        // The result should be the one element left in the stack
+        if (myStack.size() == 0)
+            ThrowException("Too many operators in expression").value(stackAsString()).context(_parent);
+        if (myStack.size() > 1)
+            ThrowException("Too few operators in expression").value(stackAsString()).context(_parent);
+        result = myStack.front();
+    }
 
     // The result should be a Value
-    Element result = myStack.front();
-    if (result.index() == 1)
-        ThrowException("Surplus operator in expression").value(stackAsString());
-    if (result.index() == 2)
-        ThrowException("Surplus parenthesis in expression").value(stackAsString());
+    if (type(result) == Type::Operator)
+        ThrowException("Surplus operator in expression").value(stackAsString()).context(_parent);
+    if (type(result) == Type::Parenthesis)
+        ThrowException("Surplus parenthesis in expression").value(stackAsString()).context(_parent);
     Value value = get<Value>(result);
-    QString j = value.typeName();
     return get<Value>(result);
 
 }
 
 const Expression::Stack& Expression::original() const {
-    if (!_isClosed)
-        ThrowException("Stack is not closed");
     return _original;
 }
 
 const Expression::Stack& Expression::stack() const {
-    if (!_isClosed)
-        ThrowException("Stack is not closed");
     return _stack;
 }
 
 QString Expression::originalAsString() const {
-    return toString(original());
+    return toString(_isClosed ? original() : stack());
 }
 
 QString Expression::stackAsString() const {
@@ -223,17 +224,20 @@ QString Expression::stackAsString() const {
 
 QString Expression::toString(const Stack &stack) {
     QStringList str;
-    for (auto &element : stack) {
-        QString s;
-        switch (element.index()) {
-        case 0: s = get<Value>(element).asStringApostrophed(); break;
-        case 1: s = convert<QString>( get<Operator>   (element) ); break;
-        case 2: s = convert<QString>( get<Parenthesis>(element) ); break;
-        case 3: s = get<QString>(element);
-        }
-        str << s;
-    }
+    for (auto &element : stack)
+        str << toString(element);
     return str.join(" ");
+}
+
+QString Expression::toString(const Element &element) {
+    QString s;
+    switch (type(element)) {
+    case Type::Value: s = get<Value>(element).asString(true, true); break;
+    case Type::Operator: s = convert<QString>( get<Operator>   (element) ); break;
+    case Type::Parenthesis: s = convert<QString>( get<Parenthesis>(element) ); break;
+    case Type::Path: s = get<Path>(element).original();
+    }
+    return s;
 }
 
 }

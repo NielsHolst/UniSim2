@@ -31,12 +31,12 @@ void TestExpression::testToPostfix() {
     expr.push(Operator::Multiply);
     expr.push(2);
 
-    QCOMPARE(expr.toString(), "17.5 + 123 * 2");
+    QCOMPARE(expr.originalAsString(), "17.5 + 123 * 2");
     try {
-        expr.toPostfix();
+        expr.close();
     }
     UNEXPECTED_EXCEPTION;
-    QCOMPARE(expr.toString(), "17.5 123 2 * +");
+    QCOMPARE(expr.stackAsString(), "17.5 123 2 * +");
 
     expr.clear();
     expr.push(17.5);
@@ -45,12 +45,12 @@ void TestExpression::testToPostfix() {
     expr.push(Operator::Add);
     expr.push(2);
 
-    QCOMPARE(expr.toString(), "17.5 * 123 + 2");
+    QCOMPARE(expr.originalAsString(), "17.5 * 123 + 2");
     try {
-        expr.toPostfix();
+        expr.close();
     }
     UNEXPECTED_EXCEPTION;
-    QCOMPARE(expr.toString(), "17.5 123 * 2 +");
+    QCOMPARE(expr.stackAsString(), "17.5 123 * 2 +");
 
 
 
@@ -60,7 +60,7 @@ void TestExpression::testEmpty() {
     bool excepted(false);
     Expression expr;
     try {
-        expr.toPostfix();
+        expr.close();
     }
     UNEXPECTED_EXCEPTION;
 
@@ -78,7 +78,7 @@ void TestExpression::testSingle() {
     Value value;
     expr.push("abc");
     try {
-        expr.toPostfix();
+        expr.close();
         value = expr.evaluate();
     }
     UNEXPECTED_EXCEPTION;
@@ -97,8 +97,8 @@ void TestExpression::testAddition() {
     e.push(9);
     e.push(Operator::Multiply);
     e.push(2);
-    e.toPostfix();
-    QCOMPARE(e.toString(), "8 9 2 * +");
+    e.close();
+    QCOMPARE(e.stackAsString(), "8 9 2 * +");
 
     Value result;
     try {
@@ -121,8 +121,9 @@ void TestExpression::testResultType() {
     e.push(9.5);
     e.push(Operator::Multiply);
     e.push(2);
-    e.toPostfix();
-    QCOMPARE(e.toString(), "8 9.5 2 * +");
+    QCOMPARE(e.stackAsString(), "8 + 9.5 * 2");
+    e.close();
+    QCOMPARE(e.stackAsString(), "8 9.5 2 * +");
 
     Value result;
     try {
@@ -146,8 +147,8 @@ void TestExpression::testNegation() {
     e.push(9);
     e.push(Operator::Multiply);
     e.push(2);
-    e.toPostfix();
-    QCOMPARE(e.toString(), "8 - 9 2 * +");
+    e.close();
+    QCOMPARE(e.stackAsString(), "8 - 9 2 * +");
 
     Value result;
     try {
@@ -172,8 +173,8 @@ void TestExpression::testExponentiation() {
     e.push(2);
     e.push(Operator::Multiply);
     e.push(4);
-    e.toPostfix();
-    QCOMPARE(e.toString(), "8 9 2 ^ 4 * +");
+    e.close();
+    QCOMPARE(e.stackAsString(), "8 9 2 ^ 4 * +");
 
     Value result;
     try {

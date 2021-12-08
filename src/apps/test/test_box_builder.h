@@ -11,12 +11,8 @@ class TestBoxBuilder : public QObject
 {
     Q_OBJECT
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
     void testBuild1();
-    void testMissingRoot();
-private:
-    base::Box *tree;
+//    void testMissingRoot();
 };
 
 DECLARE_TEST(TestBoxBuilder)

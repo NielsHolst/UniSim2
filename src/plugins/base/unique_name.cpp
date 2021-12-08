@@ -13,22 +13,17 @@ UniqueName::UniqueName(QList<Track *> tracks)
 {
     _nextEntry = 0;
     for (Track *track : tracks)
-        addEntry(track->port(), track->filter());
+        addEntry(track->port());
 }
 
-UniqueName::UniqueName(QVector<Port*> ports) {
+UniqueName::UniqueName(QVector<const Port*> ports) {
     _nextEntry = 0;
-    for (Port *port : ports)
-        addEntry(port, PortFilter::None);
+    for (const Port *port : ports)
+        addEntry(port);
 }
 
-void UniqueName::addEntry(Port *port, PortFilter filter) {
-//    bool hasLabel = (!port->label().isEmpty());
-//    QString label = hasLabel ? port->label() : port->objectName();
-    QString label = port->objectName();
-    if (filter != PortFilter::None)
-        label += "." + convert<QString>(filter);
-    _entries << Entry{label, _nextEntry++, port};
+void UniqueName::addEntry(const Port *port) {
+    _entries << Entry{port->objectName(), _nextEntry++, port};
 }
 
 QStringList UniqueName::resolve() {

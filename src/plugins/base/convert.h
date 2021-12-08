@@ -18,6 +18,8 @@
 
 namespace base {
 
+class Value;
+
 using vbool      = QVector<bool>;
 using vint       = QVector<int>;
 using vdouble    = QVector<double>;
@@ -26,6 +28,7 @@ using vQDate     = QVector<QDate>;
 using vQTime     = QVector<QTime>;
 using vQDateTime = QVector<QDateTime>;
 using vBareDate  = QVector<BareDate>;
+using vValuePtr  = QVector<const Value*>;
 
 template <class, template <class> class>
 struct isInstance : public std::false_type {};
@@ -202,6 +205,15 @@ CONVERT_VECTOR(QDate    , vQDate)
 CONVERT_VECTOR(QTime    , vQTime)
 CONVERT_VECTOR(QDateTime, vQDateTime)
 CONVERT_VECTOR(BareDate , vBareDate)
+
+template<> vbool      convert(vValuePtr values);
+template<> vint       convert(vValuePtr values);
+template<> vdouble    convert(vValuePtr values);
+template<> vQString   convert(vValuePtr values);
+template<> vQDate     convert(vValuePtr values);
+template<> vQTime     convert(vValuePtr values);
+template<> vQDateTime convert(vValuePtr values);
+template<> vBareDate  convert(vValuePtr values);
 
 
 }

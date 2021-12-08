@@ -2,13 +2,39 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <QStringList>
+#include "convert.h"
 #include "value.h"
 
 namespace base {
 
-QString Value::asStringApostrophed() const {
-    QString s = as<QString>();
-    return (type() == Type::String) ? "\"" + s + "\"" : s;
+inline QString aph(bool apostrophed, QString s) {
+    return apostrophed ? "\"" + s + "\"" : s;
+}
+
+QString Value::asString(bool apostrophed, bool vectorized) const {
+    QStringList slist;
+    switch(type()) {
+    case Type::Uninitialized: break;
+    case Type::VecBool      : for (auto x : as<vbool     >()) slist += convert<QString>(x);; break;
+    case Type::VecInt       : for (auto x : as<vint      >()) slist += convert<QString>(x);; break;
+    case Type::VecDouble    : for (auto x : as<vdouble   >()) slist += convert<QString>(x);; break;
+    case Type::VecDate      : for (auto x : as<vQDate    >()) slist += convert<QString>(x);; break;
+    case Type::VecTime      : for (auto x : as<vQTime    >()) slist += convert<QString>(x);; break;
+    case Type::VecDateTime  : for (auto x : as<vQDateTime>()) slist += convert<QString>(x);; break;
+    case Type::VecBareDate  : for (auto x : as<vBareDate >()) slist += convert<QString>(x);; break;
+
+    case Type::String       : slist += aph(apostrophed, as<QString>());
+                              break;
+    case Type::VecString    : for (QString x : as<vQString  >())
+                                slist += aph(apostrophed, x);
+                              break;
+    default                 : slist += as<QString>();
+                              break;
+    }
+    return (vectorized && isVector()) ?
+        "c(" + slist.join(",") +")" :
+        slist.at(0);
 }
 
 void Value::reset() {
@@ -84,7 +110,6 @@ void Value::assign(const Value &x) {
     case Type::VecBareDate  : changeValue(x.as<QVector<BareDate >>()); break;
     }
 }
-
 
 bool Value::operator==(const Value &x) const {
     if (type() == x.type())

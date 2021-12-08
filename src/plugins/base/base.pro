@@ -25,11 +25,9 @@ HEADERS +=  \
 #    ast_boxes.h \
 #    ast_common.h \
     bare_date.h \
-    bare_date_time.h \
 #    base_signal.h \
     box.h \
-#    box_builder.h \
-#    box_output.h \
+    box_builder.h \
 #    box_preprocessor.h \
 #    box_reader_xml.h \
     boxscript.h \
@@ -111,9 +109,9 @@ HEADERS +=  \
 #    psychrolib.h \
 #    random_generator.h \
 #    random_order.h \
-#    save_grammar_atom.h \
-#    save_grammar_base.h \
-#    save_grammar_notepad.h \
+    save_grammar_atom.h \
+    save_grammar_base.h \
+    save_grammar_notepad.h \
 #    save_graph_base.h \
 #    save_graph_graphviz.h \
 #    table.h \
@@ -127,7 +125,7 @@ HEADERS +=  \
 #    vector_op.h \
 #    vector_vector.h \
 #    vectorize.h \
-#    version.h \
+    version.h \
     win_taskbar_progress.h
 
 SOURCES +=  \
@@ -137,8 +135,7 @@ SOURCES +=  \
 #    ast_common.cpp \
 #    base_signal.cpp \
     box.cpp \
-#    box_builder.cpp \
-#    box_output.cpp \
+    box_builder.cpp \
 #    box_preprocessor.cpp \
 #    box_reader_xml.cpp \
     boxscript.cpp \
@@ -181,13 +178,13 @@ SOURCES +=  \
 #    operation.cpp \
     operate.cpp \
     operator.cpp \
-    path.h \
+    path.cpp \
 #    physiological_time.cpp \
 #    phys_math.cpp \
     port.cpp \
     port_access.cpp \
-    reader_base.h \
-    reader_boxscript.h \
+    reader_base.cpp \
+    reader_boxscript.cpp \
 #    port_buffer.cpp \
 #    port_filter.cpp \
 #    port_operand.cpp \
@@ -198,9 +195,9 @@ SOURCES +=  \
 #    psychrolib.c \
 #    random_generator.cpp \
 #    random_order.cpp \
-#    save_grammar_atom.cpp \
-#    save_grammar_base.cpp \
-#    save_grammar_notepad.cpp \
+    save_grammar_atom.cpp \
+    save_grammar_base.cpp \
+    save_grammar_notepad.cpp \
 #    save_graph_base.cpp \
 #    save_graph_graphviz.cpp \
 #    table.cpp \
@@ -214,5 +211,5 @@ SOURCES +=  \
 #    vector_op.cpp \
 #    vector_vector.cpp \
 #    vectorize.cpp  \
-#    version.cpp
+    version.cpp
 

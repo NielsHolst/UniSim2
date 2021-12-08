@@ -84,6 +84,7 @@ public:
 
     virtual void update(Port *) {}
     void closeExpressions();
+    void updatePorts();
     void verifyPorts();
 
     Box* clone(QString name, QObject *parent);
@@ -119,14 +120,17 @@ private:
 };
 
 template<class T> T* Box::findOne(QString path) {
+//    const QObject *p = this;
     return Path(path, this).resolveOne<T>(this);
 }
 
 template<class T> T* Box::findMaybeOne(QString path) {
+//    const QObject *p = this;
     return Path(path, this).resolveMaybeOne<T>(this);
 }
 
 template<class T> QVector<T*> Box::findMany(QString path) {
+//    const QObject *p = this;
     return Path(path, this).resolveMany<T>(this);
 }
 

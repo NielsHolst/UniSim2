@@ -6,6 +6,7 @@
 #include <boost/spirit/home/x3.hpp>
 #include <QVector>
 #include "convert.h"
+#include "value.h"
 
 namespace x3 = boost::spirit::x3;
 using boost::fusion::at_c;
@@ -129,5 +130,40 @@ template<> BareDate convert(QString x) {
 
     return result;
 }
+
+//
+// Vector value conversions
+//
+
+#define CONV_VALUE_VECTOR(vtype, type) \
+template<> vtype convert(vValuePtr values) { \
+    int n = values.size(); \
+    vtype result(n); \
+    const Value **source = values.data(); \
+    type *dest           = result.data(); \
+    for (int i=0; i<n; ++i) \
+        *dest++ = (*source++)->as<type>(); \
+    return result; \
+}
+
+CONV_VALUE_VECTOR(vbool, bool)
+CONV_VALUE_VECTOR(vint, int)
+CONV_VALUE_VECTOR(vdouble, double)
+CONV_VALUE_VECTOR(vQString, QString)
+CONV_VALUE_VECTOR(vQDate, QDate)
+CONV_VALUE_VECTOR(vQTime, QTime)
+CONV_VALUE_VECTOR(vQDateTime, QDateTime)
+CONV_VALUE_VECTOR(vBareDate, BareDate)
+
+//template<> vbool convert(vValuePtr values) {
+//    int n = values.size();
+//    vbool result(n);
+//    const Value **source = values.data();
+//    bool *dest           = result.data();
+//    for (int i=0; i<n; ++i)
+//        *dest++ = (*source++)->as<bool>();
+//    return result;
+//}
+
 
 }

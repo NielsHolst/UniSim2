@@ -3,6 +3,7 @@
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 #include <boost/variant/get.hpp>
 #include "test_boost_variant.h"
+#include <functional>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdisabled-macro-expansion"

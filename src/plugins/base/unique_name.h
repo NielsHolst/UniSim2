@@ -7,7 +7,6 @@
 #include <QObject>
 #include <QStringList>
 #include <QList>
-#include "port_filter.h"
 
 namespace base {
 
@@ -17,20 +16,20 @@ class Track;
 class UniqueName
 {
 public:
-    UniqueName(QList<Track*> tracks);
-    UniqueName(QVector<Port*> ports);
+    UniqueName(QList  <Track*> tracks);
+    UniqueName(QVector<const Port*> ports);
     QStringList resolve();
 private:
     // Data
     struct Entry {
         QString name;
         int index;
-        QObject *object;
+        const QObject *object;
     };
     QVector<Entry> _entries;
     int _nextEntry;
     // Methods
-    void addEntry(Port *port, PortFilter filter);
+    void addEntry(const base::Port *port);
     void sortByName();
     bool relativePath(int index);
     void extendKey(int from, int end);
