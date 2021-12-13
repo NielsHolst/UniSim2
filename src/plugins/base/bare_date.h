@@ -10,16 +10,29 @@
 
 namespace base {
 
-class BareDate : public QDate {
+class BareDate {
 public:
-    BareDate(int m, int d) : QDate(2001, m, d) {}
-    BareDate() : QDate() {}
-    // Wrap around at end of year
+    BareDate(int m, int d) : _date(2001, m, d) {}
+    BareDate() : _date() {}
     BareDate addBareDays(int days) const {
-        QDate date = addDays(days);
-        return BareDate(date.month(), date.day());
+        // Wrap around at end of year
+        QDate newDate = _date.addDays(days);
+        return BareDate(newDate.month(), newDate.day());
     }
+    QDate date() const { return _date; }
+
+private:
+    QDate _date;
 };
+
+inline bool operator==(const BareDate &a, const BareDate &b) {
+    return (a.date() == b.date());
+}
+
+BareDate operator+(const BareDate &bare, double x);
+BareDate operator-(const BareDate &bare, double x);
+int operator-(const BareDate &a, const BareDate &b);
+BareDate operator+(double x, const BareDate &bare);
 
 }
 

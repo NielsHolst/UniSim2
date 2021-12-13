@@ -22,6 +22,7 @@ private slots:
     void testBox();
     void testOperator();
     void testTooMuch();
+    void testSyntaxError();
     void testNumber();
 };
 

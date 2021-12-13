@@ -20,7 +20,7 @@ void TestValue::testBoolTyped() {
     val.changeValue(QString("abc"));
     QCOMPARE(val.value<bool>(), true);
 
-    const bool *x = val.valuePtr();
+    const bool *x = val.constPtr();
     QCOMPARE(*x, true);
 }
 

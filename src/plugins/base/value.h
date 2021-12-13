@@ -93,6 +93,10 @@ public:
     template <class U> void changeValue(U value);
     // Set to value with compatible type U
 
+    template <class U> void changeValueAt(U value, int i);
+    // Set to value with compatible type U at vector index;
+    // for scalers i must be zero
+
     template <class T> const T* valuePtr() const;
     // Return pointer in native type T
 
@@ -113,6 +117,15 @@ public:
         return static_cast<Type>(_variant.index());
     }
 
+    Type baseType() const
+    // Return the value's type, disregarding if it's a vector
+    {
+        int i = _variant.index();
+        if (isVector())
+            i = i - static_cast<int>(Type::VecBool) + 1;
+        return static_cast<Type>(i);
+    }
+
     bool isVector() const
     // Return if this is a vectored type
     {
@@ -123,6 +136,7 @@ public:
     // Size of vector, or 1 if scalar
 
     QString typeName() const;
+    static QString typeName(Type type);
     // Return the value's type name
 
     QString outputFormat() const;
@@ -135,7 +149,6 @@ public:
     bool operator==(const Value &x) const;
     bool operator!=(const Value &x) const  { return !(*this==x); }
     // Compare
-
 private:
     std::variant<
         std::monostate,
@@ -218,6 +231,53 @@ template <class U> void Value::changeValue(U value)
     }
 }
 
+template <class U> void Value::changeValueAt(U value, int i)
+{
+    using std::get;
+    switch(type()) {
+    case Type::Uninitialized:
+        ThrowException("Value is uninitialized");
+        break;
+    case Type::Bool:
+    case Type::Int:
+    case Type::Double:
+    case Type::String:
+    case Type::Date:
+    case Type::Time:
+    case Type::DateTime:
+    case Type::BareDate:
+        if (i==0)
+            changeValue(value);
+        else
+            ThrowException("Index out of range for a scalar").value(i);
+        break;
+    case Type::VecBool:
+        get<ValueTyped<QVector<bool     >>>(_variant).ptr()[i] = convert<bool     >(value);
+        break;
+    case Type::VecInt:
+        get<ValueTyped<QVector<int      >>>(_variant).ptr()[i] = convert<int      >(value);
+        break;
+    case Type::VecDouble:
+        get<ValueTyped<QVector<double   >>>(_variant).ptr()[i] = convert<double   >(value);
+        break;
+    case Type::VecString:
+        get<ValueTyped<QVector<QString  >>>(_variant).ptr()[i] = convert<QString  >(value);
+        break;
+    case Type::VecDate:
+        get<ValueTyped<QVector<QDate    >>>(_variant).ptr()[i] = convert<QDate    >(value);
+        break;
+    case Type::VecTime:
+        get<ValueTyped<QVector<QTime    >>>(_variant).ptr()[i] = convert<QTime    >(value);
+        break;
+    case Type::VecDateTime:
+        get<ValueTyped<QVector<QDateTime>>>(_variant).ptr()[i] = convert<QDateTime>(value);
+        break;
+    case Type::VecBareDate:
+        get<ValueTyped<QVector<BareDate >>>(_variant).ptr()[i] = convert<BareDate >(value);
+        break;
+    }
+}
+
 
 template <> const bool*      Value::valuePtr() const;
 template <> const int*       Value::valuePtr() const;
@@ -279,7 +339,14 @@ template <class U> U Value::as() const
     return U();
 }
 
+// Needed for QMap<Value::Type>
+inline uint qHash(const Value::Type &key) {
+    return static_cast<uint>(key);
+}
+
+//inline bool Value::Type::operator==(const Value::Type &x) const {
 
 
 }
+
 #endif

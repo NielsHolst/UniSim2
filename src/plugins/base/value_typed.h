@@ -47,7 +47,14 @@ public:
             _value = convert<T>(value);
     }
 
-    const T* valuePtr() const
+    const T* constPtr() const
+    // Return const pointer in native type T
+    {
+        Q_ASSERT(_isInitialized);
+        return _variable ? _variable : &_value;
+    }
+
+    T* ptr()
     // Return pointer in native type T
     {
         Q_ASSERT(_isInitialized);

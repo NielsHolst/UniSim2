@@ -94,7 +94,6 @@ namespace boxscript { namespace parser
 
     x3::rule<assignment_class, ast::Assignment> const assignment = "assignment";
     x3::rule<bare_date_class, ast::BareDate> const bare_date = "bare date";
-    x3::rule<bare_date_time_class, ast::BareDateTime> const bare_date_time = "bare date_time";
     x3::rule<bool__class, ast::Bool> const bool_ = "bool";
     x3::rule<box_class, ast::Box> const box = "box";
     x3::rule<date_class, ast::Date> const date = "date";
@@ -182,7 +181,7 @@ namespace boxscript { namespace parser
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
     auto const number_def = double_ | int_;
     auto const object_name_def = qualified_name | joker | dots;
-    auto const operand_def = date_time | bare_date_time | date | bare_date | time | number |
+    auto const operand_def = date_time | date | bare_date | time | number |
                              reference | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
     auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
@@ -197,7 +196,7 @@ namespace boxscript { namespace parser
     auto const time_def = integer >> ':' > integer >> -(':' > integer);
 
     BOOST_SPIRIT_DEFINE(
-                assignment, bare_date, bare_date_time, bool_, box, date, date_time,
+                assignment, bare_date, bool_, box, date, date_time,
                 dots, expression, function_call, grouped_expression, integer, joker,
                 name, number, object_name, operand, operation, operator_,
                 path, port, port_prefix, qualified_name, quoted_string, reference, sign,
@@ -211,7 +210,6 @@ namespace boxscript { namespace parser
     // We want these to be annotated with the iterator position.
     struct assignment_class : x3::annotate_on_success {};
     struct bare_date_class : x3::annotate_on_success {};
-    struct bare_date_time_class : x3::annotate_on_success {};
     struct bool__class : x3::annotate_on_success {};
     struct box_class : x3::annotate_on_success {};
     struct date_class : x3::annotate_on_success {};

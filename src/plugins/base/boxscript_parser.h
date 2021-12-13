@@ -6,7 +6,7 @@
 
 namespace boxscript{ namespace parser {
     typedef std::shared_ptr<boxscript::ast::boxscript> Result;
-    Result parse(std::string source, std::string fileNamePath);
+    Result parse(std::string source, std::string fileNamePath = "");
 }}
 
 #endif

@@ -4,6 +4,7 @@
 */
 #ifndef BASE_OPERATOR_H
 #define BASE_OPERATOR_H
+#include <QString>
 
 namespace base {
 
@@ -27,6 +28,8 @@ enum class Parenthesis {
 extern int precedence(Operator op);
 
 extern int arity(Operator op);
+
+Operator lookupOperator(QString op);
 
 }
 #endif

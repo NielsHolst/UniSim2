@@ -138,8 +138,8 @@ bool Value::operator==(const Value &x) const {
 #define VALUE_PTR(cppType, valueType) \
 template <> const cppType* Value::valuePtr() const { \
     if (type() != valueType) \
-        ThrowException("Value is not of type " + QString(#cppType)); \
-    return std::get<ValueTyped<cppType>>(_variant).valuePtr(); \
+        ThrowException("Value is not of type " + QString(#cppType)).value(typeName()); \
+    return std::get<ValueTyped<cppType>>(_variant).constPtr(); \
 }
 
 VALUE_PTR(bool     , Type::Bool)
@@ -160,7 +160,11 @@ VALUE_PTR(QVector<QDateTime>, Type::VecDateTime)
 VALUE_PTR(QVector<BareDate> , Type::VecBareDate)
 
 QString Value::typeName() const {
-    switch(type()) {
+    return typeName(type());
+}
+
+QString Value::typeName(Type type){
+    switch(type) {
     case Type::Uninitialized: return "Uninitialized";
     case Type::Bool         : return "Bool";
     case Type::Int          : return "Int";
@@ -181,6 +185,5 @@ QString Value::typeName() const {
     }
     return QString();
 }
-
 
 }

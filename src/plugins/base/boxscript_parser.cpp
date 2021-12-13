@@ -9,9 +9,6 @@ using namespace base;
 namespace boxscript { namespace parser {
 
 Result parse(std::string source, std::string fileNamePath) {
-    // Read source
-//    std::string source = environment().inputFileContent(filePath).toStdString();
-
     // Set up iterators
     using boxscript::parser::iterator_type;
     iterator_type iter(source.begin());
@@ -25,7 +22,6 @@ Result parse(std::string source, std::string fileNamePath) {
     using boxscript::parser::error_handler_tag;
     std::stringstream errorMsg;
     error_handler_type error_handler(iter, end, errorMsg, fileNamePath);
-//                                    environment().inputFileNamePath(filePath).toStdString());
 
     // Our parser
     auto const parser =

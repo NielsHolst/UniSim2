@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <map>
+#include "exception.h"
 #include "operator.h"
 
 using std::map;
@@ -41,6 +42,21 @@ int precedence(Operator op) {
 
 int arity(Operator op) {
     return arities.at(op);
+}
+
+Operator lookupOperator(QString op) {
+    switch (op.at(0).toLatin1()){
+    case '+': return Operator::Add;
+    case '-': return Operator::Subtract;
+    case '*': return Operator::Multiply;
+    case '/': return Operator::Divide;
+    case '^': return Operator::Exponentiate;
+    case '&': if (op.size()==2 && op.at(1)=='&') return Operator::And; break;
+    case '|': if (op.size()==2 && op.at(1)=='&') return Operator::Or; break;
+    case '!': return Operator::Not;
+    default: ;
+    }
+    ThrowException("Unknown operataor").value(op);
 }
 
 }

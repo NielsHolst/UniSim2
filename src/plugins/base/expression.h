@@ -8,6 +8,7 @@
 #include <variant>
 #include <vector>
 #include <QObject>
+#include "boxscript_ast.h"
 #include "operator.h"
 #include "path.h"
 #include "value.h"
@@ -17,17 +18,27 @@ namespace base {
 class Expression
 {
 public:
+    struct FunctionCall {
+        QString name;
+        int arity;
+    };
+    struct Comma {
+    };
     using Element = std::variant<
         Value,
         Operator,
         Parenthesis,
-        Path
+        Path,
+        FunctionCall,
+        Comma
     >;
     enum class Type {
         Value,
         Operator,
         Parenthesis,
-        Path
+        Path,
+        FunctionCall,
+        Comma
     };
     using Stack = std::vector<Element>;
 
@@ -35,12 +46,27 @@ public:
     void clear();
     int size() const     { return _stack.size();}
     bool isEmpty() const { return _stack.empty();}
+    void translate(const boxscript::ast::Expression &astExpression);
+    void push(boxscript::ast::Operand operand);
+    void push(boxscript::ast::Bool b);
+    void push(boxscript::ast::Number number);
+    void push(boxscript::ast::QuotedString s);
+    void push(boxscript::ast::Date date);
+    void push(boxscript::ast::Time time);
+    void push(boxscript::ast::DateTime dt);
+    void push(boxscript::ast::BareDate bd);
+    void push(boxscript::ast::Reference ref);
+    void push(boxscript::ast::GroupedExpression group);
+    void push(boxscript::ast::FunctionCall func);
     void push(Value value);
     void push(Operator operatr);
     void push(Parenthesis parenthesis);
     void push(Path path);
+    void push(FunctionCall func);
+    void push(Comma comma);
     void close();
     void resolvePaths();
+    void collectValues();
     Value evaluate();
 
     const Stack& original() const;
@@ -59,7 +85,8 @@ private:
     // Methods
     void toPostfix();
     void checkNotClosed();
-    void reduce(Stack &stack);
+    void reduceByOperator(Stack &stack);
+    void reduceByFunctionCall(Stack &stack);
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 };

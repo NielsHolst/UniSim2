@@ -15,6 +15,7 @@ private slots:
     void testResultType();
     void testNegation();
     void testExponentiation();
+    void testFunctionCall();
 };
 
 DECLARE_TEST(TestExpression)

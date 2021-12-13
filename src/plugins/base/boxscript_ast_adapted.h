@@ -16,9 +16,6 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::BareDate, day, month
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::BareDateTime, date, time
-)
-BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Bool, stringValue
 )
 BOOST_FUSION_ADAPT_STRUCT(

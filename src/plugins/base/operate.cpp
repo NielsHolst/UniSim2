@@ -76,10 +76,10 @@ inline QDateTime operator-(const QDateTime &dt, double x) {
 }
 inline QDateTime operator+(double x, const QDateTime &dt) { return dt + x; }
 
-inline BareDate operator+(const BareDate &date, double x) { return date.addBareDays( convert<int>(x)); }
-inline BareDate operator-(const BareDate &date, double x) { return date.addBareDays(-convert<int>(x)); }
-inline int      operator-(const BareDate &a, const BareDate &b) { return numeric_cast<int>(b.daysTo(a)); }
-inline BareDate operator+(double x, const BareDate &date) { return date + x; }
+//inline BareDate operator+(const BareDate &date, double x) { return date.addBareDays( convert<int>(x)); }
+//inline BareDate operator-(const BareDate &date, double x) { return date.addBareDays(-convert<int>(x)); }
+//inline int      operator-(const BareDate &a, const BareDate &b) { return numeric_cast<int>(b.date().daysTo(a.date())); }
+//inline BareDate operator+(double x, const BareDate &date) { return date + x; }
 
 //
 // Template functions for vector-scalar and vector-vector operations

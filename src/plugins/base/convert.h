@@ -99,7 +99,7 @@ template<> inline int convert(QString x) {return x.toInt();}
 template<> inline int convert(QDate x)   {return x.dayOfYear();}
 template<> inline int convert(QTime x)   {return x.hour();}
 template<> inline int convert(QDateTime x) {return x.date().dayOfYear();}
-template<> inline int convert(BareDate x)  {return x.dayOfYear();}
+template<> inline int convert(BareDate x)  {return x.date().dayOfYear();}
 template<> inline int convert(const char *x)  {return convert<int>(QString(x));}
 
 template<> inline double convert(bool x)   {return x;}
@@ -125,8 +125,8 @@ template<> inline QString convert(QDate x)  {return x.toString(Qt::ISODate);}
 template<> inline QString convert(QTime x)  {return x.toString("hh:mm:ss");}
 template<> inline QString convert(QDateTime x)    {return convert<QString>(x.date()) +
                                                    "T" + convert<QString>(x.time());}
-template<> inline QString convert(BareDate x)     {return convert<QString>(x.day()) +
-                                                   "/" + convert<QString>(x.month());}
+template<> inline QString convert(BareDate x)     {return convert<QString>(x.date().day()) +
+                                                   "/" + convert<QString>(x.date().month());}
 template<> inline QString convert(const char *x)  {return QString(x);}
 
 template<> inline QDate convert(bool  )       {ThrowException("Cannot convert bool to date");

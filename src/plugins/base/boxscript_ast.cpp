@@ -25,10 +25,6 @@ namespace boxscript { namespace ast
         return os << x.day << "/" << x.month;
     }
 
-    std::ostream& operator<<(std::ostream& os, const BareDateTime& x) {
-        return os << x.date << "T" << x.time;
-    }
-
     std::ostream& operator<<(std::ostream& os, const Bool& x) {
         return os << x.stringValue;
     }

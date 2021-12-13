@@ -125,7 +125,7 @@ template<> BareDate convert(QString x) {
                 bare_date_def,
                 space
                 );
-    if (!(first==last && ok && result.isValid()))
+    if (!(first==last && ok && result.date().isValid()))
         ThrowException("Invalid bare date format").value(x);
 
     return result;

@@ -121,6 +121,8 @@ HEADERS +=  \
 #    time_with_units.h \
     timer.h \
     unique_name.h \
+    value.h \
+    value_collection.h \
 #    vector.h \
 #    vector_op.h \
 #    vector_vector.h \
@@ -134,6 +136,7 @@ SOURCES +=  \
 #    ast_boxes.cpp \
 #    ast_common.cpp \
 #    base_signal.cpp \
+    bare_date.cpp \
     box.cpp \
     box_builder.cpp \
 #    box_preprocessor.cpp \
@@ -207,6 +210,7 @@ SOURCES +=  \
 #    track_collection.cpp \
     unique_name.cpp \
     value.cpp \
+    value_collection.cpp \
 #    vector.cpp \
 #    vector_op.cpp \
 #    vector_vector.cpp \

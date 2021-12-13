@@ -24,12 +24,6 @@ namespace boxscript { namespace ast
         friend std::ostream& operator<<(std::ostream& os, const BareDate& x);
     };
 
-    struct BareDateTime : x3::position_tagged {
-        BareDate date;
-        Time time;
-        friend std::ostream& operator<<(std::ostream& os, const BareDateTime& x);
-    };
-
     struct Bool : x3::position_tagged {
         std::string stringValue;
         friend std::ostream& operator<<(std::ostream& os, const Bool& x);
@@ -86,12 +80,12 @@ namespace boxscript { namespace ast
         friend std::ostream& operator<<(std::ostream& os, const Number& x);
     };
 
-    struct Operand : x3::variant<DateTime, BareDateTime, Date, BareDate, Time, Number,
+    struct Operand : x3::variant<DateTime, Date, BareDate, Time, Number,
                                  Reference, FunctionCall, Bool, QuotedString, GroupedExpression>,
             x3::position_tagged
     {
-        enum class Type{DateTime=0, BareDateTime=1, Date=2, BareDate=3, Time=4, Number=5,
-                        Reference=6, FunctionCall=7, Bool=8, QuotedString=9, GroupedExpression=10};
+        enum class Type{DateTime, Date, BareDate, Time, Number,
+                        Reference, FunctionCall, Bool, QuotedString, GroupedExpression};
         Type type() const {
             return static_cast<Type>(get().which());
         }
@@ -103,7 +97,6 @@ namespace boxscript { namespace ast
                 TYPE_NAME(Type::Time, Time);
                 TYPE_NAME(Type::DateTime, DateTime);
                 TYPE_NAME(Type::BareDate, BareDate);
-                TYPE_NAME(Type::BareDateTime, BareDateTime);
                 TYPE_NAME(Type::Reference, Reference);
                 TYPE_NAME(Type::FunctionCall, FunctionCall);
                 TYPE_NAME(Type::Bool, Bool);

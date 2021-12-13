@@ -136,8 +136,7 @@ void TestBoxScriptX3::testBareDateTime() {
     try {
         result = parse("box_script/bare_date_time.box");
     }
-    UNEXPECTED_EXCEPTION;
-    QVERIFY(compare("box_script/bare_date_time_parsed.box", result));
+    EXPECTED_EXCEPTION;
 }
 
 void TestBoxScriptX3::testBool() {
@@ -208,16 +207,6 @@ void TestBoxScriptX3::testOperator() {
     UNEXPECTED_EXCEPTION;
     QVERIFY(compare("box_script/operator.box", result));
 }
-
-void TestBoxScriptX3::testTooMuch() {
-    ParseResult result;
-    bool excepted(false);
-    try {
-        result = parse("box_script/too_much.box");
-    }
-    EXPECTED_EXCEPTION;
-}
-
 void TestBoxScriptX3::testNumber() {
     ParseResult result;
     bool excepted(false);
@@ -247,3 +236,23 @@ void TestBoxScriptX3::testNumber() {
 
 
 }
+
+void TestBoxScriptX3::testTooMuch() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/too_much.box");
+    }
+    EXPECTED_EXCEPTION_SHOWN;
+}
+
+
+void TestBoxScriptX3::testSyntaxError() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/syntax_error.box");
+    }
+    EXPECTED_EXCEPTION_SHOWN;
+}
+
