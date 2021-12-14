@@ -111,7 +111,7 @@ template<> inline double convert(QTime x)  {return x.hour() + x.minute()/60. + x
 template<> inline double convert(QDateTime x)   {return convert<double>(x.date()) +
                                                         convert<double>(x.time());}
 template<> inline double convert(BareDate x)    {return convert<double>(x);}
-template<> inline double convert(const char *x)  {return convert<double>(QString(x));}
+template<> inline double convert(const char *x) {return convert<double>(QString(x));}
 
 template<> inline QString convert(bool x)   {return QString::number(x);}
 template<> inline QString convert(int x)    {return QString::number(x);}
@@ -121,12 +121,12 @@ template<> inline QString convert(double x) {QString s = QString::number(x);
                                              return s;
                                             }
 template<> inline QString convert(QString x){return x;}
-template<> inline QString convert(QDate x)  {return x.toString(Qt::ISODate);}
+template<> inline QString convert(QDate x)  {return x.toString("yyyy/MM/dd");}
 template<> inline QString convert(QTime x)  {return x.toString("hh:mm:ss");}
 template<> inline QString convert(QDateTime x)    {return convert<QString>(x.date()) +
-                                                   "T" + convert<QString>(x.time());}
+                                                   "T" +  convert<QString>(x.time());}
 template<> inline QString convert(BareDate x)     {return convert<QString>(x.date().day()) +
-                                                   "/" + convert<QString>(x.date().month());}
+                                                   "/" +  convert<QString>(x.date().month());}
 template<> inline QString convert(const char *x)  {return QString(x);}
 
 template<> inline QDate convert(bool  )       {ThrowException("Cannot convert bool to date");

@@ -11,6 +11,8 @@ private slots:
     void testOne();
     void testMany();
     void testUpdate();
+    void testMixedTypes();
+    void testMixedTypesToString();
 };
 
 DECLARE_TEST(TestValueCollection)

@@ -22,7 +22,7 @@ ValueSets
         ValueSet() << Value::Type::Bool << Value::Type::Int << Value::Type::Double
     };
 
-ValueCollection::ValueCollection() : _buffer(nullptr),_isEmpty(true) {
+ValueCollection::ValueCollection() : _isEmpty(true), _buffer(nullptr) {
 }
 
 ValueCollection::ValueCollection(QVector<const Value*> _values) : ValueCollection() {
@@ -94,7 +94,6 @@ void ValueCollection::initialize() {
             _commonType = Type::Double;
         else
             _commonType = Type::String;
-        _valuePtrs = _original;
     }
     createBuffer(_commonType);
 }
@@ -125,7 +124,7 @@ template <> void ValueCollection::collect<T>() { \
 }
 
 COLLECT(bool)
-//COLLECT(int      )
+COLLECT(int      )
 COLLECT(double   )
 COLLECT(QString  )
 COLLECT(QDate    )
@@ -133,23 +132,6 @@ COLLECT(QTime    )
 COLLECT(QDateTime)
 COLLECT(BareDate )
 
-template <> void ValueCollection::collect<int>() {
-    using Ptrs = QVector<const int*>;
-    Ptrs ptrs;
-    for (const Value *value : _original) {
-        if (value->isVector()) {
-            auto vec = value->valuePtr<QVector<int>>();
-            const int *p = vec->constData();
-            int n = vec->size();
-            for (int i=0; i<n; ++i)
-                ptrs << p++;
-        }
-        else {
-            ptrs << value->valuePtr<int>();
-        }
-    }
-    _valuePtrs = ptrs;
-}
 
 void ValueCollection::update() {
     if (_hasOneType)
@@ -180,14 +162,25 @@ void ValueCollection::updateOneType() {
     }
 }
 
+#define UPDATE_MIXED(T) \
+    buffer<T>()->clear(); \
+    for (auto v : _original) \
+        *buffer<T>() << v->as<T>(); \
+    break
+
 void ValueCollection::updateMixedTypes() {
-//    using Type = Value::Type;
-//    switch (_commonType) {
-//    case Type::Int    : updateMixed<int    , vint    >(); break;
-//    case Type::Double : updateMixed<double , vdouble >(); break;
-//    case Type::String : updateMixed<QString, vQString>(); break;
-//    default: ThrowException("Illegal common type").value(Value::typeName(_commonType));
-//    }
+//    auto buf = buffer<double>();
+//    buf->clear();
+//    for (auto v : _original)
+//        *buf << v->as<double>();
+
+    using Type = Value::Type;
+    switch (_commonType) {
+    case Type::Int    : UPDATE_MIXED(int    );
+    case Type::Double : UPDATE_MIXED(double );
+    case Type::String : UPDATE_MIXED(QString);
+    default: ThrowException("Illegal common type").value(Value::typeName(_commonType));
+    }
 }
 
 bool ValueCollection::isEmpty() const {

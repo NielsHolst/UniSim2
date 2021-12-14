@@ -201,7 +201,12 @@ void Expression::resolvePaths() {
 }
 
 void Expression::collectValues() {
+    Stack myStack;
+    for (auto &element : _stack) {
+        if (type(element) == Type::FunctionCall) {
 
+        }
+    }
 }
 
 void Expression::toPostfix() {

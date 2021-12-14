@@ -298,7 +298,6 @@ template <> const QVector<BareDate>*  Value::valuePtr() const;
 
 template <class U> U Value::as() const
 {
-    QVector<const Value*> v;
     switch(type()) {
     case Type::Uninitialized:
         ThrowException("Value is uninitialized");
@@ -344,7 +343,6 @@ inline uint qHash(const Value::Type &key) {
     return static_cast<uint>(key);
 }
 
-//inline bool Value::Type::operator==(const Value::Type &x) const {
 
 
 }

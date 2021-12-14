@@ -47,10 +47,12 @@ private:
     // Pointers to original values
     QVector<const Value*> _original;
 
-    // Pointers translated to common types, if possible
+    // Characterise original pointers
+    bool _hasOneType, _isEmpty;
+
+    // Pointers translated to common type
     std::variant<
         std::monostate,
-        // If _original elements were all of the same base type
         QVector<const bool*     >,
         QVector<const int*      >,
         QVector<const double*   >,
@@ -58,9 +60,7 @@ private:
         QVector<const QDate*    >,
         QVector<const QTime*    >,
         QVector<const QDateTime*>,
-        QVector<const BareDate* >,
-        // If _original elements were mixed base type
-        QVector<const Value*>
+        QVector<const BareDate* >
     >
     _valuePtrs;
 
@@ -69,11 +69,10 @@ private:
     void createBuffer(Value::Type type);
     template <class T> QVector<T>* buffer();
 
+    // Holds return values
     Value _values;
 
-    // If _original were of same base type then _hasOneType is true,
-    // and _commonType contains the common base type
-    bool _hasOneType, _isEmpty;
+    // _commonType contains the element type of the buffer
     Value::Type _commonType;
 
     // Promotion rules; in case of mixed base types
@@ -81,7 +80,6 @@ private:
 
     void updateOneType();
     void updateMixedTypes();
-    template<class T, class VT> void updateMixed();
 };
 
 template <> void ValueCollection::collect<bool     >();
@@ -101,20 +99,6 @@ template <> vQDate    * ValueCollection::buffer<QDate     >() { return static_ca
 template <> vQTime    * ValueCollection::buffer<QTime     >() { return static_cast<vQTime    *>(_buffer); }
 template <> vQDateTime* ValueCollection::buffer<QDateTime >() { return static_cast<vQDateTime*>(_buffer); }
 template <> vBareDate * ValueCollection::buffer<BareDate  >() { return static_cast<vBareDate *>(_buffer); }
-
-
-template<class T, class VT> void ValueCollection::updateMixed() {
-//    using Values = QVector<const Value*>;
-//    Values ptrs = std::get<Values>(_valuePtrs);
-//    QVector<T> values;
-//    for (const Value *pvalue : ptrs) {
-//        if (pvalue->isVector())
-//            values << convert<VT>(*pvalue);
-//        else
-//            values << convert<T>(*pvalue);
-//    }
-//    _values = values;
-}
 
 }
 #endif
