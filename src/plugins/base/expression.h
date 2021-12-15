@@ -19,10 +19,15 @@ class Expression
 {
 public:
     struct FunctionCall {
+        FunctionCall() {}
+        FunctionCall(QString name_, int arity_) :
+            name(name_), arity(arity_), type(Value::Type::Uninitialized), id(0) {}
         QString name;
         int arity;
+        Value::Type type;
+        int id;
     };
-    struct Comma {
+    struct FunctionEnd {
     };
     using Element = std::variant<
         Value,
@@ -30,7 +35,7 @@ public:
         Parenthesis,
         Path,
         FunctionCall,
-        Comma
+        FunctionEnd
     >;
     enum class Type {
         Value,
@@ -38,7 +43,7 @@ public:
         Parenthesis,
         Path,
         FunctionCall,
-        Comma
+        FunctionEnd
     };
     using Stack = std::vector<Element>;
 
@@ -63,16 +68,15 @@ public:
     void push(Parenthesis parenthesis);
     void push(Path path);
     void push(FunctionCall func);
-    void push(Comma comma);
+    void push(FunctionEnd end);
     void close();
     void resolvePaths();
-    void collectValues();
     Value evaluate();
 
     const Stack& original() const;
     const Stack& stack() const;
     const Element& at(int i) { return _stack.at(i); }
-    static Type type(const Element& el) { return static_cast<Type>(el.index()); }
+    static Type type(const Element& el) { int i=el.index(); return static_cast<Type>(i); }
 
     QString originalAsString() const;
     QString stackAsString() const;
@@ -82,9 +86,11 @@ private:
     QObject *_parent;
     Stack _stack, _original;
     bool _isClosed;
+    QVector<FunctionCall> _functionCalls;
     // Methods
     void toPostfix();
     void checkNotClosed();
+    Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
     static QString toString(const Stack &stack);

@@ -2,12 +2,14 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <limits>
 #include <sstream>
 #include "exception.h"
 #include "expression.h"
 #include "convert_operator.h"
 #include "convert.h"
 #include "operate.h"
+#include "value_collection.h"
 using std::get;
 
 namespace base {
@@ -114,7 +116,7 @@ void Expression::push(boxscript::ast::GroupedExpression group) {
 }
 
 void Expression::push(boxscript::ast::FunctionCall func) {
-    push(FunctionCall{QString::fromStdString(func.name), (int) func.arguments.size()});
+    push(FunctionCall(QString::fromStdString(func.name), (int) func.arguments.size()));
     for (boxscript::ast::FunctionCall::Argument arg : func.arguments)
         push(arg.get());
 }
@@ -144,9 +146,9 @@ void Expression::push(FunctionCall func) {
     _stack.push_back(func);
 }
 
-void Expression::push(Comma comma) {
+void Expression::push(FunctionEnd end) {
     checkNotClosed();
-    _stack.push_back(comma);
+    _stack.push_back(end);
 }
 
 void Expression::checkNotClosed() {
@@ -187,26 +189,17 @@ inline bool isRight(Expression::Element element) {
            (get<Parenthesis>(element) == Parenthesis::Right);
 }
 
-inline bool isComma(Expression::Element element) {
-    return (Expression::type(element) == Expression::Type::Comma);
+inline bool isFunctionCall(Expression::Element element) {
+    return (Expression::type(element) == Expression::Type::FunctionCall);
 }
 
 inline int precedence(Expression::Element element) {
-    Q_ASSERT(isOperator(element));
-    return precedence( get<Operator>(element) );
+    Q_ASSERT(isOperator(element) || isFunctionCall(element));
+    return isOperator(element) ? precedence( get<Operator>(element) ) : 0;
 }
 
 void Expression::resolvePaths() {
 
-}
-
-void Expression::collectValues() {
-    Stack myStack;
-    for (auto &element : _stack) {
-        if (type(element) == Type::FunctionCall) {
-
-        }
-    }
 }
 
 void Expression::toPostfix() {
@@ -223,8 +216,7 @@ void Expression::toPostfix() {
             else {
                 // Pop until a higher precedence is found
                 while (!myStack.empty() && precedence(element) <= precedence(myStack.back())) {
-                    if (!isComma(myStack.back()))
-                        postfix.push_back( myStack.back() );
+                    postfix.push_back( myStack.back() );
                     myStack.pop_back();
                 }
                 myStack.push_back(element);
@@ -252,25 +244,39 @@ void Expression::toPostfix() {
             postfix.push_back(element);
             break;
         case Type::FunctionCall:
-            myStack.push_back(element);
+            myStack.push_back(registerFunctionCall(element));
             break;
-        case Type::Comma:
-            while (!(myStack.empty() || isLeft(myStack.back()) || isComma(myStack.back()))) {
+        case Type::FunctionEnd:
+            // Pop until matching function call
+            while (!(myStack.empty() || isFunctionCall(myStack.back()))) {
                 postfix.push_back( myStack.back() );
                 myStack.pop_back();
+            }
+            if (isFunctionCall(myStack.back())) {
+                postfix.push_back( myStack.back() );
+                myStack.pop_back();
+            }
+            else {
+                ThrowException("Missing function call");
             }
             break;
         }
     } // for
     // Pop until stack is empty
     while (!myStack.empty()) {
-        if (!isComma(myStack.back()))
-            postfix.push_back( myStack.back() );
+        postfix.push_back( myStack.back() );
         myStack.pop_back();
     }
     // Copy result
     _stack.clear();
     _stack = postfix;
+}
+
+Expression::Element Expression::registerFunctionCall(const Element &element) {
+    FunctionCall f = std::get<FunctionCall>(element);
+    f.id = _functionCalls.size();
+    _functionCalls << f;
+    return f;
 }
 
 void Expression::reduceByOperator(Stack &stack) {
@@ -309,10 +315,163 @@ void Expression::reduceByOperator(Stack &stack) {
     stack.push_back(c);
 }
 
+namespace {
+
+Value::Type argumentsType(const Expression::Stack &stack, int arity) {
+    QVector<const Value*> args;
+    auto end = stack.cend(),
+         begin = end - arity;
+    for (auto it=begin; it<end; ++it) {
+        args << & std::get<Value>(*it);
+    }
+    return ValueCollection::type(args);
+}
+
+template <class T> QVector<T> popArguments(Expression::Stack &stack, int arity) {
+    QVector<T> args;
+    for (int i=0; i<arity; ++i) {
+        const Value &value = std::get<Value>(stack.back());
+        if (value.isVector())
+            args << value.as<QVector<T>>();
+        else
+            args << value.as<T>();
+        stack.pop_back();
+    }
+    return args;
+}
+
+template <class T>
+T sum(QVector<T> v) {
+    T y = 0;
+    for (auto x : v)
+        y += x;
+    return y;
+}
+
+template <class T>
+T mean(QVector<T> v) {
+    return (v.size() > 0) ? sum<T>(v)/v.size() : T();
+}
+
+template <class T>
+T min(QVector<T> v) {
+    if (v.isEmpty())
+        ThrowException("Cannot find 'min' of empty vector");
+    T y = v.first();
+    for (auto x : v)
+        if (x<y)
+            y = x;
+    return y;
+}
+
+template <class T>
+T max(QVector<T> v) {
+    if (v.isEmpty())
+        ThrowException("Cannot find 'max' of empty vector");
+    T y = v.first();
+    for (auto x : v)
+        if (x>y)
+            y = x;
+    return y;
+}
+
+bool any(QVector<bool> v) {
+    for (auto x : v)
+        if (convert<bool>(x))
+            return true;
+    return false;
+}
+
+bool all(QVector<bool> v) {
+    for (auto x : v)
+        if (!convert<bool>(x))
+            return false;
+    return true;
+}
+
+} // local namespace
+
 void Expression::reduceByFunctionCall(Stack &stack) {
     // Pop operator
-    const FunctionCall &func = get<FunctionCall>(stack.back());
+    const FunctionCall &func    = get<FunctionCall>(stack.back());
+          FunctionCall &funcReg = _functionCalls[func.id];
     stack.pop_back();
+    if ((int) stack.size() < func.arity)
+        ThrowException("Wrong function arity").value(func.arity);
+
+    using Type = Value::Type;
+    if (funcReg.type == Value::Type::Uninitialized)
+        funcReg.type = argumentsType(stack, func.arity);
+    Type &type(funcReg.type);
+
+    if (func.name == "sum") {
+        switch (type) {
+        case Type::Int   : stack.push_back(sum(popArguments<int   >(stack, func.arity))); break;
+        case Type::Double: stack.push_back(sum(popArguments<double>(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'sum'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "mean") {
+        switch (type) {
+        case Type::Int   : stack.push_back(mean(popArguments<int   >(stack, func.arity))); break;
+        case Type::Double: stack.push_back(mean(popArguments<double>(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'mean'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "min") {
+        switch (type) {
+        case Type::Int     : stack.push_back(min(popArguments<int      >(stack, func.arity))); break;
+        case Type::Double  : stack.push_back(min(popArguments<double   >(stack, func.arity))); break;
+        case Type::Date    : stack.push_back(min(popArguments<QDate    >(stack, func.arity))); break;
+        case Type::Time    : stack.push_back(min(popArguments<QTime    >(stack, func.arity))); break;
+        case Type::DateTime: stack.push_back(min(popArguments<QDateTime>(stack, func.arity))); break;
+        case Type::BareDate: stack.push_back(min(popArguments<BareDate >(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'min'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "max") {
+        switch (type) {
+        case Type::Int     : stack.push_back(max(popArguments<int      >(stack, func.arity))); break;
+        case Type::Double  : stack.push_back(max(popArguments<double   >(stack, func.arity))); break;
+        case Type::Date    : stack.push_back(max(popArguments<QDate    >(stack, func.arity))); break;
+        case Type::Time    : stack.push_back(max(popArguments<QTime    >(stack, func.arity))); break;
+        case Type::DateTime: stack.push_back(max(popArguments<QDateTime>(stack, func.arity))); break;
+        case Type::BareDate: stack.push_back(max(popArguments<BareDate >(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'max'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "any") {
+        switch (type) {
+        case Type::Bool  :
+        case Type::Int   :
+        case Type::Double: stack.push_back(any(popArguments<bool>(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'any'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "all") {
+        switch (type) {
+        case Type::Bool  :
+        case Type::Int   :
+        case Type::Double: stack.push_back(all(popArguments<bool>(stack, func.arity))); break;
+        default: ThrowException("Illegal argument type for 'all'").value(Value::typeName(type));
+        }
+    }
+    else if (func.name == "c") {
+        switch (type) {
+        case Type::Bool    : stack.push_back(popArguments<bool     >(stack, func.arity)); break;
+        case Type::Int     : stack.push_back(popArguments<int      >(stack, func.arity)); break;
+        case Type::Double  : stack.push_back(popArguments<double   >(stack, func.arity)); break;
+        case Type::String  : stack.push_back(popArguments<QString  >(stack, func.arity)); break;
+        case Type::Date    : stack.push_back(popArguments<QDate    >(stack, func.arity)); break;
+        case Type::Time    : stack.push_back(popArguments<QTime    >(stack, func.arity)); break;
+        case Type::DateTime: stack.push_back(popArguments<QDateTime>(stack, func.arity)); break;
+        case Type::BareDate: stack.push_back(popArguments<BareDate >(stack, func.arity)); break;
+        default: ThrowException("Illegal argument type for 'c'").value(Value::typeName(type));
+        }
+    }
+    else
+        ThrowException("Unknown function").value(func.name);
+
 }
 
 Value Expression::evaluate() {
@@ -327,8 +486,10 @@ Value Expression::evaluate() {
     else {
         for (Element &element : _stack) {
             myStack.push_back(element);
-            if (Expression::type(element) == Expression::Type::Operator)
+            if (isOperator(element))
                 reduceByOperator(myStack);
+            else if (isFunctionCall(element))
+                reduceByFunctionCall(myStack);
         }
         // The result should be the one element left in the stack
         if (myStack.size() == 0)
@@ -375,15 +536,17 @@ QString Expression::toString(const Element &element) {
     Expression::FunctionCall func;
     QString s;
     switch (type(element)) {
-    case Type::Value: s = get<Value>(element).asString(true, true); break;
-    case Type::Operator: s = convert<QString>( get<Operator>   (element) ); break;
+    case Type::Value:       s = get<Value>(element).asString(true, true); break;
+    case Type::Operator:    s = convert<QString>( get<Operator>   (element) ); break;
     case Type::Parenthesis: s = convert<QString>( get<Parenthesis>(element) ); break;
-    case Type::Path: s = get<Path>(element).original(); break;
+    case Type::Path:        s = get<Path>(element).original(); break;
     case Type::FunctionCall:
-            func = get<FunctionCall>(element);
-            s = func.name + "[" + QString::number(func.arity) + "]";
-            break;
-    case Type::Comma: s = ", "; break;
+        func = get<FunctionCall>(element);
+        s = func.name + "[" + QString::number(func.arity) + "]";
+        break;
+    case Type::FunctionEnd:
+        s = "#";
+        break;
     }
     return s;
 }

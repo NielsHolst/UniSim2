@@ -32,6 +32,8 @@ inline bool operator==(const BareDate &a, const BareDate &b) {
 BareDate operator+(const BareDate &bare, double x);
 BareDate operator-(const BareDate &bare, double x);
 int operator-(const BareDate &a, const BareDate &b);
+bool operator<(const BareDate &a, const BareDate &b);
+bool operator>(const BareDate &a, const BareDate &b);
 BareDate operator+(double x, const BareDate &bare);
 
 }

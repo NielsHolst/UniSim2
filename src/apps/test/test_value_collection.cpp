@@ -24,7 +24,7 @@ void TestValueCollection::testOne() {
     }
     UNEXPECTED_EXCEPTION;
 
-    QCOMPARE(coll.type(), Value::Type::VecInt);
+    QCOMPARE(coll.type(), Value::Type::Int);
     vint val = coll.values().as<vint>();
     QCOMPARE(val.size(), 1);
     QCOMPARE(val.at(0), 7);
@@ -44,7 +44,7 @@ void TestValueCollection::testMany() {
     }
     UNEXPECTED_EXCEPTION;
 
-    QCOMPARE(coll.type(), Value::Type::VecInt);
+    QCOMPARE(coll.type(), Value::Type::Int);
     vint val = coll.values().as<vint>();
     QCOMPARE(val.size(), 3);
     QCOMPARE(val, QVector<int>() << 7 << 9 << 13);
@@ -63,7 +63,7 @@ void TestValueCollection::testUpdate() {
     }
     UNEXPECTED_EXCEPTION;
 
-    QCOMPARE(coll.type(), Value::Type::VecInt);
+    QCOMPARE(coll.type(), Value::Type::Int);
     vint val = coll.values().as<vint>();
     QCOMPARE(val.size(), 3);
     QCOMPARE(val, QVector<int>() << 7 << 9 << 13);
@@ -98,7 +98,7 @@ void TestValueCollection::testMixedTypes() {
     }
     UNEXPECTED_EXCEPTION;
 
-    QCOMPARE(coll.type(), Value::Type::VecDouble);
+    QCOMPARE(coll.type(), Value::Type::Double);
     vdouble val = coll.values().as<vdouble>();
     QCOMPARE(val.size(), 3);
     QCOMPARE(val, QVector<double>() << 1. << 13. << 3.12);
@@ -130,7 +130,7 @@ void TestValueCollection::testMixedTypesToString() {
     }
     UNEXPECTED_EXCEPTION;
 
-    QCOMPARE(coll.type(), Value::Type::VecString);
+    QCOMPARE(coll.type(), Value::Type::String);
     vQString val = coll.values().as<vQString>();
     QCOMPARE(val.size(), 2);
     QCOMPARE(val, vQString() << "13" << "2021/12/24");

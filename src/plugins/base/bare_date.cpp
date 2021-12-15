@@ -21,6 +21,14 @@ int operator-(const BareDate &a, const BareDate &b) {
     return boost::numeric_cast<int>(b.date().daysTo(a.date()));
 }
 
+bool operator<(const BareDate &a, const BareDate &b) {
+    return a.date() < b.date();
+}
+
+bool operator>(const BareDate &a, const BareDate &b) {
+    return a.date() > b.date();
+}
+
 BareDate operator+(double x, const BareDate &bare) {
     return bare + x;
 }

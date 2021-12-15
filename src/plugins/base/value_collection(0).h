@@ -20,6 +20,7 @@ class ValueCollection {
 public:
     ValueCollection();
     ValueCollection(QVector<const Value*> _values);
+    ~ValueCollection();
 
     void initialize();
     void initialize(QVector<const Value*> _values);
@@ -28,10 +29,6 @@ public:
     template <class T> void collect();
     // Collect values as a vector pointers to scalar type T;
     // allocate values buffer for type T
-
-    void collect(Value::Type commonType);
-    // Collect values as a vector pointers to generic values;
-    // allocate values buffer for common type
 
     void update();
     // Update buffered values
@@ -42,15 +39,20 @@ public:
     const Value& values();
     // Get values collected into one value
 
+    Value::Type type() const;
+    // Type of values (always a vector type)
+
 
 private:
     // Pointers to original values
     QVector<const Value*> _original;
 
-    // Pointers translated to common types, if possible
+    // Characterise original pointers
+    bool _hasOneType, _isEmpty;
+
+    // Pointers translated to common type
     std::variant<
         std::monostate,
-        // If _original elements were all of the same base type
         QVector<const bool*     >,
         QVector<const int*      >,
         QVector<const double*   >,
@@ -58,38 +60,26 @@ private:
         QVector<const QDate*    >,
         QVector<const QTime*    >,
         QVector<const QDateTime*>,
-        QVector<const BareDate* >,
-        // If _original elements were mixed base type
-        QVector<const Value*>
+        QVector<const BareDate* >
     >
     _valuePtrs;
 
     // Vector buffer updated from _valuePtrs
-    std::variant<
-        std::monostate,
-        // If _original elements are all of the same base type
-        QVector<bool     >,
-        QVector<int      >,
-        QVector<double   >,
-        QVector<QString  >,
-        QVector<QDate    >,
-        QVector<QTime    >,
-        QVector<QDateTime>,
-        QVector<BareDate >
-    > _buffer;
+    void *_buffer;
+    void createBuffer(Value::Type type);
+    template <class T> QVector<T>* buffer();
 
-    // If _original were of same base type then _hasOneType is true,
-    // and _commonType contains the common base type
-    bool _hasOneType, _isEmpty;
-    Value::Type _commonType;
+    // Holds return values
     Value _values;
+
+    // _commonType contains the element type of the buffer
+    Value::Type _commonType;
 
     // Promotion rules; in case of mixed base types
     static QVector<QSet<Value::Type>> _toInt, _toDouble, _toString;
 
     void updateOneType();
     void updateMixedTypes();
-    template<class T, class VT> void updateMixed();
 };
 
 template <> void ValueCollection::collect<bool     >();
@@ -101,18 +91,14 @@ template <> void ValueCollection::collect<QTime    >();
 template <> void ValueCollection::collect<QDateTime>();
 template <> void ValueCollection::collect<BareDate >();
 
-template<class T, class VT> void ValueCollection::updateMixed() {
-//    using Values = QVector<const Value*>;
-//    Values ptrs = std::get<Values>(_valuePtrs);
-//    QVector<T> values;
-//    for (const Value *pvalue : ptrs) {
-//        if (pvalue->isVector())
-//            values << convert<VT>(*pvalue);
-//        else
-//            values << convert<T>(*pvalue);
-//    }
-//    _values = values;
-}
+template <> vbool     * ValueCollection::buffer<bool      >() { return static_cast<vbool     *>(_buffer); }
+template <> vint      * ValueCollection::buffer<int       >() { return static_cast<vint      *>(_buffer); }
+template <> vdouble   * ValueCollection::buffer<double    >() { return static_cast<vdouble   *>(_buffer); }
+template <> vQString  * ValueCollection::buffer<QString   >() { return static_cast<vQString  *>(_buffer); }
+template <> vQDate    * ValueCollection::buffer<QDate     >() { return static_cast<vQDate    *>(_buffer); }
+template <> vQTime    * ValueCollection::buffer<QTime     >() { return static_cast<vQTime    *>(_buffer); }
+template <> vQDateTime* ValueCollection::buffer<QDateTime >() { return static_cast<vQDateTime*>(_buffer); }
+template <> vBareDate * ValueCollection::buffer<BareDate  >() { return static_cast<vBareDate *>(_buffer); }
 
 }
 #endif

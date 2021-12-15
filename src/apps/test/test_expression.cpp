@@ -190,19 +190,14 @@ void TestExpression::testExponentiation() {
 void TestExpression::testFunctionCall() {
     bool excepted(false);
     using E     = Expression;
-    using Type  = Value::Type;
     using Func  = Expression::FunctionCall;
-    using Comma = Expression::Comma;
     E e;
 
-    e.push(Func{"sum", 3});
-    e.push(Parenthesis::Left);
+    e.push(Func("sum", 3));
     e.push(8);
-    e.push(Comma());
     e.push(9);
-    e.push(Comma());
     e.push(2);
-    e.push(Parenthesis::Right);
+    e.push(Expression::FunctionEnd{});
     e.push(Operator::Subtract);
     e.push(13);
     try {
@@ -211,12 +206,12 @@ void TestExpression::testFunctionCall() {
     UNEXPECTED_EXCEPTION;
     QCOMPARE(e.stackAsString(), "8 9 2 sum[3] 13 -");
 
-//    Value result;
-//    try {
-//        result = e.evaluate();
-//        result.as<int>();
-//    }
-//    UNEXPECTED_EXCEPTION;
-//    QCOMPARE(result.type(), Type::Int);
-//    QCOMPARE(result.as<int>(), 8 + 9 + 2 - 13);
+    Value result;
+    try {
+        result = e.evaluate();
+        result.as<int>();
+    }
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(result.type(), Value::Type::Int);
+    QCOMPARE(result.as<int>(), 8 + 9 + 2 - 13);
 }
