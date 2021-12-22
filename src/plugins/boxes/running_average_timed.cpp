@@ -23,14 +23,14 @@ RunningAverageTimed::RunningAverageTimed(QString name, QObject *parent)
     Input(initial).help("Value of running average at reset");
     Input(input).help("The input to average");
     Input(timeWindow).equals(1).help("Time window to average over in units of timeUnit").unit("int>0");
-    Input(timeUnit).equals('d').help("Unit of time step").unit("y|d|h|m|s");
+    Input(timeUnit).equals("d").help("Unit of time step").unit("y|d|h|m|s");
     Input(timeStepSecs).imports("calendar[timeStepSecs]");
     Output(value).help("Running average");
     Output(count).help("Number of steps averages over").unit("integer");
 }
 
 void RunningAverageTimed::reset() {
-    TimeUnit timeUnitWindow = TimeWithUnits::charToUnit(timeUnit, this);
+    TimeUnit timeUnitWindow = TimeWithUnits::charToUnit(timeUnit.at(0).toLatin1(), this);
     double timeWindowSecs = timeWindow*TimeWithUnits::conversionFactor(timeUnitWindow, Seconds);
     count = numeric_cast<int>(std::floor(timeWindowSecs/timeStepSecs + 0.5));
 

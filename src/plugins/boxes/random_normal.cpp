@@ -28,8 +28,8 @@ void RandomNormal::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         double u = randomiser()->draw01(),
                w = 1./numStrata,
                u2 = (stratum + u)*w;

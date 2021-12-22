@@ -26,8 +26,8 @@ void RandomLogNormal::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         if (min<=0.)
             ThrowException("Minimum value must be positive").value(min).context(this);
         if (max<=0.)

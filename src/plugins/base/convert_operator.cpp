@@ -13,6 +13,9 @@ template<> QString convert(Operator op) {
     case Operator::And:           return "&&";
     case Operator::Or:            return "||";
     case Operator::Not:           return "!";
+    case Operator::Union:         return "|";
+    case Operator::If:            return "?";
+    case Operator::Else:          return ":";
     }
     return QString();
 }

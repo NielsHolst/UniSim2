@@ -360,6 +360,8 @@ Value add(const Value &a, const Value &b) {
         default            : ;
         }
         break;
+    case Type::Path:
+        break;
     //
     // Vector
     //
@@ -512,6 +514,8 @@ Value subtract(const Value &a, const Value &b) {
         case Type::Date    : return Value(a.as<BareDate>() - b.as<BareDate>());
         default            : ;
         }
+        break;
+    case Type::Path:
         break;
     //
     // Vector operations

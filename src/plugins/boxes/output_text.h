@@ -8,6 +8,7 @@
 #include <QList>
 #include <QTextStream>
 #include "output_ports.h"
+#include "output_summary.h"
 
 namespace base {
     class Track;
@@ -26,21 +27,35 @@ public:
     void debrief();
 private:
     // Inputs
-    bool skipFormats, useLocalDecimalChar;
-    int skipInitialRows, averageN;
+    bool skipFormats, useLocalDecimalChar,
+         isActive;
+    int step;
+    QVector<QString> summary;
+
     // Outputs
     QString filePath;
+
     // Data
-    bool _isCondensed;
-    int _rowCount;
-    QVector<double> _tracksRunningSum, _tracksSum, _tracksMin, _tracksMax;
+    bool _justChangedToActive;
+    int _periodCount;
+    OutputSummary _summary;
+    struct {
+        QVector<double> sum, min, max;
+        QVector<int> minAt, maxAt;
+    } _state;
     QFile _file;
     QTextStream _stream;
+
     // Methods
+    void collectPaths();
+    void setOutputNames();
+    void initializeState();
     void openFileStream();
+    void updateState();
+    void processValues();
     void writeColumnLabels();
     void writeColumnFormats();
-    void processValues();
+    void writeValues();
 };
 
 } // boxes

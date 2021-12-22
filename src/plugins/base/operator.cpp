@@ -20,7 +20,10 @@ static map<Operator,int> precedences =
    {Operator::Exponentiate , 9},
    {Operator::And          , 5},
    {Operator::Or           , 4},
-   {Operator::Not          , 8}
+   {Operator::Not          , 8},
+   {Operator::Union        , 8},
+   {Operator::If           , 3},
+   {Operator::Else         , 3}
 };
 
 static map<Operator,int> arities =
@@ -33,7 +36,10 @@ static map<Operator,int> arities =
    {Operator::Exponentiate , 2},
    {Operator::And          , 2},
    {Operator::Or           , 2},
-   {Operator::Not          , 1}
+   {Operator::Not          , 1},
+   {Operator::Union        , 2},
+   {Operator::If           , 2},
+   {Operator::Else         , 2}
 };
 
 int precedence(Operator op) {
@@ -52,8 +58,11 @@ Operator lookupOperator(QString op) {
     case '/': return Operator::Divide;
     case '^': return Operator::Exponentiate;
     case '&': if (op.size()==2 && op.at(1)=='&') return Operator::And; break;
-    case '|': if (op.size()==2 && op.at(1)=='&') return Operator::Or; break;
+    case '|': if      (op.size()==1) return Operator::Union;
+              else if (op.size()==2 && op.at(1)=='|') return Operator::Or; break;
     case '!': return Operator::Not;
+    case '?': return Operator::If;
+    case ':': return Operator::Else;
     default: ;
     }
     ThrowException("Unknown operataor").value(op);

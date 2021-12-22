@@ -29,12 +29,17 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
     case Type::VecString    : for (QString x : as<vQString  >())
                                 slist += aph(apostrophed, x);
                               break;
+    case Type::Path         : slist += as<Path>().original();
+                              break;
     default                 : slist += as<QString>();
                               break;
     }
-    return (vectorized && isVector()) ?
-        "c(" + slist.join(",") +")" :
-        slist.at(0);
+    if (isVector()) {
+       return vectorized ?  "c(" + slist.join(",") +")" : slist.join("\t");
+    }
+    else {
+       return slist.at(0);
+    }
 }
 
 void Value::reset() {
@@ -48,6 +53,7 @@ void Value::reset() {
     case Type::Time         : changeValue(QTime    ()); break;
     case Type::DateTime     : changeValue(QDateTime()); break;
     case Type::BareDate     : changeValue(BareDate ()); break;
+    case Type::Path         : changeValue(Path     ()); break;
     case Type::VecBool      : changeValue(vbool      (size())); break;
     case Type::VecInt       : changeValue(vint       (size())); break;
     case Type::VecDouble    : changeValue(vdouble    (size())); break;
@@ -100,6 +106,7 @@ void Value::assign(const Value &x) {
     case Type::Time         : changeValue(x.as<QTime    >()); break;
     case Type::DateTime     : changeValue(x.as<QDateTime>()); break;
     case Type::BareDate     : changeValue(x.as<BareDate >()); break;
+    case Type::Path         : changeValue(x.as<Path     >()); break;
     case Type::VecBool      : changeValue(x.as<QVector<bool     >>()); break;
     case Type::VecInt       : changeValue(x.as<QVector<int      >>()); break;
     case Type::VecDouble    : changeValue(x.as<QVector<double   >>()); break;
@@ -123,6 +130,7 @@ bool Value::operator==(const Value &x) const {
         case Type::Time         : return as<QTime     >() == x.as<QTime     >();
         case Type::DateTime     : return as<QDateTime >() == x.as<QDateTime >();
         case Type::BareDate     : return as<BareDate  >() == x.as<BareDate  >();
+        case Type::Path         : return as<Path      >().original() == x.as<Path>().original();
         case Type::VecBool      : return as<vbool     >() == x.as<vbool     >();
         case Type::VecInt       : return as<vint      >() == x.as<vint      >();
         case Type::VecDouble    : return as<vdouble   >() == x.as<vdouble   >();
@@ -136,7 +144,7 @@ bool Value::operator==(const Value &x) const {
 }
 
 #define VALUE_PTR(cppType, valueType) \
-template <> const cppType* Value::valuePtr() const { \
+template <> const cppType* Value::constPtr() const { \
     if (type() != valueType) \
         ThrowException("Value is not of type " + QString(#cppType)).value(typeName()); \
     return std::get<ValueTyped<cppType>>(_variant).constPtr(); \
@@ -174,6 +182,7 @@ QString Value::typeName(Type type){
     case Type::Time         : return "Time";
     case Type::DateTime     : return "DateTime";
     case Type::BareDate     : return "BareDate";
+    case Type::Path         : return "Path";
     case Type::VecBool      : return "VectorOfBool";
     case Type::VecInt       : return "VectorOfInt";
     case Type::VecDouble    : return "VectorOfDouble";

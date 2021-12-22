@@ -7,10 +7,10 @@ SUBDIRS += base
 base.subdir = src/plugins/base
 test.depends = base
 
-#SUBDIRS += boxes
-#boxes.subdir = src/plugins/boxes
-#boxes.depends = base
-#test.depends = boxes
+SUBDIRS += boxes
+boxes.subdir = src/plugins/boxes
+boxes.depends = base
+test.depends = boxes
 
 #SUBDIRS += command
 #command.subdir = src/plugins/command

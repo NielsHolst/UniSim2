@@ -1,7 +1,8 @@
 #include <QFile>
+#include "box.h"
+#include "box_builder.h"
 #include "boxscript_config.h"
 #include "boxscript_parser.h"
-//#include "environment.h"
 #include "exception.h"
 
 using namespace base;
@@ -39,6 +40,16 @@ Result parse(std::string source, std::string fileNamePath) {
     if (!success)
         throw base::Exception(QString::fromStdString(errorMsg.str()));
     return ast;
+}
+
+Expression parseExpression(QString s) {
+    BoxBuilder builder;
+    Result ast;
+    ast = parse("Box{+x=" + s.toStdString() + "}");
+    ast->root.build(&builder);
+
+    Box *root = builder.content(BoxBuilder::Amend::None);
+    return root->port("x")->expression();
 }
 
 }}

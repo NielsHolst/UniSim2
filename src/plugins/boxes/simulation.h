@@ -4,6 +4,7 @@
 */
 #ifndef SIMULATION_H
 #define SIMULATION_H
+#include <QElapsedTimer>
 #include <QList>
 #include <QTime>
 #include <base/box.h>

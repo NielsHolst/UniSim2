@@ -21,7 +21,7 @@ private:
     QTime time, sunrise, solarTime;
     double morningOffset, afternoonOffset;
     int timeStep;
-    char timeUnit;
+    QString timeUnit;
     // Outputs
     double TminYesterday, TmaxYesterday,
         TminToday, TmaxToday,

@@ -7,6 +7,7 @@
 
 #include "convert.h"
 #include "exception.h"
+#include "path.h"
 
 namespace base {
 
@@ -75,4 +76,5 @@ private:
 };
 
 }
+
 #endif

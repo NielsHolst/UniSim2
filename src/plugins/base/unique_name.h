@@ -11,14 +11,14 @@
 namespace base {
 
 class Port;
-class Track;
 
 class UniqueName
 {
 public:
-    UniqueName(QList  <Track*> tracks);
+    UniqueName();
+    UniqueName(QVector<Port*> ports);
     UniqueName(QVector<const Port*> ports);
-    QStringList resolve();
+    QStringList resolved();
 private:
     // Data
     struct Entry {
@@ -28,8 +28,10 @@ private:
     };
     QVector<Entry> _entries;
     int _nextEntry;
+    QStringList _resolved;
+    bool _isResolved;
     // Methods
-    void addEntry(const base::Port *port);
+    void addEntry(const Port *port);
     void sortByName();
     bool relativePath(int index);
     void extendKey(int from, int end);

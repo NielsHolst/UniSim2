@@ -3,23 +3,24 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include "box.h"
+#include "boxscript_parser.h"
 #include "general.h"
 #include "path.h"
 #include "port.h"
-#include "track.h"
-
 
 namespace base {
+
+int Port::_counter = 0;
 
 Port::Port(QString name, QObject *parent)
     : QObject(parent),
       _isValueOverridden(false),
       _doReset(true),
-      _isExtraneous(false),
+      _isAuxilliary(false),
       _access(PortAccess::Input),
-      _expression(this)
+      _expression(this),
+      _number(-1)
 {
-    Class(Port);
     setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
@@ -29,7 +30,7 @@ Port::Port(QString name, QObject *parent)
 void Port::assign(const Port &x) {
    _isValueOverridden = x._isValueOverridden;
    _doReset = x._doReset;
-   _isExtraneous = x._isExtraneous;
+   _isAuxilliary = x._isAuxilliary;
    _access = x._access;
    _unit = x._unit;
    _help = x._help;
@@ -67,28 +68,47 @@ Port& Port::help(QString value) {
     return *this;
 }
 
-Port& Port::isExtraneous() {
-    _isExtraneous = true;
+Port& Port::isAuxilliary() {
+    _isAuxilliary = true;
     return *this;
 }
 
-//template <>
-//Port& Port::equals(const char *fixedValue) {
-//    return equals(QString(fixedValue));
-//}
+void Port::outputNames(QStringList columnNames) {
+    _outputNames = columnNames;
+}
 
-//template <>
-//Port& Port::equals(Value value) {
-//    checkIfValueOverridden();
-//    _expression.push(value);
-//    return *this;
-//}
+Port& Port::equals(const Expression &expression) {
+    checkIfValueOverridden();
+    _expression = expression;
+    return *this;
+}
 
 Port& Port::imports(QString pathToPort, Caller caller) {
     checkIfValueOverridden();
     _expression.push(Path(pathToPort, this));
     _importCaller = caller;
     return help("Defaults to " + pathToPort);
+}
+
+Port& Port::computes(QString expression) {
+    equals( boxscript::parser::parseExpression(expression) );
+    return *this;
+}
+
+//
+// Enumeration
+//
+
+void Port::enumerate() {
+    _number = _counter++;
+}
+
+int Port::evaluationOrder() const {
+    return _number;
+}
+
+void Port::resetCounter() {
+    _counter = 0;
 }
 
 //
@@ -123,12 +143,28 @@ QString Port::help() const {
     return _help;
 }
 
+QString Port::importPath() const {
+    if (_expression.size() != 1)
+        ThrowException("Port expression must have only on token").
+            value(_expression.originalAsString()).context(this);
+    const Expression::Element &element(_expression.original().at(0));
+    if (Expression::type(element) != Expression::Type::Path)
+        ThrowException("Port expression must be a path").
+            value(_expression.originalAsString()).context(this);
+    const Path &path(std::get<Path>(element));
+    return path.original();
+}
+
+int Port::size() const {
+    return _value.size();
+}
+
 bool Port::isValueOverridden() const {
     return _isValueOverridden;
 }
 
-int Port::evaluationOrder() const {
-    return _evaluationOrder;
+QStringList Port::outputNames() const {
+    return _outputNames;
 }
 
 QVector<Port*> Port::importPorts() const {
@@ -169,17 +205,30 @@ const Expression& Port::expression() const {
     return _expression;
 }
 
+QString Port::format() const {
+    using Type = Value::Type;
+    switch (_value.baseType()) {
+        case Type::Date:
+            return "ymd";
+            break;
+        case Type::Time:
+            return "HMS";
+            break;
+        case Type::DateTime:
+            return "ymdHMS";
+            break;
+        default:
+            return "NA";
+    }
+}
+
 //
 // Housekeeping
 //
 
-void Port::enumerate(int &number) {
-    _evaluationOrder = number++;
-}
-
-void Port::closeExpression() {
-    _expression.close();
-}
+//void Port::resolveImports() {
+//    _expression.resolveImports();
+//}
 
 void Port::addExportPort(Port *port) {
     if (!_exportPorts.contains(port))
@@ -187,7 +236,8 @@ void Port::addExportPort(Port *port) {
 }
 
 void Port::reset() {
-    _value.reset();
+    if (_doReset)
+        _value.reset();
 }
 
 void Port::update() {
@@ -202,7 +252,7 @@ void Port::toText(QTextStream &text, int indentation) {
     fill.fill(' ', indentation);
     QString prefix =
             (access() == PortAccess::Input) ?
-            (_isExtraneous ? "+" : "." ) : "//~";
+            (_isAuxilliary ? "+" : "." ) : "//~";
 
     text << fill
          << prefix << objectName()

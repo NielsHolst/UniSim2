@@ -3,7 +3,6 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <boost/numeric/conversion/cast.hpp>
-#include <QElapsedTimer>
 #include <QFile>
 #include <QTextStream>
 #include <base/convert.h>
@@ -11,10 +10,8 @@
 #include <base/environment.h>
 #include <base/path.h>
 #include <base/port.h>
-#include <base/port_type.h>
 #include <base/publish.h>
 #include <base/timer.h>
-#include <base/track.h>
 #include "simulation.h"
 
 using namespace base;
@@ -49,8 +46,8 @@ Simulation::~Simulation() {
 }
 
 void Simulation::amend() {
-    port("iteration")->track();
-    Track::effectuateOrders();
+    Box::resetCounter();
+    Port::resetCounter();
 }
 
 void Simulation::initialize() {
@@ -73,6 +70,7 @@ void Simulation::run() {
     try {
         time.start();
         environment().computationStep(ComputationStep::Initialize);
+//        resolveImportsFamily();
         initializeFamily();
 
         for (iteration = 1;
@@ -83,7 +81,6 @@ void Simulation::run() {
         {
             environment().computationStep(ComputationStep::Reset);
             resetFamily();
-            Track::resetAll();
             environment().computationStep(ComputationStep::Update);
 
             for (step = 1;

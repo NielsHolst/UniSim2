@@ -7,11 +7,10 @@
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
-#include <base/track.h>
 #include "output_ports.h"
-#include "output_r.h"
 
 namespace base {
+    class Path;
     class Port;
 }
 
@@ -23,19 +22,18 @@ public:
     PlotR(QString name, QObject *parent);
     void reset();
     void initialize();
-    QString toString();
+//    QString toString();
     QString toScript();
 private:
     // Inputs
     bool hide;
-    QVector<QString> ports;
     QString layout, guideTitle, end, endCode, type, ggplot, transform;
     int maxData, ncol, nrow, iteration, fontSize;
     double width, height;
+    base::Path xAxis;
     // Outputs
     bool plotAsList;
     // Methods
-    QVector<base::Track*> xAxisTracks();
     QString dim(QString portName) const;
     void appendGgplot(QTextStream &s);
     QString scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const;

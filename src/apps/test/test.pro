@@ -18,7 +18,7 @@ HEADERS +=  \
     test_boost_variant.h \
     test_box_builder.h \
     test_box_cases.h \
-    test_box_script_x3.h \
+    test_boxscript_x3.h \
     test_convert_date.h \
     test_convert_date_time.h \
     test_convert_time.h \
@@ -26,6 +26,7 @@ HEADERS +=  \
     test_expression.h \
     test_expression_parser.h \
     test_operate.h \
+    test_reader_boxscript_x3.h \
     test_spirit.h \
     test_value.h \
     test_value_collection.h \
@@ -35,7 +36,7 @@ SOURCES +=  \
     test_boost_variant.cpp \
     test_box_builder.cpp \
     test_box_cases.cpp \
-    test_box_script_x3.cpp \
+    test_boxscript_x3.cpp \
     test_convert_date.cpp \
     test_convert_date_time.cpp \
     test_convert_time.cpp \
@@ -43,6 +44,7 @@ SOURCES +=  \
     test_expression.cpp \
     test_expression_parser.cpp \
     test_operate.cpp \
+    test_reader_boxscript_x3.cpp \
     test_spirit.cpp \
     test_value.cpp \
     test_value_collection.cpp \

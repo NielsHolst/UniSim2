@@ -25,8 +25,8 @@ void RandomUniform::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         double u = randomiser()->draw01(),
                w = (max-min)/numStrata;
         value = min + (stratum + u)*w;

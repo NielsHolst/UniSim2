@@ -2,7 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/any_year.h>
+
 #include <base/publish.h>
 #include "on_off_by_date.h"
 
@@ -13,18 +13,16 @@ namespace boxes {
 PUBLISH(OnOffByDate)
 
 OnOffByDate::OnOffByDate(QString name, QObject *parent)
-    : OnOffBase<QDate>(name, parent)
+    : OnOffBase<QDate, base::BareDate>(name, parent)
 {
-    port("x")->unit("Date");
-    port("xOn")->unit("Date");
-    port("xOff")->unit("Date");
+    port("x")   ->unit("date");
+    port("xOn") ->unit("Bare date");
+    port("xOff")->unit("Bare date");
 }
 
 void OnOffByDate::setSwitch() {
-    bool isWithinYear = isBefore(xOn, xOff);
-    isOn = isWithinYear ?
-                isAfterOrEquals(x, xOn) && isBeforeOrEquals(x, xOff) :
-                isAfterOrEquals(x, xOn) || isBeforeOrEquals(x, xOff);
+    BareDate date(x.month(), x.day());
+    isOn = (date >= xOn && date <= xOff);
 }
 
 void OnOffByDate::setValue() {

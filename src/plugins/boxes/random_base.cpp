@@ -4,6 +4,7 @@
 */
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/general.h>
 #include <base/random_order.h>
 #include "randomiser_stratified.h"
 #include "random_base.h"
@@ -27,7 +28,7 @@ RandomBase::RandomBase(QString name, QObject *parent)
 }
 
 void RandomBase::amend() {
-    _order = new RandomOrder(1, this);
+    _number = new RandomOrder(1, this);
     RandomiserStratified *stratified = findMaybeOne<RandomiserStratified>("../*");
     if (stratified) {
         Box *child = clone("B", this);
@@ -39,7 +40,7 @@ void RandomBase::initialize() {
     // Find randomiser to use
     _randomiser = findOne<RandomiserBase>("ancestors::*/*<RandomiserBase>");
     // Get number of strata
-    _order->resize(_randomiser->numStrata());
+    _number->resize(_randomiser->numStrata());
     // Potential first draw
     if (drawAtInitialize) {
         checkInputs("initialize");

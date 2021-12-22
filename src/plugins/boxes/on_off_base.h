@@ -8,7 +8,7 @@
 
 namespace boxes {
 
-template <class T> class OnOffBase : public base::Box
+template <class X, class Limits=X> class OnOffBase : public base::Box
 {
 public:
     OnOffBase(QString name, QObject *parent) : Box(name, parent) {
@@ -35,7 +35,8 @@ public:
     }
 protected:
     // Input
-    T x, xOn, xOff;
+    X x;
+    Limits xOn, xOff;
     double valueOn, valueOff;
     bool onAtReset, isSticky;
     // Output

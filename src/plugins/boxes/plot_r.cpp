@@ -4,6 +4,7 @@
 */
 #include <base/environment.h>
 #include <base/path.h>
+#include <base/port.h>
 #include <base/publish.h>
 #include "layout_r.h"
 #include "page_r.h"
@@ -35,12 +36,11 @@ PlotR::PlotR(QString name, QObject *parent)
     Input(iteration).imports("/*[iteration]");
     Input(width).imports("..[width]").help("May be used to spawn additional pages");
     Input(height).imports("..[height]").help("May be used to spawn additional pages");
+    Input(xAxis).imports("..[xAxis]");
     Output(plotAsList).noReset().help("Is the plot a list of plots?");
 }
 
 void PlotR::initialize() {
-    // Chek
-
     // Validate
     convert<LayoutR>(layout);
     if (transform!="" && transform!="log10")
@@ -55,12 +55,12 @@ void PlotR::reset() {
         ncol = 1;
 }
 
-QString PlotR::toString() {
-    QString s = "Plot: " + objectName() + "\n";
-    for (const Track *track : tracks())
-        s += "  Port: " + track->uniqueName() + "\n";
-    return s;
-}
+//QString PlotR::toString() {
+//    QString s = "Plot: " + objectName() + "\n";
+//    for (const Track *track : tracks())
+//        s += "  Port: " + track->uniqueName() + "\n";
+//    return s;
+//}
 
 inline QString apostrophed(QString s) {
     return "\"" + s + "\"";
@@ -77,30 +77,20 @@ QString PlotR::toScript() {
     if (hide)
         return QString();
 
-    if (tracks().isEmpty()) {
-        QStringList strings = QStringList(ports.begin(), ports.end());
-        ThrowException("No matching ports found for this plot").context(this);
-    }
-
     QStringList xLabels;
-    for (Track *track : xAxisTracks())
-        xLabels << apostrophed(track->uniqueNameExpanded());
+    for (auto port : xAxis.resolved())
+        xLabels << port->outputNames();
 
     QStringList yLabels;
-    for (Track *track : tracks())
-        yLabels << apostrophed(track->uniqueNameExpanded());
-
-    // Set iteration label according to filter
-    bool isFiltered = (xAxisTracks().at(0)->filter() != PortFilter::None);
-    QString iterationLabel = "iteration";
-    if (isFiltered) iterationLabel += ".end";
+    for (auto port : ports.resolved())
+        yLabels << port->outputNames();
 
     // Write function call
     QString string,
             typeId = type.toLower();
     QTextStream s(&string);
     if (typeId=="default")
-        s << scriptForDefaultPlot(xLabels, yLabels, iterationLabel);
+        s << scriptForDefaultPlot(xLabels, yLabels, "iteration");
     else if (typeId=="density")
         s << scriptForDensityPlot(yLabels);
     else if (typeId.startsWith("histogram"))
@@ -208,15 +198,6 @@ QString PlotR::scriptForSobolIndicesPlot() {
     else
         s << "()";
     return string;
-}
-
-QVector<Track*> PlotR::xAxisTracks() {
-    QVector<Track*> tracks;
-    PageR *page = Path("ancestors::*<PageR>", this).resolveOne<PageR>(this);
-    QVector<Track::Order> orders = page->xAxisOrders();
-    for (Track::Order order : orders)
-        tracks << Track::find(order);
-    return tracks;
 }
 
 QString PlotR::dim(QString portName) const {

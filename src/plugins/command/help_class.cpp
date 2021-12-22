@@ -8,7 +8,7 @@
 #include <base/convert.h>
 #include <base/dialog.h>
 #include <base/exception.h>
-#include <base/factory_plug_in.h>
+// #include <base/factory_plug_in.h>
 #include <base/mega_factory.h>
 #include <base/publish.h>
 #include "help_class.h"

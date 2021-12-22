@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/environment.h>
 #include <base/random_generator.h>
 #include <base/random_order.h>
 #include "output_r.h"
@@ -17,7 +18,7 @@ namespace boxes {
 RandomiserBase::RandomiserBase(QString name, QObject *parent)
     : Box(name, parent), matricesFilled(false)
 {
-    Class(RandomiserBase);
+//    Class(RandomiserBase);
     Input(iteration).imports("/*[iteration]");
     Input(iterations).imports("/*[iterations]");
     Input(useFixed).equals(false).help("Used fixed value instead of random values?");

@@ -80,7 +80,7 @@ void FoodWebCalcBase::computeSupplies() {
 
 void FoodWebCalcBase::pushOutputs() {
     for (Box *box : _dependents)
-        box->updateImports();
+        box->updatePorts();
 }
 
 void FoodWebCalcBase::collectFoodWeb() {

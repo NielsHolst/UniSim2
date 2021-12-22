@@ -4,8 +4,6 @@
 */
 #ifndef BASE_BARE_DATE_H
 #define BASE_BARE_DATE_H
-
-#include <boost/numeric/conversion/cast.hpp>
 #include <QDate>
 
 namespace base {
@@ -25,16 +23,41 @@ private:
     QDate _date;
 };
 
-inline bool operator==(const BareDate &a, const BareDate &b) {
+// Comparisons
+
+inline bool  operator==(const BareDate &a, const BareDate &b) {
     return (a.date() == b.date());
 }
 
+inline bool  operator!=(const BareDate &a, const BareDate &b) {
+    return (a.date() != b.date());
+}
+
+inline bool operator<(const BareDate &a, const BareDate &b) {
+    return a.date() < b.date();
+}
+
+inline bool operator<=(const BareDate &a, const BareDate &b) {
+    return a.date() <= b.date();
+}
+
+inline bool operator>(const BareDate &a, const BareDate &b) {
+    return a.date() > b.date();
+}
+
+inline bool operator>=(const BareDate &a, const BareDate &b) {
+    return a.date() >= b.date();
+}
+
+// Addition
+
 BareDate operator+(const BareDate &bare, double x);
+BareDate operator+(double x, const BareDate &bare);
+
+// Subtraction
+
 BareDate operator-(const BareDate &bare, double x);
 int operator-(const BareDate &a, const BareDate &b);
-bool operator<(const BareDate &a, const BareDate &b);
-bool operator>(const BareDate &a, const BareDate &b);
-BareDate operator+(double x, const BareDate &bare);
 
 }
 

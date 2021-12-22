@@ -35,8 +35,8 @@ void TestValue::testInitializeByValue() {
     QCOMPARE(a.as<int>(), 17);
     QCOMPARE(b.as<double>(), 3.12);
 
-    const int    *x = a.valuePtr<int>();
-    const double *y = b.valuePtr<double>();
+    const int    *x = a.constPtr<int>();
+    const double *y = b.constPtr<double>();
 
     a.changeValue(3.12);
     b.changeValue(17);
@@ -61,8 +61,8 @@ void TestValue::testInitializeByPointer() {
     QCOMPARE(a.as<int>(), 17);
     QCOMPARE(b.as<double>(), 3.12);
 
-    const int    *x = a.valuePtr<int>();
-    const double *y = b.valuePtr<double>();
+    const int    *x = a.constPtr<int>();
+    const double *y = b.constPtr<double>();
 
     a.changeValue(3.12);
     b.changeValue(17);
@@ -146,7 +146,7 @@ void TestValue::testBool() {
         QCOMPARE(val.as<bool>(), true);
         QCOMPARE(x, true);
 
-        y = val.valuePtr<bool>();
+        y = val.constPtr<bool>();
         QCOMPARE(*y, true);
     }
     UNEXPECTED_EXCEPTION;
@@ -160,11 +160,11 @@ void TestValue::testInt() {
     val.initialize(&x);
     QCOMPARE(val.as<int>(), 117);
 
-    const int *y = val.valuePtr<int>();
+    const int *y = val.constPtr<int>();
     QCOMPARE(*y, 117);
 
     try {
-        val.valuePtr<double>();
+        val.constPtr<double>();
     }
     EXPECTED_EXCEPTION;
 

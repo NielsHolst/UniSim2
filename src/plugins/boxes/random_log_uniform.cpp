@@ -25,8 +25,8 @@ void RandomLogUniform::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         double u = randomiser()->draw01(),
                w = (log(max)-log(min))/numStrata,
                log_value = log(min) + (stratum + u)*w;

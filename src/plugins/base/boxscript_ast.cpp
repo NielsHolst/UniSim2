@@ -1,6 +1,26 @@
 #include <iostream>
 #include <sstream>
+#include <QSet>
+#include <QString>
+#include <QDate>
+#include <QDateTime>
+#include <QTime>
+#include "bare_date.h"
+#include "box_builder.h"
 #include "boxscript_ast.h"
+#include "expression.h"
+#include "operator.h"
+
+//        using Type = Operand::Type;
+//        static QSet<Operand::Type> constants {
+//            Type::DateTime,
+//            Type::Date,
+//            Type::BareDate,
+//            Type::Time,
+//            Type::Number,
+//            Type::Bool,
+//            Type::QuotedString
+//        };
 
 namespace boxscript { namespace ast
 {
@@ -64,8 +84,8 @@ namespace boxscript { namespace ast
     }
 
     std::ostream& operator<<(std::ostream& os, const Expression& x) {
-        if (x.sign.has_value() && x.sign.value()=='-')
-            os << '-';
+        if (x.sign.has_value() && x.sign.value()!='+')
+            os << x.sign.value();
         os << x.firstOperand;
         for (const Operation &operation : x.operations)
             os << operation;
@@ -110,6 +130,124 @@ namespace boxscript { namespace ast
         return os << zpad(x.hour) << ":" << zpad(x.minute) << ":" << zpad(x.second);
     }
 
+    inline QString str(const std::string &s) {
+        return QString::fromStdString(s);
+    }
+
+    base::Value Time::value() const {
+        return QTime(hour, minute, second);
+    }
+
+    base::Value BareDate::value() const {
+        return base::BareDate(month, day);
+    }
+
+    base::Value Bool::value() const {
+        return (stringValue == "TRUE");
+    }
+
+    base::Value Date::value() const {
+        return QDate(year, month, day);
+    }
+
+    base::Value DateTime::value() const {
+        return QDateTime(QDate(date.year, date.month, date.day),
+                         QTime(time.hour, time.minute, time.second),
+                         Qt::UTC);
+    }
+
+    void FunctionCall::build(base::Expression *expression) {
+        auto f = base::Expression::FunctionCall(str(name), arguments.size());
+        expression->push(f);
+        for (auto arg : arguments)
+            arg.get().build(expression);
+    }
+
+    base::Value QuotedString::value() const {
+        return QString::fromStdString(stringValue);
+    }
+
+    base::Path Reference::value() const {
+        return QString::fromStdString(path + "[" + port + "]");
+    }
+
+    base::Value Number::value() const {
+        using boost::get;
+        return (type()==Type::Int) ? get<int>(*this) : get<double>(*this);
+    }
+
+    void Operand::build(base::Expression *expression) {
+        using boost::get;
+        switch (type()) {
+        case Type::DateTime:
+            expression->push(get<DateTime    >(*this).value());  break;
+        case Type::Date:
+            expression->push(get<Date        >(*this).value()); break;
+        case Type::BareDate:
+            expression->push(get<BareDate    >(*this).value());  break;
+        case Type::Time:
+            expression->push(get<Time        >(*this).value()); break;
+        case Type::Number:
+            expression->push(get<Number      >(*this).value()); break;
+        case Type::Reference:
+            expression->push(get<Reference   >(*this).value()); break;
+        case Type::FunctionCall:
+                             get<FunctionCall>(*this).build(expression); break;
+        case Type::Bool:
+            expression->push(get<Bool        >(*this).value()); break;
+        case Type::QuotedString:
+            expression->push(get<QuotedString>(*this).value()); break;
+        case Type::GroupedExpression:
+            expression->push(base::Parenthesis::Left);
+                             get<GroupedExpression>(*this).get().build(expression);
+            expression->push(base::Parenthesis::Right);
+            break;
+        }
+    }
+
+    void Operation::build(base::Expression *expression) {
+        expression->push( base::lookupOperator(QString::fromStdString(operator_)) );
+        operand.build(expression);
+    }
+
+    void Expression::build(base::BoxBuilder *builder) {
+        base::Expression expression;
+        build(&expression);
+        expression.close();
+        builder->equals(expression);
+    }
+
+    void Expression::build(base::Expression *e) {
+        if (sign.has_value()) {
+            if (sign.value()=='-')
+                e->push(base::Operator::Negate);
+            else if (sign.value()=='!')
+                e->push(base::Operator::Not);
+        }
+        firstOperand.build(e);
+        for (auto op : operations)
+            op.build(e);
+    }
+
+    void Assignment::build(base::BoxBuilder *builder) {
+        bool isAuxPort = (qualifier == '+');
+        if (isAuxPort)
+            builder->aux(str(portName));
+        else
+            builder->port(str(portName));
+        // Deal with assignment operator (=~) here...
+        expression.build(builder);
+    }
+
+    void Box::build(base::BoxBuilder *builder) {
+        builder
+        ->box(str(className))
+        .name(str(objectName));
+        for (auto assignment : assignments)
+            assignment.build(builder);
+        for (auto child : children)
+            child.get().build(builder);
+    }
 
 
 }}

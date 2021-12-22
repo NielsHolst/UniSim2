@@ -18,7 +18,7 @@ public:
 private:
     // Input
     QString fileName;
-    int number, numberWidth;
+    int evaluationOrder, numberWidth;
     // Output
     QString value;
 };

@@ -66,7 +66,7 @@ void SineWaveTemperature::reset() {
 }
 
 void SineWaveTemperature::resetStepsPerDay() {
-    switch (timeUnit) {
+    switch (timeUnit.at(0).toLatin1()) {
     case 'h':
         if (24%timeStep > 0)
             ThrowException("Time step in hours must be divisible into 24").value(timeStep).context(this);

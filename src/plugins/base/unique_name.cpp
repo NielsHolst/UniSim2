@@ -4,21 +4,22 @@
 */
 #include <algorithm>
 #include <port.h>
-#include <track.h>
 #include "unique_name.h"
 
 namespace base {
 
-UniqueName::UniqueName(QList<Track *> tracks)
-{
-    _nextEntry = 0;
-    for (Track *track : tracks)
-        addEntry(track->port());
+UniqueName::UniqueName() : _isResolved(false) {
 }
 
-UniqueName::UniqueName(QVector<const Port*> ports) {
+UniqueName::UniqueName(QVector<Port*> ports) : UniqueName() {
     _nextEntry = 0;
-    for (const Port *port : ports)
+    for (auto port : ports)
+        addEntry(port);
+}
+
+UniqueName::UniqueName(QVector<const Port*> ports) : UniqueName() {
+    _nextEntry = 0;
+    for (auto port : ports)
         addEntry(port);
 }
 
@@ -26,7 +27,11 @@ void UniqueName::addEntry(const Port *port) {
     _entries << Entry{port->objectName(), _nextEntry++, port};
 }
 
-QStringList UniqueName::resolve() {
+QStringList UniqueName::resolved() {
+    // Already done
+    if (_isResolved)
+        return _resolved;
+    // Lazy evaluation
     int n(_entries.size());
     bool extendMore;
     do {
@@ -58,10 +63,11 @@ QStringList UniqueName::resolve() {
 
     std::sort(_entries.begin(), _entries.end(),
               [](Entry a, Entry b) { return a.index < b.index; });
-    QStringList names;
+    _resolved.clear();
     for (Entry entry : _entries)
-        names << entry.name;
-    return names;
+        _resolved << entry.name;
+    _isResolved = true;
+    return _resolved;
 }
 
 void UniqueName::sortByName() {

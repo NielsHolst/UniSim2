@@ -17,12 +17,12 @@ namespace base {
 
 Box *Box::_currentRoot = nullptr;
 Box *Box::_savedCurrentRoot = nullptr;
-int Box::_count = 0;
+int Box::_counter = 0;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, QObject *parent, Persistence persistence)
-    : QObject(parent), _order(0), _amended(false), _cloned(false), _ignore(false)
+    : QObject(parent), _amended(false), _cloned(false), _ignore(false), _number(-1)
 {
     Class(Box);
     help("has no documented functionality");
@@ -132,12 +132,25 @@ QString Box::fullName() const {
     return base::fullName(this);
 }
 
-int Box::order() const {
-    return _order;
+//
+// Enumeration
+//
+
+void Box::enumerate() {
+    for (auto child : children()) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box)
+            box->enumerate();
+    }
+    _number = _counter++;
 }
 
-int Box::count() {
-    return _count;
+int Box::evaluationOrder() const {
+    return _number;
+}
+
+void Box::resetCounter() {
+    _counter = 0;
 }
 
 QString Box::profileReport() const {
@@ -154,6 +167,21 @@ void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
+//void Box::resolveImportsFamily() {
+//    for (auto child : children()) {
+//        Box *box = dynamic_cast<Box*>(child);
+//        if (box)
+//            box->resolveImportsFamily();
+//    }
+//    resolveImports();
+//}
+
+//void Box::resolveImports() {
+//    for (Port *port : _ports.values()) {
+//        port->resolveImports();
+//    }
+//}
+
 void Box::amendFamily() {
     try {
         if (_amended) return;
@@ -167,8 +195,7 @@ void Box::amendFamily() {
         if (_traceOn)
             dialog().information("amend " + fullName());
         if (!_ignore) amend();
-        _count = 0;
-        enumerateBoxes(_count);
+        enumerate();
         _amended = true;
         _timer->stop("amend");
     }
@@ -200,26 +227,18 @@ void Box::stopTimer(QString name) {
     _timer->stop(name);
 }
 
-void Box::enumerateBoxes(int &i) {
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->enumerateBoxes(i);
-    }
-    _order = i++;
-}
-
 void Box::initializeFamily() {
     if (_traceOn)
         dialog().information("initializeFamily " + fullName());
-    if (!_amended) {
-        environment().computationStep(ComputationStep::Amend, false);
-        amendFamily();
-        environment().computationStep(ComputationStep::Initialize, false);
-    }
+    if (!_amended)
+        ThrowException("Box should be amended before initialization");
+//    if (!_amended) {
+//        environment().computationStep(ComputationStep::Amend, false);
+//        amendFamily();
+//        environment().computationStep(ComputationStep::Initialize, false);
+//    }
     _timer->reset();
     _timer->start("initialize");
-    closeExpressions();
     for (auto child : children()) {
         Box *box = dynamic_cast<Box*>(child);
         if (box)
@@ -295,12 +314,6 @@ void Box::debriefFamily() {
     if (!_ignore) debrief();
     verifyPorts();
     _timer->stop("debrief");
-}
-
-void Box::closeExpressions() {
-    for (Port *port : _ports.values()) {
-        port->closeExpression();
-    }
 }
 
 void Box::updatePorts() {

@@ -3,6 +3,7 @@
 #include <base/boxscript_ast.h>         // defines << operators on AST
 #include <base/boxscript_parser.h>      // defines the parser
 #include <base/exception.h>
+#include <base/expression.h>
 #include "exception_expectation.h"
 #include "test_expression_parser.h"
 
@@ -48,3 +49,13 @@ void TestExpressionParser::testAstHandling() {
     QCOMPARE(x, 17.5);
 }
 
+void TestExpressionParser::testParser() {
+    bool excepted(false);
+    base::Expression e;
+    try {
+        e = boxscript::parser::parseExpression("7 + 17.5");
+    }
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(e.stackAsString(), "7.0 17.5 +");
+
+}

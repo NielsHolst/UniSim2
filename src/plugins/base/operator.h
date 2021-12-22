@@ -17,7 +17,10 @@ enum class Operator {
     Exponentiate,
     And,
     Or,
-    Not
+    Not,
+    Union,
+    If,
+    Else
 };
 
 enum class Parenthesis {

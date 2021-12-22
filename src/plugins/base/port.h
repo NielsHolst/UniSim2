@@ -14,9 +14,8 @@
 #include "caller.h"
 #include "construction_step.h"
 #include "convert.h"
-//#include "enum_functions.h"
-//#include "environment.h"
 #include "exception.h"
+#include "expression.h"
 #include "port_access.h"
 
 #include "value.h"
@@ -32,20 +31,25 @@ private:
     bool
         _isValueOverridden, // Has the default value been overridden in the BoxScript?
         _doReset,           // Should the value be re-initialised (according to type) at reset?
-        _isExtraneous;      // Is this a port declared in external BoxScript?
+        _isAuxilliary;      // Is this a port declared in external BoxScript?
     PortAccess _access;     // Either input or output
     QString
         _unit,              // Unit text
         _help;              // Help text
-    int _evaluationOrder;   // Order of evaluation among all ports
     Value
         _value;             // Holds the current value
     Expression
         _expression;        // Any path operands have been replaced with port pointers, when the expression was closed
+    QStringList
+        _outputNames;       // Unique name labelling of the columns for this port in the output text file;
+                            // empty if not included in output;
+                            // output summaries may result in more than one output column
     QVector<Port *>
         _importPorts,       // Ports imported by this port
         _exportPorts;       // Ports which imports this port
     Caller _importCaller;   // Latest object calling for an import of this port (for error message)
+    int _number;            // Number in evaluation order
+    static int _counter;    // Counter for enumerating evaluation order
 
 public:
     // Configure
@@ -57,14 +61,20 @@ public:
     Port& access(PortAccess acc);
     Port& unit(QString value);
     Port& help(QString value);
-    Port& isExtraneous();
+    Port& isAuxilliary();
+    void outputNames(QStringList columnNames);
 
     // Set value
     template <class T> Port& initialize(T *variable);
     template <class T> Port& equals(T fixedValue);
-//    template <>        Port& equals(const char *fixedValue);
-//    template <>        Port& equals(Value value);
+    Port& equals(const Expression &expression);
     Port& imports(QString pathToPort, Caller caller=Caller());
+    Port& computes(QString expression);
+
+    // Enumeration
+    void enumerate();
+    int evaluationOrder() const;
+    static void resetCounter();
 
     // Query
     Box *boxParent();
@@ -73,21 +83,25 @@ public:
     PortAccess access() const;
     QString unit() const;
     QString help() const;
+    QString importPath() const;
+    int size() const;
     bool isValueOverridden() const;
-    int evaluationOrder() const;
+    QStringList outputNames() const;
     QVector<Port*> importPorts() const;
     QVector<Port*> exportPorts() const;
 
     // Get value
     template <class T> T value() const;
+    template <class T> const T* valuePtr() const;
     const Value& value() const;
     void verifyValue() const;
     const Expression& expression() const;
+    QString format() const;
 
     // Housekeeping
     void addExportPort(Port *port);
     void enumerate(int &number);
-    void closeExpression();
+//    void resolveImports();
     void reset();
     void update();
 
@@ -96,6 +110,9 @@ public:
 private:
     void assign(const Port &x);
     void checkIfValueOverridden();
+
+    // Sorting
+    friend bool operator<(const Port &a, const Port &b);
 };
 
 template <class T> Port& Port::initialize(T *variable) {
@@ -113,6 +130,15 @@ template <class T> Port& Port::equals(T fixedValue)
 template <class T> T Port::value() const
 {
     return _value.as<T>();
+}
+
+template <class T> const T* Port::valuePtr() const
+{
+    return _value.constPtr<T>();
+}
+
+inline bool operator<(const Port &a, const Port &b) {
+    return a._number < b._number;
 }
 
 }

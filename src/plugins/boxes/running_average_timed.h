@@ -19,7 +19,7 @@ private:
     // Input
     double input, initial;
     double timeWindow, timeStepSecs;
-    char timeUnit;
+    QString timeUnit;
 
     // Output
     double value;

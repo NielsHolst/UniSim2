@@ -10,7 +10,6 @@
 #include "environment.h"
 #include "mega_factory.h"
 #include "path.h"
-#include "track.h"
 
 namespace base {
 
@@ -29,12 +28,11 @@ BoxBuilder::BoxBuilder(Box *parent)
 
 BoxBuilder::~BoxBuilder() {
     if (_content && _hasParent)
-        content(BoxBuilder::AmendDescendants, _exceptionCount==Exception::count());
+        content(BoxBuilder::Amend::Descendants, _exceptionCount==Exception::count());
 }
 
 void BoxBuilder::clear() {
     environment().computationStep(ComputationStep::Construct);
-    Track::clearOrders();
 }
 
 BoxBuilder& BoxBuilder::box(Box *box) {
@@ -87,7 +85,7 @@ BoxBuilder& BoxBuilder::aux(QString name) {
         ThrowException("BoxBuilder: new port declaration out of context");
     }
     _currentPort = new Port(name, _currentBox);
-    _currentPort->isExtraneous();
+    _currentPort->isAuxilliary();
     return *this;
 }
 
@@ -115,7 +113,7 @@ const Port* BoxBuilder::currentPort() const {
     return _currentPort;
 }
 
-Box* BoxBuilder::content(AmendOption amendOption, bool allowException) {
+Box* BoxBuilder::content(Amend amendOption, bool allowException) {
     if (_hasParent) {
         endbox();
         if (allowException && !_stack.isEmpty())
@@ -125,14 +123,14 @@ Box* BoxBuilder::content(AmendOption amendOption, bool allowException) {
     }
     if (_content) {
         switch (amendOption) {
-        case AmendFamily:
+        case Amend::Family:
             _content->amendFamily();
             break;
-        case AmendDescendants:
+        case Amend::Descendants:
             for (Box *child : _content->findMany<Box>("./*"))
                 child->amendFamily();
             break;
-        case AmendNone:
+        case Amend::None:
             break;
         }
 

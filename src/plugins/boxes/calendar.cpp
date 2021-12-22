@@ -30,7 +30,7 @@ Calendar::Calendar(QString name, QObject *parent)
     Input(timeZone).equals(1).help("Time zone").unit("h");
     Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts").unit("d/m/y h:m:s");
     Input(timeStep).equals(1).help("Time step in units of timeUnit").unit("int>0");
-    Input(timeUnit).equals('d').help("Unit of time step").unit("y|d|h|m|s");
+    Input(timeUnit).equals("d").help("Unit of time step").unit("y|d|h|m|s");
     Input(sample).equals(1).help("The frequency at which output is sampled").unit("int>0");
 
     Output(date).help("Current date").unit("d/m/y");
@@ -54,7 +54,7 @@ void Calendar::reset() {
         ThrowException("Sample frequency ('sample') must be larger than zero").value(sample);
     if (timeStep < 1)
         ThrowException("Time step ('timeStep') must be larger than zero").value(timeStep);
-    _timeUnit = TimeWithUnits::charToUnit(timeUnit, this);
+    _timeUnit = TimeWithUnits::charToUnit(timeUnit.at(0).toLatin1(), this);
     timeStepSecs = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Seconds);
     timeStepDays = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Days);
     dateTime = initialDateTime;

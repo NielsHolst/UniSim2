@@ -26,7 +26,7 @@ private:
     double latitude, longitude;
     QDateTime initialDateTime;
     int timeStep, timeZone, sample;
-    char timeUnit;
+    QString timeUnit;
     base::TimeUnit _timeUnit;
 
     // outputs

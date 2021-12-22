@@ -24,6 +24,7 @@ private slots:
     void testTooMuch();
     void testSyntaxError();
     void testNumber();
+    void testAuxAllTypes();
 };
 
 DECLARE_TEST(TestBoxScriptX3)

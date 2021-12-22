@@ -26,6 +26,7 @@ public:
     Exception& file(const char *s);
     Exception& line(int i);
     Exception& context(const QObject *object);
+    Exception& context(QObject *object);
     Exception& caller(Caller c);
     Exception& hint(QString s);
     Exception& id(QString s);

@@ -19,7 +19,7 @@ QMap<QString, Path::Directive> Path::_directives;
 #define DIR(x) _directives[QString(#x).toLower()] = x
 
 Path::Path(const QObject *context)
-    : _originalContext(context), _caller(nullptr)
+    : _originalContext(context), _caller(nullptr), _isResolved(false)
 {
     initDirectives();
 }
@@ -32,12 +32,6 @@ Path::Path(QString path, const QObject *context)
     #else
       _originalPaths << path.split("|", QString::SkipEmptyParts);
     #endif
-}
-
-Path::Path(QStringList paths, const QObject *context)
-    : Path(context)
-{
-    _originalPaths = paths;
 }
 
 QString Path::original() const {
@@ -79,8 +73,6 @@ Path::QObjects Path::_resolve(int number, const QObject *caller) {
         QString msg{"Path resolves to the wrong number of mathes: found(%1), expected(%2)"};
         ThrowException(msg.arg(_candidates.size()).arg(number)).value(_current.originalPath).context(_caller);
     }
-//    sort(_candidates.begin(), _candidates.end(),
-//         [](Port *a, Port *b) { return a->objectName() < b->objectName(); });
 
     return _candidates;
 }
@@ -139,6 +131,15 @@ void Path::validateName(QString name) {
 
 void Path::validateStep(QString step) {
     validate(QRegularExpression("([_A-Za-z0-9]+:?)|\\*|\\.|\\.\\.|\\.\\.\\."), step);
+}
+
+QVector<Port*> Path::resolved() {
+    if (!_isResolved) {
+        _resolvedPorts = resolveMany<Port>(_originalContext);
+        std::sort(_resolvedPorts.begin(), _resolvedPorts.end());
+        _isResolved = true;
+    }
+    return _resolvedPorts;
 }
 
 void Path::validate(QRegularExpression rx, QString s) {

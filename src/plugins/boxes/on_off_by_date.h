@@ -5,11 +5,12 @@
 #ifndef ON_OFF_BY_DATE_H
 #define ON_OFF_BY_DATE_H
 #include <QDate>
+#include <base/bare_date.h>
 #include "on_off_base.h"
 
 namespace boxes {
 
-class OnOffByDate : public OnOffBase<QDate>
+class OnOffByDate : public OnOffBase<QDate, base::BareDate>
 {
 public:
     OnOffByDate(QString name, QObject *parent);

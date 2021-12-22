@@ -17,7 +17,6 @@ HEADERS +=  \
     briere.h \
     buffer.h \
     calendar.h \
-    combinations.h \
     date.h \
     date_split.h \
     day_degrees.h \
@@ -38,7 +37,6 @@ HEADERS +=  \
     maximum.h \
     mean.h \
     minimum.h \
-    modifier.h \
     multiplum.h \
     numbered_file.h \
     offset_date_time.h \
@@ -48,6 +46,8 @@ HEADERS +=  \
     output_buffer.h \
     output_ports.h \
     output_r.h \
+    output_selector.h \
+    output_summary.h \
     output_text.h \
     page_r.h \
     parasite.h \
@@ -77,12 +77,6 @@ HEADERS +=  \
     sandy.h \
     scenarios.h \
     select_file.h \
-    sequence_base.h \
-    sequence_by_iteration.h \
-    sequence_by_step.h \
-    series_base.h \
-    series_by_iteration.h \
-    series_by_step.h \
     simulation.h \
     sine_wave_temperature.h \
     sliding_signal.h \
@@ -96,7 +90,6 @@ HEADERS +=  \
     super_functional_response.h \
     supply_budget.h \
     threshold_signal.h \
-    values_base.h \
     vector_scaled.h \
     vector_sum.h
 	
@@ -107,7 +100,6 @@ SOURCES +=  \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \
-    combinations.cpp \
     date.cpp \
     date_split.cpp \
     date_time_signal.cpp \
@@ -128,7 +120,7 @@ SOURCES +=  \
     maximum.cpp \
     minimum.cpp \
     mean.cpp \
-    modifier.cpp \
+#    modifier.cpp \
     multiplum.cpp \
     numbered_file.cpp \
     offset_date_time.cpp \
@@ -137,6 +129,8 @@ SOURCES +=  \
     output_buffer.cpp \
     output_ports.cpp \
     output_r.cpp \
+    output_selector.cpp \
+    output_summary.cpp \
     output_text.cpp \
     page_r.cpp \
     parasite.cpp \
@@ -165,12 +159,6 @@ SOURCES +=  \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \
-    sequence_base.cpp \
-    sequence_by_iteration.cpp \
-    sequence_by_step.cpp \
-    series_base.cpp \
-    series_by_iteration.cpp \
-    series_by_step.cpp \
     simulation.cpp \
     sine_wave_temperature.cpp \
     sliding_signal.cpp \
@@ -184,7 +172,6 @@ SOURCES +=  \
     super_functional_response.cpp \
     supply_budget.cpp \
     threshold_signal.cpp \
-    values_base.cpp \
     vector_scaled.cpp \
     vector_sum.cpp
 

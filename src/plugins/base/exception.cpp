@@ -5,10 +5,9 @@
 #include <iostream>
 #include <QDateTime>
 #include <QObject>
-//#include "box.h"
+#include "box.h"
 #include "exception.h"
-//#include "general.h"
-//#include "path.h"
+#include "general.h"
 
 namespace base {
 
@@ -31,16 +30,13 @@ Exception& Exception::line(int i) {
     return *this;
 }
 
-Exception& Exception::context(const QObject *) {
-    _contextDescription.clear();
-//    if (object) {
-//        _contextDescription = fullName(object);
-//        const Box *box = dynamic_cast<const Box *>(object);
-//        if (!box)
-//            box = dynamic_cast<const Box *>(object->parent());
-//        if (box)
-//            _contextDescription += QString(" (#%1)").arg(box->order());
-//    }
+Exception& Exception::context(const QObject *object) {
+    _contextDescription = object ? fullName(object) : "";
+    return *this;
+}
+
+Exception& Exception::context(QObject *object) {
+    _contextDescription = object ? fullName(object) : "";
     return *this;
 }
 
@@ -78,11 +74,11 @@ QString Exception::what() const {
         text += "\nHint: " + _hint;
     if (!_file.isEmpty())
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
-//    if (_caller.caller())
-//        text += QString("\nCalled by %1\n in %2, line %3").
-//                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
-//    if (!dateTime().isNull())
-//        text += "\nCalendar time: " + convert<QString>(dateTime());
+    if (_caller.caller())
+        text += QString("\nCalled by %1\n in %2, line %3").
+                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
+    if (!dateTime().isNull())
+        text += "\nCalendar time: " + convert<QString>(dateTime());
     return text;
 }
 
@@ -124,18 +120,18 @@ template <> QString Exception::asString(QDateTime v) {
 
 QDateTime Exception::dateTime() const {
     QDateTime result;
-//    try {
-//        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
-//        if (calendar) {
-//            Port *port = calendar->peakPort("dateTime");
-//            if (port) {
-//                result = port->value<QDateTime>();
-//            }
-//        }
-//    }
-//    catch (...) {
-//        result = QDateTime();
-//    }
+    try {
+        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
+        if (calendar) {
+            Port *port = calendar->peakPort("dateTime");
+            if (port) {
+                result = port->value<QDateTime>();
+            }
+        }
+    }
+    catch (...) {
+        result = QDateTime();
+    }
     return result;
 }
 

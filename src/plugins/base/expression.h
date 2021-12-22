@@ -70,13 +70,14 @@ public:
     void push(FunctionCall func);
     void push(FunctionEnd end);
     void close();
-    void resolvePaths();
+//    void resolveImports();
     Value evaluate();
 
     const Stack& original() const;
     const Stack& stack() const;
-    const Element& at(int i) { return _stack.at(i); }
+    const Element& at(int i) const { return _stack.at(i); }
     static Type type(const Element& el) { int i=el.index(); return static_cast<Type>(i); }
+    static QString elementName(const Element& el);
 
     QString originalAsString() const;
     QString stackAsString() const;
@@ -93,6 +94,7 @@ private:
     Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
+    void unitePaths(Stack &stack);
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 };

@@ -12,7 +12,7 @@
 #include <base/exception.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"
-#include "test_box_script_x3.h"
+#include "test_boxscript_x3.h"
 
 using namespace std;
 using namespace base;
@@ -256,3 +256,11 @@ void TestBoxScriptX3::testSyntaxError() {
     EXPECTED_EXCEPTION_SHOWN;
 }
 
+void TestBoxScriptX3::testAuxAllTypes() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/aux_all_types.box");
+    }
+    UNEXPECTED_EXCEPTION;
+}

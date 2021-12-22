@@ -11,20 +11,24 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QVector>
+#include "convert.h"
 #include "exception.h"
 
 namespace base {
 
 class Box;
+class Port;
 
 class Path {
 public:
+    Path(const QObject *context = nullptr);
     Path(QString path, const QObject *context = nullptr);
     Path(QStringList paths, const QObject *context = nullptr);
     QString original() const;
     QString normalise(int ix = 0);
     void validateName(QString name);
     void validateStep(QString step);
+    QVector<Port*> resolved();
     template<class T=QObject> T* resolveOne(const QObject* caller);
     template<class T=QObject> T* resolveMaybeOne(const QObject* caller = nullptr);
     template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = nullptr);
@@ -39,6 +43,8 @@ private:
         const QObject *normalisedContext;
     } _current;
     QObjects _candidates;
+    QVector<Port*> _resolvedPorts;
+    bool _isResolved;
 
     enum Directive {
         Self, Children, Parent, Nearest,
@@ -47,7 +53,6 @@ private:
     static QMap<QString, Directive> _directives;
 
     // Methods
-    Path(const QObject *context);
     void initDirectives();
     template<class T=QObject> QVector<T*> resolve(int number = -1, const QObject* caller = nullptr);
     QObjects _resolve(int number = -1, const QObject* caller = nullptr);
@@ -99,6 +104,8 @@ template<class T>
 QVector<T*> Path::resolveMany(const QObject *caller) {
     return resolve<T>(-1, caller);
 }
+
+template<> inline QString convert(Path x)   {return x.original();}
 
 }
 

@@ -2,11 +2,10 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <string>
-//#include "ast_boxes.h"
+#include <QFile>
+#include "boxscript_parser.h"
 #include "boxscript_preprocessor.h"
 #include "reader_boxscript.h"
-#include "exception.h"
 
 using namespace std;
 
@@ -17,21 +16,15 @@ ReaderBoxScript::ReaderBoxScript(BoxBuilder *builder)
 {
 }
 
-void ReaderBoxScript::parse(QString ) {
-//    _filePath = filePath;
-//    ast::Node astRoot;
-//    if (parse(astRoot))
-//        astRoot.addToBuilder(*_builder);
-//    else
-//        ThrowException("Parse failure");
+void ReaderBoxScript::parse(QString filePath) {
+    // Read and pre-process boxscript
+    BoxScriptPreprocessor preprocessor;
+    QString source = preprocessor.preprocess(filePath);
+
+    // Parse
+    boxscript::parser::Result result = boxscript::parser::parse(source.toStdString(), filePath.toStdString());
+    result->root.build(_builder);
 }
 
-bool ReaderBoxScript::parse(ast::Node &) {
-//    BoxScriptPreprocessor preprocessor;
-//    QString code = preprocessor.preprocess(_filePath);
-//    std::string stdCode = code.toStdString();
-//    return ast::parse_boxes(stdCode.begin(), stdCode.end(), astRoot);
-    return true;
-}
 
 } // namespace

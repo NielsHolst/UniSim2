@@ -192,7 +192,7 @@ namespace boxscript { namespace parser
     auto const qualified_name_def = lexeme[name >> -(x3::string("::") > object_name)];
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const reference_def = path >> port;
-    auto const sign_def = char_("+")|char_("-");
+    auto const sign_def = char_("+")|char_("-")|char_("!");
     auto const time_def = integer >> ':' > integer >> -(':' > integer);
 
     BOOST_SPIRIT_DEFINE(

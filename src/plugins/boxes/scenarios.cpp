@@ -69,7 +69,7 @@ void Scenarios::createColumnOutputs() {
     for (QString colname : _df.colNames().toVector()) {
         Port *port = new Port(colname, this);
         int ixCol = _df.ixCol(colname);
-        port->data(&values[ixCol]);
+        port->equals(&values[ixCol]);
     }
 }
 

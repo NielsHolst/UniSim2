@@ -34,7 +34,7 @@ protected:
         drawAtReset,
         drawAtUpdate;
     // Data
-    base::RandomOrder *_order;
+    base::RandomOrder *_number;
 private:
     RandomiserBase *_randomiser;
     bool _setNumStrata;

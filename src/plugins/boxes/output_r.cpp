@@ -73,12 +73,12 @@ void OutputR::reset() {
     numPages = _pages.size();
 }
 
-QString OutputR::toString() {
-    QString s;
-    for (PageR *page : _pages)
-        s += page->toString();
-    return s;
-}
+//QString OutputR::toString() {
+//    QString s;
+//    for (PageR *page : _pages)
+//        s += page->toString();
+//    return s;
+//}
 
 QString OutputR::toScript() {
     QString s;

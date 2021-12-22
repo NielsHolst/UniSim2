@@ -4,6 +4,13 @@
 #include <boost/optional.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
+#include "path.h"
+#include "value.h"
+
+namespace base {
+    class BoxBuilder;
+    class Expression;
+}
 
 namespace boxscript { namespace ast
 {
@@ -17,27 +24,32 @@ namespace boxscript { namespace ast
     struct Time : x3::position_tagged {
         int hour, minute, second;
         friend std::ostream& operator<<(std::ostream& os, const Time& x);
+        base::Value value() const;
     };
 
     struct BareDate : x3::position_tagged {
         int day, month;
         friend std::ostream& operator<<(std::ostream& os, const BareDate& x);
+        base::Value value() const;
     };
 
     struct Bool : x3::position_tagged {
         std::string stringValue;
         friend std::ostream& operator<<(std::ostream& os, const Bool& x);
+        base::Value value() const;
     };
 
     struct Date : x3::position_tagged {
         int day, month, year;
         friend std::ostream& operator<<(std::ostream& os, const Date& x);
+        base::Value value() const;
     };
 
     struct DateTime : x3::position_tagged {
         Date date;
         Time time;
         friend std::ostream& operator<<(std::ostream& os, const DateTime& x);
+        base::Value value() const;
     };
 
     struct FunctionCall : x3::position_tagged {
@@ -46,16 +58,19 @@ namespace boxscript { namespace ast
         std::string name;
         std::vector<Argument> arguments;
         friend std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
+        void build(base::Expression *expression);
     };
 
     struct QuotedString : x3::position_tagged {
         std::string stringValue;
         friend std::ostream& operator<<(std::ostream& os, const QuotedString& x);
+        base::Value value() const;
     };
 
     struct Reference : x3::position_tagged {
         std::string path, port;
         friend std::ostream& operator<<(std::ostream& os, const Reference& x);
+        base::Path value() const;
     };
 
     #define TYPE_NAME(x,y) case x : s=#y; break
@@ -78,6 +93,7 @@ namespace boxscript { namespace ast
         using base_type::base_type;
         using base_type::operator=;
         friend std::ostream& operator<<(std::ostream& os, const Number& x);
+        base::Value value() const;
     };
 
     struct Operand : x3::variant<DateTime, Date, BareDate, Time, Number,
@@ -108,12 +124,14 @@ namespace boxscript { namespace ast
         using base_type::base_type;
         using base_type::operator=;
         friend std::ostream& operator<<(std::ostream& os, const Operand& x);
+        void build(base::Expression *expression);
     };
 
     struct Operation : x3::position_tagged {
         std::string operator_;
         Operand operand;
         friend std::ostream& operator<<(std::ostream& os, const Operation& x);
+        void build(base::Expression *expression);
     };
 
     struct Expression : x3::position_tagged {
@@ -121,6 +139,8 @@ namespace boxscript { namespace ast
         Operand firstOperand;
         std::vector<Operation> operations;
         friend std::ostream& operator<<(std::ostream& os, const Expression& x);
+        void build(base::BoxBuilder *builder);
+        void build(base::Expression *expression);
     };
 
     struct Assignment : x3::position_tagged {
@@ -130,6 +150,7 @@ namespace boxscript { namespace ast
         Expression expression;
         friend std::ostream& operator<<(std::ostream& os, const Assignment& x);
         friend std::ostream& print     (std::ostream& os, const Assignment& x, int level);
+        void build(base::BoxBuilder *builder);
     };
 
     struct Box;
@@ -143,6 +164,7 @@ namespace boxscript { namespace ast
         std::vector<ChildBox> children;
         friend std::ostream& operator<<(std::ostream& os, const Box& x);
         friend std::ostream& print     (std::ostream& os, const Box& x, int level);
+        void build(base::BoxBuilder *builder);
     };
 
     struct boxscript : x3::position_tagged

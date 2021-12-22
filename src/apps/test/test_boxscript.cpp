@@ -4,7 +4,7 @@
 #include <base/dialog.h>
 #include <base/exception.h>
 #include "input_file_path.h"
-#include "test_box_script.h"
+#include "test_boxscript.h"
 
 using namespace base;
 

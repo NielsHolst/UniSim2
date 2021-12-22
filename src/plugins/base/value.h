@@ -11,6 +11,7 @@
 #include <QTime>
 #include "bare_date.h"
 #include "exception.h"
+#include "path.h"
 #include "value_typed.h"
 
 namespace base {
@@ -30,6 +31,7 @@ public:
         Time,
         DateTime,
         BareDate,
+        Path,
         VecBool,
         VecInt,
         VecDouble,
@@ -49,6 +51,7 @@ public:
     Value(QTime       x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(QDateTime   x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(BareDate    x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(Path        x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(const char *x, Port *parent=nullptr)  : Value(parent) { initialize(QString(x)); }
 
     Value(bool       *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
@@ -59,6 +62,7 @@ public:
     Value(QTime      *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(QDateTime  *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(BareDate   *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(Path       *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
 
     Value(QVector<bool>       x, Port *parent=nullptr) : Value(parent) { initialize(x); }
     Value(QVector<int>        x, Port *parent=nullptr) : Value(parent) { initialize(x); }
@@ -97,7 +101,7 @@ public:
     // Set to value with compatible type U at vector index;
     // for scalers i must be zero
 
-    template <class T> const T* valuePtr() const;
+    template <class T> const T* constPtr() const;
     // Return pointer in native type T
 
     template <class U> U as() const;
@@ -160,6 +164,7 @@ private:
         ValueTyped<QTime>,
         ValueTyped<QDateTime>,
         ValueTyped<BareDate>,
+        ValueTyped<Path>,
         ValueTyped<QVector<bool>>,
         ValueTyped<QVector<int>>,
         ValueTyped<QVector<double>>,
@@ -204,6 +209,9 @@ template <class U> void Value::changeValue(U value)
     case Type::BareDate:
         std::get<ValueTyped<BareDate>>(_variant).changeValue(value);
         break;
+    case Type::Path:
+        std::get<ValueTyped<Path>>(_variant).changeValue(value);
+        break;
     case Type::VecBool:
         std::get<ValueTyped<QVector<bool>>>(_variant).changeValue(value);
         break;
@@ -246,6 +254,7 @@ template <class U> void Value::changeValueAt(U value, int i)
     case Type::Time:
     case Type::DateTime:
     case Type::BareDate:
+    case Type::Path:
         if (i==0)
             changeValue(value);
         else
@@ -279,22 +288,23 @@ template <class U> void Value::changeValueAt(U value, int i)
 }
 
 
-template <> const bool*      Value::valuePtr() const;
-template <> const int*       Value::valuePtr() const;
-template <> const double*    Value::valuePtr() const;
-template <> const QString*   Value::valuePtr() const;
-template <> const QDate*     Value::valuePtr() const;
-template <> const QTime*     Value::valuePtr() const;
-template <> const QDateTime* Value::valuePtr() const;
-template <> const BareDate*  Value::valuePtr() const;
-template <> const QVector<bool>*      Value::valuePtr() const;
-template <> const QVector<int>*       Value::valuePtr() const;
-template <> const QVector<double>*    Value::valuePtr() const;
-template <> const QVector<QString>*   Value::valuePtr() const;
-template <> const QVector<QDate>*     Value::valuePtr() const;
-template <> const QVector<QTime>*     Value::valuePtr() const;
-template <> const QVector<QDateTime>* Value::valuePtr() const;
-template <> const QVector<BareDate>*  Value::valuePtr() const;
+template <> const bool*               Value::constPtr() const;
+template <> const int*                Value::constPtr() const;
+template <> const double*             Value::constPtr() const;
+template <> const QString*            Value::constPtr() const;
+template <> const QDate*              Value::constPtr() const;
+template <> const QTime*              Value::constPtr() const;
+template <> const QDateTime*          Value::constPtr() const;
+template <> const BareDate*           Value::constPtr() const;
+template <> const Path*               Value::constPtr() const;
+template <> const QVector<bool>*      Value::constPtr() const;
+template <> const QVector<int>*       Value::constPtr() const;
+template <> const QVector<double>*    Value::constPtr() const;
+template <> const QVector<QString>*   Value::constPtr() const;
+template <> const QVector<QDate>*     Value::constPtr() const;
+template <> const QVector<QTime>*     Value::constPtr() const;
+template <> const QVector<QDateTime>* Value::constPtr() const;
+template <> const QVector<BareDate>*  Value::constPtr() const;
 
 template <class U> U Value::as() const
 {
@@ -318,6 +328,8 @@ template <class U> U Value::as() const
         return std::get<ValueTyped<QDateTime>>(_variant).value<U>();
     case Type::BareDate:
         return std::get<ValueTyped<BareDate>>(_variant).value<U>();
+    case Type::Path:
+        return std::get<ValueTyped<Path>>(_variant).value<U>();
     case Type::VecBool:
         return std::get<ValueTyped<QVector<bool>>>(_variant).value<U>();
     case Type::VecInt:

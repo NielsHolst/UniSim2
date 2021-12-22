@@ -48,8 +48,8 @@ Records::Records(QString name, QObject *parent)
 void Records::amend() {
     ExceptionContext(this);
     // Allow imports defined in amend step
-    resolvePortImports();
-    updateImports();
+//    resolvePortImports();
+//    updateImports();
     // Create outputs
     readColumnNames();
     createColumnOutputs();
@@ -117,7 +117,7 @@ void Records::createColumnOutputs() {
         QString name = _columnNames[i];
         if (i != _dateColumn && i != _timeColumn) {
             if (cloned())
-                port(name)->data(&(_values[i]));
+                port(name)->equals(&_values[i]);
             else
                 NamedOutput(name, _values[i]);
         }

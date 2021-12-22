@@ -17,11 +17,6 @@ class ReaderBoxScript : public ReaderBase
 public:
     ReaderBoxScript(BoxBuilder *builder);
     void parse(QString filePath);
-private:
-    // Data
-    QString _filePath;
-    // Methods
-    bool parse(ast::Node &astRoot);
 };
 
 }

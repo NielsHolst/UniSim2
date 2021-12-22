@@ -58,9 +58,10 @@ public:
     QString className() const;
     QString name() const;
     QString fullName() const;
-    int order() const;
-    static int count();
-    QString profileReport() const;
+
+    void enumerate();
+    int evaluationOrder() const;
+    static void resetCounter();
 
     template<class T=QObject> T* findOne(QString path);
     template<class T=QObject> T* findMaybeOne(QString path);
@@ -83,7 +84,6 @@ public:
     void debriefFamily();
 
     virtual void update(Port *) {}
-    void closeExpressions();
     void updatePorts();
     void verifyPorts();
 
@@ -99,6 +99,7 @@ public:
     void stopTimer(QString name);
 
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
+    QString profileReport() const;
 private:
     // Inputs
     bool remove;
@@ -106,31 +107,28 @@ private:
     QString _help, _sideEffects;
     QMap<QString,Port*> _ports;
     QVector<Port*> _trackedPorts;
-    int _order;
     bool _amended, _cloned, _ignore;
     Timer *_timer;
     static Box *_currentRoot, *_savedCurrentRoot;
-    static int _count;
     static bool _debugOn, _traceOn;
+    // Data: enumeration
+    int _number;
+    static int _counter;
     // Methods
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
-    void enumerateBoxes(int &i);
     void resetPorts();
 };
 
 template<class T> T* Box::findOne(QString path) {
-//    const QObject *p = this;
     return Path(path, this).resolveOne<T>(this);
 }
 
 template<class T> T* Box::findMaybeOne(QString path) {
-//    const QObject *p = this;
     return Path(path, this).resolveMaybeOne<T>(this);
 }
 
 template<class T> QVector<T*> Box::findMany(QString path) {
-//    const QObject *p = this;
     return Path(path, this).resolveMany<T>(this);
 }
 

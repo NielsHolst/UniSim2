@@ -33,14 +33,13 @@ public:
     BoxBuilder& aux(QString name);
     BoxBuilder& imports(QString pathToPort, Caller caller=Caller());
     // Set value
-//    template <class T> BoxBuilder& data(T *value);
     template <class T> BoxBuilder& equals(T value, bool ignore=false);
     BoxBuilder& equals(const char *value, bool ignore=false);
     // State
     const Box* currentBox() const;
     const Port* currentPort() const;
-    enum AmendOption{AmendFamily, AmendDescendants, AmendNone};
-    Box* content(AmendOption amendOption=AmendFamily, bool allowException=true);
+    enum class Amend {Family, Descendants, None} ;
+    Box* content(Amend amendOption=Amend::Family, bool allowException=true);
 private:
     // Data
     bool _hasParent;
@@ -49,13 +48,6 @@ private:
     int _exceptionCount;
     QStack<Box*> _stack;
 };
-
-//template <class T> BoxBuilder& BoxBuilder::data(T *valuePtr) {
-//    if (!_currentPort)
-//        ThrowException("BoxBuilder: 'data' must follow 'port'");
-//    _currentPort->data(valuePtr);
-//    return *this;
-//}
 
 template <class T> BoxBuilder& BoxBuilder::equals(T value, bool ignore) {
     if (!ignore && !_currentPort)

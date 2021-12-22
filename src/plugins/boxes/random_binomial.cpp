@@ -26,8 +26,8 @@ void RandomBinomial::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         double pFrom = double(stratum)/numStrata,
                pTo =   double(stratum+1)/numStrata;
         if (P < pFrom)

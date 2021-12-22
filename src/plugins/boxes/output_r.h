@@ -25,7 +25,7 @@ public:
     void initialize();
     void reset();
     void debrief();
-    QString toString();
+//    QString toString();
     QString toScript();
     void addRCode(QString s);
 private:

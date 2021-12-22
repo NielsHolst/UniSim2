@@ -215,6 +215,18 @@ template<> vQTime     convert(vValuePtr values);
 template<> vQDateTime convert(vValuePtr values);
 template<> vBareDate  convert(vValuePtr values);
 
+//
+// Vector conversions from QStringList to container
+//
+
+template<class T, template<class> class C> C<T> convert(QStringList list) {
+    C<T> result;
+    result.reserve(list.size());
+    for (QString s : list.toVector())
+        result << convert<T>(s);
+    return result;
+}
+
 
 }
 #endif

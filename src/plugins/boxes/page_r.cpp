@@ -6,7 +6,7 @@
 #include <base/environment.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
-#include <base/port_filter.h>
+#include <base/port.h>
 #include <base/publish.h>
 #include <base/test_num.h>
 #include "layout_r.h"
@@ -25,15 +25,14 @@ PageR::PageR(QString name, QObject *parent)
     : Box(name, parent)
 {
     help("produces a page of plots for R");
+    Input(xAxis).imports("/*[step]");
     Input(show).equals(true).help("Show this page?");
-    Input(xAxis).equals("/*[step]").reference();
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
     Input(title).help("Title shown on page");
     Input(width).imports("ancestors::*<OutputR>[width]");
     Input(height).imports("ancestors::*<OutputR>[height]");
-    Input(plotAsList).imports("./*[plotAsList]").transform(Any).help("Any plot produced as a list of plots?");
-    Input(test).imports("./*[plotAsList]");
+    Input(plotAsList).computes("any(./*[plotAsList])").help("Any plot produced as a list of plots?");
 }
 
 void PageR::amend() {
@@ -43,10 +42,6 @@ void PageR::amend() {
         Box *plot = MegaFactory::create<>("PlotR", "", this);
         plot->amend();
     }
-    // Place order(s) for x-axis
-    _xAxisOrders = Track::placeOrders(xAxis, this);
-    if (_xAxisOrders.isEmpty())
-        ThrowException("Cannot find any matching ports for xAxis").context(this);
 }
 
 void PageR::initialize() {
@@ -75,12 +70,12 @@ void PageR::reset() {
     _commonPageNumber = _myPageNumber = 0;
 }
 
-QString PageR::toString() {
-QString s = className() + " " + objectName() + "\n";
-    for (PlotR *plot : _plots)
-        s += plot->toString();
-    return s;
-}
+//QString PageR::toString() {
+//    QString s = className() + " " + objectName() + "\n";
+//    for (PlotR *plot : _plots)
+//        s += plot->toString();
+//    return s;
+//}
 
 QString PageR::dim(QString portName) {
     int value = port(portName)->value<int>();
@@ -129,10 +124,6 @@ QString PageR::functionName() {
     QString s = "page_";
     s += objectName().isEmpty() ? QString::number(_myPageNumber) : objectName();
     return s;
-}
-
-QVector<Track::Order> PageR::xAxisOrders() const {
-    return _xAxisOrders;
 }
 
 }

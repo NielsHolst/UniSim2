@@ -27,8 +27,8 @@ void RandomUniformInt::updateValue() {
         value = fixed;
     }
     else {
-        int stratum = _order->next(),
-            numStrata = _order->size();
+        int stratum = _number->next(),
+            numStrata = _number->size();
         double u = randomiser()->draw01(),
                w = double(max-min+1)/numStrata;
         value = static_cast<int>( min + std::floor((stratum + u)*w) );

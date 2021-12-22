@@ -158,7 +158,7 @@ void Expression::checkNotClosed() {
 
 void Expression::close() {
     _original = _stack;
-    resolvePaths();
+//    resolveImports();
     toPostfix();
     _isClosed = true;
 }
@@ -169,6 +169,17 @@ inline bool isValue(Expression::Element element) {
 
 inline bool isOperator(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::Operator);
+}
+
+inline bool isSimpleOperator(Expression::Element element) {
+    return isOperator(element) &&
+        static_cast<int>( std::get<Operator>(element) ) <
+        static_cast<int>( Operator::Union );
+}
+
+inline bool isUnion(Expression::Element element) {
+    return isOperator(element) &&
+           (std::get<Operator>(element) == Operator::Union);
 }
 
 inline bool isParenthesis(Expression::Element element) {
@@ -198,9 +209,12 @@ inline int precedence(Expression::Element element) {
     return isOperator(element) ? precedence( get<Operator>(element) ) : 0;
 }
 
-void Expression::resolvePaths() {
-
-}
+//void Expression::resolveImports() {
+//    for (auto element : _stack) {
+//        if (isPath(element))
+//            std::get<Path>(element).resolvePorts();
+//    }
+//}
 
 void Expression::toPostfix() {
     // From: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
@@ -279,6 +293,29 @@ Expression::Element Expression::registerFunctionCall(const Element &element) {
     return f;
 }
 
+void Expression::unitePaths(Stack &stack) {
+    // Pop operator |
+    stack.pop_back();
+
+    // Both operands must be paths
+    Path a, b;
+    if (isPath(stack.back())) {
+        a = get<Path>(stack.back());
+        stack.pop_back();
+        if (isPath(stack.back())) {
+            b = get<Path>(stack.back());
+            stack.pop_back();
+        }
+        else
+            ThrowException("Operand for union (|) must be a path").value(elementName(stack.back()));
+    }
+    else
+        ThrowException("Operand for union (|) must be a path").value(elementName(stack.back()));
+
+    // Merge paths
+    stack.push_back(Path(a.original() + "|" + b.original()));
+}
+
 void Expression::reduceByOperator(Stack &stack) {
     // Second operator for arity==2
     Value b;
@@ -309,6 +346,7 @@ void Expression::reduceByOperator(Stack &stack) {
     case Operator::And          : c = operate::and_(a,b); break;
     case Operator::Or           : c = operate::or_(a,b); break;
     case Operator::Not          : c = operate::not_(a); break;
+    default                     : ThrowException("Unexpected operator").value(static_cast<int>(op));
     }
     // We need to pop operator and push result, because result may be of another type
     stack.pop_back();
@@ -472,6 +510,9 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     else
         ThrowException("Unknown function").value(func.name);
 
+    // More functions
+    //  exists(path)
+    // count(path)
 }
 
 Value Expression::evaluate() {
@@ -486,8 +527,10 @@ Value Expression::evaluate() {
     else {
         for (Element &element : _stack) {
             myStack.push_back(element);
-            if (isOperator(element))
+            if (isSimpleOperator(element))
                 reduceByOperator(myStack);
+            else if (isUnion(element))
+                unitePaths(myStack);
             else if (isFunctionCall(element))
                 reduceByFunctionCall(myStack);
         }
@@ -515,6 +558,20 @@ const Expression::Stack& Expression::original() const {
 
 const Expression::Stack& Expression::stack() const {
     return _stack;
+}
+
+QString Expression::elementName(const Element& el) {
+    using Type = Expression::Type;
+    QString s;
+    switch (type(el)) {
+    case Type::Value        : s = "Value"       ; break;
+    case Type::Operator     : s = "Operator"    ; break;
+    case Type::Parenthesis  : s = "Parenthesis" ; break;
+    case Type::Path         : s = "Path"        ; break;
+    case Type::FunctionCall : s = "FunctionCall"; break;
+    case Type::FunctionEnd  : s = "FunctionEnd" ; break;
+    }
+    return s;
 }
 
 QString Expression::originalAsString() const {
