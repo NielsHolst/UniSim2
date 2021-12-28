@@ -104,8 +104,9 @@ void Expression::push(boxscript::ast::BareDate bd) {
 }
 
 void Expression::push(boxscript::ast::Reference ref) {
-    std::string s = ref.path + '[' + ref.port + ']';
-    push(Path(QString::fromStdString(s)));
+    std::stringstream str;
+    str << ref;
+    push(Path(QString::fromStdString(str.str())));
 }
 
 void Expression::push(boxscript::ast::GroupedExpression group) {

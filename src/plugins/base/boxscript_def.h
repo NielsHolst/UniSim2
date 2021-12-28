@@ -110,7 +110,7 @@ namespace boxscript { namespace parser
     x3::rule<operand_class, ast::Operand> const operand = "operand";
     x3::rule<operation_class, ast::Operation> const operation = "operation";
     x3::rule<operator__class, std::string> const operator_ = "operator";
-    x3::rule<path_class, std::string> const path = "path";
+    x3::rule<path_class, ast::Path> const path = "path";
     x3::rule<port_class, std::string> const port = "port";
     x3::rule<port_prefix_class, char> const port_prefix = "port prefix (. or +)";
     x3::rule<qualified_name_class, std::string> const qualified_name = "qualified_name";
@@ -185,8 +185,9 @@ namespace boxscript { namespace parser
                              reference | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
     auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
-                              |x3::string("&&")|x3::string("||")|x3::string("|")|x3::string("?")|x3::string(":");
-    auto const path_def = -char_('/') >> object_name >> *(char_('/') >> object_name);
+                              |x3::string("&&")|x3::string("||")|x3::string("?")|x3::string(":");
+//    auto const path_def = -char_('/') >> object_name >> *(char_('/') >> object_name);
+    auto const path_def = -x3::string("/") >> (object_name % '/');
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
     auto const qualified_name_def = lexeme[name >> -(x3::string("::") > object_name)];

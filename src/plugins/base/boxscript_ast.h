@@ -61,6 +61,12 @@ namespace boxscript { namespace ast
         void build(base::Expression *expression);
     };
 
+    struct Path : x3::position_tagged {
+        boost::optional<std::string> root;
+        std::vector<std::string> objectNames;
+        friend std::ostream& operator<<(std::ostream& os, const Path& x);
+    };
+
     struct QuotedString : x3::position_tagged {
         std::string stringValue;
         friend std::ostream& operator<<(std::ostream& os, const QuotedString& x);
@@ -68,7 +74,8 @@ namespace boxscript { namespace ast
     };
 
     struct Reference : x3::position_tagged {
-        std::string path, port;
+        Path path;
+        std::string port;
         friend std::ostream& operator<<(std::ostream& os, const Reference& x);
         base::Path value() const;
     };

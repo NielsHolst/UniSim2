@@ -37,6 +37,9 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Operation, operator_, operand
 )
 BOOST_FUSION_ADAPT_STRUCT(
+    boxscript::ast::Path, root, objectNames
+)
+BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::QuotedString, stringValue
 )
 BOOST_FUSION_ADAPT_STRUCT(

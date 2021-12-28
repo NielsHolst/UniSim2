@@ -118,6 +118,17 @@ namespace boxscript { namespace ast
         return os << x.operator_ << x.operand;
     }
 
+    std::ostream& operator<<(std::ostream& os, const Path& x) {
+        if (x.root.has_value())
+            os << *x.root;
+        for (auto objName = x.objectNames.begin(); objName != x.objectNames.end(); ++objName) {
+            if (objName != x.objectNames.begin())
+                os << "/";
+            os << *objName;
+        }
+        return os;
+    }
+
     std::ostream& operator<<(std::ostream& os, const QuotedString& x) {
         return os << '"' << x.stringValue << '"';
     }
@@ -168,7 +179,9 @@ namespace boxscript { namespace ast
     }
 
     base::Path Reference::value() const {
-        return QString::fromStdString(path + "[" + port + "]");
+        std::stringstream str;
+        str << path <<  "[" << port << "]";
+        return QString::fromStdString(str.str());
     }
 
     base::Value Number::value() const {
