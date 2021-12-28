@@ -23,67 +23,67 @@ namespace boxscript { namespace ast
 
     struct Time : x3::position_tagged {
         int hour, minute, second;
-        friend std::ostream& operator<<(std::ostream& os, const Time& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const Time& x);
 
     struct BareDate : x3::position_tagged {
         int day, month;
-        friend std::ostream& operator<<(std::ostream& os, const BareDate& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const BareDate& x);
 
     struct Bool : x3::position_tagged {
         std::string stringValue;
-        friend std::ostream& operator<<(std::ostream& os, const Bool& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const Bool& x);
 
     struct Date : x3::position_tagged {
         int day, month, year;
-        friend std::ostream& operator<<(std::ostream& os, const Date& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const Date& x);
 
     struct DateTime : x3::position_tagged {
         Date date;
         Time time;
-        friend std::ostream& operator<<(std::ostream& os, const DateTime& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const DateTime& x);
 
     struct FunctionCall : x3::position_tagged {
         typedef x3::forward_ast<Expression> Argument;
 
         std::string name;
         std::vector<Argument> arguments;
-        friend std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
         void build(base::Expression *expression);
     };
+    std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
 
     struct Path : x3::position_tagged {
         boost::optional<std::string> root;
         std::vector<std::string> objectNames;
-        friend std::ostream& operator<<(std::ostream& os, const Path& x);
     };
+    std::ostream& operator<<(std::ostream& os, const Path& x);
 
     struct QuotedString : x3::position_tagged {
         std::string stringValue;
-        friend std::ostream& operator<<(std::ostream& os, const QuotedString& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const QuotedString& x);
 
     struct Reference : x3::position_tagged {
         Path path;
         std::string port;
-        friend std::ostream& operator<<(std::ostream& os, const Reference& x);
     };
+    std::ostream& operator<<(std::ostream& os, const Reference& x);
 
     struct ReferenceUnion : x3::position_tagged {
         std::vector<Reference> references;
-        friend std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x);
         base::Path value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x);
 
     #define TYPE_NAME(x,y) case x : s=#y; break
 
@@ -104,9 +104,9 @@ namespace boxscript { namespace ast
         }
         using base_type::base_type;
         using base_type::operator=;
-        friend std::ostream& operator<<(std::ostream& os, const Number& x);
         base::Value value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const Number& x);
 
     struct Operand : x3::variant<DateTime, Date, BareDate, Time, Number,
                                  ReferenceUnion, FunctionCall, Bool, QuotedString, GroupedExpression>,
@@ -135,35 +135,35 @@ namespace boxscript { namespace ast
         }
         using base_type::base_type;
         using base_type::operator=;
-        friend std::ostream& operator<<(std::ostream& os, const Operand& x);
         void build(base::Expression *expression);
     };
+    std::ostream& operator<<(std::ostream& os, const Operand& x);
 
     struct Operation : x3::position_tagged {
         std::string operator_;
         Operand operand;
-        friend std::ostream& operator<<(std::ostream& os, const Operation& x);
         void build(base::Expression *expression);
     };
+    std::ostream& operator<<(std::ostream& os, const Operation& x);
 
     struct Expression : x3::position_tagged {
         boost::optional<char> sign;
         Operand firstOperand;
         std::vector<Operation> operations;
-        friend std::ostream& operator<<(std::ostream& os, const Expression& x);
         void build(base::BoxBuilder *builder);
         void build(base::Expression *expression);
     };
+    std::ostream& operator<<(std::ostream& os, const Expression& x);
 
     struct Assignment : x3::position_tagged {
         char qualifier;
         std::string portName;
         char equals;
         Expression expression;
-        friend std::ostream& operator<<(std::ostream& os, const Assignment& x);
-        friend std::ostream& print     (std::ostream& os, const Assignment& x, int level);
         void build(base::BoxBuilder *builder);
     };
+    std::ostream& print     (std::ostream& os, const Assignment& x, int level);
+    std::ostream& operator<<(std::ostream& os, const Assignment& x);
 
     struct Box;
     typedef boost::recursive_wrapper<Box> ChildBox;
@@ -174,17 +174,17 @@ namespace boxscript { namespace ast
         std::string className, objectName;
         std::vector<Assignment> assignments;
         std::vector<ChildBox> children;
-        friend std::ostream& operator<<(std::ostream& os, const Box& x);
-        friend std::ostream& print     (std::ostream& os, const Box& x, int level);
         void build(base::BoxBuilder *builder);
     };
+    std::ostream& operator<<(std::ostream& os, const Box& x);
+    std::ostream& print     (std::ostream& os, const Box& x, int level);
 
     struct boxscript : x3::position_tagged
     {
         Box root;
-        friend std::ostream& operator<<(std::ostream& os, const boxscript& x);
-        friend std::ostream& print     (std::ostream& os, const boxscript& x);
     };
+    std::ostream& operator<<(std::ostream& os, const boxscript& x);
+    std::ostream& print     (std::ostream& os, const boxscript& x);
 
 }}
 

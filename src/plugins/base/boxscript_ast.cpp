@@ -24,6 +24,11 @@
 
 namespace boxscript { namespace ast
 {
+
+    inline QString str(const std::string &s) {
+        return QString::fromStdString(s);
+    }
+
     inline std::string pad(int level) { return std::string(2*level, ' '); }
 
     inline std::string zpad(int i) {
@@ -148,10 +153,6 @@ namespace boxscript { namespace ast
 
     std::ostream& operator<<(std::ostream& os, const Time& x) {
         return os << zpad(x.hour) << ":" << zpad(x.minute) << ":" << zpad(x.second);
-    }
-
-    inline QString str(const std::string &s) {
-        return QString::fromStdString(s);
     }
 
     base::Value Time::value() const {
