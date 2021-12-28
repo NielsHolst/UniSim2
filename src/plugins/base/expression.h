@@ -60,7 +60,7 @@ public:
     void push(boxscript::ast::Time time);
     void push(boxscript::ast::DateTime dt);
     void push(boxscript::ast::BareDate bd);
-    void push(boxscript::ast::Reference ref);
+    void push(boxscript::ast::ReferenceUnion ref);
     void push(boxscript::ast::GroupedExpression group);
     void push(boxscript::ast::FunctionCall func);
     void push(Value value);

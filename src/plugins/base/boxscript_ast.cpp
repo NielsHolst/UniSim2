@@ -137,6 +137,15 @@ namespace boxscript { namespace ast
         return os << x.path << "[" << x.port << "]";
     }
 
+    std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x) {
+        for (auto ref = x.references.begin(); ref != x.references.end(); ++ref) {
+            if (ref != x.references.begin())
+                os << "|";
+            os << *ref;
+        }
+        return os;
+    }
+
     std::ostream& operator<<(std::ostream& os, const Time& x) {
         return os << zpad(x.hour) << ":" << zpad(x.minute) << ":" << zpad(x.second);
     }
@@ -178,9 +187,9 @@ namespace boxscript { namespace ast
         return QString::fromStdString(stringValue);
     }
 
-    base::Path Reference::value() const {
+    base::Path ReferenceUnion::value() const {
         std::stringstream str;
-        str << path <<  "[" << port << "]";
+        str << *this;
         return QString::fromStdString(str.str());
     }
 
@@ -202,8 +211,8 @@ namespace boxscript { namespace ast
             expression->push(get<Time        >(*this).value()); break;
         case Type::Number:
             expression->push(get<Number      >(*this).value()); break;
-        case Type::Reference:
-            expression->push(get<Reference   >(*this).value()); break;
+        case Type::ReferenceUnion:
+            expression->push(get<ReferenceUnion>(*this).value()); break;
         case Type::FunctionCall:
                              get<FunctionCall>(*this).build(expression); break;
         case Type::Bool:

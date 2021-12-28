@@ -60,8 +60,8 @@ void Expression::push(boxscript::ast::Operand operand) {
     case Type::BareDate:
         push(boost::get<boxscript::ast::BareDate>(operand));
         break;
-    case Type::Reference:
-        push(boost::get<boxscript::ast::Reference>(operand));
+    case Type::ReferenceUnion:
+        push(boost::get<boxscript::ast::ReferenceUnion>(operand));
         break;
     case Type::GroupedExpression:
         push(boost::get<boxscript::ast::GroupedExpression>(operand));
@@ -103,7 +103,7 @@ void Expression::push(boxscript::ast::BareDate bd) {
     push(BareDate(bd.month, bd.day));
 }
 
-void Expression::push(boxscript::ast::Reference ref) {
+void Expression::push(boxscript::ast::ReferenceUnion ref) {
     std::stringstream str;
     str << ref;
     push(Path(QString::fromStdString(str.str())));

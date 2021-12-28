@@ -77,6 +77,11 @@ namespace boxscript { namespace ast
         Path path;
         std::string port;
         friend std::ostream& operator<<(std::ostream& os, const Reference& x);
+    };
+
+    struct ReferenceUnion : x3::position_tagged {
+        std::vector<Reference> references;
+        friend std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x);
         base::Path value() const;
     };
 
@@ -104,11 +109,11 @@ namespace boxscript { namespace ast
     };
 
     struct Operand : x3::variant<DateTime, Date, BareDate, Time, Number,
-                                 Reference, FunctionCall, Bool, QuotedString, GroupedExpression>,
+                                 ReferenceUnion, FunctionCall, Bool, QuotedString, GroupedExpression>,
             x3::position_tagged
     {
         enum class Type{DateTime, Date, BareDate, Time, Number,
-                        Reference, FunctionCall, Bool, QuotedString, GroupedExpression};
+                        ReferenceUnion, FunctionCall, Bool, QuotedString, GroupedExpression};
         Type type() const {
             return static_cast<Type>(get().which());
         }
@@ -120,7 +125,7 @@ namespace boxscript { namespace ast
                 TYPE_NAME(Type::Time, Time);
                 TYPE_NAME(Type::DateTime, DateTime);
                 TYPE_NAME(Type::BareDate, BareDate);
-                TYPE_NAME(Type::Reference, Reference);
+                TYPE_NAME(Type::ReferenceUnion, ReferenceUnion);
                 TYPE_NAME(Type::FunctionCall, FunctionCall);
                 TYPE_NAME(Type::Bool, Bool);
                 TYPE_NAME(Type::QuotedString, QuotedString);

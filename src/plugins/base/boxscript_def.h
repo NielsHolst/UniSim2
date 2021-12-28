@@ -85,6 +85,7 @@ namespace boxscript { namespace parser
     struct qualified_name_class;
     struct quoted_string_class;
     struct reference_class;
+    struct reference_union_class;
     struct sign_class;
     struct time_class;
 
@@ -116,6 +117,7 @@ namespace boxscript { namespace parser
     x3::rule<qualified_name_class, std::string> const qualified_name = "qualified_name";
     x3::rule<quoted_string_class, ast::QuotedString> const quoted_string = "quoted_string";
     x3::rule<reference_class, ast::Reference> const reference = "reference";
+    x3::rule<reference_union_class, ast::ReferenceUnion> const reference_union = "reference union";
     x3::rule<sign_class, char> const sign = "sign";
     x3::rule<time_class, ast::Time> const time = "time";
     boxscript_type const boxscript = "boxscript";
@@ -182,17 +184,17 @@ namespace boxscript { namespace parser
     auto const number_def = double_ | int_;
     auto const object_name_def = qualified_name | joker | dots;
     auto const operand_def = date_time | date | bare_date | time | number |
-                             reference | function_call | bool_ | quoted_string | grouped_expression;
+                             reference_union | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
     auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
                               |x3::string("&&")|x3::string("||")|x3::string("?")|x3::string(":");
-//    auto const path_def = -char_('/') >> object_name >> *(char_('/') >> object_name);
     auto const path_def = -x3::string("/") >> (object_name % '/');
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
     auto const qualified_name_def = lexeme[name >> -(x3::string("::") > object_name)];
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const reference_def = path >> port;
+    auto const reference_union_def = reference % '|';
     auto const sign_def = char_("+")|char_("-")|char_("!");
     auto const time_def = integer >> ':' > integer >> -(':' > integer);
 
@@ -200,7 +202,7 @@ namespace boxscript { namespace parser
                 assignment, bare_date, bool_, box, date, date_time,
                 dots, expression, function_call, grouped_expression, integer, joker,
                 name, number, object_name, operand, operation, operator_,
-                path, port, port_prefix, qualified_name, quoted_string, reference, sign,
+                path, port, port_prefix, qualified_name, quoted_string, reference, reference_union, sign,
                 time, boxscript
                 )
 
@@ -233,6 +235,7 @@ namespace boxscript { namespace parser
     struct qualified_name_class : x3::annotate_on_success {};
     struct quoted_string_class : x3::annotate_on_success {};
     struct reference_class : x3::annotate_on_success {};
+    struct reference_union_class : x3::annotate_on_success {};
     struct sign_class : x3::annotate_on_success {};
     struct time_class : x3::annotate_on_success {};
 

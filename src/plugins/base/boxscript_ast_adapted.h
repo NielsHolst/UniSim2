@@ -46,6 +46,9 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Reference, path, port
 )
 BOOST_FUSION_ADAPT_STRUCT(
+    boxscript::ast::ReferenceUnion, references
+)
+BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Time, hour, minute, second
 )
 
