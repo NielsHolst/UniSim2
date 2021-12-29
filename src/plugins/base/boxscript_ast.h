@@ -61,9 +61,16 @@ namespace boxscript { namespace ast
     };
     std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
 
+    struct QualifiedName : x3::position_tagged {
+        boost::optional<std::string> directive;
+        std::string boxName;
+    };
+    std::ostream& operator<<(std::ostream& os, const QualifiedName& x);
+
     struct Path : x3::position_tagged {
+        using Element = boost::variant<std::string, QualifiedName>;
         boost::optional<std::string> root;
-        std::vector<std::string> objectNames;
+        std::vector<Element> elements;
     };
     std::ostream& operator<<(std::ostream& os, const Path& x);
 

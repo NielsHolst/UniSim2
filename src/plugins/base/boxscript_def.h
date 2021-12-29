@@ -118,7 +118,7 @@ namespace boxscript { namespace parser
     x3::rule<path_class, ast::Path> const path = "path";
     x3::rule<port_class, std::string> const port = "port";
     x3::rule<port_prefix_class, char> const port_prefix = "port prefix (. or +)";
-    x3::rule<qualified_name_class, std::string> const qualified_name = "qualified_name";
+    x3::rule<qualified_name_class, ast::QualifiedName> const qualified_name = "qualified_name";
     x3::rule<quoted_string_class, ast::QuotedString> const quoted_string = "quoted_string";
     x3::rule<reference_class, ast::Reference> const reference = "reference";
     x3::rule<reference_union_class, ast::ReferenceUnion> const reference_union = "reference union";
@@ -202,7 +202,7 @@ namespace boxscript { namespace parser
     auto const path_def = -x3::string("/") >> ((dots|qualified_name) % '/');
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
-    auto const qualified_name_def = lexeme[-(name >> x3::string("::")) >> box_name];
+    auto const qualified_name_def = -lexeme[(name >> x3::lit("::"))] >> box_name;
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const reference_def = path >> port;
     auto const reference_union_def = reference % '|';
