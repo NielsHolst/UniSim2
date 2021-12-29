@@ -172,17 +172,6 @@ inline bool isOperator(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::Operator);
 }
 
-inline bool isSimpleOperator(Expression::Element element) {
-    return isOperator(element) &&
-        static_cast<int>( std::get<Operator>(element) ) <
-        static_cast<int>( Operator::Union );
-}
-
-inline bool isUnion(Expression::Element element) {
-    return isOperator(element) &&
-           (std::get<Operator>(element) == Operator::Union);
-}
-
 inline bool isParenthesis(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::Parenthesis);
 }
@@ -294,29 +283,6 @@ Expression::Element Expression::registerFunctionCall(const Element &element) {
     return f;
 }
 
-void Expression::unitePaths(Stack &stack) {
-    // Pop operator |
-    stack.pop_back();
-
-    // Both operands must be paths
-    Path a, b;
-    if (isPath(stack.back())) {
-        a = get<Path>(stack.back());
-        stack.pop_back();
-        if (isPath(stack.back())) {
-            b = get<Path>(stack.back());
-            stack.pop_back();
-        }
-        else
-            ThrowException("Operand for union (|) must be a path").value(elementName(stack.back()));
-    }
-    else
-        ThrowException("Operand for union (|) must be a path").value(elementName(stack.back()));
-
-    // Merge paths
-    stack.push_back(Path(a.original() + "|" + b.original()));
-}
-
 void Expression::reduceByOperator(Stack &stack) {
     // Second operator for arity==2
     Value b;
@@ -342,12 +308,18 @@ void Expression::reduceByOperator(Stack &stack) {
     case Operator::Subtract     : c = operate::subtract(a,b); break;
     case Operator::Multiply     : c = operate::multiply(a,b); break;
     case Operator::Divide       : c = operate::divide(a,b); break;
-    case Operator::Negate       : c = operate::negate(a); break;
     case Operator::Exponentiate : c = operate::exponentiate(a,b); break;
+    case Operator::Larger       : c = operate::larger(a,b); break;
+    case Operator::LargerOrEqual: c = operate::largerOrEqual(a,b); break;
+    case Operator::Less         : c = operate::less(a,b); break;
+    case Operator::LessOrEqual  : c = operate::lessOrEqual(a,b); break;
+    case Operator::Equal        : c = operate::equal(a,b); break;
+    case Operator::NotEqual     : c = operate::notEqual(a,b); break;
     case Operator::And          : c = operate::and_(a,b); break;
     case Operator::Or           : c = operate::or_(a,b); break;
+    case Operator::Negate       : c = operate::negate(a); break;
     case Operator::Not          : c = operate::not_(a); break;
-    default                     : ThrowException("Unexpected operator").value(static_cast<int>(op));
+//    default                     : ThrowException("Unexpected operator").value(static_cast<int>(op));
     }
     // We need to pop operator and push result, because result may be of another type
     stack.pop_back();
@@ -528,10 +500,8 @@ Value Expression::evaluate() {
     else {
         for (Element &element : _stack) {
             myStack.push_back(element);
-            if (isSimpleOperator(element))
+            if (isOperator(element))
                 reduceByOperator(myStack);
-            else if (isUnion(element))
-                unitePaths(myStack);
             else if (isFunctionCall(element))
                 reduceByFunctionCall(myStack);
         }

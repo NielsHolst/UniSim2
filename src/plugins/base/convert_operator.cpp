@@ -8,14 +8,17 @@ template<> QString convert(Operator op) {
     case Operator::Subtract:      return "-";
     case Operator::Multiply:      return "*";
     case Operator::Divide:        return "/";
-    case Operator::Negate:        return "-";
     case Operator::Exponentiate:  return "^";
+    case Operator::Larger:        return ">";
+    case Operator::LargerOrEqual: return ">=";
+    case Operator::Less:          return "<";
+    case Operator::LessOrEqual:   return "<=";
+    case Operator::Equal:         return "==";
+    case Operator::NotEqual:      return "!=";
     case Operator::And:           return "&&";
     case Operator::Or:            return "||";
+    case Operator::Negate:        return "-";
     case Operator::Not:           return "!";
-    case Operator::Union:         return "|";
-    case Operator::If:            return "?";
-    case Operator::Else:          return ":";
     }
     return QString();
 }

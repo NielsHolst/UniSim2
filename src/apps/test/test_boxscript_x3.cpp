@@ -225,8 +225,14 @@ void TestBoxScriptX3::testNumber() {
     QCOMPARE(ass.at(0).portName, "steps");
     QCOMPARE(ass.at(1).portName, "a");
 
-    boxscript::ast::Operand op0 = ass.at(0).expression.firstOperand,
-                            op1 = ass.at(1).expression.firstOperand;
+    QCOMPARE(ass.at(0).type(), boxscript::ast::Assignment::Type::Expression);
+    QCOMPARE(ass.at(1).type(), boxscript::ast::Assignment::Type::Expression);
+
+    auto exp0 = boost::get<boxscript::ast::Expression>(ass.at(0).expression);
+    auto exp1 = boost::get<boxscript::ast::Expression>(ass.at(1).expression);
+
+    boxscript::ast::Operand op0 = exp0.firstOperand,
+                            op1 = exp1.firstOperand;
     QCOMPARE(op0.type(), boxscript::ast::Operand::Type::Number);
     QCOMPARE(op1.type(), boxscript::ast::Operand::Type::Number);
 
@@ -264,4 +270,14 @@ void TestBoxScriptX3::testAuxAllTypes() {
         result = parse("box_script/aux_all_types.box");
     }
     UNEXPECTED_EXCEPTION;
+}
+
+void TestBoxScriptX3::testIfElse() {
+    ParseResult result;
+    bool excepted(false);
+    try {
+        result = parse("box_script/if_else.box");
+    }
+    UNEXPECTED_EXCEPTION;
+    cout << *result;
 }

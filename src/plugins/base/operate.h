@@ -7,15 +7,21 @@
 #include "value.h"
 
 namespace operate {
-base::Value add         (const base::Value &a, const base::Value &b);
-base::Value subtract    (const base::Value &a, const base::Value &b);
-base::Value multiply    (const base::Value &a, const base::Value &b);
-base::Value divide      (const base::Value &a, const base::Value &b);
-base::Value exponentiate(const base::Value &a, const base::Value &b);
-base::Value and_        (const base::Value &a, const base::Value &b);
-base::Value or_         (const base::Value &a, const base::Value &b);
-base::Value not_        (const base::Value &a);
-base::Value negate      (const base::Value &a);
+base::Value add          (const base::Value &a, const base::Value &b);
+base::Value subtract     (const base::Value &a, const base::Value &b);
+base::Value multiply     (const base::Value &a, const base::Value &b);
+base::Value divide       (const base::Value &a, const base::Value &b);
+base::Value exponentiate (const base::Value &a, const base::Value &b);
+base::Value larger       (const base::Value &a, const base::Value &b);
+base::Value largerOrEqual(const base::Value &a, const base::Value &b);
+base::Value less         (const base::Value &a, const base::Value &b);
+base::Value lessOrEqual  (const base::Value &a, const base::Value &b);
+base::Value equal        (const base::Value &a, const base::Value &b);
+base::Value notEqual     (const base::Value &a, const base::Value &b);
+base::Value and_         (const base::Value &a, const base::Value &b);
+base::Value or_          (const base::Value &a, const base::Value &b);
+base::Value not_         (const base::Value &a);
+base::Value negate       (const base::Value &a);
 }
 
 inline base::Value operator+(const base::Value &a, const base::Value &b) {

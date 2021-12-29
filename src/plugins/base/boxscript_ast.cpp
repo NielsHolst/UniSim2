@@ -42,7 +42,18 @@ namespace boxscript { namespace ast
 
     std::ostream& print(std::ostream& os, const Assignment& x, int level) {
         os << pad(level) << x.qualifier << x.portName;
-        os << " " << x.equals << " " << x.expression << std::endl;
+        os << " " << x.equals;
+        if (x.type() == Assignment::Type::Expression) {
+            os << " " << boost::get<Expression>(x.expression) << std::endl;
+        }
+        else {
+            const auto &e(boost::get<IfExpression>(x.expression));
+            int n = e.size();
+            os << "if " << e.at(0) << " then " << e.at(1) << std::endl;
+            for (int i=2; i<n-1; i+=2)
+                os << "elsif " << e.at(i) << " then " << e.at(i+1) << std::endl;
+            os << "else " << e.at(n-1) << std::endl;
+        }
         return os;
     }
 
@@ -259,7 +270,7 @@ namespace boxscript { namespace ast
         else
             builder->port(str(portName));
         // Deal with assignment operator (=~) here...
-        expression.build(builder);
+        boost::get<Expression>(expression).build(builder);
     }
 
     void Box::build(base::BoxBuilder *builder) {

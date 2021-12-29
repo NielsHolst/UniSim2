@@ -73,6 +73,7 @@ namespace boxscript { namespace parser
     struct expression_class;
     struct function_call_class;
     struct grouped_expression_class;
+    struct if_expression_class;
     struct integer_class;
     struct joker_class;
     struct name_class;
@@ -106,6 +107,7 @@ namespace boxscript { namespace parser
     x3::rule<expression_class, ast::Expression> const expression = "expression";
     x3::rule<function_call_class, ast::FunctionCall> const function_call = "function call";
     x3::rule<grouped_expression_class, ast::Expression> const grouped_expression = "grouped expression";
+    x3::rule<if_expression_class, ast::IfExpression> const if_expression = "if expression";
     x3::rule<integer_class, int> const integer = "integer";
     x3::rule<joker_class, std::string> const joker = "joker";
     x3::rule<name_class, std::string> const name = "name";
@@ -164,7 +166,7 @@ namespace boxscript { namespace parser
         _val(ctx).year = k;
     };
 
-    auto const assignment_def = (port_prefix > name) >> (char_('=')|char_('~')) > expression; //(if_expression|expression);
+    auto const assignment_def = (port_prefix > name) >> (char_('=')|char_('~')) > (if_expression|expression);
     auto const bare_date_def = (integer >> '/' >> integer) [dm] |
                         ('/' >> integer >> '/' >> integer) [md];
     auto const bare_date_time_def = bare_date >> (lit("T")|lit(" ")) >> time;
@@ -182,6 +184,9 @@ namespace boxscript { namespace parser
     auto const expression_def = -sign >> operand >> *operation;
     auto const function_call_def = name >> '(' >> expression % ',' > ')';
     auto const grouped_expression_def = '(' >> expression > ')';
+    auto const if_expression_def = lit("if") > expression > lit("then") > expression >>
+                                   *(lit("elsif") > expression > lit("then") > expression) >
+                                   lit("else") > expression;
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
@@ -190,7 +195,10 @@ namespace boxscript { namespace parser
                              reference_union | function_call | bool_ | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
     auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
-                              |x3::string("&&")|x3::string("||")|x3::string("?")|x3::string(":");
+                              |x3::string("==")|x3::string("&&")|x3::string("||")
+                              |x3::string(">=")|x3::string(">")
+                              |x3::string("<=")|x3::string("<")
+                              |x3::string("!=")|x3::string("!");
     auto const path_def = -x3::string("/") >> ((dots|qualified_name) % '/');
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
@@ -203,7 +211,7 @@ namespace boxscript { namespace parser
 
     BOOST_SPIRIT_DEFINE(
                 assignment, bare_date, bool_, box, box_name, class_name, date, date_time,
-                dots, expression, function_call, grouped_expression, integer, joker,
+                dots, expression, function_call, grouped_expression, if_expression, integer, joker,
                 name, number, operand, operation, operator_,
                 path, port, port_prefix, qualified_name, quoted_string, reference, reference_union, sign,
                 time, boxscript
@@ -226,6 +234,7 @@ namespace boxscript { namespace parser
     struct expression_class : x3::annotate_on_success {};
     struct function_call_class : x3::annotate_on_success {};
     struct grouped_expression_class : x3::annotate_on_success {};
+    struct if_expression_class : x3::annotate_on_success {};
     struct integer_class : x3::annotate_on_success {};
     struct joker_class : x3::annotate_on_success {};
     struct name_class : x3::annotate_on_success {};

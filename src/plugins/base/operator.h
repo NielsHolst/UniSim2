@@ -13,14 +13,17 @@ enum class Operator {
     Subtract,
     Multiply,
     Divide,
-    Negate,
     Exponentiate,
+    Larger,
+    LargerOrEqual,
+    Less,
+    LessOrEqual,
+    Equal,
+    NotEqual,
     And,
     Or,
-    Not,
-    Union,
-    If,
-    Else
+    Negate,
+    Not
 };
 
 enum class Parenthesis {

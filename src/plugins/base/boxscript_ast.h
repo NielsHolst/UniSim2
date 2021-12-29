@@ -155,11 +155,19 @@ namespace boxscript { namespace ast
     };
     std::ostream& operator<<(std::ostream& os, const Expression& x);
 
+    using IfExpression = std::vector<Expression>;
+
     struct Assignment : x3::position_tagged {
         char qualifier;
         std::string portName;
         char equals;
-        Expression expression;
+        boost::variant<Expression, IfExpression> expression;
+
+        enum class Type{Expression, IfExpression};
+
+        Type type() const {
+            return static_cast<Type>(expression.which());
+        }
         void build(base::BoxBuilder *builder);
     };
     std::ostream& print     (std::ostream& os, const Assignment& x, int level);

@@ -27,7 +27,8 @@ void TestExpressionParser::testAstHandling() {
     boxscript::ast::Box root = ast->root;
     QCOMPARE(root.assignments.size(), (size_t) 1);
     boxscript::ast::Assignment assignment = root.assignments.at(0);
-    boxscript::ast::Expression expression = assignment.expression;
+    QCOMPARE(assignment.type(), boxscript::ast::Assignment::Type::Expression);
+    auto expression = boost::get<boxscript::ast::Expression>(assignment.expression);
     boxscript::ast::Operand op1 = expression.firstOperand;
     QCOMPARE(expression.operations.size(), (size_t) 1);
     boxscript::ast::Operation operation = expression.operations.at(0);

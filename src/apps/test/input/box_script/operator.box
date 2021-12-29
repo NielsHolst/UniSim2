@@ -9,8 +9,14 @@ Simulation sim {
     +a = x[a]&&x[b]
     +a = x[a]||x[b]
     +a = x[a]|x[b]
-    +a = x[a]?x[b]
-    +a = x[a]:x[b]
+    +a = x[a]>x[b]
+    +a = x[a]>=x[b]
+    +a = x[a]<x[b]
+    +a = x[a]<=x[b]
+    +a = x[a]==x[b]
+    +a = x[a]!=x[b]
+    +a = -x[a]
+    +a = !x[a]
   }
 }
 

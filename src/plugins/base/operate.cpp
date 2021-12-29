@@ -82,7 +82,7 @@ inline QDateTime operator+(double x, const QDateTime &dt) { return dt + x; }
 //inline BareDate operator+(double x, const BareDate &date) { return date + x; }
 
 //
-// Template functions for vector-scalar and vector-vector operations
+// Template functions for vector-scalar operations
 //
 
 template <class T, class U, class V> Value add_vector_scalar(U a, V b) {
@@ -164,6 +164,70 @@ Value or_vector_scalar(vbool a, bool b) {
         *dest++ = *A++ || b;
     return Value(result);
 }
+
+template <class U, class V> Value larger_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) > b;
+    return Value(result);
+}
+
+template <class U, class V> Value larger_or_equal_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) >= b;
+    return Value(result);
+}
+
+template <class U, class V> Value less_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) < b;
+    return Value(result);
+}
+
+template <class U, class V> Value less_or_equal_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) <= b;
+    return Value(result);
+}
+
+template <class U, class V> Value equal_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) == b;
+    return Value(result);
+}
+
+template <class U, class V> Value not_equal_vector_scalar(U a, V b) {
+    auto A = a.data();
+    int n = a.size();
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = (*A++) != b;
+    return Value(result);
+}
+
+//
+// Template functions for vector-vector operations
+//
 
 template <class T, class U, class V> Value add_vector_vector(U a, V b) {
     auto A = a.data();
@@ -269,7 +333,86 @@ Value or_vector_vector(vbool a, vbool b) {
     return Value(result);
 }
 
- Value not_vector(vbool a) {
+template <class U, class V> Value larger_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ > *B++;
+    return Value(result);
+}
+
+template <class U, class V> Value larger_or_equal_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ >= *B++;
+    return Value(result);
+}
+
+template <class U, class V> Value less_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ < *B++;
+    return Value(result);
+}
+
+template <class U, class V> Value less_or_equal_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ <= *B++;
+    return Value(result);
+}
+
+template <class U, class V> Value equal_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ == *B++;
+    return Value(result);
+}
+
+template <class U, class V> Value not_equal_vector_vector(U a, V b) {
+    auto A = a.data();
+    auto B = b.data();
+    int n = a.size();
+    if (n != b.size())
+        ThrowException("Vectors must have equal size").value1(n).value2(b.size());
+    vbool result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = *A++ != *B++;
+    return Value(result);
+}
+
+
+Value not_vector(vbool a) {
     auto A = a.data();
     int n = a.size();
     vbool result(n);
@@ -591,7 +734,7 @@ Value subtract(const Value &a, const Value &b) {
 Value multiply(const Value &a, const Value &b) {
     using Type = Value::Type;
 
-    if (!a.isVector() && b.isVector()) return add(b, a);
+    if (!a.isVector() && b.isVector()) return multiply(b, a);
 
     switch (a.type()) {
     case Type::Int:
@@ -730,6 +873,690 @@ Value exponentiate(const Value &a, const Value &b) {
     default: ;
     }
     ThrowException("Incompatible operands in division").value(a.typeName() +" / "+ b.typeName());
+    return Value();
+}
+
+//
+// Larger than
+//
+
+Value larger(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return larger(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() > b.as<double>());
+        case Type::Int     : return Value(a.as<int>() > b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() > b.as<int>());
+        case Type::Double  : return Value(a.as<double>() > b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() > b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() > b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() > b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() > b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return larger_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return larger_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return larger_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return larger_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return larger_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return larger_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return larger_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return larger_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return larger_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return larger_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return larger_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return larger_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return larger_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return larger_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return larger_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return larger_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" > "+ b.typeName());
+    return Value();
+}
+
+//
+// Larger than or equal to
+//
+
+Value largerOrEqual(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return largerOrEqual(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() >= b.as<double>());
+        case Type::Int     : return Value(a.as<int>() >= b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() >= b.as<int>());
+        case Type::Double  : return Value(a.as<double>() >= b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() >= b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() >= b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() >= b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() >= b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return larger_or_equal_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return larger_or_equal_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return larger_or_equal_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return larger_or_equal_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return larger_or_equal_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return larger_or_equal_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return larger_or_equal_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return larger_or_equal_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return larger_or_equal_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return larger_or_equal_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return larger_or_equal_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return larger_or_equal_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return larger_or_equal_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return larger_or_equal_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return larger_or_equal_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return larger_or_equal_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" >= "+ b.typeName());
+    return Value();
+}
+
+//
+// Less than
+//
+
+Value less(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return less(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() < b.as<double>());
+        case Type::Int     : return Value(a.as<int>() < b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() < b.as<int>());
+        case Type::Double  : return Value(a.as<double>() < b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() < b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() < b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() < b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() < b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return less_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return less_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return less_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return less_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return less_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return less_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return less_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return less_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return less_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return less_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return less_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return less_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return less_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return less_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return less_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return less_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" < "+ b.typeName());
+    return Value();
+}
+
+//
+// Less than or equal to
+//
+
+Value lessOrEqual(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return lessOrEqual(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() <= b.as<double>());
+        case Type::Int     : return Value(a.as<int>() <= b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() <= b.as<int>());
+        case Type::Double  : return Value(a.as<double>() <= b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() <= b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() <= b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() <= b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() <= b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return less_or_equal_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return less_or_equal_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return less_or_equal_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return less_or_equal_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return less_or_equal_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return less_or_equal_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return less_or_equal_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return less_or_equal_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return less_or_equal_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return less_or_equal_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return less_or_equal_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return less_or_equal_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return less_or_equal_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return less_or_equal_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return less_or_equal_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return less_or_equal_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" <= "+ b.typeName());
+    return Value();
+}
+
+//
+// Equal to
+//
+
+Value equal(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return equal(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() == b.as<double>());
+        case Type::Int     : return Value(a.as<int>() == b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() == b.as<int>());
+        case Type::Double  : return Value(a.as<double>() == b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() == b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() == b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() == b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() == b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return equal_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return equal_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return equal_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return equal_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return equal_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return equal_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return equal_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return equal_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return equal_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return equal_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return equal_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return equal_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return equal_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return equal_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return equal_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return equal_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" == "+ b.typeName());
+    return Value();
+}
+
+//
+// Less than or equal to
+//
+
+Value notEqual(const Value &a, const Value &b) {
+    using Type = Value::Type;
+
+    if (!a.isVector() && b.isVector()) return notEqual(b, a);
+
+    switch (a.type()) {
+    case Type::Uninitialized :
+        break;
+    case Type::Bool:
+        break;
+    case Type::Int:
+        switch (b.type()) {
+        case Type::Double  : return Value(a.as<int>() != b.as<double>());
+        case Type::Int     : return Value(a.as<int>() != b.as<int>());
+        default            : ;
+        }
+        break;
+    case Type::Double:
+        switch (b.type()) {
+        case Type::Int     : return Value(a.as<double>() != b.as<int>());
+        case Type::Double  : return Value(a.as<double>() != b.as<double>());
+        default            : ;
+        }
+        break;
+    case Type::String:
+        break;
+    case Type::Date:
+        switch (b.type()) {
+        case Type::Date    : return Value(a.as<QDate>() != b.as<QDate>());
+        default            : ;
+        }
+        break;
+    case Type::Time:
+        switch (b.type()) {
+        case Type::Time    : return Value(a.as<QTime>() != b.as<QTime>());
+        default            : ;
+        }
+        break;
+    case Type::DateTime:
+        switch (b.type()) {
+        case Type::DateTime: return Value(a.as<QDateTime>() != b.as<QDateTime>());
+        default            : ;
+        }
+        break;
+    case Type::BareDate:
+        switch (b.type()) {
+        case Type::BareDate: return Value(a.as<BareDate>() != b.as<BareDate>());
+        default            : ;
+        }
+        break;
+    case Type::Path:
+        break;
+    //
+    // Vector
+    //
+    case Type::VecBool:
+        break;
+    case Type::VecInt:
+        switch (b.type()) {
+        case Type::Int        : return not_equal_vector_scalar(a.as<vint>(), b.as<int>());
+        case Type::Double     : return not_equal_vector_scalar(a.as<vint>(), b.as<double>());
+        case Type::VecInt     : return not_equal_vector_vector(a.as<vint>(), b.as<vint>());
+        case Type::VecDouble  : return not_equal_vector_vector(a.as<vint>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecDouble:
+        switch (b.type()) {
+        case Type::Int        : return not_equal_vector_scalar(a.as<vdouble>(), b.as<int>());
+        case Type::Double     : return not_equal_vector_scalar(a.as<vdouble>(), b.as<double>());
+        case Type::VecInt     : return not_equal_vector_vector(a.as<vdouble>(), b.as<vint>());
+        case Type::VecDouble  : return not_equal_vector_vector(a.as<vdouble>(), b.as<vdouble>());
+        default               : ;
+        }
+        break;
+    case Type::VecString:
+        break;
+    case Type::VecDate:
+        switch (b.type()) {
+        case Type::Date       : return not_equal_vector_scalar(a.as<vQDate>(), b.as< QDate>());
+        case Type::VecDate    : return not_equal_vector_vector(a.as<vQDate>(), b.as<vQDate>());
+        default               : ;
+        }
+        break;
+    case Type::VecTime:
+        switch (b.type()) {
+        case Type::Time       : return not_equal_vector_scalar(a.as<vQTime>(), b.as< QTime>());
+        case Type::VecTime    : return not_equal_vector_vector(a.as<vQTime>(), b.as<vQTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecDateTime:
+        switch (b.type()) {
+        case Type::DateTime   : return not_equal_vector_scalar(a.as<vQDateTime>(), b.as< QDateTime>());
+        case Type::VecDateTime: return not_equal_vector_vector(a.as<vQDateTime>(), b.as<vQDateTime>());
+        default               : ;
+        }
+        break;
+    case Type::VecBareDate:
+        switch (b.type()) {
+        case Type::BareDate   : return not_equal_vector_scalar(a.as<vBareDate>(), b.as< BareDate>());
+        case Type::VecBareDate: return not_equal_vector_vector(a.as<vBareDate>(), b.as<vBareDate>());
+        default               : ;
+        }
+        break;
+    }
+    ThrowException("Incompatible operands in comparison").value(a.typeName() +" != "+ b.typeName());
     return Value();
 }
 

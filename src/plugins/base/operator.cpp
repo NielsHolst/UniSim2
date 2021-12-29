@@ -16,14 +16,17 @@ static map<Operator,int> precedences =
    {Operator::Subtract     , 6},
    {Operator::Multiply     , 7},
    {Operator::Divide       , 7},
-   {Operator::Negate       , 8},
    {Operator::Exponentiate , 9},
+   {Operator::Larger       , 3},
+   {Operator::LargerOrEqual, 3},
+   {Operator::Less         , 3},
+   {Operator::LessOrEqual  , 3},
+   {Operator::Equal        , 3},
+   {Operator::NotEqual     , 3},
    {Operator::And          , 5},
    {Operator::Or           , 4},
-   {Operator::Not          , 8},
-   {Operator::Union        , 8},
-   {Operator::If           , 3},
-   {Operator::Else         , 3}
+   {Operator::Negate       , 8},
+   {Operator::Not          , 8}
 };
 
 static map<Operator,int> arities =
@@ -32,14 +35,17 @@ static map<Operator,int> arities =
    {Operator::Subtract     , 2},
    {Operator::Multiply     , 2},
    {Operator::Divide       , 2},
-   {Operator::Negate       , 1},
    {Operator::Exponentiate , 2},
+   {Operator::Larger       , 2},
+   {Operator::LargerOrEqual, 2},
+   {Operator::Less         , 2},
+   {Operator::LessOrEqual  , 2},
+   {Operator::Equal        , 2},
+   {Operator::NotEqual     , 2},
    {Operator::And          , 2},
    {Operator::Or           , 2},
-   {Operator::Not          , 1},
-   {Operator::Union        , 2},
-   {Operator::If           , 2},
-   {Operator::Else         , 2}
+   {Operator::Negate       , 1},
+   {Operator::Not          , 1}
 };
 
 int precedence(Operator op) {
@@ -51,21 +57,24 @@ int arity(Operator op) {
 }
 
 Operator lookupOperator(QString op) {
-    switch (op.at(0).toLatin1()){
+    if (op.size() == 1) switch (op.at(0).toLatin1()){
     case '+': return Operator::Add;
     case '-': return Operator::Subtract;
     case '*': return Operator::Multiply;
     case '/': return Operator::Divide;
     case '^': return Operator::Exponentiate;
-    case '&': if (op.size()==2 && op.at(1)=='&') return Operator::And; break;
-    case '|': if      (op.size()==1) return Operator::Union;
-              else if (op.size()==2 && op.at(1)=='|') return Operator::Or; break;
+    case '>': return Operator::Larger;
+    case '<': return Operator::Less;
     case '!': return Operator::Not;
-    case '?': return Operator::If;
-    case ':': return Operator::Else;
     default: ;
     }
-    ThrowException("Unknown operataor").value(op);
+    else if (op == ">=") return Operator::LargerOrEqual;
+    else if (op == "<=") return Operator::LessOrEqual;
+    else if (op == "==") return Operator::Equal;
+    else if (op == "!=") return Operator::NotEqual;
+    else if (op == "&&") return Operator::And;
+    else if (op == "||") return Operator::Or;
+    ThrowException("Unknown operator").value(op);
 }
 
 }
