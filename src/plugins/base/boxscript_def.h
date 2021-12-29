@@ -65,7 +65,6 @@ namespace boxscript { namespace parser
     struct bare_date_time_class;
     struct bool__class;
     struct box_class;
-    struct box_name_class;
     struct class_name_class;
     struct date_class;
     struct date_time_class;
@@ -76,6 +75,7 @@ namespace boxscript { namespace parser
     struct if_expression_class;
     struct integer_class;
     struct joker_class;
+    struct joker_name_class;
     struct name_class;
     struct number_class;
     struct operand_class;
@@ -99,7 +99,6 @@ namespace boxscript { namespace parser
     x3::rule<bare_date_class, ast::BareDate> const bare_date = "bare date";
     x3::rule<bool__class, ast::Bool> const bool_ = "bool";
     x3::rule<box_class, ast::Box> const box = "box";
-    x3::rule<box_name_class, std::string> const box_name = "box name";
     x3::rule<class_name_class, std::string> const class_name = "class name";
     x3::rule<date_class, ast::Date> const date = "date";
     x3::rule<date_time_class, ast::DateTime> const date_time = "date_time";
@@ -110,6 +109,7 @@ namespace boxscript { namespace parser
     x3::rule<if_expression_class, ast::IfExpression> const if_expression = "if expression";
     x3::rule<integer_class, int> const integer = "integer";
     x3::rule<joker_class, std::string> const joker = "joker";
+    x3::rule<joker_name_class, std::string> const joker_name = "joker name";
     x3::rule<name_class, std::string> const name = "name";
     x3::rule<number_class, ast::Number> const number = "number";
     x3::rule<operand_class, ast::Operand> const operand = "operand";
@@ -172,7 +172,6 @@ namespace boxscript { namespace parser
     auto const bare_date_time_def = bare_date >> (lit("T")|lit(" ")) >> time;
     auto const bool__def = lexeme[x3::string("TRUE") | x3::string("FALSE")];
     auto const box_def = class_name >> -name >> '{' >> *assignment >> *box > '}';
-    auto const box_name_def = name | joker;
     auto const boxscript_def = box;
     auto const class_name_def = lexeme[name >> -(x3::string("::") >> name)];
     auto const date_def = (integer >> '/' >> integer >> '/' > integer) [dmy_ymd] |
@@ -189,6 +188,7 @@ namespace boxscript { namespace parser
                                    lit("else") > expression;
     auto const integer_def = int_;
     auto const joker_def = lexeme[x3::string("*")];
+    auto const joker_name_def = name | joker | dots;
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
     auto const number_def = double_ | int_;
     auto const operand_def = date_time | date | bare_date | time | number |
@@ -199,10 +199,10 @@ namespace boxscript { namespace parser
                               |x3::string(">=")|x3::string(">")
                               |x3::string("<=")|x3::string("<")
                               |x3::string("!=")|x3::string("!");
-    auto const path_def = -x3::string("/") >> ((dots|qualified_name) % '/');
+    auto const path_def = -x3::string("/") >> (qualified_name % '/');
     auto const port_def = lit('[') >> (name | joker) > lit(']');
     auto const port_prefix_def = char_('.')|char_('+');
-    auto const qualified_name_def = -lexeme[(name >> x3::lit("::"))] >> box_name;
+    auto const qualified_name_def = joker_name % "::";
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const reference_def = path >> port;
     auto const reference_union_def = reference % '|';
@@ -210,8 +210,8 @@ namespace boxscript { namespace parser
     auto const time_def = integer >> ':' > integer >> -(':' > integer);
 
     BOOST_SPIRIT_DEFINE(
-                assignment, bare_date, bool_, box, box_name, class_name, date, date_time,
-                dots, expression, function_call, grouped_expression, if_expression, integer, joker,
+                assignment, bare_date, bool_, box, class_name, date, date_time,
+                dots, expression, function_call, grouped_expression, if_expression, integer, joker, joker_name,
                 name, number, operand, operation, operator_,
                 path, port, port_prefix, qualified_name, quoted_string, reference, reference_union, sign,
                 time, boxscript
@@ -226,7 +226,6 @@ namespace boxscript { namespace parser
     struct bare_date_class : x3::annotate_on_success {};
     struct bool__class : x3::annotate_on_success {};
     struct box_class : x3::annotate_on_success {};
-    struct box_name_class : x3::annotate_on_success {};
     struct class_name_class : x3::annotate_on_success {};
     struct date_class : x3::annotate_on_success {};
     struct date_time_class : x3::annotate_on_success {};
@@ -237,6 +236,7 @@ namespace boxscript { namespace parser
     struct if_expression_class : x3::annotate_on_success {};
     struct integer_class : x3::annotate_on_success {};
     struct joker_class : x3::annotate_on_success {};
+    struct joker_name_class : x3::annotate_on_success {};
     struct name_class : x3::annotate_on_success {};
     struct number_class : x3::annotate_on_success {};
     struct object_name_class : x3::annotate_on_success {};

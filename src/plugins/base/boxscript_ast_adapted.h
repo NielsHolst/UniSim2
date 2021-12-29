@@ -40,9 +40,6 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Path, root, elements
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::QualifiedName, directive, boxName
-)
-BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::QuotedString, stringValue
 )
 BOOST_FUSION_ADAPT_STRUCT(

@@ -137,21 +137,17 @@ namespace boxscript { namespace ast
     std::ostream& operator<<(std::ostream& os, const Path& x) {
         if (x.root.has_value())
             os << *x.root;
-        for (auto objName = x.elements.begin(); objName != x.elements.end(); ++objName) {
-            if (objName != x.elements.begin())
+        for (auto e = x.elements.begin(); e != x.elements.end(); ++e) {
+            if (e != x.elements.begin())
                 os << "/";
-            os << *objName;
+            for (auto q = e->begin();  q != e->end(); ++q) {
+                if (q != e->begin())
+                    os << "::";
+                os << *q;
+            }
         }
         return os;
     }
-
-    std::ostream& operator<<(std::ostream& os, const QualifiedName& x) {
-        if (x.directive.has_value())
-            os << x.directive.get() << "::";
-        return os << x.boxName;
-    }
-
-
 
     std::ostream& operator<<(std::ostream& os, const QuotedString& x) {
         return os << '"' << x.stringValue << '"';
