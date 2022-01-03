@@ -2,46 +2,12 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QVariant>
 #include <assert.h>
 #include <exception.h>
 #include "environment.h"
 #include "general.h"
 
 namespace base {
-
-//! Namespaces are currently ignored !
-
-void setClassName(QObject *object, QString className_) {
-    Q_ASSERT(object);
-    if (hasClassName(object)) {
-        bool alreadySet = (className(object) == className_);
-        if (!alreadySet) {
-            object->setProperty("base::Class", QVariant(className_));
-            object->setProperty("base::ClassInheritance", QVariant(classInheritance(object) + "/" + className_));
-        }
-    }
-    else {
-        object->setProperty("base::Class", QVariant(className_));
-        object->setProperty("base::ClassInheritance", QVariant(className_));
-    }
-}
-
-QString className(const QObject *object) {
-    Q_ASSERT(object);
-    QVariant className = object->property("base::Class");
-    return className.isValid() ? className.toString() : QString("QObject");
-}
-
-QString classInheritance(const QObject *object) {
-    Q_ASSERT(object);
-    QVariant classInheritance = object->property("base::ClassInheritance");
-    return classInheritance.isValid() ? classInheritance.toString() : QString("QObject");
-}
-
-bool hasClassName(const QObject *object) {
-    return object->property("base::Class").isValid();
-}
 
 QString fullName(const QObject *object) {
     if (!object) return "NULL";
