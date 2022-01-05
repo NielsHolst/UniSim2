@@ -9,6 +9,7 @@
 #include <QMultiMap>
 #include <QObject>
 #include "exception.h"
+#include "general.h"
 
 namespace base {
 	
@@ -48,6 +49,7 @@ T* MegaFactory::create(QString className, QString objectName, QObject *parent)
     QString msg = QString("MegaFactory cannot create object '%1' of class '%2'").arg(objectName).arg(className);
     if (!object)
         ThrowException(msg);
+    setClassName(object, className);
     T *specificObject = dynamic_cast<T*>(object);
     if (!object)
         ThrowException(msg);

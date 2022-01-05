@@ -204,10 +204,9 @@ namespace boxscript { namespace ast
     }
 
     base::Path ReferenceUnion::value() const {
-        return base::Path(*this);
-//        std::stringstream str;
-//        str << *this;
-//        return QString::fromStdString(str.str());
+        std::stringstream str;
+        str << *this;
+        return QString::fromStdString(str.str());
     }
 
     base::Value Number::value() const {

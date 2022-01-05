@@ -6,11 +6,9 @@
 #define BASE_PATH_H
 
 #include <QObject>
-#include <QList>
-#include <QMap>
-#include <QRegularExpression>
 #include <QStringList>
 #include <QVector>
+#include "boxscript_ast.h"
 #include "convert.h"
 #include "exception.h"
 
@@ -23,7 +21,7 @@ class Path {
 public:
     Path(const QObject *context = nullptr);
     Path(QString path, const QObject *context = nullptr);
-    Path(QStringList paths, const QObject *context = nullptr);
+    Path(boxscript::ast::ReferenceUnion ru, const QObject *context = nullptr);
     QString original() const;
     QString normalise(int ix = 0);
     void validateName(QString name);
@@ -33,7 +31,9 @@ public:
     template<class T=QObject> T* resolveMaybeOne(const QObject* caller = nullptr);
     template<class T=QObject> QVector<T*> resolveMany(const QObject* caller = nullptr);
 
-    typedef QList<const QObject*> QObjects;
+    enum class Directive {
+        Descendants, Ancestor, Siblings, Preceding, Following
+    };
 private:
     // Data
     QStringList _originalPaths;
@@ -46,11 +46,6 @@ private:
     QVector<Port*> _resolvedPorts;
     bool _isResolved;
 
-    enum Directive {
-        Self, Children, Parent, Nearest,
-        SelfOrDescendants, Descendants, Ancestors,
-        AllSiblings, OtherSiblings, PreceedingSibling, FollowingSibling};
-    static QMap<QString, Directive> _directives;
 
     // Methods
     void initDirectives();

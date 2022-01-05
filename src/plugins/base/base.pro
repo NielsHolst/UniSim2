@@ -39,10 +39,8 @@ HEADERS +=  \
     convert.h \
     convert_operator.h \
     circular_buffer.h \
-    class_name.h \
     command.h  \
     command_help.h  \
-    composite_path.h \
     computation_step.h \
     construction_step.h \
 #    copy_folder.h \
@@ -120,12 +118,10 @@ SOURCES +=  \
     boxscript_parser.cpp \
     boxscript_preprocessor.cpp \
     caller.cpp \
-    class_name.cpp \
     convert.cpp \
     convert_operator.cpp \
     command.cpp \
     command_help.cpp  \
-    composite_path.cpp \
     computation_step.cpp \
     construction_step.cpp \
 #    copy_folder.cpp \

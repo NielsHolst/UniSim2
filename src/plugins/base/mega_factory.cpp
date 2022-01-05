@@ -10,12 +10,10 @@
 #include <QSettings>
 #include <QStringList>
 #include "box.h"
-#include "class_name.h"
 #include "construction_step.h"
 #include "dialog.h"
 #include "exception.h"
 #include "factory_plug_in.h"
-#include "general.h"
 #include "mega_factory.h"
 #include "object_pool.h"
 
@@ -78,10 +76,9 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
 {
     FactoryPlugIn *factory;
     QObject *creation;
-    QString fullClassName;
-    if (className == "Box" || className == "base::Box") {
+    if (className == "Box") {
         creation = new Box(objectName, parent);
-        fullClassName = "base::Box";
+        setClassName(creation, "Box");
     }
     else {
         switch (me()->productIndex.count(className)) {
@@ -91,15 +88,12 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
         case 1:
             factory = me()->productIndex.value(className);
             creation = factory->create(removeNamespace(className), objectName, parent);
-            fullClassName = factory->id() + "::" + removeNamespace(className);
             break;
         default:
             // Try again with 'using' plugin name
             QString pluginName = _usingPluginName;
-            if (!className.contains("::") && !pluginName.isEmpty()) {
-                fullClassName = pluginName+"::"+className;
-                creation = createObject(fullClassName, objectName, parent);
-            }
+            if (!className.contains("::") && !pluginName.isEmpty())
+                creation = createObject(pluginName+"::"+className, objectName, parent);
             else {
                 QString msg = "Qualify class name with plug-in name as in:\n" +
                         qualifiedClassNames(className).join("\n");
@@ -107,7 +101,6 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
             }
         }
     }
-    addClassName(creation, fullClassName);
 
     ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
     if (step)

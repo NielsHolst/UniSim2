@@ -4,6 +4,7 @@
 */
 #include <algorithm>
 #include <iostream>
+#include <QMap>
 #include <QSet>
 #include "box.h"
 #include "exception.h"
@@ -14,45 +15,43 @@ using namespace std;
 
 namespace base {
 
-QMap<QString, Path::Directive> Path::_directives;
+static QMap<QString, Path::Directive> directives =
+{
+    {"descendants", Path::Directive::Descendants},
+    {"ancestor", Path::Directive::Ancestor},
+    {"siblings", Path::Directive::Siblings},
+    {"preceding", Path::Directive::Preceding},
+    {"following", Path::Directive::Following}
+};
 
-#define DIR(x) _directives[QString(#x).toLower()] = x
+inline QString qstr(std::string s) {
+    return QString::fromStdString(s);
+}
 
 Path::Path(const QObject *context)
     : _originalContext(context), _caller(nullptr), _isResolved(false)
 {
-    initDirectives();
 }
 
-Path::Path(QString path, const QObject *context)
+Path::Path(boxscript::ast::ReferenceUnion ru, const QObject *context)
     : Path(context)
 {
-    #if QT_VERSION >= 0x050E00
-      _originalPaths << path.split("|", Qt::SkipEmptyParts);
-    #else
-      _originalPaths << path.split("|", QString::SkipEmptyParts);
-    #endif
+    for (auto &ref : ru.references) {
+        QStringList refList;
+        for (auto &e : ref.path.elements) {
+            if (e.which() == 0)
+                refList << qstr(boost::get<std::string>(e));
+            else {
+                auto qname = boost::get<boxscript::ast::QualifiedName>(e);
+            }
+        }
+        //        if (ref.path.root.has_value())
+        //            reference = "/";
+    }
 }
 
 QString Path::original() const {
     return _originalPaths.join("|");
-}
-
-void Path::initDirectives() {
-    // Construct singular directives map
-    if (_directives.isEmpty()) {
-        DIR(Self);
-        DIR(Children);
-        DIR(Parent);
-        DIR(Nearest);
-        DIR(SelfOrDescendants);
-        DIR(Descendants);
-        DIR(Ancestors);
-        DIR(AllSiblings);
-        DIR(OtherSiblings);
-        DIR(PreceedingSibling);
-        DIR(FollowingSibling);
-    }
 }
 
 Path::QObjects Path::_resolve(int number, const QObject *caller) {
