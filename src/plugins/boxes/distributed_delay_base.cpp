@@ -63,8 +63,8 @@ void DistributedDelayBase::put(const QVector<double> &addition) {
     }
 }
 
-const double* DistributedDelayBase::data() const {
-    return x.data();
+QVector<double> &DistributedDelayBase::data() {
+    return x;
 }
 
 double DistributedDelayBase::content() const {

@@ -55,7 +55,7 @@ EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
 }
 
 void EnergyBudgetOptimiser::amend() {
-    if (hasHeatSink & !findMaybeOne<Box>("./heatSink")) {
+    if (hasHeatSink & !findMaybeOne<Box*>("./heatSink")) {
         BoxBuilder builder(this);
         builder.
         box("vg::HeatSink").name("heatSink").
@@ -64,10 +64,10 @@ void EnergyBudgetOptimiser::amend() {
 }
 
 void EnergyBudgetOptimiser::initialize() {
-    actuatorHeatPipes   = findOne<ActuatorHeatPipes>("actuators/heating");
-    actuatorVentilation = findOne<ActuatorVentilation>("actuators/ventilation");
-    indoorsTemperature  = findOne<IndoorsTemperature>("indoors/temperature");
-    energyBudget        = findOne<Box>("./energyBudget");
+    actuatorHeatPipes   = findOne<ActuatorHeatPipes*>("actuators/heating");
+    actuatorVentilation = findOne<ActuatorVentilation*>("actuators/ventilation");
+    indoorsTemperature  = findOne<IndoorsTemperature*>("indoors/temperature");
+    energyBudget        = findOne<Box*>("./energyBudget");
 }
 
 

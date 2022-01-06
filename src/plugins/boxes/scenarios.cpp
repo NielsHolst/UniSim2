@@ -34,7 +34,7 @@ void Scenarios::amend() {
 
 void Scenarios::initialize() {
     // Set simulation to stop after last scenario
-    Box *sim = findMaybeOne<Box>("/*<Simulation>");
+    Box *sim = findMaybeOne<Box*>("/*<Simulation>");
     if (sim) {
         Port *useStopIterations = sim->port("useStopIterations"),
              *stopIterations = sim->port("stopIterations");

@@ -16,7 +16,7 @@ Migration::Migration(QString name, QObject *parent)
 
 void Migration::amend() {
     QString popPath = "islands/*/" + name();
-    populations = findMany<Box>(popPath);
+    populations = findMany<Box*>(popPath);
     n = populations.size();
 
     distances.resize(n, n);
@@ -41,7 +41,7 @@ void Migration::setupOutcomePorts() {
         QString emPortPath = fullName() + "["+emPortName+"]",
                 imPortPath = fullName() + "["+imPortName+"]";
         // Hook emigration and immigration outputs to population stage inputs
-        Box *popStage = pop->findOne<Box>("./*<Stage>");
+        Box *popStage = pop->findOne<Box*>("./*<Stage>");
         popStage->port("phaseOutflowProportion")->imports(emPortPath);
         popStage->port("phaseInflow")->imports(imPortPath);
     }
@@ -58,8 +58,8 @@ void Migration::reset() {
 void Migration::setupDistances() {
     for (int i=0; i<n; ++i) {
         for (int j=0; j<n; ++j) {
-            Box *island1 = populations[i]->findOne<Box>(".."),
-                *island2 = populations[j]->findOne<Box>("..");
+            Box *island1 = populations[i]->findOne<Box*>(".."),
+                *island2 = populations[j]->findOne<Box*>("..");
             double dx = island1->port("longitude")->value<double>() -
                         island2->port("longitude")->value<double>();
             double dy = island1->port("latitude")->value<double>() -
@@ -105,7 +105,7 @@ void Migration::updateImmigration() {
     typedef QVector<double> Cohorts;
     // For each sender of emigrants
     for (int sender=0; sender<n; ++sender) {
-        Box *popStage = populations[sender]->findOne<Box>("./*<Stage>");
+        Box *popStage = populations[sender]->findOne<Box*>("./*<Stage>");
         Cohorts emig = popStage->port("phaseOutflow")->value<Cohorts>();
         // Split emigrants among receiving populations
         for (int receiver=0; receiver<n; ++receiver) {

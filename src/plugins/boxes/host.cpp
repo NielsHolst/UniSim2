@@ -24,7 +24,7 @@ Host::Host(QString name, QObject *parent)
 }
 
 void Host::setFoodWebImports() {
-    Box *web = findOne<Box>("../../ph");
+    Box *web = findOne<Box*>("../../ph");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("propAttacked")->imports(prefix + "[propAttacked" + suffix + "]");

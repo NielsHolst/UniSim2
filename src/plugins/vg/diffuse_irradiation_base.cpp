@@ -15,7 +15,7 @@ namespace vg {
 DiffuseIrradiationBase::DiffuseIrradiationBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(DiffuseIrradiationBase);
+    setClassName("DiffuseIrradiationBase");
     help("computes diffuse fraction of global irradiation");
     Input(angot).imports("calendar[angot]").unit("W/m2");
     Input(globalIrradiation).imports("outdoors[radiation]",CA).unit("W/m2");

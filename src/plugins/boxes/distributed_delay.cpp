@@ -3,9 +3,9 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/publish.h>
 #include <base/test_num.h>
+#include <base/vector_op.h>
 #include "distributed_delay.h"
 
 using namespace base;
@@ -88,7 +88,7 @@ void DistributedDelay::update(double inflow, double dt, double fgr) {
                 x[0] += inflow;
         }
     }
-    xSum = accum(x);
+    xSum = vector_op::sum(x);
     s.growthRate = xSum + s.outflowRate - totalBefore;
 }
 

@@ -29,7 +29,7 @@ LeafParAbsorbed::LeafParAbsorbed(QString name, QObject *parent)
 }
 
 void LeafParAbsorbed::initialize() {
-    Box *parent = findOne<Box>("..");
+    Box *parent = findOne<Box*>("..");
     QString layerName = parent->name();
     if (layerName == "top")
         _xGauss = xGauss3[0];

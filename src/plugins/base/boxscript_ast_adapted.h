@@ -37,16 +37,10 @@ BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Operation, operator_, operand
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Path, root, elements
+    boxscript::ast::PathAlternative, root, nodes, port
 )
 BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::QuotedString, stringValue
-)
-BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Reference, path, port
-)
-BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::ReferenceUnion, references
 )
 BOOST_FUSION_ADAPT_STRUCT(
     boxscript::ast::Time, hour, minute, second

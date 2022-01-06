@@ -38,16 +38,16 @@ Outdoors::Outdoors(QString name, QObject *parent)
 
 void Outdoors::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./records") && environment().option("dontAutoCreateRecords").isNull())
+    if (!findMaybeOne<Box*>("./records") && environment().option("dontAutoCreateRecords").isNull())
         builder.
         box("Records").name("records").
             port("fileName").equals("input/sel_dk.txt").
         endbox();
-    if (!findMaybeOne<Box>("./skyTemperatureEstimate"))
+    if (!findMaybeOne<Box*>("./skyTemperatureEstimate"))
         builder.
         box("SkyTemperature").name("skyTemperatureEstimate").
         endbox();
-    if (!findMaybeOne<Box>("./soilTemperature"))
+    if (!findMaybeOne<Box*>("./soilTemperature"))
         builder.
         box("Accumulator").name("soilTemperature").
             port("initial").imports("./initial[value]").
@@ -68,7 +68,7 @@ void Outdoors::amend() {
 }
 
 void Outdoors::initialize() {
-    Box *records = findOne<Box>("./records");
+    Box *records = findOne<Box*>("./records");
     bool hasTsky = records->peakPort("Tsky");
     if (hasTsky) {
         port("skyTemperature")->imports("./records[Tsky]");

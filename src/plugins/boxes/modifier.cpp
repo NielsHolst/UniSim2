@@ -29,7 +29,7 @@ void Modifier::initialize() {
         // Find the destination ports for this port name
         QVector<base::Port*> destPorts = Modifier::findDestinationPorts(portName);
         // Find the source port
-        Port *sourcePort = findOne<Port>(".[" + portName + "]");
+        Port *sourcePort = findOne<Port*>(".[" + portName + "]");
         if (sourcePort->hasImport())
             for(Port *destPort : destPorts) destPort->imports(sourcePort->importPath());
         else
@@ -40,7 +40,7 @@ void Modifier::initialize() {
 void Modifier::findBoxPaths() {
     _boxPaths.clear();
     QStringList paths = QStringList(Modifier::boxes.begin(), Modifier::boxes.end());
-    for (Box *box : findMany<Box>(paths.join("|"))) {
+    for (Box *box : findMany<Box*>(paths.join("|"))) {
         _boxPaths << box->fullName();
 //        dialog().information(box->fullName());
     }
@@ -48,7 +48,7 @@ void Modifier::findBoxPaths() {
 
 void Modifier::findPortNames() {
     _portNames.clear();
-    for (Port *port : findMany<Port>(".[*]")) {
+    for (Port *port : findMany<Port*>(".[*]")) {
         if (port->isBlind()) {
             _portNames << port->name();
 //            dialog().information(port->name());
@@ -61,7 +61,7 @@ QVector<base::Port*> Modifier::findDestinationPorts(QString portName) {
     QVector<base::Port*> ports;
     for (QString &path : _boxPaths) {
         QString destPath = path + "[" + portName + "]";
-        Port *port = findMaybeOne<Port>(destPath);
+        Port *port = findMaybeOne<Port*>(destPath);
         if (port) {
             ports << port;
 //            dialog().information(port->fullName());

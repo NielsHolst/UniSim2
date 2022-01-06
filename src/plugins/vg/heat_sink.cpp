@@ -29,7 +29,7 @@ HeatSink::HeatSink(QString name, QObject *parent)
 }
 
 void HeatSink::initialize() {
-    indoorsTemperatureBox  = findOne<IndoorsTemperature>("indoors/temperature");
+    indoorsTemperatureBox  = findOne<IndoorsTemperature*>("indoors/temperature");
 }
 
 void HeatSink::reset() {

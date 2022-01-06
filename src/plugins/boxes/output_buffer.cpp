@@ -14,7 +14,7 @@ PUBLISH(OutputBuffer)
 OutputBuffer::OutputBuffer(QString name, QObject *parent)
     : OutputPorts(name, parent)
 {
-    Class(OutputBuffer);
+    setClassName("OutputBuffer");
     help("keeps output in a memory buffer");
 }
 

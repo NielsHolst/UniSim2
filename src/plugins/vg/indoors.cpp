@@ -23,15 +23,15 @@ Indoors::Indoors(QString name, QObject *parent)
 
 void Indoors::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./humidity"))
+    if (!findMaybeOne<Box*>("./humidity"))
         builder.
         box("vg::IndoorsHumidity").name("humidity").
         endbox();
-    if (!findMaybeOne<Box>("./co2"))
+    if (!findMaybeOne<Box*>("./co2"))
         builder.
         box("vg::IndoorsCo2").name("co2").
         endbox();
-    if (!findMaybeOne<Box>("./windSpeed"))
+    if (!findMaybeOne<Box*>("./windSpeed"))
         builder.
         box("vg::IndoorsWindSpeed").name("windSpeed").
         endbox();

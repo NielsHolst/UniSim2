@@ -68,9 +68,9 @@ void StageAndPhase::update() {
 
     applyInstantMortality(instantLossRate);
 
-    inflowSum = accum(inflow);
+    inflowSum = vector_op::sum(inflow);
     inflowTotal += inflowSum;
-    phaseInflowSum = accum(phaseInflow);
+    phaseInflowSum = vector_op::sum(phaseInflow);
     phaseInflowTotal += phaseInflowSum;
     if (_firstUpdate)
         inflow[0] += initial;
@@ -98,10 +98,10 @@ void StageAndPhase::update() {
 
     content = _dd->content();
     outflow = _dd->state().outflow1;
-    outflowSum = accum(outflow);
+    outflowSum = vector_op::sum(outflow);
     outflowTotal += outflowSum;
     phaseOutflow = _dd->state().outflow2;
-    phaseOutflowSum = accum(phaseOutflow);
+    phaseOutflowSum = vector_op::sum(phaseOutflow);
     phaseOutflowTotal += phaseOutflowSum;
     growth = _dd->state().growthRate;
     if (_firstUpdate) {

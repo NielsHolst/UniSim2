@@ -212,7 +212,7 @@ void buildShelterFace(Box *parent, ScreenPosition pos, const Query &q) {
         box("vg::Screens").name("screens").
         endbox().
     endbox();
-    Box *screens = parent->findOne<Box>(faceName + "/screens");
+    Box *screens = parent->findOne<Box*>(faceName + "/screens");
     buildScreens(screens, pos, q);
 }
 
@@ -238,7 +238,7 @@ void buildConstruction(Box *parent, const Query &q) {
         endbox().
     endbox();
 
-    Box *shelter = parent->findOne<Box>("shelter");
+    Box *shelter = parent->findOne<Box*>("shelter");
     buildShelterFace(shelter, Roof1, q);
     buildShelterFace(shelter, Roof2, q);
     buildShelterFace(shelter, Side1, q);
@@ -266,7 +266,7 @@ void buildPipes(Box *parent, const HeatPipes pipes) {
             box().name("pipes").
             endbox().
         endbox();
-    Box *pipesBox =  parent->findOne<Box>("pipes");
+    Box *pipesBox =  parent->findOne<Box*>("pipes");
     for (int i=0; i < pipes.size; ++i)
         buildPipe(pipesBox, &pipes.array[i]);
 }
@@ -393,7 +393,7 @@ Box* build(const Query &q) {
         buildConstruction(sim, q);
         buildActuators(sim, q);
         buildEnergyBudget(sim);
-        buildEnergyBudgetIndoors(sim->findOne<Box>("energyBudget"), q);
+        buildEnergyBudgetIndoors(sim->findOne<Box*>("energyBudget"), q);
         buildWaterBudget(sim);
         buildIndoors(sim, q);
         buildCrop(sim);
@@ -402,9 +402,9 @@ Box* build(const Query &q) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
     }
     environment().root(sim);
-//    Box *crop = sim->findOne<Box>("greenhouse/crop");
+//    Box *crop = sim->findOne<Box*>("greenhouse/crop");
 //    std::cout << qPrintable(crop->name()) << "\n";
-//    QVector<Box*> children = crop->findMany<Box>("./*");
+//    QVector<Box*> children = crop->findMany<Box*>("./*");
 //    std::cout << children.size() << " children\n";
     return sim;
 }
@@ -467,16 +467,16 @@ Response compute(const Query &q) {
     // Extract response from model state
     try {
         r.timeStamp = q.timeStamp;
-        r.indoorsCo2 = root->findOne<Box>("indoors/co2")->port("value")->value<double>();
-        r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
-        r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
-        r.indoorsPar = root->findOne<Box>("energyBudget")->port("cropParFluxFromAbove")->value<double>();
+        r.indoorsCo2 = root->findOne<Box*>("indoors/co2")->port("value")->value<double>();
+        r.indoorsRh = root->findOne<Box*>("indoors/humidity")->port("rh")->value<double>();
+        r.indoorsTemperature = root->findOne<Box*>("indoors/temperature")->port("value")->value<double>();
+        r.indoorsPar = root->findOne<Box*>("energyBudget")->port("cropParFluxFromAbove")->value<double>();
         snapToZero(r.indoorsPar);
-        r.heating = root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>();
+        r.heating = root->findOne<Box*>("actuators/heating")->port("energyFluxTotal")->value<double>();
         snapToZero(r.heating);
-        r.photosynthesis = root->findOne<Box>("crop/photosynthesis")->port("Pg")->value<double>();
+        r.photosynthesis = root->findOne<Box*>("crop/photosynthesis")->port("Pg")->value<double>();
         snapToZero(r.photosynthesis);
-        r.growthLight = root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>();
+        r.growthLight = root->findOne<Box*>("actuators/growthLights")->port("powerUsage")->value<double>();
         snapToZero(r.growthLight);
         double E = r.heating + r.growthLight;
         snapToZero(E);

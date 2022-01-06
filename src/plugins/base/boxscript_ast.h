@@ -61,31 +61,26 @@ namespace boxscript { namespace ast
     };
     std::ostream& operator<<(std::ostream& os, const FunctionCall& x);
 
-    using QualifiedName = std::vector<std::string>;
+    using PathNode = std::vector<std::string>;
+    std::ostream& operator<<(std::ostream& os, const PathNode& x);
 
-    struct Path : x3::position_tagged {
+    struct PathAlternative : x3::position_tagged {
         boost::optional<std::string> root;
-        std::vector<QualifiedName> elements;
+        std::vector<PathNode> nodes;
+        boost::optional<PathNode> port;
+        base::Path::Alternative value() const;
     };
+    std::ostream& operator<<(std::ostream& os, const PathAlternative& x);
+
+    using Path = std::vector<ast::PathAlternative>;
     std::ostream& operator<<(std::ostream& os, const Path& x);
+    base::Path value(Path &path);
 
     struct QuotedString : x3::position_tagged {
         std::string stringValue;
         base::Value value() const;
     };
     std::ostream& operator<<(std::ostream& os, const QuotedString& x);
-
-    struct Reference : x3::position_tagged {
-        Path path;
-        std::string port;
-    };
-    std::ostream& operator<<(std::ostream& os, const Reference& x);
-
-    struct ReferenceUnion : x3::position_tagged {
-        std::vector<Reference> references;
-        base::Path value() const;
-    };
-    std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x);
 
     #define TYPE_NAME(x,y) case x : s=#y; break
 
@@ -111,11 +106,11 @@ namespace boxscript { namespace ast
     std::ostream& operator<<(std::ostream& os, const Number& x);
 
     struct Operand : x3::variant<DateTime, Date, BareDate, Time, Number,
-                                 ReferenceUnion, FunctionCall, Bool, QuotedString, GroupedExpression>,
+                                 Path, FunctionCall, Bool, QuotedString, GroupedExpression>,
             x3::position_tagged
     {
         enum class Type{DateTime, Date, BareDate, Time, Number,
-                        ReferenceUnion, FunctionCall, Bool, QuotedString, GroupedExpression};
+                        Path, FunctionCall, Bool, QuotedString, GroupedExpression};
         Type type() const {
             return static_cast<Type>(get().which());
         }
@@ -127,7 +122,7 @@ namespace boxscript { namespace ast
                 TYPE_NAME(Type::Time, Time);
                 TYPE_NAME(Type::DateTime, DateTime);
                 TYPE_NAME(Type::BareDate, BareDate);
-                TYPE_NAME(Type::ReferenceUnion, ReferenceUnion);
+                TYPE_NAME(Type::Path, Path);
                 TYPE_NAME(Type::FunctionCall, FunctionCall);
                 TYPE_NAME(Type::Bool, Bool);
                 TYPE_NAME(Type::QuotedString, QuotedString);

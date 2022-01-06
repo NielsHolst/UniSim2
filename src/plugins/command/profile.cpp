@@ -7,7 +7,6 @@
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/publish.h>
 #include "profile.h"
 

@@ -32,7 +32,7 @@ void find::doExecute() {
             QString path;
             for (int i = 1; i < n; ++i)
                 path += _args.at(i);
-            matches = box->findMany<QObject>(path);
+            matches = box->findMany<QObject*>(path);
             if (matches.isEmpty())
                 dialog().error("No matches");
             else

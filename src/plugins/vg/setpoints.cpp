@@ -65,7 +65,7 @@ Setpoints::Setpoints(QString name, QObject *parent)
 
 void Setpoints::amend() {
     // Assume that if avgRh exists, so do the remaining children
-    if (findMaybeOne<Box>("./avgRh"))
+    if (findMaybeOne<Box*>("./avgRh"))
         return;
     // Build child boxes
     BoxBuilder builder(this);

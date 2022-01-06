@@ -9,7 +9,6 @@
 #include <QTime>
 #include <base/convert.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/port.h>
 #include <base/port_access.h>
 #include <base/publish.h>
@@ -227,7 +226,7 @@ void Records::update() {
 
 void Records::doOverrideCalendarYear() {
     if (overrideCalendarYear) {
-        Box *calendar = findOne<Box>("calendar");
+        Box *calendar = findOne<Box*>("calendar");
         Port *calendarInitialDateTimePort = calendar->port("initialDateTime");
         QDateTime calendarInitialDateTime = calendarInitialDateTimePort->value<QDateTime>();
         calendarInitialDateTime.setDate(
@@ -244,7 +243,7 @@ void Records::doOverrideCalendarYear() {
 
 void Records::doOverrideCalendarDateTime() {
     if (overrideCalendarDateTime) {
-        Box *calendar = findOne<Box>("calendar");
+        Box *calendar = findOne<Box*>("calendar");
         Port *calendarInitialDateTimePort = calendar->port("initialDateTime");
         calendarInitialDateTimePort->equals(firstDateTime);
         calendar->reset();

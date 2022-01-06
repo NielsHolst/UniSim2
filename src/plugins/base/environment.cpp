@@ -14,7 +14,6 @@
 #include "command.h"
 #include "dialog.h"
 #include "environment.h"
-#include "general.h"
 #include "object_pool.h"
 #include "port.h"
 #include "save_grammar_atom.h"

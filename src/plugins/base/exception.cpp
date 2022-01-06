@@ -7,7 +7,7 @@
 #include <QObject>
 #include "box.h"
 #include "exception.h"
-#include "general.h"
+#include "node.h"
 
 namespace base {
 
@@ -31,12 +31,12 @@ Exception& Exception::line(int i) {
 }
 
 Exception& Exception::context(const QObject *object) {
-    _contextDescription = object ? fullName(object) : "";
+    _contextDescription = object ? Node::fullName(object) : "";
     return *this;
 }
 
 Exception& Exception::context(QObject *object) {
-    _contextDescription = object ? fullName(object) : "";
+    _contextDescription = object ? Node::fullName(object) : "";
     return *this;
 }
 
@@ -76,7 +76,7 @@ QString Exception::what() const {
         text += QString("\nSource code: %1, line %2").arg(_file).arg(_line);
     if (_caller.caller())
         text += QString("\nCalled by %1\n in %2, line %3").
-                arg(fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
+                arg(Node::fullName(_caller.caller())).arg(_caller.file()).arg(_caller.line());
     if (!dateTime().isNull())
         text += "\nCalendar time: " + convert<QString>(dateTime());
     return text;
@@ -121,7 +121,7 @@ template <> QString Exception::asString(QDateTime v) {
 QDateTime Exception::dateTime() const {
     QDateTime result;
     try {
-        Box *calendar = Path("calendar").resolveMaybeOne<Box>();
+        Box *calendar = Path("calendar").findMaybeOne<Box*>();
         if (calendar) {
             Port *port = calendar->peakPort("dateTime");
             if (port) {

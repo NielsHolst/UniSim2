@@ -129,43 +129,43 @@ EnergyBudget::EnergyBudget(QString name, QObject *parent)
 
 void EnergyBudget::amend() {
     bool
-        hasScreen1 = !findMany<Box>("construction/shelter/*/screens/layer1").isEmpty(),
-        hasScreen2 = !findMany<Box>("construction/shelter/*/screens/layer2").isEmpty(),
-        hasScreen3 = !findMany<Box>("construction/shelter/*/screens/layer3").isEmpty();
+        hasScreen1 = !findMany<Box*>("construction/shelter/*/screens/layer1").isEmpty(),
+        hasScreen2 = !findMany<Box*>("construction/shelter/*/screens/layer2").isEmpty(),
+        hasScreen3 = !findMany<Box*>("construction/shelter/*/screens/layer3").isEmpty();
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./sky"))
+    if (!findMaybeOne<Box*>("./sky"))
         builder.box("vg::HeatTransferSky").name("sky").
         endbox();
-    if (!findMaybeOne<Box>("./cover"))
+    if (!findMaybeOne<Box*>("./cover"))
         builder.box("vg::HeatTransferCover").name("cover").
         endbox();
-    if (!findMaybeOne<Box>("./screen1") && hasScreen1)
+    if (!findMaybeOne<Box*>("./screen1") && hasScreen1)
         builder.box("vg::HeatTransferScreen1").name("screen1").
         endbox();
-    if (!findMaybeOne<Box>("./screen2") && hasScreen2)
+    if (!findMaybeOne<Box*>("./screen2") && hasScreen2)
         builder.box("vg::HeatTransferScreen2").name("screen2").
         endbox();
-    if (!findMaybeOne<Box>("./screen3") && hasScreen3)
+    if (!findMaybeOne<Box*>("./screen3") && hasScreen3)
         builder.box("vg::HeatTransferScreen3").name("screen3").
         endbox();
-    if (!findMaybeOne<Box>("./pipe"))
+    if (!findMaybeOne<Box*>("./pipe"))
         builder.box("vg::HeatTransferPipe").name("pipe").
         endbox();
-    if (!findMaybeOne<Box>("./crop"))
+    if (!findMaybeOne<Box*>("./crop"))
         builder.box("vg::HeatTransferCrop").name("crop").
         endbox();
-    if (!findMaybeOne<Box>("./floor"))
+    if (!findMaybeOne<Box*>("./floor"))
         builder.box("vg::HeatTransferFloor").name("floor").
         endbox();
 }
 
 void EnergyBudget::reset() {
-    HeatTransferLayerBase *screen1 = findMaybeOne<HeatTransferLayerBase>("./screen1"),
-                   *screen2 = findMaybeOne<HeatTransferLayerBase>("./screen2"),
-                   *screen3 = findMaybeOne<HeatTransferLayerBase>("./screen3");
+    HeatTransferLayerBase *screen1 = findMaybeOne<HeatTransferLayerBase*>("./screen1"),
+                          *screen2 = findMaybeOne<HeatTransferLayerBase*>("./screen2"),
+                          *screen3 = findMaybeOne<HeatTransferLayerBase*>("./screen3");
     stack.clear();
-    stack << findOne<HeatTransferLayerBase>("./sky")
-          << findOne<HeatTransferLayerBase>("./cover");
+    stack << findOne<HeatTransferLayerBase*>("./sky")
+          << findOne<HeatTransferLayerBase*>("./cover");
 
     screens.clear();
     if (screen1) {
@@ -181,13 +181,13 @@ void EnergyBudget::reset() {
         screens << screen3;
     }
 
-    stack << findOne<HeatTransferLayerBase>("actuators/growthLights")
-          << findOne<HeatTransferLayerBase>("./pipe")
-          << findOne<HeatTransferLayerBase>("./crop")
-          << findOne<HeatTransferLayerBase>("./floor");
+    stack << findOne<HeatTransferLayerBase*>("actuators/growthLights")
+          << findOne<HeatTransferLayerBase*>("./pipe")
+          << findOne<HeatTransferLayerBase*>("./crop")
+          << findOne<HeatTransferLayerBase*>("./floor");
     cropIndex = stack.size() - 2;
 
-    indoorsTemperature = findOne<IndoorsTemperature>("indoors/temperature");
+    indoorsTemperature = findOne<IndoorsTemperature*>("indoors/temperature");
     update();
 }
 

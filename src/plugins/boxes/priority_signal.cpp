@@ -18,7 +18,7 @@ PrioritySignal::PrioritySignal(QString name, QObject *parent)
 }
 
 void PrioritySignal::initialize() {
-    QVector<Box*> children = findMany<Box>("./*");
+    QVector<Box*> children = findMany<Box*>("./*");
     for (Box *child : children) {
         const Port *flag = child->peakPort("flagIsUp"),
                    *signal = child->peakPort("signal");

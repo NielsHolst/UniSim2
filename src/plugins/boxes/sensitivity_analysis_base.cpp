@@ -16,7 +16,7 @@ namespace boxes {
 SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(SensitivityAnalysisBase);
+    setClassName("SensitivityAnalysisBase");
     help("is the sensitivity analysis base class");
     Input(sampleSize).equals(5).help("Size of sample in input parameter space (N)");
     Output(inputsAnalysed).noReset().help("Number of input ports included in analysis (k)");
@@ -36,8 +36,8 @@ void SensitivityAnalysisBase::initialize() {
 }
 
 void SensitivityAnalysisBase::setInputsTotal() {
-    Box *root = findOne<Box>("/");
-    QVector<Port*> ports = root->findMany<Port>("*[*]");
+    Box *root = findOne<Box*>("/");
+    QVector<Port*> ports = root->findMany<Port*>("*[*]");
     int n = 0;
     for (Port *port : ports) {
         if (canBeAnalysed(port)) ++n;
@@ -55,8 +55,8 @@ bool SensitivityAnalysisBase::canBeAnalysed(Port *port) const {
 
 void SensitivityAnalysisBase::setInputsAnalysed() {
     _saDistributions.clear();
-    Box *root = findOne<Box>("/");
-    QVector<Distribution*> distributions = root->findMany<Distribution>("*<Distribution>");
+    Box *root = findOne<Box*>("/");
+    QVector<Distribution*> distributions = root->findMany<Distribution*>("*<Distribution>");
     for (Distribution *dist : distributions) {
         if (!canBeAnalysed(dist->port())) {
             ThrowException("SensitivityAnalysis not allowed for this class")

@@ -19,7 +19,6 @@ PUBLISH(BoundaryLayerResistanceJonesA)
 BoundaryLayerResistanceJonesA::BoundaryLayerResistanceJonesA(QString name, QObject *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
-    Class(BoundaryLayerResistanceJonesA);
     help("computes boundary layer resistance from Jones (1992, eq. 3.31)");
 }
 

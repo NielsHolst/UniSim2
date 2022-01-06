@@ -19,7 +19,6 @@
 #include "dialog_widget.h"
 #include "environment.h"
 #include "exception.h"
-#include "general.h"
 #include "mega_factory.h"
 #include "win_taskbar_progress.h"
 
@@ -502,7 +501,7 @@ QString DialogWidget::line() {
 }
 
 QStringList DialogWidget::lineItems() {
-    return base::split(line());
+    return line().split(" ");
 }
 
 }

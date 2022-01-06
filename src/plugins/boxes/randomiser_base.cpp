@@ -18,7 +18,7 @@ namespace boxes {
 RandomiserBase::RandomiserBase(QString name, QObject *parent)
     : Box(name, parent), matricesFilled(false)
 {
-//    Class(RandomiserBase);
+    setClassName("RandomiserBase");
     Input(iteration).imports("/*[iteration]");
     Input(iterations).imports("/*[iterations]");
     Input(useFixed).equals(false).help("Used fixed value instead of random values?");
@@ -54,7 +54,7 @@ namespace {
 }
 
 RandomBase* RandomiserBase::variableB(RandomBase *A) {
-    RandomBase *variableB = A->findMaybeOne<RandomBase>("./B");
+    RandomBase *variableB = A->findMaybeOne<RandomBase*>("./B");
     return variableB ? variableB : A;
 }
 
@@ -128,7 +128,7 @@ void RandomiserBase::reset() {
 
 void RandomiserBase::findRandomVariables(){
     randomVariables.clear();
-    QVector<RandomBase*> candidates = findMany<RandomBase>("../*<RandomBase>");
+    QVector<RandomBase*> candidates = findMany<RandomBase*>("../*<RandomBase>");
     for (RandomBase *candidate : candidates) {
         if (!candidate->port("useFixed")->value<bool>())
             randomVariables << candidate;
@@ -160,7 +160,7 @@ void RandomiserBase::checkIterationsSimple(int iterations) {
 }
 
 void RandomiserBase::debrief() {
-    OutputR *outputR = findMaybeOne<OutputR>("*");
+    OutputR *outputR = findMaybeOne<OutputR*>("*");
     if (outputR &&doSensitivityAnalysis) {
         outputR->addRCode("sobol_k = " + QString::number(numVariables) +
                           "; sobol_N = " + QString::number(N) +

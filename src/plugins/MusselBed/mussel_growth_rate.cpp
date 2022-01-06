@@ -28,7 +28,7 @@ MusselGrowthRate::MusselGrowthRate(QString name, QObject *parent)
 }
 
 void MusselGrowthRate::initialize() {
-    scales = findMany<Box>("scales/*");
+    scales = findMany<Box*>("scales/*");
 }
 
 void MusselGrowthRate::reset() {

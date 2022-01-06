@@ -28,8 +28,8 @@ Mediator::Mediator(QString name, QObject *parent)
 
 void Mediator::amend() {
     // Find plants and pollinators
-    plants = findMany<Box>("*<Plant>");
-    pollinators = findMany<Box>("*<Pollinator>");
+    plants = findMany<Box*>("*<Plant>");
+    pollinators = findMany<Box*>("*<Pollinator>");
     numPlants = plants.size();
     numPollinators = pollinators.size();
 

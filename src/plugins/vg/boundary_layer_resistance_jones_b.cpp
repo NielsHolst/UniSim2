@@ -22,7 +22,6 @@ PUBLISH(BoundaryLayerResistanceJonesB)
 BoundaryLayerResistanceJonesB::BoundaryLayerResistanceJonesB(QString name, QObject *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
-    Class(BoundaryLayerResistanceJonesB);
     help("computes boundary layer resistance from Jones (1992, eq. A.8.1)");
     Input(evaporation).imports("../transpiration[vapourFlux]",CA).unit("kg/m2/s");
     Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");

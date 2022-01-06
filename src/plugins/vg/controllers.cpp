@@ -24,7 +24,7 @@ Controllers::Controllers(QString name, QObject *parent)
 void Controllers::amend() {
     BoxBuilder builder(this);
 
-    if (!findMaybeOne<Box>("./screens"))
+    if (!findMaybeOne<Box*>("./screens"))
         builder.
         box().name("screens").
             box("ProportionalSignal").name("energy1").
@@ -61,7 +61,7 @@ void Controllers::amend() {
         endbox();
 
 //  Introduce this again later. Maybe use the signal to modulate the desiredValue for the co2Injection PID controller
-//    if (!findMaybeOne<Box>("./co2Capacity"))
+//    if (!findMaybeOne<Box*>("./co2Capacity"))
 //        builder.
 //        box("ProportionalSignal").name("co2Capacity").
 //            port("input").imports("actuators/ventilation[value]").
@@ -72,7 +72,7 @@ void Controllers::amend() {
 //            port("increasingSignal").equals(false).
 //        endbox();
 
-    if (!findMaybeOne<Box>("./growthLights"))
+    if (!findMaybeOne<Box*>("./growthLights"))
         builder.
         box().name("growthLights").
             box("GrowthLightController").name("growthLight1").

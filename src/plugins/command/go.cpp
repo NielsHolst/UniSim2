@@ -9,7 +9,6 @@
 #include <base/exception.h>
 #include <base/port.h>
 #include <base/publish.h>
-#include "general.h"
 #include "go.h"
 
 using namespace base;
@@ -30,7 +29,7 @@ void go::doExecute() {
         QString path = _args.at(1);
         Box *box = environment().current();
         if (box) {
-            matches = box->findMany<QObject>(path);
+            matches = box->findMany<QObject*>(path);
             if (matches.isEmpty())
                 dialog().error("No matches");
             else if (matches.size() > 1) {

@@ -44,7 +44,7 @@ void Shelter::amend() {
 }
 
 void Shelter::amendShelter(BoxBuilder &builder, QString shelterName) {
-    if (!findMaybeOne<Box>("./" + shelterName))
+    if (!findMaybeOne<Box*>("./" + shelterName))
         builder.box("ShelterFace").name(shelterName).endbox();
 }
 

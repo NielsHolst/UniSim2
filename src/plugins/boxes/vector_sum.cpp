@@ -24,7 +24,7 @@ VectorSum::VectorSum(QString name, QObject *parent)
 
 void VectorSum::initialize() {
     _inputPtrs.clear();
-    QVector<Port*> inputPorts = findMany<Port>(input);
+    QVector<Port*> inputPorts = findMany<Port*>(input);
     for (Port *port : inputPorts)
         _inputPtrs << port->valuePtr< QVector<double> >();
 }

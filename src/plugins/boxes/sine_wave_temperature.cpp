@@ -46,7 +46,7 @@ void SineWaveTemperature::amend() {
         port("days").equals(1).
     endbox();
 
-    _weather = findOne<Box>(recordsName);
+    _weather = findOne<Box*>(recordsName);
     _offsetWeather = _weather->cloneFamily("weather2", this);
     _offsetWeather->port("calendarDateTime")->imports("../offsetDateTime[value]");
     _offsetWeather->amend();

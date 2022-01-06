@@ -31,22 +31,22 @@ WaterBudget::WaterBudget(QString name, QObject *parent)
 void WaterBudget::amend() {
     BoxBuilder builder(this);
 
-    if (!findMaybeOne<Box>("./ventilation"))
+    if (!findMaybeOne<Box*>("./ventilation"))
         builder.box("vg::VapourFluxVentilation").name("ventilation").
         endbox();
-    if (!findMaybeOne<Box>("./transpiration"))
+    if (!findMaybeOne<Box*>("./transpiration"))
         builder.box("vg::VapourFluxTranspiration").name("transpiration").
         endbox();
-    if (!findMaybeOne<Box>("./condensationCrop"))
+    if (!findMaybeOne<Box*>("./condensationCrop"))
         builder.box("vg::VapourFluxCondensationCover").name("condensationCrop").
         endbox();
-    if (!findMaybeOne<Box>("./condensationCover"))
+    if (!findMaybeOne<Box*>("./condensationCover"))
         builder.box("vg::VapourFluxCondensationCover").name("condensationCover").
         endbox();
-    if (!findMaybeOne<Box>("./condensationScreens")) {
-        bool hasScreen1 = !findMany<Box>("construction/shelter/*/screens/layer1").isEmpty(),
-             hasScreen2 = !findMany<Box>("construction/shelter/*/screens/layer2").isEmpty(),
-             hasScreen3 = !findMany<Box>("construction/shelter/*/screens/layer3").isEmpty();
+    if (!findMaybeOne<Box*>("./condensationScreens")) {
+        bool hasScreen1 = !findMany<Box*>("construction/shelter/*/screens/layer1").isEmpty(),
+             hasScreen2 = !findMany<Box*>("construction/shelter/*/screens/layer2").isEmpty(),
+             hasScreen3 = !findMany<Box*>("construction/shelter/*/screens/layer3").isEmpty();
         builder.box("vg::VapourFluxCondensationScreens").name("condensationScreens");
         if (hasScreen1)
             builder.

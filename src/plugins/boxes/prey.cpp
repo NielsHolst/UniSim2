@@ -21,7 +21,7 @@ Prey::Prey(QString name, QObject *parent)
 }
 
 void Prey::setFoodWebImports() {
-    Box *web = findOne<Box>("../../pp");
+    Box *web = findOne<Box*>("../../pp");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("loss")->imports(prefix + "[loss" + suffix + "]");

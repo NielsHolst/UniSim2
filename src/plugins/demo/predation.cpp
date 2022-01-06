@@ -34,7 +34,7 @@ void Predation::amend() {
 QVector<Port*> Predation::findPorts(QStringList paths) {
     QVector<Port*> ports;
     for (QString path : paths.toVector()) {
-        ports << findOne<Port>(path);
+        ports << findOne<Port*>(path);
     }
     return ports;
 }
@@ -47,7 +47,7 @@ void Predation::setupInputPorts() {
     int i(0);
     for (Port *port : predPorts) {
         Box *parent = port->boxParent();
-        Box *boxWithDemand = parent->findOne<Box>("ancestor::*[demand]");
+        Box *boxWithDemand = parent->findOne<Box*>("ancestor::*[demand]");
         QString pathToDemand = boxWithDemand->fullName() + "[demand]";
         QString portName = "demand_" + names[i];
         NamedInput(portName, predDemands[i]).imports(pathToDemand);

@@ -6,7 +6,6 @@
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/publish.h>
 #include "set_autosave.h"
 
@@ -21,7 +20,7 @@ HELP(set_autosave_path, "set autosave <on/off>", "sets autosave")
 set_autosave::set_autosave(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(set_autosave);
+    setClassName("set_autosave");
 }
 
 

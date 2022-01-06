@@ -27,7 +27,7 @@ HELP(set_folder_default, "set folder DEFAULT", "changes all paths to their defau
 set_folder::set_folder(QString name, QObject *parent)
     : Command(name, parent)
 {
-    Class(set_folder);
+    setClassName("set_folder");
 }
 
 void set_folder::doExecute() {

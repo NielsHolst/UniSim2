@@ -130,10 +130,10 @@ inline QStringList setToList(QSet<QString> set) {
 }
 
 void FoodWeb::collectFoodWeb() {
-    QVector<Box*> predators = findMany<Box>("./*<Predator>"),
-                  prey = findMany<Box>("./*<Predator>/*<Prey>"),
-                  parasites = findMany<Box>("./*<Parasite>"),
-                  hosts = findMany<Box>("./*<Parasite>/*<Host>");
+    QVector<Box*> predators = findMany<Box*>("./*<Predator>"),
+                  prey = findMany<Box*>("./*<Predator>/*<Prey>"),
+                  parasites = findMany<Box*>("./*<Parasite>"),
+                  hosts = findMany<Box*>("./*<Parasite>/*<Host>");
     QSet<QString> predatorNamesUnique, preyNamesUnique,
                   parasiteNamesUnique, hostNamesUnique;
     for (Box *box : predators)
@@ -171,7 +171,7 @@ void FoodWeb::collectFoodWeb() {
         for (int i=0; i<_nPrey; ++i) {
             QString path = "./" + _predatorNames.at(j) + "<Predator>/"
                                 + _preyNames.at(i) + "<Prey>";
-            _foodWeb(i,j) = findMaybeOne<Box>(path);
+            _foodWeb(i,j) = findMaybeOne<Box*>(path);
             if (report && _foodWeb(i,j)) {
                 QString s = "  %1";
                 dialog().information(s.arg(_preyNames.at(i)));
@@ -201,7 +201,7 @@ void FoodWeb::collectInputs() {
     // Collect prey vector
     for (int i=0; i<_nPrey; ++i) {
         QString preyPath = "./*<Predator>/" + _preyNames.at(i) + "<Prey>";
-        QVector<Box*> prey = findMany<Box>(preyPath);
+        QVector<Box*> prey = findMany<Box*>(preyPath);
         if (prey.isEmpty())
             ThrowException("Found no prey on this path").value(preyPath).context(this);
 
@@ -225,7 +225,7 @@ void FoodWeb::collectInputs() {
     // Collect predator and demand vectors
     for (int j=0; j<_nPredators; ++j) {
         QString predatorPath = "./" + _predatorNames.at(j) + "<Predator>";
-        QVector<Box*> predators = findMany<Box>(predatorPath);
+        QVector<Box*> predators = findMany<Box*>(predatorPath);
         if (predators.isEmpty()) {
             ThrowException("Found no predator on this path").value(predatorPath).context(this);
         }

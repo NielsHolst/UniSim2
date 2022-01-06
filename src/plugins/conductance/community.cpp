@@ -28,7 +28,7 @@ Community::Community(QString name, QObject *parent)
 }
 
 void Community::initialize() {
-    plants = findMany<Plant>("./*");
+    plants = findMany<Plant*>("./*");
 	if (plants.isEmpty())
         ThrowException("Community has no plants");
 	else if (plants.size() > 2)

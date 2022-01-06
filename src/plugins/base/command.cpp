@@ -6,7 +6,6 @@
 #include "dialog.h"
 #include "environment.h"
 #include "exception.h"
-#include "general.h"
 #include "mega_factory.h"
 
 namespace base {
@@ -14,10 +13,9 @@ namespace base {
 QStringList Command::_help;
 
 Command::Command(QString name, QObject *parent)
-    : QObject(parent), _error(false)
+    : Node(name, parent), _error(false)
 {
-    Class(Command);
-    setObjectName(name);
+    setClassName("Command");
 }
 
 void Command::arguments(QStringList args) {

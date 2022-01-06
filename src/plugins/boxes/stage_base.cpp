@@ -76,7 +76,7 @@ void StageBase::applyInstantMortality(double mortality) {
 }
 
 
-const double* StageBase::data() {
+QVector<double> &StageBase::data() {
     return _ddBase->data();
 }
 

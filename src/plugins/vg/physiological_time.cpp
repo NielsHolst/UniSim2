@@ -15,7 +15,7 @@ namespace vg {
 PhysiologicalTime::PhysiologicalTime(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(PhysiologicalTime);
+    setClassName("PhysiologicalTime");
     Input(step);
     Input(total);
     Input(timeStepDays).imports("calendar[timeStepDays]");

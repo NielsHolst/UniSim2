@@ -32,22 +32,22 @@ Crop::Crop(QString name, QObject *parent)
 void Crop::amend() {
     BoxBuilder builder(this);
 
-    if (!findMaybeOne<Box>("./leafWindSpeed"))
+    if (!findMaybeOne<Box*>("./leafWindSpeed"))
         builder.box("vg::LeafWindSpeed").name("leafWindSpeed").
         endbox();
-    if (!findMaybeOne<Box>("./boundaryLayerResistance"))
+    if (!findMaybeOne<Box*>("./boundaryLayerResistance"))
         builder.box("vg::BoundaryLayerResistanceStanghellini").name("boundaryLayerResistance").
         endbox();
-    if (!findMaybeOne<Box>("./transpiration"))
+    if (!findMaybeOne<Box*>("./transpiration"))
         builder.box("vg::LeafTranspiration").name("transpiration").
         endbox();
-    if (!findMaybeOne<Box>("./temperature"))
+    if (!findMaybeOne<Box*>("./temperature"))
         builder.box("vg::LeafTemperature").name("temperature").
         endbox();
-    if (!findMaybeOne<Box>("./photosynthesis"))
+    if (!findMaybeOne<Box*>("./photosynthesis"))
         builder.box("vg::CanopyPhotosynthesis").name("photosynthesis").
         endbox();
-    if (!findMaybeOne<Box>("./bigLeaf"))
+    if (!findMaybeOne<Box*>("./bigLeaf"))
         builder.box("vg::BigLeafPhotosynthesis").name("bigLeaf").
         endbox();
 }

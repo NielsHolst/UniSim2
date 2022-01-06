@@ -11,17 +11,6 @@
 #include "expression.h"
 #include "operator.h"
 
-//        using Type = Operand::Type;
-//        static QSet<Operand::Type> constants {
-//            Type::DateTime,
-//            Type::Date,
-//            Type::BareDate,
-//            Type::Time,
-//            Type::Number,
-//            Type::Bool,
-//            Type::QuotedString
-//        };
-
 namespace boxscript { namespace ast
 {
 
@@ -134,36 +123,45 @@ namespace boxscript { namespace ast
         return os << x.operator_ << x.operand;
     }
 
-    std::ostream& operator<<(std::ostream& os, const Path& x) {
+    std::ostream& operator<<(std::ostream& os, const Path &x) {
+        bool sep = false;
+        for (auto alternative : x) {
+            if (sep)
+                os << "|";
+            os << alternative;
+            sep = true;
+        }
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, const PathAlternative &x) {
         if (x.root.has_value())
-            os << *x.root;
-        for (auto e = x.elements.begin(); e != x.elements.end(); ++e) {
-            if (e != x.elements.begin())
+            os << "/";
+        bool sep = false;
+        for (auto node : x.nodes) {
+            if (sep)
                 os << "/";
-            for (auto q = e->begin();  q != e->end(); ++q) {
-                if (q != e->begin())
-                    os << "::";
-                os << *q;
-            }
+            os << node;
+            sep = true;
+        }
+        if (x.port.has_value())
+            os << "[" << *x.port << "]";
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, const PathNode& x) {
+        bool sep = false;
+        for (auto name : x) {
+            if (sep)
+                os << "::";
+            os << name;
+            sep = true;
         }
         return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const QuotedString& x) {
         return os << '"' << x.stringValue << '"';
-    }
-
-    std::ostream& operator<<(std::ostream& os, const Reference& x) {
-        return os << x.path << "[" << x.port << "]";
-    }
-
-    std::ostream& operator<<(std::ostream& os, const ReferenceUnion& x) {
-        for (auto ref = x.references.begin(); ref != x.references.end(); ++ref) {
-            if (ref != x.references.begin())
-                os << "|";
-            os << *ref;
-        }
-        return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const Time& x) {
@@ -199,14 +197,30 @@ namespace boxscript { namespace ast
             arg.get().build(expression);
     }
 
-    base::Value QuotedString::value() const {
-        return QString::fromStdString(stringValue);
+    base::Path::Alternative PathAlternative::value() const {
+        base::Path::Alternative alternative;
+        alternative.setRoot(root.has_value());
+        for (auto node : nodes) {
+            auto baseNode = base::Path::Node(node);
+            alternative.addNode(baseNode);
+        }
+        if (port.has_value()) {
+            auto basePort = base::Path::Port(*port);
+            alternative.setPort(basePort);
+        }
+        return alternative;
     }
 
-    base::Path ReferenceUnion::value() const {
-        std::stringstream str;
-        str << *this;
-        return QString::fromStdString(str.str());
+    base::Path value(Path &path) {
+        base::Path result;
+        for (auto alternative : path) {
+            result.addAlternative(nullptr);
+        }
+        return result;
+    }
+
+    base::Value QuotedString::value() const {
+        return QString::fromStdString(stringValue);
     }
 
     base::Value Number::value() const {
@@ -227,8 +241,8 @@ namespace boxscript { namespace ast
             expression->push(get<Time        >(*this).value()); break;
         case Type::Number:
             expression->push(get<Number      >(*this).value()); break;
-        case Type::ReferenceUnion:
-            expression->push(get<ReferenceUnion>(*this).value()); break;
+        case Type::Path:
+            expression->push(value(get<Path  >(*this)));        break;
         case Type::FunctionCall:
                              get<FunctionCall>(*this).build(expression); break;
         case Type::Bool:

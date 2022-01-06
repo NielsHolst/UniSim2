@@ -21,7 +21,7 @@ Parasite::Parasite(QString name, QObject *parent)
 }
 
 void Parasite::setFoodWebImports() {
-    Box *web = findOne<Box>("../pp");
+    Box *web = findOne<Box*>("../pp");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("supply")->imports(prefix + "[supply" + suffix + "]");

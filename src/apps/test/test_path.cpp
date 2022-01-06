@@ -508,7 +508,7 @@ void TestPath::testCombination() {
     QVector<QString> expected;
     expected << "/sim/io/egg" << "/sim/io/larva" << "/sim/io/pupa" << "/sim/io/adult";
 
-    QCOMPARE(expected, names( sim->findMany<Box>("io/*") ));
-    QCOMPARE(expected, names( sim->findMany<Box>("io/* | io/egg") ));
+    QCOMPARE(expected, names( sim->findMany<Box*>("io/*") ));
+    QCOMPARE(expected, names( sim->findMany<Box*>("io/* | io/egg") ));
 }
 

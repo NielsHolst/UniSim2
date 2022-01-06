@@ -19,7 +19,6 @@ PUBLISH(BoundaryLayerResistanceMonteithUnsworth)
 BoundaryLayerResistanceMonteithUnsworth::BoundaryLayerResistanceMonteithUnsworth(QString name, QObject *parent)
         : BoundaryLayerResistanceBase(name, parent)
 {
-    Class(BoundaryLayerResistanceMonteithUnsworth);
     help("computes boundary layer resistance from Monteith and Unsworth (1990)");
     Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");

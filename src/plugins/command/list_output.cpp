@@ -53,7 +53,7 @@ void ListOutput::toString(base::Box *box, int level) {
           box->className() + " " +
           box->objectName() + "\n";
     // Sort ports
-    QVector<Port*> ports = box->findMany<Port>("./*<Port>"),
+    QVector<Port*> ports = box->findMany<Port*>("./*<Port>"),
                    inputs, outputs,
                    inputImports, outputImports;
     for (Port *port : ports) {
@@ -85,7 +85,7 @@ void ListOutput::toString(base::Box *box, int level) {
 
     // List children
     if (_recurse)
-        for (Box *child : box->findMany<Box>("./*<Box>"))
+        for (Box *child : box->findMany<Box*>("./*<Box>"))
             toString(child, level+1);
 }
 

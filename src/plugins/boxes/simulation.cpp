@@ -46,8 +46,8 @@ Simulation::~Simulation() {
 }
 
 void Simulation::amend() {
-    Box::resetCounter();
-    Port::resetCounter();
+    int i = 0;
+    enumerate(i);
 }
 
 void Simulation::initialize() {

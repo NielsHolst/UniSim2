@@ -10,7 +10,7 @@
 #include <boost/math/constants/constants.hpp>
 #include <QPair>
 
-/*! \file general.h
+/*! \file phys_math.h
  * General physical functions and constants
  */
 

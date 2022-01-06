@@ -3,7 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include "exception.h"
-#include "general.h"
+#include "node.h"
 #include "timer.h"
 
 namespace base {
@@ -43,7 +43,7 @@ void Timer::stop(QString name) {
 QString Timer::report(QString separator) const {
     QString rep;
     for (QString name : _ordered)
-        rep += fullName(parent()) + "\t" +
+        rep += Node::fullName(parent()) + "\t" +
                name + "\t" +
                QString::number(_lookup.value(name).second) +
                separator ;

@@ -37,7 +37,7 @@ PageR::PageR(QString name, QObject *parent)
 
 void PageR::amend() {
     // Create a plot if none are present
-    _plots = Path("./*<PlotR>", this).resolveMany<PlotR>();
+    _plots = Path("./*<PlotR>", this).findMany<PlotR*>();
     if (_plots.empty()) {
         Box *plot = MegaFactory::create<>("PlotR", "", this);
         plot->amend();
@@ -46,9 +46,9 @@ void PageR::amend() {
 
 void PageR::initialize() {
     // See if pop-up is in effect
-    Box *outputR = findOne<Box>("ancestors::*<OutputR>)");
+    Box *outputR = findOne<Box*>("ancestors::*<OutputR>)");
     _popUp = outputR->port("popUp")->value<bool>();
-    int numPages = outputR->findMany<Box>("./*<PageR>").size();
+    int numPages = outputR->findMany<Box*>("./*<PageR>").size();
     bool keepPages = outputR->port("keepPages")->value<bool>();
     bool showPages = (numPages>1 || keepPages);
     bool dimChanged = (TestNum::ne(width, 7.) || TestNum::ne(height, 7.));
@@ -58,7 +58,7 @@ void PageR::initialize() {
         _popUp = !environment().isMac() && (showPages || dimChanged);
 
     // Find plots on this page
-    _plots = findMany<PlotR>("./*<PlotR>");
+    _plots = findMany<PlotR*>("./*<PlotR>");
 
     // Check for list output
     if (plotAsList && _plots.size() != 1)

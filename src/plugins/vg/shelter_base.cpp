@@ -14,7 +14,7 @@ namespace vg {
 ShelterBase::ShelterBase(QString name, QObject *parent)
     : Box(name, parent)
 {
-    Class(ShelterBase);
+    setClassName("ShelterBase");
     help("is a base class for the ShelterFace's and the whole Shelter");
     Output(haze).help("Proportion of direct light becoming dispersed on passage through cover and screens").unit("[0;1]");
     Output(U).help("Combined U-value of cover and screens").unit("W/K/m2");

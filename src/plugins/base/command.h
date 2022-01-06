@@ -4,12 +4,12 @@
 */
 #ifndef BASE_COMMAND_H
 #define BASE_COMMAND_H
-#include <QObject>
 #include <QStringList>
+#include "node.h"
 
 namespace base {
 
-class Command : public QObject
+class Command : public Node
 {
 public:
     Command(QString name, QObject *parent = nullptr);

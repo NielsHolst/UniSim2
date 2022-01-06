@@ -25,7 +25,7 @@ StarfishSearchRate::StarfishSearchRate(QString name, QObject *parent)
 }
 
 void StarfishSearchRate::initialize() {
-    scales = findMany<Box>("scales/*");
+    scales = findMany<Box*>("scales/*");
 }
 
 void StarfishSearchRate::reset() {

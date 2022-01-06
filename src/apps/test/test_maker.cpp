@@ -15,7 +15,7 @@ void TestMaker::testScript() {
     QCOMPARE(errors, dialog().errorCount());
 
     Box *sim = environment().root();
-    QVector<Box*> islands = sim->findMany<Box>("islands/*");
+    QVector<Box*> islands = sim->findMany<Box*>("islands/*");
     QCOMPARE(islands.size(), 3);
 
     const Box *island0 = islands.at(0);
@@ -26,7 +26,7 @@ void TestMaker::testScript() {
     QCOMPARE(island2->objectName(), QString("island2"));
 
     for (Box *island : islands) {
-        QVector<Box*> populations = island->findMany<Box>("./*<Population>");
+        QVector<Box*> populations = island->findMany<Box*>("./*<Population>");
         QCOMPARE(populations.size(), 2);
         QCOMPARE(populations.at(0)->objectName(), QString("fox"));
         QCOMPARE(populations.at(1)->objectName(), QString("rabbit"));

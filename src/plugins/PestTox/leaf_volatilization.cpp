@@ -7,7 +7,6 @@
 #include "leaf_volatilization.h"
 #include <cmath>
 #include <base/publish.h>
-#include "general.h"
 
 using namespace base;
 

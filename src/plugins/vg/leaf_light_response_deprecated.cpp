@@ -40,7 +40,7 @@ LeafLightResponseDeprecated::LeafLightResponseDeprecated(QString name, QObject *
 
 void LeafLightResponseDeprecated::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./processes"))
+    if (!findMaybeOne<Box*>("./processes"))
         builder.
         box("LeafLightResponseProcessesDeprecated").name("processes").
         endbox();

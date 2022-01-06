@@ -127,7 +127,7 @@ Box* BoxBuilder::content(Amend amendOption, bool allowException) {
             _content->amendFamily();
             break;
         case Amend::Descendants:
-            for (Box *child : _content->findMany<Box>("./*"))
+            for (Box *child : _content->findMany<Box*>("./*"))
                 child->amendFamily();
             break;
         case Amend::None:

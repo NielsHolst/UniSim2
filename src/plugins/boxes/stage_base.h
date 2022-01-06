@@ -19,7 +19,7 @@ public:
     void reset() final;
     virtual void myReset() = 0;
 
-    const double *data();
+    QVector<double> &data();
     virtual void createDistributedDelay() = 0;
 
 protected:

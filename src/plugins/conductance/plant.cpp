@@ -42,7 +42,7 @@ Plant::Plant(QString name, QObject *parent)
 
 void Plant::initialize() {
     other = 0;
-    QVector<Plant*> siblings = findMany<Plant>("otherSiblings::*");
+    QVector<Plant*> siblings = findMany<Plant*>("otherSiblings::*");
     if (siblings.size() > 1)
         ThrowException("    Max. 2 plants are allowed in community").value(siblings.size());
     other = siblings.isEmpty() ? 0 : siblings[0];

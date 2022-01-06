@@ -15,6 +15,7 @@
 #include "exception.h"
 #include "factory_plug_in.h"
 #include "mega_factory.h"
+#include "node.h"
 #include "object_pool.h"
 
 
@@ -64,33 +65,27 @@ void MegaFactory::loadPlugins() {
     me();
 }
 
-namespace {
-    QString removeNamespace(QString s) {
-        int i = s.lastIndexOf("::");
-        int n = s.size() - i - 2;
-        return (i == -1)  ? s : s.right(n);
-    }
-}
-
 QObject* MegaFactory::createObject(QString className, QString objectName, QObject *parent)
 {
     FactoryPlugIn *factory;
     QObject *creation;
-    if (className == "Box") {
+    // Box objects are not created by a factory, because the Box class is defined in the base plug-in
+    if (className == "Box" || className == "base::Box") {
         creation = new Box(objectName, parent);
-        setClassName(creation, "Box");
     }
     else {
         switch (me()->productIndex.count(className)) {
         case 0:
+            // Error: Unknown class
             ThrowException("Unknown class").value(className)
-                    .value2("\nUncreated object: "+objectName+"\nof parent: "+fullName(parent));
+                    .value2("\nUncreated object: "+objectName+"\nof parent: "+Node::fullName(parent));
         case 1:
+            // Success: Create object
             factory = me()->productIndex.value(className);
-            creation = factory->create(removeNamespace(className), objectName, parent);
+            creation = factory->create(className, objectName, parent);
             break;
         default:
-            // Try again with 'using' plugin name
+            // Too many candidate factories: Try again with 'using' plugin name as a qualifier
             QString pluginName = _usingPluginName;
             if (!className.contains("::") && !pluginName.isEmpty())
                 creation = createObject(pluginName+"::"+className, objectName, parent);
@@ -105,6 +100,10 @@ QObject* MegaFactory::createObject(QString className, QString objectName, QObjec
     ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
     if (step)
         step->finishConstruction();
+
+    Node *node = dynamic_cast<Node*>(creation);
+    if (node)
+        node->setClassName(className);
 
     return creation;
 }

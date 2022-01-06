@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/exception.h>
+#include <base/path.h>
 #include <base/publish.h>
 #include "maker.h"
 
@@ -31,7 +32,7 @@ void Maker::amend() {
     }
 
     // Find the one child; only one child allowed
-    QVector<Box*> children = findMany<Box>("./*");
+    QVector<Box*> children = findMany<Box*>("./*");
     if (children.isEmpty())
         ThrowException("Maker must have one child; found none").context(this);
     if (children.size() > 1)
@@ -63,7 +64,7 @@ void Maker::amend() {
     delete child;
 
     // Amend the clones
-    QVector<Box*> clones = findMany<Box>("./*");
+    QVector<Box*> clones = findMany<Box*>("./*");
     for (Box *clone : clones)
         clone->amendFamily();
 }
@@ -90,7 +91,7 @@ void Maker::readDataFrame() {
         if (!path.startsWith("."))
             path.prepend("selfOrDescendants::");
         // And that it is found once
-        findOne<Port>(path);
+        findOne<Port*>(path);
         // Leave at names column
         _columnPaths << ((colName == namesCol) ? QString() : path);
     }
@@ -101,9 +102,9 @@ void Maker::copyPortValuesFromColumns(int row) {
     int col(0);
     for (QString path : _columnPaths) {
         if (!path.isEmpty()) {
-            Port *port = findOne<Port>(path);
+            Port *port = findOne<Port*>(path);
             QString entry = _df.at(row,col);
-            if (base::isPath(entry))
+            if (Path::isValid(entry))
                 port->imports(entry);
             else
                 port->equals(entry);

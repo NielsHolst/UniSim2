@@ -95,7 +95,7 @@ namespace {
 
 void help_class::setColWidths() {
     _colWidthName = _colWidthValue = _colWidthUnit = 0;
-    for (const Port *port : _box->findMany<Port>(".[*]")) {
+    for (const Port *port : _box->findMany<Port*>(".[*]")) {
         _colWidthName = std::max(_colWidthName, port->objectName().size());
         if (showValue(port))
             _colWidthValue = std::max(_colWidthValue, port->valueAsString().size());
@@ -120,7 +120,7 @@ void help_class::writeClassHelp() {
 
 QStringList help_class::portsHelp(PortAccess access) {
     QStringList list;
-    for (const Port *port : _box->findMany<Port>(".[*]")) {
+    for (const Port *port : _box->findMany<Port*>(".[*]")) {
         if (port->access() == access) {
             QString item;
             item = "." + port->objectName().leftJustified(_colWidthName);

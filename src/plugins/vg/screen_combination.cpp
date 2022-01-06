@@ -33,7 +33,7 @@ void ScreenCombination::update() {
         _states.clear();
         QStringList names = formula.split("+");
         for (QString name : names) {
-            Box *controller = findOne<Box>(screenControllersPath+ "/" + name);
+            Box *controller = findOne<Box*>(screenControllersPath+ "/" + name);
             _states << controller->port("value")->valuePtr<double>();
         }
         _oldFormula = formula;

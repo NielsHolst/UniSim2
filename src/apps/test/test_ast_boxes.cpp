@@ -58,15 +58,15 @@ void TestAstBoxes::testWhitespaceInVector() {
     UNEXPECTED
 
     typedef QVector<int> VecInt;
-    QCOMPARE(root->findOne<Port>("a[numbers1]")->value<VecInt>(),
+    QCOMPARE(root->findOne<Port*>("a[numbers1]")->value<VecInt>(),
              VecInt() << 7 << 9 << 13);
-    QCOMPARE(root->findOne<Port>("a[numbers1]")->value<VecInt>(),
+    QCOMPARE(root->findOne<Port*>("a[numbers1]")->value<VecInt>(),
              VecInt() << 7 << 9 << 13);
 
     typedef QVector<QString> VecString;
-    QCOMPARE(root->findOne<Port>("b[s1]")->value<VecString>(),
+    QCOMPARE(root->findOne<Port*>("b[s1]")->value<VecString>(),
              VecString() << "abc" << "def" << "ghi");
-    QCOMPARE(root->findOne<Port>("b[s2]")->value<VecString>(),
+    QCOMPARE(root->findOne<Port*>("b[s2]")->value<VecString>(),
              VecString() << "abc" << "def" << "ghi");
 }
 
@@ -78,9 +78,9 @@ void TestAstBoxes::testWhitespaceInPath() {
         reader->parse(inputFilePath("ast_whitespace_in_path.box"));
         root = builder->content();
         root->run();
-        x = root->findOne<Port>("a[input2]");
-        y = root->findOne<Port>("a[input1]");
-        z = root->findOne<Port>("a [ input2 ]");
+        x = root->findOne<Port*>("a[input2]");
+        y = root->findOne<Port*>("a[input1]");
+        z = root->findOne<Port*>("a [ input2 ]");
     }
     UNEXPECTED
 

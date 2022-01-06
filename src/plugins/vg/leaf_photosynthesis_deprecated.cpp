@@ -32,7 +32,7 @@ LeafPhotosynthesisDeprecated::LeafPhotosynthesisDeprecated(QString name, QObject
 
 void LeafPhotosynthesisDeprecated::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./lightResponse"))
+    if (!findMaybeOne<Box*>("./lightResponse"))
         builder.
         box("vg::LeafLightResponse").name("lightResponse").
         endbox();

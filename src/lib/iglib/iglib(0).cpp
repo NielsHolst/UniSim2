@@ -563,7 +563,7 @@ Response compute(const Query &q) {
         r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
         r.indoorsPar = root->findOne<Box>("indoors/light")->port("parTotal")->value<double>();
         snapToZero(r.indoorsPar);
-        QVector<Box*> pipes = root->findMany<Box>("pipes/pipe");
+        QVector<Box*> pipes = root->findMany<Box*>("pipes/pipe");
         r.heating = 0; for (Box *pipe : pipes) r.heating += pipe->port("effect")->value<double>();
         snapToZero(r.heating);
         r.photosynthesis = root->findOne<Box>("crop/Pg")->port("value")->value<double>();

@@ -80,7 +80,7 @@ void list::listBoxes() {
     }
     if (_path.isEmpty())
         _path = ".";
-    QVector<Box*> boxes = current->findMany<Box>(_path);
+    QVector<Box*> boxes = current->findMany<Box*>(_path);
     if (boxes.isEmpty()) {
         dialog().error("Nothing matches: '" + _path +"'");
         return;

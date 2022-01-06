@@ -30,7 +30,7 @@ LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
 }
 
 void LeafPhotosynthesis::initialize() {
-    Box *parent = findOne<Box>("..");
+    Box *parent = findOne<Box*>("..");
     QString layerName = parent->name();
     if (layerName == "top")
         _wGauss = wGauss3[0];

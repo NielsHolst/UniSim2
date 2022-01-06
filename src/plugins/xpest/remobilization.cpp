@@ -26,8 +26,8 @@ Remobilization::Remobilization(QString name, QObject *parent)
 }
 
 void Remobilization::amend() {
-    fromComponent = findOne<Box>(from);
-    toComponent = findOne<Box>(to);
+    fromComponent = findOne<Box*>(from);
+    toComponent = findOne<Box*>(to);
 }
 
 void Remobilization::reset() {

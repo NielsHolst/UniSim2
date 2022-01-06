@@ -1,4 +1,7 @@
 Simulation sim {
+  +x1 = 1
+  +x2 = 2
+  +x3 = 3
   +a = TRUE
   +b = 117
   +c = 3.12

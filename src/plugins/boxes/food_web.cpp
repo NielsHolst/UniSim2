@@ -33,19 +33,19 @@ void FoodWeb::amend() {
 }
 
 void FoodWeb::setFoodWebImports() {
-    QVector<Host*> hosts = findMany<Host>("descendants::*");
+    QVector<Host*> hosts = findMany<Host*>("descendants::*");
     for (Host *host : hosts)
         host->setFoodWebImports();
 
-    QVector<Parasite*> parasites = findMany<Parasite>("descendants::*");
+    QVector<Parasite*> parasites = findMany<Parasite*>("descendants::*");
     for (Parasite *parasite : parasites)
         parasite->setFoodWebImports();
 
-    QVector<Predator*> predators = findMany<Predator>("descendants::*");
+    QVector<Predator*> predators = findMany<Predator*>("descendants::*");
     for (Predator *predator : predators)
         predator->setFoodWebImports();
 
-    QVector<Prey*> prey = findMany<Prey>("descendants::*");
+    QVector<Prey*> prey = findMany<Prey*>("descendants::*");
     for (Prey *aPrey : prey)
         aPrey->setFoodWebImports();
 }

@@ -30,7 +30,7 @@ AphidImmigration::AphidImmigration(QString name, QObject *parent)
 
 void AphidImmigration::reset() {
     exposed.resize(k);
-    bool withoutFungus = findOne<Box>("..")->name().contains("withoutFungus");
+    bool withoutFungus = findOne<Box*>("..")->name().contains("withoutFungus");
     if (withoutFungus)
         port("propExposedImmigrants")->equals(0.);
 }

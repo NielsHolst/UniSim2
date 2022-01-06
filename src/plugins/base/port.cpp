@@ -4,24 +4,19 @@
 */
 #include "box.h"
 #include "boxscript_parser.h"
-#include "general.h"
 #include "path.h"
 #include "port.h"
 
 namespace base {
 
-int Port::_counter = 0;
-
 Port::Port(QString name, QObject *parent)
-    : QObject(parent),
+    : Node(name, parent),
       _isValueOverridden(false),
       _doReset(true),
       _isAuxilliary(false),
       _access(PortAccess::Input),
-      _expression(this),
-      _number(-1)
+      _expression(this)
 {
-    setObjectName(name);
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
@@ -80,12 +75,14 @@ void Port::outputNames(QStringList columnNames) {
 Port& Port::equals(const Expression &expression) {
     checkIfValueOverridden();
     _expression = expression;
+    _expression.setParent(this);
     return *this;
 }
 
 Port& Port::imports(QString pathToPort, Caller caller) {
     checkIfValueOverridden();
     _expression.push(Path(pathToPort, this));
+    _expression.setParent(this);
     _importCaller = caller;
     return help("Defaults to " + pathToPort);
 }
@@ -93,22 +90,6 @@ Port& Port::imports(QString pathToPort, Caller caller) {
 Port& Port::computes(QString expression) {
     equals( boxscript::parser::parseExpression(expression) );
     return *this;
-}
-
-//
-// Enumeration
-//
-
-void Port::enumerate() {
-    _number = _counter++;
-}
-
-int Port::evaluationOrder() const {
-    return _number;
-}
-
-void Port::resetCounter() {
-    _counter = 0;
 }
 
 //
@@ -120,15 +101,6 @@ Box *Port::boxParent() {
     if (!par)
         ThrowException("Application error: Port has no Box parent").context(this);
     return par;
-}
-
-QString Port::name() const {
-    return objectName();
-}
-
-QString Port::fullName() const {
-    QString path = parent() ? base::fullName(parent()) : QString();
-    return path + "[" + name() + "]";
 }
 
 PortAccess Port::access() const {
@@ -144,15 +116,19 @@ QString Port::help() const {
 }
 
 QString Port::importPath() const {
-    if (_expression.size() != 1)
+    if (_expression.size() != 1) {
         ThrowException("Port expression must have only on token").
             value(_expression.originalAsString()).context(this);
+    }
+
     const Expression::Element &element(_expression.original().at(0));
-    if (Expression::type(element) != Expression::Type::Path)
+    if (Expression::type(element) != Expression::Type::Path) {
         ThrowException("Port expression must be a path").
             value(_expression.originalAsString()).context(this);
+    }
+
     const Path &path(std::get<Path>(element));
-    return path.original();
+    return path.toString();
 }
 
 int Port::size() const {

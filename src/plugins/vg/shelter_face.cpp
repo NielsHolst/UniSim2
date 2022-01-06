@@ -23,12 +23,12 @@ ShelterFace::ShelterFace(QString name, QObject *parent)
 }
 
 void ShelterFace::amend() {
-    if (!findMaybeOne<Box>("./area"))
+    if (!findMaybeOne<Box*>("./area"))
         ThrowException("Shelter face must have an 'area' child box").context(this);
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./cover"))
+    if (!findMaybeOne<Box*>("./cover"))
         builder.box("Cover").name("cover").endbox();
-    if (objectName().contains("roof") && !findMaybeOne<Box>("./vent")) {
+    if (objectName().contains("roof") && !findMaybeOne<Box*>("./vent")) {
         QString name = "vent"; // + objectName().back();
         builder.box("Vent").name(name).endbox();
     }

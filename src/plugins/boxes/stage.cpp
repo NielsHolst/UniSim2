@@ -10,6 +10,7 @@
 #include <base/exception.h>
 #include <base/publish.h>
 #include <base/test_num.h>
+#include <base/vector_op.h>
 #include "distributed_delay.h"
 #include "stage.h"
 
@@ -22,7 +23,7 @@ PUBLISH(Stage)
 Stage::Stage(QString name, QObject *parent)
     : StageBase(name, parent)
 {
-    Class(Stage);
+    setClassName("Stage");
     help("models a distributed delay");
     Input(inflow).help("Amount of inflow");
     Input(phaseOutflowProportion).help("Proportion that will change phase in next time step");
@@ -58,9 +59,8 @@ void Stage::update() {
             QString msg("phaseInflow's size (k=%1) does not match the size of the recipient (k=%2)");
             ThrowException(msg.arg(phaseInflow.size()).arg(k)).context(this);
         }
-        double *contents = const_cast<double*>(data());
-        increment(contents, phaseInflow.data(), k);
-        phaseInflowSum = accum(phaseInflow);
+        vector_op::add(data(), phaseInflow);
+        phaseInflowSum = vector_op::sum(phaseInflow);
         phaseInflowTotal += phaseInflowSum;
     }
 
@@ -88,7 +88,7 @@ void Stage::update() {
             ThrowException(msg).value(phaseOutflowProportion).context(this);
         }
         phaseOutflow = _dd->take(phaseOutflowProportion);
-        phaseOutflowTotal += accum(phaseOutflow);
+        phaseOutflowTotal += vector_op::sum(phaseOutflow);
     }
 
     content = _dd->content();

@@ -60,13 +60,14 @@ HEADERS +=  \
     expression.h \
     factory_plug_in.h \
 #    food_web_box_base.h \
-    general.h \
+#    general.h \
     history.h \
     interpolate.h \
     matrix.h \
     matrix2D.h \
     mega_factory.h \
     minimise.h \
+    node.h \
     object_pool.h \
     organisation.h \
     operate.h \
@@ -99,10 +100,7 @@ HEADERS +=  \
     value.h \
     value_collection.h \
     value_typed.h \
-#    vector.h \
     vector_op.h \
-#    vector_vector.h \
-#    vectorize.h \
     version.h \
     win_taskbar_progress.h
 
@@ -139,9 +137,10 @@ SOURCES +=  \
     exception.cpp \
     exception_context_class.cpp \
     expression.cpp \
-    general.cpp \
+#    general.cpp \
     history.cpp \
     mega_factory.cpp \
+    node.cpp \
     object_pool.cpp \
     operate.cpp \
     operator.cpp \
@@ -168,9 +167,6 @@ SOURCES +=  \
     unique_name.cpp \
     value.cpp \
     value_collection.cpp \
-#    vector.cpp \
     vector_op.cpp \
-#    vector_vector.cpp \
-#    vectorize.cpp  \
     version.cpp
 

@@ -17,7 +17,7 @@ public:
     void scale(double factor);
     const QVector<double>& take(double proportion);
     void put(const QVector<double> &addition);
-    const double *data() const;
+    QVector<double> &data();
     double content() const;
 
 protected:

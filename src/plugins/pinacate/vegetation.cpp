@@ -32,7 +32,7 @@ void Vegetation::update() {
    availability = (scaling*((K-herbivorebiomass)/K));
    if (availability < 0)
    availability = 0;
-   Box *scalingBox = findOne <Box>("./scaling");
+   Box *scalingBox = findOne<Box*>("./scaling");
    if (currentday == 1)
            scalingBox -> reset();
 }

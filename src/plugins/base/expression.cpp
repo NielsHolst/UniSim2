@@ -19,108 +19,112 @@ Expression::Expression(QObject *parent)
 {
 }
 
+void Expression::setParent(QObject *parent) {
+    _parent = parent;
+}
+
 void Expression::clear() {
     _isClosed = false;
     _stack.clear();
     _original.clear();
 }
 
-void Expression::translate(const boxscript::ast::Expression &e) {
-    clear();
-    push(e.firstOperand);
-    for (auto operation : e.operations) {
-        push(lookupOperator(QString::fromStdString(operation.operator_)));
-        push(operation.operand);
-    }
-    close();
-}
+//void Expression::translate(const boxscript::ast::Expression &e) {
+//    clear();
+//    push(e.firstOperand);
+//    for (auto operation : e.operations) {
+//        push(lookupOperator(QString::fromStdString(operation.operator_)));
+//        push(operation.operand);
+//    }
+//    close();
+//}
 
-void Expression::push(boxscript::ast::Operand operand) {
-    using Type = boxscript::ast::Operand::Type;
-    boxscript::ast::Number number;
-    switch(operand.type()) {
-    case Type::Bool:
-        push(boost::get<boxscript::ast::Bool>(operand));
-        break;
-    case Type::Number:
-        push(boost::get<boxscript::ast::Number>(operand));
-        break;
-    case Type::QuotedString:
-        push(boost::get<boxscript::ast::QuotedString>(operand));
-        break;
-    case Type::Date:
-        push(boost::get<boxscript::ast::Date>(operand));
-        break;
-    case Type::Time:
-        push(boost::get<boxscript::ast::Time>(operand));
-        break;
-    case Type::DateTime:
-        push(boost::get<boxscript::ast::DateTime>(operand));
-        break;
-    case Type::BareDate:
-        push(boost::get<boxscript::ast::BareDate>(operand));
-        break;
-    case Type::ReferenceUnion:
-        push(boost::get<boxscript::ast::ReferenceUnion>(operand));
-        break;
-    case Type::GroupedExpression:
-        push(boost::get<boxscript::ast::GroupedExpression>(operand));
-        break;
-    case Type::FunctionCall:
-        push(boost::get<boxscript::ast::FunctionCall>(operand));
-        break;
-    }
-}
+//void Expression::push(boxscript::ast::Operand operand) {
+//    using Type = boxscript::ast::Operand::Type;
+//    boxscript::ast::Number number;
+//    switch(operand.type()) {
+//    case Type::Bool:
+//        push(boost::get<boxscript::ast::Bool>(operand));
+//        break;
+//    case Type::Number:
+//        push(boost::get<boxscript::ast::Number>(operand));
+//        break;
+//    case Type::QuotedString:
+//        push(boost::get<boxscript::ast::QuotedString>(operand));
+//        break;
+//    case Type::Date:
+//        push(boost::get<boxscript::ast::Date>(operand));
+//        break;
+//    case Type::Time:
+//        push(boost::get<boxscript::ast::Time>(operand));
+//        break;
+//    case Type::DateTime:
+//        push(boost::get<boxscript::ast::DateTime>(operand));
+//        break;
+//    case Type::BareDate:
+//        push(boost::get<boxscript::ast::BareDate>(operand));
+//        break;
+//    case Type::ReferenceUnion:
+//        push(boost::get<boxscript::ast::ReferenceUnion>(operand));
+//        break;
+//    case Type::GroupedExpression:
+//        push(boost::get<boxscript::ast::GroupedExpression>(operand));
+//        break;
+//    case Type::FunctionCall:
+//        push(boost::get<boxscript::ast::FunctionCall>(operand));
+//        break;
+//    }
+//}
 
-void Expression::push(boxscript::ast::Bool b) {
-    push(b.stringValue=="TRUE");
-}
+//void Expression::push(boxscript::ast::Bool b) {
+//    push(b.stringValue=="TRUE");
+//}
 
-void Expression::push(boxscript::ast::Number number) {
-    if (number.type() == boxscript::ast::Number::Type::Int)
-        push(boost::get<int>(number));
-    else
-        push(boost::get<double>(number));
-}
+//void Expression::push(boxscript::ast::Number number) {
+//    if (number.type() == boxscript::ast::Number::Type::Int)
+//        push(boost::get<int>(number));
+//    else
+//        push(boost::get<double>(number));
+//}
 
-void Expression::push(boxscript::ast::QuotedString s) {
-    push(Value(QString::fromStdString(s.stringValue)));
-}
+//void Expression::push(boxscript::ast::QuotedString s) {
+//    push(Value(QString::fromStdString(s.stringValue)));
+//}
 
-void Expression::push(boxscript::ast::Date date) {
-    push(QDate(date.year, date.month, date.day));
-}
+//void Expression::push(boxscript::ast::Date date) {
+//    push(QDate(date.year, date.month, date.day));
+//}
 
-void Expression::push(boxscript::ast::Time time) {
-    push(QTime(time.hour, time.minute, time.second));
-}
+//void Expression::push(boxscript::ast::Time time) {
+//    push(QTime(time.hour, time.minute, time.second));
+//}
 
-void Expression::push(boxscript::ast::DateTime dt) {
-    push(Value(QDateTime(QDate(dt.date.year, dt.date.month, dt.date.day), QTime(dt.time.hour, dt.time.minute, dt.time.second), Qt::UTC)));
-}
+//void Expression::push(boxscript::ast::DateTime dt) {
+//    push(Value(QDateTime(QDate(dt.date.year, dt.date.month, dt.date.day), QTime(dt.time.hour, dt.time.minute, dt.time.second), Qt::UTC)));
+//}
 
-void Expression::push(boxscript::ast::BareDate bd) {
-    push(BareDate(bd.month, bd.day));
-}
+//void Expression::push(boxscript::ast::BareDate bd) {
+//    push(BareDate(bd.month, bd.day));
+//}
 
-void Expression::push(boxscript::ast::ReferenceUnion ref) {
-    std::stringstream str;
-    str << ref;
-    push(Path(QString::fromStdString(str.str())));
-}
+//void Expression::push(boxscript::ast::Path path) {
+////    std::stringstream str;
+////    str << ref;
+////    push(Path(QString::fromStdString(str.str())));
+//}
 
-void Expression::push(boxscript::ast::GroupedExpression group) {
-    push(Parenthesis::Left);
-    const boxscript::ast::Expression &e(group.get());
-    translate(e); // push expression inside parentheses recursively
-    push(Parenthesis::Right);
-}
+//void Expression::push(boxscript::ast::GroupedExpression group) {
+//    push(Parenthesis::Left);
+//    const boxscript::ast::Expression &e(group.get());
+//    translate(e); // push expression inside parentheses recursively
+//    push(Parenthesis::Right);
+//}
 
-void Expression::push(boxscript::ast::FunctionCall func) {
-    push(FunctionCall(QString::fromStdString(func.name), (int) func.arguments.size()));
-    for (boxscript::ast::FunctionCall::Argument arg : func.arguments)
-        push(arg.get());
-}
+//void Expression::push(boxscript::ast::FunctionCall func) {
+//    push(FunctionCall(QString::fromStdString(func.name), (int) func.arguments.size()));
+//    for (boxscript::ast::FunctionCall::Argument arg : func.arguments)
+//        push(arg.get());
+//}
 
 void Expression::push(Value value) {
     checkNotClosed();
@@ -567,7 +571,7 @@ QString Expression::toString(const Element &element) {
     case Type::Value:       s = get<Value>(element).asString(true, true); break;
     case Type::Operator:    s = convert<QString>( get<Operator>   (element) ); break;
     case Type::Parenthesis: s = convert<QString>( get<Parenthesis>(element) ); break;
-    case Type::Path:        s = get<Path>(element).original(); break;
+    case Type::Path:        s = get<Path>(element).toString(); break;
     case Type::FunctionCall:
         func = get<FunctionCall>(element);
         s = func.name + "[" + QString::number(func.arity) + "]";

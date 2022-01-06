@@ -5,7 +5,6 @@
 #ifndef BASE_PORT_H
 #define BASE_PORT_H
 #include <boost/variant/get.hpp>
-#include <QObject>
 #include <QMap>
 #include <QString>
 #include <QStringList>
@@ -16,6 +15,7 @@
 #include "convert.h"
 #include "exception.h"
 #include "expression.h"
+#include "node.h"
 #include "port_access.h"
 
 #include "value.h"
@@ -25,7 +25,7 @@ namespace base {
 
 class Box;
 
-class Port : public QObject, public ConstructionStep {
+class Port : public Node, public ConstructionStep {
 public:
 private:
     bool
@@ -48,13 +48,11 @@ private:
         _importPorts,       // Ports imported by this port
         _exportPorts;       // Ports which imports this port
     Caller _importCaller;   // Latest object calling for an import of this port (for error message)
-    int _number;            // Number in evaluation order
-    static int _counter;    // Counter for enumerating evaluation order
 
 public:
     // Configure
     Port(QString name, QObject *parent);
-    Port(const Port &x) : QObject(x.parent()) { assign(x); }
+    Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
     Port& operator=(const Port &x)            { assign(x);  return *this; }
     Port& doReset();
     Port& noReset();
@@ -71,15 +69,8 @@ public:
     Port& imports(QString pathToPort, Caller caller=Caller());
     Port& computes(QString expression);
 
-    // Enumeration
-    void enumerate();
-    int evaluationOrder() const;
-    static void resetCounter();
-
     // Query
     Box *boxParent();
-    QString name() const;
-    QString fullName() const;
     PortAccess access() const;
     QString unit() const;
     QString help() const;
@@ -100,8 +91,6 @@ public:
 
     // Housekeeping
     void addExportPort(Port *port);
-    void enumerate(int &number);
-//    void resolveImports();
     void reset();
     void update();
 
@@ -110,9 +99,6 @@ public:
 private:
     void assign(const Port &x);
     void checkIfValueOverridden();
-
-    // Sorting
-    friend bool operator<(const Port &a, const Port &b);
 };
 
 template <class T> Port& Port::initialize(T *variable) {
@@ -135,10 +121,6 @@ template <class T> T Port::value() const
 template <class T> const T* Port::valuePtr() const
 {
     return _value.constPtr<T>();
-}
-
-inline bool operator<(const Port &a, const Port &b) {
-    return a._number < b._number;
 }
 
 }

@@ -11,7 +11,6 @@
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/mega_factory.h>
 #include <base/path.h>
 #include <base/port.h>
@@ -46,7 +45,7 @@ OutputR::OutputR(QString name, QObject *parent)
 
 void OutputR::amend() {
     // Create text output if not present
-    if ( Path("./*<OutputText>", this).resolveMany<Box>().empty() ) {
+    if ( Path("./*<OutputText>", this).findMany<Box*>().empty() ) {
         Box *textOutput = MegaFactory::create<>("OutputText", "", this);
         textOutput->port("skipInitialRows")->equals(skipSteps);
         textOutput->port("useLocalDecimalChar")->equals(useLocalDecimalChar);
@@ -56,7 +55,7 @@ void OutputR::amend() {
 
 void OutputR::initialize() {
     // Check that only one OutputR objects exists
-    QVector<OutputR*> outputs = findMany<OutputR>("*");
+    QVector<OutputR*> outputs = findMany<OutputR*>("*");
     if (outputs.size() > 1)
         ThrowException("Only one OutputR box is allowed").
                 hint("Put all PageR boxes inside the same OutputR box").
@@ -69,7 +68,7 @@ void OutputR::initialize() {
 }
 
 void OutputR::reset() {
-    _pages = findMany<PageR>("./*<PageR>");
+    _pages = findMany<PageR*>("./*<PageR>");
     numPages = _pages.size();
 }
 

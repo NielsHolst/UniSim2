@@ -84,8 +84,8 @@ void FoodWebCalcBase::pushOutputs() {
 }
 
 void FoodWebCalcBase::collectFoodWeb() {
-    QVector<Box*> attackers = findMany<Box>(pathToAttackers()),
-                  resources = findMany<Box>(pathToResources());
+    QVector<Box*> attackers = findMany<Box*>(pathToAttackers()),
+                  resources = findMany<Box*>(pathToResources());
     _attackerNames = findNames(attackers);
     _resourceNames = findNames(resources);
     _nAttackers = _attackerNames.size();
@@ -95,7 +95,7 @@ void FoodWebCalcBase::collectFoodWeb() {
         for (int i=0; i<_nResources; ++i) {
             QString path = "../" + _attackerNames.at(j) + sharp(attackerClass()) + "/"
                                  + _resourceNames.at(i) + sharp(resourceClass());
-            _foodWeb(i,j) = findMaybeOne<Box>(path);
+            _foodWeb(i,j) = findMaybeOne<Box*>(path);
         }
     }
     _dependents = attackers;
@@ -133,7 +133,7 @@ void FoodWebCalcBase::collectInputs() {
     // Collect resource vector
     for (int i=0; i<_nResources; ++i) {
         QString resPath = "../*" + sharp(attackerClass()) + "/" + _resourceNames.at(i) + sharp(resourceClass());
-        QVector<Box*> res = findMany<Box>(resPath);
+        QVector<Box*> res = findMany<Box*>(resPath);
         if (res.isEmpty())
             ThrowException("Found no resource on this path").value(resPath).context(this);
 
@@ -157,7 +157,7 @@ void FoodWebCalcBase::collectInputs() {
     // Collect attacker and demand vectors
     for (int j=0; j<_nAttackers; ++j) {
         QString attPath = "../" + _attackerNames.at(j) + sharp(attackerClass());
-        QVector<Box*> att = findMany<Box>(attPath);
+        QVector<Box*> att = findMany<Box*>(attPath);
         if (att.isEmpty()) {
             ThrowException("Found no attacker on this path").value(attPath).context(this);
         }

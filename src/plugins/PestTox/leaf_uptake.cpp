@@ -8,7 +8,6 @@
 #include <cmath>
 #include <base/exception.h>
 #include <base/publish.h>
-#include "general.h"
 
 using namespace base;
 

@@ -78,11 +78,11 @@ QString PlotR::toScript() {
         return QString();
 
     QStringList xLabels;
-    for (auto port : xAxis.resolved())
+    for (auto port : xAxis.findMany<base::Port*>())
         xLabels << port->outputNames();
 
     QStringList yLabels;
-    for (auto port : ports.resolved())
+    for (auto port : ports.findMany<base::Port*>())
         yLabels << port->outputNames();
 
     // Write function call

@@ -127,7 +127,7 @@ int runWithoutDialog(int argc, char *argv[]) {
         Box *sim = environment().current();
         if (!sim)
             ThrowException("No XML script loaded");
-        Box *outputText = sim->findOne<Box>("output/text");
+        Box *outputText = sim->findOne<Box*>("output/text");
         QString outputFilePath = outputText->port("filePath")->value<QString>();
         copyFile(outputFilePath, destinationFilePath(args));
     }

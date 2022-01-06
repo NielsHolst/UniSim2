@@ -24,7 +24,7 @@ Predator::Predator(QString name, QObject *parent)
 }
 
 void Predator::setFoodWebImports() {
-    Box *web = findOne<Box>("../pp");
+    Box *web = findOne<Box*>("../pp");
     QString prefix = web->fullName(),
             suffix = "_" + name();
     port("supply")->imports(prefix + "[supply" + suffix + "]");

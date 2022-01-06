@@ -29,7 +29,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
     case Type::VecString    : for (QString x : as<vQString  >())
                                 slist += aph(apostrophed, x);
                               break;
-    case Type::Path         : slist += as<Path>().original();
+    case Type::Path         : slist += as<Path>().toString();
                               break;
     default                 : slist += as<QString>();
                               break;
@@ -130,7 +130,7 @@ bool Value::operator==(const Value &x) const {
         case Type::Time         : return as<QTime     >() == x.as<QTime     >();
         case Type::DateTime     : return as<QDateTime >() == x.as<QDateTime >();
         case Type::BareDate     : return as<BareDate  >() == x.as<BareDate  >();
-        case Type::Path         : return as<Path      >().original() == x.as<Path>().original();
+        case Type::Path         : return as<Path      >().toString() == x.as<Path>().toString();
         case Type::VecBool      : return as<vbool     >() == x.as<vbool     >();
         case Type::VecInt       : return as<vint      >() == x.as<vint      >();
         case Type::VecDouble    : return as<vdouble   >() == x.as<vdouble   >();

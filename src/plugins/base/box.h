@@ -5,15 +5,13 @@
 #ifndef BASE_BOX_H
 #define BASE_BOX_H
 #include <QMap>
-#include <QObject>
 #include <QTextStream>
 #include <QVector>
 #include "caller.h"
+#include "node.h"
 #include "path.h"
 #include "port.h"
 #include "port_access.h"
-
-#define RETURN_PLUGIN_NAME(x) #x
 
 #define Input(X)  (*new base::Port(#X, this)).initialize(& X).access(base::PortAccess::Input)
 #define Output(X) (*new base::Port(#X, this)).initialize(& X).access(base::PortAccess::Output).doReset()
@@ -26,13 +24,11 @@ namespace base {
 class Port;
 class Timer;
 
-class Box : public QObject, public ConstructionStep
+class Box : public Node, public ConstructionStep
 {
 public:
-    enum Persistence {DontAllowRemoval, AllowRemoval};
-    Box(QString name, QObject *parent, Persistence=DontAllowRemoval);
+    Box(QString name, QObject *parent);
     ~Box();
-    QString pluginName() const { return RETURN_PLUGIN_NAME(BOXES_PLUGIN_NAME); }
     void addPort(Port *port);
 
     Port* peakPort(QString name);
@@ -55,17 +51,9 @@ public:
 
     Box* boxParent();
 
-    QString className() const;
-    QString name() const;
-    QString fullName() const;
-
-    void enumerate();
-    int evaluationOrder() const;
-    static void resetCounter();
-
-    template<class T=QObject> T* findOne(QString path);
-    template<class T=QObject> T* findMaybeOne(QString path);
-    template<class T=QObject> QVector<T*> findMany(QString path);
+    template<class T> T findOne(QString path);
+    template<class T> T findMaybeOne(QString path);
+    template<class T> QVector<T> findMany(QString path);
 
     virtual void amend() {}
     virtual void initialize() {}
@@ -101,8 +89,6 @@ public:
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
     QString profileReport() const;
 private:
-    // Inputs
-    bool remove;
     // Data
     QString _help, _sideEffects;
     QMap<QString,Port*> _ports;
@@ -111,25 +97,23 @@ private:
     Timer *_timer;
     static Box *_currentRoot, *_savedCurrentRoot;
     static bool _debugOn, _traceOn;
-    // Data: enumeration
-    int _number;
-    static int _counter;
+
     // Methods
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void resetPorts();
 };
 
-template<class T> T* Box::findOne(QString path) {
-    return Path(path, this).resolveOne<T>(this);
+template<class T> inline T Box::findOne(QString path) {
+    return Path(path, this).findOne<T>();
 }
 
-template<class T> T* Box::findMaybeOne(QString path) {
-    return Path(path, this).resolveMaybeOne<T>(this);
+template<class T> inline T Box::findMaybeOne(QString path) {
+    return Path(path, this).findMaybeOne<T>();
 }
 
-template<class T> QVector<T*> Box::findMany(QString path) {
-    return Path(path, this).resolveMany<T>(this);
+template<class T> inline  QVector<T> Box::findMany(QString path) {
+    return Path(path, this).findMany<T>();
 }
 
 }

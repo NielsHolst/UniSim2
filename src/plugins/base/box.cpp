@@ -7,7 +7,6 @@
 #include "dialog.h"
 #include "environment.h"
 #include "exception.h"
-#include "general.h"
 #include "mega_factory.h"
 #include "path.h"
 #include "port.h"
@@ -17,22 +16,15 @@ namespace base {
 
 Box *Box::_currentRoot = nullptr;
 Box *Box::_savedCurrentRoot = nullptr;
-int Box::_counter = 0;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
-Box::Box(QString name, QObject *parent, Persistence persistence)
-    : QObject(parent), _amended(false), _cloned(false), _ignore(false), _number(-1)
+Box::Box(QString name, QObject *parent)
+    : Node(name, parent), _amended(false), _cloned(false), _ignore(false)
 {
-    Class(Box);
     help("has no documented functionality");
-    setObjectName(name);
     _currentRoot = this;
     _timer = new Timer(this);
-    if (persistence == AllowRemoval)
-        Input(remove).equals(false).help("Remove this box?");
-    else
-        remove = false;
 }
 
 Box::~Box() {
@@ -92,7 +84,7 @@ QString Box::sideEffects() const {
 }
 
 void Box::removeChild(QString name) {
-    Box *child = findOne<Box>(name);
+    Box *child = findOne<Box*>(name);
     dialog().information("Removing box " + child->fullName());
     delete child;
 }
@@ -120,39 +112,6 @@ Box* Box::boxParent() {
     return dynamic_cast<Box*>(parent());
 }
 
-QString Box::className() const {
-    return base::className(this);
-}
-
-QString Box::name() const {
-    return objectName();
-}
-
-QString Box::fullName() const {
-    return base::fullName(this);
-}
-
-//
-// Enumeration
-//
-
-void Box::enumerate() {
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->enumerate();
-    }
-    _number = _counter++;
-}
-
-int Box::evaluationOrder() const {
-    return _number;
-}
-
-void Box::resetCounter() {
-    _counter = 0;
-}
-
 QString Box::profileReport() const {
     QString rep = _timer->report();
     for (auto child : children()) {
@@ -167,21 +126,6 @@ void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
-//void Box::resolveImportsFamily() {
-//    for (auto child : children()) {
-//        Box *box = dynamic_cast<Box*>(child);
-//        if (box)
-//            box->resolveImportsFamily();
-//    }
-//    resolveImports();
-//}
-
-//void Box::resolveImports() {
-//    for (Port *port : _ports.values()) {
-//        port->resolveImports();
-//    }
-//}
-
 void Box::amendFamily() {
     try {
         if (_amended) return;
@@ -195,7 +139,6 @@ void Box::amendFamily() {
         if (_traceOn)
             dialog().information("amend " + fullName());
         if (!_ignore) amend();
-        enumerate();
         _amended = true;
         _timer->stop("amend");
     }
@@ -232,11 +175,6 @@ void Box::initializeFamily() {
         dialog().information("initializeFamily " + fullName());
     if (!_amended)
         ThrowException("Box should be amended before initialization");
-//    if (!_amended) {
-//        environment().computationStep(ComputationStep::Amend, false);
-//        amendFamily();
-//        environment().computationStep(ComputationStep::Initialize, false);
-//    }
     _timer->reset();
     _timer->start("initialize");
     for (auto child : children()) {
@@ -245,7 +183,6 @@ void Box::initializeFamily() {
             box->initializeFamily();
     }
     updatePorts();
-//    checkSelfImports();
     if (_traceOn)
         dialog().information("initialize " + fullName());
     if (!_ignore) initialize();
@@ -337,7 +274,7 @@ Box* Box::clone(QString name, QObject *parent) {
     Box *myClone = MegaFactory::create<Box>(className(), name, parent);
     myClone->_cloned = true;
     // Loop through my ports
-    for (Port *port : findMany<Port>(".[*]")) {
+    for (Port *port : findMany<Port*>(".[*]")) {
         // Find correspondin port in clone
         QString name = port->objectName();
         Port *clonedPort = myClone->peakPort(name);
@@ -352,7 +289,7 @@ Box* Box::clone(QString name, QObject *parent) {
 
 Box* Box::cloneFamily(QString name, QObject *parent) {
     Box *myClone = clone(name, parent);
-    for (Box *child : findMany<Box>("./*"))
+    for (Box *child : findMany<Box*>("./*"))
         child->cloneFamily(child->objectName(), myClone);
     return myClone;
 }
@@ -387,7 +324,7 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
 //         << " // #" << order()
          << "\n";
 
-    for (Port *port : me->findMany<Port>(".[*]")) {
+    for (Port *port : me->findMany<Port*>(".[*]")) {
         bool isInput = port->access() == PortAccess::Input,
              isOverridden = port->isValueOverridden(),
              doWrite = isInput &
@@ -396,14 +333,14 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
             port->toText(text, indentation+2);
     }
 
-    for (Port *port : me->findMany<Port>(".[*]")) {
+    for (Port *port : me->findMany<Port*>(".[*]")) {
         bool isOutput = port->access() == PortAccess::Output,
              doWrite = writeOutputs && isOutput;
         if (doWrite)
             port->toText(text, indentation+2);
     }
 
-    for (Box *box : me->findMany<Box>("./*")) {
+    for (Box *box : me->findMany<Box*>("./*")) {
         box->toText(text, options, indentation+2);
     }
     text << fill << "}\n";

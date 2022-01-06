@@ -17,4 +17,5 @@ void TestReaderBoxScriptX3::testAuxAllTypes() {
         root = builder.content();
     }
     UNEXPECTED_EXCEPTION;
+    delete root;
 }

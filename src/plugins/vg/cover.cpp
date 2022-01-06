@@ -9,7 +9,6 @@
 #include <base/data_grid.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/interpolate.h>
 #include <base/publish.h>
 #include "cover.h"

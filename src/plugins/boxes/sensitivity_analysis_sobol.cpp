@@ -137,7 +137,7 @@ void SensitivityAnalysisSobol::debrief() {
 //            << k << "\n";
 //    _file.close();
 //    environment().incrementFileCounter();
-    OutputR *outputR = findMaybeOne<OutputR>("*");
+    OutputR *outputR = findMaybeOne<OutputR*>("*");
     if (outputR) {
         outputR->addRCode("sobol_k = " + QString::number(k) +
                           "; sobol_N = " + QString::number(N) +

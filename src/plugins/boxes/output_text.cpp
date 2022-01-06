@@ -53,26 +53,26 @@ void OutputText::initialize() {
 
     // If output is for R then add R code to skip format
     if (skipFormats) {
-        OutputR *outputR = findMaybeOne<OutputR>("*");
+        OutputR *outputR = findMaybeOne<OutputR*>("*");
         if (outputR)
             outputR->addRCode("output_skip_formats = TRUE");
     }
 }
 void OutputText::collectPaths() {
     // Always output Simulation iteration
-    ports = Path(ports.original() + "|/*[iteration]");
+    ports = Path(ports.toString() + "|/*[iteration]");
 
     // Collect ports if this is a child of an OutputR box
-    bool doCollect = findMaybeOne<Box>("../*<OutputR>");
+    bool doCollect = findMaybeOne<Box*>("../*<OutputR>");
     if (doCollect) {
         QStringList paths;
-        paths << ports.original();
-        QVector<Box*> pages = findMany<Box>("../*<PageR>");
+        paths << ports.toString();
+        QVector<Box*> pages = findMany<Box*>("../*<PageR>");
         for (auto page : pages) {
-            paths << page->port("xAxis")->value<Path>().original();
-            QVector<Box*> plots = page->findMany<Box>("../*<PlotR>");
+            paths << page->port("xAxis")->value<Path>().toString();
+            QVector<Box*> plots = page->findMany<Box*>("../*<PlotR>");
             for (auto plot : plots) {
-                paths << plot->port("ports")->value<Path>().original();
+                paths << plot->port("ports")->value<Path>().toString();
             }
         }
         ports = Path(paths.join("|"));
@@ -85,7 +85,7 @@ inline bool isNumberLike(const Port *port) {
 }
 
 void OutputText::setOutputNames() {
-    auto portPtrs = ports.resolved();
+    auto portPtrs = ports.findMany<Port*>();
     QStringList names = UniqueName(portPtrs).resolved();
     auto name = names.begin();
     auto port = portPtrs.begin();
@@ -115,7 +115,7 @@ void OutputText::openFileStream() {
 
 void OutputText::initializeState() {
     using Type = OutputSummary::Type;
-    int n = ports.resolved().size();
+    int n = ports.matches().size();
     if (_summary.contains(Type::Sum) || _summary.contains(Type::Mean)) {
         _state.sum.fill(0., n);
     }
@@ -154,7 +154,7 @@ void OutputText::update() {
 void OutputText::updateState() {
     using Type = OutputSummary::Type;
     int i=0;
-    for (auto port : ports.resolved()) {
+    for (auto port : ports.findMany<Port*>()) {
         if (isNumberLike(port)) {
             if (_summary.contains(Type::Sum) || _summary.contains(Type::Mean))
                 _state.sum[i] += port->value<double>();
@@ -174,14 +174,14 @@ void OutputText::updateState() {
 
 void OutputText::writeColumnLabels() {
     QStringList list;
-    for (auto port : ports.resolved())
+    for (auto port : ports.findMany<Port*>())
         list << port->outputNames();
     _stream << list.join("\t") << "\n";
 }
 
 void OutputText::writeColumnFormats() {
     QStringList list;
-    for (auto port : ports.resolved()) {
+    for (auto port : ports.findMany<Port*>()) {
         if (_summary.size() <= 1)
             list << port->format();
         else if (isNumberLike(port)) {
@@ -197,7 +197,7 @@ void OutputText::writeValues() {
     QStringList values;
     // Loop through ports
     int i=0;
-    for (auto port : ports.resolved()) {
+    for (auto port : ports.findMany<Port*>()) {
         using Type = OutputSummary::Type;
         if (_summary.size() <= 1)               values << port->value<QString>();
         else if (isNumberLike(port)) {

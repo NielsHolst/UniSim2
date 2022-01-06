@@ -32,7 +32,7 @@ GrowthLights::GrowthLights(QString name, QObject *parent)
 
 void GrowthLights::amend() {
     BoxBuilder builder(this);
-    QVector<Box*> children = findMany<Box>("./*");
+    QVector<Box*> children = findMany<Box*>("./*");
     if (children.isEmpty())
         builder.box("GrowthLight").name("noLight").endbox();
 }
