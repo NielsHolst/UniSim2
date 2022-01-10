@@ -27,7 +27,6 @@ public:
     bool isType(QString name) const;
 
     QString name() const    { return objectName(); }
-    QObject *parent() const { return _parent; }
     int order() const       { return _order; }
 
     // Namespace is defined by BOXES_PLUGIN_NAME in project file
@@ -36,7 +35,6 @@ public:
 
 private:
     QString _class;
-    QObject *_parent;
     int _order;
 };
 

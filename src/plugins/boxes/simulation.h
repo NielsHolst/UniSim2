@@ -19,7 +19,6 @@ class Simulation : public base::Box
 {
 public:
     Simulation(QString name, QObject *parent);
-    ~Simulation();
     void amend();
     void initialize();
     void cleanup();

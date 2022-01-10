@@ -1,7 +1,7 @@
 Simulation sim {
   .steps = 1085
   Box dates {
-    +a = ..../x/*[abc]
+    &a = ..../x/*[abc]
   }
 }
 

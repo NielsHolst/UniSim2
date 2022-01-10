@@ -40,11 +40,6 @@ Simulation::Simulation(QString name, QObject *parent)
     Output(errorMsg).help("Error message");
 }
 
-Simulation::~Simulation() {
-    if (environment().root() == this)
-        environment().root(nullptr);
-}
-
 void Simulation::amend() {
     int i = 0;
     enumerate(i);

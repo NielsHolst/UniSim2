@@ -6,7 +6,7 @@
 #include "expression.h"
 
 namespace boxscript{ namespace parser {
-    typedef std::shared_ptr<boxscript::ast::boxscript> Result;
+    typedef std::shared_ptr<ast::boxscript> Result;
     Result parse(std::string source, std::string fileNamePath = "");
     base::Expression parseExpression(QString s);
 }}

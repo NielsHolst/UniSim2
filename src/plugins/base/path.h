@@ -33,6 +33,9 @@ public:
         Node(QString directive, QString className, QString objectName);
         Node(std::vector<std::string> names);
         QString toString() const;
+        Directive directive() const { return _directive; }
+        QString className() const { return _className; }
+        QString objectName() const { return _objectName; }
     private:
         Directive _directive;
         QString _className, _objectName;
@@ -45,6 +48,8 @@ public:
         Port(QString directive, QString name);
         Port(std::vector<std::string> names);
         QString toString() const;
+        Directive directive() const { return _directive; }
+        QString name() const { return _name; }
     private:
         Directive _directive;
         QString _name;
@@ -58,6 +63,9 @@ public:
         void setRoot(bool hasRoot);
         void addNode(Node &node);
         void setPort(const Port &port);
+        bool hasRoot() const;
+        const QVector<Node> &nodes() const;
+        const std::optional<Port> &port() const;
         const Objects& matches();
         QString toString() const;
 
@@ -106,10 +114,13 @@ public:
     // Methods
     Path(Object *parent=nullptr);
     Path(QString path, Object *parent=nullptr);
+//    Path(const Path &path);
+//    Path & operator=(const Path &path);
     void setParent(Object *parent);
     Object *parent();
     void addAlternative(const Alternative &alternative);
     QString toString() const;
+    const QVector<Alternative> &alternatives() const;
     const Objects& matches();
     template<class T> T findOne();
     template<class T> T findMaybeOne();

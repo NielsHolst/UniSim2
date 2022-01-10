@@ -11,14 +11,15 @@
 #include "expression.h"
 #include "operator.h"
 
-namespace boxscript { namespace ast
-{
+namespace ast {
 
     inline QString str(const std::string &s) {
         return QString::fromStdString(s);
     }
 
-    inline std::string pad(int level) { return std::string(2*level, ' '); }
+    inline std::string spaces(int n) { return std::string(n, ' '); }
+
+    inline std::string pad(int level) { return spaces(2*level); }
 
     inline std::string zpad(int i) {
         std::string s = std::to_string(i);
@@ -37,11 +38,12 @@ namespace boxscript { namespace ast
         }
         else {
             const auto &e(boost::get<IfExpression>(x.expression));
-            int n = e.size();
-            os << "if " << e.at(0) << " then " << e.at(1) << std::endl;
+            const int n = e.size(),
+                      padding = 2*level + x.portName.size() + 4;
+            os << " if " << e.at(0) << " then " << e.at(1) << std::endl;
             for (int i=2; i<n-1; i+=2)
-                os << "elsif " << e.at(i) << " then " << e.at(i+1) << std::endl;
-            os << "else " << e.at(n-1) << std::endl;
+                os << spaces(padding) << "elsif " << e.at(i) << " then " << e.at(i+1) << std::endl;
+            os << spaces(padding) << "else " << e.at(n-1) << std::endl;
         }
         return os;
     }
@@ -73,7 +75,7 @@ namespace boxscript { namespace ast
     }
 
     std::ostream& operator<<(std::ostream& os, const ChildBox& x) {
-        return print(os, x, 0);
+        return os << x.get().objectName;
     }
 
     std::ostream& print(std::ostream& os, const ChildBox& x, int level) {
@@ -144,8 +146,7 @@ namespace boxscript { namespace ast
             os << node;
             sep = true;
         }
-        if (x.port.has_value())
-            os << "[" << *x.port << "]";
+        os << "[" << x.port << "]";
         return os;
     }
 
@@ -204,18 +205,16 @@ namespace boxscript { namespace ast
             auto baseNode = base::Path::Node(node);
             alternative.addNode(baseNode);
         }
-        if (port.has_value()) {
-            auto basePort = base::Path::Port(*port);
+        auto basePort = base::Path::Port(port);
+        if (basePort.name() != "DUMMY")
             alternative.setPort(basePort);
-        }
         return alternative;
     }
 
     base::Path value(Path &path) {
         base::Path result;
-        for (auto alternative : path) {
-            result.addAlternative(nullptr);
-        }
+        for (auto alternative : path)
+            result.addAlternative(alternative.value());
         return result;
     }
 
@@ -282,7 +281,7 @@ namespace boxscript { namespace ast
     }
 
     void Assignment::build(base::BoxBuilder *builder) {
-        bool isAuxPort = (qualifier == '+');
+        bool isAuxPort = (qualifier != '.');
         if (isAuxPort)
             builder->aux(str(portName));
         else
@@ -302,5 +301,5 @@ namespace boxscript { namespace ast
     }
 
 
-}}
+}
 

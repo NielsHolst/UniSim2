@@ -7,43 +7,43 @@
 #include <boost/fusion/include/std_pair.hpp>
 
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::boxscript, root
+    ast::boxscript, root
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Assignment, qualifier, portName, equals, expression
+    ast::Assignment, qualifier, portName, equals, expression
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::BareDate, day, month
+    ast::BareDate, day, month
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Bool, stringValue
+    ast::Bool, stringValue
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Box, className, objectName, assignments, children
+    ast::Box, className, objectName, assignments, children
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Date, day, month, year
+    ast::Date, day, month, year
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::DateTime, date, time
+    ast::DateTime, date, time
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Expression, sign, firstOperand, operations
+    ast::Expression, sign, firstOperand, operations
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::FunctionCall, name, arguments
+    ast::FunctionCall, name, arguments
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Operation, operator_, operand
+    ast::Operation, operator_, operand
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::PathAlternative, root, nodes, port
+    ast::PathAlternative, root, nodes, port
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::QuotedString, stringValue
+    ast::QuotedString, stringValue
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    boxscript::ast::Time, hour, minute, second
+    ast::Time, hour, minute, second
 )
 
 #endif

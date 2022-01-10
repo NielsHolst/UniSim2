@@ -14,8 +14,7 @@
 
 namespace base {
 
-Box *Box::_currentRoot = nullptr;
-Box *Box::_savedCurrentRoot = nullptr;
+Box *Box::_latest = nullptr;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
@@ -23,13 +22,15 @@ Box::Box(QString name, QObject *parent)
     : Node(name, parent), _amended(false), _cloned(false), _ignore(false)
 {
     help("has no documented functionality");
-    _currentRoot = this;
     _timer = new Timer(this);
+    // If box has a box parent, it can be used to find the root
+    if (dynamic_cast<Box*>(parent) )
+        _latest = this;
 }
 
 Box::~Box() {
-    if (this == _currentRoot)
-        _currentRoot = nullptr;
+    if (this == _latest)
+        _latest = nullptr;
 }
 
 void Box::addPort(Port *port) {
@@ -83,30 +84,33 @@ QString Box::sideEffects() const {
     return _sideEffects;
 }
 
-void Box::removeChild(QString name) {
-    Box *child = findOne<Box*>(name);
-    dialog().information("Removing box " + child->fullName());
-    delete child;
+Box *Box::findRoot() {
+    Box *p = dynamic_cast<Box*>(parent());
+    return p ? p->findRoot() : this;
 }
 
-Box* Box::currentRoot() {
-    if (_currentRoot==nullptr)
-        return nullptr;
-    while (true) {
-        Box *p = dynamic_cast<Box*>(_currentRoot->parent());
-        if (!p) break;
-        _currentRoot = p;
-    }
-    return _currentRoot;
+Box *Box::root() {
+    return _latest ? _latest->findRoot() : nullptr;
 }
 
-void Box::saveCurrentRoot() {
-    _savedCurrentRoot = _currentRoot;
-}
+//Box* Box::currentRoot() {
+//    if (_currentRoot==nullptr)
+//        return nullptr;
+//    while (true) {
+//        Box *p = dynamic_cast<Box*>(_currentRoot->parent());
+//        if (!p) break;
+//        _currentRoot = p;
+//    }
+//    return _currentRoot;
+//}
 
-void Box::restoreCurrentRoot() {
-    _currentRoot = _savedCurrentRoot;
-}
+//void Box::saveCurrentRoot() {
+//    _savedCurrentRoot = _currentRoot;
+//}
+
+//void Box::restoreCurrentRoot() {
+//    _currentRoot = _savedCurrentRoot;
+//}
 
 Box* Box::boxParent() {
     return dynamic_cast<Box*>(parent());
@@ -253,21 +257,31 @@ void Box::debriefFamily() {
     _timer->stop("debrief");
 }
 
+void Box::enumeratePorts() {
+//    _portsInOrder.clear();
+//    for (Port *port : _ports.values())
+//        _portsInOrder << port;
+//    std::sort(_portsInOrder.begin(), _portsInOrder.end())     ;
+}
+
+void Box::resetPorts() {
+    for (Port *port : _ports.values())
+//    for (Port *port : _portsInOrder)
+        port->reset();
+}
+
 void Box::updatePorts() {
     for (Port *port : _ports.values())
+//    for (Port *port : _portsInOrder)
         port->update();
 }
 
 void Box::verifyPorts() {
     if (_debugOn) {
         for (Port *port : _ports.values())
+//        for (Port *port : _portsInOrder)
             port->verifyValue();
     }
-}
-
-void Box::resetPorts() {
-    for (Port *port : _ports.values())
-        port->reset();
 }
 
 Box* Box::clone(QString name, QObject *parent) {
@@ -324,7 +338,7 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
 //         << " // #" << order()
          << "\n";
 
-    for (Port *port : me->findMany<Port*>(".[*]")) {
+    for (Port *port : _ports.values()) {
         bool isInput = port->access() == PortAccess::Input,
              isOverridden = port->isValueOverridden(),
              doWrite = isInput &
@@ -333,7 +347,7 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
             port->toText(text, indentation+2);
     }
 
-    for (Port *port : me->findMany<Port*>(".[*]")) {
+    for (Port *port : _ports.values()) {
         bool isOutput = port->access() == PortAccess::Output,
              doWrite = writeOutputs && isOutput;
         if (doWrite)

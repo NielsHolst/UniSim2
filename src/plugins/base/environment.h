@@ -27,12 +27,6 @@ public:
     Environment();
     ~Environment();
 
-    Box* root();
-    void root(Box *newRoot);
-
-    Box* current();
-    void current(Box *newCurrent);
-
     ComputationStep computationStep() const;
     void computationStep(ComputationStep step, bool showInDialog = true);
 

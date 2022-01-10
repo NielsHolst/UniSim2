@@ -47,8 +47,8 @@ private:
     static int _count;
     static const QObject *_fallbackContext;
     // methods
-    template <class T> QString asString(T v);
-    QDateTime dateTime() const;
+    template <class T> QString asString(T v) noexcept;
+    QDateTime dateTime() const noexcept;
 };
 
 template <class T> Exception& Exception::value(T v) {
@@ -65,17 +65,24 @@ template <class T> Exception& Exception::value2(T v) {
     return *this;
 }
 
-template <class T> QString Exception::asString(T v) {
-    return QString::fromStdString(boost::lexical_cast<std::string>(v));
+template <class T> QString Exception::asString(T v) noexcept {
+    QString s;
+    try {
+        s = QString::fromStdString(boost::lexical_cast<std::string>(v));
+    }
+    catch (...) {
+        s = "Invalid value";
+    }
+    return s;
 }
 
-template <> QString Exception::asString(bool v);
-template <> QString Exception::asString(char v);
-template <> QString Exception::asString(const char *v);
-template <> QString Exception::asString(QString v);
-template <> QString Exception::asString(QDate v);
-template <> QString Exception::asString(QTime v);
-template <> QString Exception::asString(QDateTime v);
+template <> QString Exception::asString(bool v) noexcept;
+template <> QString Exception::asString(char v) noexcept;
+template <> QString Exception::asString(const char *v) noexcept;
+template <> QString Exception::asString(QString v) noexcept;
+template <> QString Exception::asString(QDate v) noexcept;
+template <> QString Exception::asString(QTime v) noexcept;
+template <> QString Exception::asString(QDateTime v) noexcept;
 
 }
 #endif

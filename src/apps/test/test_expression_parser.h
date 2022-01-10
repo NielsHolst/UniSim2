@@ -12,7 +12,9 @@ class TestExpressionParser : public QObject
     Q_OBJECT
 private slots:
     void testAstHandling();
-    void testParser();
+    void testOperation();
+    void testPathWithPort();
+    void testPathWithoutPort();
 };
 
 DECLARE_TEST(TestExpressionParser)

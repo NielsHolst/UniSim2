@@ -6,7 +6,6 @@
 #include <QMap>
 #include "box.h"
 #include "boxscript_parser.h"
-#include "environment.h"
 #include "expression.h"
 #include "path.h"
 
@@ -220,8 +219,6 @@ QString Path::Port::toString() const {
 Path::Alternative::Alternative(Path *parent)
     : _parent(parent), _isMatched(false)
 {
-    if (!_parent)
-        ThrowException("Path alternative must have a parent");
 }
 
 void Path::Alternative::setParent(Path *parent) {
@@ -240,7 +237,21 @@ void Path::Alternative::addNode(Node &node) {
 }
 
 void Path::Alternative::setPort(const Port &port) {
-    _port = port;
+    // Dummy port is ignored
+    if (_port->_name != "DUMMY")
+        _port = port;
+}
+
+bool Path::Alternative::hasRoot() const {
+    return _hasRoot;
+}
+
+const QVector<Path::Node> &Path::Alternative::nodes() const {
+    return _nodes;
+}
+
+const std::optional<Path::Port> &Path::Alternative::port() const {
+    return _port;
 }
 
 QString Path::Alternative::toString() const {
@@ -256,9 +267,6 @@ QString Path::Alternative::toString() const {
 }
 
 const Path::Objects& Path::Alternative::matches() {
-    if (!_parent->parent() || _hasRoot)
-        ThrowException("Path must have either a root or a parent").value(toString());
-
     if (_isMatched)
         return _matches;
 
@@ -276,12 +284,20 @@ const Path::Objects& Path::Alternative::matches() {
 
 void Path::Alternative::initiateMatches(const Node &node) {
     // Find root and parent
-    Object *root = dynamic_cast<Object*>(environment().root()),
-           *p = dynamic_cast<Object*>(_parent->parent());
+    Object *root = Box::root(),
+           *p = _parent ? dynamic_cast<Object*>(_parent->parent()) : nullptr;
 
-    // Check if that root exists if needed
-    if (!root && (_hasRoot || node._directive==Directive::Any))
+    // Check that root or parent exists, if need
+    enum {NeedsRoot, NeedsParent} need;
+    need = (_hasRoot || node._directive==Directive::Any) ? NeedsRoot : NeedsParent;
+
+    // Check root
+    if (need==NeedsRoot && !root)
         ThrowException("No root found for path").value(toString()).context(p);
+
+    // Check parent
+    if (need==NeedsParent && !p)
+        ThrowException("No parent found for path").value(toString()).context(p);
 
     // Set up initial nodes for seach
     if (_hasRoot)
@@ -512,21 +528,46 @@ Path::Objects Path::Alternative::following(Objects candidates, QString className
 // Path
 
 Path::Path(Object *parent)
-    : _parent(parent)
+    : _parent(parent), _isMatched(false)
 {
 }
 
 Path::Path(QString path, Object *parent)
-    : _parent(parent)
+    : Path(parent)
 {
-    auto expression = boxscript::parser::parseExpression(path);
+    // The parser needs a port on every alternative: Add missing ports as dummies
+    QStringList alternatives = path.split("|"), corrected;
+    for (auto alternative : alternatives)
+        corrected << (path.contains("[") ? alternative : alternative.trimmed() + "[DUMMY]");
+
+    // Parse path as an expression
+    auto expression = boxscript::parser::parseExpression(corrected.join("|"));
     if (expression.size() != 1 || Expression::type(expression.at(0)) != Expression::Type::Path)
         ThrowException("Invalid path").value(path).context(parent);
 
-    *this = std::get<Path>(expression.at(0));
-    if (parent)
-        _parent = parent;
+    Path parsedPath = std::get<Path>(expression.at(0));
+    _parent = parent ? parent : parsedPath._parent;
+    _alternatives = parsedPath._alternatives;
+    _matches = parsedPath._matches;
+    _isMatched = parsedPath._isMatched;
 }
+
+//Path::Path(const Path &path)
+//    :
+//      _parent(path._parent),
+//      _alternatives(path._alternatives),
+//      _matches(path._matches),
+//      _isMatched(path._isMatched)
+//{
+//}
+
+//Path & Path::operator=(const Path &path) {
+//    _parent = path._parent;
+//    _alternatives = path._alternatives;
+//    _matches = path._matches;
+//    _isMatched = path._isMatched;
+//    return *this;
+//}
 
 void Path::setParent(Object *parent)
 {
@@ -542,11 +583,11 @@ void Path::addAlternative(const Alternative &alternative) {
 }
 
 const Path::Objects &Path::matches() {
-    if (_alternatives.isEmpty())
-        ThrowException("Path is empty").context(_parent);
-
     if (_isMatched)
         return _matches;
+
+    if (_alternatives.isEmpty())
+        ThrowException("Path is empty").context(_parent);
 
     // Set the me as parent of my alternatives
     for (auto alternative : _alternatives)
@@ -573,6 +614,10 @@ QString Path::toString() const {
     for (auto alt : _alternatives)
         list <<alt.toString();
     return list.join("|");
+}
+
+const QVector<Path::Alternative> &Path::alternatives() const {
+    return _alternatives;
 }
 
 bool Path::isValid(QString path) {

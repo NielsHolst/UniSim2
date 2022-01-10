@@ -26,8 +26,8 @@ HEADERS +=  \
     test_expression.h \
     test_expression_parser.h \
     test_operate.h \
+    test_path.h \
     test_reader_boxscript_x3.h \
-    test_spirit.h \
     test_value.h \
     test_value_collection.h \
 
@@ -44,7 +44,7 @@ SOURCES +=  \
     test_expression.cpp \
     test_expression_parser.cpp \
     test_operate.cpp \
+    test_path.cpp \
     test_reader_boxscript_x3.cpp \
-    test_spirit.cpp \
     test_value.cpp \
     test_value_collection.cpp \

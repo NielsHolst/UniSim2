@@ -120,7 +120,7 @@ namespace boxscript { namespace parser
     x3::rule<path_alternative_class, ast::PathAlternative> const path_alternative = "path alternative";
     x3::rule<path_node_class, ast::PathNode> const path_node = "path node";
     x3::rule<port_class, ast::PathNode> const port = "port";
-    x3::rule<port_prefix_class, char> const port_prefix = "port prefix (. or +)";
+    x3::rule<port_prefix_class, char> const port_prefix = "port prefix";
     x3::rule<quoted_string_class, ast::QuotedString> const quoted_string = "quoted_string";
     x3::rule<sign_class, char> const sign = "sign";
     x3::rule<time_class, ast::Time> const time = "time";
@@ -191,8 +191,8 @@ namespace boxscript { namespace parser
     auto const joker_name_def = name | joker | dots;
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
     auto const number_def = double_ | int_;
-    auto const operand_def = date_time | date | bare_date | time | number |
-                             path | function_call | bool_ | quoted_string | grouped_expression;
+    auto const operand_def = bool_ | function_call | date_time | date | bare_date | time | number |
+                             path | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
     auto const operator__def = x3::string("+")|x3::string("-")|x3::string("*")|x3::string("/")|x3::string("^")
                               |x3::string("==")|x3::string("&&")|x3::string("||")
@@ -200,10 +200,10 @@ namespace boxscript { namespace parser
                               |x3::string("<=")|x3::string("<")
                               |x3::string("!=")|x3::string("!");
     auto const path_def = path_alternative % '|';
-    auto const path_alternative_def = -x3::string("/") >> (path_node % '/') >> -port;
+    auto const path_alternative_def = -x3::string("/") >> (path_node % '/') >> port;
     auto const path_node_def = joker_name % "::";
     auto const port_def = lit('[') >> path_node > lit(']');
-    auto const port_prefix_def = char_('.')|char_('+');
+    auto const port_prefix_def = char_('.')|char_('&');
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const sign_def = char_("+")|char_("-")|char_("!");
     auto const time_def = integer >> ':' > integer >> -(':' > integer);

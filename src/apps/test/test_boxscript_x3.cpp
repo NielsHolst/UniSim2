@@ -217,29 +217,29 @@ void TestBoxScriptX3::testNumber() {
     UNEXPECTED_EXCEPTION;
     QVERIFY(compare("box_script/number.box", result));
 
-    boxscript::ast::Box root = result->root;
+    ast::Box root = result->root;
     QCOMPARE(root.className, "Simulation");
     QCOMPARE(root.objectName, "sim");
 
-    std::vector<boxscript::ast::Assignment> ass = root.assignments;
+    std::vector<ast::Assignment> ass = root.assignments;
     QCOMPARE(ass.at(0).portName, "steps");
     QCOMPARE(ass.at(1).portName, "a");
 
-    QCOMPARE(ass.at(0).type(), boxscript::ast::Assignment::Type::Expression);
-    QCOMPARE(ass.at(1).type(), boxscript::ast::Assignment::Type::Expression);
+    QCOMPARE(ass.at(0).type(), ast::Assignment::Type::Expression);
+    QCOMPARE(ass.at(1).type(), ast::Assignment::Type::Expression);
 
-    auto exp0 = boost::get<boxscript::ast::Expression>(ass.at(0).expression);
-    auto exp1 = boost::get<boxscript::ast::Expression>(ass.at(1).expression);
+    auto exp0 = boost::get<ast::Expression>(ass.at(0).expression);
+    auto exp1 = boost::get<ast::Expression>(ass.at(1).expression);
 
-    boxscript::ast::Operand op0 = exp0.firstOperand,
+    ast::Operand op0 = exp0.firstOperand,
                             op1 = exp1.firstOperand;
-    QCOMPARE(op0.type(), boxscript::ast::Operand::Type::Number);
-    QCOMPARE(op1.type(), boxscript::ast::Operand::Type::Number);
+    QCOMPARE(op0.type(), ast::Operand::Type::Number);
+    QCOMPARE(op1.type(), ast::Operand::Type::Number);
 
-    boxscript::ast::Number num0 = boost::get<boxscript::ast::Number>(op0),
-                           num1 = boost::get<boxscript::ast::Number>(op1);
-    QCOMPARE(num0.type(), boxscript::ast::Number::Type::Int);
-    QCOMPARE(num1.type(), boxscript::ast::Number::Type::Double);
+    ast::Number num0 = boost::get<ast::Number>(op0),
+                           num1 = boost::get<ast::Number>(op1);
+    QCOMPARE(num0.type(), ast::Number::Type::Int);
+    QCOMPARE(num1.type(), ast::Number::Type::Double);
 
 
 }

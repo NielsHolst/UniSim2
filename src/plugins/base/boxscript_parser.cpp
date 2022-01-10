@@ -1,6 +1,5 @@
 #include <QFile>
 #include "box.h"
-#include "box_builder.h"
 #include "boxscript_config.h"
 #include "boxscript_parser.h"
 #include "exception.h"
@@ -16,7 +15,7 @@ Result parse(std::string source, std::string fileNamePath) {
     iterator_type const end(source.end());
 
     // Our AST
-    auto ast = std::make_shared<boxscript::ast::boxscript>();
+    auto ast = std::make_shared<ast::boxscript>();
 
     // Our error handler
     using boxscript::parser::error_handler_type;
@@ -43,13 +42,14 @@ Result parse(std::string source, std::string fileNamePath) {
 }
 
 Expression parseExpression(QString s) {
-    BoxBuilder builder;
-    Result ast;
-    ast = parse("Box{+x=" + s.toStdString() + "}");
-    ast->root.build(&builder);
-
-    Box *root = builder.content(BoxBuilder::Amend::None);
-    return root->port("x")->expression();
+    auto ast = parse("Box{&x=" + s.toStdString() + "}");
+    auto root = ast->root;
+    auto assignment = root.assignments.at(0);
+    auto expression = boost::get<ast::Expression>(assignment.expression);
+    Expression baseExpression;
+    expression.build(&baseExpression);
+    baseExpression.close();
+    return baseExpression;
 }
 
 }}

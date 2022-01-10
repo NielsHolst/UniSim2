@@ -4,7 +4,6 @@
 */
 #include "box.h"
 #include "dialog.h"
-#include "environment.h"
 #include "exception.h"
 #include "factory_plug_in.h"
 #include "mega_factory.h"
@@ -70,7 +69,7 @@ QStringList SaveGrammarBase::classNames() {
 
 QStringList SaveGrammarBase::portNames() {
     // Collect port names of current root
-    QSet<QString> names = collectPortNames(environment().root());
+    QSet<QString> names = collectPortNames(Box::root());
 
     // Create an object of each class
     Box *root = new Box("root", nullptr);

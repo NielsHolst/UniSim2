@@ -1,9 +1,9 @@
 Simulation sim {
   .steps = 1085
   Box s {
-    +a = "abc"
-    +b = ""
-    +c = "123"
+    &a = "abc"
+    &b = ""
+    &c = "123"
   }
 }
 

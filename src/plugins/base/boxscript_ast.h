@@ -12,7 +12,7 @@ namespace base {
     class Expression;
 }
 
-namespace boxscript { namespace ast
+namespace ast
 {
     namespace x3 = boost::spirit::x3;
 
@@ -67,7 +67,7 @@ namespace boxscript { namespace ast
     struct PathAlternative : x3::position_tagged {
         boost::optional<std::string> root;
         std::vector<PathNode> nodes;
-        boost::optional<PathNode> port;
+        PathNode port;
         base::Path::Alternative value() const;
     };
     std::ostream& operator<<(std::ostream& os, const PathAlternative& x);
@@ -171,7 +171,7 @@ namespace boxscript { namespace ast
     std::ostream& operator<<(std::ostream& os, const Assignment& x);
 
     struct Box;
-    typedef boost::recursive_wrapper<Box> ChildBox;
+    using ChildBox = boost::recursive_wrapper<Box>;
     std::ostream& operator<<(std::ostream& os, const ChildBox& x);
     std::ostream& print     (std::ostream& os, const ChildBox& x, int level);
 
@@ -191,6 +191,7 @@ namespace boxscript { namespace ast
     std::ostream& operator<<(std::ostream& os, const boxscript& x);
     std::ostream& print     (std::ostream& os, const boxscript& x);
 
-}}
+
+}
 
 #endif

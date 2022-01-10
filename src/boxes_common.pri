@@ -86,3 +86,5 @@ INCLUDEPATH += $${BOOST_PATH}
     unix:LIBS += -L$$_PRO_FILE_PWD_/../../../bin/ -luniversal_simulator_base$${SUFFIX}
     macx:LIBS += -L$$(HOME)/lib -luniversal_simulator_base$${SUFFIX}
 }
+
+DEFINES += BOOST_SPIRIT_X3_DEBUG

@@ -43,12 +43,7 @@ public:
     void sideEffects(QString s);
     QString sideEffects() const;
 
-    void removeChild(QString name);
-
-    static Box* currentRoot();
-    static void saveCurrentRoot();
-    static void restoreCurrentRoot();
-
+    static Box *root();
     Box* boxParent();
 
     template<class T> T findOne(QString path);
@@ -71,7 +66,8 @@ public:
     void cleanupFamily();
     void debriefFamily();
 
-    virtual void update(Port *) {}
+//    virtual void update(Port *) {}
+    void enumeratePorts();
     void updatePorts();
     void verifyPorts();
 
@@ -92,13 +88,15 @@ private:
     // Data
     QString _help, _sideEffects;
     QMap<QString,Port*> _ports;
+//    QVector<Port*> _portsInOrder;
     QVector<Port*> _trackedPorts;
     bool _amended, _cloned, _ignore;
     Timer *_timer;
-    static Box *_currentRoot, *_savedCurrentRoot;
+    static Box *_latest;
     static bool _debugOn, _traceOn;
 
     // Methods
+    Box *findRoot();
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void resetPorts();

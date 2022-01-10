@@ -90,38 +90,65 @@ void Exception::setContext(const QObject *object) {
     _fallbackContext = object;
 }
 
-template <> QString Exception::asString(bool v) {
+template <> QString Exception::asString(bool v) noexcept {
     return v ? "true" : "false";
 }
 
-template <> QString Exception::asString(char v) {
+template <> QString Exception::asString(char v) noexcept {
     return QString(v);
 }
 
-template <> QString Exception::asString(const char *v) {
+template <> QString Exception::asString(const char *v) noexcept {
     return QString(v);
 }
 
-template <> QString Exception::asString(QString v) {
+template <> QString Exception::asString(QString v) noexcept {
     return v;
 }
 
-template <> QString Exception::asString(QDate v) {
-    return v.toString(Qt::ISODate);
-}
-
-template <> QString Exception::asString(QTime v) {
-    return v.toString("hh:mm:ss");
-}
-
-template <> QString Exception::asString(QDateTime v) {
-    return v.toString("yyyy/MM/dd hh:mm:ss");
-}
-
-QDateTime Exception::dateTime() const {
-    QDateTime result;
+template <> QString Exception::asString(QDate v) noexcept {
+    QString s;
     try {
-        Box *calendar = Path("calendar").findMaybeOne<Box*>();
+        s = v.toString(Qt::ISODate);
+    }
+    catch (...) {
+        s = "Invalid date";
+    }
+    return s;
+}
+
+template <> QString Exception::asString(QTime v) noexcept {
+    QString s;
+    try {
+        s = v.toString("hh:mm:ss");
+    }
+    catch (...) {
+        s = "Invalid time";
+    }
+    return s;
+}
+
+template <> QString Exception::asString(QDateTime v) noexcept {
+    QString s;
+    try {
+        s = v.toString("yyyy/MM/dd hh:mm:ss");
+    }
+    catch (...) {
+        s = "Invalid date time";
+    }
+    return s;
+}
+
+QDateTime Exception::dateTime() const noexcept {
+    QDateTime result;
+    Box *calendar;
+    try {
+        try {
+            calendar = Path("calendar").findMaybeOne<Box*>();
+        }
+        catch (...) {
+            calendar = nullptr;
+        }
         if (calendar) {
             Port *port = calendar->peakPort("dateTime");
             if (port) {

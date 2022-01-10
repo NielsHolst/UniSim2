@@ -82,22 +82,6 @@ Environment::~Environment() {
     }
 }
 
-Box* Environment::root() {
-    return _root;
-}
-
-void Environment::root(Box *newRoot) {
-    _current = _root = newRoot;
-}
-
-Box* Environment::current() {
-    return _current;
-}
-
-void Environment::current(Box *newCurrent) {
-    _current = newCurrent;
-}
-
 ComputationStep Environment::computationStep() const {
     return _computationStep;
 }

@@ -24,8 +24,10 @@ void Node::setClassName(QString className) {
 
 void Node::enumerate(int &i) {
     // Enumerate boxes before ports
-    for (auto box : findChildren<Box*>("",Qt::FindDirectChildrenOnly))
+    for (auto box : findChildren<Box*>("",Qt::FindDirectChildrenOnly)) {
         box->enumerate(i);
+//        box->enumeratePorts();
+    }
     for (auto port : findChildren<Port*>("",Qt::FindDirectChildrenOnly))
         port->enumerate(i);
     // Enumerate self
