@@ -26,6 +26,9 @@ Box::Box(QString name, QObject *parent)
     // If box has a box parent, it can be used to find the root
     if (dynamic_cast<Box*>(parent) )
         _latest = this;
+
+    QString s = parent ? Node::fullName(parent) : "No parent";
+        std::cout << "Create box" << qPrintable(name + " inside " + s) << std::endl;
 }
 
 Box::~Box() {
@@ -42,6 +45,7 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     if (ports.contains(name))
         ThrowException("Box already has a port with this name").value(name).context(this);
     ports[name] = port;
+    std::cout << qPrintable("addPort " + this->className() + "::" + this->name() + " : " + name) << std::endl;
 }
 
 Port* Box::peakPort(QString name) {

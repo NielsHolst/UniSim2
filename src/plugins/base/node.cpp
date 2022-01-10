@@ -24,12 +24,18 @@ void Node::setClassName(QString className) {
 
 void Node::enumerate(int &i) {
     // Enumerate boxes before ports
-    for (auto box : findChildren<Box*>("",Qt::FindDirectChildrenOnly)) {
-        box->enumerate(i);
-//        box->enumeratePorts();
+    for (auto child : findChildren<QObject*>("",Qt::FindDirectChildrenOnly)) {
+        Box *box = dynamic_cast<Box*>(child);
+        if (box) {
+            box->enumerate(i);
+            box->enumeratePorts();
+        }
     }
-    for (auto port : findChildren<Port*>("",Qt::FindDirectChildrenOnly))
-        port->enumerate(i);
+    for (auto child : findChildren<QObject*>("",Qt::FindDirectChildrenOnly)) {
+        Port *port = dynamic_cast<Port*>(child);
+        if (port )
+            port ->enumerate(i);
+    }
     // Enumerate self
     _order = i++;
 }
@@ -43,7 +49,7 @@ QString Node::fullName(const QObject *object) {
     const QObject *p = object;
     const QObject *last;
     while (p) {
-        names << p->objectName();
+        names.prepend(p->objectName());
         last = p;
         p = p->parent();
     }

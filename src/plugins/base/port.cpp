@@ -7,6 +7,8 @@
 #include "path.h"
 #include "port.h"
 
+#include <iostream>
+
 namespace base {
 
 Port::Port(QString name, QObject *parent)
@@ -17,6 +19,8 @@ Port::Port(QString name, QObject *parent)
       _access(PortAccess::Input),
       _expression(this)
 {
+    QString s = parent ? Node::fullName(parent) : "No parent";
+    std::cout << "Create port " << qPrintable(s+"["+name+"]") << std::endl;
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);

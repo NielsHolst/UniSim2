@@ -289,7 +289,8 @@ void Path::Alternative::initiateMatches(const Node &node) {
 
     // Check that root or parent exists, if need
     enum {NeedsRoot, NeedsParent} need;
-    need = (_hasRoot || node._directive==Directive::Any) ? NeedsRoot : NeedsParent;
+//    need = (_hasRoot || node._directive==Directive::Any) ? NeedsRoot : NeedsParent;
+    need = (node._objectName.contains(".") || node._directive!=Directive::Any) ? NeedsParent : NeedsRoot;
 
     // Check root
     if (need==NeedsRoot && !root)
@@ -590,7 +591,7 @@ const Path::Objects &Path::matches() {
         ThrowException("Path is empty").context(_parent);
 
     // Set the me as parent of my alternatives
-    for (auto alternative : _alternatives)
+    for (auto &alternative : _alternatives)
         alternative.setParent(this);
 
     // Collect matches
