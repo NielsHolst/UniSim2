@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(Population)
 
-Population::Population(QString name, QObject *parent)
+Population::Population(QString name, Box *parent)
     : Box(name, parent),
       _cohorts(&cohorts),
       _age(&age)

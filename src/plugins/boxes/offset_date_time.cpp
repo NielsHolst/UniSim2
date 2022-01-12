@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(OffsetDateTime)
 
-OffsetDateTime::OffsetDateTime(QString name, QObject *parent)
+OffsetDateTime::OffsetDateTime(QString name, Box *parent)
     : Box(name, parent) {
     help("computes a date-time plus/minus an offset");
     Input(dateTime).help("Date-time that will be offset");

@@ -14,7 +14,7 @@ namespace boxes {
 class RandomUniformInt : public RandomBaseTyped<int>
 {
 public: 
-    RandomUniformInt(QString name, QObject *parent);
+    RandomUniformInt(QString name, Box *parent);
 private:
     void updateValue();
 };

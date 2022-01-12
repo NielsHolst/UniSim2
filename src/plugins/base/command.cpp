@@ -12,7 +12,7 @@ namespace base {
 
 QStringList Command::_help;
 
-Command::Command(QString name, QObject *parent)
+Command::Command(QString name, Node *parent)
     : Node(name, parent), _error(false)
 {
     setClassName("Command");
@@ -38,7 +38,7 @@ void Command::execute() {
 }
 
 bool Command::hasError() const {
-    Command *parentCommand = dynamic_cast<Command*>(parent());
+    Command *parentCommand = parent<Command*>();
     return _error || (parentCommand && parentCommand->hasError());
 }
 
@@ -51,10 +51,11 @@ QStringList Command::help() {
     return _help;
 }
 
-void Command::submit(QStringList com, QObject *parent) {
-    Command *command;
+void Command::submit(QStringList com) {
+    using std::unique_ptr;
+    unique_ptr<Command> command;
     try {
-        command = MegaFactory::create<Command>(com.first(), com.first(), parent);
+        command = unique_ptr<Command>( MegaFactory::create<Command>(com.first(), com.first()) );
         command->arguments(com);
         command->execute();
     }

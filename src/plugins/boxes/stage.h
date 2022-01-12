@@ -13,7 +13,7 @@
     class Stage : public StageBase
     {
     public:
-        Stage(QString name, QObject *parent);
+        Stage(QString name, Box *parent);
         void myReset();
         void update();
 

@@ -11,7 +11,7 @@ namespace boxes {
 class OutputBuffer : public OutputPorts
 {
 public:
-    OutputBuffer(QString name, QObject *parent);
+    OutputBuffer(QString name, Box *parent);
 };
 
 } // boxes

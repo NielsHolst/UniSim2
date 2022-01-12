@@ -15,7 +15,7 @@ namespace boxes {
 class SolarTime : public base::Box
 {
 public: 
-    SolarTime(QString name, QObject *parent);
+    SolarTime(QString name, Box *parent);
     void reset();
 	void update();
 private:

@@ -12,7 +12,7 @@ namespace boxes {
 class boxesDocumentation : public base::Documentation
 {
 public:
-    boxesDocumentation(QString name, QObject *parent);
+    boxesDocumentation(QString name, Box *parent);
 };
 
 } //namespace

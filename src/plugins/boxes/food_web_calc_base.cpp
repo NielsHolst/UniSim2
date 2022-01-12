@@ -17,7 +17,7 @@ using namespace TestNum;
 
 namespace boxes {
 
-FoodWebCalcBase::FoodWebCalcBase(QString name, QObject *parent)
+FoodWebCalcBase::FoodWebCalcBase(QString name, Box *parent)
     : Box(name, parent), _foodWeb(this), _a(this) {
     Input(timeStep).imports("..[timeStep]");
 }

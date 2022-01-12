@@ -10,7 +10,7 @@ namespace boxes {
 
 PUBLISH(boxesDocumentation)
 
-boxesDocumentation::boxesDocumentation(QString name, QObject *parent)
+boxesDocumentation::boxesDocumentation(QString name, Box *parent)
     : Documentation(name, parent)
 {
     title = "Basic building blocks";

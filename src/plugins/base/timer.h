@@ -5,19 +5,19 @@
 #ifndef BASE_TIMER_H
 #define BASE_TIMER_H
 #include <QMap>
-#include <QObject>
 #include <QPair>
 #include <QString>
 #include <QStringList>
 #include <QElapsedTimer>
 #include <QVector>
+#include "node.h"
 
 namespace base {
 
-class Timer : public QObject
+class Timer : public Node
 {
 public:
-    Timer(QObject *parent);
+    Timer(Node *parent);
     void addProfile(QString name);
     void reset();
     void start(QString name);

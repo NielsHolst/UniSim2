@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(SeriesByStep)
 
-SeriesByStep::SeriesByStep(QString name, QObject *parent)
+SeriesByStep::SeriesByStep(QString name, Box *parent)
     : SeriesBase(name, parent)
 {
     help("produces a series of numbers changing by every step");

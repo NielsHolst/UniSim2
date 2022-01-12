@@ -89,16 +89,16 @@ void TestExpressionParser::testPathWithPort() {
     UNEXPECTED_EXCEPTION;
 
     Expression::Stack elements = e.original();
-    QCOMPARE(elements.size(), (size_t) 1);
+    QCOMPARE(elements.size(), (uint) 1);
     Expression::Element el = elements[0];
     QCOMPARE(Expression::type(el), Expression::Type::Path);
     Path path = std::get<Path>(el);
     auto alternatives = path.alternatives();
-    QCOMPARE(alternatives.size(), (size_t) 1);
+    QCOMPARE(alternatives.size(), 1);
     auto alternative = alternatives.at(0);
     QVERIFY(!alternative.hasRoot());
     auto nodes = alternative.nodes();
-    QCOMPARE(nodes.size(), (size_t) 3);
+    QCOMPARE(nodes.size(), 3);
     QCOMPARE(nodes.at(0).objectName(), QString("a"));
     QCOMPARE(nodes.at(1).objectName(), QString("b"));
     QCOMPARE(nodes.at(2).objectName(), QString("c"));
@@ -116,16 +116,16 @@ void TestExpressionParser::testPathWithoutPort() {
     UNEXPECTED_EXCEPTION;
 
     Expression::Stack elements = e.original();
-    QCOMPARE(elements.size(), (size_t) 1);
+    QCOMPARE((int) elements.size(), 1);
     Expression::Element el = elements[0];
     QCOMPARE(Expression::type(el), Expression::Type::Path);
     Path path = std::get<Path>(el);
     auto alternatives = path.alternatives();
-    QCOMPARE(alternatives.size(), (size_t) 1);
+    QCOMPARE(alternatives.size(), 1);
     auto alternative = alternatives.at(0);
     QVERIFY(!alternative.hasRoot());
     auto nodes = alternative.nodes();
-    QCOMPARE(nodes.size(), (size_t) 3);
+    QCOMPARE(nodes.size(), 3);
     QCOMPARE(nodes.at(0).objectName(), QString("a"));
     QCOMPARE(nodes.at(1).objectName(), QString("b"));
     QCOMPARE(nodes.at(2).objectName(), QString("c"));

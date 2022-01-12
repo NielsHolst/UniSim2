@@ -26,12 +26,29 @@ namespace ast {
         return std::string(2 - s.length(), '0') + s;
     }
 
+    std::string Assignment::toString() const {
+        std::stringstream str;
+        str << *this;
+        return str.str();
+    }
+
     std::ostream& operator<<(std::ostream& os, const Assignment& x) {
         return print(os, x, 0);
     }
 
     std::ostream& print(std::ostream& os, const Assignment& x, int level) {
-        os << pad(level) << x.qualifier << x.portName;
+        os << pad(level) << x.qualifier;
+
+        int namesSize = 0;
+        bool separate = false;
+        for (auto name : x.names) {
+            os << name;
+            namesSize += name.size();
+            if (separate) os << " ";
+            separate = true;
+        }
+        namesSize += x.names.size() - 1;
+
         os << " " << x.equals;
         if (x.type() == Assignment::Type::Expression) {
             os << " " << boost::get<Expression>(x.expression) << std::endl;
@@ -39,7 +56,7 @@ namespace ast {
         else {
             const auto &e(boost::get<IfExpression>(x.expression));
             const int n = e.size(),
-                      padding = 2*level + x.portName.size() + 4;
+                      padding = 2*level + namesSize + 4;
             os << " if " << e.at(0) << " then " << e.at(1) << std::endl;
             for (int i=2; i<n-1; i+=2)
                 os << spaces(padding) << "elsif " << e.at(i) << " then " << e.at(i+1) << std::endl;
@@ -282,10 +299,26 @@ namespace ast {
 
     void Assignment::build(base::BoxBuilder *builder) {
         bool isAuxPort = (qualifier != '.');
+        QString typeName, portName;
+        switch (names.size()) {
+        case 1:
+            portName = str(names.at(0));
+            break;
+        case 2:
+            typeName = str(names.at(0));
+            portName = str(names.at(1));
+            break;
+        default:
+            ThrowException("Expected <name> or <type> <name> for variable").value(str(toString()));
+        }
+
         if (isAuxPort)
-            builder->aux(str(portName));
-        else
-            builder->port(str(portName));
+            builder->aux(portName, typeName);
+        else {
+            if (!typeName.isEmpty())
+                ThrowException("You cannot re-define the type of an existing port").value(str(toString()));
+            builder->port(portName);
+        }
         // Deal with assignment operator (=~) here...
         boost::get<Expression>(expression).build(builder);
     }

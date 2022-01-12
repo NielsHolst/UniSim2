@@ -11,7 +11,7 @@ namespace boxes {
 class NumberedFile : public base::Box
 {
 public:
-    NumberedFile(QString name, QObject *parent);
+    NumberedFile(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

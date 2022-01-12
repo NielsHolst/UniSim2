@@ -13,7 +13,7 @@ namespace boxes {
 class RandomiserMonteCarlo : public RandomiserBase
 {
 public:
-    RandomiserMonteCarlo(QString name, QObject *parent);
+    RandomiserMonteCarlo(QString name, Box *parent);
     ~RandomiserMonteCarlo();
     int numStrata() const;
 private:

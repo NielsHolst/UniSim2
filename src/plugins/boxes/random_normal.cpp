@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(RandomNormal)
 
-RandomNormal::RandomNormal(QString name, QObject *parent)
+RandomNormal::RandomNormal(QString name, Box *parent)
     : RandomBaseTyped<double>(name, parent)
 {
     help("produces random numbers from the normal distribution");

@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(VectorScaled)
 
-VectorScaled::VectorScaled(QString name, QObject *parent)
+VectorScaled::VectorScaled(QString name, Box *parent)
     : Box(name, parent)
 {
     help("scales a vector by a factor");

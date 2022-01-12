@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(FunctionalResponse)
 
-FunctionalResponse::FunctionalResponse(QString name, QObject *parent)
+FunctionalResponse::FunctionalResponse(QString name, Box *parent)
     : Box(name, parent) {
     help("computes a Gutierrez-BaumgÃ¤rtner functional response");
     Input(attacker).help("Attacker density").unit("#predators");

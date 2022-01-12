@@ -6,16 +6,16 @@
 #define BASE_TABLE_H
 
 #include <QMap>
-#include <QObject>
+#include "node.h"
 #include <QStringList>
 
 namespace base {
 
-class Table : public QObject
+class Table : public Node
 {
 public:
     enum Labelling {ColumnLabelled, RowLabelled, BothLabelled, NoLabelling};
-    Table (QObject *parent = nullptr);
+    Table (Node *parent = nullptr);
     virtual void read(QString fileName, Labelling labelling) = 0;
     virtual int numRow() const = 0;
     virtual int numCol() const = 0;

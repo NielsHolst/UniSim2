@@ -12,13 +12,13 @@ namespace base {
 class Command : public Node
 {
 public:
-    Command(QString name, QObject *parent = nullptr);
+    Command(QString name, Node *parent = nullptr);
     void arguments(QStringList args);
     QStringList arguments() const;
     void execute();
     bool hasError() const;
     static QStringList help();
-    static void submit(QStringList com, QObject *parent);
+    static void submit(QStringList com);
 protected:
     QStringList _args;
     void helpText(QString help);

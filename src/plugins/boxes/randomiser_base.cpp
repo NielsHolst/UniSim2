@@ -15,7 +15,7 @@ using namespace base;
 
 namespace boxes {
 
-RandomiserBase::RandomiserBase(QString name, QObject *parent)
+RandomiserBase::RandomiserBase(QString name, Box *parent)
     : Box(name, parent), matricesFilled(false)
 {
     setClassName("RandomiserBase");

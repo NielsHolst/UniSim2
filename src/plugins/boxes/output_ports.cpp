@@ -8,7 +8,7 @@ using namespace base;
 
 namespace boxes {
 
-OutputPorts::OutputPorts(QString name, QObject *parent)
+OutputPorts::OutputPorts(QString name, Box *parent)
     : Box(name, parent)
 {
     Input(ports).help("Ports to include in output");

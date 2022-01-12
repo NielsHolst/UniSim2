@@ -11,7 +11,7 @@ namespace boxes {
 class SeriesByStep : public SeriesBase
 {
 public:
-    SeriesByStep(QString name, QObject *parent);
+    SeriesByStep(QString name, Box *parent);
     void setCounter();
     void setSteps();
     void reset();

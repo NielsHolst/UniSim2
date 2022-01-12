@@ -22,7 +22,7 @@ void show(QString s, const QVector<double> &v) {
     std::cout << "\n";
 }
 
-DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, QObject *parent_, Policy policy_)
+DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, Box *parent_, Policy policy_)
     : DistributedDelayBase(parent_), p(p_), policy(policy_)
 {
 //    base::dialog().information("Create DistributedDelay2D");

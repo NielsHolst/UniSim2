@@ -19,7 +19,7 @@ PUBLISH(Split)
 
 const int N = 5;
 
-Split::Split(QString name, QObject *parent)
+Split::Split(QString name, Box *parent)
     : Box(name, parent) {
     help("splits a number into proportional pieces (max. 5)");
     Input(whole).help("The number to be split");

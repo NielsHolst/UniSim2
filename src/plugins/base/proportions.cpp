@@ -3,8 +3,8 @@
 
 namespace base {
 
-Proportions::Proportions(QObject *parent)
-    : QObject(parent), root(nullptr)
+Proportions::Proportions(base::Node *parent)
+    : base::Node("proportions", parent), QObject(nullptr), root(nullptr)
 {
     root = new Node(nullptr, 0, 1., true);
     root->setParent(this);

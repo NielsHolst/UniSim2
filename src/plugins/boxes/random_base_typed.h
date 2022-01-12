@@ -13,7 +13,7 @@ namespace boxes {
 template <class T> class RandomBaseTyped : public RandomBase
 {
 public: 
-    RandomBaseTyped(QString name, QObject *parent);
+    RandomBaseTyped(QString name, Box *parent);
     using RandomBase::update;
     void update(base::Port *port);
 
@@ -26,7 +26,7 @@ protected:
 };
 
 template <class ValueType>
-RandomBaseTyped<ValueType>::RandomBaseTyped(QString name, QObject *parent)
+RandomBaseTyped<ValueType>::RandomBaseTyped(QString name, Box *parent)
     : RandomBase(name, parent)
 {
     Input(fixed).equals(static_cast<ValueType>(0)).help("Fixed value ");

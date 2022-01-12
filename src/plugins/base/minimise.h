@@ -15,7 +15,7 @@ using boost::math::tools::brent_find_minima;
 namespace base {
 
     template <class Functor>
-    QPair<double, double> minimise(Functor f, double xMin, double xMax, double precision, int maxIter, QObject *caller) {
+    QPair<double, double> minimise(Functor f, double xMin, double xMax, double precision, int maxIter, Node *caller) {
         int bits = static_cast<int>( std::ceil(1. - std::log(precision)/std::log(2.)) );
         std::pair<double, double> minimum;
         boost::uintmax_t _maxIter = static_cast<boost::uintmax_t>( maxIter );

@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include "factory.h"
+#include <base/node.h>
 #include <base/publish.h>
 
 //#define RETURN_ID(x) #x
@@ -19,7 +20,7 @@ QList<QString> Factory::inventory() const{
     return productList().keys();
 }
 
-QObject* Factory::create(QString className, QString objectName, QObject *parent) {
+base::Node* Factory::create(QString className, QString objectName, base::Node *parent) {
     ProductList::const_iterator p = productList().find(className);
     return (p == productList().end())
             ? 0

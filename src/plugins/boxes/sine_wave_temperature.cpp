@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(SineWaveTemperature)
 
-SineWaveTemperature::SineWaveTemperature(QString name, QObject *parent)
+SineWaveTemperature::SineWaveTemperature(QString name, Box *parent)
     : Box(name, parent) {
     help("computes sine-wave interpolation from daily min-max temperatures");
     Input(recordsName).equals("weather").help("Name of Records box holding temperature");

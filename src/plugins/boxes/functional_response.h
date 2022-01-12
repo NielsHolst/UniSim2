@@ -11,7 +11,7 @@ namespace boxes {
 class FunctionalResponse : public base::Box
 {
 public: 
-    FunctionalResponse(QString name, QObject *parent);
+    FunctionalResponse(QString name, Box *parent);
     void reset();
     void update();
 private:

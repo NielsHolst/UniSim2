@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(Buffer)
 
-Buffer::Buffer(QString name, QObject *parent)
+Buffer::Buffer(QString name, Box *parent)
     : Box(name, parent)
 {
     help("is a first in-first out buffer");

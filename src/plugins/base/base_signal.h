@@ -12,7 +12,7 @@ namespace base {
 class BaseSignal : public base::Box
 {
 public:
-    BaseSignal(QString name, QObject *parent);
+    BaseSignal(QString name, Box *parent);
     void reset() final;
     void update() final;
     virtual void localReset() {}

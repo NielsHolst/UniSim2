@@ -21,7 +21,7 @@ PUBLISH(PageR)
 
 int PageR::_commonPageNumber;
 
-PageR::PageR(QString name, QObject *parent)
+PageR::PageR(QString name, Box *parent)
     : Box(name, parent)
 {
     help("produces a page of plots for R");

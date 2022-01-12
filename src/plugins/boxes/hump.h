@@ -11,7 +11,7 @@ namespace boxes {
 class Hump : public base::Box
 {
 public: 
-    Hump(QString name, QObject *parent=0);
+    Hump(QString name, Box *parent);
     // standard methods
     void initialize();
     void reset();

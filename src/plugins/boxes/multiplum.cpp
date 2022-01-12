@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(Multiplum)
 
-Multiplum::Multiplum(QString name, QObject *parent)
+Multiplum::Multiplum(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes multiplum of factors");

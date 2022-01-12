@@ -12,7 +12,7 @@ namespace boxes {
 class ThresholdSignal : public base::BaseSignal
 {
 public:
-    ThresholdSignal(QString name, QObject *parent);
+    ThresholdSignal(QString name, Box *parent);
     bool computeFlag();
     double computeSignal(bool flag);
 private:

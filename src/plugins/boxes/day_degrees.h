@@ -11,7 +11,7 @@ namespace boxes {
 class DayDegrees : public base::PhysiologicalTime
 {
 public: 
-    DayDegrees(QString name, QObject *parent);
+    DayDegrees(QString name, Box *parent);
     void reset();
     void updateStep();
 private:

@@ -11,7 +11,7 @@ namespace boxes {
 class SuperFunctionalResponse : public base::Box
 {
 public: 
-    SuperFunctionalResponse(QString name, QObject *parent);
+    SuperFunctionalResponse(QString name, Box *parent);
     void reset();
     void update();
 private:

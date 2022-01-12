@@ -9,15 +9,15 @@
 
 #define CA Caller(this, QString(__FILE__), __LINE__)
 
-class QObject;
-
 namespace base {
-	
+
+class Node;
+
 class Caller {
 public:
     Caller();
-    Caller(const QObject *caller, QString file, int line);
-    const QObject* caller() const {
+    Caller(const Node *caller, QString file, int line);
+    const Node* caller() const {
         return _caller;
     }
     QString file() const {
@@ -27,7 +27,7 @@ public:
         return _line;
     }
 private:
-    const QObject *_caller;
+    const Node *_caller;
     QString _file;
     int _line;
 };

@@ -5,7 +5,6 @@
 #ifndef BASE_SAVE_GRAMMAR_BASE_H
 #define BASE_SAVE_GRAMMAR_BASE_H
 #include <QFile>
-#include <QObject>
 #include <QSet>
 #include <QTextStream>
 
@@ -13,7 +12,7 @@ namespace base {
 
 class Box;
 
-class SaveGrammarBase : public QObject
+class SaveGrammarBase
 {
 public:
     SaveGrammarBase();

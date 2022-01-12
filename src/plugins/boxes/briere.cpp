@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(Briere)
 
-Briere::Briere(QString name, QObject *parent)
+Briere::Briere(QString name, Box *parent)
     : PhysiologicalTime(name, parent) {
     help("computes non-linear development rate per day");
     Input(T0).help("Lower temperature threshold");

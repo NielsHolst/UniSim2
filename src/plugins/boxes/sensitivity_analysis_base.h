@@ -17,7 +17,7 @@ namespace boxes {
 class SensitivityAnalysisBase : public base::Box
 {
 public:
-    SensitivityAnalysisBase(QString name, QObject *parent);
+    SensitivityAnalysisBase(QString name, Box *parent);
     void initialize();
 protected:
     // Inputs

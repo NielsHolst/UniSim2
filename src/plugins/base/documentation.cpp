@@ -7,7 +7,7 @@
 
 namespace base {
 
-Documentation::Documentation(QString name, QObject *parent)
+Documentation::Documentation(QString name, Box *parent)
     : Box(name, parent)
 {
     help("provides documentation");

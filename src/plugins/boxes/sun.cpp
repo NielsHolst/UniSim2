@@ -21,7 +21,7 @@ constexpr double RAD = PI/180.;
 
 PUBLISH(Sun)
 
-Sun::Sun(QString name, QObject *parent)
+Sun::Sun(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes sun-earth astronomy");

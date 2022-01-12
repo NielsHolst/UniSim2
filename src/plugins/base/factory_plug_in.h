@@ -10,16 +10,17 @@
 #include "exception.h"
 #include "product_base.h"
 
-class QObject;
 
 namespace base {
+
+class Node;
 
 class FactoryPlugIn
 {
 public:
     virtual QString id() const = 0;
     virtual QList<QString> inventory() const = 0;
-    virtual QObject* create(QString className, QString objectName, QObject *parent) = 0;
+    virtual Node* create(QString className, QString objectName, Node *parent) = 0;
 };
 
 } //namespace

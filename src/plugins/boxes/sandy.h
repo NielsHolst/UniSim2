@@ -11,7 +11,7 @@ namespace boxes {
 class Sandy : public base::Box
 {
 public:
-    Sandy(QString name, QObject *parent);
+    Sandy(QString name, Box *parent);
     void reset();
     void update();
 private:

@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(Weather)
 
-Weather::Weather(QString name, QObject *parent)
+Weather::Weather(QString name, Box *parent)
     : Box(name, parent)
 {
     Input(Tmin).importsMaybe("descendants::*[Tmin]");

@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(SeriesByIteration)
 
-SeriesByIteration::SeriesByIteration(QString name, QObject *parent)
+SeriesByIteration::SeriesByIteration(QString name, Box *parent)
     : SeriesBase(name, parent)
 {
     help("produces a given series of numbers changing by every iteration");

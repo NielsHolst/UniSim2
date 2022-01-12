@@ -7,7 +7,6 @@
 #include <stack>
 #include <variant>
 #include <vector>
-#include <QObject>
 #include "boxscript_ast.h"
 #include "operator.h"
 #include "path.h"
@@ -47,8 +46,8 @@ public:
     };
     using Stack = std::vector<Element>;
 
-    Expression(QObject *parent=nullptr);
-    void setParent(QObject *parent);
+    Expression(Node *parent=nullptr);
+    void setParent(Node *parent);
     void clear();
     int size() const     { return _stack.size();}
     bool isEmpty() const { return _stack.empty();}
@@ -85,7 +84,7 @@ public:
 
 private:
     // Data
-    QObject *_parent;
+    Node *_parent;
     Stack _stack, _original;
     bool _isClosed;
     QVector<FunctionCall> _functionCalls;

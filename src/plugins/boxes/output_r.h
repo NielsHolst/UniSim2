@@ -20,7 +20,7 @@ class PageR;
 class OutputR : public base::Box
 {
 public:
-    OutputR(QString name, QObject *parent);
+    OutputR(QString name, Box *parent);
     void amend();
     void initialize();
     void reset();

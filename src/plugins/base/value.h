@@ -150,6 +150,9 @@ public:
     Value& operator=(const Value &x) { assign(x);  return *this; }
     // Copy from another Value but keep my own type
 
+    static Value create(QString type);
+    // Create a value from type name
+
     bool operator==(const Value &x) const;
     bool operator!=(const Value &x) const  { return !(*this==x); }
     // Compare
@@ -176,14 +179,16 @@ private:
     >
     _variant; // Starts out uninitialised (= monostate)
     void assign(const Value &x);
+    // Unused?
     Port *_parent;
+    Node* parent() const;
 };
 
 template <class U> void Value::changeValue(U value)
 {
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized");
+        ThrowException("Value is uninitialized").context(parent());
         break;
     case Type::Bool:
         std::get<ValueTyped<bool>>(_variant).changeValue(value);
@@ -244,7 +249,7 @@ template <class U> void Value::changeValueAt(U value, int i)
     using std::get;
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized");
+        ThrowException("Value is uninitialized").context(parent());
         break;
     case Type::Bool:
     case Type::Int:
@@ -258,7 +263,7 @@ template <class U> void Value::changeValueAt(U value, int i)
         if (i==0)
             changeValue(value);
         else
-            ThrowException("Index out of range for a scalar").value(i);
+            ThrowException("Index out of range for a scalar").value(i).context(parent());;
         break;
     case Type::VecBool:
         get<ValueTyped<QVector<bool     >>>(_variant).ptr()[i] = convert<bool     >(value);
@@ -310,7 +315,7 @@ template <class U> U Value::as() const
 {
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized");
+        ThrowException("Value is uninitialized").context(parent());;
         break;
     case Type::Bool:
         return std::get<ValueTyped<bool>>(_variant).value<U>();

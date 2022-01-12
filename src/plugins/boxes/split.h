@@ -11,7 +11,7 @@ namespace boxes {
 class Split : public base::Box
 {
 public: 
-    Split(QString name, QObject *parent);
+    Split(QString name, Box *parent);
     void amend();
     void initialize();
     void reset();

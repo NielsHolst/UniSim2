@@ -18,17 +18,16 @@ Box *Box::_latest = nullptr;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
-Box::Box(QString name, QObject *parent)
+Box::Box(QString name, Box *parent)
     : Node(name, parent), _amended(false), _cloned(false), _ignore(false)
 {
     help("has no documented functionality");
     _timer = new Timer(this);
-    // If box has a box parent, it can be used to find the root
-    if (dynamic_cast<Box*>(parent) )
+    if (!_latest || parent)
         _latest = this;
-
-    QString s = parent ? Node::fullName(parent) : "No parent";
-        std::cout << "Create box" << qPrintable(name + " inside " + s) << std::endl;
+    // Debug
+//    QString s = parent ? Node::fullName(parent) : "No parent";
+//        std::cout << "Create box" << qPrintable(name + " inside " + s) << std::endl;
 }
 
 Box::~Box() {
@@ -45,7 +44,7 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     if (ports.contains(name))
         ThrowException("Box already has a port with this name").value(name).context(this);
     ports[name] = port;
-    std::cout << qPrintable("addPort " + this->className() + "::" + this->name() + " : " + name) << std::endl;
+//    std::cout << qPrintable("addPort " + this->className() + "::" + this->name() + " : " + name) << std::endl;
 }
 
 Port* Box::peakPort(QString name) {
@@ -89,7 +88,7 @@ QString Box::sideEffects() const {
 }
 
 Box *Box::findRoot() {
-    Box *p = dynamic_cast<Box*>(parent());
+    Box *p = parent<Box*>();
     return p ? p->findRoot() : this;
 }
 
@@ -97,35 +96,10 @@ Box *Box::root() {
     return _latest ? _latest->findRoot() : nullptr;
 }
 
-//Box* Box::currentRoot() {
-//    if (_currentRoot==nullptr)
-//        return nullptr;
-//    while (true) {
-//        Box *p = dynamic_cast<Box*>(_currentRoot->parent());
-//        if (!p) break;
-//        _currentRoot = p;
-//    }
-//    return _currentRoot;
-//}
-
-//void Box::saveCurrentRoot() {
-//    _savedCurrentRoot = _currentRoot;
-//}
-
-//void Box::restoreCurrentRoot() {
-//    _currentRoot = _savedCurrentRoot;
-//}
-
-Box* Box::boxParent() {
-    return dynamic_cast<Box*>(parent());
-}
-
-QString Box::profileReport() const {
+QString Box::profileReport() {
     QString rep = _timer->report();
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            rep += box->profileReport();
+    for (auto box : children<Box*>()) {
+        rep += box->profileReport();
     }
     return rep;
 }
@@ -139,11 +113,8 @@ void Box::amendFamily() {
         if (_amended) return;
         createTimers();
         _timer->start("amend");
-        for (auto child : children()) {
-            Box *box = dynamic_cast<Box*>(child);
-            if (box)
-                box->amendFamily();
-        }
+        for (auto box : children<Box*>())
+            box->amendFamily();
         if (_traceOn)
             dialog().information("amend " + fullName());
         if (!_ignore) amend();
@@ -185,11 +156,8 @@ void Box::initializeFamily() {
         ThrowException("Box should be amended before initialization");
     _timer->reset();
     _timer->start("initialize");
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->initializeFamily();
-    }
+    for (auto box : children<Box*>())
+        box->initializeFamily();
     updatePorts();
     if (_traceOn)
         dialog().information("initialize " + fullName());
@@ -199,11 +167,8 @@ void Box::initializeFamily() {
 
 void Box::resetFamily() {
     _timer->start("reset");
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->resetFamily();
-    }
+    for (auto box : children<Box*>())
+        box->resetFamily();
     resetPorts();
     updatePorts();
     if (_traceOn)
@@ -214,11 +179,8 @@ void Box::resetFamily() {
 }
 
 void Box::updateFamily() {
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->updateFamily();
-    }
+    for (auto box : children<Box*>())
+        box->updateFamily();
     updatePorts();
     if (_traceOn)
         dialog().information("update " + fullName());
@@ -233,11 +195,8 @@ void Box::updateFamily() {
 
 void Box::cleanupFamily() {
     _timer->start("cleanup");
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->cleanupFamily();
-    }
+    for (auto box : children<Box*>())
+        box->cleanupFamily();
     updatePorts();
     if (_traceOn)
         dialog().information("cleanup " + fullName());
@@ -248,11 +207,8 @@ void Box::cleanupFamily() {
 
 void Box::debriefFamily() {
     _timer->start("debrief");
-    for (auto child : children()) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box)
-            box->debriefFamily();
-    }
+    for (auto box : children<Box*>())
+        box->debriefFamily();
     updatePorts();
     if (_traceOn)
         dialog().information("debrief " + fullName());
@@ -261,34 +217,31 @@ void Box::debriefFamily() {
     _timer->stop("debrief");
 }
 
-void Box::enumeratePorts() {
-//    _portsInOrder.clear();
-//    for (Port *port : _ports.values())
-//        _portsInOrder << port;
-//    std::sort(_portsInOrder.begin(), _portsInOrder.end())     ;
+void Box::orderPorts() {
+    _portsInOrder.clear();
+    for (Port *port : _ports.values())
+        _portsInOrder << port;
+    std::sort(_portsInOrder.begin(), _portsInOrder.end())     ;
 }
 
 void Box::resetPorts() {
-    for (Port *port : _ports.values())
-//    for (Port *port : _portsInOrder)
+    for (Port *port : _portsInOrder)
         port->reset();
 }
 
 void Box::updatePorts() {
-    for (Port *port : _ports.values())
-//    for (Port *port : _portsInOrder)
+    for (Port *port : _portsInOrder)
         port->update();
 }
 
 void Box::verifyPorts() {
     if (_debugOn) {
-        for (Port *port : _ports.values())
-//        for (Port *port : _portsInOrder)
+        for (Port *port : _portsInOrder)
             port->verifyValue();
     }
 }
 
-Box* Box::clone(QString name, QObject *parent) {
+Box* Box::clone(QString name, Box *parent) {
     Box *myClone = MegaFactory::create<Box>(className(), name, parent);
     myClone->_cloned = true;
     // Loop through my ports
@@ -305,7 +258,7 @@ Box* Box::clone(QString name, QObject *parent) {
     return myClone;
 }
 
-Box* Box::cloneFamily(QString name, QObject *parent) {
+Box* Box::cloneFamily(QString name, Box *parent) {
     Box *myClone = clone(name, parent);
     for (Box *child : findMany<Box*>("./*"))
         child->cloneFamily(child->objectName(), myClone);

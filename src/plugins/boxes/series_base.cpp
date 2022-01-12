@@ -8,7 +8,7 @@ using namespace base;
 
 namespace boxes {
 
-SeriesBase::SeriesBase(QString name, QObject *parent)
+SeriesBase::SeriesBase(QString name, Box *parent)
     : ValuesBase(name, parent)
 {
     Input(numbers).help("Vector holding a series of values");

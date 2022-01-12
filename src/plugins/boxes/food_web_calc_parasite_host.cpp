@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(FoodWebCalcParasiteHost)
 
-FoodWebCalcParasiteHost::FoodWebCalcParasiteHost(QString name, QObject *parent)
+FoodWebCalcParasiteHost::FoodWebCalcParasiteHost(QString name, Box *parent)
     : FoodWebCalcBase(name, parent) {
     help("computes food web acquisition among Parasite/Host objects");
 }

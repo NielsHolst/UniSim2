@@ -78,7 +78,7 @@ void DialogBase::pushMessage() {
 
 void DialogBase::popMessage() {
     if (_messages.isEmpty())
-        ThrowException("Unexpected empty message stack").context(this);
+        ThrowException("Unexpected empty message stack");
     message(_messages.pop());
 }
 

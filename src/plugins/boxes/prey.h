@@ -11,7 +11,7 @@ namespace boxes {
 class Prey : public base::Box
 {
 public: 
-    Prey(QString name, QObject *parent);
+    Prey(QString name, Box *parent);
     void setFoodWebImports();
 private:
     // Inputs

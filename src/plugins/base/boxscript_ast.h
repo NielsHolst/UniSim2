@@ -156,7 +156,7 @@ namespace ast
 
     struct Assignment : x3::position_tagged {
         char qualifier;
-        std::string portName;
+        std::vector<std::string> names;
         char equals;
         boost::variant<Expression, IfExpression> expression;
 
@@ -166,9 +166,10 @@ namespace ast
             return static_cast<Type>(expression.which());
         }
         void build(base::BoxBuilder *builder);
+        std::string toString() const;
     };
-    std::ostream& print     (std::ostream& os, const Assignment& x, int level);
     std::ostream& operator<<(std::ostream& os, const Assignment& x);
+    std::ostream& print     (std::ostream& os, const Assignment& x, int level);
 
     struct Box;
     using ChildBox = boost::recursive_wrapper<Box>;

@@ -13,7 +13,7 @@ using namespace base;
 
 namespace boxes {
 
-SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, QObject *parent)
+SensitivityAnalysisBase::SensitivityAnalysisBase(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("SensitivityAnalysisBase");

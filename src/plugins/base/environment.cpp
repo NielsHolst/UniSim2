@@ -14,7 +14,6 @@
 #include "command.h"
 #include "dialog.h"
 #include "environment.h"
-#include "object_pool.h"
 #include "port.h"
 #include "save_grammar_atom.h"
 #include "save_grammar_notepad.h"
@@ -23,15 +22,13 @@
 
 namespace base {
 
-Environment *Environment::_environment = nullptr;
+std::unique_ptr<Environment> Environment::_environment = nullptr;
 
 const QString PATH_NOT_SET = "/FolderNotSet";
 
 Environment& environment() {
-    if (!Environment::_environment) {
-        Environment::_environment = new Environment;
-        objectPool()->attach("Environment", Environment::_environment);
-    }
+    if (!Environment::_environment)
+        Environment::_environment = std::unique_ptr<Environment>( new Environment );
     return *Environment::_environment;
 }
 
@@ -141,7 +138,7 @@ QString Environment::openOutputFile(QFile &file, QString extension) {
     file.setFileName(filePath);
     if ( !file.open(QIODevice::WriteOnly | QIODevice::NewOnly | QIODevice::Text) )
 //    if ( !file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        ThrowException("Cannot open file for output").value(filePath).context(this);
+        ThrowException("Cannot open file for output").value(filePath);
     return filePath;
 }
 
@@ -403,9 +400,8 @@ void Environment::checkInstallation() const {
     if (isNewInstallation()) {
         // Reconfigure home folder
         dialog().information("New installation detected; reconfiguring HOME folder...");
-        Environment *this2 = const_cast<Environment *>(this);
         int numErrors = Exception::count();
-        Command::submit(QStringList() << "reconfigure", this2);
+        Command::submit(QStringList() << "reconfigure");
         bool successful = (numErrors == Exception::count());
         if (successful) {
             // Reset work folder to home
@@ -487,7 +483,7 @@ QDir Environment::findAtomDir() const {
             }
         }
     }
-    dir = homeDir().filePath(path);
+    dir.setPath(homeDir().filePath(path));
     if (!dir.exists())
         dir.setPath("/Users/user-name/"+path);
     return dir;
@@ -505,7 +501,7 @@ QDir Environment::findNotepadDir() const {
             }
         }
     }
-    dir = homeDir().filePath(path);
+    dir.setPath(homeDir().filePath(path));
     if (!dir.exists())
         dir.setPath("/Users/user-name/"+path);
     return dir;

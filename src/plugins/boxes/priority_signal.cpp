@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(PrioritySignal)
 
-PrioritySignal::PrioritySignal(QString name, QObject *parent)
+PrioritySignal::PrioritySignal(QString name, Box *parent)
     : BaseSignal(name, parent){
     help("selects signal among child signals");
     Input(reverseOrder).equals(false).help("Find first signal!=0 from top (false) or bottom (true)?").unit("y|n");

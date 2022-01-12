@@ -14,12 +14,12 @@ using std::get;
 
 namespace base {
 
-Expression::Expression(QObject *parent)
+Expression::Expression(Node *parent)
     : _parent(parent), _isClosed(false)
 {
 }
 
-void Expression::setParent(QObject *parent) {
+void Expression::setParent(Node *parent) {
     _parent = parent;
 }
 

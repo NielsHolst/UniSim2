@@ -12,7 +12,7 @@ namespace boxes {
 class FoodWebCalcBase : public base::Box
 {
 public: 
-    FoodWebCalcBase(QString name, QObject *parent);
+    FoodWebCalcBase(QString name, Box *parent);
     void amend();
     void reset();
     void update() final;

@@ -12,7 +12,7 @@ namespace boxes {
 class SlidingSignal : public base::BaseSignal
 {
 public:
-    SlidingSignal(QString name, QObject *parent);
+    SlidingSignal(QString name, Box *parent);
     bool computeFlag();
     double computeSignal(bool);
     virtual double slide(double proportion) = 0;

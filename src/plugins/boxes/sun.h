@@ -12,7 +12,7 @@ namespace boxes {
 class Sun : public base::Box
 {
 public: 
-    Sun(QString name, QObject *parent);
+    Sun(QString name, Box *parent);
     void reset();
 	void update();
 

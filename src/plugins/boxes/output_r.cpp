@@ -25,7 +25,7 @@ namespace boxes {
 
 PUBLISH(OutputR)
 
-OutputR::OutputR(QString name, QObject *parent)
+OutputR::OutputR(QString name, Box *parent)
     : Box(name, parent)
 {
     help("creates output and scripts for R");

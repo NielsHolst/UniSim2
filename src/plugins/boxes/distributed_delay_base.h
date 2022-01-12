@@ -4,7 +4,6 @@
 */
 #ifndef DISTRIBUTED_DELAY_BASE_H
 #define DISTRIBUTED_DELAY_BASE_H
-#include <QObject>
 #include <QVector>
 
 namespace boxes {
@@ -12,7 +11,7 @@ namespace boxes {
 class DistributedDelayBase
 {
 public:
-    DistributedDelayBase(QObject *parent);
+    DistributedDelayBase(Box *parent);
     virtual ~DistributedDelayBase();
     void scale(double factor);
     const QVector<double>& take(double proportion);
@@ -23,7 +22,7 @@ public:
 protected:
     QVector<double> x;
     double xSum;
-    QObject *parent;
+    Box *parent;
 
 private:
     QVector<double> taken;

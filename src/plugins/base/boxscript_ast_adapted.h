@@ -10,7 +10,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     ast::boxscript, root
 )
 BOOST_FUSION_ADAPT_STRUCT(
-    ast::Assignment, qualifier, portName, equals, expression
+    ast::Assignment, qualifier, names, equals, expression
 )
 BOOST_FUSION_ADAPT_STRUCT(
     ast::BareDate, day, month

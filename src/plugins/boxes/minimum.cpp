@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(Minimum)
 
-Minimum::Minimum(QString name, QObject *parent)
+Minimum::Minimum(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes minimum of inputs");

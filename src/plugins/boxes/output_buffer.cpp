@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(OutputBuffer)
 
-OutputBuffer::OutputBuffer(QString name, QObject *parent)
+OutputBuffer::OutputBuffer(QString name, Box *parent)
     : OutputPorts(name, parent)
 {
     setClassName("OutputBuffer");

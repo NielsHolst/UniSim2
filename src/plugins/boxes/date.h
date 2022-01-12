@@ -12,7 +12,7 @@ namespace boxes {
 class Date : public base::Box
 {
 public:
-    Date(QString name, QObject *parent);
+    Date(QString name, Box *parent);
     void reset();
     void update();
 private:

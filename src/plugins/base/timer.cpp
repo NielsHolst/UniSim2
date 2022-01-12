@@ -8,8 +8,8 @@
 
 namespace base {
 
-Timer::Timer(QObject *parent)
-    : QObject(parent)
+Timer::Timer(Node *parent)
+    : Node("timer", parent)
 {
 }
 

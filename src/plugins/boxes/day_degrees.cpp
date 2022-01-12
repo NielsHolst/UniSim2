@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(DayDegrees)
 
-DayDegrees::DayDegrees(QString name, QObject *parent)
+DayDegrees::DayDegrees(QString name, Box *parent)
     : PhysiologicalTime(name, parent) {
     help("computes linear day-degrees");
     Input(T0).equals(0).help("Lower temperature threshold");

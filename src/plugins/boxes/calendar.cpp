@@ -21,7 +21,7 @@ namespace boxes {
 
 PUBLISH(Calendar)
 
-Calendar::Calendar(QString name, QObject *parent)
+Calendar::Calendar(QString name, Box *parent)
     : Box(name, parent)
 {
     help("keeps check on date and time");

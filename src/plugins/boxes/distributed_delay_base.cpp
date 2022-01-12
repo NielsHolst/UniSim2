@@ -7,7 +7,7 @@
 
 namespace boxes {
 
-DistributedDelayBase::DistributedDelayBase(QObject *parent_)
+DistributedDelayBase::DistributedDelayBase(Box *parent_)
     : xSum(0), parent(parent_)
 {
 //    base::dialog().information("Create DistributedDelayBase");

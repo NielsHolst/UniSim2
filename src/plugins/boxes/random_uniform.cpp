@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(RandomUniform)
 
-RandomUniform::RandomUniform(QString name, QObject *parent)
+RandomUniform::RandomUniform(QString name, Box *parent)
     : RandomBaseTyped<double>(name, parent)
 {
     help("produces random numbers from the uniform distribution");

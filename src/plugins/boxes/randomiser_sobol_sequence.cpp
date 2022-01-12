@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(RandomiserSobolSequence)
 
-RandomiserSobolSequence::RandomiserSobolSequence(QString name, QObject *parent)
+RandomiserSobolSequence::RandomiserSobolSequence(QString name, Box *parent)
     : RandomiserBase(name, parent), sobol(nullptr), variate(nullptr)
 {
     help("draws quasi-random numbers [0;1) from the Sobol' sequence");

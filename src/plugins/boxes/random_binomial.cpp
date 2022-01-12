@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(RandomBinomial)
 
-RandomBinomial::RandomBinomial(QString name, QObject *parent)
+RandomBinomial::RandomBinomial(QString name, Box *parent)
     : RandomBaseTyped<bool>(name, parent)
 {
     help("produces random numbers from the binomial distribution");

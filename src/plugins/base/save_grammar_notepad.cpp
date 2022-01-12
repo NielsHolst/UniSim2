@@ -24,9 +24,10 @@ QString SaveGrammarNotepad::grammarFilePath() {
 }
 
 void SaveGrammarNotepad::writeBeginning() {
-    QFile notepad_template(":notepad_grammar_template.xml");
+    const char fileName[] = ":notepad_grammar_template.xml";
+    QFile notepad_template(fileName);
     if ( !notepad_template.open(QIODevice::ReadOnly | QIODevice::Text) )
-        ThrowException("Cannot open file").context(this);
+        ThrowException("Cannot open file").value(fileName);
 
     QTextStream stream(&_output);
     stream

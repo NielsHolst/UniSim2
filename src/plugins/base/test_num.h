@@ -7,8 +7,10 @@
 
 #include <float.h>
 #include <cmath>
-#include <QObject>
-#include "exception.h"
+
+namespace base {
+    class Node;
+}
 
 namespace TestNum {
 
@@ -81,26 +83,11 @@ inline void snapToZero(double &n, double feps = 1e-6) {
         n = 0.;
 }
 
-inline void assureEqZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
-    if (eqZero(n, feps))
-        n = 0.;
-    if (n != 0.)
-        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
-}
+void assureEqZero(double &n, const char *varName, base::Node *context, double feps = 1e-6);
 
-inline void assureGeZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
-    if (geZero(n, feps) && n < 0.)
-        n = 0.;
-    if (n < 0)
-        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
-}
+void assureGeZero(double &n, const char *varName, base::Node *context, double feps = 1e-6);
 
-inline void assureLeZero(double &n, const char *varName, QObject *context, double feps = 1e-6) {
-    if (leZero(n, feps) && n > 0.)
-        n = 0.;
-    if (n > 0)
-        ThrowException("Cannot round number to zero: " + QString(varName) + " = " + QString::number(n)).context(context);
-}
+void assureLeZero(double &n, const char *varName, base::Node *context, double feps = 1e-6);
 
 // Fuzzy rounding in neighbourhood of constant
 
@@ -109,32 +96,11 @@ inline void snapTo(double &n, double d, double feps = 1e-6) {
         n = d;
 }
 
-inline void assureEq(double &n, double d, const char *varName, QObject *context, double feps = 1e-6) {
-    if (eq(n, d, feps))
-        n = d;
-    if (n != d)
-        ThrowException("Cannot round number to constant: " + QString(varName) +
-                                " = " + QString::number(n) +
-                                " != " + QString::number(d)).context(context);
-}
+void assureEq(double &n, double d, const char *varName, base::Node *context, double feps = 1e-6);
 
-inline void assureGe(double &n, double d, const char *varName, QObject *context, double feps = 1e-6) {
-    if (ge(n, d, feps) && n < d)
-        n = d;
-    if (n < d)
-        ThrowException("Cannot round number to constant: " + QString(varName) +
-                                " = " + QString::number(n) +
-                                " != " + QString::number(d)).context(context);
-}
+void assureGe(double &n, double d, const char *varName, base::Node *context, double feps = 1e-6);
 
-inline void assureLe(double &n, double d, const char *varName, QObject *context, double feps = 1e-6) {
-    if (le(n, d, feps) && n > d)
-        n = d;
-    if (n > d)
-        ThrowException("Cannot round number to constant: " + QString(varName) +
-                                " = " + QString::number(n) +
-                                " != " + QString::number(d)).context(context);
-}
+void assureLe(double &n, double d, const char *varName, base::Node *context, double feps = 1e-6);
 
 } // namespace
 

@@ -16,17 +16,17 @@
 #define ThrowException(X) \
     throw base::Exception((X)).file(__FILE__).line(__LINE__)
 
-class QObject;
-
 namespace base {
-	
+
+class Node;
+
 class Exception {
 public:
     Exception(QString message);
     Exception& file(const char *s);
     Exception& line(int i);
-    Exception& context(const QObject *object);
-    Exception& context(QObject *object);
+    Exception& context(const Node *object);
+    Exception& context(Node *object);
     Exception& caller(Caller c);
     Exception& hint(QString s);
     Exception& id(QString s);
@@ -37,7 +37,7 @@ public:
     QString id() const;
     QString what() const;
     static int count();
-    static void setContext(const QObject *object);
+    static void setContext(const Node *object);
 private:
     // data
     QString _message, _contextDescription,
@@ -45,7 +45,7 @@ private:
     Caller _caller;
     int _line;
     static int _count;
-    static const QObject *_fallbackContext;
+    static const Node *_fallbackContext;
     // methods
     template <class T> QString asString(T v) noexcept;
     QDateTime dateTime() const noexcept;

@@ -166,7 +166,7 @@ namespace boxscript { namespace parser
         _val(ctx).year = k;
     };
 
-    auto const assignment_def = (port_prefix > name) >> (char_('=')|char_('~')) >> (if_expression|expression);
+    auto const assignment_def = (port_prefix > +name) >> (char_('=')|char_('~')) >> (if_expression|expression);
     auto const bare_date_def = (integer >> '/' >> integer) [dm] |
                         ('/' >> integer >> '/' >> integer) [md];
     auto const bare_date_time_def = bare_date >> (lit("T")|lit(" ")) >> time;

@@ -11,7 +11,7 @@ namespace boxes {
 class RandomBinomial : public RandomBaseTyped<bool>
 {
 public: 
-    RandomBinomial(QString name, QObject *parent);
+    RandomBinomial(QString name, Box *parent);
 private:
     void updateValue();
 };

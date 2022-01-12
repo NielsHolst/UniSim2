@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(Host)
 
-Host::Host(QString name, QObject *parent)
+Host::Host(QString name, Box *parent)
     : Box(name, parent) {
     help("defines the host parameters for interaction with the parent Parasite");
     Input(density).help("Density");

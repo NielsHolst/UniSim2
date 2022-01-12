@@ -12,7 +12,7 @@ namespace boxes {
 class Parasite : public base::Box
 {
 public: 
-    Parasite(QString name, QObject *parent);
+    Parasite(QString name, Box *parent);
     void setFoodWebImports();
 private:
     // Inputs

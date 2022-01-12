@@ -14,7 +14,7 @@ using namespace base;
 
 namespace boxes {
 
-StageBase::StageBase(QString name, QObject *parent)
+StageBase::StageBase(QString name, Box *parent)
     : Box(name, parent), _ddBase(nullptr)
 {
     Input(initial).help("Initial amount of inflow");

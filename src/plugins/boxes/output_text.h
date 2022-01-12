@@ -19,7 +19,7 @@ namespace boxes {
 class OutputText : public OutputPorts
 {
 public:
-    OutputText(QString name, QObject *parent);
+    OutputText(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

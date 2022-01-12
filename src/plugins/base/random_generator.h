@@ -4,26 +4,28 @@
 */
 #ifndef BASE_RANDOM_GENERATOR_H
 #define BASE_RANDOM_GENERATOR_H
-#include <QObject>
+#include <memory>
+#include "node.h"
 #include <boost/random/mersenne_twister.hpp>
 
 namespace base {
 
-class RandomGenerator : public QObject
+class RandomGenerator : public Node
 {
 public: 
     typedef boost::mt19937 Generator;
-    friend RandomGenerator::Generator* randomGenerator();
+    friend RandomGenerator::Generator &randomGenerator();
     struct Shuffler {
         unsigned operator()(unsigned i);
     };
 private:
     RandomGenerator();
     Generator generator;
-    static RandomGenerator *theRandomGenerator;
+    static std::unique_ptr<RandomGenerator> theRandomGenerator;
 };
 
-RandomGenerator::Generator* randomGenerator();
+RandomGenerator::Generator &randomGenerator();
+
 void seedRandomGenerator(int seed);
 
 } //namespace

@@ -12,7 +12,7 @@ namespace boxes {
 class Mean : public base::Box
 {
 public: 
-    Mean(QString name, QObject *parent);
+    Mean(QString name, Box *parent);
     // standard methods
     void reset();
     void update();

@@ -12,7 +12,7 @@ namespace boxes {
 class Predator : public base::Box
 {
 public: 
-    Predator(QString name, QObject *parent);
+    Predator(QString name, Box *parent);
     void setFoodWebImports();
 private:
     // Inputs

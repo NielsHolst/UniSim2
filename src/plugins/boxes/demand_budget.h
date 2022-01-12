@@ -11,7 +11,7 @@ namespace boxes {
 class DemandBudget : public base::Box
 {
 public: 
-    DemandBudget(QString name, QObject *parent);
+    DemandBudget(QString name, Box *parent);
     void reset();
     void update();
 private:

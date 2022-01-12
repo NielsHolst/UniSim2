@@ -4,7 +4,6 @@
 */
 #ifndef DISTRIBUTED_DELAY_2D_H
 #define DISTRIBUTED_DELAY_2D_H
-#include <QObject>
 #include "distributed_delay_base.h"
 
 namespace boxes {
@@ -36,7 +35,7 @@ public:
     };
     typedef enum {Flexible, Symmetric, Asymmetric} Policy;
 
-    DistributedDelay2D(const FixedParameters &p, QObject *parent, Policy policy = Flexible);
+    DistributedDelay2D(const FixedParameters &p, Box *parent, Policy policy = Flexible);
     DistributedDelay2D(const DistributedDelay2D &dd);
     ~DistributedDelay2D();
     void update(const UpdateParameters &up);

@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(DateTimeSignal)
 
-DateTimeSignal::DateTimeSignal(QString name, QObject *parent)
+DateTimeSignal::DateTimeSignal(QString name, Box *parent)
     : BaseSignal(name, parent){
     help("sets a signal according to date (ignoring year) and time of day");
     Input(beginDate).equals(QDate(2001,1,1)).help("The beginning of the date interval").unit("d/m/y");

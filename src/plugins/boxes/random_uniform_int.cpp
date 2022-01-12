@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(RandomUniformInt)
 
-RandomUniformInt::RandomUniformInt(QString name, QObject *parent)
+RandomUniformInt::RandomUniformInt(QString name, Box *parent)
     : RandomBaseTyped<int>(name, parent)
 {
     help("produces random integer numbers from the uniform distribution");

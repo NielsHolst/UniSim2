@@ -12,7 +12,7 @@ namespace boxes {
 class DateSplit : public base::Box
 {
 public:
-    DateSplit(QString name, QObject *parent);
+    DateSplit(QString name, Box *parent);
     void reset();
     void update();
 private:

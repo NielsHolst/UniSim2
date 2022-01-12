@@ -27,7 +27,7 @@ class Timer;
 class Box : public Node, public ConstructionStep
 {
 public:
-    Box(QString name, QObject *parent);
+    Box(QString name, Box *parent);
     ~Box();
     void addPort(Port *port);
 
@@ -44,7 +44,6 @@ public:
     QString sideEffects() const;
 
     static Box *root();
-    Box* boxParent();
 
     template<class T> T findOne(QString path);
     template<class T> T findMaybeOne(QString path);
@@ -67,12 +66,12 @@ public:
     void debriefFamily();
 
 //    virtual void update(Port *) {}
-    void enumeratePorts();
+    void orderPorts();
     void updatePorts();
     void verifyPorts();
 
-    Box* clone(QString name, QObject *parent);
-    Box* cloneFamily(QString name, QObject *parent);
+    Box* clone(QString name, Box *parent);
+    Box* cloneFamily(QString name, Box *parent);
     bool cloned() const;
 
     static bool debug();
@@ -83,12 +82,12 @@ public:
     void stopTimer(QString name);
 
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
-    QString profileReport() const;
+    QString profileReport();
 private:
     // Data
     QString _help, _sideEffects;
     QMap<QString,Port*> _ports;
-//    QVector<Port*> _portsInOrder;
+    QVector<Port*> _portsInOrder;
     QVector<Port*> _trackedPorts;
     bool _amended, _cloned, _ignore;
     Timer *_timer;

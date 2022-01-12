@@ -11,7 +11,7 @@ namespace boxes {
 class RandomNormal : public RandomBaseTyped<double>
 {
 public: 
-    RandomNormal(QString name, QObject *parent);
+    RandomNormal(QString name, Box *parent);
 private:
     void updateValue();
 };

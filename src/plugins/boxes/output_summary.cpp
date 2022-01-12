@@ -3,7 +3,6 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QMap>
-#include <QObject>
 #include <base/exception.h>
 #include "output_summary.h"
 
@@ -15,7 +14,7 @@ OutputSummary::OutputSummary() {
     _summaries << Type::Current;
 }
 
-OutputSummary::OutputSummary(QVector<QString> summaries, QObject *parent)
+OutputSummary::OutputSummary(QVector<QString> summaries, Box *parent)
     : _parent(parent)
 {
     static QMap<QString, Type> lookup {

@@ -6,7 +6,7 @@
 
 namespace boxes {
 
-SlidingSignal::SlidingSignal(QString name, QObject *parent)
+SlidingSignal::SlidingSignal(QString name, Box *parent)
     : BaseSignal(name, parent)
 {
     help("base class for computing a signal that slides with an input");

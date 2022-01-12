@@ -24,7 +24,7 @@ constexpr double DEGREES = 1./RAD;
 
 PUBLISH(SolarTime)
 
-SolarTime::SolarTime(QString name, QObject *parent)
+SolarTime::SolarTime(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes true solar time and azimuth");

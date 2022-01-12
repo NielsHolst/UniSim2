@@ -11,7 +11,7 @@ namespace boxes {
 class SeriesByIteration : public SeriesBase
 {
 public:
-    SeriesByIteration(QString name, QObject *parent);
+    SeriesByIteration(QString name, Box *parent);
     void setCounter();
     void setIterations();
     void reset();

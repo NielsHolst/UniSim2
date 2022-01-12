@@ -13,7 +13,7 @@ namespace boxes {
 class OnOffByDate : public OnOffBase<QDate, base::BareDate>
 {
 public:
-    OnOffByDate(QString name, QObject *parent);
+    OnOffByDate(QString name, Box *parent);
 private:
     // Methods
     void setSwitch();

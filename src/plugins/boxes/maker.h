@@ -17,7 +17,7 @@ namespace boxes {
 class Maker : public base::Box
 {
 public:
-    Maker(QString name, QObject *parent);
+    Maker(QString name, Box *parent);
     void amend();
 
 private:

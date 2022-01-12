@@ -11,7 +11,7 @@ namespace boxes {
 class Weather : public base::Box
 {
 public:
-    Weather(QString name, QObject *parent);
+    Weather(QString name, Box *parent);
     void reset();
     void update();
 private:

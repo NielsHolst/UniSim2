@@ -17,7 +17,7 @@ Dialog::Dialog(QObject *parent)
     setObjectName("dialog");
     QMainWindow *wParent = dynamic_cast<QMainWindow*>(parent);
     if (!wParent)
-        ThrowException("Parent must be a QWidget").context(this);
+        ThrowException("Parent must be a QWidget");
     _widget = new DialogWidget(wParent);
     _widget->init();
 }

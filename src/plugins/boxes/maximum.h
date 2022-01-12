@@ -12,7 +12,7 @@ namespace boxes {
 class Maximum : public base::Box
 {
 public: 
-    Maximum(QString name, QObject *parent);
+    Maximum(QString name, Box *parent);
     // standard methods
     void reset();
     void update();

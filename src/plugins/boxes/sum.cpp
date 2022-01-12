@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(Sum)
 
-Sum::Sum(QString name, QObject *parent)
+Sum::Sum(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes sum of inputs");

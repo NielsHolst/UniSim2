@@ -13,7 +13,7 @@ namespace boxes {
 class OutputSelector : public base::Box
 {
 public:
-    OutputSelector(QString name, QObject *parent);
+    OutputSelector(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

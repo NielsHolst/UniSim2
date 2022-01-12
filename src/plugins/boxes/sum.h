@@ -12,7 +12,7 @@ namespace boxes {
 class Sum : public base::Box
 {
 public: 
-    Sum(QString name, QObject *parent);
+    Sum(QString name, Box *parent);
     // standard methods
     void reset();
     void update();

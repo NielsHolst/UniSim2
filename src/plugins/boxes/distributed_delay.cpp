@@ -12,7 +12,7 @@ using namespace base;
 
 namespace boxes {
 
-DistributedDelay::DistributedDelay(const Parameters &p_, QObject *parent)
+DistributedDelay::DistributedDelay(const Parameters &p_, Box *parent)
     : DistributedDelayBase(parent), p(p_)
 //! Create distributed delay from parameters
 {

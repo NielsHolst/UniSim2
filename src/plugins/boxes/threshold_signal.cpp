@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(ThresholdSignal)
 
-ThresholdSignal::ThresholdSignal(QString name, QObject *parent)
+ThresholdSignal::ThresholdSignal(QString name, Box *parent)
     : BaseSignal(name, parent){
     help("sets a signal according to a threshold value");
     Input(input).help("Input that is compared to threshold");

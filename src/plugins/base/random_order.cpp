@@ -9,10 +9,9 @@
 
 namespace base {
 
-RandomOrder::RandomOrder(int n, QObject *parent)
-    : QObject(parent), distribution(nullptr), variate(nullptr)
+RandomOrder::RandomOrder(int n, Node *parent)
+    : Node("randomOrder", parent), distribution(nullptr), variate(nullptr)
 {
-    setObjectName("randomOrder");
     resize((n<1) ? 1 : n);
 }
 
@@ -26,7 +25,7 @@ void RandomOrder::resize(int n) {
     delete distribution;
     delete variate;
     distribution = new Distribution(0, n-1);
-    variate = new Variate(*randomGenerator(), *distribution);
+    variate = new Variate(randomGenerator(), *distribution);
 
     // Fill vector
     numbers.resize(static_cast<unsigned>(n));

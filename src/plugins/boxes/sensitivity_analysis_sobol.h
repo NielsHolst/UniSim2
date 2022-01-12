@@ -12,7 +12,7 @@ namespace boxes {
 class SensitivityAnalysisSobol : public SensitivityAnalysisBase
 {
 public:
-    SensitivityAnalysisSobol(QString name, QObject *parent);
+    SensitivityAnalysisSobol(QString name, Box *parent);
     void initialize();
     void reset();
     void debrief();

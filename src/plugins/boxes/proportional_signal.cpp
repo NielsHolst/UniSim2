@@ -12,7 +12,7 @@ namespace boxes {
 	
 PUBLISH(ProportionalSignal)
 
-ProportionalSignal::ProportionalSignal(QString name, QObject *parent)
+ProportionalSignal::ProportionalSignal(QString name, Box *parent)
     : SlidingSignal(name, parent)
 {
     help("produces a signal value that responds proportionally to the input value");

@@ -11,7 +11,7 @@
 
 namespace base {
 
-Port::Port(QString name, QObject *parent)
+Port::Port(QString name, Node *parent)
     : Node(name, parent),
       _isValueOverridden(false),
       _doReset(true),
@@ -19,8 +19,10 @@ Port::Port(QString name, QObject *parent)
       _access(PortAccess::Input),
       _expression(this)
 {
-    QString s = parent ? Node::fullName(parent) : "No parent";
-    std::cout << "Create port " << qPrintable(s+"["+name+"]") << std::endl;
+    // Debug
+//    QString s = parent ? Node::fullName(parent) : "No parent";
+//    std::cout << "Create port " << qPrintable(s+"["+name+"]") << std::endl;
+
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
@@ -67,13 +69,18 @@ Port& Port::help(QString value) {
     return *this;
 }
 
-Port& Port::isAuxilliary() {
-    _isAuxilliary = true;
+Port& Port::isAuxilliary(bool value) {
+    _isAuxilliary = value;
     return *this;
 }
 
 void Port::outputNames(QStringList columnNames) {
     _outputNames = columnNames;
+}
+
+Port& Port::initialize(Value value) {
+    _value = value;
+    return *this;
 }
 
 Port& Port::equals(const Expression &expression) {
@@ -117,6 +124,10 @@ QString Port::unit() const {
 
 QString Port::help() const {
     return _help;
+}
+
+bool Port::isAuxilliary() const {
+    return _isAuxilliary;
 }
 
 QString Port::importPath() const {

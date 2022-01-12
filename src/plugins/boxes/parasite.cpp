@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(Parasite)
 
-Parasite::Parasite(QString name, QObject *parent)
+Parasite::Parasite(QString name, Box *parent)
     : Box(name, parent) {
     help("defines the demand and supply of a parasite");
     Input(density).help("Density");

@@ -2,7 +2,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QObject>
 #include "exception.h"
 #include "time_with_units.h"
 
@@ -28,7 +27,7 @@ char TimeWithUnits::unitToChar(TimeUnit unit) {
     return _unitToChar.value(unit);
 }
 
-TimeUnit TimeWithUnits::charToUnit(char ch, QObject *concerning) {
+TimeUnit TimeWithUnits::charToUnit(char ch, Node *concerning) {
     if (ch < 'a')
         ch = 'a' + ch - 'A';
     if (_charToUnit.isEmpty()) {

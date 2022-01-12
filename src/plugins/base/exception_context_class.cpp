@@ -7,13 +7,13 @@
 
 namespace base {
 
-ExceptionContextClass::ExceptionContextClass(const QObject *context) {
+ExceptionContextClass::ExceptionContextClass(const Node *context) {
     Exception::setContext(context);
     _contexts.push(context);
 }
 
 ExceptionContextClass::~ExceptionContextClass() {
-    const QObject *prevContext = _contexts.isEmpty() ? nullptr : _contexts.pop();
+    const Node *prevContext = _contexts.isEmpty() ? nullptr : _contexts.pop();
     Exception::setContext(prevContext);
 }
 

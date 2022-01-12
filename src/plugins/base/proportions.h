@@ -7,12 +7,13 @@
 #include <QObject>
 #include <QSet>
 #include <QVector>
+#include "node.h"
 
 namespace base {
 
-class Proportions : public QObject {
+class Proportions : public base::Node, QObject {
 public:
-    Proportions(QObject *parent);
+    Proportions(base::Node *parent);
     void add(double proportion);
     const QVector<double> &reconciled();
 private:

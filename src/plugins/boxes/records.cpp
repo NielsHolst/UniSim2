@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(Records)
 
-Records::Records(QString name, QObject *parent)
+Records::Records(QString name, Box *parent)
     : Box(name, parent)
 {
     help("reads inputs from records in a text file");

@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(DateSplit)
 
-DateSplit::DateSplit(QString name, QObject *parent)
+DateSplit::DateSplit(QString name, Box *parent)
     : Box(name, parent)
 {
     help("splits a date into day, month and year");

@@ -4,6 +4,7 @@
 */
 #include <QStringList>
 #include "convert.h"
+#include "port.h"
 #include "value.h"
 
 namespace base {
@@ -146,7 +147,7 @@ bool Value::operator==(const Value &x) const {
 #define VALUE_PTR(cppType, valueType) \
 template <> const cppType* Value::constPtr() const { \
     if (type() != valueType) \
-        ThrowException("Value is not of type " + QString(#cppType)).value(typeName()); \
+        ThrowException("Value is not of type " + QString(#cppType)).value(typeName()).context(parent()); \
     return std::get<ValueTyped<cppType>>(_variant).constPtr(); \
 }
 
@@ -173,26 +174,55 @@ QString Value::typeName() const {
 
 QString Value::typeName(Type type){
     switch(type) {
-    case Type::Uninitialized: return "Uninitialized";
-    case Type::Bool         : return "Bool";
-    case Type::Int          : return "Int";
-    case Type::Double       : return "Double";
-    case Type::String       : return "String";
-    case Type::Date         : return "Date";
-    case Type::Time         : return "Time";
-    case Type::DateTime     : return "DateTime";
-    case Type::BareDate     : return "BareDate";
-    case Type::Path         : return "Path";
-    case Type::VecBool      : return "VectorOfBool";
-    case Type::VecInt       : return "VectorOfInt";
-    case Type::VecDouble    : return "VectorOfDouble";
-    case Type::VecString    : return "VectorOfString";
-    case Type::VecDate      : return "VectorOfDate";
-    case Type::VecTime      : return "VectorOfTime";
-    case Type::VecDateTime  : return "VectorOfDateTime";
-    case Type::VecBareDate  : return "VectorOfBareDate";
+    case Type::Uninitialized: return "uninitialized";
+    case Type::Bool         : return "bool";
+    case Type::Int          : return "int";
+    case Type::Double       : return "double";
+    case Type::String       : return "string";
+    case Type::Date         : return "date";
+    case Type::Time         : return "tyime";
+    case Type::DateTime     : return "datetime";
+    case Type::BareDate     : return "baredate";
+    case Type::Path         : return "path";
+    case Type::VecBool      : return "vec_bool";
+    case Type::VecInt       : return "vec_int";
+    case Type::VecDouble    : return "vec_double";
+    case Type::VecString    : return "vec_string";
+    case Type::VecDate      : return "vec_date";
+    case Type::VecTime      : return "vec_time";
+    case Type::VecDateTime  : return "vec_datetime";
+    case Type::VecBareDate  : return "vec_baredate";
     }
     return QString();
+}
+
+Value Value::create(QString type) {
+    static QMap<QString, Value> map = {
+        {"", Value()},
+        {"bool", Value(bool())},
+        {"int", Value(int())},
+        {"double", Value(double())},
+        {"string", Value(QString())},
+        {"date", Value(QDate())},
+        {"datetime", Value(QDateTime())},
+        {"baredate", Value(BareDate())},
+        {"path", Path()},
+        {"vec_bool", Value(QVector<bool>())},
+        {"vec_int", Value(QVector<int>())},
+        {"vec_double", Value(QVector<double>())},
+        {"vec_string", Value(QVector<QString>())},
+        {"vec_date", Value(QVector<QDate>())},
+        {"vec_datetime", Value(QVector<QDateTime>())},
+        {"vec_baredate", Value(QVector<BareDate>())}
+    };
+    if (map.contains(type))
+        return map.value(type);
+    else
+        ThrowException("Unknown value type").value(type);
+}
+
+Node* Value::parent() const {
+    return nullptr; //_parent;
 }
 
 }

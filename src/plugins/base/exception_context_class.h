@@ -5,7 +5,6 @@
 #ifndef BASE_EXCEPTION_CONTEXT_CLASS_H
 #define BASE_EXCEPTION_CONTEXT_CLASS_H
 
-#include <QObject>
 #include <QStack>
 
 #define ExceptionContext(X) ExceptionContextClass thisExceptionContext(X)
@@ -14,10 +13,10 @@ namespace base {
 	
 class ExceptionContextClass {
 public:
-    ExceptionContextClass(const QObject *context);
+    ExceptionContextClass(const Node *context);
     ~ExceptionContextClass();
 private:
-    QStack<const QObject *> _contexts;
+    QStack<const Node *> _contexts;
 };
 
 }

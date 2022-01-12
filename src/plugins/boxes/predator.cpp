@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(Predator)
 
-Predator::Predator(QString name, QObject *parent)
+Predator::Predator(QString name, Box *parent)
     : Box(name, parent) {
     help("defines the demand and supply of a predator");
     Input(density).help("Density");

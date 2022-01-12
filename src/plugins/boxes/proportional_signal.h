@@ -12,7 +12,7 @@ namespace boxes {
 class ProportionalSignal : public SlidingSignal
 {
 public:
-    ProportionalSignal(QString name, QObject *parent);
+    ProportionalSignal(QString name, Box *parent);
     double slide(double proportion);
 };
 } //namespace

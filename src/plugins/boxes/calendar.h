@@ -15,7 +15,7 @@ namespace boxes {
 class Calendar : public base::Box
 {
 public: 
-    Calendar(QString name, QObject *parent);
+    Calendar(QString name, Box *parent);
 	//standard methods
     void initialize();
     void reset();

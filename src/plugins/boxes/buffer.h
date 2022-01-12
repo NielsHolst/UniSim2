@@ -13,7 +13,7 @@ namespace boxes {
 class Buffer : public base::Box
 {
 public:
-    Buffer(QString name, QObject *parent);
+    Buffer(QString name, Box *parent);
     void reset();
     void update();
 private:

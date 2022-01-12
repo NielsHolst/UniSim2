@@ -11,7 +11,7 @@ namespace base {
 class Documentation : public base::Box
 {
 public:
-    Documentation(QString name, QObject *parent);
+    Documentation(QString name, Box *parent);
 protected:
     // Inputs
     QString

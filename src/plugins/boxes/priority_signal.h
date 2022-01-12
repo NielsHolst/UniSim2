@@ -13,7 +13,7 @@ namespace boxes {
 class PrioritySignal : public base::BaseSignal
 {
 public:
-    PrioritySignal(QString name, QObject *parent);
+    PrioritySignal(QString name, Box *parent);
     void initialize();
     bool computeFlag();
     double computeSignal(bool flag);

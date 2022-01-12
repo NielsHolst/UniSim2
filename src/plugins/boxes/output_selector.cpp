@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(OutputSelector)
 
-OutputSelector::OutputSelector(QString name, QObject *parent)
+OutputSelector::OutputSelector(QString name, Box *parent)
     : Box(name, parent)
 {
     help("creates an output text file");

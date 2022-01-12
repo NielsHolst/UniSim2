@@ -12,7 +12,7 @@ namespace base {
 template <class T> class Matrix2D
 {
 public:
-    Matrix2D(QObject *parent=nullptr);
+    Matrix2D(Node *parent=nullptr);
     void resize(int rows, int cols);
     int numRow() const;
     int numCol() const;
@@ -24,13 +24,13 @@ private:
     // Data
     QVector<T> _data;
     int _nrow, _ncol;
-    QObject *_parent;
+    Node *_parent;
     // Methods
     void check(int row, int col) const;
 };
 
 template <class T>
-Matrix2D<T>::Matrix2D(QObject *parent)
+Matrix2D<T>::Matrix2D(Node *parent)
     : _parent(parent)
 {        
 }

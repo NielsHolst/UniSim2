@@ -12,7 +12,7 @@ namespace boxes {
 class Accumulator : public base::Box
 {
 public:
-    Accumulator(QString name, QObject *parent);
+    Accumulator(QString name, Box *parent);
     void reset();
     void update();
 

@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(PopUp)
 
-PopUp::PopUp(QString name, QObject *parent)
+PopUp::PopUp(QString name, Box *parent)
     : Box(name, parent) {
     help("shows message in pop-up window");
     Input(title).help("Title");

@@ -222,8 +222,8 @@ void TestBoxScriptX3::testNumber() {
     QCOMPARE(root.objectName, "sim");
 
     std::vector<ast::Assignment> ass = root.assignments;
-    QCOMPARE(ass.at(0).portName, "steps");
-    QCOMPARE(ass.at(1).portName, "a");
+    QCOMPARE(ass.at(0).names.at(0), "steps");
+    QCOMPARE(ass.at(1).names.at(0), "a");
 
     QCOMPARE(ass.at(0).type(), ast::Assignment::Type::Expression);
     QCOMPARE(ass.at(1).type(), ast::Assignment::Type::Expression);

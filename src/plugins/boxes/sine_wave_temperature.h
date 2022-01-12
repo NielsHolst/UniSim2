@@ -11,7 +11,7 @@ namespace boxes {
 class SineWaveTemperature : public base::Box
 {
 public: 
-    SineWaveTemperature(QString name, QObject *parent);
+    SineWaveTemperature(QString name, Box *parent);
     void amend();
     void reset();
     void update();

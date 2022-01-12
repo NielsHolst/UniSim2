@@ -17,7 +17,7 @@ namespace boxes {
 class VectorScaled : public base::Box
 {
 public:
-    VectorScaled(QString name, QObject *parent);
+    VectorScaled(QString name, Box *parent);
     void reset();
     void update();
 private:

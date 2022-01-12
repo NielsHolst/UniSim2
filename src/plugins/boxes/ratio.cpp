@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(Ratio)
 
-Ratio::Ratio(QString name, QObject *parent)
+Ratio::Ratio(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes a ratio; 0/0 yields 0");

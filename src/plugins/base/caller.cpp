@@ -11,7 +11,7 @@ Caller::Caller()
 {
 }
 
-Caller::Caller(const QObject *caller, QString file, int line)
+Caller::Caller(const Node *caller, QString file, int line)
     : _caller(caller), _file(file), _line(line)
 {
 }

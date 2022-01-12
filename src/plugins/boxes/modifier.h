@@ -15,7 +15,7 @@ namespace boxes {
 class Modifier : public base::Box
 {
 public: 
-    Modifier(QString name, QObject *parent=0);
+    Modifier(QString name, Box *parent);
     void initialize();
 private:
     // Input

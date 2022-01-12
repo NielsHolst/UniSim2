@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(Scenarios)
 
-Scenarios::Scenarios(QString name, QObject *parent)
+Scenarios::Scenarios(QString name, Box *parent)
     : Box(name, parent)
 {
     help("runs scenarios from a text file");

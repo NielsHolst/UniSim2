@@ -7,16 +7,16 @@
 #include <vector>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <QObject>
 #include <QVector>
 #include "random_generator.h"
+#include "node.h"
 
 namespace base {
 
-class RandomOrder : public QObject
+class RandomOrder : public Node
 {
 public: 
-    RandomOrder(int n, QObject *parent);
+    RandomOrder(int n, Node *parent);
     ~RandomOrder();
     void resize(int n);
     void shuffle();

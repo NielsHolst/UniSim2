@@ -2,7 +2,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QObject>
 #include "box.h"
 #include "box_builder.h"
 #include "computation_step.h"
@@ -10,6 +9,7 @@
 #include "environment.h"
 #include "mega_factory.h"
 #include "path.h"
+#include "value.h"
 
 namespace base {
 
@@ -80,12 +80,14 @@ BoxBuilder& BoxBuilder::port(QString name) {
     return *this;
 }
 
-BoxBuilder& BoxBuilder::aux(QString name) {
+BoxBuilder& BoxBuilder::aux(QString name, QString type) {
     if (!_currentBox) {
         ThrowException("BoxBuilder: new port declaration out of context");
     }
     _currentPort = new Port(name, _currentBox);
-    _currentPort->isAuxilliary();
+    _currentPort->isAuxilliary(true);
+    if (!type.isEmpty())
+        _currentPort->initialize(Value::create(type));
     return *this;
 }
 
@@ -99,8 +101,16 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort, Caller caller) {
 
 // Set value
 
-BoxBuilder& BoxBuilder::equals(const char *value, bool ignore) {
-    return equals(QString(value), ignore);
+BoxBuilder& BoxBuilder::equals(const char *value) {
+    return equals(QString(value));
+}
+
+BoxBuilder& BoxBuilder::equals(Expression expression) {
+    if (!_currentPort)
+        ThrowException("BoxBuilder: 'equals' must follow 'port'");
+    // Assign the value to the port we are currently defining
+    _currentPort->equals(expression);
+    return *this;
 }
 
 // State
@@ -137,6 +147,9 @@ Box* BoxBuilder::content(Amend amendOption, bool allowException) {
     }
     else
         ThrowException("Construction failed");
+    // If we are returning a root box then enumerate it
+    if (!_hasParent)
+        Node::enumerate();
     return _content;
 }
 

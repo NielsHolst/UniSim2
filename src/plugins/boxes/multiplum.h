@@ -12,7 +12,7 @@ namespace boxes {
 class Multiplum : public base::Box
 {
 public:
-    Multiplum(QString name, QObject *parent);
+    Multiplum(QString name, Box *parent);
     void reset();
     void update();
 private:

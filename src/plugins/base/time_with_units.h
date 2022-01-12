@@ -8,7 +8,7 @@
 #include <QMap>
 #include <QString>
 
-class QObject;
+class Node;
 
 namespace base {
 
@@ -21,7 +21,7 @@ public:
     TimeUnit unit() const;
     long long toSeconds() const;
     static char unitToChar(TimeUnit unit);
-    static TimeUnit charToUnit(char ch, QObject *concerning = 0);
+    static TimeUnit charToUnit(char ch, Node *concerning = 0);
     static double conversionFactor(TimeUnit from, TimeUnit to);
 private:
     int _time;

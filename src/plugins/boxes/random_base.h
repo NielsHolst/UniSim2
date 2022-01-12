@@ -17,7 +17,7 @@ class RandomiserBase;
 class RandomBase : public base::Box
 {
 public: 
-    RandomBase(QString name, QObject *parent);
+    RandomBase(QString name, Box *parent);
     virtual ~RandomBase() {}
     void amend() final;
     void initialize() final;

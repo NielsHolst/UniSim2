@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(SensitivityAnalysisSobol)
 
-SensitivityAnalysisSobol::SensitivityAnalysisSobol(QString name, QObject *parent)
+SensitivityAnalysisSobol::SensitivityAnalysisSobol(QString name, Box *parent)
     : SensitivityAnalysisBase(name, parent),
       N(sampleSize), k(inputsAnalysed)
 {

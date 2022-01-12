@@ -19,7 +19,7 @@ namespace boxes {
 class PlotR : public OutputPorts
 {
 public:
-    PlotR(QString name, QObject *parent);
+    PlotR(QString name, Box *parent);
     void reset();
     void initialize();
 //    QString toString();

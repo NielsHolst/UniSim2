@@ -13,7 +13,7 @@ namespace boxes {
 class RandomiserStratified : public RandomiserBase
 {
 public:
-    RandomiserStratified(QString name, QObject *parent);
+    RandomiserStratified(QString name, Box *parent);
     ~RandomiserStratified();
     int numStrata() const;
 private:

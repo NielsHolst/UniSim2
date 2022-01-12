@@ -11,7 +11,7 @@ namespace boxes {
 class OnOff : public OnOffBase<double>
 {
 public:
-    OnOff(QString name, QObject *parent);
+    OnOff(QString name, Box *parent);
 private:
     // Methods
     void setSwitch();

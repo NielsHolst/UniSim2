@@ -12,7 +12,7 @@ namespace boxes {
 class RunningAverageTimed : public base::Box
 {
 public: 
-    RunningAverageTimed(QString name, QObject *parent);
+    RunningAverageTimed(QString name, Box *parent);
     void reset();
     void update();
 private:

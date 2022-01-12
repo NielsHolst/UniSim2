@@ -12,7 +12,7 @@ namespace boxes {
 class Minimum : public base::Box
 {
 public: 
-    Minimum(QString name, QObject *parent);
+    Minimum(QString name, Box *parent);
     // standard methods
     void reset();
     void update();

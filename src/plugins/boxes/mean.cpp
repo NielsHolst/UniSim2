@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(Mean)
 
-Mean::Mean(QString name, QObject *parent)
+Mean::Mean(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes average of inputs");

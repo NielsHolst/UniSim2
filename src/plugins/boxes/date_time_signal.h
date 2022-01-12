@@ -12,7 +12,7 @@ namespace boxes {
 class DateTimeSignal : public base::BaseSignal
 {
 public:
-    DateTimeSignal(QString name, QObject *parent);
+    DateTimeSignal(QString name, Box *parent);
     bool computeFlag();
     double computeSignal(bool flag);
 private:

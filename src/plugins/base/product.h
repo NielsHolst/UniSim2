@@ -4,7 +4,6 @@
 */
 #ifndef BASE_PRODUCT_H
 #define BASE_PRODUCT_H
-#include <QObject>
 #include <QString>
 #include "product_base.h"
 
@@ -12,12 +11,14 @@
 
 namespace base {
 
+class Box;
+
 template <class T>
 class Product : public ProductBase
 {
 public:
     Product(QString name, ProductList &list);
-    QObject* create(QString objectName, QObject *parent) const;
+    Node* create(QString objectName, Box *parent) const;
 };
 
 template <class T>
@@ -27,7 +28,7 @@ Product<T>::Product(QString name, ProductList &list)
 }
 
 template <class T>
-QObject* Product<T>::create(QString objectName, QObject *parent) const
+Node* Product<T>::create(QString objectName, Box *parent) const
 {
     return new T(objectName, parent);
 }

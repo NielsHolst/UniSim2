@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(StageAndPhase)
 
-StageAndPhase::StageAndPhase(QString name, QObject *parent)
+StageAndPhase::StageAndPhase(QString name, Box *parent)
     : StageBase(name, parent), _firstUpdate(true)
 {
     help("models a 2-D distributed delay");

@@ -12,7 +12,7 @@ namespace boxes {
 class OffsetDateTime : public base::Box
 {
 public: 
-    OffsetDateTime(QString name, QObject *parent);
+    OffsetDateTime(QString name, Box *parent);
     void reset();
     void update();
 private:

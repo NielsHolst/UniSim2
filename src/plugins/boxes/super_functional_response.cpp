@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(SuperFunctionalResponse)
 
-SuperFunctionalResponse::SuperFunctionalResponse(QString name, QObject *parent)
+SuperFunctionalResponse::SuperFunctionalResponse(QString name, Box *parent)
     : Box(name, parent) {
     help("computes a Frazer-Gilbert functional response");
     Input(attacker).help("Attacker density").unit("#attackers");

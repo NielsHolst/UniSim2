@@ -12,7 +12,7 @@ namespace boxes {
 class OutputPorts : public base::Box
 {
 public:
-    OutputPorts(QString name, QObject *parent);
+    OutputPorts(QString name, Box *parent);
 protected:
     // Inputs
     base::Path ports;

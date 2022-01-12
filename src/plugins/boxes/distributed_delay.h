@@ -21,7 +21,7 @@ public:
         State() : outflowRate(0), growthRate(0) {}
     };
 
-    DistributedDelay(const Parameters &p, QObject *parent);
+    DistributedDelay(const Parameters &p, Box *parent);
     DistributedDelay(const DistributedDelay &dd);
     void update(double inflow, double dt, double fgr);
     State state() const;

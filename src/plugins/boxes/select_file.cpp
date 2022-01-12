@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(SelectFile)
 
-SelectFile::SelectFile(QString name, QObject *parent)
+SelectFile::SelectFile(QString name, Box *parent)
     : Box(name, parent)
 {
     help("selects a file from a folder");

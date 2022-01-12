@@ -13,7 +13,7 @@ namespace boxes {
 class Population : public base::Box
 {
 public:
-    Population(QString name, QObject *parent);
+    Population(QString name, Box *parent);
     void reset();
     void update();
 private:

@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(Simulation)
 
-Simulation::Simulation(QString name, QObject *parent)
+Simulation::Simulation(QString name, Box *parent)
     : Box(name, parent)
 {
     help("runs a simulation");
@@ -38,11 +38,6 @@ Simulation::Simulation(QString name, QObject *parent)
     Output(executionTime).help("Duration of simulation run (ms)");
     Output(hasError).help("Did an error occur during simulation run?");
     Output(errorMsg).help("Error message");
-}
-
-void Simulation::amend() {
-    int i = 0;
-    enumerate(i);
 }
 
 void Simulation::initialize() {

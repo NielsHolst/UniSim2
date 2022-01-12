@@ -11,7 +11,7 @@ namespace boxes {
 class FoodWebCalcParasiteHost : public FoodWebCalcBase
 {
 public: 
-    FoodWebCalcParasiteHost(QString name, QObject *parent);
+    FoodWebCalcParasiteHost(QString name, Box *parent);
     void amend();
     void reset();
 protected:

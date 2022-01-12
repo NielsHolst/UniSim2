@@ -11,7 +11,7 @@ namespace boxes {
 class Host : public base::Box
 {
 public: 
-    Host(QString name, QObject *parent);
+    Host(QString name, Box *parent);
     void setFoodWebImports();
 private:
     // Inputs

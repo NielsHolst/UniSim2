@@ -8,7 +8,7 @@
 #include <QMap>
 #include <QString>
 
-class QObject;
+class Node;
 
 namespace base {
 
@@ -19,7 +19,7 @@ class ProductBase
 {
 public:
     ProductBase(QString name, ProductList &list);
-    virtual QObject* create(QString objectName, QObject *parent) const = 0;
+    virtual Node* create(QString objectName, Node *parent) const = 0;
     QString id() const;
 private:
     QString _id;

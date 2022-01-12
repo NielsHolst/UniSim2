@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(Date)
 
-Date::Date(QString name, QObject *parent)
+Date::Date(QString name, Box *parent)
     : Box(name, parent)
 {
     help("constructs a date from day, month and year");

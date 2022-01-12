@@ -6,7 +6,7 @@
 
 namespace base {
 
-PhysiologicalTime::PhysiologicalTime(QString name, QObject *parent)
+PhysiologicalTime::PhysiologicalTime(QString name, Box *parent)
     : Box(name, parent) {
     Input(T).imports("weather[Tavg]");
     Input(timeStepDays).imports("calendar[timeStepDays]").help("Length of a time steps in days");

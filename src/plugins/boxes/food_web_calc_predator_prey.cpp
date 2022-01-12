@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(FoodWebCalcPredatorPrey)
 
-FoodWebCalcPredatorPrey::FoodWebCalcPredatorPrey(QString name, QObject *parent)
+FoodWebCalcPredatorPrey::FoodWebCalcPredatorPrey(QString name, Box *parent)
     : FoodWebCalcBase(name, parent) {
     help("computes food web acquisition among Predator/Prey objects");
 }

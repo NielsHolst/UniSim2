@@ -5,11 +5,11 @@
 #ifndef BASE_BOX_BUILDER_H
 #define BASE_BOX_BUILDER_H
 #include <QList>
-#include <QObject>
 #include <QStack>
 #include <QString>
 #include "caller.h"
 #include "exception.h"
+#include "expression.h"
 #include "port.h"
 
 namespace base {
@@ -30,11 +30,12 @@ public:
     BoxBuilder& endbox();
     // Port
     BoxBuilder& port(QString name);
-    BoxBuilder& aux(QString name);
+    BoxBuilder& aux(QString name, QString type=QString());
     BoxBuilder& imports(QString pathToPort, Caller caller=Caller());
     // Set value
-    template <class T> BoxBuilder& equals(T value, bool ignore=false);
-    BoxBuilder& equals(const char *value, bool ignore=false);
+    template <class T> BoxBuilder& equals(T value);
+    BoxBuilder& equals(const char *value);
+    BoxBuilder& equals(Expression expression);
     // State
     const Box* currentBox() const;
     const Port* currentPort() const;
@@ -49,9 +50,14 @@ private:
     QStack<Box*> _stack;
 };
 
-template <class T> BoxBuilder& BoxBuilder::equals(T value, bool ignore) {
-    if (!ignore && !_currentPort)
+template <class T> BoxBuilder& BoxBuilder::equals(T value) {
+    // We need a current to assign value to
+    if (!_currentPort)
         ThrowException("BoxBuilder: 'equals' must follow 'port'");
+    // For an auxillary port, we did not know its type until now
+    if (_currentPort->isAuxilliary())
+        _currentPort->initialize(value);
+    // Assign the value to the port we are currently defining
     _currentPort->equals(value);
     return *this;
 }

@@ -384,7 +384,7 @@ void DialogWidget::writeWelcome() {
     environment().checkInstallation();
 
     information("Saving box script grammar...");
-    Command::submit(QStringList() << "save" << "grammar", this);
+    Command::submit(QStringList() << "save" << "grammar");
 
     QString info = "\nWork folder:\n  " + environment().folderInfo(Environment::Work) +
                    "\nInput folder:\n  " + environment().folderInfo(Environment::Input) +
@@ -486,7 +486,7 @@ void DialogWidget:: submitCommand() {
     if (!items.isEmpty()) {
         _history.add(line);
         try {
-            Command::submit(items, this);
+            Command::submit(items);
         }
         catch (Exception &){
             dialog().error("Could not execute command: " + items.join(" "));

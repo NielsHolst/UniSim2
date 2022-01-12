@@ -12,7 +12,7 @@ namespace boxes {
 class SeriesBase : public ValuesBase
 {
 public:
-    SeriesBase(QString name, QObject *parent);
+    SeriesBase(QString name, Box *parent);
     void setValues();
 private:
     // Inputs

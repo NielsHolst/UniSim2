@@ -14,7 +14,7 @@ namespace boxes {
 class PopUp : public base::Box
 {
 public: 
-    PopUp(QString name, QObject *parent);
+    PopUp(QString name, Box *parent);
     void amend();
     void initialize();
     void reset();

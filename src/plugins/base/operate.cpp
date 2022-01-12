@@ -5,7 +5,6 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <QDate>
 #include <QDateTime>
-#include <QObject>
 #include <QString>
 #include <QTime>
 #include "bare_date.h"

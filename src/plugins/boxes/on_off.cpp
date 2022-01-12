@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(OnOff)
 
-OnOff::OnOff(QString name, QObject *parent)
+OnOff::OnOff(QString name, Box *parent)
     : OnOffBase<double>(name, parent)
 {
 }

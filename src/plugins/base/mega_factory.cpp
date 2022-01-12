@@ -16,12 +16,10 @@
 #include "factory_plug_in.h"
 #include "mega_factory.h"
 #include "node.h"
-#include "object_pool.h"
-
 
 namespace base {
 
-MegaFactory *MegaFactory::_me = nullptr;
+std::unique_ptr<MegaFactory> MegaFactory::_me = nullptr;
 QString MegaFactory::_usingPluginName;
 
 MegaFactory::MegaFactory() {
@@ -65,23 +63,23 @@ void MegaFactory::loadPlugins() {
     me();
 }
 
-QObject* MegaFactory::createObject(QString className, QString objectName, QObject *parent)
+Node *MegaFactory::createObject(QString className, QString objectName, Box *parent)
 {
     FactoryPlugIn *factory;
-    QObject *creation;
+    Node *creation;
     // Box objects are not created by a factory, because the Box class is defined in the base plug-in
     if (className == "Box" || className == "base::Box") {
         creation = new Box(objectName, parent);
     }
     else {
-        switch (me()->productIndex.count(className)) {
+        switch (me().productIndex.count(className)) {
         case 0:
             // Error: Unknown class
             ThrowException("Unknown class").value(className)
                     .value2("\nUncreated object: "+objectName+"\nof parent: "+Node::fullName(parent));
         case 1:
             // Success: Create object
-            factory = me()->productIndex.value(className);
+            factory = me().productIndex.value(className);
             creation = factory->create(className, objectName, parent);
             break;
         default:
@@ -113,7 +111,7 @@ QStringList MegaFactory::qualifiedClassNames(QString className) {
     if (className.contains("::"))
         result << className;
     else {
-        QList<FactoryPlugIn*> factories = me()->productIndex.values(className);
+        QList<FactoryPlugIn*> factories = me().productIndex.values(className);
         for (auto factory : factories)
             result << (factory->id() + "::" + className);
     }
@@ -125,20 +123,18 @@ void MegaFactory::usingPlugin(QString pluginName) {
 }
 
 const QList<FactoryPlugIn*>& MegaFactory::factories() {
-    return me()->_factories;
+    return me()._factories;
 }
 
-MegaFactory* MegaFactory::me() {
-    if (!_me) {
-        _me = new MegaFactory;
-        objectPool()->attach("MegaFactory", _me);
-    }
-    return _me;
+MegaFactory& MegaFactory::me() {
+    if (!_me)
+        _me = std::unique_ptr<MegaFactory>( new MegaFactory );
+    return *_me;
 }
 
  QStringList MegaFactory::find(QString className) {
      QStringList names;
-     auto factories = me()->productIndex.values(className);
+     auto factories = me().productIndex.values(className);
      for (auto factory : factories)
          names << factory->id();
      return names;

@@ -11,7 +11,7 @@ namespace boxes {
 class FoodWebCalcPredatorPrey : public FoodWebCalcBase
 {
 public: 
-    FoodWebCalcPredatorPrey(QString name, QObject *parent);
+    FoodWebCalcPredatorPrey(QString name, Box *parent);
     void amend();
     void reset();
 protected:

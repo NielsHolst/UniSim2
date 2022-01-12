@@ -17,7 +17,7 @@ namespace boxes {
 PUBLISH(PlotR)
 
 
-PlotR::PlotR(QString name, QObject *parent)
+PlotR::PlotR(QString name, Box *parent)
     : OutputPorts(name, parent)
 {
     help("produces an R plot");

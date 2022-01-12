@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(RunningAverage)
 
-RunningAverage::RunningAverage(QString name, QObject *parent)
+RunningAverage::RunningAverage(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes running average by no. of steps");

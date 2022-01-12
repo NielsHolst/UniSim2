@@ -15,7 +15,7 @@ namespace boxes {
 
 PUBLISH(SensitivityAnalysisSimple)
 
-SensitivityAnalysisSimple::SensitivityAnalysisSimple(QString name, QObject *parent)
+SensitivityAnalysisSimple::SensitivityAnalysisSimple(QString name, Box *parent)
     : SensitivityAnalysisBase(name, parent)
 {
     help("runs a simple sensitivity analysis");

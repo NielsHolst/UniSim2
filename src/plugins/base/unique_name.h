@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QList>
+#include "node.h"
 
 namespace base {
 
@@ -24,7 +25,7 @@ private:
     struct Entry {
         QString name;
         int index;
-        const QObject *object;
+        const Node *object;
     };
     QVector<Entry> _entries;
     int _nextEntry;

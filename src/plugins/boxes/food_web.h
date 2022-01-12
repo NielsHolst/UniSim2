@@ -11,7 +11,7 @@ namespace boxes {
 class FoodWeb : public base::Box
 {
 public: 
-    FoodWeb(QString name, QObject *parent);
+    FoodWeb(QString name, Box *parent);
     void amend();
 private:
     // Inputs

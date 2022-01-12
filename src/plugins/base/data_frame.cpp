@@ -11,7 +11,7 @@
 
 namespace base {
 
-DataFrame::DataFrame(QObject *parent)
+DataFrame::DataFrame(Node *parent)
     : Table(parent)
 {
     setObjectName("DataFrame");

@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(OnOffByDate)
 
-OnOffByDate::OnOffByDate(QString name, QObject *parent)
+OnOffByDate::OnOffByDate(QString name, Box *parent)
     : OnOffBase<QDate, base::BareDate>(name, parent)
 {
     port("x")   ->unit("date");

@@ -11,7 +11,7 @@ namespace base {
 class PhysiologicalTime : public Box
 {
 public:
-    PhysiologicalTime(QString name, QObject *parent);
+    PhysiologicalTime(QString name, Box *parent);
     void update() final;
     virtual void updateStep() = 0;
 protected:

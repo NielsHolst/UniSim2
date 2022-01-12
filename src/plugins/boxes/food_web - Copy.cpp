@@ -19,7 +19,7 @@ namespace boxes {
 
 PUBLISH(FoodWeb)
 
-FoodWeb::FoodWeb(QString name, QObject *parent)
+FoodWeb::FoodWeb(QString name, Box *parent)
     : Box(name, parent), _foodWeb(this), _a(this) {
     help("resolves food web acquisitions among Predator and Parasite objects");
     Input(timeStep).equals(1.).help("Simulation time step");

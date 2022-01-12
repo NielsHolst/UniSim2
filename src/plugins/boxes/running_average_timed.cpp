@@ -16,7 +16,7 @@ namespace boxes {
 
 PUBLISH(RunningAverageTimed)
 
-RunningAverageTimed::RunningAverageTimed(QString name, QObject *parent)
+RunningAverageTimed::RunningAverageTimed(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes running average in time window");

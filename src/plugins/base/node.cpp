@@ -9,45 +9,79 @@
 
 namespace base {
 
-Node::Node(QString name, QObject *parent)
-    : QObject(parent), _order(-1)
+Node::Node(QString name, Node *parent)
+    : _name(name), _parent(parent), _order(-1)
 {
-    setObjectName(name);
+    if (parent)
+        parent->addChild(this);
 }
 
-void Node::setClassName(QString className) {
-    auto list = className.split("::");
+Node::~Node() {
+    for (auto child : _children)
+        delete child;
+    _children.clear();
+}
+
+void Node::addChild(Node *child) {
+    _children << child;
+}
+
+void Node::setParent(Node *parent) {
+    if (_parent)
+        ThrowException("Parent already set").value(parent->fullName()).context(this);
+    _parent = parent;
+    if (parent)
+        parent->addChild(this);
+}
+
+void Node::setClassName(QString name) {
+    auto list = name.split("::");
     if (list.size() > 2)
-        ThrowException("Invalid class name").value(className).context(this);
+        ThrowException("Invalid class name").value(name).context(this);
     _class = list.last();
 }
 
+void Node::setObjectName(QString name) {
+    _name = name;
+}
+
+void Node::enumerate() {
+    Box *root = Box::root();
+    if (!root)
+      ThrowException("Missing root");
+
+    int i = 0;
+    Box::root()->enumerate(i);
+
+    root->orderPorts();
+    auto all = root->descendants<Box*>() << root;
+    for (auto *box : all) {
+        QString s = fullName(box);
+        box->orderPorts();
+    }
+}
+
 void Node::enumerate(int &i) {
-    // Enumerate boxes before ports
-    for (auto child : findChildren<QObject*>("",Qt::FindDirectChildrenOnly)) {
-        Box *box = dynamic_cast<Box*>(child);
-        if (box) {
-            box->enumerate(i);
-            box->enumeratePorts();
-        }
+    auto children_ = children<Node*>();
+    for (auto *node : children_) {
+        QString s = fullName(node);
+        node->enumerate(i);
     }
-    for (auto child : findChildren<QObject*>("",Qt::FindDirectChildrenOnly)) {
-        Port *port = dynamic_cast<Port*>(child);
-        if (port )
-            port ->enumerate(i);
-    }
-    // Enumerate self
     _order = i++;
+}
+
+QString Node::objectName() const {
+    return _name;
 }
 
 QString Node::fullName() const {
     return fullName(this);
 }
 
-QString Node::fullName(const QObject *object) {
+QString Node::fullName(const Node *object) {
     QStringList names;
-    const QObject *p = object;
-    const QObject *last;
+    const Node *p = object;
+    const Node *last;
     while (p) {
         names.prepend(p->objectName());
         last = p;
@@ -68,7 +102,7 @@ QString Node::className(Namespace ns) const {
 
 QStringList Node::pedigree(Namespace ns) const {
     QStringList result;
-    auto parentNode = dynamic_cast<Node*>(parent());
+    auto parentNode = parent();
     if (parentNode)
         result = parentNode->pedigree() + result;
     else

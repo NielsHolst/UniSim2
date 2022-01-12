@@ -17,7 +17,7 @@ namespace boxes {
 class VectorSum : public base::Box
 {
 public:
-    VectorSum(QString name, QObject *parent);
+    VectorSum(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

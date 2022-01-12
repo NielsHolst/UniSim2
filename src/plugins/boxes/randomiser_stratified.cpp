@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(RandomiserStratified)
 
-RandomiserStratified::RandomiserStratified(QString name, QObject *parent)
+RandomiserStratified::RandomiserStratified(QString name, Box *parent)
     : RandomiserBase(name, parent), variate(nullptr)
 {
     help("draws random numbers [0;1) by stratification");

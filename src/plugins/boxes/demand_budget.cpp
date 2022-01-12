@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(DemandBudget)
 
-DemandBudget::DemandBudget(QString name, QObject *parent)
+DemandBudget::DemandBudget(QString name, Box *parent)
     : Box(name, parent) {
     help("computes gross demand from energy budget");
     Input(demandNet).help("Net demand").unit("#prey");

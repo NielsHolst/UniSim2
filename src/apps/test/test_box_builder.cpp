@@ -17,7 +17,8 @@ void TestBoxBuilder::testBuild1() {
     try {
         tree = TestBoxCases::case1();
         root = Box::root();
-        tree->toText(str);
+        root->initializeFamily();
+        root->toText(str);
     }
     catch(const base::Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
@@ -42,27 +43,3 @@ void TestBoxBuilder::testBuild1() {
             << "\n\n";
     delete tree;
 }
-
-//void TestBoxBuilder::testMissingRoot() {
-//    BoxBuilder builder;
-//    bool excepted{false};
-//    try {
-//        builder.
-//            box().name("A").
-//                box().name("a").
-//                endbox().
-//                box().name("b").
-//                endbox().
-//            endbox().
-//            box().name("B").
-//                box().name("a").
-//                endbox().
-//                box().name("b").
-//                endbox().
-//            endbox();
-//    }
-//    catch (Exception &) {
-//        excepted = true;
-//    }
-//    QVERIFY(excepted);
-//}

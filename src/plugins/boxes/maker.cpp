@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(Maker)
 
-Maker::Maker(QString name, QObject *parent)
+Maker::Maker(QString name, Box *parent)
     : Box(name, parent)
 {
     help("clones all boxes inside it according to one of three methods");

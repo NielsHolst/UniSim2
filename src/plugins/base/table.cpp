@@ -9,8 +9,8 @@
 
 namespace base {
 
-Table::Table(QObject *parent)
-    : QObject(parent)
+Table::Table(Node *parent)
+    : Node("Table", parent)
 {
 }
 

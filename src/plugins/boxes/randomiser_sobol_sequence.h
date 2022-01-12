@@ -13,7 +13,7 @@ namespace boxes {
 class RandomiserSobolSequence : public RandomiserBase
 {
 public:
-    RandomiserSobolSequence(QString name, QObject *parent);
+    RandomiserSobolSequence(QString name, Box *parent);
     ~RandomiserSobolSequence();
     int numStrata() const;
 private:

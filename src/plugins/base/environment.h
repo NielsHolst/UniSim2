@@ -6,7 +6,6 @@
 #define BASE_ENVIRONMENT_H
 
 #include <QDir>
-#include <QObject>
 #include <QMap>
 #include <QStack>
 #include <QVariant>
@@ -19,7 +18,7 @@ namespace base {
 class Box;
 class Command;
 
-class Environment : public QObject {
+class Environment {
 public:
     enum Folder {Work, Input, Output, Notepad, Atom, Graphviz};
     const Folder LastFolder = Graphviz;
@@ -89,7 +88,7 @@ private:
     QMap<QString, QVariant> _options;
     QStack<QString> _latestLoadArgs;
     // Singleton
-    static Environment *_environment;
+    static std::unique_ptr<Environment> _environment;
     friend Environment& environment();
     // Methods
     QString fileCounterKey();

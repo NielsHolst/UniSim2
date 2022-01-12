@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(Stage)
 
-Stage::Stage(QString name, QObject *parent)
+Stage::Stage(QString name, Box *parent)
     : StageBase(name, parent)
 {
     setClassName("Stage");

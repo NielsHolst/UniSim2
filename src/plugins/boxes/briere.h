@@ -11,7 +11,7 @@ namespace boxes {
 class Briere : public base::PhysiologicalTime
 {
 public: 
-    Briere(QString name, QObject *parent);
+    Briere(QString name, Box *parent);
     void reset();
     void updateStep();
 private:

@@ -20,7 +20,7 @@ namespace boxes {
 
 PUBLISH(OutputText)
 
-OutputText::OutputText(QString name, QObject *parent)
+OutputText::OutputText(QString name, Box *parent)
     : OutputPorts(name, parent)
 {
     help("creates an output text file");

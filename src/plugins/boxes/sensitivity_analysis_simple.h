@@ -12,7 +12,7 @@ namespace boxes {
 class SensitivityAnalysisSimple : public SensitivityAnalysisBase
 {
 public:
-    SensitivityAnalysisSimple(QString name, QObject *parent);
+    SensitivityAnalysisSimple(QString name, Box *parent);
     void reset();
 private:
     // Inputs

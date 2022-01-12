@@ -82,7 +82,7 @@ bool UniqueName::relativePath(int index) {
 void UniqueName::extendKey(int begin, int end) {
     for (int i = begin; i < end; ++i) {
         Entry &entry(_entries[i]);
-        const QObject *object = entry.object;
+        const Node *object = entry.object;
         Q_ASSERT(object);
         QString parentName = object->parent() ? object->parent()->objectName() : QString();
         entry.name.prepend(parentName + "/");

@@ -51,19 +51,21 @@ private:
 
 public:
     // Configure
-    Port(QString name, QObject *parent);
+    Port(QString name, Node *parent);
     Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
-    Port& operator=(const Port &x)            { assign(x);  return *this; }
+    Port& operator=(const Port &x)                   { assign(x);  return *this; }
     Port& doReset();
     Port& noReset();
     Port& access(PortAccess acc);
     Port& unit(QString value);
     Port& help(QString value);
-    Port& isAuxilliary();
+    Port& isAuxilliary(bool value);
     void outputNames(QStringList columnNames);
 
     // Set value
     template <class T> Port& initialize(T *variable);
+    template <class T> Port& initialize(T  variable);
+    Port& initialize(Value value);
     template <class T> Port& equals(T fixedValue);
     Port& equals(const Expression &expression);
     Port& imports(QString pathToPort, Caller caller=Caller());
@@ -74,6 +76,7 @@ public:
     PortAccess access() const;
     QString unit() const;
     QString help() const;
+    bool isAuxilliary() const;
     QString importPath() const;
     int size() const;
     bool isValueOverridden() const;
@@ -103,6 +106,12 @@ private:
 
 template <class T> Port& Port::initialize(T *variable) {
     _value.initialize(variable);
+    return *this;
+}
+
+template <class T> Port& Port::initialize(T fixedValue) {
+    _value.initialize(fixedValue);
+    equals(fixedValue);
     return *this;
 }
 

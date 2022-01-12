@@ -18,8 +18,7 @@ namespace boxes {
 class Simulation : public base::Box
 {
 public:
-    Simulation(QString name, QObject *parent);
-    void amend();
+    Simulation(QString name, Box *parent);
     void initialize();
     void cleanup();
     void debrief();

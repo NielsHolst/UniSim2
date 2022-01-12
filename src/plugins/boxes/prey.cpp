@@ -10,7 +10,7 @@ namespace boxes {
 
 PUBLISH(Prey)
 
-Prey::Prey(QString name, QObject *parent)
+Prey::Prey(QString name, Box *parent)
     : Box(name, parent) {
     help("defines the prey parameters for interaction with the parent Predator");
     Input(density).help("Density");

@@ -4,7 +4,6 @@
 */
 #include <iostream>
 #include <QDateTime>
-#include <QObject>
 #include "box.h"
 #include "exception.h"
 #include "node.h"
@@ -12,7 +11,7 @@
 namespace base {
 
 int Exception::_count = 0;
-const QObject *Exception::_fallbackContext = nullptr;
+const Node *Exception::_fallbackContext = nullptr;
 
 Exception::Exception(QString message)
     : _message(message), _caller(Caller())
@@ -30,12 +29,12 @@ Exception& Exception::line(int i) {
     return *this;
 }
 
-Exception& Exception::context(const QObject *object) {
+Exception& Exception::context(const Node *object) {
     _contextDescription = object ? Node::fullName(object) : "";
     return *this;
 }
 
-Exception& Exception::context(QObject *object) {
+Exception& Exception::context(Node *object) {
     _contextDescription = object ? Node::fullName(object) : "";
     return *this;
 }
@@ -86,7 +85,7 @@ int Exception::count() {
     return _count;
 }
 
-void Exception::setContext(const QObject *object) {
+void Exception::setContext(const Node *object) {
     _fallbackContext = object;
 }
 

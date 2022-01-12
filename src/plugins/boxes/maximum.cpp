@@ -15,7 +15,7 @@ namespace boxes {
 
 PUBLISH(Maximum)
 
-Maximum::Maximum(QString name, QObject *parent)
+Maximum::Maximum(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes maximum of inputs");

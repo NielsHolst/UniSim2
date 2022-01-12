@@ -15,7 +15,7 @@ class DistributedDelay2D;
 class StageAndPhase : public StageBase
 {
 public:
-    StageAndPhase(QString name, QObject *parent);
+    StageAndPhase(QString name, Box *parent);
     // standard methods
     void myReset();
     void update();

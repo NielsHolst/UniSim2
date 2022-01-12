@@ -13,7 +13,7 @@ namespace boxes {
 class Ratio : public base::Box
 {
 public:
-    Ratio(QString name, QObject *parent);
+    Ratio(QString name, Box *parent);
     void reset();
     void update();
 private:

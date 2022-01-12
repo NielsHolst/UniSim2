@@ -12,7 +12,7 @@ namespace boxes {
 class SelectFile : public base::Box
 {
 public:
-    SelectFile(QString name, QObject *parent);
+    SelectFile(QString name, Box *parent);
     void amend();
     void initialize();
     void reset();

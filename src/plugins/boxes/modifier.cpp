@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(Modifier)
 
-Modifier::Modifier(QString name, QObject *parent)
+Modifier::Modifier(QString name, Box *parent)
     : Box(name, parent)
 {
     help("modifies ports of existing boxes");

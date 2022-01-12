@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(NumberedFile)
 
-NumberedFile::NumberedFile(QString name, QObject *parent)
+NumberedFile::NumberedFile(QString name, Box *parent)
     : Box(name, parent)
 {
     help("creates a numbered file name");

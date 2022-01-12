@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(VectorSum)
 
-VectorSum::VectorSum(QString name, QObject *parent)
+VectorSum::VectorSum(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes the vector sum of many vectors");

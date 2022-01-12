@@ -19,7 +19,7 @@ namespace boxes {
 class Records : public base::Box
 {
 public:
-    Records(QString name, QObject *parent);
+    Records(QString name, Box *parent);
     ~Records();
     // standard methods
     void amend();

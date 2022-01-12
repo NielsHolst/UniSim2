@@ -13,7 +13,7 @@ namespace boxes {
 
 PUBLISH(Accumulator)
 
-Accumulator::Accumulator(QString name, QObject *parent)
+Accumulator::Accumulator(QString name, Box *parent)
     : Box(name, parent)
 {
     help("accumulates values");

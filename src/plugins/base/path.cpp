@@ -398,8 +398,9 @@ bool match(Path::Object *p, QString className, QString objectName) {
 }
 
 Path::Objects Path::Alternative::any(Object *p, QString className, QString objectName) {
+    auto desc = p->descendants<Object*>();
     Objects all, result;
-    all << p << p->findChildren<Object*>();
+    all << p << Objects(desc.begin(), desc.end());
     for (auto candidate : all) {
         if (match(candidate, className, objectName))
             result << candidate;
@@ -409,7 +410,7 @@ Path::Objects Path::Alternative::any(Object *p, QString className, QString objec
 
 Path::Objects Path::Alternative::descendants(Object *p, QString className, QString objectName) {
     Objects result;
-    auto descendants = p->findChildren<Object*>();
+    auto descendants = p->descendants<Object*>();
     for (auto descendant : descendants) {
         if (match(descendant, className, objectName))
             result << descendant;
@@ -425,7 +426,7 @@ Path::Objects Path::Alternative::descendants(Objects candidates, QString classNa
 }
 
 Path::Object* Path::Alternative::parent(Object *p, QString className, QString objectName) {
-    auto parent = dynamic_cast<Object*>(p->parent());
+    auto parent = p->parent<Object*>();
     return (parent && match(parent, className, objectName)) ? parent : nullptr;
 }
 
@@ -459,7 +460,7 @@ Path::Objects Path::Alternative::ancestors(Objects candidates, QString className
 
 Path::Objects Path::Alternative::children(Object *p, QString className, QString objectName) {
     Objects result;
-    auto children = p->findChildren<Object*>(QString(), Qt::FindDirectChildrenOnly);
+    auto children = p->children<Object*>();
     for (auto child : children) {
         if (match(child, className, objectName))
             result << child;
@@ -476,7 +477,7 @@ Path::Objects Path::Alternative::children(Objects candidates, QString className,
 
 Path::Objects Path::Alternative::siblings(Object *p, QString className, QString objectName) {
     Objects result;
-    auto children = p->findChildren<Object*>(QString(), Qt::FindDirectChildrenOnly);
+    auto children = p->children<Object*>();
     for (auto child : children) {
         if (child != p && match(child, className, objectName))
             result << child;
@@ -492,7 +493,7 @@ Path::Objects Path::Alternative::siblings(Objects candidates, QString className,
 }
 
 Path::Object* Path::Alternative::preceding(Object *p, QString className, QString objectName) {
-    auto children = p->findChildren<Object*>(QString(), Qt::FindDirectChildrenOnly);
+    auto children = p->children<Object*>();
     int i=0;
     while (children.at(i) != p) ++i;
     return (i>0 && match(children.at(i), className, objectName)) ? children[i] : nullptr;
@@ -509,7 +510,7 @@ Path::Objects Path::Alternative::preceding(Objects candidates, QString className
 }
 
 Path::Object* Path::Alternative::following(Object *p, QString className, QString objectName) {
-    auto children = p->findChildren<Object*>(QString(), Qt::FindDirectChildrenOnly);
+    auto children = p->children<Object*>();
     int i=0,
         n=children.size();
     while (children.at(i) != p) ++i;

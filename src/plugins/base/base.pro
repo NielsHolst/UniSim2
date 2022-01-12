@@ -68,7 +68,6 @@ HEADERS +=  \
     mega_factory.h \
     minimise.h \
     node.h \
-    object_pool.h \
     organisation.h \
     operate.h \
     operator.h \
@@ -141,7 +140,6 @@ SOURCES +=  \
     history.cpp \
     mega_factory.cpp \
     node.cpp \
-    object_pool.cpp \
     operate.cpp \
     operator.cpp \
     path.cpp \
@@ -162,6 +160,7 @@ SOURCES +=  \
 #    save_graph_base.cpp \
 #    save_graph_graphviz.cpp \
     table.cpp \
+    test_num.cpp \
     time_with_units.cpp \
     timer.cpp \
     unique_name.cpp \

@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(SupplyBudget)
 
-SupplyBudget::SupplyBudget(QString name, QObject *parent)
+SupplyBudget::SupplyBudget(QString name, Box *parent)
     : Box(name, parent) {
     help("computes net supply from energy budget");
     Input(supplyGross).help("Gross supply").unit("#prey");

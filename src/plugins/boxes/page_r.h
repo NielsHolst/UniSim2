@@ -16,7 +16,7 @@ class Port;
 class PageR : public base::Box
 {
 public:
-    PageR(QString name, QObject *parent);
+    PageR(QString name, Box *parent);
     void amend();
     void reset();
     void initialize();

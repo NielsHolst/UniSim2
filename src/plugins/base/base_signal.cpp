@@ -10,7 +10,7 @@ using phys_math::infinity;
 
 namespace base {
 
-BaseSignal::BaseSignal(QString name, QObject *parent)
+BaseSignal::BaseSignal(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("BaseSignal");

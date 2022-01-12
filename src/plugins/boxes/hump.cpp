@@ -12,7 +12,7 @@ namespace boxes {
 
 PUBLISH(Hump)
 
-Hump::Hump(QString name, QObject *parent)
+Hump::Hump(QString name, Box *parent)
     : Box(name, parent)
 {
     help("produces a hump- or ditch-shaped curve");

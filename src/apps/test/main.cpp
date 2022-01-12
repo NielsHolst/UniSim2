@@ -3,7 +3,6 @@
 #include <QDir>
 #include <base/dialog_stub.h>
 #include <base/environment.h>
-#include <base/object_pool.h>
 #include "autotest.h"
 
 inline QString inputPath() {
@@ -18,7 +17,6 @@ inline QString inputPath() {
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    new base::ObjectPool(&app);
     base::DialogStub *dialog = new base::DialogStub(qApp);
 
     QString saveLoadArg = base::environment().latestLoadArg();

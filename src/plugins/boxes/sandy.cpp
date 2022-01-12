@@ -14,7 +14,7 @@ namespace boxes {
 
 PUBLISH(Sandy)
 
-Sandy::Sandy(QString name, QObject *parent)
+Sandy::Sandy(QString name, Box *parent)
     : Box(name, parent)
 {
     help("the Sandy equation (experimental)");

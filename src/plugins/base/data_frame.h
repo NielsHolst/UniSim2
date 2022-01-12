@@ -15,7 +15,7 @@ namespace base {
 class DataFrame : public Table
 {
 public:
-    DataFrame(QObject *parent = nullptr);
+    DataFrame(Node *parent = nullptr);
     void read(QString fileName, Labelling labelling);
     int numRow() const;
     int numCol() const;

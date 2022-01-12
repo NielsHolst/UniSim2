@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QMultiMap>
 #include <QObject>
+#include "box.h"
 #include "exception.h"
 
 namespace base {
@@ -21,7 +22,7 @@ public:
     static void loadPlugins();
 
     template <class T=Box>
-    static T* create(QString className, QString objectName, QObject *parent);
+    static T* create(QString className, QString objectName, Box *parent=nullptr);
 
     static const QList<base::FactoryPlugIn*> &factories();
     static QDir pluginsDir();
@@ -31,20 +32,21 @@ public:
 private:
     // methods
     MegaFactory();
-    static MegaFactory* me();
-    static QObject* createObject(QString className, QString objectName, QObject *parent=nullptr);
+    static std::unique_ptr<MegaFactory> _me;
+    static MegaFactory &me();
+
+    static Node* createObject(QString className, QString objectName, Box *parent=nullptr);
     // data
     typedef QMultiMap<QString, FactoryPlugIn*> ProductIndex;
-    static MegaFactory *_me;
     ProductIndex productIndex;
     QList<base::FactoryPlugIn*> _factories;
     static QString _usingPluginName;
 };
 
 template <class T>
-T* MegaFactory::create(QString className, QString objectName, QObject *parent)
+T* MegaFactory::create(QString className, QString objectName, Box *parent)
 {
-    QObject *object = MegaFactory::createObject(className, objectName, parent);
+    Node *object = MegaFactory::createObject(className, objectName, parent);
     QString msg = QString("MegaFactory cannot create object '%1' of class '%2'").arg(objectName).arg(className);
     if (!object)
         ThrowException(msg);
