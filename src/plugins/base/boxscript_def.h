@@ -52,7 +52,6 @@ namespace boxscript { namespace parser
     using x3::lexeme;
     using x3::lit; // to ignore string
     boost::spirit::x3::real_parser<double, boost::spirit::x3::strict_real_policies<double> > const double_ = {};
-
 //    boost::spirit::x3::comma_strict_real_policies<double> const comma_double = {};
 
 
@@ -190,6 +189,7 @@ namespace boxscript { namespace parser
     auto const joker_def = lexeme[x3::string("*")];
     auto const joker_name_def = name | joker | dots;
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
+//    auto const number_def = lexeme[int_ >> !char_(".eE")] | double_;
     auto const number_def = double_ | int_;
     auto const operand_def = bool_ | function_call | date_time | date | bare_date | time | number |
                              path | quoted_string | grouped_expression;

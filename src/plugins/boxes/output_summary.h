@@ -9,7 +9,7 @@
 #include <QVector>
 
 namespace base {
-  class Node;
+  class Box;
 }
 
 namespace boxes {
@@ -18,7 +18,7 @@ class OutputSummary
 {
 public:
     OutputSummary();
-    OutputSummary(QVector<QString> summaries, base::Node *parent);
+    OutputSummary(QVector<QString> summaries, base::Box *parent);
     enum class Type{Current, Sum, Mean, Min, Max, MinAt, MaxAt};
     bool contains(Type summary) const;
     bool hasNone() const;
@@ -26,7 +26,7 @@ public:
 private:
     // Data
     QSet<Type> _summaries;
-    base::Node *_parent;
+    base::Box *_parent;
 };
 
 inline bool OutputSummary::contains(Type summary) const {

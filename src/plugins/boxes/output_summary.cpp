@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QMap>
+#include <base/box.h>
 #include <base/exception.h>
 #include "output_summary.h"
 

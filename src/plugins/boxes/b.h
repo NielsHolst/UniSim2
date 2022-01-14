@@ -11,7 +11,7 @@ namespace boxes {
 class B : public base::Box
 {
 public:
-    B(QString name, Node *parent);
+    B(QString name, Box *parent);
     void reset();
     void update();
 private:

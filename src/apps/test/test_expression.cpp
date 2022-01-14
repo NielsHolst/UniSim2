@@ -149,7 +149,7 @@ void TestExpression::testNegation() {
     e.push(Operator::Multiply);
     e.push(2);
     e.close();
-    QCOMPARE(e.stackAsString(), "8 - 9 2 * +");
+    QCOMPARE(e.stackAsString(), "8 -- 9 2 * +");
 
     Value result;
     try {
@@ -195,16 +195,23 @@ void TestExpression::testFunctionCall() {
 
     e.push(Func("sum", 3));
     e.push(8);
-    e.push(9);
+    e.push(Operator::Add);
     e.push(2);
-    e.push(Expression::FunctionEnd{});
-    e.push(Operator::Subtract);
+    e.push(Operator::Multiply);
+    e.push(3);
+    e.push(Operator::Comma);
     e.push(13);
+    e.push(Operator::Comma);
+    e.push(14);
+    e.push(Operator::Comma);
+    e.push(Expression::FunctionCallEnd());
+    e.push(Operator::Subtract);
+    e.push(100);
     try {
         e.close();
     }
     UNEXPECTED_EXCEPTION;
-    QCOMPARE(e.stackAsString(), "8 9 2 sum[3] 13 -");
+    QCOMPARE(e.stackAsString(), "8 2 3 * + , 13 , 14 , sum[3] 100 -");
 
     Value result;
     try {
@@ -213,5 +220,5 @@ void TestExpression::testFunctionCall() {
     }
     UNEXPECTED_EXCEPTION;
     QCOMPARE(result.type(), Value::Type::Int);
-    QCOMPARE(result.as<int>(), 8 + 9 + 2 - 13);
+    QCOMPARE(result.as<int>(), 8 + 2 * 3 + 13 +14 - 100);
 }

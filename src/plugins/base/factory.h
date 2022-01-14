@@ -7,10 +7,6 @@
 
 #include <base/factory_plug_in.h>
 
-namespace base {
-    class Node;
-}
-
 namespace BOXES_PLUGIN_NAME {
 
 class Factory : public QObject, public base::FactoryPlugIn
@@ -21,7 +17,7 @@ Q_PLUGIN_METADATA(IID "org.ecolmod.base")
 public:
     QString id() const;
     QList<QString> inventory() const;
-    base::Node* create(QString className, QString objectName, base::Node *parent);
+    base::Node* create(QString className, QString objectName, base::Box *parent);
 };
 
 } //namespace

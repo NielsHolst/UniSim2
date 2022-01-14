@@ -12,6 +12,8 @@
 #include "value_collection.h"
 using std::get;
 
+#include <iostream>
+
 namespace base {
 
 Expression::Expression(Node *parent)
@@ -29,102 +31,13 @@ void Expression::clear() {
     _original.clear();
 }
 
-//void Expression::translate(const boxscript::ast::Expression &e) {
-//    clear();
-//    push(e.firstOperand);
-//    for (auto operation : e.operations) {
-//        push(lookupOperator(QString::fromStdString(operation.operator_)));
-//        push(operation.operand);
-//    }
-//    close();
-//}
-
-//void Expression::push(boxscript::ast::Operand operand) {
-//    using Type = boxscript::ast::Operand::Type;
-//    boxscript::ast::Number number;
-//    switch(operand.type()) {
-//    case Type::Bool:
-//        push(boost::get<boxscript::ast::Bool>(operand));
-//        break;
-//    case Type::Number:
-//        push(boost::get<boxscript::ast::Number>(operand));
-//        break;
-//    case Type::QuotedString:
-//        push(boost::get<boxscript::ast::QuotedString>(operand));
-//        break;
-//    case Type::Date:
-//        push(boost::get<boxscript::ast::Date>(operand));
-//        break;
-//    case Type::Time:
-//        push(boost::get<boxscript::ast::Time>(operand));
-//        break;
-//    case Type::DateTime:
-//        push(boost::get<boxscript::ast::DateTime>(operand));
-//        break;
-//    case Type::BareDate:
-//        push(boost::get<boxscript::ast::BareDate>(operand));
-//        break;
-//    case Type::ReferenceUnion:
-//        push(boost::get<boxscript::ast::ReferenceUnion>(operand));
-//        break;
-//    case Type::GroupedExpression:
-//        push(boost::get<boxscript::ast::GroupedExpression>(operand));
-//        break;
-//    case Type::FunctionCall:
-//        push(boost::get<boxscript::ast::FunctionCall>(operand));
-//        break;
-//    }
-//}
-
-//void Expression::push(boxscript::ast::Bool b) {
-//    push(b.stringValue=="TRUE");
-//}
-
-//void Expression::push(boxscript::ast::Number number) {
-//    if (number.type() == boxscript::ast::Number::Type::Int)
-//        push(boost::get<int>(number));
-//    else
-//        push(boost::get<double>(number));
-//}
-
-//void Expression::push(boxscript::ast::QuotedString s) {
-//    push(Value(QString::fromStdString(s.stringValue)));
-//}
-
-//void Expression::push(boxscript::ast::Date date) {
-//    push(QDate(date.year, date.month, date.day));
-//}
-
-//void Expression::push(boxscript::ast::Time time) {
-//    push(QTime(time.hour, time.minute, time.second));
-//}
-
-//void Expression::push(boxscript::ast::DateTime dt) {
-//    push(Value(QDateTime(QDate(dt.date.year, dt.date.month, dt.date.day), QTime(dt.time.hour, dt.time.minute, dt.time.second), Qt::UTC)));
-//}
-
-//void Expression::push(boxscript::ast::BareDate bd) {
-//    push(BareDate(bd.month, bd.day));
-//}
-
-//void Expression::push(boxscript::ast::Path path) {
-////    std::stringstream str;
-////    str << ref;
-////    push(Path(QString::fromStdString(str.str())));
-//}
-
-//void Expression::push(boxscript::ast::GroupedExpression group) {
-//    push(Parenthesis::Left);
-//    const boxscript::ast::Expression &e(group.get());
-//    translate(e); // push expression inside parentheses recursively
-//    push(Parenthesis::Right);
-//}
-
-//void Expression::push(boxscript::ast::FunctionCall func) {
-//    push(FunctionCall(QString::fromStdString(func.name), (int) func.arguments.size()));
-//    for (boxscript::ast::FunctionCall::Argument arg : func.arguments)
-//        push(arg.get());
-//}
+bool Expression::isFixed() const {
+    for (auto element : _stack) {
+        if (type(element) == Type::Path)
+            return false;
+    }
+    return true;
+}
 
 void Expression::push(Value value) {
     checkNotClosed();
@@ -151,7 +64,7 @@ void Expression::push(FunctionCall func) {
     _stack.push_back(func);
 }
 
-void Expression::push(FunctionEnd end) {
+void Expression::push(FunctionCallEnd end) {
     checkNotClosed();
     _stack.push_back(end);
 }
@@ -174,6 +87,11 @@ inline bool isValue(Expression::Element element) {
 
 inline bool isOperator(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::Operator);
+}
+
+inline bool isComma(Expression::Element element) {
+    return isOperator(element) &&
+           (get<Operator>(element) == Operator::Comma);
 }
 
 inline bool isParenthesis(Expression::Element element) {
@@ -200,34 +118,52 @@ inline bool isFunctionCall(Expression::Element element) {
 
 inline int precedence(Expression::Element element) {
     Q_ASSERT(isOperator(element) || isFunctionCall(element));
-    return isOperator(element) ? precedence( get<Operator>(element) ) : 0;
+    return isOperator(element) ?
+                precedence( get<Operator>(element) ) :
+                precedence(Operator::Comma)- 1; // comma has higher predecence than function call
 }
 
-//void Expression::resolveImports() {
-//    for (auto element : _stack) {
-//        if (isPath(element))
-//            std::get<Path>(element).resolvePorts();
-//    }
-//}
-
 void Expression::toPostfix() {
-    // From: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
+    std::cout << "toPostfix " << qPrintable(toString(_stack)) << std::endl;
+    // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
     for (auto &element : _stack) {
+        QString s1 = elementName(element),
+                s2 = toString(postfix),
+                s3 = toString(myStack);
+        std::cout << qPrintable(s1) << " =>"
+                  << "\npostfix stack = " << qPrintable(s2)
+                  << "\n      mystack = " << qPrintable(s3)
+                  << std::endl;
         switch (type(element)) {
         case Type::Value:
             postfix.push_back(element);
             break;
         case Type::Operator:
-            if (myStack.empty() || precedence(element) > precedence(myStack.back()))
-                myStack.push_back(element);
+            if (myStack.empty() || precedence(element) > precedence(myStack.back())) {
+                // Comma goes on to postfix, other operator is kept for later
+                if (isComma(element))
+                    postfix.push_back(element);
+                else
+                    myStack.push_back(element);
+            }
             else {
-                // Pop until a higher precedence is found
+                // Pop until a higher precedence is found or stack is empty
                 while (!myStack.empty() && precedence(element) <= precedence(myStack.back())) {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
+                    s2 = toString(postfix);
+                    s3 = toString(myStack);
+                    std::cout << "Push and pop"
+                              << "\npostfix stack = " << qPrintable(s2)
+                              << "\n      mystack = " << qPrintable(s3)
+                              << std::endl;
                 }
-                myStack.push_back(element);
+                // Comma goes on to postfix, other operator is kept for later
+                if (isComma(element))
+                    postfix.push_back(element);
+                else
+                    myStack.push_back(element);
             }
             break;
         case Type::Parenthesis:
@@ -254,19 +190,11 @@ void Expression::toPostfix() {
         case Type::FunctionCall:
             myStack.push_back(registerFunctionCall(element));
             break;
-        case Type::FunctionEnd:
-            // Pop until matching function call
-            while (!(myStack.empty() || isFunctionCall(myStack.back()))) {
-                postfix.push_back( myStack.back() );
-                myStack.pop_back();
-            }
-            if (isFunctionCall(myStack.back())) {
-                postfix.push_back( myStack.back() );
-                myStack.pop_back();
-            }
-            else {
-                ThrowException("Missing function call");
-            }
+        case Type::FunctionCallEnd:
+            // Push function call savend on my stack
+            // Note: A function call end is never transferred to the postfix stack
+            postfix.push_back( myStack.back() );
+            myStack.pop_back();
             break;
         }
     } // for
@@ -274,6 +202,12 @@ void Expression::toPostfix() {
     while (!myStack.empty()) {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
+        QString s2 = toString(postfix),
+                s3 = toString(myStack);
+        std::cout << "Push and pop"
+                  << "\npostfix stack = " << qPrintable(s2)
+                  << "\n      mystack = " << qPrintable(s3)
+                  << std::endl;
     }
     // Copy result
     _stack.clear();
@@ -323,7 +257,7 @@ void Expression::reduceByOperator(Stack &stack) {
     case Operator::Or           : c = operate::or_(a,b); break;
     case Operator::Negate       : c = operate::negate(a); break;
     case Operator::Not          : c = operate::not_(a); break;
-//    default                     : ThrowException("Unexpected operator").value(static_cast<int>(op));
+    case Operator::Comma        :ThrowException("Cannot reduce by comma operator").context(_parent); break;
     }
     // We need to pop operator and push result, because result may be of another type
     stack.pop_back();
@@ -344,14 +278,15 @@ Value::Type argumentsType(const Expression::Stack &stack, int arity) {
 
 template <class T> QVector<T> popArguments(Expression::Stack &stack, int arity) {
     QVector<T> args;
-    for (int i=0; i<arity; ++i) {
-        const Value &value = std::get<Value>(stack.back());
+    int n = stack.size();
+    for (int i=n-arity; i<n; ++i) {
+        const Value &value = std::get<Value>(stack.at(i));
         if (value.isVector())
-            args << value.as<QVector<T>>();
+            args << value.as<QVector<T>>(); // flatten vector
         else
             args << value.as<T>();
-        stack.pop_back();
     }
+    stack.resize(n-arity);
     return args;
 }
 
@@ -494,7 +429,12 @@ void Expression::reduceByFunctionCall(Stack &stack) {
 
 Value Expression::evaluate() {
     if (_stack.size() == 0)
-        ThrowException("Expression is empty").context(_parent);
+        ThrowException("Expression stack is empty").context(_parent);
+//    QString s1 = toString(_stack),
+//            s2, s3;
+//    std::cout << qPrintable(s1) << "=>\n"
+//              << "evaluate stack =\n" << qPrintable(s1)
+//              << std::endl;
 
     Stack myStack;
     Element result;
@@ -503,11 +443,21 @@ Value Expression::evaluate() {
     }
     else {
         for (Element &element : _stack) {
-            myStack.push_back(element);
-            if (isOperator(element))
-                reduceByOperator(myStack);
-            else if (isFunctionCall(element))
-                reduceByFunctionCall(myStack);
+//            s2 = elementName(element);
+//            s3 = toString(myStack);
+//            std::cout << qPrintable(s2) << "=>\n"
+//                      << "mystack =\n" << qPrintable(s3)
+//                      << std::endl;
+            if (isComma(element)) {
+                ; // nothing to do
+            }
+            else {
+                myStack.push_back(element);
+                if (isOperator(element))
+                    reduceByOperator(myStack);
+                else if (isFunctionCall(element))
+                    reduceByFunctionCall(myStack);
+            }
         }
         // The result should be the one element left in the stack
         if (myStack.size() == 0)
@@ -518,10 +468,8 @@ Value Expression::evaluate() {
     }
 
     // The result should be a Value
-    if (type(result) == Type::Operator)
-        ThrowException("Surplus operator in expression").value(stackAsString()).context(_parent);
-    if (type(result) == Type::Parenthesis)
-        ThrowException("Surplus parenthesis in expression").value(stackAsString()).context(_parent);
+    if (type(result) != Type::Value)
+        ThrowException("Unexpected results type; expected a Value").value(toString(result)).context(_parent);
     Value value = get<Value>(result);
     return get<Value>(result);
 
@@ -539,12 +487,12 @@ QString Expression::elementName(const Element& el) {
     using Type = Expression::Type;
     QString s;
     switch (type(el)) {
-    case Type::Value        : s = "Value"       ; break;
-    case Type::Operator     : s = "Operator"    ; break;
-    case Type::Parenthesis  : s = "Parenthesis" ; break;
-    case Type::Path         : s = "Path"        ; break;
-    case Type::FunctionCall : s = "FunctionCall"; break;
-    case Type::FunctionEnd  : s = "FunctionEnd" ; break;
+    case Type::Value           : s = "Value"          ; break;
+    case Type::Operator        : s = "Operator"       ; break;
+    case Type::Parenthesis     : s = "Parenthesis"    ; break;
+    case Type::Path            : s = "Path"           ; break;
+    case Type::FunctionCall    : s = "FunctionCall"   ; break;
+    case Type::FunctionCallEnd : s = "FunctionCallEnd"; break;
     }
     return s;
 }
@@ -576,9 +524,7 @@ QString Expression::toString(const Element &element) {
         func = get<FunctionCall>(element);
         s = func.name + "[" + QString::number(func.arity) + "]";
         break;
-    case Type::FunctionEnd:
-        s = "#";
-        break;
+    case Type::FunctionCallEnd: s = "end"; break;
     }
     return s;
 }

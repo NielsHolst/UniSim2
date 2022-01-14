@@ -4,14 +4,11 @@
 */
 #ifndef BASE_PRODUCT_H
 #define BASE_PRODUCT_H
-#include <QString>
 #include "product_base.h"
 
 #define PUBLISH(name) static Product<name> name##Product(#name, productList());
 
 namespace base {
-
-class Box;
 
 template <class T>
 class Product : public ProductBase

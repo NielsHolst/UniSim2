@@ -11,6 +11,8 @@
 
 namespace base {
 
+class Box;
+
 class Node 
 {
 public:
@@ -21,6 +23,7 @@ public:
     void setParent(Node *parent);
     void setClassName(QString name);
     void setObjectName(QString name);
+    void setOrder(int order);
     static void enumerate();
 
     template <class T=Node*> T parent() const;
@@ -67,6 +70,8 @@ template <class T> QVector<T> Node::children() {
 template <> inline QVector<Node*> Node::children() {
     return _children;
 }
+
+template <> QVector<Box*> Node::children();
 
 template <class T> QVector<T> Node::descendants() {
     QVector<T> result;

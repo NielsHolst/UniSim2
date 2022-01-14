@@ -7,6 +7,8 @@
 #include "node.h"
 #include "port.h"
 
+#include <iostream>
+
 namespace base {
 
 Node::Node(QString name, Node *parent)
@@ -45,29 +47,23 @@ void Node::setObjectName(QString name) {
     _name = name;
 }
 
+void Node::setOrder(int order) {
+    _order = order;
+}
+
 void Node::enumerate() {
     Box *root = Box::root();
     if (!root)
       ThrowException("Missing root");
-
     int i = 0;
-    Box::root()->enumerate(i);
-
-    root->orderPorts();
-    auto all = root->descendants<Box*>() << root;
-    for (auto *box : all) {
-        QString s = fullName(box);
-        box->orderPorts();
-    }
+    root->enumerate(i);
 }
 
 void Node::enumerate(int &i) {
-    auto children_ = children<Node*>();
-    for (auto *node : children_) {
-        QString s = fullName(node);
-        node->enumerate(i);
-    }
+    for (auto *box : children<Box*>())
+        box->enumerate(i);
     _order = i++;
+    // std::cerr << qPrintable(fullName()) << " " << _order << std::endl;
 }
 
 QString Node::objectName() const {
@@ -113,6 +109,15 @@ QStringList Node::pedigree(Namespace ns) const {
 bool Node::isType(QString name) const {
     Namespace ns = name.contains("::") ? Namespace::Include : Namespace::Exclude;
     return pedigree(ns).contains(name);
+}
+
+template <> QVector<Box*> Node::children() {
+    QVector<Box*> result;
+    for (auto child : _children) {
+        Box* res = dynamic_cast<Box*>(child);
+        if (res) result << res;
+    }
+    return result;
 }
 
 }

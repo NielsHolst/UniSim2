@@ -26,7 +26,8 @@ static map<Operator,int> precedences =
    {Operator::And          , 5},
    {Operator::Or           , 4},
    {Operator::Negate       , 8},
-   {Operator::Not          , 8}
+   {Operator::Not          , 8},
+   {Operator::Comma        , 0}
 };
 
 static map<Operator,int> arities =
@@ -45,7 +46,8 @@ static map<Operator,int> arities =
    {Operator::And          , 2},
    {Operator::Or           , 2},
    {Operator::Negate       , 1},
-   {Operator::Not          , 1}
+   {Operator::Not          , 1},
+   {Operator::Comma        , 0}
 };
 
 int precedence(Operator op) {
@@ -66,6 +68,7 @@ Operator lookupOperator(QString op) {
     case '>': return Operator::Larger;
     case '<': return Operator::Less;
     case '!': return Operator::Not;
+    case ',': return Operator::Comma;
     default: ;
     }
     else if (op == ">=") return Operator::LargerOrEqual;

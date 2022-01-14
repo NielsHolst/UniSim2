@@ -10,11 +10,12 @@
 #include <QStringList>
 #include <QElapsedTimer>
 #include <QVector>
-#include "node.h"
 
 namespace base {
 
-class Timer : public Node
+class Node;
+
+class Timer
 {
 public:
     Timer(Node *parent);
@@ -30,6 +31,7 @@ public:
     };
     QString report(QString separator="\n") const;
 private:
+    Node *_parent;
     typedef QPair<QElapsedTimer,int> Watch;
     QMap<QString, Watch> _lookup;
     QStringList _ordered;

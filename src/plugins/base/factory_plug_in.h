@@ -5,22 +5,17 @@
 #ifndef BASE_FACTORY_PLUG_IN_H
 #define BASE_FACTORY_PLUG_IN_H
 
-#include <QString>
 #include <QtPlugin>
-#include "exception.h"
 #include "product_base.h"
 
-
 namespace base {
-
-class Node;
 
 class FactoryPlugIn
 {
 public:
     virtual QString id() const = 0;
     virtual QList<QString> inventory() const = 0;
-    virtual Node* create(QString className, QString objectName, Node *parent) = 0;
+    virtual Node* create(QString className, QString objectName, Box *parent) = 0;
 };
 
 } //namespace

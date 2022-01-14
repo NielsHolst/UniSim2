@@ -211,8 +211,11 @@ namespace ast {
     void FunctionCall::build(base::Expression *expression) {
         auto f = base::Expression::FunctionCall(str(name), arguments.size());
         expression->push(f);
-        for (auto arg : arguments)
+        for (auto arg : arguments) {
             arg.get().build(expression);
+            expression->push(base::Operator::Comma);
+        }
+        expression->push(base::Expression::FunctionCallEnd());
     }
 
     base::Path::Alternative PathAlternative::value() const {
@@ -240,8 +243,12 @@ namespace ast {
     }
 
     base::Value Number::value() const {
-        using boost::get;
-        return (type()==Type::Int) ? get<int>(*this) : get<double>(*this);
+        base::Value val;
+        if (type()==Type::Double)
+            val = boost::get<double>(*this);
+        else
+            val = boost::get<int>(*this);
+        return val;
     }
 
     void Operand::build(base::Expression *expression) {

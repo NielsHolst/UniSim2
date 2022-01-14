@@ -6,6 +6,10 @@
 #define DISTRIBUTED_DELAY_2D_H
 #include "distributed_delay_base.h"
 
+namespace base {
+    class Box;
+};
+
 namespace boxes {
 
 class DistributedDelay2D : public DistributedDelayBase
@@ -35,7 +39,7 @@ public:
     };
     typedef enum {Flexible, Symmetric, Asymmetric} Policy;
 
-    DistributedDelay2D(const FixedParameters &p, Box *parent, Policy policy = Flexible);
+    DistributedDelay2D(const FixedParameters &p, base::Box *parent, Policy policy = Flexible);
     DistributedDelay2D(const DistributedDelay2D &dd);
     ~DistributedDelay2D();
     void update(const UpdateParameters &up);
@@ -67,7 +71,7 @@ private:
 
 
 inline double DistributedDelay2D::val(int i, int j) const {
-    return x.at(ix(i,j));
+    return _x.at(ix(i,j));
 }
 
 inline double& DistributedDelay2D::ref(int i, int j) {
@@ -75,7 +79,7 @@ inline double& DistributedDelay2D::ref(int i, int j) {
 }
 
 inline double& DistributedDelay2D::xref(int i, int j) {
-    return x[ix(i,j)];
+    return _x[ix(i,j)];
 }
 
 }

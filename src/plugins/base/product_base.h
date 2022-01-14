@@ -8,18 +8,18 @@
 #include <QMap>
 #include <QString>
 
-class Node;
-
 namespace base {
 
+class Box;
+class Node;
 class ProductBase;
-typedef QMap<QString, ProductBase*> ProductList;
+using ProductList =  QMap<QString, ProductBase*>;
 
 class ProductBase
 {
 public:
     ProductBase(QString name, ProductList &list);
-    virtual Node* create(QString objectName, Node *parent) const = 0;
+    virtual Node* create(QString objectName, Box *parent) const = 0;
     QString id() const;
 private:
     QString _id;

@@ -43,7 +43,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
     }
 }
 
-void Value::reset() {
+void Value::clear() {
     switch(type()) {
     case Type::Uninitialized: break;
     case Type::Bool         : changeValue(bool     ()); break;
@@ -180,7 +180,7 @@ QString Value::typeName(Type type){
     case Type::Double       : return "double";
     case Type::String       : return "string";
     case Type::Date         : return "date";
-    case Type::Time         : return "tyime";
+    case Type::Time         : return "time";
     case Type::DateTime     : return "datetime";
     case Type::BareDate     : return "baredate";
     case Type::Path         : return "path";

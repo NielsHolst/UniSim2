@@ -27,7 +27,7 @@ RandomiserStratified::~RandomiserStratified() {
 
 void RandomiserStratified::inializeGenerator() {
     delete variate;
-    variate = new Variate(*randomGenerator(), distribution);
+    variate = new Variate(randomGenerator(), distribution);
 }
 
 void RandomiserStratified::checkIterations(int iterations) {

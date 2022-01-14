@@ -27,7 +27,7 @@ RandomiserMonteCarlo::~RandomiserMonteCarlo() {
 
 void RandomiserMonteCarlo::inializeGenerator() {
     delete variate;
-    variate = new Variate(*randomGenerator(), distribution);
+    variate = new Variate(randomGenerator(), distribution);
 }
 
 void RandomiserMonteCarlo::checkIterations(int iterations) {

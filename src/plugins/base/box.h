@@ -11,18 +11,17 @@
 #include "node.h"
 #include "path.h"
 #include "port.h"
-#include "port_access.h"
+#include "timer.h"
 
-#define Input(X)  (*new base::Port(#X, this)).initialize(& X).access(base::PortAccess::Input)
-#define Output(X) (*new base::Port(#X, this)).initialize(& X).access(base::PortAccess::Output).doReset()
+#define Input(X)  (*new base::Port(#X, base::Port::Type::Input , this)).initialize(& X)
+#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X).clear()
 
-#define NamedInput(X,Y)  (*new base::Port((X), this)).initialize(& (Y)).access(base::PortAccess::Input)
-#define NamedOutput(X,Y) (*new base::Port((X), this)).initialize(& (Y)).access(PortAccess::Output).doReset()
+#define NamedInput(X,Y)  (*new base::Port((X), base::Port::Type::Input , this)).initialize(& (Y))
+#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y)).clear()
 
 namespace base {
 
 class Port;
-class Timer;
 
 class Box : public Node, public ConstructionStep
 {
@@ -65,8 +64,7 @@ public:
     void cleanupFamily();
     void debriefFamily();
 
-//    virtual void update(Port *) {}
-    void orderPorts();
+    const QVector<Port*> &portsInOrder();
     void updatePorts();
     void verifyPorts();
 
@@ -86,11 +84,10 @@ public:
 private:
     // Data
     QString _help, _sideEffects;
-    QMap<QString,Port*> _ports;
-    QVector<Port*> _portsInOrder;
-    QVector<Port*> _trackedPorts;
-    bool _amended, _cloned, _ignore;
-    Timer *_timer;
+    QMap<QString,Port*> _portMap;
+    QVector<Port*> _portsInOrder, _inputPorts, _trackedPorts;
+    bool _amended, _cloned;
+    Timer _timer;
     static Box *_latest;
     static bool _debugOn, _traceOn;
 
@@ -99,6 +96,7 @@ private:
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void resetPorts();
+    void trace(QString id) const;
 };
 
 template<class T> inline T Box::findOne(QString path) {

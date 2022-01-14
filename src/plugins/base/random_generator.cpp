@@ -14,7 +14,6 @@ namespace base {
 std::unique_ptr<RandomGenerator> RandomGenerator::theRandomGenerator = nullptr;
 
 RandomGenerator::RandomGenerator()
-    : Node("RandomGenerator", nullptr)
 {
 }
 

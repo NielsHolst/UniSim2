@@ -6,21 +6,21 @@
 #include <base/node.h>
 #include <base/publish.h>
 
-//#define RETURN_ID(x) #x
+#define APOSTROPHED(x) #x
 
 using namespace base;
 
 namespace BOXES_PLUGIN_NAME {
 
 QString Factory::id() const {
-    return BOXES_PLUGIN_NAME_TEXT;
+    return APOSTROPHED(BOXES_PLUGIN_NAME);
 }
 
 QList<QString> Factory::inventory() const{
     return productList().keys();
 }
 
-base::Node* Factory::create(QString className, QString objectName, base::Node *parent) {
+Node* Factory::create(QString className, QString objectName, Box *parent) {
     ProductList::const_iterator p = productList().find(className);
     return (p == productList().end())
             ? 0

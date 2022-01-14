@@ -73,8 +73,6 @@ HEADERS +=  \
     operator.h \
     path.h \
     port.h \
-    port_access.h \
-    port_mode.h \
     product.h \
     product_base.h \
     physiological_time.h \
@@ -146,7 +144,6 @@ SOURCES +=  \
     physiological_time.cpp \
     phys_math.cpp \
     port.cpp \
-    port_access.cpp \
     reader_base.cpp \
     reader_boxscript.cpp \
     product_base.cpp \

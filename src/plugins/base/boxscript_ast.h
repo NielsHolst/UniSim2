@@ -84,6 +84,10 @@ namespace ast
 
     #define TYPE_NAME(x,y) case x : s=#y; break
 
+//    struct integer {
+//        int value;
+//    };
+
     struct Number : x3::variant<double, int>,
             x3::position_tagged
     {

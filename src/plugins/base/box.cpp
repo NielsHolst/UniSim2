@@ -19,15 +19,11 @@ bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, Box *parent)
-    : Node(name, parent), _amended(false), _cloned(false), _ignore(false)
+    : Node(name, parent), _amended(false), _cloned(false), _timer(this)
 {
     help("has no documented functionality");
-    _timer = new Timer(this);
     if (!_latest || parent)
         _latest = this;
-    // Debug
-//    QString s = parent ? Node::fullName(parent) : "No parent";
-//        std::cout << "Create box" << qPrintable(name + " inside " + s) << std::endl;
 }
 
 Box::~Box() {
@@ -36,7 +32,12 @@ Box::~Box() {
 }
 
 void Box::addPort(Port *port) {
-    addPort(_ports, port);
+    addPort(_portMap, port);
+    _portsInOrder << port;
+    if (port->type() == Port::Type::Input) {
+        port->setOrder(_inputPorts.size());
+        _inputPorts << port;
+    }
 }
 
 void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
@@ -48,11 +49,11 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
 }
 
 Port* Box::peakPort(QString name) {
-    return _ports.contains(name) ? _ports.value(name) : nullptr;
+    return _portMap.contains(name) ? _portMap.value(name) : nullptr;
 }
 
 const Port* Box::peakPort(QString name) const {
-    return _ports.contains(name) ? _ports.value(name) : nullptr;
+    return _portMap.contains(name) ? _portMap.value(name) : nullptr;
 }
 
 Port* Box::port(QString name, Caller caller) {
@@ -97,7 +98,7 @@ Box *Box::root() {
 }
 
 QString Box::profileReport() {
-    QString rep = _timer->report();
+    QString rep = _timer.report();
     for (auto box : children<Box*>()) {
         rep += box->profileReport();
     }
@@ -112,14 +113,13 @@ void Box::amendFamily() {
     try {
         if (_amended) return;
         createTimers();
-        _timer->start("amend");
+        _timer.start("amend");
         for (auto box : children<Box*>())
             box->amendFamily();
-        if (_traceOn)
-            dialog().information("amend " + fullName());
-        if (!_ignore) amend();
+        if (_traceOn) trace("amend");
+        amend();
         _amended = true;
-        _timer->stop("amend");
+        _timer.stop("amend");
     }
     catch (Exception &ex) {
         dialog().error(ex.what());
@@ -138,90 +138,86 @@ void Box::createTimers() {
 }
 
 void Box::createTimer(QString name) {
-    _timer->addProfile(name);
+    _timer.addProfile(name);
 }
 
 void Box::startTimer(QString name) {
-    _timer->start(name);
+    _timer.start(name);
 }
 
 void Box::stopTimer(QString name) {
-    _timer->stop(name);
+    _timer.stop(name);
 }
 
 void Box::initializeFamily() {
-    if (_traceOn)
-        dialog().information("initializeFamily " + fullName());
-    if (!_amended)
-        ThrowException("Box should be amended before initialization");
-    _timer->reset();
-    _timer->start("initialize");
+    _timer.reset();
+    _timer.start("initialize");
     for (auto box : children<Box*>())
         box->initializeFamily();
-    updatePorts();
-    if (_traceOn)
-        dialog().information("initialize " + fullName());
-    if (!_ignore) initialize();
-    _timer->stop("initialize");
+
+//    for (auto port : children<Port*>()) {
+//        auto value = port->value();
+//        if (value.type() == Value::Type::Uninitialized) {
+//            QString s = "Box::initializeFamily: " + port->name() + " is uninitialized\n";
+//            auto expr = port->expression();
+//            s += "  expr size = " + QString::number(expr.size()) + "\n";
+//            if (!expr.isEmpty())
+//                s += " expr[0] type = " + Expression::elementName(expr.at(0));
+//            std::cerr << qPrintable(s) << std::endl;
+//        }
+//    }
+
+    if (_traceOn) trace("initialize");
+    initialize();
+    _timer.stop("initialize");
 }
 
 void Box::resetFamily() {
-    _timer->start("reset");
+    _timer.start("reset");
     for (auto box : children<Box*>())
         box->resetFamily();
     resetPorts();
-    updatePorts();
-    if (_traceOn)
-        dialog().information("reset " + fullName());
-    if (!_ignore) reset();
+    if (_traceOn) trace("reset");
+    reset();
     verifyPorts();
-    _timer->stop("reset");
+    _timer.stop("reset");
 }
 
 void Box::updateFamily() {
+    _timer.start("update");
     for (auto box : children<Box*>())
         box->updateFamily();
     updatePorts();
-    if (_traceOn)
-        dialog().information("update " + fullName());
-
-    _timer->start("update");
-    if (!_ignore) update();
-    _timer->stop("update");
-
+    if (_traceOn) trace("update");
+    update();
     verifyPorts();
-
+    _timer.stop("update");
 }
 
 void Box::cleanupFamily() {
-    _timer->start("cleanup");
+    _timer.start("cleanup");
     for (auto box : children<Box*>())
         box->cleanupFamily();
     updatePorts();
-    if (_traceOn)
-        dialog().information("cleanup " + fullName());
-    if (!_ignore) cleanup();
+    if (_traceOn) trace("cleanup");
+    cleanup();
     verifyPorts();
-    _timer->stop("cleanup");
+    _timer.stop("cleanup");
 }
 
 void Box::debriefFamily() {
-    _timer->start("debrief");
+    _timer.start("debrief");
     for (auto box : children<Box*>())
         box->debriefFamily();
     updatePorts();
-    if (_traceOn)
-        dialog().information("debrief " + fullName());
-    if (!_ignore) debrief();
+    if (_traceOn) trace("debrief");
+    debrief();
     verifyPorts();
-    _timer->stop("debrief");
+    _timer.stop("debrief");
 }
 
-void Box::orderPorts() {
-    _portsInOrder.clear();
-    for (Port *port : _ports.values())
-        _portsInOrder << port;
-    std::sort(_portsInOrder.begin(), _portsInOrder.end())     ;
+const QVector<Port*> &Box::portsInOrder() {
+    return _portsInOrder;
 }
 
 void Box::resetPorts() {
@@ -230,8 +226,8 @@ void Box::resetPorts() {
 }
 
 void Box::updatePorts() {
-    for (Port *port : _portsInOrder)
-        port->update();
+    for (Port *port : _inputPorts)
+        port->evaluate();
 }
 
 void Box::verifyPorts() {
@@ -251,7 +247,7 @@ Box* Box::clone(QString name, Box *parent) {
         Port *clonedPort = myClone->peakPort(name);
         // Create port in clone, if not found
         if (!clonedPort)
-            clonedPort = new Port(name, myClone);
+            clonedPort = new Port(name, port->type(), myClone);
         // Copy my port to clone
         *clonedPort = *port;
     }
@@ -295,8 +291,8 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
 //         << " // #" << order()
          << "\n";
 
-    for (Port *port : _ports.values()) {
-        bool isInput = port->access() == PortAccess::Input,
+    for (Port *port : _portMap.values()) {
+        bool isInput = port->type() == Port::Type::Input,
              isOverridden = port->isValueOverridden(),
              doWrite = isInput &
                        (writeAllInputs || (writeOverriddenInputs && isOverridden));
@@ -304,8 +300,8 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
             port->toText(text, indentation+2);
     }
 
-    for (Port *port : _ports.values()) {
-        bool isOutput = port->access() == PortAccess::Output,
+    for (Port *port : _portMap.values()) {
+        bool isOutput = port->type() == Port::Type::Output,
              doWrite = writeOutputs && isOutput;
         if (doWrite)
             port->toText(text, indentation+2);
@@ -315,6 +311,10 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
         box->toText(text, options, indentation+2);
     }
     text << fill << "}\n";
+}
+
+void Box::trace(QString id) const {
+    dialog().information(id + " " + fullName());
 }
 
 }

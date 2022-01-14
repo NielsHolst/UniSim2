@@ -16,10 +16,7 @@
 #include "exception.h"
 #include "expression.h"
 #include "node.h"
-#include "port_access.h"
-
 #include "value.h"
-#include "expression.h"
 
 namespace base {
 
@@ -27,12 +24,12 @@ class Box;
 
 class Port : public Node, public ConstructionStep {
 public:
+    enum class Type{Input, Output, Auxiliary};
 private:
+    Type _type;             // Purpose of the port
     bool
         _isValueOverridden, // Has the default value been overridden in the BoxScript?
-        _doReset,           // Should the value be re-initialised (according to type) at reset?
-        _isAuxilliary;      // Is this a port declared in external BoxScript?
-    PortAccess _access;     // Either input or output
+        _doReset;
     QString
         _unit,              // Unit text
         _help;              // Help text
@@ -51,32 +48,31 @@ private:
 
 public:
     // Configure
-    Port(QString name, Node *parent);
+    Port(QString name, Type type, Node *parent);
     Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
     Port& operator=(const Port &x)                   { assign(x);  return *this; }
     Port& doReset();
     Port& noReset();
-    Port& access(PortAccess acc);
     Port& unit(QString value);
     Port& help(QString value);
-    Port& isAuxilliary(bool value);
     void outputNames(QStringList columnNames);
 
     // Set value
     template <class T> Port& initialize(T *variable);
     template <class T> Port& initialize(T  variable);
     Port& initialize(Value value);
+    Port& clear();
     template <class T> Port& equals(T fixedValue);
+    Port& equals(const Value &value);
     Port& equals(const Expression &expression);
     Port& imports(QString pathToPort, Caller caller=Caller());
     Port& computes(QString expression);
 
     // Query
     Box *boxParent();
-    PortAccess access() const;
+    Port::Type type() const;
     QString unit() const;
     QString help() const;
-    bool isAuxilliary() const;
     QString importPath() const;
     int size() const;
     bool isValueOverridden() const;
@@ -95,7 +91,7 @@ public:
     // Housekeeping
     void addExportPort(Port *port);
     void reset();
-    void update();
+    void evaluate();
 
     // Output
     void toText(QTextStream &text, int indentation = 0);
@@ -117,9 +113,7 @@ template <class T> Port& Port::initialize(T fixedValue) {
 
 template <class T> Port& Port::equals(T fixedValue)
 {
-    checkIfValueOverridden();
-    _expression.push(Value(fixedValue));
-    return *this;
+    return equals(Value(fixedValue));
 }
 
 template <class T> T Port::value() const
@@ -131,6 +125,12 @@ template <class T> const T* Port::valuePtr() const
 {
     return _value.constPtr<T>();
 }
+
+template<class T> T convert(Port::Type) {
+    ThrowException("Cannot convert Port::Type");
+}
+
+template<> QString convert(Port::Type type);
 
 }
 #endif

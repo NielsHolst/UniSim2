@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/box.h>
 #include <base/exception.h>
 #include <base/test_num.h>
 #include <base/vector_op.h>
@@ -22,19 +23,19 @@ void show(QString s, const QVector<double> &v) {
     std::cout << "\n";
 }
 
-DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, Box *parent_, Policy policy_)
-    : DistributedDelayBase(parent_), p(p_), policy(policy_)
+DistributedDelay2D::DistributedDelay2D(const FixedParameters &p_, Box *parent, Policy policy_)
+    : DistributedDelayBase(parent), p(p_), policy(policy_)
 {
 //    base::dialog().information("Create DistributedDelay2D");
     resize(p.k1, p.k2);
 }
 
 DistributedDelay2D::DistributedDelay2D(const DistributedDelay2D &dd)
-    : DistributedDelayBase(dd.parent), p(dd.p), policy(dd.policy), s(dd.s)
+    : DistributedDelayBase(dd._parent), p(dd.p), policy(dd.policy), s(dd.s)
 {
 //    base::dialog().information("Copy DistributedDelay2D");
-    x = dd.x;
-    xSum = dd.xSum;
+    _x = dd._x;
+    _xSum = dd._xSum;
 }
 
 DistributedDelay2D::~DistributedDelay2D() {
@@ -44,7 +45,7 @@ DistributedDelay2D::~DistributedDelay2D() {
 void DistributedDelay2D::resize(int k1, int k2) {
     p.k1 = k1;
     p.k2 = k2;
-    x.resize(p.k1*p.k2);
+    _x.resize(p.k1*p.k2);
     s.rates.resize(p.k1*p.k2);
     s.outflow1.resize(p.k2);
     s.outflow2.resize(p.k1);
@@ -61,7 +62,7 @@ void DistributedDelay2D::update(const UpdateParameters &up) {
     }
     else if (isSymmetric && hasGrowth) {
         QString msg("Growth rate different from 1 not valid for symmetric update (fgr1=%1, fgr2=%2");
-        throw Exception(msg.arg(up.fgr1).arg(up.fgr2)).context(parent);
+        throw Exception(msg.arg(up.fgr1).arg(up.fgr2)).context(_parent);
     }
 
     // Set flow parameters
@@ -76,15 +77,15 @@ void DistributedDelay2D::update(const UpdateParameters &up) {
     vector_op::multiply(flowParameters[1].inflow, 1./s.idt);
 
     // Update
-    double totalBefore = xSum + vector_op::sum(*up.inflow1) + vector_op::sum(*up.inflow2);
+    double totalBefore = _xSum + vector_op::sum(*up.inflow1) + vector_op::sum(*up.inflow2);
     if (isSymmetric)
         updateSymmetric(totalBefore);
     else
         updateAsymmetric();
 
     // Done
-    xSum = vector_op::sum(x);
-    s.growthRate = xSum + vector_op::sum(s.outflow1) + vector_op::sum(s.outflow2)- totalBefore;
+    _xSum = vector_op::sum(_x);
+    s.growthRate = _xSum + vector_op::sum(s.outflow1) + vector_op::sum(s.outflow2)- totalBefore;
 }
 
 void DistributedDelay2D::updateSymmetric(double totalBefore) {
@@ -98,13 +99,13 @@ void DistributedDelay2D::updateSymmetric(double totalBefore) {
     }
 
     // Fix inaccuracy
-    xSum = vector_op::sum(x);
+    _xSum = vector_op::sum(_x);
     double outTotal = vector_op::sum(s.outflow1) + vector_op::sum(s.outflow2);
-    s.growthRate = xSum + outTotal - totalBefore;
-    if (xSum > 0.) {
-        double factor = 1. - s.growthRate/(xSum+outTotal);
+    s.growthRate = _xSum + outTotal - totalBefore;
+    if (_xSum > 0.) {
+        double factor = 1. - s.growthRate/(_xSum+outTotal);
         if (!TestNum::eq(factor,1.)) {
-            vector_op::multiply(x, factor);
+            vector_op::multiply(_x, factor);
             vector_op::multiply(s.outflow1, factor);
             vector_op::multiply(s.outflow2, factor);
         }
@@ -124,9 +125,9 @@ void DistributedDelay2D::updateAsymmetric() {
 
 DistributedDelay2D::FlowParameters DistributedDelay2D::computeFlowParameters(double L, int k, double dt, double fgr) const {
     if (L<=0.)
-        ThrowException("L<=0").value(L).context(parent);
+        ThrowException("L<=0").value(L).context(_parent);
     if (fgr<=0.)
-        ThrowException("fgr<=0").value(fgr).context(parent);
+        ThrowException("fgr<=0").value(fgr).context(_parent);
     FlowParameters p;
     double del = L*pow(fgr, -1./k);
     double atr = k*(1./L - 1./del);
@@ -211,10 +212,10 @@ void DistributedDelay2D::updateRates() {
 
 void DistributedDelay2D::addRates() {
     for (int i = 0; i < p.k1*p.k2; ++i) {
-        x[i] += s.rates[i];
-        if (x[i] < 0) {
+        _x[i] += s.rates[i];
+        if (_x[i] < 0) {
             QString msg = "Increase internal precision of DistributedDelay2D; negative content (%1)";
-            throw Exception(msg.arg(x[i]));
+            throw Exception(msg.arg(_x[i]));
         }
     }
 }

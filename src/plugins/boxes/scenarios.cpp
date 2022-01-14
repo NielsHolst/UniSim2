@@ -5,6 +5,7 @@
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
+#include <base/port.h>
 #include <base/publish.h>
 #include "scenarios.h"
 
@@ -67,7 +68,7 @@ void Scenarios::readDataFrame() {
 void Scenarios::createColumnOutputs() {
     values.fill(QString(), _df.numCol());
     for (QString colname : _df.colNames().toVector()) {
-        Port *port = new Port(colname, this);
+        Port *port = new Port(colname, Port::Type::Input, this);
         int ixCol = _df.ixCol(colname);
         port->equals(&values[ixCol]);
     }

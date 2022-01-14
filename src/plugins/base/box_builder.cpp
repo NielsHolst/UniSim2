@@ -11,6 +11,7 @@
 #include "path.h"
 #include "value.h"
 
+
 namespace base {
 
 BoxBuilder::BoxBuilder(Box *parent)
@@ -74,7 +75,6 @@ BoxBuilder& BoxBuilder::endbox() {
 
 BoxBuilder& BoxBuilder::port(QString name) {
     if (!_currentBox)
-
         ThrowException("BoxBuilder: port declaration outside of box context");
     _currentPort = _currentBox->port(name);
     return *this;
@@ -84,10 +84,10 @@ BoxBuilder& BoxBuilder::aux(QString name, QString type) {
     if (!_currentBox) {
         ThrowException("BoxBuilder: new port declaration out of context");
     }
-    _currentPort = new Port(name, _currentBox);
-    _currentPort->isAuxilliary(true);
+    _currentPort = new Port(name, Port::Type::Auxiliary, _currentBox);
     if (!type.isEmpty())
         _currentPort->initialize(Value::create(type));
+    // std::cerr << "BoxBuilder::aux " << qPrintable(name + " " + _currentPort->value().typeName())  << std::endl;
     return *this;
 }
 
@@ -110,6 +110,8 @@ BoxBuilder& BoxBuilder::equals(Expression expression) {
         ThrowException("BoxBuilder: 'equals' must follow 'port'");
     // Assign the value to the port we are currently defining
     _currentPort->equals(expression);
+    // std::cerr << "BoxBuilder::equals (expr)" << qPrintable(_currentPort->name() + " " + _currentPort->value().typeName())
+              // << std::endl;
     return *this;
 }
 

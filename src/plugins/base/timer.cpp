@@ -9,13 +9,13 @@
 namespace base {
 
 Timer::Timer(Node *parent)
-    : Node("timer", parent)
+    : _parent(parent)
 {
 }
 
 void Timer::addProfile(QString name) {
     if (_lookup.contains(name))
-        ThrowException("Timer already present").value(name).context(this);
+        ThrowException("Timer already present").value(name).context(_parent);
     _lookup[name] = Watch{QElapsedTimer(), 0};
     _ordered << name;
 }
@@ -30,7 +30,7 @@ void Timer::reset() {
 void Timer::start(QString name) {
     if (!_lookup.contains(name))
         ThrowException("No timer with that name").value(name)
-                .value2(QStringList(_lookup.keys()).join(", ")).context(this);
+                .value2(QStringList(_lookup.keys()).join(", ")).context(_parent);
     _lookup[name].first.start();
 }
 
@@ -43,7 +43,7 @@ void Timer::stop(QString name) {
 QString Timer::report(QString separator) const {
     QString rep;
     for (QString name : _ordered)
-        rep += Node::fullName(parent()) + "\t" +
+        rep += _parent->fullName() + "\t" +
                name + "\t" +
                QString::number(_lookup.value(name).second) +
                separator ;

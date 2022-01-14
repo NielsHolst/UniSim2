@@ -11,7 +11,7 @@ namespace boxes {
 
 PUBLISH(B)
 
-B::B(QString name, Node *parent)
+B::B(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes Saltelli et al. B function");

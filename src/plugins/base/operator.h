@@ -23,7 +23,8 @@ enum class Operator {
     And,
     Or,
     Negate,
-    Not
+    Not,
+    Comma
 };
 
 enum class Parenthesis {

@@ -112,7 +112,7 @@ public:
     // -apostroped: a string it will be apostrophed
     // -vectorized: vectors will be shown on c(...) form
 
-    void reset();
+    void clear();
     // Reset value to default according to its type
 
     Type type() const

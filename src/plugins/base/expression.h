@@ -26,7 +26,7 @@ public:
         Value::Type type;
         int id;
     };
-    struct FunctionEnd {
+    struct FunctionCallEnd {
     };
     using Element = std::variant<
         Value,
@@ -34,7 +34,7 @@ public:
         Parenthesis,
         Path,
         FunctionCall,
-        FunctionEnd
+        FunctionCallEnd
     >;
     enum class Type {
         Value,
@@ -42,7 +42,7 @@ public:
         Parenthesis,
         Path,
         FunctionCall,
-        FunctionEnd
+        FunctionCallEnd
     };
     using Stack = std::vector<Element>;
 
@@ -51,31 +51,20 @@ public:
     void clear();
     int size() const     { return _stack.size();}
     bool isEmpty() const { return _stack.empty();}
-//    void translate(const boxscript::ast::Expression &astExpression);
-//    void push(boxscript::ast::Operand operand);
-//    void push(boxscript::ast::Bool b);
-//    void push(boxscript::ast::Number number);
-//    void push(boxscript::ast::QuotedString s);
-//    void push(boxscript::ast::Date date);
-//    void push(boxscript::ast::Time time);
-//    void push(boxscript::ast::DateTime dt);
-//    void push(boxscript::ast::BareDate bd);
-//    void push(boxscript::ast::Path path);
-//    void push(boxscript::ast::GroupedExpression group);
-//    void push(boxscript::ast::FunctionCall func);
+    bool isFixed() const;
     void push(Value value);
     void push(Operator operatr);
     void push(Parenthesis parenthesis);
     void push(Path path);
     void push(FunctionCall func);
-    void push(FunctionEnd end);
+    void push(FunctionCallEnd end);
     void close();
-//    void resolveImports();
     Value evaluate();
 
     const Stack& original() const;
     const Stack& stack() const;
     const Element& at(int i) const { return _stack.at(i); }
+    Type type(int i) { return type(at(i)); }
     static Type type(const Element& el) { int i=el.index(); return static_cast<Type>(i); }
     static QString elementName(const Element& el);
 

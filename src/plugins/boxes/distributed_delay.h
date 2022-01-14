@@ -4,8 +4,11 @@
 */
 #ifndef DISTRIBUTED_DELAY_H
 #define DISTRIBUTED_DELAY_H
-
 #include "distributed_delay_base.h"
+
+namespace base {
+    class Box;
+};
 
 namespace boxes {
 
@@ -21,7 +24,7 @@ public:
         State() : outflowRate(0), growthRate(0) {}
     };
 
-    DistributedDelay(const Parameters &p, Box *parent);
+    DistributedDelay(const Parameters &p, base::Box *parent);
     DistributedDelay(const DistributedDelay &dd);
     void update(double inflow, double dt, double fgr);
     State state() const;
