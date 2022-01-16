@@ -41,8 +41,6 @@ HEADERS +=  \
     circular_buffer.h \
     command.h  \
     command_help.h  \
-    computation_step.h \
-    construction_step.h \
 #    copy_folder.h \
     data_frame.h \
 #    data_grid.h \
@@ -117,8 +115,6 @@ SOURCES +=  \
     convert_operator.cpp \
     command.cpp \
     command_help.cpp  \
-    computation_step.cpp \
-    construction_step.cpp \
 #    copy_folder.cpp \
     data_frame.cpp \
 #    data_grid.cpp \

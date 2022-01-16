@@ -14,19 +14,19 @@ namespace base {
 Port::Port(QString name, Type type, Node *parent)
     : Node(name, parent),
       _type(type),
-      _isValueOverridden(false),
+      _defaultValueOverridden(false),
       _doReset(true),
       _expression(this)
 {
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
-    _doReset = (type == Type::Output);
+    _doReset = (type != Type::Input);
 }
 
 void Port::assign(const Port &x) {
    _type = x._type;
-   _isValueOverridden = x._isValueOverridden;
+   _defaultValueOverridden = x._defaultValueOverridden;
    _doReset = x._doReset;
    _unit = x._unit;
    _help = x._help;
@@ -35,8 +35,8 @@ void Port::assign(const Port &x) {
 }
 
 void Port::checkIfValueOverridden() {
-    Box *boxParent = dynamic_cast<Box*>(parent());
-    _isValueOverridden =  boxParent && !boxParent->underConstruction();
+    auto *p = parent<Box*>();
+    _defaultValueOverridden = p && p->computationStep()!=Box::ComputationStep::Construct;
 }
 
 Port& Port::doReset() {
@@ -158,7 +158,7 @@ int Port::size() const {
 }
 
 bool Port::isValueOverridden() const {
-    return _isValueOverridden;
+    return _defaultValueOverridden;
 }
 
 QStringList Port::outputNames() const {
@@ -236,8 +236,8 @@ void Port::reset() {
 
 void Port::evaluate() {
     _value = _expression.evaluate();
-    QString type = _value.typeName();
-    std::cout << "Port::evaluate " << qPrintable(type) << std::endl;
+//    QString type = _value.typeName();
+//    std::cout << "Port::evaluate " << qPrintable(type) << std::endl;
 }
 
 // Access

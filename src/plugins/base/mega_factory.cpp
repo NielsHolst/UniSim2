@@ -10,7 +10,6 @@
 #include <QSettings>
 #include <QStringList>
 #include "box.h"
-#include "construction_step.h"
 #include "dialog.h"
 #include "exception.h"
 #include "factory_plug_in.h"
@@ -95,9 +94,10 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
         }
     }
 
-    ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
-    if (step)
-        step->finishConstruction();
+// Unused?
+//    ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
+//    if (step)
+//        step->finishConstruction();
 
     Node *node = dynamic_cast<Node*>(creation);
     if (node)

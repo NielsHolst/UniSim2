@@ -4,11 +4,7 @@
 */
 #include "box.h"
 #include "box_builder.h"
-#include "computation_step.h"
-#include "dialog.h"
-#include "environment.h"
 #include "mega_factory.h"
-#include "path.h"
 #include "value.h"
 
 
@@ -23,8 +19,6 @@ BoxBuilder::BoxBuilder(Box *parent)
         _content = _currentBox = parent;
         _stack.push(_currentBox);
     }
-    else
-        clear();
 }
 
 BoxBuilder::~BoxBuilder() {
@@ -32,9 +26,10 @@ BoxBuilder::~BoxBuilder() {
         content(BoxBuilder::Amend::Descendants, _exceptionCount==Exception::count());
 }
 
-void BoxBuilder::clear() {
-    environment().computationStep(ComputationStep::Construct);
-}
+// Unused?
+//void BoxBuilder::clear() {
+//    environment().computationStep(ComputationStep::Construct);
+//}
 
 BoxBuilder& BoxBuilder::box(Box *box) {
     box->setParent(_currentBox);

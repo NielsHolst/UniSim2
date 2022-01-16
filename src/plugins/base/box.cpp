@@ -19,7 +19,7 @@ bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, Box *parent)
-    : Node(name, parent), _amended(false), _cloned(false), _timer(this)
+    : Node(name, parent), _computationStep(ComputationStep::Construct), _amended(false), _cloned(false), _timer(this)
 {
     help("has no documented functionality");
     if (!_latest || parent)
@@ -109,14 +109,16 @@ void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
-void Box::amendFamily() {
+void Box::amendFamily(bool announce) {
+    if (announce) dialog().message("Amending...");
     try {
         if (_amended) return;
         createTimers();
         _timer.start("amend");
         for (auto box : children<Box*>())
-            box->amendFamily();
+            box->amendFamily(false);
         if (_traceOn) trace("amend");
+        computationStep(ComputationStep::Amend);
         amend();
         _amended = true;
         _timer.stop("amend");
@@ -149,71 +151,77 @@ void Box::stopTimer(QString name) {
     _timer.stop(name);
 }
 
-void Box::initializeFamily() {
+void Box::initializeFamily(bool announce) {
+    if (announce) dialog().message("Initializing...");
     _timer.reset();
     _timer.start("initialize");
     for (auto box : children<Box*>())
-        box->initializeFamily();
-
-//    for (auto port : children<Port*>()) {
-//        auto value = port->value();
-//        if (value.type() == Value::Type::Uninitialized) {
-//            QString s = "Box::initializeFamily: " + port->name() + " is uninitialized\n";
-//            auto expr = port->expression();
-//            s += "  expr size = " + QString::number(expr.size()) + "\n";
-//            if (!expr.isEmpty())
-//                s += " expr[0] type = " + Expression::elementName(expr.at(0));
-//            std::cerr << qPrintable(s) << std::endl;
-//        }
-//    }
-
+        box->initializeFamily(false);
     if (_traceOn) trace("initialize");
+    computationStep(ComputationStep::Initialize);
     initialize();
     _timer.stop("initialize");
 }
 
-void Box::resetFamily() {
+void Box::resetFamily(bool announce) {
+    if (announce) dialog().message("Announcing...");
     _timer.start("reset");
     for (auto box : children<Box*>())
-        box->resetFamily();
+        box->resetFamily(false);
     resetPorts();
     if (_traceOn) trace("reset");
+    computationStep(ComputationStep::Reset);
     reset();
     verifyPorts();
     _timer.stop("reset");
 }
 
-void Box::updateFamily() {
+void Box::updateFamily(bool annouce) {
+    if (annouce) dialog().message("Updating...");
     _timer.start("update");
     for (auto box : children<Box*>())
-        box->updateFamily();
+        box->updateFamily(false);
     updatePorts();
     if (_traceOn) trace("update");
+    computationStep(ComputationStep::Update);
     update();
     verifyPorts();
     _timer.stop("update");
 }
 
-void Box::cleanupFamily() {
+void Box::cleanupFamily(bool annouce) {
+    if (annouce) dialog().message("Cleaning up...");
     _timer.start("cleanup");
     for (auto box : children<Box*>())
-        box->cleanupFamily();
+        box->cleanupFamily(false);
     updatePorts();
     if (_traceOn) trace("cleanup");
+    computationStep(ComputationStep::Cleanup);
     cleanup();
     verifyPorts();
     _timer.stop("cleanup");
 }
 
-void Box::debriefFamily() {
+void Box::debriefFamily(bool annouce) {
+    if (annouce) dialog().message("Debriefing...");
     _timer.start("debrief");
     for (auto box : children<Box*>())
-        box->debriefFamily();
+        box->debriefFamily(false);
     updatePorts();
     if (_traceOn) trace("debrief");
+    computationStep(ComputationStep::Debrief);
     debrief();
     verifyPorts();
     _timer.stop("debrief");
+    if (annouce) dialog().message("Ready");
+}
+
+void Box::computationStep(ComputationStep step) {
+    _computationStep = step;
+}
+
+Box::ComputationStep Box::computationStep() const {
+    return _computationStep;
 }
 
 const QVector<Port*> &Box::portsInOrder() {
@@ -284,12 +292,7 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
     QString fill;
     fill.fill(' ', indentation);
 
-    QString postfix = (constructionStep() == ComputationStep::Amend) ? " //amended" : "";
-
-    text << fill << className() << " " << objectName()
-         << " {" << postfix
-//         << " // #" << order()
-         << "\n";
+    text << fill << className() << " " << objectName() << " {\n";
 
     for (Port *port : _portMap.values()) {
         bool isInput = port->type() == Port::Type::Input,
@@ -315,6 +318,26 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
 
 void Box::trace(QString id) const {
     dialog().information(id + " " + fullName());
+}
+
+Box::ComputationStep Box::lookup(QString step, Box *context) {
+    static QMap<QString, ComputationStep> map =
+    {
+        {"construct", ComputationStep::Construct},
+        {"amend", ComputationStep::Amend},
+        {"initialize", ComputationStep::Initialize},
+        {"reset", ComputationStep::Reset},
+        {"update", ComputationStep::Update},
+        {"cleanup", ComputationStep::Cleanup},
+        {"debrief", ComputationStep::Debrief},
+        {"ready", ComputationStep::Ready}
+    };
+    if (!map.contains(step)) {
+        QStringList list = map.keys();
+        QString s = list.join(", ");
+        ThrowException("Unknown computation step").value(step).hint(s).context(context);
+    }
+    return map.value(step);
 }
 
 }

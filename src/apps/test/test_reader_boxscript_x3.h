@@ -7,6 +7,7 @@ class TestReaderBoxScriptX3 : public QObject
     Q_OBJECT
 private slots:
     void testAuxAllTypes();
+    void testResetUpdate();
 };
 
 DECLARE_TEST(TestReaderBoxScriptX3)

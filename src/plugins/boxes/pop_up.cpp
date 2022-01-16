@@ -3,10 +3,8 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QTextEdit>
-#include <base/computation_step.h>
 #include <base/dialog.h>
 #include <base/exception.h>
-#include <base/history.h>
 #include <base/publish.h>
 #include "pop_up.h"
 
@@ -34,49 +32,35 @@ PopUp::PopUp(QString name, Box *parent)
 }
 
 void PopUp::amend() {
-    _error = false;
-    try {
-        _when = convert<ComputationStep>(when);
-    }
-    catch (Exception &ex) {
-        _error = true;
-        _errorMsg = ex.what();
-    }
+    _when = convert<ComputationStep>(when);
     if (_when == ComputationStep::Amend)
         showPopUp();
 }
 
 void PopUp::initialize() {
-    // Handle error
-    if (_error)
-        ThrowException(_errorMsg).context(this);
     // Check buttons (convert and throw away)
     toButtons(buttons);
     toButton(defaultButton);
     toButton(escapeButton);
     // Maybe show
-    if (_when==ComputationStep::Initialize && latestCommand()=="run")
+    if (_when==ComputationStep::Initialize && dialog().latestCommand()=="run")
         showPopUp();
 }
 
 void PopUp::reset() {
-    if (_when == ComputationStep::Reset)
-        showPopUp();
+    if (_when == ComputationStep::Reset) showPopUp();
 }
 
 void PopUp::update() {
-    if (_when == ComputationStep::Update)
-        showPopUp();
+    if (_when == ComputationStep::Update) showPopUp();
 }
 
 void PopUp::cleanup() {
-    if (_when == ComputationStep::Cleanup)
-        showPopUp();
+    if (_when == ComputationStep::Cleanup) showPopUp();
 }
 
 void PopUp::debrief() {
-    if (_when == ComputationStep::Debrief)
-        showPopUp();
+    if (_when == ComputationStep::Debrief) showPopUp();
 }
 
 void PopUp::showPopUp() {
@@ -122,11 +106,6 @@ QMessageBox::Icon PopUp::toIcon(QString source) {
     if (s == "warning") return QMessageBox::Warning;
     if (s == "critical") return QMessageBox::Critical;
     ThrowException("Unknown icon").value(source).context(this);
-}
-
-QString PopUp::latestCommand() const {
-    QString s = dialog().history()->previous();
-    return s.trimmed().split(" ").at(0).toLower();
 }
 
 } //namespace

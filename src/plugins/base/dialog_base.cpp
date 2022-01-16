@@ -95,5 +95,11 @@ int DialogBase::errorCount() const {
    return _errorCount;
 }
 
+QString DialogBase::latestCommand() const {
+    QString s = dialog().history()->previous();
+    auto items = s.trimmed().split(" ");
+    return items.isEmpty() ? "" : items.at(0);
+}
+
 }
 

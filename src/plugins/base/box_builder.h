@@ -23,7 +23,7 @@ class BoxBuilder
 public:
     BoxBuilder(Box *parent=nullptr);
     ~BoxBuilder();
-    void clear();
+//    void clear();
     // Box
     BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");

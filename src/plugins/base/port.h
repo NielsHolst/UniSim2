@@ -11,7 +11,6 @@
 #include <QTextStream>
 #include <QVector>
 #include "caller.h"
-#include "construction_step.h"
 #include "convert.h"
 #include "exception.h"
 #include "expression.h"
@@ -22,13 +21,13 @@ namespace base {
 
 class Box;
 
-class Port : public Node, public ConstructionStep {
+class Port : public Node {
 public:
     enum class Type{Input, Output, Auxiliary};
 private:
     Type _type;             // Purpose of the port
     bool
-        _isValueOverridden, // Has the default value been overridden in the BoxScript?
+        _defaultValueOverridden, // Has the default value been overridden in the BoxScript?
         _doReset;
     QString
         _unit,              // Unit text

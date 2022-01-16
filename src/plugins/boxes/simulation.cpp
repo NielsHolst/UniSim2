@@ -59,20 +59,14 @@ void Simulation::run() {
     QElapsedTimer time;
     try {
         time.start();
-        environment().computationStep(ComputationStep::Initialize);
-//        resolveImportsFamily();
         initializeFamily();
-
         for (iteration = 1;
              (useStopIterations && !stopIterations && iterations==1) ||         // apply flag only
              (useStopIterations && !stopIterations && iteration<=iterations) || // apply both lag and count
              (!useStopIterations && iteration<=iterations);                     // apply count only
               ++iteration)
         {
-            environment().computationStep(ComputationStep::Reset);
             resetFamily();
-            environment().computationStep(ComputationStep::Update);
-
             for (step = 1;
                  (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
                  (useStopSteps && !stopSteps && step<=steps) || // apply both flag and count
@@ -82,17 +76,14 @@ void Simulation::run() {
                 show(time);
                 updateFamily();
             }
-            environment().computationStep(ComputationStep::Cleanup);
             cleanupFamily();
         }
-        environment().computationStep(ComputationStep::Debrief);
         debriefFamily();
     }
     catch (Exception &ex) {
         hasError = true;
         errorMsg = ex.what();
     }
-    environment().computationStep(ComputationStep::Ready);
     dialog().finishProgress();
     executionTime = boost::numeric_cast<int>(time.elapsed());
 }

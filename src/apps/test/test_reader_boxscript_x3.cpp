@@ -23,12 +23,12 @@ auto vstr(QVector<T> v) {
 
 void TestReaderBoxScriptX3::testAuxAllTypes() {
     bool excepted(false);
-    Box *root;
+    std::unique_ptr<Box> root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/aux_all_types.box"));
-        root = builder.content();
+        root = std::unique_ptr<Box>( builder.content() );
     }
     UNEXPECTED_EXCEPTION;
 
@@ -125,4 +125,52 @@ void TestReaderBoxScriptX3::testAuxAllTypes() {
         QCOMPARE(root->port("vh")->value<vBareDate>(), vBareDate()<<BareDate(12,24)<<BareDate(12,31)<<BareDate(2,29));
     }
     UNEXPECTED_EXCEPTION;
+}
+
+void TestReaderBoxScriptX3::testResetUpdate() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/reset_update.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+    //
+    // Check port values after construction and amend
+    //
+    try {
+        QCOMPARE(root->port("a")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("a")->value<int>(), 10);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("b")->value().type(), Value::Type::Uninitialized);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("c")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("c")->value<int>(), 20);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("d")->value().type(), Value::Type::Uninitialized);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("e")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("e")->value<int>(), 10);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->findOne<Box*>("B")->port("a")->value().type(), Value::Type::Int);
+        QCOMPARE(root->findOne<Box*>("B")->port("a")->value<int>(), 20);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->findOne<Port*>("B[b]")->value().type(), Value::Type::Uninitialized);
+    }
+    UNEXPECTED_EXCEPTION;
+
 }

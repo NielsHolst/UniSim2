@@ -124,17 +124,17 @@ inline int precedence(Expression::Element element) {
 }
 
 void Expression::toPostfix() {
-    std::cout << "toPostfix " << qPrintable(toString(_stack)) << std::endl;
+//    std::cout << "toPostfix " << qPrintable(toString(_stack)) << std::endl;
     // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
     for (auto &element : _stack) {
         QString s1 = elementName(element),
                 s2 = toString(postfix),
                 s3 = toString(myStack);
-        std::cout << qPrintable(s1) << " =>"
-                  << "\npostfix stack = " << qPrintable(s2)
-                  << "\n      mystack = " << qPrintable(s3)
-                  << std::endl;
+//        std::cout << qPrintable(s1) << " =>"
+//                  << "\npostfix stack = " << qPrintable(s2)
+//                  << "\n      mystack = " << qPrintable(s3)
+//                  << std::endl;
         switch (type(element)) {
         case Type::Value:
             postfix.push_back(element);
@@ -152,12 +152,12 @@ void Expression::toPostfix() {
                 while (!myStack.empty() && precedence(element) <= precedence(myStack.back())) {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
-                    s2 = toString(postfix);
-                    s3 = toString(myStack);
-                    std::cout << "Push and pop"
-                              << "\npostfix stack = " << qPrintable(s2)
-                              << "\n      mystack = " << qPrintable(s3)
-                              << std::endl;
+//                    s2 = toString(postfix);
+//                    s3 = toString(myStack);
+//                    std::cout << "Push and pop"
+//                              << "\npostfix stack = " << qPrintable(s2)
+//                              << "\n      mystack = " << qPrintable(s3)
+//                              << std::endl;
                 }
                 // Comma goes on to postfix, other operator is kept for later
                 if (isComma(element))
@@ -202,12 +202,12 @@ void Expression::toPostfix() {
     while (!myStack.empty()) {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
-        QString s2 = toString(postfix),
-                s3 = toString(myStack);
-        std::cout << "Push and pop"
-                  << "\npostfix stack = " << qPrintable(s2)
-                  << "\n      mystack = " << qPrintable(s3)
-                  << std::endl;
+//        QString s2 = toString(postfix),
+//                s3 = toString(myStack);
+//        std::cout << "Push and pop"
+//                  << "\npostfix stack = " << qPrintable(s2)
+//                  << "\n      mystack = " << qPrintable(s3)
+//                  << std::endl;
     }
     // Copy result
     _stack.clear();

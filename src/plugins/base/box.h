@@ -23,9 +23,11 @@ namespace base {
 
 class Port;
 
-class Box : public Node, public ConstructionStep
+class Box : public Node
 {
 public:
+    enum class ComputationStep {Construct, Amend, Initialize, Reset, Update, Cleanup, Debrief, Ready};
+
     Box(QString name, Box *parent);
     ~Box();
     void addPort(Port *port);
@@ -57,12 +59,15 @@ public:
     virtual void import() {}
     virtual void run();
 
-    void amendFamily();
-    void initializeFamily();
-    void resetFamily();
-    void updateFamily();
-    void cleanupFamily();
-    void debriefFamily();
+    void amendFamily(bool announce=true);
+    void initializeFamily(bool announce=true);
+    void resetFamily(bool announce=true);
+    void updateFamily(bool announce=true);
+    void cleanupFamily(bool announce=true);
+    void debriefFamily(bool announce=true);
+
+    void computationStep(ComputationStep step);
+    ComputationStep computationStep() const;
 
     const QVector<Port*> &portsInOrder();
     void updatePorts();
@@ -81,9 +86,12 @@ public:
 
     void toText(QTextStream &text, QString options = "", int indentation = 0) const;
     QString profileReport();
+
+    static ComputationStep lookup(QString step, Box *context);
 private:
     // Data
     QString _help, _sideEffects;
+    ComputationStep _computationStep;
     QMap<QString,Port*> _portMap;
     QVector<Port*> _portsInOrder, _inputPorts, _trackedPorts;
     bool _amended, _cloned;

@@ -79,41 +79,6 @@ Environment::~Environment() {
     }
 }
 
-ComputationStep Environment::computationStep() const {
-    return _computationStep;
-}
-void Environment::computationStep(ComputationStep step, bool showInDialog) {
-    // Change step
-    _computationStep = step;
-    // Show step in dialog
-    QString info = (step == ComputationStep::Start || step == ComputationStep::Ready) ?
-                    QString() : (convert<QString>(step) + "...");
-    if (showInDialog & !_isSilent)
-        dialog().information(info);
-    // Show step in status bar
-    switch (step) {
-    case ComputationStep::Construct:
-        dialog().message("Construct...");
-        if (_root) delete _root;
-        _root = _current = nullptr;
-        break;
-    case ComputationStep::Amend:
-        dialog().message("Amending...");
-        break;
-    case ComputationStep::Start:
-        dialog().message("Starting...");
-        break;
-    case ComputationStep::Ready:
-        dialog().message("Ready");
-        break;
-    case ComputationStep::Initialize:
-        dialog().message("Running...");
-        break;
-    default:
-        ;
-    }
-}
-
 QString Environment::homePath() const {
     QStringList paths =
         QStandardPaths::standardLocations(QStandardPaths::HomeLocation);

@@ -6,8 +6,6 @@
 #define POP_UP_H
 #include <QMessageBox>
 #include <base/box.h>
-#include <base/computation_step.h>
-#include <base/convert.h>
 
 namespace boxes {
 
@@ -30,9 +28,7 @@ private:
     QString answer;
     bool accepted, notAccepted;
     // Data
-    base::ComputationStep _when;
-    bool _error;
-    QString _errorMsg;
+    Box::ComputationStep _when;
     // Methods
     void showPopUp();
     QMessageBox::StandardButton toButton(QString source);

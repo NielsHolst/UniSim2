@@ -53,6 +53,7 @@ public:
     int errorCount() const;
 
     virtual void writePrompt() {}
+    QString latestCommand() const;
 
 private:
     // singleton data

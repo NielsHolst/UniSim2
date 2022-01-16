@@ -40,6 +40,7 @@ DialogWidget::DialogWidget(QMainWindow *parent)
     setObjectName("dialog");
     setDocument(_textDocument = new QTextDocument(this));
     setFocus(Qt::ActiveWindowFocusReason);
+    message("Starting up...");
 }
 
 void DialogWidget::init() {
@@ -379,8 +380,6 @@ void DialogWidget::writePrompt() {
 void DialogWidget::writeWelcome() {
     bool isFirstInstallation = environment().isFirstInstallation();
     information(isFirstInstallation ? "\nWelcome to Universal Simulator!" : "\nWelcome back!");
-
-    environment().computationStep(ComputationStep::Start);
     environment().checkInstallation();
 
     information("Saving box script grammar...");
@@ -406,7 +405,7 @@ void DialogWidget::writeWelcome() {
                   "Use the 'libr i' command whenever you want to see this list again. ");
     else
         showNews();
-    environment().computationStep(ComputationStep::Ready);
+    message("Ready");
 }
 
 void DialogWidget::showNews() {

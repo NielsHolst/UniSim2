@@ -9,7 +9,6 @@
 #include <QMap>
 #include <QStack>
 #include <QVariant>
-#include "computation_step.h"
 #include "convert.h"
 #include "exception.h"
 
@@ -25,9 +24,6 @@ public:
 
     Environment();
     ~Environment();
-
-    ComputationStep computationStep() const;
-    void computationStep(ComputationStep step, bool showInDialog = true);
 
     QString homePath() const;
 
@@ -80,7 +76,6 @@ public:
 private:
     // Data
     Box *_root, *_current;
-    ComputationStep _computationStep;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;
