@@ -60,10 +60,9 @@ void Node::enumerate() {
 }
 
 void Node::enumerate(int &i) {
-    for (auto *box : children<Box*>())
+    for (auto *box : children<Node*>())
         box->enumerate(i);
     _order = i++;
-    // std::cerr << qPrintable(fullName()) << " " << _order << std::endl;
 }
 
 QString Node::objectName() const {

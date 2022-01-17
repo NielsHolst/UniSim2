@@ -16,7 +16,7 @@ inline QString aph(bool apostrophed, QString s) {
 QString Value::asString(bool apostrophed, bool vectorized) const {
     QStringList slist;
     switch(type()) {
-    case Type::Uninitialized: break;
+    case Type::Uninitialized: slist += "uninitialized"; break;
     case Type::VecBool      : for (auto x : as<vbool     >()) slist += convert<QString>(x);; break;
     case Type::VecInt       : for (auto x : as<vint      >()) slist += convert<QString>(x);; break;
     case Type::VecDouble    : for (auto x : as<vdouble   >()) slist += convert<QString>(x);; break;

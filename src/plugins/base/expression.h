@@ -10,9 +10,12 @@
 #include "boxscript_ast.h"
 #include "operator.h"
 #include "path.h"
+#include "success.h"
 #include "value.h"
 
 namespace base {
+
+class Box;
 
 class Expression
 {
@@ -59,8 +62,10 @@ public:
     void push(FunctionCall func);
     void push(FunctionCallEnd end);
     void close();
+    bool resolveImports(Success rule);
     Value evaluate();
 
+    Box *boxAncestor();
     const Stack& original() const;
     const Stack& stack() const;
     const Element& at(int i) const { return _stack.at(i); }

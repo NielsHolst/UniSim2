@@ -25,7 +25,7 @@ SelectFile::SelectFile(QString name, Box *parent)
     Input(selectFileNumber).equals(1).help("Which file to pick");
     Input(fileNumberOffset).equals(1).help("Offset for fileNumber, typically 0 or 1");
     Input(showFileNames).equals(true).help("Show set of file names?").unit("bool");
-    Output(numFiles).noReset().help("Number of matching files");
+    Output(numFiles).noClear().help("Number of matching files");
     Output(fileName).help("Name of selected file");
     Output(fileNamePath).help("Name of selected file with absolute path");
 }

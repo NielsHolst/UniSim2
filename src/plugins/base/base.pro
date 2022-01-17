@@ -86,6 +86,7 @@ HEADERS +=  \
     save_grammar_notepad.h \
 #    save_graph_base.h \
 #    save_graph_graphviz.h \
+    success.h \
     table.h \
     test_num.h \
     to_q_string_list.h \

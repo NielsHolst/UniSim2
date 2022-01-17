@@ -16,6 +16,7 @@
 #include "expression.h"
 #include "node.h"
 #include "value.h"
+#include "success.h"
 
 namespace base {
 
@@ -27,8 +28,11 @@ public:
 private:
     Type _type;             // Purpose of the port
     bool
-        _defaultValueOverridden, // Has the default value been overridden in the BoxScript?
-        _doReset;
+        _hasBeenRedefined, // Has the default value been overridden in the BoxScript?
+        _clearAtReset,                // Is value set to T() at reset()? Defaults to true for output and aux ports
+        _hasBeenFixed;           // An input port can be fixed in initialize() or later, which means the expression does
+                                 // not be to evaluated again. Fixing happens if the expression is a constant value or its
+                                 // evaluation involves only constants and other fixed ports
     QString
         _unit,              // Unit text
         _help;              // Help text
@@ -48,24 +52,27 @@ private:
 public:
     // Configure
     Port(QString name, Type type, Node *parent);
-    Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
-    Port& operator=(const Port &x)                   { assign(x);  return *this; }
-    Port& doReset();
-    Port& noReset();
+//    Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
+//    Port& operator=(const Port &x)                   { assign(x);  return *this; }
+    Port& doClear();
+    Port& noClear();
     Port& unit(QString value);
     Port& help(QString value);
     void outputNames(QStringList columnNames);
 
-    // Set value
+    // Define port
     template <class T> Port& initialize(T *variable);
     template <class T> Port& initialize(T  variable);
     Port& initialize(Value value);
-    Port& clear();
     template <class T> Port& equals(T fixedValue);
     Port& equals(const Value &value);
     Port& equals(const Expression &expression);
     Port& imports(QString pathToPort, Caller caller=Caller());
     Port& computes(QString expression);
+
+    // Change value
+    void clear();
+    void evaluate(Success rule);
 
     // Query
     Box *boxParent();
@@ -89,14 +96,12 @@ public:
 
     // Housekeeping
     void addExportPort(Port *port);
-    void reset();
-    void evaluate();
 
     // Output
     void toText(QTextStream &text, int indentation = 0);
 private:
-    void assign(const Port &x);
-    void checkIfValueOverridden();
+    void define();
+//    void assign(const Port &x);
 };
 
 template <class T> Port& Port::initialize(T *variable) {

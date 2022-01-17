@@ -52,6 +52,7 @@ private:
     int _order;
     void addChild(Node *child);
     void enumerate(int &i);
+    template <class T=Node*> QVector<T> descendants(bool includeMe);
 };
 
 template <class T> T Node::parent() const {
@@ -74,12 +75,19 @@ template <> inline QVector<Node*> Node::children() {
 template <> QVector<Box*> Node::children();
 
 template <class T> QVector<T> Node::descendants() {
-    QVector<T> result;
-    for (auto child : _children)
-        result.append(child->children<T>());
-    return result;
+    return descendants<T>(false);
 }
 
+template <class T> QVector<T> Node::descendants(bool includeMe) {
+    QVector<T> result;
+    for (auto child : _children)
+        result.append(child->descendants<T>(true));
+    if (includeMe) {
+        T res = dynamic_cast<T>(this);
+        if (res) result << res;
+    }
+    return result;
+}
 
 inline bool operator<(const Node &a, const Node &b) {
     return a.order() < b.order();

@@ -29,7 +29,7 @@ OutputText::OutputText(QString name, Box *parent)
     Input(step).imports("/*[step]");
     Input(isActive).imports("./*[isActive] | ../*[isActive]"); // look in child and sibling
     Input(summary) .imports("./*[summary]  | ../*[summary]");  // look in child and sibling
-    Output(filePath).noReset().help("Name of output file including absolute path");
+    Output(filePath).noClear().help("Name of output file including absolute path");
 }
 
 void OutputText::initialize() {

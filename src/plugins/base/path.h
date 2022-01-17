@@ -75,9 +75,7 @@ public:
         bool _hasRoot;
         QVector<Node> _nodes;
         std::optional<Port> _port;
-
         Objects _matches;
-        bool _isMatched;
 
         // Methods
         void initiateMatches(const Node &node);
@@ -130,15 +128,13 @@ private:
     // Data
     Object *_parent;
     QVector<Alternative> _alternatives;
-
     Objects _matches;
-    bool _isMatched;
 };
 
 template<class T> inline T Path::findOne() {
     QVector<T> result = findMany<T>();
     if (result.size() != 1)
-        ThrowException("Expected exactly one match").value(result.size).context(_parent);
+        ThrowException("Expected exactly one match").value1(toString()).value2(result.size()).context(_parent);
     return result[0];
 }
 
@@ -147,7 +143,7 @@ template<class T> inline T Path::findMaybeOne() {
     switch (result.size()) {
     case 0: return nullptr;
     case 1: return result[0];
-    default: ThrowException("Expected only one match").value(result.size).context(_parent);
+    default: ThrowException("Expected at most one match").value1(toString()).value2(result.size()).context(_parent);
     }
 }
 

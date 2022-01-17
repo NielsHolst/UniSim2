@@ -4,6 +4,7 @@
 */
 #include <limits>
 #include <sstream>
+#include "box.h"
 #include "exception.h"
 #include "expression.h"
 #include "convert_operator.h"
@@ -224,6 +225,7 @@ Expression::Element Expression::registerFunctionCall(const Element &element) {
 void Expression::reduceByOperator(Stack &stack) {
     // Second operator for arity==2
     Value b;
+    bool bIsOk = true;
     // Pop operator
     Operator op = get<Operator>(stack.back());
     stack.pop_back();
@@ -232,6 +234,7 @@ void Expression::reduceByOperator(Stack &stack) {
     Q_ASSERT(isValue(stack.back()));
     if (arity(op) == 2) {
         b = get<Value>(stack.back());
+        bIsOk = (b.type() != Value::Type::Uninitialized);
         stack.pop_back();
     }
     // Check stack sanity before referencing stack top
@@ -240,26 +243,28 @@ void Expression::reduceByOperator(Stack &stack) {
     const Value &a = get<Value>(stack.back());
     // Result
     Value c;
-    // Carry out operation and leave result in stack top
-    switch (op) {
-    case Operator::Add          : c = operate::add(a,b); break;
-    case Operator::Subtract     : c = operate::subtract(a,b); break;
-    case Operator::Multiply     : c = operate::multiply(a,b); break;
-    case Operator::Divide       : c = operate::divide(a,b); break;
-    case Operator::Exponentiate : c = operate::exponentiate(a,b); break;
-    case Operator::Larger       : c = operate::larger(a,b); break;
-    case Operator::LargerOrEqual: c = operate::largerOrEqual(a,b); break;
-    case Operator::Less         : c = operate::less(a,b); break;
-    case Operator::LessOrEqual  : c = operate::lessOrEqual(a,b); break;
-    case Operator::Equal        : c = operate::equal(a,b); break;
-    case Operator::NotEqual     : c = operate::notEqual(a,b); break;
-    case Operator::And          : c = operate::and_(a,b); break;
-    case Operator::Or           : c = operate::or_(a,b); break;
-    case Operator::Negate       : c = operate::negate(a); break;
-    case Operator::Not          : c = operate::not_(a); break;
-    case Operator::Comma        :ThrowException("Cannot reduce by comma operator").context(_parent); break;
+    // If operand(s) are OK then carry out operation and leave result in stack top
+    if (a.type() != Value::Type::Uninitialized && bIsOk) {
+        switch (op) {
+        case Operator::Add          : c = operate::add(a,b); break;
+        case Operator::Subtract     : c = operate::subtract(a,b); break;
+        case Operator::Multiply     : c = operate::multiply(a,b); break;
+        case Operator::Divide       : c = operate::divide(a,b); break;
+        case Operator::Exponentiate : c = operate::exponentiate(a,b); break;
+        case Operator::Larger       : c = operate::larger(a,b); break;
+        case Operator::LargerOrEqual: c = operate::largerOrEqual(a,b); break;
+        case Operator::Less         : c = operate::less(a,b); break;
+        case Operator::LessOrEqual  : c = operate::lessOrEqual(a,b); break;
+        case Operator::Equal        : c = operate::equal(a,b); break;
+        case Operator::NotEqual     : c = operate::notEqual(a,b); break;
+        case Operator::And          : c = operate::and_(a,b); break;
+        case Operator::Or           : c = operate::or_(a,b); break;
+        case Operator::Negate       : c = operate::negate(a); break;
+        case Operator::Not          : c = operate::not_(a); break;
+        case Operator::Comma        :ThrowException("Cannot reduce by comma operator").context(_parent); break;
+        }
     }
-    // We need to pop operator and push result, because result may be of another type
+    // We need to pop operand and push result, because result may be of another type
     stack.pop_back();
     stack.push_back(c);
 }
@@ -473,6 +478,51 @@ Value Expression::evaluate() {
     Value value = get<Value>(result);
     return get<Value>(result);
 
+}
+
+bool Expression::resolveImports(Success rule) {
+    bool allResolved = true;
+    Box *box = boxAncestor();
+    QString s1 = stackAsString();
+    for (Element &element : _stack) {
+        if (type(element) == Type::Path) {
+            Path &path = get<Path>(element);
+            path.setParent(box);
+            auto matches = path.findMany<Port*>();
+            switch (matches.size()) {
+            case 0:
+                if (rule == Success::MustSucceed) {
+                    ThrowException("Could not find port").
+                            value1(originalAsString()).value2(path.toString()).
+                            context(box);
+                }
+                allResolved = false;
+                break;
+            case 1:
+                element = matches.at(0)->value();
+                break;
+            default:
+                ThrowException("Multiple matches not implemented").hint("Insert c function call to combine values from matches");
+            }
+        }
+    }
+    QString s2 = stackAsString();
+    std::cout << "Expression::resolveImports\n"
+              << qPrintable(s1) << "\n"
+              << qPrintable(s2) << std::endl;
+    return allResolved;
+}
+
+Box *Expression::boxAncestor() {
+    if (!_parent)
+        ThrowException("Expressions needs a parent").value(originalAsString());
+    auto *box  = dynamic_cast<Box* >(_parent);
+    auto *port = dynamic_cast<Port*>(_parent);
+    if (port)
+        box = port->parent<Box*>();
+    if (!box)
+        ThrowException("Expression must be declated inside a box").value(originalAsString());
+    return box;
 }
 
 const Expression::Stack& Expression::original() const {

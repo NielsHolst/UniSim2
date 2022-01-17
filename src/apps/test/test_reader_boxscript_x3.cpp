@@ -127,13 +127,13 @@ void TestReaderBoxScriptX3::testAuxAllTypes() {
     UNEXPECTED_EXCEPTION;
 }
 
-void TestReaderBoxScriptX3::testResetUpdate() {
+void TestReaderBoxScriptX3::testConstructAmend() {
     bool excepted(false);
     std::unique_ptr<Box> root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
-        reader.parse(inputFilePath("box_script/reset_update.box"));
+        reader.parse(inputFilePath("box_script/construct_amend.box"));
         root = std::unique_ptr<Box>( builder.content() );
     }
     UNEXPECTED_EXCEPTION;
@@ -146,7 +146,8 @@ void TestReaderBoxScriptX3::testResetUpdate() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->port("b")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->port("b")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("b")->value<int>(), 20);
     }
     UNEXPECTED_EXCEPTION;
     try {
@@ -159,8 +160,8 @@ void TestReaderBoxScriptX3::testResetUpdate() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->port("e")->value().type(), Value::Type::Int);
-        QCOMPARE(root->port("e")->value<int>(), 10);
+        QVERIFY2(root->port("e")->value().type() == Value::Type::Int, qPrintable(root->port("e")->value().typeName()));
+        QVERIFY2(root->port("e")->value<int>() == 5, qPrintable(root->port("e")->value().asString(true,true)));
     }
     UNEXPECTED_EXCEPTION;
     try {
@@ -169,8 +170,54 @@ void TestReaderBoxScriptX3::testResetUpdate() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->findOne<Port*>("B[b]")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->findOne<Port*>("B[b]")->value().type(), Value::Type::Int);
+        QCOMPARE(root->findOne<Port*>("B[b]")->value<int>(), -10);
     }
     UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Uninitialized);
+    }
+    UNEXPECTED_EXCEPTION;
+}
 
+void TestReaderBoxScriptX3::testInitialize() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/initialize.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+        root->initializeFamily();
+    }
+    UNEXPECTED_EXCEPTION;
+    //
+    // Check port values after initialize
+    //
+    try {
+        QCOMPARE(root->port("a")->value<int>(), 10);
+        QCOMPARE(root->port("b")->value<int>(), 20);
+        QCOMPARE(root->port("c")->value<int>(), 20);
+        QCOMPARE(root->port("d")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->port("e")->value<int>(), 5);
+        QCOMPARE(root->findOne<Port*>("B[a]")->value<int>(), 20);
+        QCOMPARE(root->findOne<Port*>("B[b]")->value<int>(), -10);
+    }
+    UNEXPECTED_EXCEPTION;
+}
+
+void TestReaderBoxScriptX3::testInitializePortMissing() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/initialize_port_missing.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        root->initializeFamily();
+    }
+    EXPECTED_EXCEPTION_SHOWN;
 }

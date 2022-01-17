@@ -32,7 +32,7 @@ RandomBaseTyped<ValueType>::RandomBaseTyped(QString name, Box *parent)
     Input(fixed).equals(static_cast<ValueType>(0)).help("Fixed value ");
     Input(min).equals(static_cast<ValueType>(0)).help("Minimum value (included)");
     Input(max).equals(static_cast<ValueType>(1)).help("Maximum value (excluded)");
-    Output(value).noReset().help("The most recently drawn value");
+    Output(value).noClear().help("The most recently drawn value");
 }
 
 template <class ValueType>

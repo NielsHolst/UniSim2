@@ -11,13 +11,14 @@
 #include "node.h"
 #include "path.h"
 #include "port.h"
+#include "success.h"
 #include "timer.h"
 
 #define Input(X)  (*new base::Port(#X, base::Port::Type::Input , this)).initialize(& X)
-#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X).clear()
+#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X).doClear()
 
 #define NamedInput(X,Y)  (*new base::Port((X), base::Port::Type::Input , this)).initialize(& (Y))
-#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y)).clear()
+#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y)).doClear()
 
 namespace base {
 
@@ -70,7 +71,7 @@ public:
     ComputationStep computationStep() const;
 
     const QVector<Port*> &portsInOrder();
-    void updatePorts();
+    void updatePorts(Success rule);
     void verifyPorts();
 
     Box* clone(QString name, Box *parent);
@@ -93,7 +94,7 @@ private:
     QString _help, _sideEffects;
     ComputationStep _computationStep;
     QMap<QString,Port*> _portMap;
-    QVector<Port*> _portsInOrder, _inputPorts, _trackedPorts;
+    QVector<Port*> _portsInOrder, _trackedPorts;
     bool _amended, _cloned;
     Timer _timer;
     static Box *_latest;
@@ -103,7 +104,7 @@ private:
     Box *findRoot();
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
-    void resetPorts();
+    void clearPorts();
     void trace(QString id) const;
 };
 

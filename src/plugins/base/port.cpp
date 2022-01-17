@@ -14,38 +14,24 @@ namespace base {
 Port::Port(QString name, Type type, Node *parent)
     : Node(name, parent),
       _type(type),
-      _defaultValueOverridden(false),
-      _doReset(true),
+      _hasBeenRedefined(false),
+      _hasBeenFixed(false),
       _expression(this)
 {
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
-    _doReset = (type != Type::Input);
+    _clearAtReset = (type == Type::Output);
+    clear();
 }
 
-void Port::assign(const Port &x) {
-   _type = x._type;
-   _defaultValueOverridden = x._defaultValueOverridden;
-   _doReset = x._doReset;
-   _unit = x._unit;
-   _help = x._help;
-   _value = x._value;
-   _expression = x._expression;
-}
-
-void Port::checkIfValueOverridden() {
-    auto *p = parent<Box*>();
-    _defaultValueOverridden = p && p->computationStep()!=Box::ComputationStep::Construct;
-}
-
-Port& Port::doReset() {
-    _doReset = true;
+Port& Port::doClear() {
+    _clearAtReset = true;
     return *this;
 }
 
-Port& Port::noReset() {
-    _doReset = false;
+Port& Port::noClear() {
+    _clearAtReset = false;
     return *this;
 }
 
@@ -63,55 +49,79 @@ void Port::outputNames(QStringList columnNames) {
     _outputNames = columnNames;
 }
 
+//
+// Define port
+//
+
 Port& Port::initialize(Value value) {
     _value = value;
     return *this;
 }
 
-Port& Port::clear() {
-    _value.clear();
-    return *this;
+void Port::define() {
+    // Check parent
+    auto *box = parent<Box*>();
+    if (!box)
+        ThrowException("Port is missing a parent box").context(this);
+
+    // Check that (re-) definition is legal in this step
+    auto step = box->computationStep();
+    if (step != Box::ComputationStep::Construct && step != Box::ComputationStep::Amend)
+        ThrowException("Change of port definition only allowed in constructor and amend function").context(this);
+
+    // Register re-definition
+    _hasBeenRedefined = (step != Box::ComputationStep::Construct);
+
+    // Set me as parent of expression
+    _expression.setParent(this);
+
+    // Evaluate to update value (if possible)
+    QString s1 = _value.asString(true, true);
+    evaluate(Success::MaySucceed);
+    QString s2 = _value.asString(true, true);
+    std::cout << "Port::define()\n"
+              << qPrintable(s1) << "\n"
+              << qPrintable(s2) << std::endl;
 }
 
 Port& Port::equals(const Value &value) {
-    checkIfValueOverridden();
+    _expression.clear();
     _expression.push(value);
-    // If value is fixed then set it immediately
-    if (value.type() != Value::Type::Uninitialized &&
-        value.type() != Value::Type::Path)
-        _value = value;
+    define();
     return *this;
 }
 
 Port& Port::equals(const Expression &expression) {
-    checkIfValueOverridden();
     _expression = expression;
-    _expression.setParent(this);
-//    // If expression contains only one element,
-//    // and it is a value, which is fixed, then set it immediately
-//    if (_expression.size()==1 && _expression.type(0) == Expression::Type::Value) {
-//        const Value &value = std::get<Value>(_expression.at(0));
-//        if (value.type() != Value::Type::Uninitialized &&
-//            value.type() != Value::Type::Path)
-//           _value = value;
-//    }
-    // If expression is fixed then evaluate it immediately
-    if (_expression.isFixed())
-        evaluate();
+    define();
     return *this;
 }
 
 Port& Port::imports(QString pathToPort, Caller caller) {
-    checkIfValueOverridden();
-    _expression.push(Path(pathToPort, this));
-    _expression.setParent(this);
     _importCaller = caller;
+    _expression.push(Path(pathToPort, this));
+    define();
     return help("Defaults to " + pathToPort);
 }
 
 Port& Port::computes(QString expression) {
-    equals( boxscript::parser::parseExpression(expression) );
-    return *this;
+    return equals( boxscript::parser::parseExpression(expression) );
+}
+
+//
+// Change value
+//
+
+void Port::clear() {
+    if (_clearAtReset)
+        _value.clear();
+}
+
+void Port::evaluate(Success rule) {
+    // Evaluate only if port has an expression
+    // and when all imports have been resolved
+    if (!_expression.isEmpty() && _expression.resolveImports(rule))
+        _value = _expression.evaluate();
 }
 
 //
@@ -158,7 +168,7 @@ int Port::size() const {
 }
 
 bool Port::isValueOverridden() const {
-    return _defaultValueOverridden;
+    return _hasBeenRedefined;
 }
 
 QStringList Port::outputNames() const {
@@ -229,23 +239,12 @@ void Port::addExportPort(Port *port) {
         _exportPorts << port;
 }
 
-void Port::reset() {
-    if (_doReset)
-        _value.clear();
-}
-
-void Port::evaluate() {
-    _value = _expression.evaluate();
-//    QString type = _value.typeName();
-//    std::cout << "Port::evaluate " << qPrintable(type) << std::endl;
-}
-
 // Access
 
 void Port::toText(QTextStream &text, int indentation) {
     static QMap<Type,QString> prefix =
     {{Type::Input, "."}, {Type::Output, "//."}, {Type::Input, "&"}};
-    evaluate(); // make certain that _value has been initialized
+    evaluate(Success::MaySucceed); // make certain that _value has been initialized
     QString fill, expression;
     fill.fill(' ', indentation);
     text << fill

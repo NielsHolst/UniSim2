@@ -217,7 +217,7 @@ QString Path::Port::toString() const {
 // Alternative
 
 Path::Alternative::Alternative(Path *parent)
-    : _parent(parent), _isMatched(false)
+    : _parent(parent)
 {
 }
 
@@ -267,9 +267,6 @@ QString Path::Alternative::toString() const {
 }
 
 const Path::Objects& Path::Alternative::matches() {
-    if (_isMatched)
-        return _matches;
-
     auto next = _nodes.begin();
     if (next) {
         initiateMatches(*next);
@@ -278,7 +275,16 @@ const Path::Objects& Path::Alternative::matches() {
     for(;next != _nodes.end(); ++next)
         filterMatches(*next);
 
-    _isMatched = true;
+    Objects ports;
+    if (_port.has_value()) {
+        for (auto match : _matches) {
+            for (auto child : match->children<base::Port*>()) {
+                if (child->name() == (*_port).name())
+                    ports << dynamic_cast<base::Node*>(child);
+            }
+        }
+        _matches = ports;
+    }
     return _matches;
 }
 
@@ -530,7 +536,7 @@ Path::Objects Path::Alternative::following(Objects candidates, QString className
 // Path
 
 Path::Path(Object *parent)
-    : _parent(parent), _isMatched(false)
+    : _parent(parent)
 {
 }
 
@@ -551,25 +557,7 @@ Path::Path(QString path, Object *parent)
     _parent = parent ? parent : parsedPath._parent;
     _alternatives = parsedPath._alternatives;
     _matches = parsedPath._matches;
-    _isMatched = parsedPath._isMatched;
 }
-
-//Path::Path(const Path &path)
-//    :
-//      _parent(path._parent),
-//      _alternatives(path._alternatives),
-//      _matches(path._matches),
-//      _isMatched(path._isMatched)
-//{
-//}
-
-//Path & Path::operator=(const Path &path) {
-//    _parent = path._parent;
-//    _alternatives = path._alternatives;
-//    _matches = path._matches;
-//    _isMatched = path._isMatched;
-//    return *this;
-//}
 
 void Path::setParent(Object *parent)
 {
@@ -585,9 +573,6 @@ void Path::addAlternative(const Alternative &alternative) {
 }
 
 const Path::Objects &Path::matches() {
-    if (_isMatched)
-        return _matches;
-
     if (_alternatives.isEmpty())
         ThrowException("Path is empty").context(_parent);
 
@@ -606,8 +591,6 @@ const Path::Objects &Path::matches() {
 
     // Sort matches
     std::sort(_matches.begin(), _matches.end());
-
-    _isMatched = true;
     return _matches;
 }
 

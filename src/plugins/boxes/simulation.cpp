@@ -32,7 +32,7 @@ Simulation::Simulation(QString name, Box *parent)
     Input(useStopSteps).equals(false).help("Use the stopSteps flag?");
     Input(silent).equals(false).help("Run without scrolling progress messages?");
     Input(unattended).equals(false).help("An unattended run will finish without accessing clipboard");
-    Output(iteration).noReset().help("Iteration number (1,2,...)");
+    Output(iteration).noClear().help("Iteration number (1,2,...)");
     Output(step).help("Step number (0,1,2,...)");
     Output(finalStep).help("Last completed step in simulation");
     Output(executionTime).help("Duration of simulation run (ms)");

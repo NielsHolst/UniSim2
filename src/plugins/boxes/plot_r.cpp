@@ -37,7 +37,7 @@ PlotR::PlotR(QString name, Box *parent)
     Input(width).imports("..[width]").help("May be used to spawn additional pages");
     Input(height).imports("..[height]").help("May be used to spawn additional pages");
     Input(xAxis).imports("..[xAxis]");
-    Output(plotAsList).noReset().help("Is the plot a list of plots?");
+    Output(plotAsList).noClear().help("Is the plot a list of plots?");
 }
 
 void PlotR::initialize() {
