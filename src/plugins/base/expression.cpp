@@ -125,7 +125,8 @@ inline int precedence(Expression::Element element) {
 }
 
 void Expression::toPostfix() {
-//    std::cout << "toPostfix " << qPrintable(toString(_stack)) << std::endl;
+    QString s1 = toString(_stack);
+    std::cout << "toPostfix " << qPrintable(s1) << std::endl;
     // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
     for (auto &element : _stack) {
@@ -213,6 +214,8 @@ void Expression::toPostfix() {
     // Copy result
     _stack.clear();
     _stack = postfix;
+    QString s2 = toString(_stack);
+    std::cout << "toPostfix " << qPrintable(s2) << std::endl;
 }
 
 Expression::Element Expression::registerFunctionCall(const Element &element) {
@@ -480,13 +483,30 @@ Value Expression::evaluate() {
 
 }
 
+Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const QVector<Port*> &ports) {
+    QString s1 = stackAsString();
+    at = _stack.insert(at, ports.size(), Element());
+    QString s2 = stackAsString(),
+            s3 = toString(*at);
+    s3 = toString(*at);
+    for (auto port : ports) {
+        *at++ = port->value();
+        s3 = stackAsString();
+    }
+    *at++ = FunctionCall("c", ports.size());
+    s3 = stackAsString();
+    return at;
+}
+
 bool Expression::resolveImports(Success rule) {
     bool allResolved = true;
     Box *box = boxAncestor();
-    QString s1 = stackAsString();
-    for (Element &element : _stack) {
-        if (type(element) == Type::Path) {
-            Path &path = get<Path>(element);
+    QString s1, s2;
+    for (auto element=_stack.begin(); element!=_stack.end(); ++element) {
+        s1 = stackAsString();
+        s2 = toString(*element);
+        if (type(*element) == Type::Path) {
+            Path &path = get<Path>(*element);
             path.setParent(box);
             auto matches = path.findMany<Port*>();
             switch (matches.size()) {
@@ -499,14 +519,14 @@ bool Expression::resolveImports(Success rule) {
                 allResolved = false;
                 break;
             case 1:
-                element = matches.at(0)->value();
+                *element = matches.at(0)->value();
                 break;
             default:
-                ThrowException("Multiple matches not implemented").hint("Insert c function call to combine values from matches");
+                element = replaceElement(element, matches);
             }
         }
     }
-    QString s2 = stackAsString();
+    s2 = stackAsString();
     std::cout << "Expression::resolveImports\n"
               << qPrintable(s1) << "\n"
               << qPrintable(s2) << std::endl;

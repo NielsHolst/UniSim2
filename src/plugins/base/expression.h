@@ -88,6 +88,7 @@ private:
     Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
+    Stack::iterator replaceElement(Stack::iterator at, const QVector<Port*> &ports);
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 };

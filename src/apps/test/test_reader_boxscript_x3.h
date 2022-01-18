@@ -10,6 +10,7 @@ private slots:
     void testConstructAmend();
     void testInitialize();
     void testInitializePortMissing();
+    void testMultipleMatches();
 };
 
 DECLARE_TEST(TestReaderBoxScriptX3)

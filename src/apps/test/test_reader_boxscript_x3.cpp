@@ -221,3 +221,20 @@ void TestReaderBoxScriptX3::testInitializePortMissing() {
     }
     EXPECTED_EXCEPTION_SHOWN;
 }
+
+void TestReaderBoxScriptX3::testMultipleMatches() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/multiple_matches.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+
+    try {
+        QCOMPARE(root->port("a")->value<double>(), 80.0);
+    }
+    UNEXPECTED_EXCEPTION;
+}

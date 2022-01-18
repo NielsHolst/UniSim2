@@ -581,7 +581,7 @@ const Path::Objects &Path::matches() {
         alternative.setParent(this);
 
     // Collect matches
-    for (auto alternative : _alternatives) {
+    for (auto &alternative : _alternatives) {
         for (auto match : alternative.matches()) {
             // Avoid duplicates
             if (!_matches.contains(match))
