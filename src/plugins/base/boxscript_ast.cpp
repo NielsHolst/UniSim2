@@ -305,6 +305,7 @@ namespace ast {
     }
 
     void Assignment::build(base::BoxBuilder *builder) {
+        // Left-hand side
         bool isAuxPort = (qualifier != '.');
         QString typeName, portName;
         switch (names.size()) {
@@ -326,8 +327,42 @@ namespace ast {
                 ThrowException("You cannot re-define the type of an existing port").value(str(toString()));
             builder->port(portName);
         }
-        // Deal with assignment operator (=~) here...
-        boost::get<Expression>(expression).build(builder);
+        // Deal with assignment operator (=~) here
+        //...
+
+        // Right-hand side
+        if (type() == Type::Expression)
+            boost::get<Expression>(expression).build(builder);
+        else { // IfExpression
+            base::Expression expr;
+            auto e = boost::get<IfExpression>(expression);
+            // if
+            expr.push(base::Expression::Conditional::If);
+            // expression
+            auto it = e.begin();
+            (*it).build(&expr); it++;
+            // then
+            expr.push(base::Expression::Conditional::Then);
+            // expression
+            (*it).build(&expr); it++;
+            while (it != e.end()-1) {
+                // elsif
+                expr.push(base::Expression::Conditional::Elsif);
+                // expression
+                (*it).build(&expr); it++;
+                // then
+                expr.push(base::Expression::Conditional::Then);
+                // expression
+                (*it).build(&expr); it++;
+            }
+            // else
+            expr.push(base::Expression::Conditional::Else);
+            // expression
+            (*it).build(&expr); it++;
+            // finished
+            expr.close();
+            builder->equals(expr);
+        }
     }
 
     void Box::build(base::BoxBuilder *builder) {

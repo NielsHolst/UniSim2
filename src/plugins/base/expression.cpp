@@ -40,36 +40,6 @@ bool Expression::isFixed() const {
     return true;
 }
 
-void Expression::push(Value value) {
-    checkNotClosed();
-    _stack.push_back(value);
-}
-
-void Expression::push(Operator operatr) {
-    checkNotClosed();
-    _stack.push_back(operatr);
-}
-
-void Expression::push(Parenthesis parenthesis) {
-    checkNotClosed();
-    _stack.push_back(parenthesis);
-}
-
-void Expression::push(Path path) {
-    checkNotClosed();
-    _stack.push_back(path);
-}
-
-void Expression::push(FunctionCall func) {
-    checkNotClosed();
-    _stack.push_back(func);
-}
-
-void Expression::push(FunctionCallEnd end) {
-    checkNotClosed();
-    _stack.push_back(end);
-}
-
 void Expression::checkNotClosed() {
     if (_isClosed)
         ThrowException("You cannot push to a closed stack").value(originalAsString()).context(_parent);
@@ -77,7 +47,6 @@ void Expression::checkNotClosed() {
 
 void Expression::close() {
     _original = _stack;
-//    resolveImports();
     toPostfix();
     _isClosed = true;
 }
@@ -117,11 +86,31 @@ inline bool isFunctionCall(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::FunctionCall);
 }
 
+inline bool isConditional(Expression::Element element) {
+    return (Expression::type(element) == Expression::Type::Conditional);
+}
+
+inline bool isConditionalThen(Expression::Element element) {
+    return (isConditional(element) &&
+            get<Expression::Conditional>(element) == Expression::Conditional::Then);
+}
+
+inline bool isConditionalElse(Expression::Element element) {
+    return (isConditional(element) &&
+            get<Expression::Conditional>(element) == Expression::Conditional::Else);
+}
+
 inline int precedence(Expression::Element element) {
-    Q_ASSERT(isOperator(element) || isFunctionCall(element));
-    return isOperator(element) ?
-                precedence( get<Operator>(element) ) :
-                precedence(Operator::Comma)- 1; // comma has higher predecence than function call
+    switch(Expression::type(element)) {
+    case Expression::Type::Operator:
+        return precedence( get<Operator>(element) );
+    case Expression::Type::FunctionCall:
+        return precedence(Operator::Comma)- 1;
+    case Expression::Type::Conditional:
+        return precedence(Operator::Comma)- 2;
+    default:
+        ThrowException("Unexpected element").value(Expression::elementName(element));
+    }
 }
 
 void Expression::toPostfix() {
@@ -133,15 +122,16 @@ void Expression::toPostfix() {
         QString s1 = elementName(element),
                 s2 = toString(postfix),
                 s3 = toString(myStack);
-//        std::cout << qPrintable(s1) << " =>"
-//                  << "\npostfix stack = " << qPrintable(s2)
-//                  << "\n      mystack = " << qPrintable(s3)
-//                  << std::endl;
+        std::cout << qPrintable(s1) << " =>"
+                  << "\npostfix stack = " << qPrintable(s2)
+                  << "\n      mystack = " << qPrintable(s3)
+                  << std::endl;
         switch (type(element)) {
         case Type::Value:
             postfix.push_back(element);
             break;
         case Type::Operator:
+        case Type::Conditional:
             if (myStack.empty() || precedence(element) > precedence(myStack.back())) {
                 // Comma goes on to postfix, other operator is kept for later
                 if (isComma(element))
@@ -154,12 +144,12 @@ void Expression::toPostfix() {
                 while (!myStack.empty() && precedence(element) <= precedence(myStack.back())) {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
-//                    s2 = toString(postfix);
-//                    s3 = toString(myStack);
-//                    std::cout << "Push and pop"
-//                              << "\npostfix stack = " << qPrintable(s2)
-//                              << "\n      mystack = " << qPrintable(s3)
-//                              << std::endl;
+                    s2 = toString(postfix);
+                    s3 = toString(myStack);
+                    std::cout << "Push and pop"
+                              << "\npostfix stack = " << qPrintable(s2)
+                              << "\n      mystack = " << qPrintable(s3)
+                              << std::endl;
                 }
                 // Comma goes on to postfix, other operator is kept for later
                 if (isComma(element))
@@ -193,7 +183,7 @@ void Expression::toPostfix() {
             myStack.push_back(registerFunctionCall(element));
             break;
         case Type::FunctionCallEnd:
-            // Push function call savend on my stack
+            // Push function call end on my stack
             // Note: A function call end is never transferred to the postfix stack
             postfix.push_back( myStack.back() );
             myStack.pop_back();
@@ -204,12 +194,12 @@ void Expression::toPostfix() {
     while (!myStack.empty()) {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
-//        QString s2 = toString(postfix),
-//                s3 = toString(myStack);
-//        std::cout << "Push and pop"
-//                  << "\npostfix stack = " << qPrintable(s2)
-//                  << "\n      mystack = " << qPrintable(s3)
-//                  << std::endl;
+        QString s2 = toString(postfix),
+                s3 = toString(myStack);
+        std::cout << "Push and pop"
+                  << "\npostfix stack = " << qPrintable(s2)
+                  << "\n      mystack = " << qPrintable(s3)
+                  << std::endl;
     }
     // Copy result
     _stack.clear();
@@ -435,14 +425,29 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     // count(path)
 }
 
+bool Expression::reduceByCondition(Stack &stack) {
+    // Pop "If" or "Elsif" keyword
+    stack.pop_back();
+    // Pop boolean value
+    Q_ASSERT(type(stack.back()) == Type::Value);
+    Value condition = get<Value>(stack.back());
+    stack.pop_back();
+    // Return whether condition was true
+    return condition.as<bool>();
+}
+
 Value Expression::evaluate() {
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
-//    QString s1 = toString(_stack),
-//            s2, s3;
-//    std::cout << qPrintable(s1) << "=>\n"
-//              << "evaluate stack =\n" << qPrintable(s1)
-//              << std::endl;
+
+    QString s1 = toString(_stack),
+            s2, s3;
+    std::cout << qPrintable(s1) << "=>\n"
+              << "evaluate stack =\n" << qPrintable(s1)
+              << std::endl;
+
+    enum class ConditionalPhase {FinishUponThen, SkipUntilThen, SkipUntilElse, Done};
+    auto phase = ConditionalPhase::Done;
 
     Stack myStack;
     Element result;
@@ -451,20 +456,46 @@ Value Expression::evaluate() {
     }
     else {
         for (Element &element : _stack) {
-//            s2 = elementName(element);
-//            s3 = toString(myStack);
-//            std::cout << qPrintable(s2) << "=>\n"
-//                      << "mystack =\n" << qPrintable(s3)
-//                      << std::endl;
-            if (isComma(element)) {
-                ; // nothing to do
+            s2 = toString(element);
+            s3 = toString(myStack);
+            std::cout << qPrintable(s2) << "=>\n"
+                      << "mystack =\n" << qPrintable(s3)
+                      << std::endl;
+
+            if (phase == ConditionalPhase::SkipUntilThen) {
+                if (isConditionalThen(element))
+                    phase = ConditionalPhase::Done;
             }
+            else if (phase == ConditionalPhase::SkipUntilElse) {
+                if (isConditionalElse(element))
+                    phase = ConditionalPhase::Done;
+            }
+            else if (isComma(element))
+                ; // nothing to do
             else {
                 myStack.push_back(element);
                 if (isOperator(element))
                     reduceByOperator(myStack);
                 else if (isFunctionCall(element))
                     reduceByFunctionCall(myStack);
+                else if (isConditional(element)) {
+                    switch (get<Conditional>(element)) {
+                    case Conditional::If:
+                    case Conditional::Elsif:
+                        phase = reduceByCondition(myStack) ?
+                                ConditionalPhase::FinishUponThen :
+                                ConditionalPhase::SkipUntilThen;
+
+                        break;
+                    case Conditional::Then:
+                        phase = ConditionalPhase::SkipUntilElse;
+                        myStack.pop_back(); // pop 'Then'
+                        break;
+                    case Conditional::Else:
+                        myStack.pop_back(); // pop 'Else'
+                        break;
+                    }
+                }
             }
         }
         // The result should be the one element left in the stack
@@ -563,6 +594,7 @@ QString Expression::elementName(const Element& el) {
     case Type::Path            : s = "Path"           ; break;
     case Type::FunctionCall    : s = "FunctionCall"   ; break;
     case Type::FunctionCallEnd : s = "FunctionCallEnd"; break;
+    case Type::Conditional     : s = "Conditional"    ; break;
     }
     return s;
 }
@@ -595,8 +627,20 @@ QString Expression::toString(const Element &element) {
         s = func.name + "[" + QString::number(func.arity) + "]";
         break;
     case Type::FunctionCallEnd: s = "end"; break;
+    case Type::Conditional:     s = conditionalToString(get<Conditional>(element)); break;
     }
     return s;
+}
+
+QString conditionalToString(Expression::Conditional cond) {
+    static QMap<Expression::Conditional, QString> map =
+    {
+        {Expression::Conditional::If,    "if"},
+        {Expression::Conditional::Then,  "then"},
+        {Expression::Conditional::Else,  "else"},
+        {Expression::Conditional::Elsif, "elsif"}
+    };
+    return map.value(cond);
 }
 
 }

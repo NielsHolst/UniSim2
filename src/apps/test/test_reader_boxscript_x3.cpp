@@ -238,3 +238,16 @@ void TestReaderBoxScriptX3::testMultipleMatches() {
     }
     UNEXPECTED_EXCEPTION;
 }
+
+
+void TestReaderBoxScriptX3::testCondition() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/conditional.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+}

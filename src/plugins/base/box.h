@@ -15,10 +15,10 @@
 #include "timer.h"
 
 #define Input(X)  (*new base::Port(#X, base::Port::Type::Input , this)).initialize(& X)
-#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X).doClear()
+#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X)
 
 #define NamedInput(X,Y)  (*new base::Port((X), base::Port::Type::Input , this)).initialize(& (Y))
-#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y)).doClear()
+#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y))
 
 namespace base {
 

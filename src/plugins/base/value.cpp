@@ -45,7 +45,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
 
 void Value::clear() {
     switch(type()) {
-    case Type::Uninitialized: break;
+    case Type::Uninitialized: ThrowException("Cannot clear uninitialized value").context(_parent); break;
     case Type::Bool         : changeValue(bool     ()); break;
     case Type::Int          : changeValue(int      ()); break;
     case Type::Double       : changeValue(double   ()); break;
@@ -68,7 +68,7 @@ void Value::clear() {
 
 int Value::size() const {
     switch(type()) {
-    case Type::Uninitialized: break;
+    case Type::Uninitialized: ThrowException("Cannot tell size of uninitialized value").context(_parent); break;
     case Type::VecBool      : return as<vbool     >().size(); break;
     case Type::VecInt       : return as<vint      >().size(); break;
     case Type::VecDouble    : return as<vdouble   >().size(); break;

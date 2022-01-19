@@ -105,8 +105,6 @@ BoxBuilder& BoxBuilder::equals(Expression expression) {
         ThrowException("BoxBuilder: 'equals' must follow 'port'");
     // Assign the value to the port we are currently defining
     _currentPort->equals(expression);
-    // std::cerr << "BoxBuilder::equals (expr)" << qPrintable(_currentPort->name() + " " + _currentPort->value().typeName())
-              // << std::endl;
     return *this;
 }
 

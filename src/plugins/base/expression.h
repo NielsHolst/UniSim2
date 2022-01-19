@@ -31,13 +31,15 @@ public:
     };
     struct FunctionCallEnd {
     };
+    enum class Conditional {If, Then, Elsif, Else};
     using Element = std::variant<
         Value,
         Operator,
         Parenthesis,
         Path,
         FunctionCall,
-        FunctionCallEnd
+        FunctionCallEnd,
+        Conditional
     >;
     enum class Type {
         Value,
@@ -45,7 +47,8 @@ public:
         Parenthesis,
         Path,
         FunctionCall,
-        FunctionCallEnd
+        FunctionCallEnd,
+        Conditional
     };
     using Stack = std::vector<Element>;
 
@@ -55,12 +58,7 @@ public:
     int size() const     { return _stack.size();}
     bool isEmpty() const { return _stack.empty();}
     bool isFixed() const;
-    void push(Value value);
-    void push(Operator operatr);
-    void push(Parenthesis parenthesis);
-    void push(Path path);
-    void push(FunctionCall func);
-    void push(FunctionCallEnd end);
+    template <class T> void push(T element);
     void close();
     bool resolveImports(Success rule);
     Value evaluate();
@@ -88,10 +86,18 @@ private:
     Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
+    bool reduceByCondition(Stack &stack);
     Stack::iterator replaceElement(Stack::iterator at, const QVector<Port*> &ports);
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 };
+
+template <class T> void Expression::push(T element)
+{     checkNotClosed();
+      _stack.push_back(element);
+}
+
+QString conditionalToString(Expression::Conditional cond);
 
 }
 #endif

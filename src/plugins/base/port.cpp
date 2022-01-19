@@ -22,7 +22,6 @@ Port::Port(QString name, Type type, Node *parent)
     if (boxParent)
         boxParent->addPort(this);
     _clearAtReset = (type == Type::Output);
-    clear();
 }
 
 Port& Port::doClear() {
@@ -54,7 +53,8 @@ void Port::outputNames(QStringList columnNames) {
 //
 
 Port& Port::initialize(Value value) {
-    _value = value;
+    _value = value; // value may be undefined but is used to give _value the right type
+    _value.clear(); // _value is set to T()
     return *this;
 }
 
