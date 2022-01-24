@@ -19,6 +19,7 @@ namespace base {
 class ValueCollection {
 public:
     ValueCollection();
+    ValueCollection(QVector<const Value*> values);
     ~ValueCollection();
 
     void initialize(QVector<const Value*> values);

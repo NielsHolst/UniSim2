@@ -1,5 +1,6 @@
 #include <iostream>
 #include <boost/variant/get.hpp>
+#include <base/box.h>
 #include <base/expression.h>
 #include <base/operator.h>
 #include "exception_expectation.h"
@@ -75,7 +76,8 @@ void TestExpression::testEmpty() {
 
 void TestExpression::testSingle() {
     bool excepted(false);
-    Expression expr;
+    Box box("A", nullptr);
+    Expression expr(&box);
     Value value;
     expr.push("abc");
     try {
@@ -91,7 +93,8 @@ void TestExpression::testAddition() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    E e;
+    Box box("A", nullptr);
+    E e(&box);
 
     e.push(8);
     e.push(Operator::Add);
@@ -115,7 +118,8 @@ void TestExpression::testResultType() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    E e;
+    Box box("A", nullptr);
+    E e(&box);
 
     e.push(8);
     e.push(Operator::Add);
@@ -140,7 +144,8 @@ void TestExpression::testNegation() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    E e;
+    Box box("A", nullptr);
+    E e(&box);
 
     e.push(Operator::Negate);
     e.push(8);
@@ -165,7 +170,8 @@ void TestExpression::testExponentiation() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    E e;
+    Box box("A", nullptr);
+    E e(&box);
 
     e.push(8);
     e.push(Operator::Add);
@@ -191,7 +197,8 @@ void TestExpression::testFunctionCall() {
     bool excepted(false);
     using E     = Expression;
     using Func  = Expression::FunctionCall;
-    E e;
+    Box box("A", nullptr);
+    E e(&box);
 
     e.push(Func("sum", 3));
     e.push(8);

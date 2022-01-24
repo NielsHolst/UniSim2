@@ -42,7 +42,7 @@ void Box::addPort(QMap<QString,Port*> &ports, Port *port) {
     if (ports.contains(name))
         ThrowException("Box already has a port with this name").value(name).context(this);
     ports[name] = port;
-//    std::cout << qPrintable("addPort " + this->className() + "::" + this->name() + " : " + name) << std::endl;
+
 }
 
 Port* Box::peakPort(QString name) {
@@ -117,7 +117,7 @@ void Box::amendFamily(bool announce) {
         if (_traceOn) trace("amend");
         computationStep(ComputationStep::Amend);
         amend();
-        updatePorts(Success::MaySucceed);
+        touchPorts();
         _amended = true;
         _timer.stop("amend");
     }
@@ -157,7 +157,7 @@ void Box::initializeFamily(bool announce) {
         box->initializeFamily(false);
     if (_traceOn) trace("initialize");
     computationStep(ComputationStep::Initialize);
-    updatePorts(Success::MustSucceed);
+    updatePorts();
     initialize();
     _timer.stop("initialize");
 }
@@ -182,7 +182,7 @@ void Box::updateFamily(bool annouce) {
         box->updateFamily(false);
     if (_traceOn) trace("update");
     computationStep(ComputationStep::Update);
-    updatePorts(Success::MustSucceed);
+    updatePorts();
     update();
     verifyPorts();
     _timer.stop("update");
@@ -195,7 +195,7 @@ void Box::cleanupFamily(bool annouce) {
         box->cleanupFamily(false);
     if (_traceOn) trace("cleanup");
     computationStep(ComputationStep::Cleanup);
-    updatePorts(Success::MustSucceed);
+    updatePorts();
     cleanup();
     verifyPorts();
     _timer.stop("cleanup");
@@ -206,7 +206,7 @@ void Box::debriefFamily(bool annouce) {
     _timer.start("debrief");
     for (auto box : children<Box*>())
         box->debriefFamily(false);
-    updatePorts(Success::MustSucceed);
+    updatePorts();
     if (_traceOn) trace("debrief");
     computationStep(ComputationStep::Debrief);
     debrief();
@@ -232,9 +232,14 @@ void Box::clearPorts() {
         port->clear();
 }
 
-void Box::updatePorts(Success rule) {
+void Box::touchPorts() {
     for (Port *port : _portsInOrder)
-        port->evaluate(rule);
+        port->touch();
+}
+
+void Box::updatePorts() {
+    for (Port *port : _portsInOrder)
+        port->evaluate();
 }
 
 void Box::verifyPorts() {

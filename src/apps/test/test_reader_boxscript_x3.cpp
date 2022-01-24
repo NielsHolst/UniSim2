@@ -21,6 +21,10 @@ auto vstr(QVector<T> v) {
     return qPrintable(list.join(" "));
 }
 
+auto str(QString s) {
+    return qPrintable(s);
+}
+
 void TestReaderBoxScriptX3::testAuxAllTypes() {
     bool excepted(false);
     std::unique_ptr<Box> root;
@@ -89,8 +93,8 @@ void TestReaderBoxScriptX3::testAuxAllTypes() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->port("vb")->value().type(), Value::Type::VecInt);
-        QVERIFY2(root->port("vb")->value<vint>()==vint()<<133<<-28<<36, vstr(root->port("vb")->value<vint>()));
+        QVERIFY2(root->port("vb")->value().type()==Value::Type::VecInt, str(root->port("vb")->value().typeName()));
+        QVERIFY2(root->port("vb")->value<vint>()==vint()<<133<<-28<<36<<3, vstr(root->port("vb")->value<vint>()));
     }
     UNEXPECTED_EXCEPTION;
     try {
@@ -156,7 +160,7 @@ void TestReaderBoxScriptX3::testConstructAmend() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->port("d")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->port("d")->value().type(), Value::Type::Null);
     }
     UNEXPECTED_EXCEPTION;
     try {
@@ -175,7 +179,7 @@ void TestReaderBoxScriptX3::testConstructAmend() {
     }
     UNEXPECTED_EXCEPTION;
     try {
-        QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Null);
     }
     UNEXPECTED_EXCEPTION;
 }
@@ -198,7 +202,7 @@ void TestReaderBoxScriptX3::testInitialize() {
         QCOMPARE(root->port("a")->value<int>(), 10);
         QCOMPARE(root->port("b")->value<int>(), 20);
         QCOMPARE(root->port("c")->value<int>(), 20);
-        QCOMPARE(root->port("d")->value().type(), Value::Type::Uninitialized);
+        QCOMPARE(root->port("d")->value().type(), Value::Type::Null);
         QCOMPARE(root->port("e")->value<int>(), 5);
         QCOMPARE(root->findOne<Port*>("B[a]")->value<int>(), 20);
         QCOMPARE(root->findOne<Port*>("B[b]")->value<int>(), -10);
@@ -219,7 +223,8 @@ void TestReaderBoxScriptX3::testInitializePortMissing() {
     try {
         root->initializeFamily();
     }
-    EXPECTED_EXCEPTION_SHOWN;
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Null);
 }
 
 void TestReaderBoxScriptX3::testMultipleMatches() {
@@ -250,4 +255,12 @@ void TestReaderBoxScriptX3::testCondition() {
         root = std::unique_ptr<Box>( builder.content() );
     }
     UNEXPECTED_EXCEPTION;
+
+    try {
+        QCOMPARE(root->port("a")->value<int>(),  7);
+        QCOMPARE(root->port("b")->value<int>(), 15);
+        QCOMPARE(root->port("c")->value<int>(), 19);
+    }
+    UNEXPECTED_EXCEPTION;
+
 }

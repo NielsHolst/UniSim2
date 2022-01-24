@@ -72,7 +72,8 @@ public:
 
     // Change value
     void clear();
-    void evaluate(Success rule);
+    void touch();
+    void evaluate();
 
     // Query
     Box *boxParent();
@@ -106,6 +107,7 @@ private:
 
 template <class T> Port& Port::initialize(T *variable) {
     _value.initialize(variable);
+    _value.clear();
     return *this;
 }
 

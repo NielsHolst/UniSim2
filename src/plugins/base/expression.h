@@ -60,7 +60,7 @@ public:
     bool isFixed() const;
     template <class T> void push(T element);
     void close();
-    bool resolveImports(Success rule);
+    void resolveImports();
     Value evaluate();
 
     Box *boxAncestor();
@@ -69,7 +69,7 @@ public:
     const Element& at(int i) const { return _stack.at(i); }
     Type type(int i) { return type(at(i)); }
     static Type type(const Element& el) { int i=el.index(); return static_cast<Type>(i); }
-    static QString elementName(const Element& el);
+    static QString typeName(const Element& el);
 
     QString originalAsString() const;
     QString stackAsString() const;

@@ -1,6 +1,7 @@
 #ifndef EXCEPTION_EXPECTATION_H
 #define EXCEPTION_EXPECTATION_H
 #include <exception>
+#include <iostream>
 #include <qtestcase.h>
 #include <base/exception.h>
 

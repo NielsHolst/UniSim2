@@ -25,6 +25,12 @@ ValueSets
 ValueCollection::ValueCollection() : _buffer(nullptr) {
 }
 
+ValueCollection::ValueCollection(QVector<const Value*> values)
+    : ValueCollection()
+{
+    initialize(values);
+}
+
 void ValueCollection::createBuffer(Value::Type type) {
     using Type = Value::Type;
     switch (type) {
@@ -79,6 +85,8 @@ Value::Type ValueCollection::type(QVector<const Value*> values) {
 
     if (baseTypes.size() == 1)
         common = *baseTypes.cbegin();
+    else if (baseTypes.contains(Value::Type::Null))
+        common = Value::Type::Null;
     else if (baseTypes == _toInt.at(0))
         common = Type::Int;
     else if (baseTypes == _toDouble.at(0) || baseTypes == _toDouble.at(1) || baseTypes == _toDouble.at(2))

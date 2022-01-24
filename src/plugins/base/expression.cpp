@@ -13,8 +13,6 @@
 #include "value_collection.h"
 using std::get;
 
-#include <iostream>
-
 namespace base {
 
 Expression::Expression(Node *parent)
@@ -109,23 +107,14 @@ inline int precedence(Expression::Element element) {
     case Expression::Type::Conditional:
         return precedence(Operator::Comma)- 2;
     default:
-        ThrowException("Unexpected element").value(Expression::elementName(element));
+        ThrowException("Unexpected element").value(Expression::typeName(element));
     }
 }
 
 void Expression::toPostfix() {
-    QString s1 = toString(_stack);
-    std::cout << "toPostfix " << qPrintable(s1) << std::endl;
     // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
     for (auto &element : _stack) {
-        QString s1 = elementName(element),
-                s2 = toString(postfix),
-                s3 = toString(myStack);
-        std::cout << qPrintable(s1) << " =>"
-                  << "\npostfix stack = " << qPrintable(s2)
-                  << "\n      mystack = " << qPrintable(s3)
-                  << std::endl;
         switch (type(element)) {
         case Type::Value:
             postfix.push_back(element);
@@ -144,12 +133,6 @@ void Expression::toPostfix() {
                 while (!myStack.empty() && precedence(element) <= precedence(myStack.back())) {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
-                    s2 = toString(postfix);
-                    s3 = toString(myStack);
-                    std::cout << "Push and pop"
-                              << "\npostfix stack = " << qPrintable(s2)
-                              << "\n      mystack = " << qPrintable(s3)
-                              << std::endl;
                 }
                 // Comma goes on to postfix, other operator is kept for later
                 if (isComma(element))
@@ -194,18 +177,10 @@ void Expression::toPostfix() {
     while (!myStack.empty()) {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
-        QString s2 = toString(postfix),
-                s3 = toString(myStack);
-        std::cout << "Push and pop"
-                  << "\npostfix stack = " << qPrintable(s2)
-                  << "\n      mystack = " << qPrintable(s3)
-                  << std::endl;
     }
     // Copy result
     _stack.clear();
     _stack = postfix;
-    QString s2 = toString(_stack);
-    std::cout << "toPostfix " << qPrintable(s2) << std::endl;
 }
 
 Expression::Element Expression::registerFunctionCall(const Element &element) {
@@ -216,60 +191,71 @@ Expression::Element Expression::registerFunctionCall(const Element &element) {
 }
 
 void Expression::reduceByOperator(Stack &stack) {
-    // Second operator for arity==2
-    Value b;
-    bool bIsOk = true;
     // Pop operator
     Operator op = get<Operator>(stack.back());
     stack.pop_back();
-    // Check stack sanity before popping second operand
+
+    // Check stack size
     Q_ASSERT(static_cast<int>(stack.size()) >= arity((op)));
-    Q_ASSERT(isValue(stack.back()));
-    if (arity(op) == 2) {
-        b = get<Value>(stack.back());
-        bIsOk = (b.type() != Value::Type::Uninitialized);
-        stack.pop_back();
-    }
-    // Check stack sanity before referencing stack top
-    Q_ASSERT(isValue(stack.back()));
-    // First operator
-    const Value &a = get<Value>(stack.back());
-    // Result
-    Value c;
-    // If operand(s) are OK then carry out operation and leave result in stack top
-    if (a.type() != Value::Type::Uninitialized && bIsOk) {
-        switch (op) {
-        case Operator::Add          : c = operate::add(a,b); break;
-        case Operator::Subtract     : c = operate::subtract(a,b); break;
-        case Operator::Multiply     : c = operate::multiply(a,b); break;
-        case Operator::Divide       : c = operate::divide(a,b); break;
-        case Operator::Exponentiate : c = operate::exponentiate(a,b); break;
-        case Operator::Larger       : c = operate::larger(a,b); break;
-        case Operator::LargerOrEqual: c = operate::largerOrEqual(a,b); break;
-        case Operator::Less         : c = operate::less(a,b); break;
-        case Operator::LessOrEqual  : c = operate::lessOrEqual(a,b); break;
-        case Operator::Equal        : c = operate::equal(a,b); break;
-        case Operator::NotEqual     : c = operate::notEqual(a,b); break;
-        case Operator::And          : c = operate::and_(a,b); break;
-        case Operator::Or           : c = operate::or_(a,b); break;
-        case Operator::Negate       : c = operate::negate(a); break;
-        case Operator::Not          : c = operate::not_(a); break;
-        case Operator::Comma        :ThrowException("Cannot reduce by comma operator").context(_parent); break;
-        }
-    }
-    // We need to pop operand and push result, because result may be of another type
+
+    // Pop second operand (it comes first from the stack!)
+    const Value &b = isValue(stack.back()) ? get<Value>(stack.back()) : Value::null();
     stack.pop_back();
+
+    // Pop first operand if present
+    const Value &a = (arity(op)==2 && isValue(stack.back())) ? get<Value>(stack.back()) : Value::null();
+    if (arity(op)==2)
+        stack.pop_back();
+
+    // Carry out the operation and leave result in stack top
+    Value c;
+    switch (op) {
+    case Operator::Add          : c = operate::add(a,b); break;
+    case Operator::Subtract     : c = operate::subtract(a,b); break;
+    case Operator::Multiply     : c = operate::multiply(a,b); break;
+    case Operator::Divide       : c = operate::divide(a,b); break;
+    case Operator::Exponentiate : c = operate::exponentiate(a,b); break;
+    case Operator::Larger       : c = operate::larger(a,b); break;
+    case Operator::LargerOrEqual: c = operate::largerOrEqual(a,b); break;
+    case Operator::Less         : c = operate::less(a,b); break;
+    case Operator::LessOrEqual  : c = operate::lessOrEqual(a,b); break;
+    case Operator::Equal        : c = operate::equal(a,b); break;
+    case Operator::NotEqual     : c = operate::notEqual(a,b); break;
+    case Operator::And          : c = operate::and_(a,b); break;
+    case Operator::Or           : c = operate::or_(a,b); break;
+    case Operator::Negate       : c = operate::negate(b); break;
+    case Operator::Not          : c = operate::not_(b); break;
+    case Operator::Comma        :ThrowException("Cannot reduce by comma operator").context(_parent); break;
+    }
     stack.push_back(c);
 }
 
 namespace {
 
-Value::Type argumentsType(const Expression::Stack &stack, int arity) {
+QVector<const Value*> findManyValues(const Path &path) {
+    QVector<const Value*> values;
+    for (Port *port : path.findMany<Port*>()) {
+         values << &port->value();
+    }
+    return values;
+}
+
+Value::Type argumentsType(Expression::Stack &stack, int arity) {
     QVector<const Value*> args;
     auto end = stack.cend(),
          begin = end - arity;
     for (auto it=begin; it<end; ++it) {
-        args << & std::get<Value>(*it);
+        switch (Expression::type(*it)) {
+        case Expression::Type::Value:
+            args << const_cast<const Value*>(& std::get<Value>(*it));
+            break;
+        case Expression::Type::Path:
+            args << findManyValues( std::get<Path>(*it) );
+            break;
+        default:
+            ThrowException("Value or Path expected").value(Expression::typeName(*it));
+        }
+
     }
     return ValueCollection::type(args);
 }
@@ -281,7 +267,7 @@ template <class T> QVector<T> popArguments(Expression::Stack &stack, int arity) 
         const Value &value = std::get<Value>(stack.at(i));
         if (value.isVector())
             args << value.as<QVector<T>>(); // flatten vector
-        else
+        else if (!value.isNull())
             args << value.as<T>();
     }
     stack.resize(n-arity);
@@ -324,6 +310,8 @@ T max(QVector<T> v) {
 }
 
 bool any(QVector<bool> v) {
+    if (v.isEmpty())
+        ThrowException("Cannot apply 'any' to an empty vector");
     for (auto x : v)
         if (convert<bool>(x))
             return true;
@@ -331,6 +319,8 @@ bool any(QVector<bool> v) {
 }
 
 bool all(QVector<bool> v) {
+    if (v.isEmpty())
+        ThrowException("Cannot apply 'all' to an empty vector");
     for (auto x : v)
         if (!convert<bool>(x))
             return false;
@@ -340,7 +330,7 @@ bool all(QVector<bool> v) {
 } // local namespace
 
 void Expression::reduceByFunctionCall(Stack &stack) {
-    // Pop operator
+    // Pop function
     const FunctionCall &func    = get<FunctionCall>(stack.back());
           FunctionCall &funcReg = _functionCalls[func.id];
     stack.pop_back();
@@ -352,7 +342,11 @@ void Expression::reduceByFunctionCall(Stack &stack) {
         funcReg.type = argumentsType(stack, func.arity);
     Type &type(funcReg.type);
 
-    if (func.name == "sum") {
+    if (type == Type::Null) {
+        stack.resize(stack.size() - func.arity);
+        stack.push_back(Value::null());
+    }
+    else if (func.name == "sum") {
         switch (type) {
         case Type::Int   : stack.push_back(sum(popArguments<int   >(stack, func.arity))); break;
         case Type::Double: stack.push_back(sum(popArguments<double>(stack, func.arity))); break;
@@ -406,6 +400,7 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     }
     else if (func.name == "c") {
         switch (type) {
+        case Type::Null    : stack.push_back(Value::null()); break;
         case Type::Bool    : stack.push_back(popArguments<bool     >(stack, func.arity)); break;
         case Type::Int     : stack.push_back(popArguments<int      >(stack, func.arity)); break;
         case Type::Double  : stack.push_back(popArguments<double   >(stack, func.arity)); break;
@@ -417,12 +412,23 @@ void Expression::reduceByFunctionCall(Stack &stack) {
         default: ThrowException("Illegal argument type for 'c'").value(Value::typeName(type));
         }
     }
+    else if (func.name == "exists" || func.name == "count") {
+        int count;
+        switch (type) {
+        case Type::Bool    : count = popArguments<bool     >(stack, func.arity).size(); break;
+        case Type::Int     : count = popArguments<int      >(stack, func.arity).size(); break;
+        case Type::Double  : count = popArguments<double   >(stack, func.arity).size(); break;
+        case Type::String  : count = popArguments<QString  >(stack, func.arity).size(); break;
+        case Type::Date    : count = popArguments<QDate    >(stack, func.arity).size(); break;
+        case Type::Time    : count = popArguments<QTime    >(stack, func.arity).size(); break;
+        case Type::DateTime: count = popArguments<QDateTime>(stack, func.arity).size(); break;
+        case Type::BareDate: count = popArguments<BareDate >(stack, func.arity).size(); break;
+        default: ThrowException("Illegal argument type for 'c'").value(Value::typeName(type));
+        }
+        stack.push_back(Value(count));
+    }
     else
         ThrowException("Unknown function").value(func.name);
-
-    // More functions
-    //  exists(path)
-    // count(path)
 }
 
 bool Expression::reduceByCondition(Stack &stack) {
@@ -437,14 +443,14 @@ bool Expression::reduceByCondition(Stack &stack) {
 }
 
 Value Expression::evaluate() {
+    QString s0, s1, s2, s3;
+    s0 = stackAsString();
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
 
-    QString s1 = toString(_stack),
-            s2, s3;
-    std::cout << qPrintable(s1) << "=>\n"
-              << "evaluate stack =\n" << qPrintable(s1)
-              << std::endl;
+    // Replace Path elements with Value elements
+    resolveImports();
+    s1 = stackAsString();
 
     enum class ConditionalPhase {FinishUponThen, SkipUntilThen, SkipUntilElse, Done};
     auto phase = ConditionalPhase::Done;
@@ -456,11 +462,8 @@ Value Expression::evaluate() {
     }
     else {
         for (Element &element : _stack) {
-            s2 = toString(element);
-            s3 = toString(myStack);
-            std::cout << qPrintable(s2) << "=>\n"
-                      << "mystack =\n" << qPrintable(s3)
-                      << std::endl;
+            s2 = toString(myStack);
+            s3 = toString(element);
 
             if (phase == ConditionalPhase::SkipUntilThen) {
                 if (isConditionalThen(element))
@@ -505,49 +508,30 @@ Value Expression::evaluate() {
             ThrowException("Too few operators in expression").value(stackAsString()).context(_parent);
         result = myStack.front();
     }
+    s2 = toString(myStack);
 
-    // The result should be a Value
-    if (type(result) != Type::Value)
-        ThrowException("Unexpected results type; expected a Value").value(toString(result)).context(_parent);
-    Value value = get<Value>(result);
-    return get<Value>(result);
-
+    // Return result or null
+    return (type(result) == Type::Value) ? get<Value>(result) : Value::null();
 }
 
 Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const QVector<Port*> &ports) {
-    QString s1 = stackAsString();
     at = _stack.insert(at, ports.size(), Element());
-    QString s2 = stackAsString(),
-            s3 = toString(*at);
-    s3 = toString(*at);
-    for (auto port : ports) {
+    for (auto port : ports)
         *at++ = port->value();
-        s3 = stackAsString();
-    }
     *at++ = FunctionCall("c", ports.size());
-    s3 = stackAsString();
     return at;
 }
 
-bool Expression::resolveImports(Success rule) {
-    bool allResolved = true;
+void Expression::resolveImports() {
     Box *box = boxAncestor();
-    QString s1, s2;
     for (auto element=_stack.begin(); element!=_stack.end(); ++element) {
-        s1 = stackAsString();
-        s2 = toString(*element);
         if (type(*element) == Type::Path) {
             Path &path = get<Path>(*element);
             path.setParent(box);
             auto matches = path.findMany<Port*>();
             switch (matches.size()) {
             case 0:
-                if (rule == Success::MustSucceed) {
-                    ThrowException("Could not find port").
-                            value1(originalAsString()).value2(path.toString()).
-                            context(box);
-                }
-                allResolved = false;
+                *element = Value::null();
                 break;
             case 1:
                 *element = matches.at(0)->value();
@@ -557,11 +541,6 @@ bool Expression::resolveImports(Success rule) {
             }
         }
     }
-    s2 = stackAsString();
-    std::cout << "Expression::resolveImports\n"
-              << qPrintable(s1) << "\n"
-              << qPrintable(s2) << std::endl;
-    return allResolved;
 }
 
 Box *Expression::boxAncestor() {
@@ -584,7 +563,7 @@ const Expression::Stack& Expression::stack() const {
     return _stack;
 }
 
-QString Expression::elementName(const Element& el) {
+QString Expression::typeName(const Element& el) {
     using Type = Expression::Type;
     QString s;
     switch (type(el)) {

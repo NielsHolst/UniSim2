@@ -11,7 +11,6 @@
 #include "node.h"
 #include "path.h"
 #include "port.h"
-#include "success.h"
 #include "timer.h"
 
 #define Input(X)  (*new base::Port(#X, base::Port::Type::Input , this)).initialize(& X)
@@ -71,7 +70,8 @@ public:
     ComputationStep computationStep() const;
 
     const QVector<Port*> &portsInOrder();
-    void updatePorts(Success rule);
+    void touchPorts();
+    void updatePorts();
     void verifyPorts();
 
     Box* clone(QString name, Box *parent);

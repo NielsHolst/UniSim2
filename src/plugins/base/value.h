@@ -21,8 +21,13 @@ class Port;
 class Value {
 public:
 
+    struct Null {
+    };
+    static Value null() { return Null(); }
+
     enum class Type { // Add same as vectors + a QVector<Value*> for heterogenous types
         Uninitialized,
+        Null,
         Bool,
         Int,
         Double,
@@ -43,6 +48,7 @@ public:
     };
 
     Value(Port *parent=nullptr) : _parent(parent) {}
+    Value(Null         , Port *parent=nullptr)  : Value(parent) { _variant = Null(); }
     Value(bool        x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(int         x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
     Value(double      x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
@@ -133,7 +139,7 @@ public:
     bool isVector() const
     // Return if this is a vectored type
     {
-        return (type() >= Type::VecBool);
+        return (type() >= Type::VecBool && type() <= Type::VecBareDate);
     }
 
     int size() const;
@@ -153,12 +159,14 @@ public:
     static Value create(QString type);
     // Create a value from type name
 
+    bool isNull() const;
     bool operator==(const Value &x) const;
     bool operator!=(const Value &x) const  { return !(*this==x); }
     // Compare
 private:
     std::variant<
         std::monostate,
+        Null,
         ValueTyped<bool>,
         ValueTyped<int>,
         ValueTyped<double>,
@@ -189,6 +197,9 @@ template <class U> void Value::changeValue(U value)
     switch(type()) {
     case Type::Uninitialized:
         ThrowException("Value is uninitialized").context(parent());
+        break;
+    case Type::Null:
+        ThrowException("Value is null").context(parent());
         break;
     case Type::Bool:
         std::get<ValueTyped<bool>>(_variant).changeValue(value);
@@ -250,6 +261,9 @@ template <class U> void Value::changeValueAt(U value, int i)
     switch(type()) {
     case Type::Uninitialized:
         ThrowException("Value is uninitialized").context(parent());
+        break;
+    case Type::Null:
+        ThrowException("Value is null").context(parent());
         break;
     case Type::Bool:
     case Type::Int:
@@ -316,6 +330,9 @@ template <class U> U Value::as() const
     switch(type()) {
     case Type::Uninitialized:
         ThrowException("Value is uninitialized").context(parent());;
+        break;
+    case Type::Null:
+        ThrowException("Value is null").context(parent());
         break;
     case Type::Bool:
         return std::get<ValueTyped<bool>>(_variant).value<U>();

@@ -75,13 +75,8 @@ void Port::define() {
     // Set me as parent of expression
     _expression.setParent(this);
 
-    // Evaluate to update value (if possible)
-    QString s1 = _value.asString(true, true);
-    evaluate(Success::MaySucceed);
-    QString s2 = _value.asString(true, true);
-    std::cout << "Port::define()\n"
-              << qPrintable(s1) << "\n"
-              << qPrintable(s2) << std::endl;
+    // Evaluation may not complete but try to evaluate value
+    touch();
 }
 
 Port& Port::equals(const Value &value) {
@@ -117,11 +112,35 @@ void Port::clear() {
         _value.clear();
 }
 
-void Port::evaluate(Success rule) {
-    // Evaluate only if port has an expression
-    // and when all imports have been resolved
-    if (!_expression.isEmpty() && _expression.resolveImports(rule))
+void Port::touch() {
+    // Tentative evaluation. Imports of yet-undefined ports in _expression
+    // will be replaced ny null values; hence _expression is kept
+    QString s1 = _expression.originalAsString(),
+            s2 = _expression.stackAsString(),
+            s3 = _value.asString(true, true);
+//    std::cout << qPrintable(name()+"touch A\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+
+    auto keep = _expression;
+    evaluate();
+    _expression = keep;
+    s1 = _expression.originalAsString(),
+    s2 = _expression.stackAsString(),
+    s3 = _value.asString(true, true);
+//    std::cout << qPrintable(name()+"touch Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+}
+
+void Port::evaluate() {
+    QString s1 = _expression.originalAsString(),
+            s2 = _expression.stackAsString(),
+            s3 = _value.asString(true, true);
+//    std::cout << qPrintable(name()+"evaluate A\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+
+    if (!_expression.isEmpty())
         _value = _expression.evaluate();
+    s1 = _expression.originalAsString(),
+    s2 = _expression.stackAsString(),
+    s3 = _value.asString(true, true);
+//    std::cout << qPrintable(name()+"evaluate Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
 }
 
 //
@@ -243,8 +262,7 @@ void Port::addExportPort(Port *port) {
 
 void Port::toText(QTextStream &text, int indentation) {
     static QMap<Type,QString> prefix =
-    {{Type::Input, "."}, {Type::Output, "//."}, {Type::Input, "&"}};
-    evaluate(Success::MaySucceed); // make certain that _value has been initialized
+        {{Type::Input, "."}, {Type::Output, "//."}, {Type::Input, "&"}};
     QString fill, expression;
     fill.fill(' ', indentation);
     text << fill

@@ -6,6 +6,7 @@
 #define BASE_OPERATE_H
 #include "value.h"
 
+// Define operations as functions
 namespace operate {
 base::Value add          (const base::Value &a, const base::Value &b);
 base::Value subtract     (const base::Value &a, const base::Value &b);
@@ -24,6 +25,7 @@ base::Value not_         (const base::Value &a);
 base::Value negate       (const base::Value &a);
 }
 
+// Define operations as operators
 inline base::Value operator+(const base::Value &a, const base::Value &b) {
     return operate::add(a, b);
 }
@@ -51,6 +53,11 @@ inline base::Value operator||(const base::Value &a, const base::Value &b) {
 inline base::Value operator!(const base::Value &a) {
     return operate::not_(a);
 }
+
+inline base::Value operator-(const base::Value &a) {
+    return operate::negate(a);
+}
+
 
 #endif
 

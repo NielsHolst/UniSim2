@@ -58,27 +58,25 @@ public:
 
     class Alternative {
     public:
-        Alternative(Path *parent = nullptr);
-        void setParent(Path *parent);
+        Alternative();
         void setRoot(bool hasRoot);
         void addNode(Node &node);
         void setPort(const Port &port);
         bool hasRoot() const;
         const QVector<Node> &nodes() const;
         const std::optional<Port> &port() const;
-        const Objects& matches();
+        const Objects& matches(base::Node *parent);
         QString toString() const;
 
     private:
         // Data
-        Path *_parent;
         bool _hasRoot;
         QVector<Node> _nodes;
         std::optional<Port> _port;
         Objects _matches;
 
         // Methods
-        void initiateMatches(const Node &node);
+        void initiateMatches(const Node &node, base::Node *parent);
         void filterMatches  (const Node &node);
 
         Objects any(Object *p, QString className, QString objectName);
@@ -112,33 +110,31 @@ public:
     // Methods
     Path(Object *parent=nullptr);
     Path(QString path, Object *parent=nullptr);
-//    Path(const Path &path);
-//    Path & operator=(const Path &path);
     void setParent(Object *parent);
     Object *parent();
-    void addAlternative(const Alternative &alternative);
+    void addAlternative(Alternative alternative);
     QString toString() const;
     const QVector<Alternative> &alternatives() const;
-    const Objects& matches();
-    template<class T> T findOne();
-    template<class T> T findMaybeOne();
-    template<class T> QVector<T> findMany();
+    const Objects& matches() const;
+    template<class T> T findOne() const;
+    template<class T> T findMaybeOne() const;
+    template<class T> QVector<T> findMany() const;
     static bool isValid(QString path);
 private:
     // Data
     Object *_parent;
-    QVector<Alternative> _alternatives;
-    Objects _matches;
+    mutable QVector<Alternative> _alternatives;
+    mutable Objects _matches;
 };
 
-template<class T> inline T Path::findOne() {
+template<class T> inline T Path::findOne() const {
     QVector<T> result = findMany<T>();
     if (result.size() != 1)
         ThrowException("Expected exactly one match").value1(toString()).value2(result.size()).context(_parent);
     return result[0];
 }
 
-template<class T> inline T Path::findMaybeOne() {
+template<class T> inline T Path::findMaybeOne() const {
     QVector<T> result = findMany<T>();
     switch (result.size()) {
     case 0: return nullptr;
@@ -147,7 +143,7 @@ template<class T> inline T Path::findMaybeOne() {
     }
 }
 
-template<class T> inline QVector<T> Path::findMany() {
+template<class T> inline QVector<T> Path::findMany() const {
     QVector<T> result;
     for (auto candidate : matches()) {
         auto typed = dynamic_cast<T>(candidate);

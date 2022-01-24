@@ -233,7 +233,7 @@ namespace ast {
 
     base::Path value(Path &path) {
         base::Path result;
-        for (auto alternative : path)
+        for (const auto &alternative : path)
             result.addAlternative(alternative.value());
         return result;
     }

@@ -12,8 +12,6 @@
 #include "expression.h"
 #include "port.h"
 
-#include <iostream>
-
 namespace base {
 
 class Box;
@@ -59,8 +57,6 @@ template <class T> BoxBuilder& BoxBuilder::equals(T value) {
     // For an auxillary port, we did not know its type until now
     if (_currentPort->type() == Port::Type::Auxiliary)
         _currentPort->initialize(value);
-    // std::cerr << "BoxBuilder::equals " << qPrintable(_currentPort->name() + " " + _currentPort->value().typeName())
-              // << std::endl;
     // Assign the value to the port we are currently defining
     _currentPort->equals(value);
     return *this;

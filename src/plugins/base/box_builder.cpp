@@ -82,7 +82,6 @@ BoxBuilder& BoxBuilder::aux(QString name, QString type) {
     _currentPort = new Port(name, Port::Type::Auxiliary, _currentBox);
     if (!type.isEmpty())
         _currentPort->initialize(Value::create(type));
-    // std::cerr << "BoxBuilder::aux " << qPrintable(name + " " + _currentPort->value().typeName())  << std::endl;
     return *this;
 }
 

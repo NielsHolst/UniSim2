@@ -17,6 +17,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
     QStringList slist;
     switch(type()) {
     case Type::Uninitialized: slist += "uninitialized"; break;
+    case Type::Null         : slist += "null"; break;
     case Type::VecBool      : for (auto x : as<vbool     >()) slist += convert<QString>(x);; break;
     case Type::VecInt       : for (auto x : as<vint      >()) slist += convert<QString>(x);; break;
     case Type::VecDouble    : for (auto x : as<vdouble   >()) slist += convert<QString>(x);; break;
@@ -46,6 +47,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
 void Value::clear() {
     switch(type()) {
     case Type::Uninitialized: ThrowException("Cannot clear uninitialized value").context(_parent); break;
+    case Type::Null         : ThrowException("Cannot clear null value").context(_parent); break;
     case Type::Bool         : changeValue(bool     ()); break;
     case Type::Int          : changeValue(int      ()); break;
     case Type::Double       : changeValue(double   ()); break;
@@ -69,6 +71,7 @@ void Value::clear() {
 int Value::size() const {
     switch(type()) {
     case Type::Uninitialized: ThrowException("Cannot tell size of uninitialized value").context(_parent); break;
+    case Type::Null         : return 0;                       break;
     case Type::VecBool      : return as<vbool     >().size(); break;
     case Type::VecInt       : return as<vint      >().size(); break;
     case Type::VecDouble    : return as<vdouble   >().size(); break;
@@ -79,7 +82,6 @@ int Value::size() const {
     case Type::VecBareDate  : return as<vBareDate >().size(); break;
     default: return 1;
     }
-    return 0;
 }
 
 QString Value::outputFormat() const {
@@ -98,7 +100,8 @@ QString Value::outputFormat() const {
 
 void Value::assign(const Value &x) {
     switch(type()) {
-    case Type::Uninitialized: _variant = x._variant; break;
+    case Type::Uninitialized:
+    case Type::Null         : _variant = x._variant         ; break;
     case Type::Bool         : changeValue(x.as<bool     >()); break;
     case Type::Int          : changeValue(x.as<int      >()); break;
     case Type::Double       : changeValue(x.as<double   >()); break;
@@ -122,7 +125,8 @@ void Value::assign(const Value &x) {
 bool Value::operator==(const Value &x) const {
     if (type() == x.type())
         switch(type()) {
-        case Type::Uninitialized: return true;
+        case Type::Uninitialized:
+        case Type::Null         : return false; //true;
         case Type::Bool         : return as<bool      >() == x.as<bool      >();
         case Type::Int          : return as<int       >() == x.as<int       >();
         case Type::Double       : return as<double    >() == x.as<double    >();
@@ -175,6 +179,7 @@ QString Value::typeName() const {
 QString Value::typeName(Type type){
     switch(type) {
     case Type::Uninitialized: return "uninitialized";
+    case Type::Null         : return "null";
     case Type::Bool         : return "bool";
     case Type::Int          : return "int";
     case Type::Double       : return "double";
@@ -219,6 +224,10 @@ Value Value::create(QString type) {
         return map.value(type);
     else
         ThrowException("Unknown value type").value(type);
+}
+
+bool Value::isNull() const {
+    return type() == Type::Null;
 }
 
 Node* Value::parent() const {
