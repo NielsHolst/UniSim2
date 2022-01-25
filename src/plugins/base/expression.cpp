@@ -13,6 +13,7 @@
 #include "value_collection.h"
 using std::get;
 
+#include <iostream>
 namespace base {
 
 Expression::Expression(Node *parent)
@@ -274,6 +275,11 @@ template <class T> QVector<T> popArguments(Expression::Stack &stack, int arity) 
     return args;
 }
 
+void  popArguments(Expression::Stack &stack, int arity) {
+    int n = stack.size();
+    stack.resize(n-arity);
+}
+
 template <class T>
 T sum(QVector<T> v) {
     T y = 0;
@@ -327,6 +333,11 @@ bool all(QVector<bool> v) {
     return true;
 }
 
+inline bool isLikeNull(Value::Type type) {
+    return type==Value::Type::Uninitialized || type==Value::Type::Null;
+
+}
+
 } // local namespace
 
 void Expression::reduceByFunctionCall(Stack &stack) {
@@ -342,12 +353,10 @@ void Expression::reduceByFunctionCall(Stack &stack) {
         funcReg.type = argumentsType(stack, func.arity);
     Type &type(funcReg.type);
 
-    if (type == Type::Null) {
-        stack.resize(stack.size() - func.arity);
-        stack.push_back(Value::null());
-    }
-    else if (func.name == "sum") {
+    // Functions that accepts null type
+    if (func.name == "sum") {
         switch (type) {
+        case Type::Null  : popArguments(stack, func.arity); stack.push_back(Value(int(0))); break;
         case Type::Int   : stack.push_back(sum(popArguments<int   >(stack, func.arity))); break;
         case Type::Double: stack.push_back(sum(popArguments<double>(stack, func.arity))); break;
         default: ThrowException("Illegal argument type for 'sum'").value(Value::typeName(type));
@@ -355,11 +364,45 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     }
     else if (func.name == "mean") {
         switch (type) {
+        case Type::Null  : popArguments(stack, func.arity); stack.push_back(Value(int(0))); break;
         case Type::Int   : stack.push_back(mean(popArguments<int   >(stack, func.arity))); break;
         case Type::Double: stack.push_back(mean(popArguments<double>(stack, func.arity))); break;
         default: ThrowException("Illegal argument type for 'mean'").value(Value::typeName(type));
         }
     }
+    else if (func.name == "exists" || func.name == "count") {
+        if (isLikeNull(type)) {
+            popArguments(stack, func.arity);
+            if (func.name == "exists")
+                stack.push_back(Value(false));
+            else
+                stack.push_back(Value(int(0)));
+        }
+        else {
+            int count;
+            switch (type) {
+            case Type::Bool    : count = popArguments<bool     >(stack, func.arity).size(); break;
+            case Type::Int     : count = popArguments<int      >(stack, func.arity).size(); break;
+            case Type::Double  : count = popArguments<double   >(stack, func.arity).size(); break;
+            case Type::String  : count = popArguments<QString  >(stack, func.arity).size(); break;
+            case Type::Date    : count = popArguments<QDate    >(stack, func.arity).size(); break;
+            case Type::Time    : count = popArguments<QTime    >(stack, func.arity).size(); break;
+            case Type::DateTime: count = popArguments<QDateTime>(stack, func.arity).size(); break;
+            case Type::BareDate: count = popArguments<BareDate >(stack, func.arity).size(); break;
+            default: ThrowException("Illegal argument type for "+func.name).value(Value::typeName(type));
+            }
+            if (func.name == "exists")
+                stack.push_back(Value(bool(count)));
+            else
+                stack.push_back(Value(count));
+        }
+    }
+    // Evaluate null to null
+    else if (type == Type::Null) {
+        stack.resize(stack.size() - func.arity);
+        stack.push_back(Value::null());
+    }
+    // Functions that don't accept null type
     else if (func.name == "min") {
         switch (type) {
         case Type::Int     : stack.push_back(min(popArguments<int      >(stack, func.arity))); break;
@@ -412,21 +455,6 @@ void Expression::reduceByFunctionCall(Stack &stack) {
         default: ThrowException("Illegal argument type for 'c'").value(Value::typeName(type));
         }
     }
-    else if (func.name == "exists" || func.name == "count") {
-        int count;
-        switch (type) {
-        case Type::Bool    : count = popArguments<bool     >(stack, func.arity).size(); break;
-        case Type::Int     : count = popArguments<int      >(stack, func.arity).size(); break;
-        case Type::Double  : count = popArguments<double   >(stack, func.arity).size(); break;
-        case Type::String  : count = popArguments<QString  >(stack, func.arity).size(); break;
-        case Type::Date    : count = popArguments<QDate    >(stack, func.arity).size(); break;
-        case Type::Time    : count = popArguments<QTime    >(stack, func.arity).size(); break;
-        case Type::DateTime: count = popArguments<QDateTime>(stack, func.arity).size(); break;
-        case Type::BareDate: count = popArguments<BareDate >(stack, func.arity).size(); break;
-        default: ThrowException("Illegal argument type for 'c'").value(Value::typeName(type));
-        }
-        stack.push_back(Value(count));
-    }
     else
         ThrowException("Unknown function").value(func.name);
 }
@@ -445,6 +473,8 @@ bool Expression::reduceByCondition(Stack &stack) {
 Value Expression::evaluate() {
     QString s0, s1, s2, s3;
     s0 = stackAsString();
+    std::cout << "Expression::evaluate " << qPrintable(s0) << std::endl;
+
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
 
@@ -464,6 +494,9 @@ Value Expression::evaluate() {
         for (Element &element : _stack) {
             s2 = toString(myStack);
             s3 = toString(element);
+            std::cout << "Reduce\n"
+                      << "My stack " << qPrintable(s2) << std::endl
+                      << "Element "  << qPrintable(s3) << std::endl;
 
             if (phase == ConditionalPhase::SkipUntilThen) {
                 if (isConditionalThen(element))
@@ -509,6 +542,8 @@ Value Expression::evaluate() {
         result = myStack.front();
     }
     s2 = toString(myStack);
+    std::cout << "End\n"
+              << "My stack " << qPrintable(s2) << std::endl;
 
     // Return result or null
     return (type(result) == Type::Value) ? get<Value>(result) : Value::null();

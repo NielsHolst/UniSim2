@@ -231,9 +231,7 @@ void Path::Alternative::addNode(Node &node) {
 }
 
 void Path::Alternative::setPort(const Port &port) {
-    // Dummy port is ignored
-    if (_port->_name != "DUMMY")
-        _port = port;
+    _port = port;
 }
 
 bool Path::Alternative::hasRoot() const {

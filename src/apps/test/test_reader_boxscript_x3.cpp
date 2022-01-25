@@ -227,24 +227,6 @@ void TestReaderBoxScriptX3::testInitializePortMissing() {
     QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Null);
 }
 
-void TestReaderBoxScriptX3::testMultipleMatches() {
-    bool excepted(false);
-    std::unique_ptr<Box> root;
-    BoxBuilder builder;
-    ReaderBoxScript reader(&builder);
-    try {
-        reader.parse(inputFilePath("box_script/multiple_matches.box"));
-        root = std::unique_ptr<Box>( builder.content() );
-    }
-    UNEXPECTED_EXCEPTION;
-
-    try {
-        QCOMPARE(root->port("a")->value<double>(), 80.0);
-    }
-    UNEXPECTED_EXCEPTION;
-}
-
-
 void TestReaderBoxScriptX3::testCondition() {
     bool excepted(false);
     std::unique_ptr<Box> root;
@@ -262,5 +244,53 @@ void TestReaderBoxScriptX3::testCondition() {
         QCOMPARE(root->port("c")->value<int>(), 19);
     }
     UNEXPECTED_EXCEPTION;
-
 }
+
+void TestReaderBoxScriptX3::testMultipleMatches() {
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/multiple_matches.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+
+    try {
+        QCOMPARE(root->port("a")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("a")->value<int>(), 80);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("b")->value().type(), Value::Type::Int);
+        QCOMPARE(root->port("b")->value<int>(), 3);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QVERIFY2(root->port("c")->value().type() == Value::Type::Bool, str(root->port("c")->value().typeName()));
+        QCOMPARE(root->port("c")->value<bool>(), true);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QCOMPARE(root->port("k")->value().type(), Value::Type::Null);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QVERIFY2(root->port("u")->value().type() == Value::Type::Int, str(root->port("u")->value().typeName()));
+        QCOMPARE(root->port("u")->value<int>(), 20);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QVERIFY2(root->port("v")->value().type() == Value::Type::Int, str(root->port("v")->value().typeName()));
+        QCOMPARE(root->port("v")->value<int>(), 0);
+    }
+    UNEXPECTED_EXCEPTION;
+    try {
+        QVERIFY2(root->port("w")->value().type() == Value::Type::Bool, str(root->port("c")->value().typeName()));
+        QCOMPARE(root->port("w")->value<bool>(), false);
+    }
+    UNEXPECTED_EXCEPTION;
+}
+
+
