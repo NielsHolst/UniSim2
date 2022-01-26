@@ -73,6 +73,8 @@ public:
 
     QString originalAsString() const;
     QString stackAsString() const;
+    static QString toString(const Stack &stack);
+    static QString toString(const Element &element);
 
 private:
     // Data
@@ -88,8 +90,6 @@ private:
     void reduceByFunctionCall(Stack &stack);
     bool reduceByCondition(Stack &stack);
     Stack::iterator replaceElement(Stack::iterator at, const QVector<Port*> &ports);
-    static QString toString(const Stack &stack);
-    static QString toString(const Element &element);
 };
 
 template <class T> void Expression::push(T element)

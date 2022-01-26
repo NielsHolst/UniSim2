@@ -132,7 +132,7 @@ public:
     {
         int i = _variant.index();
         if (isVector())
-            i = i - static_cast<int>(Type::VecBool) + 1;
+            i = i - static_cast<int>(Type::VecBool) + static_cast<int>(Type::Bool);
         return static_cast<Type>(i);
     }
 

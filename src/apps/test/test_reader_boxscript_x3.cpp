@@ -13,16 +13,19 @@
 
 #define STR(X) qPrintable(convert<QString>(X))
 
-template <class T>
-auto vstr(QVector<T> v) {
-    QStringList list;
-    for (auto x : v)
-        list << convert<QString>(x);
-    return qPrintable(list.join(" "));
-}
 
-auto str(QString s) {
-    return qPrintable(s);
+namespace {
+    template <class T>
+    auto vstr(QVector<T> v) {
+        QStringList list;
+        for (auto x : v)
+            list << convert<QString>(x);
+        return qPrintable(list.join(" "));
+    }
+
+    auto str(QString s) {
+        return qPrintable(s);
+    }
 }
 
 void TestReaderBoxScriptX3::testAuxAllTypes() {

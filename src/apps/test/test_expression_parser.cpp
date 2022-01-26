@@ -58,7 +58,7 @@ void TestExpressionParser::testOperation() {
     }
     UNEXPECTED_EXCEPTION;
     QString s = e.stackAsString();
-    QCOMPARE(e.stackAsString(), "7 17.5 +");
+    QCOMPARE(e.stackAsString(), "7{int} 17.5{double} +{Operator}");
 }
 
 void TestExpressionParser::testPathWithPort() {

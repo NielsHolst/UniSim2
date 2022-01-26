@@ -242,6 +242,9 @@ QVector<const Value*> findManyValues(const Path &path) {
 }
 
 Value::Type argumentsType(Expression::Stack &stack, int arity) {
+    QString s1 = Expression::toString(stack);
+    std::cout << "argumentsType\n"
+              << "stack " << qPrintable(s1) << std::endl;
     QVector<const Value*> args;
     auto end = stack.cend(),
          begin = end - arity;
@@ -352,6 +355,11 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     if (funcReg.type == Value::Type::Uninitialized)
         funcReg.type = argumentsType(stack, func.arity);
     Type &type(funcReg.type);
+    QString s1 = toString(stack),
+            s2 = Value::typeName(type);
+    std::cout << "reduceByFunctionCall\n"
+              << "stack " << qPrintable(s1) << std::endl
+              << "common type" << qPrintable(s2) << std::endl;
 
     // Functions that accepts null type
     if (func.name == "sum") {
@@ -365,7 +373,7 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     else if (func.name == "mean") {
         switch (type) {
         case Type::Null  : popArguments(stack, func.arity); stack.push_back(Value(int(0))); break;
-        case Type::Int   : stack.push_back(mean(popArguments<int   >(stack, func.arity))); break;
+        case Type::Int   :
         case Type::Double: stack.push_back(mean(popArguments<double>(stack, func.arity))); break;
         default: ThrowException("Illegal argument type for 'mean'").value(Value::typeName(type));
         }
@@ -473,7 +481,7 @@ bool Expression::reduceByCondition(Stack &stack) {
 Value Expression::evaluate() {
     QString s0, s1, s2, s3;
     s0 = stackAsString();
-    std::cout << "Expression::evaluate " << qPrintable(s0) << std::endl;
+    std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
 
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
@@ -602,7 +610,7 @@ QString Expression::typeName(const Element& el) {
     using Type = Expression::Type;
     QString s;
     switch (type(el)) {
-    case Type::Value           : s = "Value"          ; break;
+    case Type::Value           : s = get<Value>(el).typeName(); break;
     case Type::Operator        : s = "Operator"       ; break;
     case Type::Parenthesis     : s = "Parenthesis"    ; break;
     case Type::Path            : s = "Path"           ; break;
@@ -643,7 +651,7 @@ QString Expression::toString(const Element &element) {
     case Type::FunctionCallEnd: s = "end"; break;
     case Type::Conditional:     s = conditionalToString(get<Conditional>(element)); break;
     }
-    return s;
+    return s +"{" + typeName(element) +"}";
 }
 
 QString conditionalToString(Expression::Conditional cond) {

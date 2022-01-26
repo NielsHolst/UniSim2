@@ -80,13 +80,14 @@ Value::Type ValueCollection::type(QVector<const Value*> values) {
     QSet<Type> baseTypes;
     Type common;
     for (const Value *value : values) {
-        baseTypes << value->baseType();
+        if (!value->isNull())
+            baseTypes << value->baseType();
     }
 
-    if (baseTypes.size() == 1)
-        common = *baseTypes.cbegin();
-    else if (baseTypes.contains(Value::Type::Null))
+    if (baseTypes.size() == 0)
         common = Value::Type::Null;
+    else if (baseTypes.size() == 1)
+        common = *baseTypes.cbegin();
     else if (baseTypes == _toInt.at(0))
         common = Type::Int;
     else if (baseTypes == _toDouble.at(0) || baseTypes == _toDouble.at(1) || baseTypes == _toDouble.at(2))
