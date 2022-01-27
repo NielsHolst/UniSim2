@@ -261,8 +261,8 @@ void TestReaderBoxScriptX3::testMultipleMatches() {
     UNEXPECTED_EXCEPTION;
 
     try {
-        QCOMPARE(root->port("a")->value().type(), Value::Type::Int);
-        QCOMPARE(root->port("a")->value<int>(), 80);
+        QVERIFY2(root->port("a")->value().type() == Value::Type::Double, str(root->port("a")->value().typeName()));
+        QCOMPARE(root->port("a")->value<int>(), 80.);
     }
     UNEXPECTED_EXCEPTION;
     try {

@@ -75,20 +75,17 @@ QString Node::fullName() const {
 
 QString Node::fullName(const Node *object) {
     QStringList names;
+    QString portName("");
     const Node *p = object;
-    const Node *last;
-    while (p) {
-        names.prepend(p->objectName());
-        last = p;
+    if (dynamic_cast<const Port*>(p)) {
+        portName = "[" + p->objectName() + "]";
         p = p->parent();
     }
-    if (dynamic_cast<const Port*>(last)) {
-        QString portName = names.last();
-        names.pop_back();
-        return names.join("/") + "[" + portName + "]";
+    while (p) {
+        names.prepend(p->objectName());
+        p = p->parent();
     }
-    else
-        return names.join("/");
+    return names.join("/") + portName;
 }
 
 QString Node::className(Namespace ns) const {

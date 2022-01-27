@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QTextEdit>
+#include <base/computation_step.h>
 #include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>
@@ -32,8 +33,8 @@ PopUp::PopUp(QString name, Box *parent)
 }
 
 void PopUp::amend() {
-    _when = convert<ComputationStep>(when);
-    if (_when == ComputationStep::Amend)
+    _when = Computation::lookup(when, this);
+    if (_when == Computation::Step::Amend)
         showPopUp();
 }
 
@@ -43,24 +44,24 @@ void PopUp::initialize() {
     toButton(defaultButton);
     toButton(escapeButton);
     // Maybe show
-    if (_when==ComputationStep::Initialize && dialog().latestCommand()=="run")
+    if (_when==Computation::Step::Initialize && dialog().latestCommand()=="run")
         showPopUp();
 }
 
 void PopUp::reset() {
-    if (_when == ComputationStep::Reset) showPopUp();
+    if (_when == Computation::Step::Reset) showPopUp();
 }
 
 void PopUp::update() {
-    if (_when == ComputationStep::Update) showPopUp();
+    if (_when == Computation::Step::Update) showPopUp();
 }
 
 void PopUp::cleanup() {
-    if (_when == ComputationStep::Cleanup) showPopUp();
+    if (_when == Computation::Step::Cleanup) showPopUp();
 }
 
 void PopUp::debrief() {
-    if (_when == ComputationStep::Debrief) showPopUp();
+    if (_when == Computation::Step::Debrief) showPopUp();
 }
 
 void PopUp::showPopUp() {

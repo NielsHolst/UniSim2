@@ -15,7 +15,6 @@ Port::Port(QString name, Type type, Node *parent)
     : Node(name, parent),
       _type(type),
       _hasBeenRedefined(false),
-      _hasBeenFixed(false),
       _expression(this)
 {
     Box *boxParent = dynamic_cast<Box*>(parent);
@@ -65,12 +64,13 @@ void Port::define() {
         ThrowException("Port is missing a parent box").context(this);
 
     // Check that (re-) definition is legal in this step
-    auto step = box->computationStep();
-    if (step != Box::ComputationStep::Construct && step != Box::ComputationStep::Amend)
-        ThrowException("Change of port definition only allowed in constructor and amend function").context(this);
+    auto step = Computation::currentStep();
+    if (step >= Computation::Step::Initialize)
+        ThrowException("Change of port definition only allowed until amend step").
+                value(Computation::toString(step)).context(this);
 
     // Register re-definition
-    _hasBeenRedefined = (step != Box::ComputationStep::Construct);
+    _hasBeenRedefined = (step > Computation::Step::Construct);
 
     // Set me as parent of expression
     _expression.setParent(this);
@@ -115,18 +115,9 @@ void Port::clear() {
 void Port::touch() {
     // Tentative evaluation. Imports of yet-undefined ports in _expression
     // will be replaced ny null values; hence _expression is kept
-    QString s1 = _expression.originalAsString(),
-            s2 = _expression.stackAsString(),
-            s3 = _value.asString(true, true);
-//    std::cout << qPrintable(name()+"touch A\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
-
     auto keep = _expression;
     evaluate();
     _expression = keep;
-    s1 = _expression.originalAsString(),
-    s2 = _expression.stackAsString(),
-    s3 = _value.asString(true, true);
-//    std::cout << qPrintable(name()+"touch Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
 }
 
 void Port::evaluate() {
@@ -135,8 +126,16 @@ void Port::evaluate() {
             s3 = _value.asString(true, true);
 //    std::cout << qPrintable(name()+"evaluate A\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
 
-    if (!_expression.isEmpty())
-        _value = _expression.evaluate();
+    if (!_expression.isEmpty()) {
+        if (_type == Type::Auxiliary)
+            // Overwrite value's type, as an auxillary port may change type, since its expression
+            // is evaluated again and again and additional references may be resolved
+            _value.overwrite(_expression.evaluate());
+        else
+            // Update value, keeping its type, which for inputs and outputs were defined
+            // in the C++ code; the expression's type will be converted to the value's types
+            _value = _expression.evaluate();
+    }
     s1 = _expression.originalAsString(),
     s2 = _expression.stackAsString(),
     s3 = _value.asString(true, true);
@@ -268,7 +267,8 @@ void Port::toText(QTextStream &text, int indentation) {
     text << fill
          << prefix.value(_type) << objectName()
          << " = " << _expression.originalAsString()
-         << "//" + _value.typeName()
+         << "//" << _value.typeName()
+         << "//" << order()
          << "\n";
 }
 

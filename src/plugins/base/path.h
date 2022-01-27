@@ -4,7 +4,7 @@
 */
 #ifndef BASE_PATH_H
 #define BASE_PATH_H
-
+#include <algorithm>
 #include <optional>
 #include <string>
 #include <vector>
@@ -150,9 +150,9 @@ template<class T> inline QVector<T> Path::findMany() const {
         if (typed)
             result << typed;
     }
+    std::sort(result.begin(), result.end(),  [](T a, T b) { return a->order() < b->order(); });
     return result;
 }
-
 
 }
 

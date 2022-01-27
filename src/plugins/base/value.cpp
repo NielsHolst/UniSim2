@@ -46,8 +46,8 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
 
 void Value::clear() {
     switch(type()) {
-    case Type::Uninitialized: ThrowException("Cannot clear uninitialized value").context(_parent); break;
-    case Type::Null         : ThrowException("Cannot clear null value").context(_parent); break;
+    case Type::Uninitialized: ThrowException("Cannot clear uninitialized value"); break;
+    case Type::Null         : ThrowException("Cannot clear null value"); break;
     case Type::Bool         : changeValue(bool     ()); break;
     case Type::Int          : changeValue(int      ()); break;
     case Type::Double       : changeValue(double   ()); break;
@@ -70,7 +70,7 @@ void Value::clear() {
 
 int Value::size() const {
     switch(type()) {
-    case Type::Uninitialized: ThrowException("Cannot tell size of uninitialized value").context(_parent); break;
+    case Type::Uninitialized: ThrowException("Cannot tell size of uninitialized value"); break;
     case Type::Null         : return 0;                       break;
     case Type::VecBool      : return as<vbool     >().size(); break;
     case Type::VecInt       : return as<vint      >().size(); break;
@@ -151,7 +151,7 @@ bool Value::operator==(const Value &x) const {
 #define VALUE_PTR(cppType, valueType) \
 template <> const cppType* Value::constPtr() const { \
     if (type() != valueType) \
-        ThrowException("Value is not of type " + QString(#cppType)).value(typeName()).context(parent()); \
+        ThrowException("Value is not of type " + QString(#cppType)).value(typeName()); \
     return std::get<ValueTyped<cppType>>(_variant).constPtr(); \
 }
 
@@ -228,10 +228,6 @@ Value Value::create(QString type) {
 
 bool Value::isNull() const {
     return type() == Type::Null;
-}
-
-Node* Value::parent() const {
-    return nullptr; //_parent;
 }
 
 }

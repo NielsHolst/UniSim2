@@ -47,46 +47,46 @@ public:
         VecBareDate
     };
 
-    Value(Port *parent=nullptr) : _parent(parent) {}
-    Value(Null         , Port *parent=nullptr)  : Value(parent) { _variant = Null(); }
-    Value(bool        x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(int         x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(double      x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QString     x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QDate       x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QTime       x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QDateTime   x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(BareDate    x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(Path        x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(const char *x, Port *parent=nullptr)  : Value(parent) { initialize(QString(x)); }
+    Value() {}
+    Value(Null         ) { _variant = Null(); }
+    Value(bool        x) { initialize(x); }
+    Value(int         x) { initialize(x); }
+    Value(double      x) { initialize(x); }
+    Value(QString     x) { initialize(x); }
+    Value(QDate       x) { initialize(x); }
+    Value(QTime       x) { initialize(x); }
+    Value(QDateTime   x) { initialize(x); }
+    Value(BareDate    x) { initialize(x); }
+    Value(Path        x) { initialize(x); }
+    Value(const char *x) { initialize(QString(x)); }
 
-    Value(bool       *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(int        *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(double     *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QString    *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QDate      *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QTime      *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(QDateTime  *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(BareDate   *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
-    Value(Path       *x, Port *parent=nullptr)  : Value(parent) { initialize(x); }
+    Value(bool       *x) { initialize(x); }
+    Value(int        *x) { initialize(x); }
+    Value(double     *x) { initialize(x); }
+    Value(QString    *x) { initialize(x); }
+    Value(QDate      *x) { initialize(x); }
+    Value(QTime      *x) { initialize(x); }
+    Value(QDateTime  *x) { initialize(x); }
+    Value(BareDate   *x) { initialize(x); }
+    Value(Path       *x) { initialize(x); }
 
-    Value(QVector<bool>       x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<int>        x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<double>     x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QString>    x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QDate>      x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QTime>      x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QDateTime>  x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<BareDate>   x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<bool>       x) { initialize(x); }
+    Value(QVector<int>        x) { initialize(x); }
+    Value(QVector<double>     x) { initialize(x); }
+    Value(QVector<QString>    x) { initialize(x); }
+    Value(QVector<QDate>      x) { initialize(x); }
+    Value(QVector<QTime>      x) { initialize(x); }
+    Value(QVector<QDateTime>  x) { initialize(x); }
+    Value(QVector<BareDate>   x) { initialize(x); }
 
-    Value(QVector<bool>      *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<int>       *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<double>    *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QString>   *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QDate>     *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QTime>     *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<QDateTime> *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
-    Value(QVector<BareDate>  *x, Port *parent=nullptr) : Value(parent) { initialize(x); }
+    Value(QVector<bool>      *x) { initialize(x); }
+    Value(QVector<int>       *x) { initialize(x); }
+    Value(QVector<double>    *x) { initialize(x); }
+    Value(QVector<QString>   *x) { initialize(x); }
+    Value(QVector<QDate>     *x) { initialize(x); }
+    Value(QVector<QTime>     *x) { initialize(x); }
+    Value(QVector<QDateTime> *x) { initialize(x); }
+    Value(QVector<BareDate>  *x) { initialize(x); }
 
     template <class T> void initialize(T *variable)
     // Link to outside variable
@@ -156,6 +156,9 @@ public:
     Value& operator=(const Value &x) { assign(x);  return *this; }
     // Copy from another Value but keep my own type
 
+    void overwrite(const Value &x) { _variant = x._variant; }
+    // Overwrite value and its type
+
     static Value create(QString type);
     // Create a value from type name
 
@@ -187,19 +190,16 @@ private:
     >
     _variant; // Starts out uninitialised (= monostate)
     void assign(const Value &x);
-    // Unused?
-    Port *_parent;
-    Node* parent() const;
 };
 
 template <class U> void Value::changeValue(U value)
 {
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized").context(parent());
+        ThrowException("Value is uninitialized");
         break;
     case Type::Null:
-        ThrowException("Value is null").context(parent());
+        ThrowException("Value is null");
         break;
     case Type::Bool:
         std::get<ValueTyped<bool>>(_variant).changeValue(value);
@@ -260,10 +260,10 @@ template <class U> void Value::changeValueAt(U value, int i)
     using std::get;
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized").context(parent());
+        ThrowException("Value is uninitialized");
         break;
     case Type::Null:
-        ThrowException("Value is null").context(parent());
+        ThrowException("Value is null");
         break;
     case Type::Bool:
     case Type::Int:
@@ -277,7 +277,7 @@ template <class U> void Value::changeValueAt(U value, int i)
         if (i==0)
             changeValue(value);
         else
-            ThrowException("Index out of range for a scalar").value(i).context(parent());;
+            ThrowException("Index out of range for a scalar").value(i);
         break;
     case Type::VecBool:
         get<ValueTyped<QVector<bool     >>>(_variant).ptr()[i] = convert<bool     >(value);
@@ -329,10 +329,10 @@ template <class U> U Value::as() const
 {
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized").context(parent());;
+        ThrowException("Value is uninitialized");
         break;
     case Type::Null:
-        ThrowException("Value is null").context(parent());
+        ThrowException("Value is null");
         break;
     case Type::Bool:
         return std::get<ValueTyped<bool>>(_variant).value<U>();

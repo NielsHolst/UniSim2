@@ -5,16 +5,22 @@
 #include <limits>
 #include <sstream>
 #include "box.h"
-#include "exception.h"
-#include "expression.h"
+#include "computation_step.h"
 #include "convert_operator.h"
 #include "convert.h"
+#include "exception.h"
+#include "expression.h"
 #include "operate.h"
+#include "phys_math.h"
+#include "port.h"
 #include "value_collection.h"
 using std::get;
-
 #include <iostream>
+
 namespace base {
+
+Expression::ResolvedReferences Expression::_resolvedReferences;
+bool Expression::_fixedResolvedReferences;
 
 Expression::Expression(Node *parent)
     : _parent(parent), _isClosed(false)
@@ -242,9 +248,6 @@ QVector<const Value*> findManyValues(const Path &path) {
 }
 
 Value::Type argumentsType(Expression::Stack &stack, int arity) {
-    QString s1 = Expression::toString(stack);
-    std::cout << "argumentsType\n"
-              << "stack " << qPrintable(s1) << std::endl;
     QVector<const Value*> args;
     auto end = stack.cend(),
          begin = end - arity;
@@ -345,21 +348,23 @@ inline bool isLikeNull(Value::Type type) {
 
 void Expression::reduceByFunctionCall(Stack &stack) {
     // Pop function
-    const FunctionCall &func    = get<FunctionCall>(stack.back());
-          FunctionCall &funcReg = _functionCalls[func.id];
+    FunctionCall &func    = get<FunctionCall>(stack.back());
+//          FunctionCall &funcReg = _functionCalls[func.id];
     stack.pop_back();
     if ((int) stack.size() < func.arity)
         ThrowException("Wrong function arity").value(func.arity);
 
     using Type = Value::Type;
-    if (funcReg.type == Value::Type::Uninitialized)
-        funcReg.type = argumentsType(stack, func.arity);
-    Type &type(funcReg.type);
+//    if (funcReg.type == Value::Type::Uninitialized)
+//        funcReg.type = argumentsType(stack, func.arity);
+//    Type &type(funcReg.type);
+    func.type = argumentsType(stack, func.arity);
+    Type &type(func.type);
     QString s1 = toString(stack),
             s2 = Value::typeName(type);
-    std::cout << "reduceByFunctionCall\n"
-              << "stack " << qPrintable(s1) << std::endl
-              << "common type" << qPrintable(s2) << std::endl;
+//    std::cout << "reduceByFunctionCall\n"
+//              << "stack " << qPrintable(s1) << std::endl
+//              << "common type" << qPrintable(s2) << std::endl;
 
     // Functions that accepts null type
     if (func.name == "sum") {
@@ -481,13 +486,16 @@ bool Expression::reduceByCondition(Stack &stack) {
 Value Expression::evaluate() {
     QString s0, s1, s2, s3;
     s0 = stackAsString();
-    std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
+//    std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
 
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
 
+    // Save stack if references have not yet been fixed
+    Stack savedStack = _fixedResolvedReferences ? Stack() : _stack;
+
     // Replace Path elements with Value elements
-    resolveImports();
+    resolveReferences();
     s1 = stackAsString();
 
     enum class ConditionalPhase {FinishUponThen, SkipUntilThen, SkipUntilElse, Done};
@@ -502,9 +510,9 @@ Value Expression::evaluate() {
         for (Element &element : _stack) {
             s2 = toString(myStack);
             s3 = toString(element);
-            std::cout << "Reduce\n"
-                      << "My stack " << qPrintable(s2) << std::endl
-                      << "Element "  << qPrintable(s3) << std::endl;
+//            std::cout << "Reduce\n"
+//                      << "My stack " << qPrintable(s2) << std::endl
+//                      << "Element "  << qPrintable(s3) << std::endl;
 
             if (phase == ConditionalPhase::SkipUntilThen) {
                 if (isConditionalThen(element))
@@ -550,8 +558,15 @@ Value Expression::evaluate() {
         result = myStack.front();
     }
     s2 = toString(myStack);
-    std::cout << "End\n"
-              << "My stack " << qPrintable(s2) << std::endl;
+//    std::cout << "End\n"
+//              << "My stack " << qPrintable(s2) << std::endl;
+
+    // Restore stack if references have not yet been fixed
+    if (!_fixedResolvedReferences) {
+        _stack.clear();
+        _stack = savedStack;
+    }
+    std::cout << (_fixedResolvedReferences ? "STACK FIXED\n" : "STACK NOT FIXED\n");
 
     // Return result or null
     return (type(result) == Type::Value) ? get<Value>(result) : Value::null();
@@ -565,13 +580,20 @@ Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const
     return at;
 }
 
-void Expression::resolveImports() {
+void Expression::resolveReferences() {
     Box *box = boxAncestor();
     for (auto element=_stack.begin(); element!=_stack.end(); ++element) {
         if (type(*element) == Type::Path) {
             Path &path = get<Path>(*element);
             path.setParent(box);
             auto matches = path.findMany<Port*>();
+            addResolvedReferences(matches);
+
+            for (auto port : matches) {
+                std::cout <<
+                    qPrintable(port->fullName() +" "+ port->value().typeName() + "\n");
+            }
+
             switch (matches.size()) {
             case 0:
                 *element = Value::null();
@@ -663,6 +685,49 @@ QString conditionalToString(Expression::Conditional cond) {
         {Expression::Conditional::Elsif, "elsif"}
     };
     return map.value(cond);
+}
+
+void Expression::resetResolvedReferences() {
+    _resolvedReferences.clear();
+    _fixedResolvedReferences = false;
+}
+
+void Expression::addResolvedReferences(QVector<Port *> ports) {
+    for (auto port : ports) {
+        auto ref = ResolvedReference {
+                      const_cast<const Node *>(_parent),
+                      const_cast<const Port *>(port)
+                  };
+
+        if (!port->value().isNull() && !_resolvedReferences.contains(ref))
+            _resolvedReferences[ref] = Computation::currentStep();
+    }
+}
+
+int Expression::numResolvedReferences() {
+    return _resolvedReferences.size();
+}
+
+const Expression::ResolvedReferences &Expression::resolvedReferences() {
+    return _resolvedReferences;
+}
+
+void Expression::fixResolvedReferences() {
+    _fixedResolvedReferences = true;
+}
+
+size_t qHash(const Expression::ResolvedReference &key) {
+    return phys_math::hashPointers(key.referee, key.reference);
+}
+
+bool operator==(const Expression::ResolvedReference &a, const Expression::ResolvedReference &b) {
+    return a.referee==b.referee && a.reference==b.reference;
+}
+
+std::ostream& operator<<(std::ostream& os, const Expression::ResolvedReference& ref) {
+    os << qPrintable(ref.referee->fullName()) << " => "
+       << qPrintable(ref.reference->fullName());
+    return os;
 }
 
 }

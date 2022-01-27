@@ -373,6 +373,7 @@ namespace ast {
             assignment.build(builder);
         for (auto child : children)
             child.get().build(builder);
+        builder->endbox();
     }
 
 

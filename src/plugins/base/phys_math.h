@@ -104,6 +104,9 @@ double propIntegral(double current, double target, double rate, double dt);
 double propExpIntegral(double current, double target, double rate, double dt, double exponent);
 double invPropExpIntegral(double integral, double target, double rate, double dt, double exponent);
 
+// Pointer math
+size_t hashPointers(const void *p, const void *q);
+
 template <class T> T minmax(T min, T value, T max) {
     if (value < min)
         return min;

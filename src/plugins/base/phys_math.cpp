@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <bitset>
 #include <math.h>
 #include <boost/math/distributions/normal.hpp>
 #include <QtGlobal>
@@ -489,6 +490,23 @@ double sineWaveUp(double proportion, double y0, double y1) {
     return y0 + y1 - sineWaveDown(proportion, y1, y0);
 }
 
+//! Make hash value fromm two pointers
+/*!
+ * \brief Combine the most significant half of the bits in the two addresses.
+ * \param p is a pointer
+ * \param q is a pointer
+ * \return hashed value
+ */
+size_t hashPointers(const void *p, const void *q) {
+    constexpr int n = 8*sizeof(size_t), h=n/2;
+    auto pi = (size_t) reinterpret_cast<uintptr_t>(p),
+         qi = (size_t) reinterpret_cast<uintptr_t>(q);
+    std::bitset<n>
+        pb(pi),
+        qb(qi),
+        pqb = ((pb << h) >> h) | (qb << h);
+    return (size_t) pqb.to_ullong();
+}
 
 } //namespace
 

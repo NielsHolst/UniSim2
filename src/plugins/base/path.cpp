@@ -2,7 +2,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <algorithm>
 #include <QMap>
 #include "box.h"
 #include "boxscript_parser.h"
@@ -580,9 +579,6 @@ const Path::Objects &Path::matches() const {
                 _matches << match;
         }
     }
-
-    // Sort matches
-    std::sort(_matches.begin(), _matches.end());
     return _matches;
 }
 

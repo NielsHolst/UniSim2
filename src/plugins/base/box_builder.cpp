@@ -137,13 +137,14 @@ Box* BoxBuilder::content(Amend amendOption, bool allowException) {
         case Amend::None:
             break;
         }
-
     }
     else
         ThrowException("Construction failed");
     // If we are returning a root box then enumerate it
-    if (!_hasParent)
+    if (!_hasParent) {
         Node::enumerate();
+//        Expression::resetNumReferencesResolved();
+    }
     return _content;
 }
 

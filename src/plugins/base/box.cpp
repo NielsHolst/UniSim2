@@ -19,7 +19,7 @@ bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, Box *parent)
-    : Node(name, parent), _computationStep(ComputationStep::Construct), _amended(false), _cloned(false), _timer(this)
+    : Node(name, parent), _amended(false), _cloned(false), _timer(this)
 {
     help("has no documented functionality");
     if (!_latest || parent)
@@ -107,7 +107,7 @@ void Box::run() {
 }
 
 void Box::amendFamily(bool announce) {
-    if (announce) dialog().message("Amending...");
+    if (announce) Computation::changeStep(Computation::Step::Amend);
     try {
         if (_amended) return;
         createTimers();
@@ -115,7 +115,7 @@ void Box::amendFamily(bool announce) {
         for (auto box : children<Box*>())
             box->amendFamily(false);
         if (_traceOn) trace("amend");
-        computationStep(ComputationStep::Amend);
+//        computationStep(Computation::Step::Amend);
         amend();
         touchPorts();
         _amended = true;
@@ -150,78 +150,79 @@ void Box::stopTimer(QString name) {
 }
 
 void Box::initializeFamily(bool announce) {
-    if (announce) dialog().message("Initializing...");
+    if (announce) Computation::changeStep(Computation::Step::Initialize);
     _timer.reset();
     _timer.start("initialize");
     for (auto box : children<Box*>())
         box->initializeFamily(false);
     if (_traceOn) trace("initialize");
-    computationStep(ComputationStep::Initialize);
+//    computationStep(Computation::Step::Initialize);
     updatePorts();
     initialize();
     _timer.stop("initialize");
 }
 
 void Box::resetFamily(bool announce) {
-    if (announce) dialog().message("Announcing...");
+    if (announce) Computation::changeStep(Computation::Step::Reset);
     _timer.start("reset");
     for (auto box : children<Box*>())
         box->resetFamily(false);
     clearPorts();
     if (_traceOn) trace("reset");
-    computationStep(ComputationStep::Reset);
+//    computationStep(Computation::Step::Reset);
+    updatePorts();
     reset();
     verifyPorts();
     _timer.stop("reset");
 }
 
-void Box::updateFamily(bool annouce) {
-    if (annouce) dialog().message("Updating...");
+void Box::updateFamily(bool announce) {
+    if (announce) Computation::changeStep(Computation::Step::Update);
     _timer.start("update");
     for (auto box : children<Box*>())
         box->updateFamily(false);
     if (_traceOn) trace("update");
-    computationStep(ComputationStep::Update);
+//    computationStep(Computation::Step::Update);
     updatePorts();
     update();
     verifyPorts();
     _timer.stop("update");
 }
 
-void Box::cleanupFamily(bool annouce) {
-    if (annouce) dialog().message("Cleaning up...");
+void Box::cleanupFamily(bool announce) {
+    if (announce) Computation::changeStep(Computation::Step::Cleanup);
     _timer.start("cleanup");
     for (auto box : children<Box*>())
         box->cleanupFamily(false);
     if (_traceOn) trace("cleanup");
-    computationStep(ComputationStep::Cleanup);
+//    computationStep(Computation::Step::Cleanup);
     updatePorts();
     cleanup();
     verifyPorts();
     _timer.stop("cleanup");
 }
 
-void Box::debriefFamily(bool annouce) {
-    if (annouce) dialog().message("Debriefing...");
+void Box::debriefFamily(bool announce) {
+    if (announce) Computation::changeStep(Computation::Step::Debrief);
     _timer.start("debrief");
     for (auto box : children<Box*>())
         box->debriefFamily(false);
-    updatePorts();
     if (_traceOn) trace("debrief");
-    computationStep(ComputationStep::Debrief);
+//    computationStep(Computation::Step::Debrief);
+    updatePorts();
     debrief();
     verifyPorts();
     _timer.stop("debrief");
-    if (annouce) dialog().message("Ready");
+    if (announce) Computation::changeStep(Computation::Step::Ready);
 }
 
-void Box::computationStep(ComputationStep step) {
-    _computationStep = step;
-}
+//void Box::computationStep(Computation::Step step) {
+//    _computationStep = step;
+//}
 
-Box::ComputationStep Box::computationStep() const {
-    return _computationStep;
-}
+//Computation::Step Box::computationStep() const {
+//    return _computationStep;
+//}
 
 const QVector<Port*> &Box::portsInOrder() {
     return _portsInOrder;
@@ -287,61 +288,50 @@ bool Box::debug() {
 
 void Box::toText(QTextStream &text, QString options, int indentation) const {
     if (options.isEmpty())
-        options = "io";
+        options = "ioa";
     bool writeOverriddenInputs = options.contains("I"),
-         writeAllInputs = options.contains("i") && !writeOverriddenInputs,
-         writeOutputs = options.contains("o");
+         writeAllInputs        = options.contains("i") && !writeOverriddenInputs,
+         writeOutputs          = options.contains("o"),
+         writeAux              = options.contains("a");
 
-    Box *me = const_cast<Box*>(this);
     QString fill;
     fill.fill(' ', indentation);
 
-    text << fill << className() << " " << objectName() << " {\n";
+    text << fill << className() << " " << objectName() << " { //" << order() << "\n";
 
-    for (Port *port : _portMap.values()) {
-        bool isInput = port->type() == Port::Type::Input,
-             isOverridden = port->isValueOverridden(),
-             doWrite = isInput &
-                       (writeAllInputs || (writeOverriddenInputs && isOverridden));
+    for (Port *port : _portsInOrder) {
+        bool doWrite;
+        switch (port->type()) {
+        case Port::Type::Input:
+            doWrite = writeAllInputs || (writeOverriddenInputs && port->isValueOverridden());
+            break;
+        case Port::Type::Output:
+            doWrite = writeOutputs;
+            break;
+        case Port::Type::Auxiliary:
+            doWrite = writeAux;
+            break;
+        }
         if (doWrite)
             port->toText(text, indentation+2);
     }
 
-    for (Port *port : _portMap.values()) {
-        bool isOutput = port->type() == Port::Type::Output,
-             doWrite = writeOutputs && isOutput;
-        if (doWrite)
-            port->toText(text, indentation+2);
-    }
-
-    for (Box *box : me->findMany<Box*>("./*")) {
+    Box *me = const_cast<Box*>(this);
+    for (Box *box : me->findMany<Box*>("./*"))
         box->toText(text, options, indentation+2);
-    }
+
     text << fill << "}\n";
+}
+
+QString Box::toText(QString options) const {
+    QString s;
+    QTextStream text(&s);
+    toText(text, options, 0);
+    return s;
 }
 
 void Box::trace(QString id) const {
     dialog().information(id + " " + fullName());
-}
-
-Box::ComputationStep Box::lookup(QString step, Box *context) {
-    static QMap<QString, ComputationStep> map =
-    {
-        {"construct", ComputationStep::Construct},
-        {"amend", ComputationStep::Amend},
-        {"initialize", ComputationStep::Initialize},
-        {"reset", ComputationStep::Reset},
-        {"update", ComputationStep::Update},
-        {"cleanup", ComputationStep::Cleanup},
-        {"debrief", ComputationStep::Debrief},
-        {"ready", ComputationStep::Ready}
-    };
-    if (!map.contains(step)) {
-        QStringList list = map.keys();
-        QString s = list.join(", ");
-        ThrowException("Unknown computation step").value(step).hint(s).context(context);
-    }
-    return map.value(step);
 }
 
 }

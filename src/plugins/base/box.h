@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QVector>
 #include "caller.h"
+#include "computation_step.h"
 #include "node.h"
 #include "path.h"
 #include "port.h"
@@ -26,8 +27,6 @@ class Port;
 class Box : public Node
 {
 public:
-    enum class ComputationStep {Construct, Amend, Initialize, Reset, Update, Cleanup, Debrief, Ready};
-
     Box(QString name, Box *parent);
     ~Box();
     void addPort(Port *port);
@@ -66,8 +65,8 @@ public:
     void cleanupFamily(bool announce=true);
     void debriefFamily(bool announce=true);
 
-    void computationStep(ComputationStep step);
-    ComputationStep computationStep() const;
+//    void computationStep(Computation::Step step);
+//    Computation::Step computationStep() const;
 
     const QVector<Port*> &portsInOrder();
     void touchPorts();
@@ -85,27 +84,25 @@ public:
     void startTimer(QString name);
     void stopTimer(QString name);
 
-    void toText(QTextStream &text, QString options = "", int indentation = 0) const;
+    QString toText(QString options = "") const;
     QString profileReport();
-
-    static ComputationStep lookup(QString step, Box *context);
 private:
     // Data
     QString _help, _sideEffects;
-    ComputationStep _computationStep;
+//    Computation::Step _computationStep;
     QMap<QString,Port*> _portMap;
     QVector<Port*> _portsInOrder, _trackedPorts;
     bool _amended, _cloned;
     Timer _timer;
     static Box *_latest;
     static bool _debugOn, _traceOn;
-
     // Methods
     Box *findRoot();
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void clearPorts();
     void trace(QString id) const;
+    void toText(QTextStream &text, QString options, int indentation) const;
 };
 
 template<class T> inline T Box::findOne(QString path) {

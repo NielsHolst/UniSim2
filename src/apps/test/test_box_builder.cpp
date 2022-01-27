@@ -10,15 +10,12 @@ using namespace base;
 
 void TestBoxBuilder::testBuild1() {
     bool excepted(false);
-    base::Box *tree, *root;
-    QString s;
-    QTextStream str(&s);
+    std::unique_ptr<Box> root;
 
     try {
-        tree = TestBoxCases::case1();
-        root = Box::root();
+        TestBoxCases::case1();
+        root = std::unique_ptr<Box>( Box::root() );
         root->initializeFamily();
-        root->toText(str);
     }
     catch(const base::Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();
@@ -32,14 +29,6 @@ void TestBoxBuilder::testBuild1() {
         QFAIL("Unexpected exception");
     }
     QVERIFY(!excepted);
-    excepted = false;
 
-
-
-
-    std::cout
-            << "\n\n"
-            << qPrintable(s)
-            << "\n\n";
-    delete tree;
+    std::cout << qPrintable(root->toText()) << std::endl;
 }

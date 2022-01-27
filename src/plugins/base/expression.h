@@ -8,6 +8,7 @@
 #include <variant>
 #include <vector>
 #include "boxscript_ast.h"
+#include "computation_step.h"
 #include "operator.h"
 #include "path.h"
 #include "success.h"
@@ -16,6 +17,7 @@
 namespace base {
 
 class Box;
+class Port;
 
 class Expression
 {
@@ -60,7 +62,7 @@ public:
     bool isFixed() const;
     template <class T> void push(T element);
     void close();
-    void resolveImports();
+    void resolveReferences();
     Value evaluate();
 
     Box *boxAncestor();
@@ -73,8 +75,20 @@ public:
 
     QString originalAsString() const;
     QString stackAsString() const;
+
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
+
+    struct ResolvedReference {
+        const Node *referee;
+        const Port *reference;
+    };
+    using ResolvedReferences = QHash<ResolvedReference, Computation::Step>;
+
+    static void resetResolvedReferences();
+    static int numResolvedReferences();
+    static const ResolvedReferences &resolvedReferences();
+    static void fixResolvedReferences();
 
 private:
     // Data
@@ -82,6 +96,9 @@ private:
     Stack _stack, _original;
     bool _isClosed;
     QVector<FunctionCall> _functionCalls;
+    static ResolvedReferences _resolvedReferences;
+    static bool _fixedResolvedReferences;
+
     // Methods
     void toPostfix();
     void checkNotClosed();
@@ -90,12 +107,18 @@ private:
     void reduceByFunctionCall(Stack &stack);
     bool reduceByCondition(Stack &stack);
     Stack::iterator replaceElement(Stack::iterator at, const QVector<Port*> &ports);
+
+    void addResolvedReferences(QVector<Port *> ports);
 };
 
 template <class T> void Expression::push(T element)
 {     checkNotClosed();
       _stack.push_back(element);
 }
+
+size_t qHash(const Expression::ResolvedReference &key);
+bool operator==(const Expression::ResolvedReference &a, const Expression::ResolvedReference &b);
+std::ostream& operator<<(std::ostream& os, const Expression::ResolvedReference &ref);
 
 QString conditionalToString(Expression::Conditional cond);
 

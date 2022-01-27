@@ -157,7 +157,7 @@ void TestBoxScriptX3::testReference() {
     }
     UNEXPECTED_EXCEPTION;
     QVERIFY(compare("box_script/reference_cleaned.box", result));
-    std::cout << *result;
+//    std::cout << *result;
 }
 
 void TestBoxScriptX3::testDotsError() {
@@ -279,5 +279,5 @@ void TestBoxScriptX3::testIfElse() {
         result = parse("box_script/if_else.box");
     }
     UNEXPECTED_EXCEPTION;
-    cout << *result;
+//    cout << *result;
 }

@@ -29,10 +29,7 @@ private:
     Type _type;             // Purpose of the port
     bool
         _hasBeenRedefined, // Has the default value been overridden in the BoxScript?
-        _clearAtReset,                // Is value set to T() at reset()? Defaults to true for output and aux ports
-        _hasBeenFixed;           // An input port can be fixed in initialize() or later, which means the expression does
-                                 // not be to evaluated again. Fixing happens if the expression is a constant value or its
-                                 // evaluation involves only constants and other fixed ports
+        _clearAtReset;                // Is value set to T() at reset()? Defaults to true for output and aux ports
     QString
         _unit,              // Unit text
         _help;              // Help text
