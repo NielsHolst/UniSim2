@@ -226,6 +226,5 @@ template<class T, template<class> class C> C<T> convert(QStringList list) {
     return result;
 }
 
-
 }
 #endif

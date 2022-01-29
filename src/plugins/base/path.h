@@ -14,6 +14,8 @@
 
 namespace base {
 
+class Expression;
+class Port;
 
 class Path {
 public:
@@ -110,9 +112,11 @@ public:
     // Methods
     Path(Object *parent=nullptr);
     Path(QString path, Object *parent=nullptr);
+    Path(const Expression *expression);
     void setParent(Object *parent);
     Object *parent();
-    void addAlternative(Alternative alternative);
+    void add(const Alternative &alternative);
+    void add(const Path &path);
     QString toString() const;
     const QVector<Alternative> &alternatives() const;
     const Objects& matches() const;
@@ -125,16 +129,18 @@ private:
     Object *_parent;
     mutable QVector<Alternative> _alternatives;
     mutable Objects _matches;
+    // Methods
+    void initialize(const Expression &expression);
 };
 
-template<class T> inline T Path::findOne() const {
+template<class T> T Path::findOne() const {
     QVector<T> result = findMany<T>();
     if (result.size() != 1)
         ThrowException("Expected exactly one match").value1(toString()).value2(result.size()).context(_parent);
     return result[0];
 }
 
-template<class T> inline T Path::findMaybeOne() const {
+template<class T> T Path::findMaybeOne() const {
     QVector<T> result = findMany<T>();
     switch (result.size()) {
     case 0: return nullptr;
@@ -143,7 +149,7 @@ template<class T> inline T Path::findMaybeOne() const {
     }
 }
 
-template<class T> inline QVector<T> Path::findMany() const {
+template<class T> QVector<T> Path::findMany() const {
     QVector<T> result;
     for (auto candidate : matches()) {
         auto typed = dynamic_cast<T>(candidate);
@@ -153,6 +159,11 @@ template<class T> inline QVector<T> Path::findMany() const {
     std::sort(result.begin(), result.end(),  [](T a, T b) { return a->order() < b->order(); });
     return result;
 }
+
+template<> QVector<base::Port*> Path::findMany() const;
+
+//template<> inline Path    convert(Path x)    {return x;}
+//template<> inline QString convert(Path x)    {return x.toString();}
 
 }
 

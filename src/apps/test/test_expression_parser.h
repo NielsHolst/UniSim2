@@ -15,6 +15,7 @@ private slots:
     void testOperation();
     void testPathWithPort();
     void testPathWithoutPort();
+    void testError();
 };
 
 DECLARE_TEST(TestExpressionParser)

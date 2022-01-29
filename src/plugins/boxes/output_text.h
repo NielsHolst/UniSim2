@@ -47,7 +47,7 @@ private:
     QTextStream _stream;
 
     // Methods
-    void collectPaths();
+    void complementPorts();
     void setOutputNames();
     void initializeState();
     void openFileStream();

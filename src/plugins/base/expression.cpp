@@ -110,18 +110,25 @@ inline int precedence(Expression::Element element) {
     case Expression::Type::Operator:
         return precedence( get<Operator>(element) );
     case Expression::Type::FunctionCall:
-        return precedence(Operator::Comma)- 1;
+        return precedence(Operator::Comma) - 1;
     case Expression::Type::Conditional:
-        return precedence(Operator::Comma)- 2;
+        return precedence(Operator::Comma) - 2;
+    case Expression::Type::Parenthesis:
+        return precedence(Operator::Comma) - 3;
     default:
-        ThrowException("Unexpected element").value(Expression::typeName(element));
+        ThrowException("Unknown precedence").value(Expression::typeName(element));
     }
 }
 
 void Expression::toPostfix() {
     // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
+    QString s0 = toString(_stack),
+            s1, s2, s3;
     for (auto &element : _stack) {
+        s1 = toString(element);
+        s2 = toString(myStack);
+        s3 = toString(postfix);
         switch (type(element)) {
         case Type::Value:
             postfix.push_back(element);
@@ -157,6 +164,9 @@ void Expression::toPostfix() {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
                 }
+                s1 = toString(element);
+                s2 = toString(myStack);
+                s3 = toString(postfix);
                 if (myStack.empty())
                     ThrowException("No matching left parenthesis").context(_parent);
                 myStack.pop_back(); // pop left parenthesis
@@ -185,6 +195,8 @@ void Expression::toPostfix() {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
     }
+    s2 = toString(myStack);
+    s3 = toString(postfix);
     // Copy result
     _stack.clear();
     _stack = postfix;
@@ -486,7 +498,8 @@ bool Expression::reduceByCondition(Stack &stack) {
 Value Expression::evaluate() {
     QString s0, s1, s2, s3;
     s0 = stackAsString();
-//    std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
+    if (s0.startsWith("pop"))
+        std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
 
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
@@ -566,8 +579,6 @@ Value Expression::evaluate() {
         _stack.clear();
         _stack = savedStack;
     }
-    std::cout << (_fixedResolvedReferences ? "STACK FIXED\n" : "STACK NOT FIXED\n");
-
     // Return result or null
     return (type(result) == Type::Value) ? get<Value>(result) : Value::null();
 }
@@ -582,28 +593,33 @@ Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const
 
 void Expression::resolveReferences() {
     Box *box = boxAncestor();
-    for (auto element=_stack.begin(); element!=_stack.end(); ++element) {
+    auto end0 = _stack.end(), end1=end0;
+    auto element=_stack.begin();
+    while (element!=_stack.end()) {
+        QString s0 = toString(_stack),
+                s1 = toString(*element);
         if (type(*element) == Type::Path) {
             Path &path = get<Path>(*element);
             path.setParent(box);
             auto matches = path.findMany<Port*>();
             addResolvedReferences(matches);
-
-            for (auto port : matches) {
-                std::cout <<
-                    qPrintable(port->fullName() +" "+ port->value().typeName() + "\n");
-            }
-
             switch (matches.size()) {
             case 0:
                 *element = Value::null();
+                ++element;
                 break;
             case 1:
                 *element = matches.at(0)->value();
+                ++element;
                 break;
             default:
+                end0 = _stack.end();
                 element = replaceElement(element, matches);
+                end1 = _stack.end();
             }
+        }
+        else {
+            ++element;
         }
     }
 }

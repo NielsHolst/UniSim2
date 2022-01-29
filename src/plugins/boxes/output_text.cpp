@@ -34,7 +34,7 @@ OutputText::OutputText(QString name, Box *parent)
 
 void OutputText::initialize() {
     // Find all ports in output and set their output names
-    collectPaths();
+    complementPorts();
     setOutputNames();
 
     // Reset summaries
@@ -58,25 +58,17 @@ void OutputText::initialize() {
             outputR->addRCode("output_skip_formats = TRUE");
     }
 }
-void OutputText::collectPaths() {
-    // Always output Simulation iteration
-    ports = Path(ports.toString() + "|/*[iteration]");
+void OutputText::complementPorts() {
+    // Always output Simulation iteration (if present)
+    ports.add(Path("/*[iteration]", this).alternatives().at(0));
 
-    // Collect ports if this is a child of an OutputR box
-    bool doCollect = findMaybeOne<Box*>("../*<OutputR>");
-    if (doCollect) {
-        QStringList paths;
-        paths << ports.toString();
-        QVector<Box*> pages = findMany<Box*>("../*<PageR>");
-        for (auto page : pages) {
-            paths << page->port("xAxis")->value<Path>().toString();
-            QVector<Box*> plots = page->findMany<Box*>("../*<PlotR>");
-            for (auto plot : plots) {
-                paths << plot->port("ports")->value<Path>().toString();
-            }
-        }
-        ports = Path(paths.join("|"));
-    }
+    // Add x-axis of any pages
+    ports.add(Path("PageR::*[xAxis]", this).alternatives().at(0));
+
+    // Add ports from any plots
+    QVector<Port*> otherPorts = findMany<Port*>("PlotR::*/Port::ports");
+    for (auto port : otherPorts)
+        ports.add(port->value<Path>());
 }
 
 inline bool isNumberLike(const Port *port) {

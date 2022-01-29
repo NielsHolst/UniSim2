@@ -1,0 +1,10 @@
+Simulation sim {
+  .steps = 3
+  Box pop { 
+    &r = 1.05
+    &density = if (sim[step]==0) then 100 else .[r] * .[density]
+  }
+  // OutputText output {
+    // .ports = pop[*]
+  // }
+}

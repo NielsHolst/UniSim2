@@ -121,6 +121,12 @@ void Port::touch() {
 }
 
 void Port::evaluate() {
+    // Path value is not evaluated
+    if (_value.type() == Value::Type::Path) {
+        _value = Path(&_expression);
+        return;
+    }
+
     QString s1 = _expression.originalAsString(),
             s2 = _expression.stackAsString(),
             s3 = _value.asString(true, true);

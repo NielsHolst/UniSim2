@@ -133,3 +133,11 @@ void TestExpressionParser::testPathWithoutPort() {
     QVERIFY(!port.has_value());
 }
 
+void TestExpressionParser::testError() {
+    bool excepted(false);
+    base::Expression e;
+    try {
+        e = boxscript::parser::parseExpression("*<PageR[xAxis]>");
+    }
+    EXPECTED_EXCEPTION_SHOWN;
+}

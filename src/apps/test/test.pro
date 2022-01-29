@@ -31,6 +31,7 @@ HEADERS +=  \
     test_path.h \
     test_reader_boxscript_x3.h \
     test_references.h \
+    test_simulation.h \
     test_value.h \
     test_value_collection.h \
 
@@ -52,5 +53,6 @@ SOURCES +=  \
     test_path.cpp \
     test_reader_boxscript_x3.cpp \
     test_references.cpp \
+    test_simulation.cpp \
     test_value.cpp \
     test_value_collection.cpp \

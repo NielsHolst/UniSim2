@@ -231,3 +231,29 @@ void TestExpression::testFunctionCall() {
     QCOMPARE(result.type(), Value::Type::Int);
     QCOMPARE(result.as<int>(), 8 + 2 * 3 + 13 +14 - 100);
 }
+
+void TestExpression::testParentheses() {
+    bool excepted(false);
+    using E     = Expression;
+    Box box("A", nullptr);
+    E e(&box);
+
+    e.push(Parenthesis::Left);
+    e.push(3);
+    e.push(Operator::Add);
+    e.push(4);
+    e.push(Parenthesis::Right);
+
+    try {
+        e.close();
+    }
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(e.stackAsString(),
+        "3{int} 4{int} +{Operator}");
+
+    Value result = e.evaluate();
+    QCOMPARE(result.type(), Value::Type::Int);
+    QCOMPARE(result.as<int>(), 7);
+
+
+}

@@ -296,4 +296,38 @@ void TestReaderBoxScriptX3::testMultipleMatches() {
     UNEXPECTED_EXCEPTION;
 }
 
+void TestReaderBoxScriptX3::testParentheses() {
+    using Type = Value::Type;
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/parentheses.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
+
+    try {
+        QVERIFY2(root->findOne<Port*>("A[a]")->value().type() == Type::Int,
+             str(root->findOne<Port*>("A[a]")->value().typeName()));
+        QCOMPARE(root->findOne<Port*>("A[a]")->value<int>(), 72);
+    }
+    UNEXPECTED_EXCEPTION;
+
+    try {
+        QVERIFY2(root->findOne<Port*>("A[b]")->value().type() == Type::Double,
+             str(root->findOne<Port*>("A[b]")->value().typeName()));
+        QCOMPARE(root->findOne<Port*>("A[b]")->value<int>(), 80.0);
+    }
+    UNEXPECTED_EXCEPTION;
+
+    try {
+        QVERIFY2(root->findOne<Port*>("A[c]")->value().type() == Type::Double,
+             str(root->findOne<Port*>("A[c]")->value().typeName()));
+        QCOMPARE(root->findOne<Port*>("A[c]")->value<int>(), 6.0);
+    }
+    UNEXPECTED_EXCEPTION;
+
+}
 

@@ -12,6 +12,7 @@ private slots:
     void testInitializePortMissing();
     void testMultipleMatches();
     void testCondition();
+    void testParentheses();
 };
 
 DECLARE_TEST(TestReaderBoxScriptX3)

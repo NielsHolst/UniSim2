@@ -7,6 +7,7 @@
 #include "boxscript_parser.h"
 #include "expression.h"
 #include "path.h"
+#include "port.h"
 
 using namespace std;
 
@@ -268,9 +269,10 @@ const Path::Objects& Path::Alternative::matches(base::Node *parent) {
 
     Objects ports;
     if (_port.has_value()) {
+        bool anyPort = ((*_port).name() == "*");
         for (auto match : _matches) {
             for (auto child : match->children<base::Port*>()) {
-                if (child->name() == (*_port).name())
+                if (anyPort || child->name() == (*_port).name())
                     ports << dynamic_cast<base::Node*>(child);
             }
         }
@@ -531,7 +533,7 @@ Path::Path(Object *parent)
 }
 
 Path::Path(QString path, Object *parent)
-    : Path(parent)
+    : _parent(parent)
 {
     // The parser needs a port on every alternative: Add missing ports as dummies
     QStringList alternatives = path.split("|"), corrected;
@@ -542,11 +544,24 @@ Path::Path(QString path, Object *parent)
     auto expression = boxscript::parser::parseExpression(corrected.join("|"));
     if (expression.size() != 1 || Expression::type(expression.at(0)) != Expression::Type::Path)
         ThrowException("Invalid path").value(path).context(parent);
+    initialize(expression);
+    if (parent)
+        _parent = parent;
+}
+
+Path::Path(const Expression *expression) {
+    Q_ASSERT(expression);
+    initialize(*expression);
+}
+
+void Path::initialize(const Expression &expression) {
+    if (expression.size() != 1 || Expression::type(expression.at(0)) != Expression::Type::Path)
+        ThrowException("Invalid path").value(expression.originalAsString()).context(_parent);
 
     Path parsedPath = std::get<Path>(expression.at(0));
-    _parent = parent ? parent : parsedPath._parent;
     _alternatives = parsedPath._alternatives;
     _matches = parsedPath._matches;
+    _parent = parsedPath._parent;
 }
 
 void Path::setParent(Object *parent)
@@ -558,18 +573,26 @@ Path::Object *Path::parent() {
     return _parent;
 }
 
-void Path::addAlternative(Alternative alternative) {
+void Path::add(const Alternative &alternative) {
     _alternatives << alternative;
 }
 
+void Path::add(const Path &path) {
+    for (const auto &alternative : path.alternatives())
+        add(alternative);
+}
+
 const Path::Objects &Path::matches() const {
+    // Find matches from scratch
+    _matches.clear();
+
+    // Nothing to find
+    if (_alternatives.isEmpty())
+        return _matches;
+
     // Path must have a parent
     if (!_parent)
         ThrowException("Path must have a parent").value(toString());
-
-    // Empty path is illegal
-    if (_alternatives.isEmpty())
-        ThrowException("Path is empty").context(_parent);
 
     // Collect matches
     for (auto &alternative : _alternatives) {
@@ -600,5 +623,30 @@ bool Path::isValid(QString path) {
 
 }
 
+template<> QVector<base::Port*> Path::findMany() const {
+    QVector<base::Port*> result;
+    for (auto candidate : matches()) {
+        base::Port *port = dynamic_cast<base::Port*>(candidate);
+        if (port) {
+            // If port found in this path itself holds a path
+            // then look for further ports in that path
+            if (port->value().type() == Value::Type::Path) {
+                const Path &pathReferredTo = port->value<Path>();
+                // Accept but don't follow cyclic references
+                auto portsReferredTo = pathReferredTo.findMany<base::Port*>();
+                for (auto port : portsReferredTo) {
+                    if (!result.contains(port))
+                        result << port;
+                }
+            }
+            // Else just add the port found in this path
+            else
+                result << port;
+        }
+    }
+    std::sort(result.begin(), result.end(),
+              [](base::Port *a, base::Port *b) { return a->order() < b->order(); });
+    return result;
+}
 
 } //namespace
