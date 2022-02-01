@@ -38,11 +38,13 @@ void Expression::clear() {
 }
 
 bool Expression::isFixed() const {
-    for (auto element : _stack) {
-        if (type(element) == Type::Path)
+    // The expression is fixed is it is not empty and it contains no references
+    // This can be improved to consider if the reference referred to are also fixed
+    for (const Element &element : _stack) {
+        if (type(element) == Type::ValuePtr || type(element) == Type::Path)
             return false;
     }
-    return true;
+    return !_stack.empty();
 }
 
 void Expression::checkNotClosed() {
@@ -58,6 +60,10 @@ void Expression::close() {
 
 inline bool isValue(Expression::Element element) {
     return (Expression::type(element) == Expression::Type::Value);
+}
+
+inline bool isValuePtr(Expression::Element element) {
+    return (Expression::type(element) == Expression::Type::ValuePtr);
 }
 
 inline bool isOperator(Expression::Element element) {
@@ -131,6 +137,7 @@ void Expression::toPostfix() {
         s3 = toString(postfix);
         switch (type(element)) {
         case Type::Value:
+        case Type::ValuePtr:
             postfix.push_back(element);
             break;
         case Type::Operator:
@@ -180,7 +187,8 @@ void Expression::toPostfix() {
             postfix.push_back(element);
             break;
         case Type::FunctionCall:
-            myStack.push_back(registerFunctionCall(element));
+//            myStack.push_back(registerFunctionCall(element));
+            myStack.push_back(element);
             break;
         case Type::FunctionCallEnd:
             // Push function call end on my stack
@@ -202,12 +210,12 @@ void Expression::toPostfix() {
     _stack = postfix;
 }
 
-Expression::Element Expression::registerFunctionCall(const Element &element) {
-    FunctionCall f = std::get<FunctionCall>(element);
-    f.id = _functionCalls.size();
-    _functionCalls << f;
-    return f;
-}
+//Expression::Element Expression::registerFunctionCall(const Element &element) {
+//    FunctionCall f = std::get<FunctionCall>(element);
+//    f.id = _functionCalls.size();
+//    _functionCalls << f;
+//    return f;
+//}
 
 void Expression::reduceByOperator(Stack &stack) {
     // Pop operator
@@ -218,11 +226,15 @@ void Expression::reduceByOperator(Stack &stack) {
     Q_ASSERT(static_cast<int>(stack.size()) >= arity((op)));
 
     // Pop second operand (it comes first from the stack!)
-    const Value &b = isValue(stack.back()) ? get<Value>(stack.back()) : Value::null();
+    const Value &b = isValue   (stack.back()) ?  get<Value   >(stack.back()) :
+                     isValuePtr(stack.back()) ? *get<ValuePtr>(stack.back()) :
+                     Value::null();
     stack.pop_back();
 
     // Pop first operand if present
-    const Value &a = (arity(op)==2 && isValue(stack.back())) ? get<Value>(stack.back()) : Value::null();
+    const Value &a = (arity(op)==2 && isValue   (stack.back())) ?  get<Value   >(stack.back()) :
+                     (arity(op)==2 && isValuePtr(stack.back())) ? *get<ValuePtr>(stack.back()) :
+                     Value::null();
     if (arity(op)==2)
         stack.pop_back();
 
@@ -268,13 +280,15 @@ Value::Type argumentsType(Expression::Stack &stack, int arity) {
         case Expression::Type::Value:
             args << const_cast<const Value*>(& std::get<Value>(*it));
             break;
+        case Expression::Type::ValuePtr:
+            args << std::get<Expression::ValuePtr>(*it);
+            break;
         case Expression::Type::Path:
             args << findManyValues( std::get<Path>(*it) );
             break;
         default:
             ThrowException("Value or Path expected").value(Expression::typeName(*it));
         }
-
     }
     return ValueCollection::type(args);
 }
@@ -283,7 +297,8 @@ template <class T> QVector<T> popArguments(Expression::Stack &stack, int arity) 
     QVector<T> args;
     int n = stack.size();
     for (int i=n-arity; i<n; ++i) {
-        const Value &value = std::get<Value>(stack.at(i));
+        Q_ASSERT(isValue(stack.at(i)) || isValuePtr(stack.at(i)));
+        const Value &value = isValue(stack.at(i)) ? std::get<Value>(stack.at(i)) : *std::get<Expression::ValuePtr>(stack.at(i));
         if (value.isVector())
             args << value.as<QVector<T>>(); // flatten vector
         else if (!value.isNull())
@@ -361,15 +376,11 @@ inline bool isLikeNull(Value::Type type) {
 void Expression::reduceByFunctionCall(Stack &stack) {
     // Pop function
     FunctionCall &func    = get<FunctionCall>(stack.back());
-//          FunctionCall &funcReg = _functionCalls[func.id];
     stack.pop_back();
     if ((int) stack.size() < func.arity)
         ThrowException("Wrong function arity").value(func.arity);
 
     using Type = Value::Type;
-//    if (funcReg.type == Value::Type::Uninitialized)
-//        funcReg.type = argumentsType(stack, func.arity);
-//    Type &type(funcReg.type);
     func.type = argumentsType(stack, func.arity);
     Type &type(func.type);
     QString s1 = toString(stack),
@@ -488,8 +499,8 @@ bool Expression::reduceByCondition(Stack &stack) {
     // Pop "If" or "Elsif" keyword
     stack.pop_back();
     // Pop boolean value
-    Q_ASSERT(type(stack.back()) == Type::Value);
-    Value condition = get<Value>(stack.back());
+    Q_ASSERT(isValue(stack.back()) || isValuePtr(stack.back()));
+    Value condition = isValue(stack.back()) ? get<Value>(stack.back()) : *get<ValuePtr>(stack.back());
     stack.pop_back();
     // Return whether condition was true
     return condition.as<bool>();
@@ -498,8 +509,6 @@ bool Expression::reduceByCondition(Stack &stack) {
 Value Expression::evaluate() {
     QString s0, s1, s2, s3;
     s0 = stackAsString();
-    if (s0.startsWith("pop"))
-        std::cout << "\nExpression::evaluate " << qPrintable(s0) << std::endl;
 
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
@@ -510,6 +519,7 @@ Value Expression::evaluate() {
     // Replace Path elements with Value elements
     resolveReferences();
     s1 = stackAsString();
+//    std::cout << "\nExpression::evaluate " << qPrintable(s0+"\n"+s1) << std::endl;
 
     enum class ConditionalPhase {FinishUponThen, SkipUntilThen, SkipUntilElse, Done};
     auto phase = ConditionalPhase::Done;
@@ -580,13 +590,15 @@ Value Expression::evaluate() {
         _stack = savedStack;
     }
     // Return result or null
-    return (type(result) == Type::Value) ? get<Value>(result) : Value::null();
+    return isValue   (result) ?  get<Value>(result) :
+           isValuePtr(result) ? *get<ValuePtr>(result) :
+           Value::null();
 }
 
 Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const QVector<Port*> &ports) {
     at = _stack.insert(at, ports.size(), Element());
     for (auto port : ports)
-        *at++ = port->value();
+        *at++ = port->valuePtr<Value>();
     *at++ = FunctionCall("c", ports.size());
     return at;
 }
@@ -609,7 +621,7 @@ void Expression::resolveReferences() {
                 ++element;
                 break;
             case 1:
-                *element = matches.at(0)->value();
+                *element = matches.at(0)->valuePtr<Value>();
                 ++element;
                 break;
             default:
@@ -648,7 +660,8 @@ QString Expression::typeName(const Element& el) {
     using Type = Expression::Type;
     QString s;
     switch (type(el)) {
-    case Type::Value           : s = get<Value>(el).typeName(); break;
+    case Type::Value           : s = get<Value   >(el).typeName(); break;
+    case Type::ValuePtr        : s = get<ValuePtr>(el)->typeName(); break;
     case Type::Operator        : s = "Operator"       ; break;
     case Type::Parenthesis     : s = "Parenthesis"    ; break;
     case Type::Path            : s = "Path"           ; break;
@@ -678,7 +691,8 @@ QString Expression::toString(const Element &element) {
     Expression::FunctionCall func;
     QString s;
     switch (type(element)) {
-    case Type::Value:       s = get<Value>(element).asString(true, true); break;
+    case Type::Value:       s = get<Value   >(element). asString(true, true); break;
+    case Type::ValuePtr:    s = get<ValuePtr>(element)->asString(true, true); break;
     case Type::Operator:    s = convert<QString>( get<Operator>   (element) ); break;
     case Type::Parenthesis: s = convert<QString>( get<Parenthesis>(element) ); break;
     case Type::Path:        s = get<Path>(element).toString(); break;
@@ -730,6 +744,10 @@ const Expression::ResolvedReferences &Expression::resolvedReferences() {
 
 void Expression::fixResolvedReferences() {
     _fixedResolvedReferences = true;
+}
+
+bool Expression::allReferencesHaveBeenResolved() {
+    return _fixedResolvedReferences;
 }
 
 size_t qHash(const Expression::ResolvedReference &key) {

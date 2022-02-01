@@ -33,7 +33,7 @@ Simulation::Simulation(QString name, Box *parent)
     Input(silent).equals(false).help("Run without scrolling progress messages?");
     Input(unattended).equals(false).help("An unattended run will finish without accessing clipboard");
     Output(iteration).noClear().help("Iteration number (1,2,...)");
-    Output(step).help("Step number (0,1,2,...)");
+    Output(step).noClear().help("Step number (0,1,2,...)");
     Output(finalStep).help("Last completed step in simulation");
     Output(executionTime).help("Duration of simulation run (ms)");
     Output(hasError).help("Did an error occur during simulation run?");
@@ -48,6 +48,12 @@ void Simulation::initialize() {
     // Increment file counter;
     // output files needed for this run must be open at this time
     environment().incrementFileCounter();
+}
+
+void Simulation::reset() {
+    // Simulation is the last object reset
+    // Setting step = 1 here means it will be 1 for the first update of descendants
+    step = 1;
 }
 
 void Simulation::run() {
@@ -99,7 +105,7 @@ void Simulation::show(QElapsedTimer time) {
 }
 
 void Simulation::cleanup() {
-    finalStep = step;
+    finalStep = (step > steps) ? steps : step;
     step = 0;
 }
 

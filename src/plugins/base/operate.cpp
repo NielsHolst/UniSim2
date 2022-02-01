@@ -1356,6 +1356,10 @@ Value equal(const Value &a, const Value &b) {
         }
         break;
     case Type::String:
+        SWITCH_B
+        case Type::String  : return Value(a.as<QString>() == b.as<QString>());
+        default            : ;
+        }
         break;
     case Type::Date:
         SWITCH_B
@@ -1468,6 +1472,10 @@ Value notEqual(const Value &a, const Value &b) {
         }
         break;
     case Type::String:
+        SWITCH_B
+        case Type::String  : return Value(a.as<QString>() != b.as<QString>());
+        default            : ;
+        }
         break;
     case Type::Date:
         SWITCH_B

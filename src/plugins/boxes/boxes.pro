@@ -17,6 +17,7 @@ HEADERS +=  \
     briere.h \
     buffer.h \
     calendar.h \
+    computation.h \
     date.h \
     date_split.h \
     day_degrees.h \
@@ -100,6 +101,7 @@ SOURCES +=  \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \
+    computation.cpp \
     date.cpp \
     date_split.cpp \
     date_time_signal.cpp \

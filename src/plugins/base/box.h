@@ -70,7 +70,7 @@ public:
 
     const QVector<Port*> &portsInOrder();
     void touchPorts();
-    void updatePorts();
+    void evaluatePorts();
     void verifyPorts();
 
     Box* clone(QString name, Box *parent);

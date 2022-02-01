@@ -15,6 +15,7 @@ Port::Port(QString name, Type type, Node *parent)
     : Node(name, parent),
       _type(type),
       _hasBeenRedefined(false),
+      _isFixed(false),
       _expression(this)
 {
     Box *boxParent = dynamic_cast<Box*>(parent);
@@ -121,31 +122,48 @@ void Port::touch() {
 }
 
 void Port::evaluate() {
-    // Path value is not evaluated
+    QString s1 = _expression.originalAsString(),
+            s2 = _expression.stackAsString(),
+            s3 = _value.asString(true, true) + "{"+_value.typeName()+"}" ;
+    if (s1.startsWith("if"))
+        std::cout << qPrintable(name()+" evaluate A\n"+s1+"\n"+s2+"\n"+s3+"\n") <<
+                     "fixed=" <<_isFixed << " resolved=" << Expression::allReferencesHaveBeenResolved() << std::endl;
+
+    // A fixed port needs no evaluation
+    if (_isFixed)
+        return;
+
+    // A Path value is set equal to the expression, presumable a valid path
     if (_value.type() == Value::Type::Path) {
         _value = Path(&_expression);
         return;
     }
 
-    QString s1 = _expression.originalAsString(),
-            s2 = _expression.stackAsString(),
-            s3 = _value.asString(true, true);
-//    std::cout << qPrintable(name()+"evaluate A\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
 
     if (!_expression.isEmpty()) {
-        if (_type == Type::Auxiliary)
+        if (_type == Type::Auxiliary &&
+            (Computation::currentStep() <= Computation::Step::Reset ||
+             _value.type() == Value::Type::Uninitialized ||
+             !Expression::allReferencesHaveBeenResolved()))
             // Overwrite value's type, as an auxillary port may change type, since its expression
-            // is evaluated again and again and additional references may be resolved
+            // is evaluated again and again and additional references may have been resolved
             _value.overwrite(_expression.evaluate());
         else
             // Update value, keeping its type, which for inputs and outputs were defined
             // in the C++ code; the expression's type will be converted to the value's types
+            // For aux ports, all references have now been resolved and the value's type thereby fixed
             _value = _expression.evaluate();
     }
     s1 = _expression.originalAsString(),
     s2 = _expression.stackAsString(),
-    s3 = _value.asString(true, true);
-//    std::cout << qPrintable(name()+"evaluate Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+    s3 = "Value = " + _value.asString(true, true) + "{"+_value.typeName()+"}" ;
+    if (s1.startsWith("if"))
+        std::cout << qPrintable(name()+" evaluate Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+
+    // Register if the value will remain fixed after reset
+    if (Computation::currentStep() == Computation::Step::Reset)
+        _isFixed = _expression.isFixed();
+
 }
 
 //

@@ -22,6 +22,7 @@ class Port;
 class Expression
 {
 public:
+    using ValuePtr = const Value*;
     struct FunctionCall {
         FunctionCall() {}
         FunctionCall(QString name_, int arity_) :
@@ -36,6 +37,7 @@ public:
     enum class Conditional {If, Then, Elsif, Else};
     using Element = std::variant<
         Value,
+        ValuePtr,
         Operator,
         Parenthesis,
         Path,
@@ -45,6 +47,7 @@ public:
     >;
     enum class Type {
         Value,
+        ValuePtr,
         Operator,
         Parenthesis,
         Path,
@@ -89,20 +92,21 @@ public:
     static int numResolvedReferences();
     static const ResolvedReferences &resolvedReferences();
     static void fixResolvedReferences();
+    static bool allReferencesHaveBeenResolved();
 
 private:
     // Data
     Node *_parent;
     Stack _stack, _original;
     bool _isClosed;
-    QVector<FunctionCall> _functionCalls;
+//    QVector<FunctionCall> _functionCalls;
     static ResolvedReferences _resolvedReferences;
     static bool _fixedResolvedReferences;
 
     // Methods
     void toPostfix();
     void checkNotClosed();
-    Element registerFunctionCall(const Element &element);
+//    Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
     bool reduceByCondition(Stack &stack);

@@ -180,7 +180,7 @@ namespace boxscript { namespace parser
     auto const date_time_def = date >> lit("T") >> time;
     auto const dots_def = lexeme[x3::repeat(1,3)[x3::string(".")]];
     auto const expression_def = -sign >> operand >> *operation;
-    auto const function_call_def = name >> '(' >> expression % ',' > ')';
+    auto const function_call_def = name >> '(' >> -(expression % ',') > ')';
     auto const grouped_expression_def = '(' >> expression > ')';
     auto const if_expression_def = lit("if") > expression > lit("then") > expression >>
                                    *(lit("elsif") > expression > lit("then") > expression) >
@@ -189,7 +189,6 @@ namespace boxscript { namespace parser
     auto const joker_def = lexeme[x3::string("*")];
     auto const joker_name_def = name | joker | dots;
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
-//    auto const number_def = lexeme[int_ >> !char_(".eE")] | double_;
     auto const number_def = double_ | int_;
     auto const operand_def = bool_ | function_call | date_time | date | bare_date | time | number |
                              path | quoted_string | grouped_expression;

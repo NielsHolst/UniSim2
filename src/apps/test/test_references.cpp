@@ -116,4 +116,26 @@ void TestReferences::testForward() {
 
 }
 
+void TestReferences::testUpdate() {
+    using Type = Value::Type;
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/reference_update.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    UNEXPECTED_EXCEPTION;
 
+    try {
+        QVERIFY2(root->findOne<Port*>("A[a]")->value().type() == Type::Uninitialized,
+             str(root->findOne<Port*>("A[a]")->value().typeName()));
+        QCOMPARE(root->findOne<Port*>("A[a]")->value<int>(), 0);
+    }
+    UNEXPECTED_EXCEPTION;
+
+    root->run();
+    QCOMPARE(root->findOne<Port*>("A[a]")->value<int>(), 140);
+
+}

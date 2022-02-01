@@ -115,7 +115,6 @@ void Box::amendFamily(bool announce) {
         for (auto box : children<Box*>())
             box->amendFamily(false);
         if (_traceOn) trace("amend");
-//        computationStep(Computation::Step::Amend);
         amend();
         touchPorts();
         _amended = true;
@@ -156,8 +155,7 @@ void Box::initializeFamily(bool announce) {
     for (auto box : children<Box*>())
         box->initializeFamily(false);
     if (_traceOn) trace("initialize");
-//    computationStep(Computation::Step::Initialize);
-    updatePorts();
+    evaluatePorts();
     initialize();
     _timer.stop("initialize");
 }
@@ -167,10 +165,9 @@ void Box::resetFamily(bool announce) {
     _timer.start("reset");
     for (auto box : children<Box*>())
         box->resetFamily(false);
-    clearPorts();
     if (_traceOn) trace("reset");
-//    computationStep(Computation::Step::Reset);
-    updatePorts();
+    clearPorts();
+    evaluatePorts();
     reset();
     verifyPorts();
     _timer.stop("reset");
@@ -182,8 +179,7 @@ void Box::updateFamily(bool announce) {
     for (auto box : children<Box*>())
         box->updateFamily(false);
     if (_traceOn) trace("update");
-//    computationStep(Computation::Step::Update);
-    updatePorts();
+    evaluatePorts();
     update();
     verifyPorts();
     _timer.stop("update");
@@ -195,8 +191,7 @@ void Box::cleanupFamily(bool announce) {
     for (auto box : children<Box*>())
         box->cleanupFamily(false);
     if (_traceOn) trace("cleanup");
-//    computationStep(Computation::Step::Cleanup);
-    updatePorts();
+    evaluatePorts();
     cleanup();
     verifyPorts();
     _timer.stop("cleanup");
@@ -208,21 +203,12 @@ void Box::debriefFamily(bool announce) {
     for (auto box : children<Box*>())
         box->debriefFamily(false);
     if (_traceOn) trace("debrief");
-//    computationStep(Computation::Step::Debrief);
-    updatePorts();
+    evaluatePorts();
     debrief();
     verifyPorts();
     _timer.stop("debrief");
     if (announce) Computation::changeStep(Computation::Step::Ready);
 }
-
-//void Box::computationStep(Computation::Step step) {
-//    _computationStep = step;
-//}
-
-//Computation::Step Box::computationStep() const {
-//    return _computationStep;
-//}
 
 const QVector<Port*> &Box::portsInOrder() {
     return _portsInOrder;
@@ -238,7 +224,7 @@ void Box::touchPorts() {
         port->touch();
 }
 
-void Box::updatePorts() {
+void Box::evaluatePorts() {
     for (Port *port : _portsInOrder)
         port->evaluate();
 }

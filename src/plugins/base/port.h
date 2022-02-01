@@ -28,8 +28,9 @@ public:
 private:
     Type _type;             // Purpose of the port
     bool
-        _hasBeenRedefined, // Has the default value been overridden in the BoxScript?
-        _clearAtReset;                // Is value set to T() at reset()? Defaults to true for output and aux ports
+        _hasBeenRedefined,  // Has the default value been overridden in the BoxScript?
+        _clearAtReset,      // Is value set to T() at reset()? Defaults to true for output and aux ports
+        _isFixed;           // Does the value remain fixed following its first evaluation?
     QString
         _unit,              // Unit text
         _help;              // Help text
@@ -99,7 +100,6 @@ public:
     void toText(QTextStream &text, int indentation = 0);
 private:
     void define();
-//    void assign(const Port &x);
 };
 
 template <class T> Port& Port::initialize(T *variable) {
@@ -127,6 +127,11 @@ template <class T> T Port::value() const
 template <class T> const T* Port::valuePtr() const
 {
     return _value.constPtr<T>();
+}
+
+template <> inline const Value* Port::valuePtr() const
+{
+    return &_value;
 }
 
 template<class T> T convert(Port::Type) {

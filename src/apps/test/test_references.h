@@ -7,6 +7,7 @@ class TestReferences : public QObject
     Q_OBJECT
 private slots:
     void testForward();
+    void testUpdate();
 };
 
 DECLARE_TEST(TestReferences)

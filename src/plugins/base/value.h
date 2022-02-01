@@ -329,10 +329,12 @@ template <class U> U Value::as() const
 {
     switch(type()) {
     case Type::Uninitialized:
-        ThrowException("Value is uninitialized");
+//        ThrowException("Value is uninitialized");
+        return U();
         break;
     case Type::Null:
-        ThrowException("Value is null");
+        //ThrowException("Value is null");
+        return U();
         break;
     case Type::Bool:
         return std::get<ValueTyped<bool>>(_variant).value<U>();
