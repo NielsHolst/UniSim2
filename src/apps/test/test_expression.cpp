@@ -1,6 +1,7 @@
 #include <iostream>
 #include <boost/variant/get.hpp>
 #include <base/box.h>
+#include <base/port.h>
 #include <base/expression.h>
 #include <base/operator.h>
 #include "exception_expectation.h"
@@ -76,8 +77,9 @@ void TestExpression::testEmpty() {
 
 void TestExpression::testSingle() {
     bool excepted(false);
-    Box box("A", nullptr);
-    Expression expr(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    Expression expr(port);
     Value value;
     expr.push("abc");
     try {
@@ -93,8 +95,9 @@ void TestExpression::testAddition() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(8);
     e.push(Operator::Add);
@@ -118,8 +121,9 @@ void TestExpression::testResultType() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(8);
     e.push(Operator::Add);
@@ -144,8 +148,9 @@ void TestExpression::testNegation() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(Operator::Negate);
     e.push(8);
@@ -170,8 +175,9 @@ void TestExpression::testExponentiation() {
     bool excepted(false);
     using E    = Expression;
     using Type = Value::Type;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(8);
     e.push(Operator::Add);
@@ -197,8 +203,9 @@ void TestExpression::testFunctionCall() {
     bool excepted(false);
     using E     = Expression;
     using Func  = Expression::FunctionCall;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(Func("sum", 3));
     e.push(8);
@@ -235,8 +242,9 @@ void TestExpression::testFunctionCall() {
 void TestExpression::testParentheses() {
     bool excepted(false);
     using E     = Expression;
-    Box box("A", nullptr);
-    E e(&box);
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    E e(port);
 
     e.push(Parenthesis::Left);
     e.push(3);

@@ -37,34 +37,12 @@ static QMap<Path::Directive, QString> nodeDirToString =
     {Path::Directive::Following  , "following"  }
 };
 
-static QMap<QString, Path::Port::Directive> portDirFromString =
-{
-    {"all",    Path::Port::Directive::All},
-    {"input",  Path::Port::Directive::Input},
-    {"output", Path::Port::Directive::Output}
-};
-
-static QMap<Path::Port::Directive, QString> portDirToString =
-{
-    {Path::Port::Directive::All   , "all"   },
-    {Path::Port::Directive::Input , "input" },
-    {Path::Port::Directive::Output, "output"}
-};
-
 inline bool isNodeDirective(std::string s) {
     return nodeDirFromString.contains(QString::fromStdString(s));
 }
 
 inline bool isNodeDirective(QString s) {
     return nodeDirFromString.contains(s);
-}
-
-inline bool isPortDirective(std::string s) {
-    return portDirFromString.contains(QString::fromStdString(s));
-}
-
-inline bool isPortDirective(QString s) {
-    return portDirFromString.contains(s);
 }
 
 inline QString qstr(std::string s) {
@@ -158,12 +136,12 @@ QString Path::Node::toString() const {
 Path::Port::Port(QString directive, QString name)
     : _name(name)
 {
-    if (directive.isEmpty())
-        _directive = Directive::All;
-    else if (portDirFromString.contains(directive))
-        _directive = portDirFromString.value(directive);
-    else
-        ThrowException("Unknown port directive").value(directive);
+    if (!directive.isEmpty()) {
+        if (isPortType(directive))
+            _directive = portTypeFromString(directive);
+        else
+            ThrowException("Unknown port directive").value(directive);
+    }
 }
 
 Path::Port::Port(std::vector<std::string> names) {
@@ -172,11 +150,9 @@ Path::Port::Port(std::vector<std::string> names) {
         ThrowException("Empty port name");
 
     // Directive, if present, must be first name
-    bool hasDirective = isPortDirective(names.at(0));
-
-    // If no directive, the port refers to any kind of port
-    _directive = hasDirective ?
-         portDirFromString.value(qstr(names.at(0))) : base::Path::Port::Directive::All;
+    bool hasDirective = isPortType(qstr(names.at(0)));
+    if (hasDirective)
+        _directive = portTypeFromString(qstr(names.at(0)));
 
     // Set name
     bool tooLong = false;
@@ -189,7 +165,7 @@ Path::Port::Port(std::vector<std::string> names) {
         break;
     case 2:
         if (hasDirective)
-            // Directive + name
+            // Directive :: name
             _name = qstr(names.at(1));
         else {
             ThrowException("Unknown path directive").value(qstr(names.at(0)));
@@ -207,11 +183,15 @@ Path::Port::Port(std::vector<std::string> names) {
 
 }
 
+bool Path::Port::matches(const base::Port *port) {
+    bool directiveOk = (!_directive.has_value() || *_directive == port->type()),
+         nameOk      = (_name == "*"            ||  _name      == port->name());
+    return directiveOk && nameOk;
+}
+
 QString Path::Port::toString() const {
-    QString result = "[";
-    if (_directive != Directive::All)
-        result += portDirToString.value(_directive) + "::";
-    return result + _name + "]";
+    QString result = _directive.has_value() ? (portTypeToString(*_directive) + "::") : "";
+    return "[" + result + _name + "]";
 }
 
 // Alternative
@@ -223,7 +203,7 @@ void Path::Alternative::setRoot(bool hasRoot) {
     _hasRoot = hasRoot;
 }
 
-void Path::Alternative::addNode(Node &node) {
+void Path::Alternative::addNode(Node node) {
     // An empty directive means Any for the first node and, Children for the following nodes
     if (!_nodes.isEmpty() && node._directive==Directive::Any)
         node._directive = Directive::Children;
@@ -258,7 +238,7 @@ QString Path::Alternative::toString() const {
     return result;
 }
 
-const Path::Objects& Path::Alternative::matches(base::Node *parent) {
+const Path::Objects& Path::Alternative::matches(base::Box *parent) {
     auto next = _nodes.begin();
     if (next) {
         initiateMatches(*next, parent);
@@ -267,15 +247,27 @@ const Path::Objects& Path::Alternative::matches(base::Node *parent) {
     for(;next != _nodes.end(); ++next)
         filterMatches(*next);
 
-    Objects ports;
     if (_port.has_value()) {
-        bool anyPort = ((*_port).name() == "*");
-        for (auto match : _matches) {
-            for (auto child : match->children<base::Port*>()) {
-                if (anyPort || child->name() == (*_port).name())
-                    ports << dynamic_cast<base::Node*>(child);
+        Objects ports;
+        for (auto candidate : _matches) {
+            // If the candidate is a port, test if it matches _port
+            auto *basePort = dynamic_cast<base::Port*>(candidate);
+            if (basePort) {
+                if (_port->matches(basePort))
+                    ports << candidate;
+            }
+            // Otherwise the candidate is a box;
+            // loop through all its ports and test if they match _port
+            else {
+                auto *parentBox = dynamic_cast<base::Box*>(candidate);
+                Q_ASSERT(parentBox);
+                for (auto basePort : parentBox->children<base::Port*>()) {
+                    if (_port->matches(basePort))
+                        ports << dynamic_cast<base::Node*>(basePort);
+                }
             }
         }
+        _matches.clear();
         _matches = ports;
     }
     return _matches;
@@ -527,12 +519,12 @@ Path::Objects Path::Alternative::following(Objects candidates, QString className
 
 // Path
 
-Path::Path(Object *parent)
+Path::Path(base::Port *parent)
     : _parent(parent)
 {
 }
 
-Path::Path(QString path, Object *parent)
+Path::Path(QString path, base::Port *parent)
     : _parent(parent)
 {
     // The parser needs a port on every alternative: Add missing ports as dummies
@@ -541,12 +533,10 @@ Path::Path(QString path, Object *parent)
         corrected << (path.contains("[") ? alternative : alternative.trimmed() + "[DUMMY]");
 
     // Parse path as an expression
-    auto expression = boxscript::parser::parseExpression(corrected.join("|"));
+    auto expression = boxscript::parser::parseExpression(nullptr, corrected.join("|"));
     if (expression.size() != 1 || Expression::type(expression.at(0)) != Expression::Type::Path)
         ThrowException("Invalid path").value(path).context(parent);
     initialize(expression);
-    if (parent)
-        _parent = parent;
 }
 
 Path::Path(const Expression *expression) {
@@ -554,22 +544,22 @@ Path::Path(const Expression *expression) {
     initialize(*expression);
 }
 
-void Path::initialize(const Expression &expression) {
+void Path::initialize(Expression expression) {
     if (expression.size() != 1 || Expression::type(expression.at(0)) != Expression::Type::Path)
         ThrowException("Invalid path").value(expression.originalAsString()).context(_parent);
 
     Path parsedPath = std::get<Path>(expression.at(0));
     _alternatives = parsedPath._alternatives;
     _matches = parsedPath._matches;
-    _parent = parsedPath._parent;
+    setParent(expression.parent());
 }
 
-void Path::setParent(Object *parent)
+void Path::setParent(base::Port *parent)
 {
     _parent = parent;
 }
 
-Path::Object *Path::parent() {
+base::Port *Path::parent() {
     return _parent;
 }
 
@@ -582,7 +572,7 @@ void Path::add(const Path &path) {
         add(alternative);
 }
 
-const Path::Objects &Path::matches() const {
+const Path::Objects &Path::matches(base::Node *anchor) const {
     // Find matches from scratch
     _matches.clear();
 
@@ -590,13 +580,21 @@ const Path::Objects &Path::matches() const {
     if (_alternatives.isEmpty())
         return _matches;
 
-    // Path must have a parent
-    if (!_parent)
-        ThrowException("Path must have a parent").value(toString());
+    // Path must have a parent or an anchor
+    base::Node *nodeAnchor = anchor ? anchor : dynamic_cast<base::Node*>(_parent);
+    if (!nodeAnchor)
+        ThrowException("Path must have a parent or an anchor").value(toString());
+
+    // The anchor must be a Box; if not use its parent
+    base::Box *boxAnchor = dynamic_cast<Box*>(nodeAnchor);
+    if (!boxAnchor)
+        boxAnchor = nodeAnchor->parent<Box*>();
+    if (!boxAnchor)
+        ThrowException("Path must be anchored by a box").value(toString());
 
     // Collect matches
     for (auto &alternative : _alternatives) {
-        for (auto match : alternative.matches(_parent)) {
+        for (auto match : alternative.matches(boxAnchor)) {
             // Avoid duplicates
             if (!_matches.contains(match))
                 _matches << match;
@@ -617,15 +615,15 @@ const QVector<Path::Alternative> &Path::alternatives() const {
 }
 
 bool Path::isValid(QString path) {
-    auto expression = boxscript::parser::parseExpression(path);
+    auto expression = boxscript::parser::parseExpression(nullptr, path);
     return (expression.size() == 1 &&
             Expression::type(expression.at(0)) == Expression::Type::Path);
 
 }
 
-template<> QVector<base::Port*> Path::findMany() const {
+template<> QVector<base::Port*> Path::findMany(base::Node *anchor) const {
     QVector<base::Port*> result;
-    for (auto candidate : matches()) {
+    for (auto candidate : matches(anchor)) {
         base::Port *port = dynamic_cast<base::Port*>(candidate);
         if (port) {
             // If port found in this path itself holds a path

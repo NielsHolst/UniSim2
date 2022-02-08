@@ -4,9 +4,7 @@
 */
 #ifndef OUTPUT_SELECTOR_H
 #define OUTPUT_SELECTOR_H
-#include <QSet>
 #include <base/box.h>
-#include "output_summary.h"
 
 namespace boxes {
 
@@ -22,12 +20,10 @@ public:
 private:
     // Inputs
     int skipRows, period;
-    bool final;
-    QVector<QString> summary;
+    bool final, useLocalDecimalChar;
     // Outputs
     bool isActive, isSkipping;
     // Data
-    OutputSummary _summary;
     int _totalRowCount,
         _periodCount;
 };

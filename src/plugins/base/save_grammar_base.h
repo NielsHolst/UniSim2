@@ -32,7 +32,7 @@ private:
     // methods
     void openFileStream();
     void closeFileStream();
-    QSet<QString> collectPortNames(const Box *root);
+    QSet<QString> collectPortNames(Box *root);
     virtual QString grammarFilePath() = 0;
     virtual void writeBeginning() = 0;
     virtual void writePlugins() = 0;

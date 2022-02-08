@@ -44,15 +44,13 @@ HEADERS +=  \
     on_off.h \
     on_off_base.h \
     on_off_by_date.h \
-    output_buffer.h \
-    output_ports.h \
     output_r.h \
     output_selector.h \
-    output_summary.h \
     output_text.h \
-    page_r.h \
+    output_writer.h \
+#    page_r.h \
     parasite.h \
-    plot_r.h \
+#    plot_r.h \
     pop_up.h \
     population.h \
     predator.h \
@@ -122,21 +120,18 @@ SOURCES +=  \
     maximum.cpp \
     minimum.cpp \
     mean.cpp \
-#    modifier.cpp \
     multiplum.cpp \
     numbered_file.cpp \
     offset_date_time.cpp \
     on_off.cpp \
     on_off_by_date.cpp \
-    output_buffer.cpp \
-    output_ports.cpp \
     output_r.cpp \
     output_selector.cpp \
-    output_summary.cpp \
     output_text.cpp \
-    page_r.cpp \
+    output_writer.cpp \
+#    page_r.cpp \
     parasite.cpp \
-    plot_r.cpp \
+#    plot_r.cpp \
     pop_up.cpp \
     population.cpp \
     predator.cpp \

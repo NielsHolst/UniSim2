@@ -4,58 +4,19 @@
 */
 #ifndef OUTPUT_TEXT_H
 #define OUTPUT_TEXT_H
-#include <QFile>
-#include <QList>
-#include <QTextStream>
-#include "output_ports.h"
-#include "output_summary.h"
-
-namespace base {
-    class Track;
-}
+#include <base/box.h>
+#include <base/path.h>
 
 namespace boxes {
 
-class OutputText : public OutputPorts
+class OutputText : public base::Box
 {
 public:
-    OutputText(QString name, Box *parent);
-    void initialize();
-    void reset();
-    void update();
-    void cleanup();
-    void debrief();
+    OutputText(QString name, base::Box *parent);
 private:
     // Inputs
-    bool skipFormats, useLocalDecimalChar,
-         isActive;
-    int step;
-    QVector<QString> summary;
-
-    // Outputs
-    QString filePath;
-
-    // Data
-    bool _justChangedToActive;
-    int _periodCount;
-    OutputSummary _summary;
-    struct {
-        QVector<double> sum, min, max;
-        QVector<int> minAt, maxAt;
-    } _state;
-    QFile _file;
-    QTextStream _stream;
-
-    // Methods
-    void complementPorts();
-    void setOutputNames();
-    void initializeState();
-    void openFileStream();
-    void updateState();
-    void processValues();
-    void writeColumnLabels();
-    void writeColumnFormats();
-    void writeValues();
+    base::Path ports;
+    bool skipFormats;
 };
 
 } // boxes

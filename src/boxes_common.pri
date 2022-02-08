@@ -32,7 +32,7 @@ win32:lessThan(QT_MAJOR_VERSION, 6) {
 }
 
 # Define macro to generate spirit debug output on cerr
-# DEFINES += BOOST_SPIRIT_X3_DEBUG
+#DEFINES += BOOST_SPIRIT_X3_DEBUG
 
 # Show warning when using deprecated Qt features
 DEFINES += QT_DEPRECATED_WARNINGS

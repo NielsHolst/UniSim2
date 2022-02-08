@@ -2,7 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/computation_step.h>
+#include <base/computation.h>
 #include <base/publish.h>
 #include "computation.h"
 
@@ -46,7 +46,6 @@ void Computation::debrief() {
 void Computation::updateStep() {
     step = base::Computation::toString(base::Computation::currentStep());
 }
-
 
 } //namespace
 

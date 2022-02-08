@@ -16,12 +16,11 @@ PUBLISH(OutputSelector)
 OutputSelector::OutputSelector(QString name, Box *parent)
     : Box(name, parent)
 {
-    help("creates an output text file");
+    help("selects what to output");
     Input(skipRows).equals(0).help("The initial `skipRows` steps in every iteration will be ignored");
     Input(period).equals(1).help("If >1: A row of summary output will be produced with this period");
     Input(final).equals(false).help("Overrules 'period'");
-    Input(summary).computes("c(\"Current\")").
-            help("Any combination of summaries: Current, Sum, Mean, Min, Max, MinAt and MaxAt");
+    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Output(isActive).help("Should output be written?");
     Output(isSkipping).help("Are lines being skipped?");
 }
@@ -29,7 +28,6 @@ OutputSelector::OutputSelector(QString name, Box *parent)
 void OutputSelector::initialize() {
     isSkipping = (skipRows > 0);
     isActive = false;
-    _summary = OutputSummary(summary, this);
 }
 
 void OutputSelector::reset() {

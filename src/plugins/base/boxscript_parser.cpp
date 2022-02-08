@@ -1,8 +1,11 @@
 #include <QFile>
 #include "box.h"
+#include "box_builder.h"
 #include "boxscript_config.h"
 #include "boxscript_parser.h"
+#include "computation.h"
 #include "exception.h"
+#include "port.h"
 
 using namespace base;
 
@@ -41,15 +44,16 @@ Result parse(std::string source, std::string fileNamePath) {
     return ast;
 }
 
-Expression parseExpression(QString s) {
+Expression parseExpression(Port *parent, QString s) {
+    Computation::pushStep(Computation::Step::Scratch);
+    BoxBuilder builder;
     auto ast = parse("Box{&x=" + s.toStdString() + "}");
-    auto root = ast->root;
-    auto assignment = root.assignments.at(0);
-    auto expression = boost::get<ast::Expression>(assignment.expression);
-    Expression baseExpression;
-    expression.build(&baseExpression);
-    baseExpression.close();
-    return baseExpression;
+    ast->root.build(&builder);
+    auto root = std::unique_ptr<Box>( builder.content(BoxBuilder::Amend::None) );
+    Expression e = root->port("x")->expression();
+    e.setParent(parent);
+    Computation::popStep();
+    return e;
 }
 
 }}

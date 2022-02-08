@@ -223,11 +223,16 @@ void TestReaderBoxScriptX3::testInitializePortMissing() {
         root = std::unique_ptr<Box>( builder.content() );
     }
     UNEXPECTED_EXCEPTION;
+
     try {
         root->initializeFamily();
     }
     UNEXPECTED_EXCEPTION;
-    QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Null);
+
+    try {
+        QCOMPARE(root->findOne<Port*>("B[c]")->value().type(), Value::Type::Null);
+    }
+    UNEXPECTED_EXCEPTION;
 }
 
 void TestReaderBoxScriptX3::testCondition() {

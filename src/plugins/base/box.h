@@ -8,17 +8,16 @@
 #include <QTextStream>
 #include <QVector>
 #include "caller.h"
-#include "computation_step.h"
 #include "node.h"
 #include "path.h"
 #include "port.h"
 #include "timer.h"
 
-#define Input(X)  (*new base::Port(#X, base::Port::Type::Input , this)).initialize(& X)
-#define Output(X) (*new base::Port(#X, base::Port::Type::Output, this)).initialize(& X)
+#define Input(X)  (*new base::Port(#X, base::PortType::Input , this)).initialize(& X)
+#define Output(X) (*new base::Port(#X, base::PortType::Output, this)).initialize(& X)
 
-#define NamedInput(X,Y)  (*new base::Port((X), base::Port::Type::Input , this)).initialize(& (Y))
-#define NamedOutput(X,Y) (*new base::Port((X), base::Port::Type::Output, this)).initialize(& (Y))
+#define NamedInput(X,Y)  (*new base::Port((X), base::PortType::Input , this)).initialize(& (Y))
+#define NamedOutput(X,Y) (*new base::Port((X), base::PortType::Output, this)).initialize(& (Y))
 
 namespace base {
 
@@ -65,9 +64,6 @@ public:
     void cleanupFamily(bool announce=true);
     void debriefFamily(bool announce=true);
 
-//    void computationStep(Computation::Step step);
-//    Computation::Step computationStep() const;
-
     const QVector<Port*> &portsInOrder();
     void touchPorts();
     void evaluatePorts();
@@ -89,7 +85,6 @@ public:
 private:
     // Data
     QString _help, _sideEffects;
-//    Computation::Step _computationStep;
     QMap<QString,Port*> _portMap;
     QVector<Port*> _portsInOrder, _trackedPorts;
     bool _amended, _cloned;
@@ -106,15 +101,15 @@ private:
 };
 
 template<class T> inline T Box::findOne(QString path) {
-    return Path(path, this).findOne<T>();
+    return Path(path).findOne<T>(this);
 }
 
 template<class T> inline T Box::findMaybeOne(QString path) {
-    return Path(path, this).findMaybeOne<T>();
+    return Path(path).findMaybeOne<T>(this);
 }
 
 template<class T> inline  QVector<T> Box::findMany(QString path) {
-    return Path(path, this).findMany<T>();
+    return Path(path).findMany<T>(this);
 }
 
 }

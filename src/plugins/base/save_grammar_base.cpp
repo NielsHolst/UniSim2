@@ -100,10 +100,10 @@ QStringList SaveGrammarBase::portNames() {
     return sorted;
 }
 
-QSet<QString> SaveGrammarBase::collectPortNames(const Box *root) {
+QSet<QString> SaveGrammarBase::collectPortNames(Box *root) {
     QSet<QString> names;
     if (root) {
-        QVector<Port*> ports = Path("Port::*", const_cast<Box*>(root)).findMany<Port*>();
+        QVector<Port*> ports = Path("Port::*").findMany<Port*>(root);
         for (Port *port : ports)
             names << port->objectName();
     }

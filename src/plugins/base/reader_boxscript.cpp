@@ -5,7 +5,7 @@
 #include <QFile>
 #include "boxscript_parser.h"
 #include "boxscript_preprocessor.h"
-#include "computation_step.h"
+#include "computation.h"
 #include "reader_boxscript.h"
 
 using namespace std;
@@ -26,8 +26,8 @@ void ReaderBoxScript::parse(QString filePath) {
     QString source = preprocessor.preprocess(filePath);
 
     // Parse
-    boxscript::parser::Result result = boxscript::parser::parse(source.toStdString(), filePath.toStdString());
-    result->root.build(_builder);
+    boxscript::parser::Result ast = boxscript::parser::parse(source.toStdString(), filePath.toStdString());
+    ast->root.build(_builder);
 }
 
 

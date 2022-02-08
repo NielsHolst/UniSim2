@@ -79,7 +79,7 @@ BoxBuilder& BoxBuilder::aux(QString name, QString type) {
     if (!_currentBox) {
         ThrowException("BoxBuilder: new port declaration out of context");
     }
-    _currentPort = new Port(name, Port::Type::Auxiliary, _currentBox);
+    _currentPort = new Port(name, PortType::Auxiliary, _currentBox);
     if (!type.isEmpty())
         _currentPort->initialize(Value::create(type));
     return *this;

@@ -4,6 +4,7 @@
 */
 #include <iostream>
 #include "box.h"
+#include "computation.h"
 #include "dialog.h"
 #include "environment.h"
 #include "exception.h"
@@ -288,13 +289,13 @@ void Box::toText(QTextStream &text, QString options, int indentation) const {
     for (Port *port : _portsInOrder) {
         bool doWrite;
         switch (port->type()) {
-        case Port::Type::Input:
+        case PortType::Input:
             doWrite = writeAllInputs || (writeOverriddenInputs && port->isValueOverridden());
             break;
-        case Port::Type::Output:
+        case PortType::Output:
             doWrite = writeOutputs;
             break;
-        case Port::Type::Auxiliary:
+        case PortType::Auxiliary:
             doWrite = writeAux;
             break;
         }

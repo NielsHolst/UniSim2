@@ -41,7 +41,7 @@ HEADERS +=  \
     circular_buffer.h \
     command.h  \
     command_help.h  \
-    computation_step.h \
+    computation.h \
 #    copy_folder.h \
     data_frame.h \
 #    data_grid.h \
@@ -72,12 +72,14 @@ HEADERS +=  \
     operator.h \
     path.h \
     port.h \
+    port_type.h \
     product.h \
     product_base.h \
     physiological_time.h \
     phys_math.h \
     reader_base.h \
     reader_boxscript.h \
+    resolved_references.h \
     proportions.h \
     psychrolib.h \
     random_generator.h \
@@ -117,7 +119,7 @@ SOURCES +=  \
     convert_operator.cpp \
     command.cpp \
     command_help.cpp  \
-    computation_step.cpp \
+    computation.cpp \
 #    copy_folder.cpp \
     data_frame.cpp \
 #    data_grid.cpp \
@@ -143,6 +145,7 @@ SOURCES +=  \
     physiological_time.cpp \
     phys_math.cpp \
     port.cpp \
+    port_type.cpp \
     reader_base.cpp \
     reader_boxscript.cpp \
     product_base.cpp \
@@ -150,6 +153,7 @@ SOURCES +=  \
     psychrolib.c \
     random_generator.cpp \
     random_order.cpp \
+    resolved_references.cpp \
     save_grammar_atom.cpp \
     save_grammar_base.cpp \
     save_grammar_notepad.cpp \

@@ -7,24 +7,35 @@
 #include "test_simulation.h"
 
 void TestSimulation::testGrowth() {
-//    using Type = Value::Type;
-//    bool excepted(false);
-//    std::unique_ptr<Box> root;
-//    BoxBuilder builder;
-//    ReaderBoxScript reader(&builder);
-//    try {
-//        reader.parse(inputFilePath("box_script/simulation.box"));
-//        root = std::unique_ptr<Box>( builder.content() );
-//    }
-//    UNEXPECTED_EXCEPTION;
+    bool excepted(false);
+    std::unique_ptr<Box> root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/simulation.box"));
+        root = std::unique_ptr<Box>( builder.content() );
+    }
+    catch(const base::Exception &ex) {
+        QString s = "Unexpected exception: " + ex.what();
+        QFAIL(qPrintable(s));
+    }
+    catch (const std::exception& ex) {
+        QString s = "Unexpected exception: " + QString(ex.what());
+        QFAIL(qPrintable(s));
+    }
+    catch (...) {
+        QFAIL("Unexpected exception");
+    }
+    QVERIFY(!excepted);
+    excepted = false;
 
-//    try {
-//        root->run();
-//    }
-//    UNEXPECTED_EXCEPTION;
+    try {
+        root->run();
+    }
+    UNEXPECTED_EXCEPTION;
 
-//    if (root->port("hasError")->value<bool>())
-//        QFAIL(qPrintable(root->port("errorMsg")->value<QString>()));
+    if (root->port("hasError")->value<bool>())
+        QFAIL(qPrintable(root->port("errorMsg")->value<QString>()));
 }
 
 

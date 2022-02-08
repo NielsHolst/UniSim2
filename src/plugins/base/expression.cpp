@@ -2,10 +2,10 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <iostream>
 #include <limits>
 #include <sstream>
 #include "box.h"
-#include "computation_step.h"
 #include "convert_operator.h"
 #include "convert.h"
 #include "exception.h"
@@ -13,33 +13,36 @@
 #include "operate.h"
 #include "phys_math.h"
 #include "port.h"
+#include "resolved_references.h"
 #include "value_collection.h"
+
 using std::get;
-#include <iostream>
 
 namespace base {
 
-Expression::ResolvedReferences Expression::_resolvedReferences;
-bool Expression::_fixedResolvedReferences;
-
-Expression::Expression(Node *parent)
-    : _parent(parent), _isClosed(false)
+Expression::Expression(Port *parent)
+    : _parent(parent), _isClosed(false), _isResolved(false)
 {
 }
 
-void Expression::setParent(Node *parent) {
+void Expression::setParent(Port *parent) {
     _parent = parent;
+    for (Element &element : _stack) {
+        if (Expression::type(element) == Expression::Type::Path) {
+            std::get<Path>(element).setParent(parent);
+        }
+    }
 }
 
 void Expression::clear() {
-    _isClosed = false;
+    _isClosed = _isResolved = false;
     _stack.clear();
     _original.clear();
 }
 
-bool Expression::isFixed() const {
-    // The expression is fixed is it is not empty and it contains no references
-    // This can be improved to consider if the reference referred to are also fixed
+bool Expression::isConstant() const {
+    // The expression is constant is it is not empty and it contains no references
+    // This can be improved to consider if the references referred to are also constant
     for (const Element &element : _stack) {
         if (type(element) == Type::ValuePtr || type(element) == Type::Path)
             return false;
@@ -513,11 +516,23 @@ Value Expression::evaluate() {
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
 
-    // Save stack if references have not yet been fixed
-    Stack savedStack = _fixedResolvedReferences ? Stack() : _stack;
+    // If references have not yet all been resolved
+    // then save stack to restore it after evaluation
+    Stack savedStack;
+    bool keepStack = !ResolvedReferences::fixed();
+    if (keepStack)
+        savedStack = _stack;
 
-    // Replace Path elements with Value elements
-    resolveReferences();
+    // If my references have not yet been resolved
+    // then replace Path elements with Value elements
+    if (!_isResolved)
+        resolveReferences();
+
+    // If all have been resolved
+    // then keep the stack with all Path elements replaced by Value elements.
+    // First time ::fixed() turns true _isResolved turns true and remains true.
+    _isResolved = ResolvedReferences::fixed();
+
     s1 = stackAsString();
 //    std::cout << "\nExpression::evaluate " << qPrintable(s0+"\n"+s1) << std::endl;
 
@@ -581,11 +596,9 @@ Value Expression::evaluate() {
         result = myStack.front();
     }
     s2 = toString(myStack);
-//    std::cout << "End\n"
-//              << "My stack " << qPrintable(s2) << std::endl;
 
-    // Restore stack if references have not yet been fixed
-    if (!_fixedResolvedReferences) {
+    // Restore stack if references were not yet fixed
+    if (keepStack) {
         _stack.clear();
         _stack = savedStack;
     }
@@ -604,7 +617,7 @@ Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const
 }
 
 void Expression::resolveReferences() {
-    Box *box = boxAncestor();
+//    Box *box = boxAncestor();
     auto end0 = _stack.end(), end1=end0;
     auto element=_stack.begin();
     while (element!=_stack.end()) {
@@ -612,9 +625,10 @@ void Expression::resolveReferences() {
                 s1 = toString(*element);
         if (type(*element) == Type::Path) {
             Path &path = get<Path>(*element);
-            path.setParent(box);
+            path.setParent(_parent);
             auto matches = path.findMany<Port*>();
-            addResolvedReferences(matches);
+            ResolvedReferences::add(_parent, matches);
+
             switch (matches.size()) {
             case 0:
                 *element = Value::null();
@@ -636,16 +650,8 @@ void Expression::resolveReferences() {
     }
 }
 
-Box *Expression::boxAncestor() {
-    if (!_parent)
-        ThrowException("Expressions needs a parent").value(originalAsString());
-    auto *box  = dynamic_cast<Box* >(_parent);
-    auto *port = dynamic_cast<Port*>(_parent);
-    if (port)
-        box = port->parent<Box*>();
-    if (!box)
-        ThrowException("Expression must be declated inside a box").value(originalAsString());
-    return box;
+Port *Expression::parent() {
+    return _parent;
 }
 
 const Expression::Stack& Expression::original() const {
@@ -715,53 +721,6 @@ QString conditionalToString(Expression::Conditional cond) {
         {Expression::Conditional::Elsif, "elsif"}
     };
     return map.value(cond);
-}
-
-void Expression::resetResolvedReferences() {
-    _resolvedReferences.clear();
-    _fixedResolvedReferences = false;
-}
-
-void Expression::addResolvedReferences(QVector<Port *> ports) {
-    for (auto port : ports) {
-        auto ref = ResolvedReference {
-                      const_cast<const Node *>(_parent),
-                      const_cast<const Port *>(port)
-                  };
-
-        if (!port->value().isNull() && !_resolvedReferences.contains(ref))
-            _resolvedReferences[ref] = Computation::currentStep();
-    }
-}
-
-int Expression::numResolvedReferences() {
-    return _resolvedReferences.size();
-}
-
-const Expression::ResolvedReferences &Expression::resolvedReferences() {
-    return _resolvedReferences;
-}
-
-void Expression::fixResolvedReferences() {
-    _fixedResolvedReferences = true;
-}
-
-bool Expression::allReferencesHaveBeenResolved() {
-    return _fixedResolvedReferences;
-}
-
-size_t qHash(const Expression::ResolvedReference &key) {
-    return phys_math::hashPointers(key.referee, key.reference);
-}
-
-bool operator==(const Expression::ResolvedReference &a, const Expression::ResolvedReference &b) {
-    return a.referee==b.referee && a.reference==b.reference;
-}
-
-std::ostream& operator<<(std::ostream& os, const Expression::ResolvedReference& ref) {
-    os << qPrintable(ref.referee->fullName()) << " => "
-       << qPrintable(ref.reference->fullName());
-    return os;
 }
 
 }

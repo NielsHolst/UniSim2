@@ -55,7 +55,7 @@ template <class T> BoxBuilder& BoxBuilder::equals(T value) {
     if (!_currentPort)
         ThrowException("BoxBuilder: 'equals' must follow 'port'");
     // For an auxillary port, we did not know its type until now
-    if (_currentPort->type() == Port::Type::Auxiliary)
+    if (_currentPort->type() == PortType::Auxiliary)
         _currentPort->initialize(value);
     // Assign the value to the port we are currently defining
     _currentPort->equals(value);

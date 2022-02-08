@@ -3,44 +3,79 @@
 #include <QDir>
 #include <base/dialog_stub.h>
 #include <base/environment.h>
+#include <base/organisation.h>
 #include "autotest.h"
 
-inline QString inputPath() {
+namespace {
+
+QDir saveDirInput, saveDirOutput;
+
+QString expectedInputPath() {
     QString path = QCoreApplication::applicationDirPath();
     QDir dir = QDir(path);
     dir.cdUp();
     dir.cd("src/apps/test/input");
     return dir.absolutePath();
-//    return "C:/Users/au152367/Documents/qdev/UniSim2/src/apps/test/input/";
 }
+
+QString expectedOutputPath() {
+    QString path = QCoreApplication::applicationDirPath();
+    QDir dir = QDir(path);
+    dir.cdUp();
+    dir.cd("output");
+    return dir.absolutePath();
+}
+
+bool setInputPath() {
+    saveDirInput = base::environment().dir(base::Environment::Input);
+    QDir dir = QDir();
+    bool ok = dir.cd(expectedInputPath());
+    if (ok)
+        base::environment().dir(base::Environment::Input, dir);
+    else
+        std::cout << "Input path not found: " << qPrintable(expectedInputPath());
+    return ok;
+}
+
+bool setOutputPath() {
+    saveDirOutput = base::environment().dir(base::Environment::Output);
+    QDir dir = QDir();
+    bool ok = dir.cd(expectedOutputPath());
+    if (ok)
+        base::environment().dir(base::Environment::Output, dir);
+    else
+        std::cout << "Output path not found: " << qPrintable(expectedOutputPath());
+    return ok;
+}
+
+}
+
 
 int main(int argc, char *argv[])
 {
+    // Init app
+    int result = EXIT_FAILURE;
     QApplication app(argc, argv);
-    base::DialogStub *dialog = new base::DialogStub(qApp);
 
-    QString saveLoadArg = base::environment().latestLoadArg();
-    base::environment().latestLoadArg("test.box");
+    // Set up dialog stub
+    new base::DialogStub(qApp);
 
-    QDir saveDirInput = base::environment().dir(base::Environment::Input),
-         testDirInput = QDir();
-    if (!testDirInput.cd(inputPath())) {
-        std::cout << qPrintable(inputPath())
-                  << " path not found from "
-                  << qPrintable(testDirInput.absolutePath())
-                  << "Check source in src/apps/test/main.cpp";
-        dialog->deleteLater();
-        return 0;
+    // Set input and output folders
+    if (setInputPath() && setOutputPath()) {
+
+        // Manipulate latest load argument
+        base::environment().latestLoadArg("test.box");
+
+        // Run test
+        result = AutoTest::run(argc, argv);
+        QString msg = (result==0) ? "All tests passed" : "One or more tests failed";
+        std::cout << "\n\n" << qPrintable(msg) << "\n";
     }
-    base::environment().dir(base::Environment::Input, testDirInput);
 
-    int result = AutoTest::run(argc, argv);
-    QString msg = (result==0) ? "All tests passed" : "One or more tests failed";
-    std::cout << "\n\n" << qPrintable(msg) << "\n";
+    // Re-establish input and output folders
+    base::environment().dir(base::Environment::Input,  saveDirInput);
+    base::environment().dir(base::Environment::Output, saveDirOutput);
 
-    base::environment().latestLoadArg(saveLoadArg);
-    base::environment().dir(base::Environment::Input, saveDirInput);
-
-    dialog->deleteLater();
+    // Done
     return result;
 }

@@ -5,6 +5,7 @@
 #include <base/exception.h>
 #include <base/expression.h>
 #include <base/reader_boxscript.h>
+#include <base/resolved_references.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"
 #include "test_references.h"
@@ -26,6 +27,10 @@ void TestReferences::testForward() {
     try {
         reader.parse(inputFilePath("box_script/reference_forward.box"));
         root = std::unique_ptr<Box>( builder.content() );
+//        std::cout << "A[a] A[b] "
+//                  << str(root->findOne<Port*>("A[a]")->value().typeName()) << " "
+//                  << str(root->findOne<Port*>("A[b]")->value().typeName()) << std::endl;
+        root->initializeFamily();
     }
     UNEXPECTED_EXCEPTION;
 
@@ -34,7 +39,7 @@ void TestReferences::testForward() {
              str(root->findOne<Port*>("A[a]")->value().typeName()));
         QCOMPARE(root->findOne<Port*>("A[a]")->value<QDate>(), QDate(2021,12,24));
 
-        QVERIFY2(root->findOne<Port*>("B[a]")->value().type() == Type::Null,
+        QVERIFY2(root->findOne<Port*>("B[a]")->value().type() == Type::Date,
              str(root->findOne<Port*>("B[a]")->value().typeName()));
 
         QVERIFY2(root->findOne<Port*>("B[b]")->value().type() == Type::Date,
@@ -44,7 +49,7 @@ void TestReferences::testForward() {
         QVERIFY2(root->findOne<Port*>("C[a]")->value().type() == Type::Null,
              str(root->findOne<Port*>("C[a]")->value().typeName()));
 
-        QVERIFY2(root->findOne<Port*>("C[b]")->value().type() == Type::Null,
+        QVERIFY2(root->findOne<Port*>("C[b]")->value().type() == Type::Date,
              str(root->findOne<Port*>("C[b]")->value().typeName()));
 
         QVERIFY2(root->findOne<Port*>("C[c]")->value().type() == Type::Date,
@@ -55,9 +60,9 @@ void TestReferences::testForward() {
              str(root->findOne<Port*>("D[a]")->value().typeName()));
         QCOMPARE(root->findOne<Port*>("D[a]")->value<double>(), 13.1412);
 
-        QVERIFY2(root->findOne<Port*>("E[a]")->value().type() == Type::Int,
+        QVERIFY2(root->findOne<Port*>("E[a]")->value().type() == Type::Double,
              str(root->findOne<Port*>("E[a]")->value().typeName()));
-        QCOMPARE(root->findOne<Port*>("E[a]")->value<int>(), 20);
+        QCOMPARE(root->findOne<Port*>("E[a]")->value<double>(), 23.1412);
 
         QVERIFY2(root->findOne<Port*>("E[b]")->value().type() == Type::Double,
              str(root->findOne<Port*>("E[b]")->value().typeName()));
@@ -65,11 +70,11 @@ void TestReferences::testForward() {
 
         QVERIFY2(root->findOne<Port*>("F[a]")->value().type() == Type::Int,
              str(root->findOne<Port*>("F[a]")->value().typeName()));
-        QCOMPARE(root->findOne<Port*>("F[a]")->value<int>(), 20);
+        QCOMPARE(root->findOne<Port*>("F[a]")->value<int>(), 30);
 
-        QVERIFY2(root->findOne<Port*>("F[b]")->value().type() == Type::Int,
+        QVERIFY2(root->findOne<Port*>("F[b]")->value().type() == Type::Double,
              str(root->findOne<Port*>("F[b]")->value().typeName()));
-        QCOMPARE(root->findOne<Port*>("F[b]")->value<int>(), 20);
+        QCOMPARE(root->findOne<Port*>("F[b]")->value<double>(), 23.1412);
 
         QVERIFY2(root->findOne<Port*>("F[c]")->value().type() == Type::Double,
              str(root->findOne<Port*>("F[c]")->value().typeName()));
@@ -77,43 +82,22 @@ void TestReferences::testForward() {
     }
     UNEXPECTED_EXCEPTION;
 
-//    std::cout << qPrintable(root->toText()) << std::endl;
-
-    std::cout << "Num resolved A: " <<  Expression::numResolvedReferences() << std::endl;
-    auto refs = Expression::resolvedReferences();
-    for (auto it = refs.begin(); it != refs.end(); ++it)
-        std::cout << it.key() << " " << qPrintable(Computation::toString(it.value())) << std::endl;
-
     try {
         root->initializeFamily();
     }
     UNEXPECTED_EXCEPTION;
-    std::cout << "Num resolved B: " <<  Expression::numResolvedReferences() << std::endl;
-    refs = Expression::resolvedReferences();
-    for (auto it = refs.begin(); it != refs.end(); ++it)
-        std::cout << it.key() << " " << qPrintable(Computation::toString(it.value())) << std::endl;
 
     try {
         root->resetFamily();
     }
     UNEXPECTED_EXCEPTION;
-    std::cout << "Num resolved C: " <<  Expression::numResolvedReferences() << std::endl;
-    refs = Expression::resolvedReferences();
-    for (auto it = refs.begin(); it != refs.end(); ++it)
-        std::cout << it.key() << " " << qPrintable(Computation::toString(it.value())) << std::endl;
 
     try {
         root->updateFamily();
+        root->updateFamily();
+        root->updateFamily();
     }
     UNEXPECTED_EXCEPTION;
-    std::cout << "Num resolved D: " <<  Expression::numResolvedReferences() << std::endl;
-    refs = Expression::resolvedReferences();
-    for (auto it = refs.begin(); it != refs.end(); ++it)
-        std::cout << it.key() << " " << qPrintable(Computation::toString(it.value())) << std::endl;
-
-    root->updateFamily();
-    root->updateFamily();
-
 }
 
 void TestReferences::testUpdate() {
@@ -129,13 +113,13 @@ void TestReferences::testUpdate() {
     UNEXPECTED_EXCEPTION;
 
     try {
-        QVERIFY2(root->findOne<Port*>("A[a]")->value().type() == Type::Uninitialized,
-             str(root->findOne<Port*>("A[a]")->value().typeName()));
-        QCOMPARE(root->findOne<Port*>("A[a]")->value<int>(), 0);
+        QVERIFY2(root->findOne<Port*>("A[aaa]")->value().type() == Type::Uninitialized,
+             str(root->findOne<Port*>("A[aaa]")->value().typeName()));
+        QCOMPARE(root->findOne<Port*>("A[aaa]")->value<int>(), 0);
     }
     UNEXPECTED_EXCEPTION;
 
     root->run();
-    QCOMPARE(root->findOne<Port*>("A[a]")->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("A[aaa]")->value<int>(), 140);
 
 }

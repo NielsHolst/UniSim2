@@ -68,7 +68,7 @@ void Scenarios::readDataFrame() {
 void Scenarios::createColumnOutputs() {
     values.fill(QString(), _df.numCol());
     for (QString colname : _df.colNames().toVector()) {
-        Port *port = new Port(colname, Port::Type::Input, this);
+        Port *port = new Port(colname, PortType::Input, this);
         int ixCol = _df.ixCol(colname);
         port->equals(&values[ixCol]);
     }

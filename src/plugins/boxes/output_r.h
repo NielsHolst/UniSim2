@@ -21,7 +21,6 @@ class OutputR : public base::Box
 {
 public:
     OutputR(QString name, Box *parent);
-    void amend();
     void initialize();
     void reset();
     void debrief();
@@ -31,7 +30,7 @@ public:
 private:
     // Input
     QString begin;
-    bool popUp, keepPages, keepVariables, useLocalDecimalChar,saveAsDataFrame;
+    bool popUp, keepPages, keepVariables, saveAsDataFrame;
     double width, height;
     QVector<QString> end;
     int skipSteps;
@@ -41,7 +40,7 @@ private:
 
     // Data
     QDir _destinationDir;
-    QVector<PageR*> _pages;
+//    QVector<PageR*> _pages;
     QFile _file;
     QString _filePathR, _filePathTxt;
     QStringList _RCodes;

@@ -6,7 +6,7 @@
 #define POP_UP_H
 #include <QMessageBox>
 #include <base/box.h>
-#include <base/computation_step.h>
+#include <base/computation.h>
 
 namespace boxes {
 

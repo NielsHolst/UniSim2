@@ -211,7 +211,7 @@ Value Value::create(QString type) {
         {"date", Value(QDate())},
         {"datetime", Value(QDateTime())},
         {"baredate", Value(BareDate())},
-        {"path", Path()},
+        {"path", Value(Path())},
         {"vec_bool", Value(QVector<bool>())},
         {"vec_int", Value(QVector<int>())},
         {"vec_double", Value(QVector<double>())},

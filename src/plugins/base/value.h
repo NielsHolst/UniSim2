@@ -57,8 +57,9 @@ public:
     Value(QTime       x) { initialize(x); }
     Value(QDateTime   x) { initialize(x); }
     Value(BareDate    x) { initialize(x); }
-    Value(Path        x) { initialize(x); }
     Value(const char *x) { initialize(QString(x)); }
+    explicit
+    Value(Path        x) { initialize(x); }
 
     Value(bool       *x) { initialize(x); }
     Value(int        *x) { initialize(x); }
@@ -68,6 +69,7 @@ public:
     Value(QTime      *x) { initialize(x); }
     Value(QDateTime  *x) { initialize(x); }
     Value(BareDate   *x) { initialize(x); }
+    explicit
     Value(Path       *x) { initialize(x); }
 
     Value(QVector<bool>       x) { initialize(x); }

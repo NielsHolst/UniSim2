@@ -16,8 +16,7 @@
 #include <base/port.h>
 #include <base/publish.h>
 #include "output_r.h"
-#include "page_r.h"
-#include "plot_r.h"
+//#include "page_r.h"
 
 using namespace base;
 
@@ -35,22 +34,11 @@ OutputR::OutputR(QString name, Box *parent)
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(saveAsDataFrame).equals(false).help("Save output as R data frame too?");
-    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
     Input(skipSteps).help("Number of steps to skip in the output");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
     Output(numPages).help("Number of pages in this output");
-}
-
-void OutputR::amend() {
-    // Create text output if not present
-    if ( Path("./*<OutputText>", this).findMany<Box*>().empty() ) {
-        Box *textOutput = MegaFactory::create<>("OutputText", "", this);
-        textOutput->port("skipInitialRows")->equals(skipSteps);
-        textOutput->port("useLocalDecimalChar")->equals(useLocalDecimalChar);
-        textOutput->amend();
-    }
 }
 
 void OutputR::initialize() {
@@ -68,8 +56,8 @@ void OutputR::initialize() {
 }
 
 void OutputR::reset() {
-    _pages = findMany<PageR*>("./*<PageR>");
-    numPages = _pages.size();
+//    _pages = findMany<PageR*>("./*<PageR>");
+//    numPages = _pages.size();
 }
 
 //QString OutputR::toString() {
@@ -81,35 +69,35 @@ void OutputR::reset() {
 
 QString OutputR::toScript() {
     QString s;
-    for (PageR *page : _pages)
-        s += page->toScript();
-    s += "plot_all <- function(df) {\n";
-    for (PageR *page : _pages) {
-        s += "  " + page->functionName() + "(df)\n";
-    }
-    s += "}\n";
+//    for (PageR *page : _pages)
+//        s += page->toScript();
+//    s += "plot_all <- function(df) {\n";
+//    for (PageR *page : _pages) {
+//        s += "  " + page->functionName() + "(df)\n";
+//    }
+//    s += "}\n";
 
-    s += "\nfigures <- function(df) {\n  Pages = list(";
-    bool first = true;
-    for (PageR *page : _pages) {
-        if (!first)
-            s += ", ";
-        first = false;
-        s += toFigureListElement(page);
-    }
-    s += ")\n}\n";
+//    s += "\nfigures <- function(df) {\n  Pages = list(";
+//    bool first = true;
+//    for (PageR *page : _pages) {
+//        if (!first)
+//            s += ", ";
+//        first = false;
+//        s += toFigureListElement(page);
+//    }
+//    s += ")\n}\n";
 
-    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
+//    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
 
     return s;
 }
 
-QString OutputR::toFigureListElement(PageR *page) {
+QString OutputR::toFigureListElement(PageR */*page*/) {
     QString s = "Page = list(";
-    s += "Grob=" + page->functionName() + "(df), ";
-    s += "Width=" + QString::number(page->port("width")->value<double>()) + ", ";
-    s += "Height=" + QString::number(page->port("height")->value<double>());
-    s += ")";
+//    s += "Grob=" + page->functionName() + "(df), ";
+//    s += "Width=" + QString::number(page->port("width")->value<double>()) + ", ";
+//    s += "Height=" + QString::number(page->port("height")->value<double>());
+//    s += ")";
     return s;
 
 }

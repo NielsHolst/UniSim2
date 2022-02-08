@@ -7,7 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
-#include "output_ports.h"
+#include <base/box.h>
 
 namespace base {
     class Path;
@@ -16,10 +16,10 @@ namespace base {
 
 namespace boxes {
 
-class PlotR : public OutputPorts
+class PlotR : public base::Box
 {
 public:
-    PlotR(QString name, Box *parent);
+    PlotR(QString name, base::Box *parent);
     void reset();
     void initialize();
 //    QString toString();

@@ -4,24 +4,26 @@
 */
 #include "box.h"
 #include "boxscript_parser.h"
+#include "computation.h"
 #include "path.h"
 #include "port.h"
-
+#include "resolved_references.h"
 #include <iostream>
 
 namespace base {
 
-Port::Port(QString name, Type type, Node *parent)
+Port::Port(QString name, PortType type, Node *parent)
     : Node(name, parent),
       _type(type),
       _hasBeenRedefined(false),
-      _isFixed(false),
+      _isConstant(false),
       _expression(this)
 {
+    setClassName("Port");
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);
-    _clearAtReset = (type == Type::Output);
+    _clearAtReset = (type == PortType::Output);
 }
 
 Port& Port::doClear() {
@@ -44,8 +46,8 @@ Port& Port::help(QString value) {
     return *this;
 }
 
-void Port::outputNames(QStringList columnNames) {
-    _outputNames = columnNames;
+void Port::outputName(QString name) {
+    _outputName = name;
 }
 
 //
@@ -59,13 +61,19 @@ Port& Port::initialize(Value value) {
 }
 
 void Port::define() {
+    // Get computation step
+    auto step = Computation::currentStep();
+
+    // In scratch mode don't define ports
+    if (step == Computation::Step::Scratch)
+        return;
+
     // Check parent
     auto *box = parent<Box*>();
     if (!box)
         ThrowException("Port is missing a parent box").context(this);
 
     // Check that (re-) definition is legal in this step
-    auto step = Computation::currentStep();
     if (step >= Computation::Step::Initialize)
         ThrowException("Change of port definition only allowed until amend step").
                 value(Computation::toString(step)).context(this);
@@ -73,11 +81,42 @@ void Port::define() {
     // Register re-definition
     _hasBeenRedefined = (step > Computation::Step::Construct);
 
-    // Set me as parent of expression
+    // Set me as parent of the expression and of any paths in the expression
     _expression.setParent(this);
 
-    // Evaluation may not complete but try to evaluate value
-    touch();
+    // Port to a path can only be defined by a simple expression
+    if (_value.type() == Value::Type::Path) {
+        if (_expression.size() != 1)
+            ThrowException("Port to a Path variable can only be defined by a path").
+                value(_expression.originalAsString()).context(this);
+        const auto &el = _expression.at(0);
+        if (Expression::type(el) == Expression::Type::Path) {
+            Path path = std::get<Path>(el);
+            path.setParent(this);
+            _value.changeValue(path);
+        }
+        else if (Expression::type(el) == Expression::Type::Value) {
+            auto val = std::get<Value>(el);
+            if (val.type() == Value::Type::String) {
+                _value.changeValue(Path(val.as<QString>(), this));
+            }
+            ThrowException("String value expected").
+                    value1(val.asString(false, false)).value2(val.typeName()).
+                    context(this);
+        }
+        else {
+            ThrowException("Path or string value expected").
+                    value1(Expression::toString(el)).value2(Expression::typeName(el)).
+                    context(this);
+        }
+    }
+    // Make certain that any paths in expression have expression as parent
+    else {
+
+    }
+    // Evaluation may not complete but try to evaluate value, except Path ports needs no evaluation
+    if (_value.type() != Value::Type::Path)
+        touch();
 }
 
 Port& Port::equals(const Value &value) {
@@ -101,7 +140,8 @@ Port& Port::imports(QString pathToPort, Caller caller) {
 }
 
 Port& Port::computes(QString expression) {
-    return equals( boxscript::parser::parseExpression(expression) );
+    Expression e = boxscript::parser::parseExpression(this, expression);
+    return equals(e);
 }
 
 //
@@ -125,28 +165,20 @@ void Port::evaluate() {
     QString s1 = _expression.originalAsString(),
             s2 = _expression.stackAsString(),
             s3 = _value.asString(true, true) + "{"+_value.typeName()+"}" ;
-    if (s1.startsWith("if"))
-        std::cout << qPrintable(name()+" evaluate A\n"+s1+"\n"+s2+"\n"+s3+"\n") <<
-                     "fixed=" <<_isFixed << " resolved=" << Expression::allReferencesHaveBeenResolved() << std::endl;
+    if (name()=="xxx" || name()=="aaa")
+        std::cout << "Port:: evaluate x a\n";
 
-    // A fixed port needs no evaluation
-    if (_isFixed)
+    // A constant port or a port to path needs no evaluation
+    if (_isConstant || _value.type() == Value::Type::Path)
         return;
-
-    // A Path value is set equal to the expression, presumable a valid path
-    if (_value.type() == Value::Type::Path) {
-        _value = Path(&_expression);
-        return;
-    }
-
 
     if (!_expression.isEmpty()) {
-        if (_type == Type::Auxiliary &&
+        if (_type == PortType::Auxiliary &&
             (Computation::currentStep() <= Computation::Step::Reset ||
              _value.type() == Value::Type::Uninitialized ||
-             !Expression::allReferencesHaveBeenResolved()))
-            // Overwrite value's type, as an auxillary port may change type, since its expression
-            // is evaluated again and again and additional references may have been resolved
+             !ResolvedReferences::fixed()))
+            // Overwrite value's type, as an auxillary port may change type:  Its expression
+            // is evaluated again and again, and additional references (with other types) may have been resolved
             _value.overwrite(_expression.evaluate());
         else
             // Update value, keeping its type, which for inputs and outputs were defined
@@ -157,13 +189,12 @@ void Port::evaluate() {
     s1 = _expression.originalAsString(),
     s2 = _expression.stackAsString(),
     s3 = "Value = " + _value.asString(true, true) + "{"+_value.typeName()+"}" ;
-    if (s1.startsWith("if"))
-        std::cout << qPrintable(name()+" evaluate Z\n"+s1+"\n"+s2+"\n"+s3+"\n") << std::endl;
+    if (name()=="xxx" || name()=="aaa")
+        std::cout << "Port:: evaluate x a\n";
 
-    // Register if the value will remain fixed after reset
+    // Register if the value will remain constant after reset
     if (Computation::currentStep() == Computation::Step::Reset)
-        _isFixed = _expression.isFixed();
-
+        _isConstant = _expression.isConstant();
 }
 
 //
@@ -177,7 +208,7 @@ Box *Port::boxParent() {
     return par;
 }
 
-Port::Type Port::type() const {
+PortType Port::type() const {
     return _type;
 }
 
@@ -213,8 +244,8 @@ bool Port::isValueOverridden() const {
     return _hasBeenRedefined;
 }
 
-QStringList Port::outputNames() const {
-    return _outputNames;
+QString Port::outputName() const {
+    return _outputName;
 }
 
 QVector<Port*> Port::importPorts() const {
@@ -284,9 +315,9 @@ void Port::addExportPort(Port *port) {
 // Access
 
 void Port::toText(QTextStream &text, int indentation) {
-    static QMap<Type,QString> prefix =
-        {{Type::Input, "."}, {Type::Output, "//."}, {Type::Input, "&"}};
-    QString fill, expression;
+    static QMap<PortType,QString> prefix =
+        {{PortType::Input, "."}, {PortType::Output, "//."}, {PortType::Input, "&"}};
+    QString fill;
     fill.fill(' ', indentation);
     text << fill
          << prefix.value(_type) << objectName()
@@ -296,15 +327,10 @@ void Port::toText(QTextStream &text, int indentation) {
          << "\n";
 }
 
-#define CASE_TYPE(x) case Port::Type::x: return #x
-
-template<> QString convert(Port::Type type) {
-    switch (type) {
-        CASE_TYPE(Input);
-        CASE_TYPE(Output);
-        CASE_TYPE(Auxiliary);
-    }
-    return QString();
+template <> Port& Port::initialize(Path *path) {
+    path->setParent(this);
+    _value = Value(path);
+    return *this;
 }
 
 }

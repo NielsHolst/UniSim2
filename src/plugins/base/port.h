@@ -15,6 +15,8 @@
 #include "exception.h"
 #include "expression.h"
 #include "node.h"
+#include "path.h"
+#include "port_type.h"
 #include "value.h"
 #include "success.h"
 
@@ -23,14 +25,12 @@ namespace base {
 class Box;
 
 class Port : public Node {
-public:
-    enum class Type{Input, Output, Auxiliary};
 private:
-    Type _type;             // Purpose of the port
+    PortType _type;         // Purpose of the port
     bool
         _hasBeenRedefined,  // Has the default value been overridden in the BoxScript?
         _clearAtReset,      // Is value set to T() at reset()? Defaults to true for output and aux ports
-        _isFixed;           // Does the value remain fixed following its first evaluation?
+        _isConstant;           // Does the value remain fixed following its first evaluation?
     QString
         _unit,              // Unit text
         _help;              // Help text
@@ -38,10 +38,9 @@ private:
         _value;             // Holds the current value
     Expression
         _expression;        // Any path operands have been replaced with port pointers, when the expression was closed
-    QStringList
-        _outputNames;       // Unique name labelling of the columns for this port in the output text file;
-                            // empty if not included in output;
-                            // output summaries may result in more than one output column
+    QString
+        _outputName;        // Unique name labelling of the column for this port in the output text file;
+                            // empty if not included in output
     QVector<Port *>
         _importPorts,       // Ports imported by this port
         _exportPorts;       // Ports which imports this port
@@ -49,14 +48,12 @@ private:
 
 public:
     // Configure
-    Port(QString name, Type type, Node *parent);
-//    Port(const Port &x) : Node(x.name(), x.parent()) { assign(x); }
-//    Port& operator=(const Port &x)                   { assign(x);  return *this; }
+    Port(QString name, PortType type, Node *parent);
     Port& doClear();
     Port& noClear();
     Port& unit(QString value);
     Port& help(QString value);
-    void outputNames(QStringList columnNames);
+    void outputName(QString name);
 
     // Define port
     template <class T> Port& initialize(T *variable);
@@ -75,13 +72,13 @@ public:
 
     // Query
     Box *boxParent();
-    Port::Type type() const;
+    PortType type() const;
     QString unit() const;
     QString help() const;
     QString importPath() const;
     int size() const;
     bool isValueOverridden() const;
-    QStringList outputNames() const;
+    QString outputName() const;
     QVector<Port*> importPorts() const;
     QVector<Port*> exportPorts() const;
 
@@ -108,6 +105,8 @@ template <class T> Port& Port::initialize(T *variable) {
     return *this;
 }
 
+template <> Port& Port::initialize(Path *variable);
+
 template <class T> Port& Port::initialize(T fixedValue) {
     _value.initialize(fixedValue);
     equals(fixedValue);
@@ -133,12 +132,6 @@ template <> inline const Value* Port::valuePtr() const
 {
     return &_value;
 }
-
-template<class T> T convert(Port::Type) {
-    ThrowException("Cannot convert Port::Type");
-}
-
-template<> QString convert(Port::Type type);
 
 }
 #endif

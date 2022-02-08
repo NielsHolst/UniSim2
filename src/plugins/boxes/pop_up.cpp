@@ -3,7 +3,6 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QTextEdit>
-#include <base/computation_step.h>
 #include <base/dialog.h>
 #include <base/exception.h>
 #include <base/publish.h>

@@ -36,7 +36,7 @@ public:
     QString fullName() const;
     static QString fullName(const Node *object);
 
-    QStringList pedigree(Namespace ns = Namespace::Exclude) const;
+//    QStringList pedigree(Namespace ns = Namespace::Exclude) const;
     bool isType(QString name) const;
 
     QString name() const    { return objectName(); }

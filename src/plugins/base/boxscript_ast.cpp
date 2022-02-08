@@ -265,7 +265,7 @@ namespace ast {
         case Type::Number:
             expression->push(get<Number      >(*this).value()); break;
         case Type::Path:
-            expression->push(value(get<Path  >(*this)));        break;
+            expression->push(value(get<ast::Path>(*this)));        break;
         case Type::FunctionCall:
                              get<FunctionCall>(*this).build(expression); break;
         case Type::Bool:

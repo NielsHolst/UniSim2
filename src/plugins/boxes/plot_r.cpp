@@ -18,7 +18,7 @@ PUBLISH(PlotR)
 
 
 PlotR::PlotR(QString name, Box *parent)
-    : OutputPorts(name, parent)
+    : Box(name, parent)
 {
     help("produces an R plot");
     Input(hide).equals(false).help("Hide this plot?");

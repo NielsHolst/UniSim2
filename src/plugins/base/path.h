@@ -11,6 +11,7 @@
 #include <QVector>
 #include "exception.h"
 #include "node.h"
+#include "port_type.h"
 
 namespace base {
 
@@ -46,14 +47,15 @@ public:
 
     class Port {
     public:
-        enum class Directive {All, Input, Output};
         Port(QString directive, QString name);
         Port(std::vector<std::string> names);
-        QString toString() const;
-        Directive directive() const { return _directive; }
         QString name() const { return _name; }
+        bool hasDirective() const { return _directive.has_value(); }
+        PortType directive() const { return *_directive; }
+        bool matches(const base::Port *port);
+        QString toString() const;
     private:
-        Directive _directive;
+        std::optional<PortType> _directive;
         QString _name;
         friend Alternative;
     };
@@ -62,12 +64,12 @@ public:
     public:
         Alternative();
         void setRoot(bool hasRoot);
-        void addNode(Node &node);
+        void addNode(Node node);
         void setPort(const Port &port);
         bool hasRoot() const;
         const QVector<Node> &nodes() const;
         const std::optional<Port> &port() const;
-        const Objects& matches(base::Node *parent);
+        const Objects& matches(base::Box *parent);
         QString toString() const;
 
     private:
@@ -110,38 +112,38 @@ public:
     //
 
     // Methods
-    Path(Object *parent=nullptr);
-    Path(QString path, Object *parent=nullptr);
+    Path(base::Port *parent=nullptr);
+    Path(QString path, base::Port *parent=nullptr);
     Path(const Expression *expression);
-    void setParent(Object *parent);
-    Object *parent();
+    void setParent(base::Port *parent);
+    base::Port *parent();
     void add(const Alternative &alternative);
     void add(const Path &path);
     QString toString() const;
     const QVector<Alternative> &alternatives() const;
-    const Objects& matches() const;
-    template<class T> T findOne() const;
-    template<class T> T findMaybeOne() const;
-    template<class T> QVector<T> findMany() const;
+    const Objects& matches(base::Node *anchor = nullptr) const;
+    template<class T> T findOne(base::Node *anchor = nullptr) const;
+    template<class T> T findMaybeOne(base::Node *anchor = nullptr) const;
+    template<class T> QVector<T> findMany(base::Node *anchor = nullptr) const;
     static bool isValid(QString path);
 private:
     // Data
-    Object *_parent;
+    base::Port *_parent;
     mutable QVector<Alternative> _alternatives;
     mutable Objects _matches;
     // Methods
-    void initialize(const Expression &expression);
+    void initialize(Expression expression);
 };
 
-template<class T> T Path::findOne() const {
-    QVector<T> result = findMany<T>();
+template<class T> T Path::findOne(base::Node *anchor) const {
+    QVector<T> result = findMany<T>(anchor);
     if (result.size() != 1)
         ThrowException("Expected exactly one match").value1(toString()).value2(result.size()).context(_parent);
     return result[0];
 }
 
-template<class T> T Path::findMaybeOne() const {
-    QVector<T> result = findMany<T>();
+template<class T> T Path::findMaybeOne(base::Node *anchor) const {
+    QVector<T> result = findMany<T>(anchor);
     switch (result.size()) {
     case 0: return nullptr;
     case 1: return result[0];
@@ -149,9 +151,9 @@ template<class T> T Path::findMaybeOne() const {
     }
 }
 
-template<class T> QVector<T> Path::findMany() const {
+template<class T> QVector<T> Path::findMany(base::Node *anchor) const {
     QVector<T> result;
-    for (auto candidate : matches()) {
+    for (auto candidate : matches(anchor)) {
         auto typed = dynamic_cast<T>(candidate);
         if (typed)
             result << typed;
@@ -160,10 +162,8 @@ template<class T> QVector<T> Path::findMany() const {
     return result;
 }
 
-template<> QVector<base::Port*> Path::findMany() const;
+template<> QVector<base::Port*> Path::findMany(base::Node *anchor) const;
 
-//template<> inline Path    convert(Path x)    {return x;}
-//template<> inline QString convert(Path x)    {return x.toString();}
 
 }
 

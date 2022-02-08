@@ -66,6 +66,13 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
 {
     FactoryPlugIn *factory;
     Node *creation;
+
+    QStringList test;
+    for (QString s : me().productIndex.keys()) {
+        test << s;
+    }
+
+
     // Box objects are not created by a factory, because the Box class is defined in the base plug-in
     if (className == "Box" || className == "base::Box") {
         creation = new Box(objectName, parent);

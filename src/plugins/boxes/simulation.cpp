@@ -11,6 +11,7 @@
 #include <base/path.h>
 #include <base/port.h>
 #include <base/publish.h>
+#include <base/resolved_references.h>
 #include <base/timer.h>
 #include "simulation.h"
 
@@ -65,7 +66,9 @@ void Simulation::run() {
     QElapsedTimer time;
     try {
         time.start();
+        ResolvedReferences::clear();
         initializeFamily();
+        ResolvedReferences::check();
         for (iteration = 1;
              (useStopIterations && !stopIterations && iterations==1) ||         // apply flag only
              (useStopIterations && !stopIterations && iteration<=iterations) || // apply both lag and count
@@ -73,6 +76,7 @@ void Simulation::run() {
               ++iteration)
         {
             resetFamily();
+            ResolvedReferences::check();
             for (step = 1;
                  (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
                  (useStopSteps && !stopSteps && step<=steps) || // apply both flag and count
@@ -81,6 +85,7 @@ void Simulation::run() {
             {
                 show(time);
                 updateFamily();
+                ResolvedReferences::check();
             }
             cleanupFamily();
         }

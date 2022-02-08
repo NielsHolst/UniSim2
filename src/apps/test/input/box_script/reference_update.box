@@ -4,10 +4,10 @@ Simulation sim {
   Computation comp {  
   }
   Box A {
-    &x = comp[step]
-    &a = if    (comp[step]=="reset")  then 100
-         elsif (comp[step]=="update") then .[a] + 20
-         else .[a]
+    &xxx = comp[step]
+    &aaa = if    (comp[step]=="reset")  then 100
+           elsif (comp[step]=="update") then .[aaa] + 20
+           else .[aaa]
     // &a = .[x]
     // &b = .[a]
     // &c = .[b]

@@ -92,19 +92,23 @@ QString Node::className(Namespace ns) const {
     return (ns == Namespace::Include) ? (namespaceName() + "::" + _class) : _class;
 }
 
-QStringList Node::pedigree(Namespace ns) const {
-    QStringList result;
-    auto parentNode = parent();
-    if (parentNode)
-        result = parentNode->pedigree() + result;
-    else
-        result << className(ns);
-    return result;
-}
+//QStringList Node::pedigree(Namespace ns) const {
+//    QStringList result;
+//    auto parentNode = parent();
+//    if (parentNode)
+//        result = parentNode->pedigree(ns) + result;
+//    else
+//        result << className(ns);
+//    return result;
+//}
 
 bool Node::isType(QString name) const {
-    Namespace ns = name.contains("::") ? Namespace::Include : Namespace::Exclude;
-    return pedigree(ns).contains(name);
+    bool ok = name==className(Namespace::Include) || name==className(Namespace::Exclude);
+    return ok;
+
+//    Namespace ns = name.contains("::") ? Namespace::Include : Namespace::Exclude;
+//    QStringList test = pedigree(ns);
+//    return pedigree(ns).contains(name);
 }
 
 template <> QVector<Box*> Node::children() {

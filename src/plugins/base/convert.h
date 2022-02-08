@@ -14,6 +14,7 @@
 #include <QVector>
 #include "bare_date.h"
 #include "exception.h"
+#include "path.h"
 
 namespace base {
 
@@ -73,6 +74,7 @@ template<> inline QString convert(QTime x);
 template<> inline QString convert(QDateTime x);
 template<> inline QString convert(BareDate x);
 
+// Conversions to bool
 template<> inline bool convert(bool x)   {return x;}
 template<> inline bool convert(int x)    {return x;}
 template<> inline bool convert(double x) {return x;}
@@ -91,6 +93,7 @@ template<> inline bool convert(BareDate x)  {ThrowException("Cannot convert bare
                                           return false;}
 template<> inline bool convert(const char *x) {return convert<bool>(QString(x));}
 
+// Conversions to int
 template<> inline int convert(bool x)    {return x;}
 template<> inline int convert(int x)     {return x;}
 template<> inline int convert(double x)  {return boost::numeric_cast<int>(x+0.5);}
@@ -101,6 +104,7 @@ template<> inline int convert(QDateTime x) {return x.date().dayOfYear();}
 template<> inline int convert(BareDate x)  {return x.date().dayOfYear();}
 template<> inline int convert(const char *x)  {return convert<int>(QString(x));}
 
+// Conversions to double
 template<> inline double convert(bool x)   {return x;}
 template<> inline double convert(int x)    {return x;}
 template<> inline double convert(double x) {return x;}
@@ -112,6 +116,7 @@ template<> inline double convert(QDateTime x)   {return convert<double>(x.date()
 template<> inline double convert(BareDate x)    {return convert<double>(x);}
 template<> inline double convert(const char *x) {return convert<double>(QString(x));}
 
+// Conversions to QString
 template<> inline QString convert(bool x)   {return QString::number(x);}
 template<> inline QString convert(int x)    {return QString::number(x);}
 template<> inline QString convert(double x) {QString s = QString::number(x);
@@ -126,8 +131,10 @@ template<> inline QString convert(QDateTime x)    {return convert<QString>(x.dat
                                                    "T" +  convert<QString>(x.time());}
 template<> inline QString convert(BareDate x)     {return convert<QString>(x.date().day()) +
                                                    "/" +  convert<QString>(x.date().month());}
+template<> inline QString convert(const Path &x) { return x.toString(); }
 template<> inline QString convert(const char *x)  {return QString(x);}
 
+// Conversions to QDate
 template<> inline QDate convert(bool  )       {ThrowException("Cannot convert bool to date");
                                                return QDate();}
 template<> inline QDate convert(int  )        {ThrowException("Cannot convert int to date");
@@ -145,6 +152,7 @@ template<> inline QDate convert(BareDate x)   {ThrowException("Cannot convert ba
                                                return QDate();}
 template<> inline QDate convert(const char *x)  {return convert<QDate>(QString(x));}
 
+// Conversions to QTime
 template<> inline QTime convert(bool  )       {ThrowException("Cannot convert bool to time");
                                                return QTime();}
 template<> inline QTime convert(int  )        {ThrowException("Cannot convert int to time");
@@ -162,6 +170,7 @@ template<> inline QTime convert(BareDate x)   {ThrowException("Cannot convert ba
                                                return QTime();}
 template<> inline QTime convert(const char *x)  {return convert<QTime>(QString(x));}
 
+// Conversions to QDateTime
 template<> inline QDateTime convert(bool  )     {ThrowException("Cannot convert bool to date-time");
                                                  return QDateTime();}
 template<> inline QDateTime convert(int  )      {ThrowException("Cannot convert int to date-time");
@@ -179,6 +188,7 @@ template<> inline QDateTime convert(BareDate x) {ThrowException("Cannot convert 
                                                  return QDateTime();}
 template<> inline QDateTime convert(const char *x)  {return convert<QDateTime>(QString(x));}
 
+// Conversions to BareDate
 template<> inline BareDate convert(bool  )         {ThrowException("Cannot convert bool to bare date");
                                                     return BareDate();}
 template<> inline BareDate convert(int  )          {ThrowException("Cannot convert int to bare date");
@@ -196,6 +206,12 @@ template<> inline BareDate convert(QDateTime x)    {ThrowException("Cannot conve
 template<> inline BareDate convert(BareDate x)     {return x;}
 template<> inline BareDate convert(const char *x)  {return convert<BareDate>(QString(x));}
 
+// Conversions to Path
+template<> inline Path convert(QString x)          {return Path(x); }
+template<> inline Path convert(const Path &x)      {return x; }
+template<> inline Path convert(Path x)             {return x; }
+
+// Conversions to vector
 CONVERT_VECTOR(bool     , vbool)
 CONVERT_VECTOR(int      , vint)
 CONVERT_VECTOR(double   , vdouble)
@@ -205,6 +221,7 @@ CONVERT_VECTOR(QTime    , vQTime)
 CONVERT_VECTOR(QDateTime, vQDateTime)
 CONVERT_VECTOR(BareDate , vBareDate)
 
+// Conversions to vector from values
 template<> vbool      convert(vValuePtr values);
 template<> vint       convert(vValuePtr values);
 template<> vdouble    convert(vValuePtr values);
@@ -214,10 +231,7 @@ template<> vQTime     convert(vValuePtr values);
 template<> vQDateTime convert(vValuePtr values);
 template<> vBareDate  convert(vValuePtr values);
 
-//
 // Vector conversions from QStringList to container
-//
-
 template<class T, template<class> class C> C<T> convert(QStringList list) {
     C<T> result;
     result.reserve(list.size());

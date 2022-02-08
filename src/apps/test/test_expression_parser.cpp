@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
+#include <base/box.h>
 #include <base/boxscript_ast.h>         // defines << operators on AST
 #include <base/boxscript_parser.h>      // defines the parser
 #include <base/exception.h>
 #include <base/expression.h>
+#include <base/port.h>
 #include "exception_expectation.h"
 #include "test_expression_parser.h"
 
@@ -52,9 +54,11 @@ void TestExpressionParser::testAstHandling() {
 
 void TestExpressionParser::testOperation() {
     bool excepted(false);
-    base::Expression e;
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    Expression e;
     try {
-        e = boxscript::parser::parseExpression("7 + 17.5");
+        e = boxscript::parser::parseExpression(port, "7 + 17.5");
     }
     UNEXPECTED_EXCEPTION;
     QString s = e.stackAsString();
@@ -82,9 +86,11 @@ void TestExpressionParser::testPathWithPort() {
     ast::Path astPath = boost::get<ast::Path>(op1);
 
     // Parse as expression only
-    base::Expression e;
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    Expression e;
     try {
-        e = boxscript::parser::parseExpression("a/b/c[x]");
+        e = boxscript::parser::parseExpression(port, "a/b/c[x]");
     }
     UNEXPECTED_EXCEPTION;
 
@@ -102,16 +108,18 @@ void TestExpressionParser::testPathWithPort() {
     QCOMPARE(nodes.at(0).objectName(), QString("a"));
     QCOMPARE(nodes.at(1).objectName(), QString("b"));
     QCOMPARE(nodes.at(2).objectName(), QString("c"));
-    auto port = alternative.port();
-    QVERIFY(port.has_value());
-    QCOMPARE(port.value().name(), QString("x"));
+    auto aport = alternative.port();
+    QVERIFY(aport.has_value());
+    QCOMPARE(aport.value().name(), QString("x"));
 }
 
 void TestExpressionParser::testPathWithoutPort() {
     bool excepted(false);
-    base::Expression e;
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    Expression e;
     try {
-        e = boxscript::parser::parseExpression("a/b/c[DUMMY]");
+        e = boxscript::parser::parseExpression(port, "a/b/c[DUMMY]");
     }
     UNEXPECTED_EXCEPTION;
 
@@ -129,15 +137,17 @@ void TestExpressionParser::testPathWithoutPort() {
     QCOMPARE(nodes.at(0).objectName(), QString("a"));
     QCOMPARE(nodes.at(1).objectName(), QString("b"));
     QCOMPARE(nodes.at(2).objectName(), QString("c"));
-    auto port = alternative.port();
-    QVERIFY(!port.has_value());
+    auto aport = alternative.port();
+    QVERIFY(!aport.has_value());
 }
 
 void TestExpressionParser::testError() {
     bool excepted(false);
-    base::Expression e;
+    auto box = std::unique_ptr<Box>( new Box("A", nullptr) );
+    auto port = new Port("a", PortType::Auxiliary, box.get());
+    Expression e;
     try {
-        e = boxscript::parser::parseExpression("*<PageR[xAxis]>");
+        e = boxscript::parser::parseExpression(port, "*<PageR[xAxis]>");
     }
     EXPECTED_EXCEPTION_SHOWN;
 }
