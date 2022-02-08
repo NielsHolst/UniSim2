@@ -4,6 +4,7 @@
 #include <base/reader_boxscript.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"
+#include "output_file.h"
 #include "test_simulation.h"
 
 void TestSimulation::testGrowth() {
@@ -36,6 +37,11 @@ void TestSimulation::testGrowth() {
 
     if (root->port("hasError")->value<bool>())
         QFAIL(qPrintable(root->port("errorMsg")->value<QString>()));
+
+    OutputFile f;
+    QCOMPARE(f.columnLabels(), QStringList()<<"iteration"<<"sim/step"<<"comp/step"<<"r"<<"density");
+    QCOMPARE(f.cell<int>(3,"sim/step"), 3);
+    QCOMPARE(f.cell<double>(3,"density"), 115.763);
 }
 
 

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <QLocale>
+#include <base/box_builder.h>
 #include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -24,21 +25,20 @@ OutputWriter::OutputWriter(QString name, Box *parent)
     : Box(name, parent)
 {
     help("writes the output text file");
-
-//    Port *test = new base::Port("ports", base::Port::Type::Input , this);
-//    test->initialize(& ports);
-
-    Input(test);
-
-    Input(ports)
-            .computes("/*[iteration] | OutputText::*[ports] | OutputR::*[ports]");
-    Input(skipFormats)
-            .computes("if exists(OutputSelector::*[*]) then OutputSelector::*[skipFormats] else FALSE");
-    Input(useLocalDecimalChar)
-            .computes("if exists(OutputSelector::*[*]) then OutputSelector::*[useLocalDecimalChar] else FALSE");
-    Input(isActive)
-            .computes("if exists(OutputSelector::*[*]) then OutputSelector::*[isActive] else TRUE");
+    Input(ports).computes("/*[iteration] | OutputText::*[ports] | OutputR::*[ports]");
+    Input(skipFormats).imports("OutputSelector::*[skipFormats]");
+    Input(useLocalDecimalChar).imports("OutputSelector::*[useLocalDecimalChar]");
+    Input(isActive).imports("OutputSelector::*[isActive]");
     Output(filePath).noClear().help("Name of output file including absolute path");
+}
+
+void OutputWriter::amend() {
+    BoxBuilder builder(this);
+    if (!findMaybeOne<Box*>("OutputSelector::*"))
+//        MegaFactory::create("OutputSelector", "selector", this);
+        builder.
+        box("OutputSelector").name("selector").endbox();
+
 }
 
 void OutputWriter::initialize() {

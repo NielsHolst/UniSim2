@@ -8,17 +8,16 @@ Simulation sim {
     &aaa = if    (comp[step]=="reset")  then 100
            elsif (comp[step]=="update") then .[aaa] + 20
            else .[aaa]
-    // &a = .[x]
-    // &b = .[a]
-    // &c = .[b]
-    // &d = .[c]
+    &b = .[aaa]
+    &c = .[b]
+    &d = .[c]
   }
-  // Box B {
-    // &a = .[b]
-    // &b = .[c]
-    // &c = .[d]
-    // &d = if    (comp[step]=="reset")  then 100
-         // elsif (comp[step]=="update") then .[d] + 20
-         // else .[d]
-  // }
+  Box B {
+    &a = .[b]
+    &b = .[c]
+    &c = .[d]
+    &d = if    (comp[step]=="reset")  then 100
+         elsif (comp[step]=="update") then .[d] + 20
+         else .[d]
+  }
 }

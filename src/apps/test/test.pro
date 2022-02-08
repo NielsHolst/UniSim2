@@ -15,6 +15,7 @@ HEADERS +=  \
     autotest.h \
     exception_expectation.h \
     input_file_path.h \
+    output_file.h \
     test_bitset.h \
     test_boost_variant.h \
     test_box_builder.h \
@@ -37,6 +38,7 @@ HEADERS +=  \
 
 SOURCES +=  \
     main.cpp \
+    output_file.cpp \
     test_bitset.cpp \
     test_boost_variant.cpp \
     test_box_builder.cpp \

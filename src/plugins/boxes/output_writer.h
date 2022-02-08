@@ -20,6 +20,7 @@ class OutputWriter : public base::Box
 {
 public:
     OutputWriter(QString name, base::Box *parent);
+    void amend();
     void initialize();
     void reset();
     void update();
@@ -27,7 +28,7 @@ public:
     void debrief();
 private:
     // Inputs
-    base::Path ports, test;
+    base::Path ports;
     bool skipFormats,
          useLocalDecimalChar,
          isActive;

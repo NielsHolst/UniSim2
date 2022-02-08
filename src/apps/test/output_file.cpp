@@ -38,11 +38,6 @@ int OutputFile::numRows() {
     return i;
 }
 
-QString OutputFile::cell(int i, QString col) {
-    int j = columnLabels().indexOf(col);
-    return (j == -1) ? QString() : row(i).at(j);
-}
-
 QStringList OutputFile::row(int i) {
     open();
     int j(-1);

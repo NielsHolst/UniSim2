@@ -121,5 +121,18 @@ void TestReferences::testUpdate() {
 
     root->run();
     QCOMPARE(root->findOne<Port*>("A[aaa]")->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("A[b]"  )->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("A[c]"  )->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("A[d]"  )->value<int>(), 140);
 
+    std::cout
+            << root->findOne<Port*>("B[d]"  )->value<int>() << std::endl
+            << root->findOne<Port*>("B[c]"  )->value<int>() << std::endl
+            << root->findOne<Port*>("B[b]"  )->value<int>() << std::endl
+            << root->findOne<Port*>("B[a]"  )->value<int>() << std::endl;
+
+    QCOMPARE(root->findOne<Port*>("B[d]"  )->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("B[c]"  )->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("B[b]"  )->value<int>(), 140);
+    QCOMPARE(root->findOne<Port*>("B[a]"  )->value<int>(), 120);
 }
