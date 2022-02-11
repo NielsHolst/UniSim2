@@ -4,14 +4,16 @@
 */
 #ifndef COMMAND_GENERAL
 #define COMMAND_GENERAL
-
-#include <QObject>
 #include <QVector>
+
+namespace base {
+class Node;
+}
 
 namespace command {
 
-QString info(QVector<QObject*> objects);
-QString info(QObject *object);
+QString info(QVector<base::Node *> nodes);
+QString info(base::Node *node);
 
 }
 

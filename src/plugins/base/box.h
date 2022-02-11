@@ -42,7 +42,9 @@ public:
     void sideEffects(QString s);
     QString sideEffects() const;
 
-    static Box *root();
+    static bool hasRoot();
+    static Box* root();
+    static Box* root(Box *box);
 
     template<class T> T findOne(QString path);
     template<class T> T findMaybeOne(QString path);
@@ -54,7 +56,6 @@ public:
     virtual void update() {}
     virtual void cleanup() {}
     virtual void debrief() {}
-    virtual void import() {}
     virtual void run();
 
     void amendFamily(bool announce=true);
@@ -68,6 +69,7 @@ public:
     void touchPorts();
     void evaluatePorts();
     void verifyPorts();
+    void registerImportPortsFamily();
 
     Box* clone(QString name, Box *parent);
     Box* cloneFamily(QString name, Box *parent);
@@ -87,12 +89,13 @@ private:
     QString _help, _sideEffects;
     QMap<QString,Port*> _portMap;
     QVector<Port*> _portsInOrder, _trackedPorts;
-    bool _amended, _cloned;
+    bool _amended, _initialized, _cloned;
     Timer _timer;
+    static std::unique_ptr<Box> _root;
     static Box *_latest;
     static bool _debugOn, _traceOn;
     // Methods
-    Box *findRoot();
+    Box *latestRoot();
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void clearPorts();

@@ -91,7 +91,8 @@ public:
     QString format() const;
 
     // Housekeeping
-    void addExportPort(Port *port);
+    void registerImportPorts();
+    void registerExportPort(Port *importer);
 
     // Output
     void toText(QTextStream &text, int indentation = 0);

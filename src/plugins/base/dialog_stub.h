@@ -13,6 +13,7 @@ class DialogStub : public DialogBase
 {
 public:
     DialogStub(QObject *parent);
+    void init();
     void progress(int current, int total);
     void finished();
     QProgressBar* progressBar();

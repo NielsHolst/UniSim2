@@ -11,7 +11,7 @@ namespace command {
 class set : public base::Command
 {
 public:
-    set(QString name, QObject *parent);
+    set(QString name, base::Box *parent);
 private:
     void doExecute();
 };

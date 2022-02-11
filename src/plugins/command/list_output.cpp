@@ -4,8 +4,10 @@
 */
 #include <base/box.h>
 #include <base/command.h>
+#include <base/computation.h>
 #include <base/dialog.h>
-#include <base/environment.h>
+#include <base/port.h>
+#include <base/port_type.h>
 #include "list_output.h"
 
 using namespace base;
@@ -26,10 +28,10 @@ ListOutput::ListOutput(QVector<Box*> boxes, ListOptionSet options)
     _listExportsOnly = _listExports && !(_listInputs || _listOutputs || _listImports);
 
     try {
-        ComputationStep step = environment().computationStep();
-        if (step == ComputationStep::Amend) {
-            environment().root()->initializeFamily();
-            environment().root()->resetFamily();
+        if (Computation::currentStep() == Computation::Step::Amend) {
+            Box::root()->initializeFamily();
+            Box::root()->resetFamily();
+            Box::root()->registerImportPortsFamily();
             dialog().message("Ready");
         }
     }
@@ -53,21 +55,23 @@ void ListOutput::toString(base::Box *box, int level) {
           box->className() + " " +
           box->objectName() + "\n";
     // Sort ports
-    QVector<Port*> ports = box->findMany<Port*>("./*<Port>"),
-                   inputs, outputs,
-                   inputImports, outputImports;
+    QVector<Port*> ports = box->portsInOrder(),
+                   inputs, outputs, aux,
+                   inputImports, outputImports, auxImports;
     for (Port *port : ports) {
-        switch (port->access()) {
-        case PortAccess::Input:
+        switch (port->type()) {
+        case PortType::Input:
             inputs << port;
-            if (port->hasImport()) inputImports << port;
+            inputImports << port->importPorts();
             break;
-        case PortAccess::Output:
+        case PortType::Output:
             outputs << port;
-            if (port->hasImport()) outputImports << port;
+            outputImports << port->importPorts();
             break;
-        case PortAccess::Uninitialized:
-            ThrowException("Uninitialized port access");
+        case PortType::Auxiliary:
+            aux << port;
+            auxImports << port->importPorts();
+            break;
         }
     }
 
@@ -85,19 +89,29 @@ void ListOutput::toString(base::Box *box, int level) {
 
     // List children
     if (_recurse)
-        for (Box *child : box->findMany<Box*>("./*<Box>"))
+        for (Box *child : box->findMany<Box*>("./*"))
             toString(child, level+1);
 }
 
+inline QStringList portNames(QVector<Port*> ports) {
+    QStringList list;
+    for (auto port : ports)
+        list << port->fullName();
+    return list;
+}
+
 void ListOutput::toString(base::Port *port, int level) {
+    QMap<PortType, QString> prefix = {
+        {PortType::Input    , "."},
+        {PortType::Output   , ">"},
+        {PortType::Auxiliary, "&"}
+    };
+
     QString fill = QString().fill(' ', 2*level);
 
     if (!_listExportsOnly || !port->exportPorts().isEmpty()) {
-        QString prefix,
-                assignment = port->valueAsString();
-        if (!_listShort)
-            prefix = port->isBlind() ? "+" : (port->access()==PortAccess::Input) ? "." : "~";
-        if (port->type() == Char || port->type() == String) {
+        QString assignment = port->value().asString();
+        if (port->value().type() == Value::Type::String) {
 //            if (assignment.size() > 13)
 //                assignment = assignment.left(10) + "...";
             assignment = "\"" + assignment + "\"";
@@ -105,11 +119,11 @@ void ListOutput::toString(base::Port *port, int level) {
         if (!_listShort) {
             if (!port->unit().isEmpty())
                 assignment += " " + port->unit();
-            if (port->hasImport())
-                assignment += " <- " + port->importPath();
+            if (!port->importPorts().isEmpty())
+                assignment += " <- " + portNames(port->importPorts()).join("|");
         }
         _s += fill +
-              prefix +
+              prefix.value(port->type()) +
               port->objectName() +
               " = " +
               assignment +

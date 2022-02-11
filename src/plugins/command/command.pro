@@ -16,7 +16,7 @@ HEADERS +=  \
     clip.h \
     command_documentation.h \
     debug.h \
-    doc.h \
+#    doc.h \
     edit.h \
     find.h \
     general.h \
@@ -29,7 +29,6 @@ HEADERS +=  \
     list_options.h \
     list_output.h \
     load.h \
-    load3.h \
     location.h \
     prep.h \
     profile.h \
@@ -52,7 +51,7 @@ SOURCES +=  \
     clip.cpp \
     command_documentation.cpp \
     debug.cpp \
-    doc.cpp \
+#    doc.cpp \
     edit.cpp \
     find.cpp \
     general.cpp \
@@ -65,7 +64,6 @@ SOURCES +=  \
     list_options.cpp \
     list_output.cpp \
     load.cpp \
-    load3.cpp \
     location.cpp \
     prep.cpp \
     profile.cpp \

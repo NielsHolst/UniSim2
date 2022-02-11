@@ -13,6 +13,9 @@ DialogStub::DialogStub(QObject *parent)
 {
 }
 
+void DialogStub::init() {
+}
+
 void DialogStub::progress(int, int) {
 }
 

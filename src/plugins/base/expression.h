@@ -77,7 +77,7 @@ public:
 
     QString originalAsString() const;
     QString stackAsString() const;
-
+    const QVector<Port*> &importPorts() const;
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 private:
@@ -85,11 +85,11 @@ private:
     Port *_parent;
     Stack _stack, _original;
     bool _isClosed, _isResolved;
+    QVector<Port*> _importPorts;
 
     // Methods
     void toPostfix();
     void checkNotClosed();
-//    Element registerFunctionCall(const Element &element);
     void reduceByOperator(Stack &stack);
     void reduceByFunctionCall(Stack &stack);
     bool reduceByCondition(Stack &stack);

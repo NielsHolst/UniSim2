@@ -11,7 +11,7 @@ namespace command {
 class quit : public base::Command
 {
 public:
-    quit(QString name, QObject *parent);
+    quit(QString name, base::Box *parent);
 private:
     void doExecute();
 };

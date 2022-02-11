@@ -12,7 +12,7 @@ namespace command {
 class commandDocumentation : public base::Documentation
 {
 public:
-    commandDocumentation(QString name, QObject *parent);
+    commandDocumentation(QString name, base::Box *parent);
 };
 
 } //namespace

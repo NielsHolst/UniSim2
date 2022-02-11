@@ -18,13 +18,13 @@ namespace command {
 PUBLISH(find)
 HELP(find, "find <path expression>", "finds objects matching path expression")
 
-find::find(QString name, QObject *parent)
+find::find(QString name, Box *parent)
     : Command(name, parent)
 {
 }
 
 void find::doExecute() {
-    QVector<QObject*> matches;
+    QVector<Node*> matches;
     int n = _args.size();
     if (n > 1) {
         Box *box = environment().current();
@@ -32,7 +32,7 @@ void find::doExecute() {
             QString path;
             for (int i = 1; i < n; ++i)
                 path += _args.at(i);
-            matches = box->findMany<QObject*>(path);
+            matches = box->findMany<Node*>(path);
             if (matches.isEmpty())
                 dialog().error("No matches");
             else

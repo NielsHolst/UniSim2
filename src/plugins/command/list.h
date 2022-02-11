@@ -12,7 +12,7 @@ namespace command {
 class list : public base::Command
 {
 public:
-    list(QString name, QObject *parent);
+    list(QString name, base::Box *parent);
 
 private:
     // Data

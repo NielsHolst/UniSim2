@@ -18,7 +18,7 @@ namespace command {
 PUBLISH(debug)
 HELP(debug, "debug", "runs simulation in debug mode")
 
-debug::debug(QString name, QObject *parent)
+debug::debug(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -31,7 +31,7 @@ void debug::doExecute() {
     if (_args.size() == 2)
         com << _args[1];
     Box::debug(true);
-    Command::submit(com, this);
+    Command::submit(com);
     Box::debug(false);
 }
 

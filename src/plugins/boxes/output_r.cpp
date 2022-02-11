@@ -8,6 +8,7 @@
 #include <QSet>
 #include <QTextStream>
 #include <QVector>
+#include <base/box_builder.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -16,7 +17,7 @@
 #include <base/port.h>
 #include <base/publish.h>
 #include "output_r.h"
-//#include "page_r.h"
+#include "page_r.h"
 
 using namespace base;
 
@@ -30,74 +31,82 @@ OutputR::OutputR(QString name, Box *parent)
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\ncopies an R script to the clipboard");
     Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
-    Input(end).equals("scripts/end.R").help("Name of R script(s) run after auto-generated R script");
+    Input(end).computes("c(\"scripts/end.R\")").help("Name of R script(s) run after auto-generated R script");
     Input(keepPages).equals(false).help("Keep previous pages in R?");
     Input(keepVariables).equals(false).help("Keep previous variables in R?");
     Input(saveAsDataFrame).equals(false).help("Save output as R data frame too?");
-    Input(skipSteps).help("Number of steps to skip in the output");
     Input(popUp).equals(false).help("Show pages in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
+    Input(plotAsList).equals(false).help("Put plots into an R list?");
+
+    Output(ports).computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
     Output(numPages).help("Number of pages in this output");
+}
+
+void OutputR::amend() {
+    // If it does not exist, create an OutputWriter as a sibling box
+    if (!findMaybeOne<Box*>("OutputWriter::*")) {
+        BoxBuilder builder(Node::parent<Box*>());
+        builder.
+        box("OutputWriter").name("outputWriter").endbox();
+        findOne<Box*>("../OutputWriter::outputWriter")->amendFamily(false);
+    }
 }
 
 void OutputR::initialize() {
     // Check that only one OutputR objects exists
-    QVector<OutputR*> outputs = findMany<OutputR*>("*");
-    if (outputs.size() > 1)
+    if (findMany<OutputR*>("*").size() > 1)
         ThrowException("Only one OutputR box is allowed").
                 hint("Put all PageR boxes inside the same OutputR box").
                 context(this);
+
+    // Find my pages
+    _pages = findMany<PageR*>("./*");
+
     // Open file for R script
     openFile();
-    // Getting the output path for .txt output
+
+    // Get the output path for .txt output
     _filePathTxt = environment().outputFilePath(".txt");
     _filePathTxt.replace("\\", "/");
 }
 
 void OutputR::reset() {
-//    _pages = findMany<PageR*>("./*<PageR>");
-//    numPages = _pages.size();
+    numPages = _pages.size();
 }
-
-//QString OutputR::toString() {
-//    QString s;
-//    for (PageR *page : _pages)
-//        s += page->toString();
-//    return s;
-//}
 
 QString OutputR::toScript() {
     QString s;
-//    for (PageR *page : _pages)
-//        s += page->toScript();
-//    s += "plot_all <- function(df) {\n";
-//    for (PageR *page : _pages) {
-//        s += "  " + page->functionName() + "(df)\n";
-//    }
-//    s += "}\n";
+    for (PageR *page : _pages)
+        s += page->toScript();
+    s += "plot_all <- function(df) {\n";
+    for (PageR *page : _pages) {
+        s += "  " + page->functionName() + "(df)\n";
+    }
+    s += "}\n";
 
-//    s += "\nfigures <- function(df) {\n  Pages = list(";
-//    bool first = true;
-//    for (PageR *page : _pages) {
-//        if (!first)
-//            s += ", ";
-//        first = false;
-//        s += toFigureListElement(page);
-//    }
-//    s += ")\n}\n";
+    s += "\nfigures <- function(df) {\n  Pages = list(";
+    bool first = true;
+    for (PageR *page : _pages) {
+        if (!first)
+            s += ", ";
+        first = false;
+        s += toFigureListElement(page);
+    }
+    s += ")\n}\n";
 
-//    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
+    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
 
     return s;
 }
 
-QString OutputR::toFigureListElement(PageR */*page*/) {
+QString OutputR::toFigureListElement(PageR *page) {
     QString s = "Page = list(";
-//    s += "Grob=" + page->functionName() + "(df), ";
-//    s += "Width=" + QString::number(page->port("width")->value<double>()) + ", ";
-//    s += "Height=" + QString::number(page->port("height")->value<double>());
-//    s += ")";
+    s += "Grob="   + page->functionName() + "(df), ";
+    s += "Width="  + page ->port("width" )->value<QString>() + ", ";
+    s += "Height=" + page->port("height")->value<QString>();
+    s += ")";
     return s;
 
 }

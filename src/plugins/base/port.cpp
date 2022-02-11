@@ -47,7 +47,7 @@ Port& Port::help(QString value) {
 }
 
 void Port::outputName(QString name) {
-    _outputName = name;
+    _outputName = name.replace("/", ".");
 }
 
 //
@@ -95,24 +95,18 @@ void Port::define() {
             path.setParent(this);
             _value.changeValue(path);
         }
-        else if (Expression::type(el) == Expression::Type::Value) {
-            auto val = std::get<Value>(el);
-            if (val.type() == Value::Type::String) {
-                _value.changeValue(Path(val.as<QString>(), this));
-            }
-            ThrowException("String value expected").
-                    value1(val.asString(false, false)).value2(val.typeName()).
-                    context(this);
+        else if (Expression::type(el) == Expression::Type::Value &&
+                 std::get<Value>(el).type()  == Value::Type::String) {
+            _value.changeValue(Path(std::get<Value>(el).as<QString>(), this));
         }
         else {
             ThrowException("Path or string value expected").
                     value1(Expression::toString(el)).value2(Expression::typeName(el)).
                     context(this);
         }
-    }
-    // Make certain that any paths in expression have expression as parent
-    else {
-
+        // Path outputs are not cleared at reset
+        if (_type == PortType::Output)
+            noClear();
     }
     // Evaluation may not complete but try to evaluate value, except Path ports needs no evaluation
     if (_value.type() != Value::Type::Path)
@@ -249,7 +243,7 @@ QString Port::outputName() const {
 }
 
 QVector<Port*> Port::importPorts() const {
-    return _importPorts;
+    return _expression.importPorts();
 }
 
 QVector<Port*> Port::exportPorts() const {
@@ -307,9 +301,14 @@ QString Port::format() const {
 // Housekeeping
 //
 
-void Port::addExportPort(Port *port) {
-    if (!_exportPorts.contains(port))
-        _exportPorts << port;
+void Port::registerImportPorts() {
+    for (auto port : _expression.importPorts())
+        port->registerExportPort(this);
+}
+
+void Port::registerExportPort(Port *importer) {
+    if (!_exportPorts.contains(importer))
+        _exportPorts << importer;
 }
 
 // Access

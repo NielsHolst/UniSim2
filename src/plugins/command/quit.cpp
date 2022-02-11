@@ -15,7 +15,7 @@ namespace command {
 PUBLISH(quit)
 HELP(quit, "quit", "close console")
 
-quit::quit(QString name, QObject *parent)
+quit::quit(QString name, Box *parent)
     : Command(name, parent)
 {
     helpText("quit");

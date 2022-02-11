@@ -20,7 +20,7 @@ TARGET = universal_simulator_base$${SUFFIX}
 
 # Our project header and source code
 HEADERS +=  \
-#    altova_xml.h \
+    altova_xml.h \
     bare_date.h \
     base_signal.h \
     box.h \
@@ -42,7 +42,7 @@ HEADERS +=  \
     command.h  \
     command_help.h  \
     computation.h \
-#    copy_folder.h \
+    copy_folder.h \
     data_frame.h \
 #    data_grid.h \
 #    date_time.h \
@@ -104,7 +104,7 @@ HEADERS +=  \
     win_taskbar_progress.h
 
 SOURCES +=  \
-#    altova_xml.cpp \
+    altova_xml.cpp \
     base_signal.cpp \
     bare_date.cpp \
     box.cpp \
@@ -120,7 +120,7 @@ SOURCES +=  \
     command.cpp \
     command_help.cpp  \
     computation.cpp \
-#    copy_folder.cpp \
+    copy_folder.cpp \
     data_frame.cpp \
 #    data_grid.cpp \
 #    date_time.cpp \

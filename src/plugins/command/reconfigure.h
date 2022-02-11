@@ -12,7 +12,7 @@ namespace command {
 class reconfigure : public base::Command
 {
 public:
-    reconfigure(QString name, QObject *parent);
+    reconfigure(QString name, base::Box *parent);
     static QDir source();
     static QDir destination();
 private:

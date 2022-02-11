@@ -19,7 +19,7 @@ namespace command {
 PUBLISH(doc)
 HELP(doc, "doc", "writes model documentation file")
 
-doc::doc(QString name, QObject *parent)
+doc::doc(QString name, Box *parent)
     : Command(name, parent)
 {
     }
@@ -30,7 +30,7 @@ void doc::doExecute() {
     dialog().resetErrorCount();
     doLoad();
     if (dialog().errorCount() == 0) {
-        Command::submit(QStringList() << "list", this);
+        Command::submit(QStringList() << "list");
         doDoc();
     }
 }
@@ -40,14 +40,14 @@ void doc::doLoad() {
     com << "load";
     if (_args.size() == 2)
         com << _args[1];
-    Command::submit(com, this);
+    Command::submit();
 }
 
 void doc::doDoc() {
     environment().openOutputFile(_file, "txt");
     _text.setDevice(&_file);
     appendHeadings();
-    appendText(environment().root());
+    appendText(Box::root());
     _file.close();
     dialog().information("Documentation file written to '" + environment().latestOutputFilePath("txt") + "'");
     environment().incrementFileCounter();

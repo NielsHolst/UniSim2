@@ -11,7 +11,7 @@ namespace command {
 class reset : public base::Command
 {
 public:
-    reset(QString name, QObject *parent);
+    reset(QString name, base::Box *parent);
 private:
     void doExecute();
     void doLoad();

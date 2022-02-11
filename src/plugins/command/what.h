@@ -14,7 +14,7 @@ namespace command {
 class what : public base::Command
 {
 public:
-    what(QString name, QObject *parent);
+    what(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

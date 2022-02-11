@@ -33,7 +33,7 @@ Environment& environment() {
 }
 
 Environment::Environment()
-    : _root(nullptr), _current(nullptr), _isSilent(false), _isUnattended(false)
+    : _current(nullptr), _isSilent(false), _isUnattended(false)
 {
     QSettings settings;
     _isFirstInstallation = !QDir(homePath()).exists();
@@ -192,6 +192,14 @@ void Environment::currentLoadArg(QString arg) {
 
 QString Environment::currentLoadArg() const {
     return _currentLoadArg;
+}
+
+void Environment::current(Box *box) {
+    _current = box;
+}
+
+Box *Environment::current() const {
+    return _current;
 }
 
 void Environment::isSilent(bool silent) {

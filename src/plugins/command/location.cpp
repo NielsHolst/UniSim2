@@ -16,7 +16,7 @@ namespace command {
 PUBLISH(location)
 HELP(location, "location", "shows international location setting")
 
-location::location(QString name, QObject *parent)
+location::location(QString name, Box *parent)
     : Command(name, parent)
 {
 }

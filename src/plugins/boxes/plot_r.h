@@ -8,9 +8,9 @@
 #include <QStringList>
 #include <QTextStream>
 #include <base/box.h>
+#include <base/path.h>
 
 namespace base {
-    class Path;
     class Port;
 }
 
@@ -20,23 +20,24 @@ class PlotR : public base::Box
 {
 public:
     PlotR(QString name, base::Box *parent);
-    void reset();
     void initialize();
-//    QString toString();
     QString toScript();
 private:
     // Inputs
-    bool hide;
+    base::Path xAxis, ports;
     QString layout, guideTitle, end, endCode, type, ggplot, transform;
     int maxData, ncol, nrow, iteration, fontSize;
     double width, height;
-    base::Path xAxis;
-    // Outputs
     bool plotAsList;
+
+    // Data
+    bool _doPlotAsList;
+
     // Methods
-    QString dim(QString portName) const;
+    QString nrowString() const;
+    QString ncolString() const;
     void appendGgplot(QTextStream &s);
-    QString scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const;
+    QString scriptForDefaultPlot(QStringList xLabels, QStringList yLabels) const;
     QString scriptForDensityPlot(QStringList yLabels) const;
     QString scriptForHistogramPlot(QStringList yLabels, QString type) const;
     QString scriptForSobolConvergencePlot() const;

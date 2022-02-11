@@ -11,7 +11,7 @@ namespace command {
 class profile : public base::Command
 {
 public:
-    profile(QString name, QObject *parent);
+    profile(QString name, base::Box *parent);
 private:
     void doExecute();
 };

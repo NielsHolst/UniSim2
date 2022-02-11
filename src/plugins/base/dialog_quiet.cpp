@@ -11,6 +11,9 @@ DialogQuiet::DialogQuiet(QObject *parent)
 {
 }
 
+void DialogQuiet::init() {
+}
+
 void DialogQuiet::progress(int, int) {
 }
 

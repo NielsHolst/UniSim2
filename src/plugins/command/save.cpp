@@ -17,7 +17,7 @@ namespace command {
 PUBLISH(save)
 //HELP(save_grammar, "save grammar", "save grammar for Atom and Notepad++ editors")
 
-save::save(QString name, QObject *parent)
+save::save(QString name, Box *parent)
     : Command(name, parent)
 {
 }

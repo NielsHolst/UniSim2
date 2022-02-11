@@ -11,7 +11,7 @@ namespace command {
 class save : public base::Command
 {
 public:
-    save(QString name, QObject *parent);
+    save(QString name, base::Box *parent);
 private:
     void doExecute();
     void saveGrammar();

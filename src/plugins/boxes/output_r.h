@@ -9,7 +9,7 @@
 #include <QString>
 #include <QVector>
 #include <base/box.h>
-#include <base/convert.h>
+#include <base/path.h>
 
 class QFile;
 
@@ -21,26 +21,28 @@ class OutputR : public base::Box
 {
 public:
     OutputR(QString name, Box *parent);
-    void initialize();
+    void amend();
     void reset();
+    void initialize();
     void debrief();
-//    QString toString();
+
     QString toScript();
     void addRCode(QString s);
+
 private:
     // Input
     QString begin;
-    bool popUp, keepPages, keepVariables, saveAsDataFrame;
-    double width, height;
     QVector<QString> end;
-    int skipSteps;
+    bool popUp, keepPages, keepVariables, saveAsDataFrame, plotAsList;
+    double width, height;
 
     // Output
+    base::Path ports;
     int numPages;
 
     // Data
     QDir _destinationDir;
-//    QVector<PageR*> _pages;
+    QVector<PageR*> _pages;
     QFile _file;
     QString _filePathR, _filePathTxt;
     QStringList _RCodes;

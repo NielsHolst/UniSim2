@@ -9,15 +9,9 @@ BOXES_PLUGIN_NAME = test_boxes
 include("$$_PRO_FILE_PWD_/../../boxes_plugin.pri")
 
 HEADERS +=  \
-    area.h \
-    data_frame_input.h \
-    model_a.h \
-    vector_input.h
+    a.h \
 	
 SOURCES +=  \
-    area.cpp \
-    data_frame_input.cpp \
-    model_a.cpp\
-    vector_input.cpp
+    a.cpp \
 
 

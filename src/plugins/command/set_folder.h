@@ -11,7 +11,7 @@ namespace command {
 class set_folder : public base::Command
 {
 public:
-    set_folder(QString name, QObject *parent);
+    set_folder(QString name, base::Box *parent);
     static void showAllFolders();
 private:
     void doExecute();

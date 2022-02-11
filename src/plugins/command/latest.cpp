@@ -17,7 +17,7 @@ namespace command {
 PUBLISH(latest)
 HELP(latest, "latest", "shows latest loaded scripts")
 
-latest::latest(QString name, QObject *parent)
+latest::latest(QString name, Box *parent)
     : Command(name, parent)
 {
 }

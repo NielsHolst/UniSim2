@@ -17,6 +17,6 @@ test.depends = boxes
 #command.depends = base
 #test.depends = command
 
-#SUBDIRS += test_boxes
-#test_boxes.subdir = src/plugins/test_boxes
-#test_boxes.depends = base
+SUBDIRS += test_boxes
+test_boxes.subdir = src/plugins/test_boxes
+test_boxes.depends = base

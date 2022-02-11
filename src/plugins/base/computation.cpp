@@ -63,7 +63,7 @@ void Computation::changeStep(Step step) {
         {Step::Debrief   , "Debriefing..."  },
         {Step::Scratch   , "Scratch..."   }
     };
-    dialog().message(map.value(step));
+    dialog().information(map.value(step));
     _currentStep = step;
     if (step <= Step::Amend)
         ResolvedReferences::clear();

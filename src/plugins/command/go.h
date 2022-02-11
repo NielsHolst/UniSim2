@@ -12,7 +12,7 @@ namespace command {
 class go : public base::Command
 {
 public:
-    go(QString name, QObject *parent);
+    go(QString name, base::Box *parent);
 private:
     // data
     // methods

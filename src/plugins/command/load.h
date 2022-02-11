@@ -14,13 +14,11 @@ namespace command {
 class load : public base::Command
 {
 public:
-    load(QString name, QObject *parent);
+    load(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();
     void readFile(QString fileName);
-    enum FileType {Boxes, Xml};
-    FileType fileType(QString fileName);
 };
 
 }

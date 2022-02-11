@@ -6,7 +6,7 @@
 #include <base/box.h>
 #include <base/command_help.h>
 #include <base/dialog.h>
-// #include <base/factory_plug_in.h>
+#include <base/factory_plug_in.h>
 #include <base/mega_factory.h>
 #include <base/port.h>
 #include <base/publish.h>
@@ -19,10 +19,14 @@ namespace command {
 PUBLISH(help)
 HELP(help, "help", "shows command, plugin or class documentation")
 
-help::help(QString name, QObject *parent)
-    : Command(name, parent)
+help::help(QString name, Box *parent)
+    : Command(name, parent), _parent(nullptr)
 {
     helpText("help");
+}
+
+help::~help() {
+    delete _parent;
 }
 
 void help::doExecute() {
@@ -89,7 +93,7 @@ void help::showPlugins() {
     for (int i=0; i < plugins.size(); ++i) {
         QString name = plugins.at(i)->id(),
                 desc = createBox(name + "Documentation") ?
-                       _box->port("title")->valueAsString() : "undescribed";
+                       _box->port("title")->value().asString(true,true) : "undescribed";
         info.addLine(name, desc);
     }
     dialog().information(info.combined().join("\n"));
@@ -118,9 +122,7 @@ bool help::getPlugIn(QString name) {
 
 bool help::createBox(QString className) {
     try {
-        Box::saveCurrentRoot();
-        _box = MegaFactory::create<Box>(className, "helpObject", this);
-        Box::restoreCurrentRoot();
+        _box = MegaFactory::create<Box>(className, "helpObject", _parent);
     }
     catch (Exception &) {
         _box = nullptr;
@@ -133,7 +135,7 @@ void help::showPlugin() {
     QStringList headerLines;
     QString name = _plugIn->id();
     if (createBox(name+"Documentation")) {
-        QString title = _box->port("title")->valueAsString();
+        QString title = _box->port("title")->value().asString(true,true);
         int length = title.length();
         QVector<QString>
                 authorNames = _box->port("authorNames")->value<QVector<QString>>(),
@@ -177,9 +179,9 @@ void help::showClass() {
         _box->className() +
         " " + _box->help() +
         "\n\nInput:\n" +
-       portsHelp(PortAccess::Input).join("\n") +
+       portsHelp(PortType::Input).join("\n") +
        "\n\nOutput:\n" +
-       portsHelp(PortAccess::Output).join("\n");
+       portsHelp(PortType::Output).join("\n");
     if (!_box->sideEffects().isEmpty())
         msg += "\n\nSide effects:\n" + sideEffects();
     dialog().information(msg);
@@ -187,7 +189,7 @@ void help::showClass() {
 
 namespace {
     bool showValue(const Port *port) {
-        return port->access() == PortAccess::Input && !port->hasImport();
+        return port->type() == PortType::Input;
     }
 }
 
@@ -196,18 +198,18 @@ void help::setColWidths() {
     for (const Port *port : _box->findMany<Port*>(".[*]")) {
         _colWidthName = std::max(_colWidthName, port->objectName().size());
         if (showValue(port))
-            _colWidthValue = std::max(_colWidthValue, port->valueAsString().size());
+            _colWidthValue = std::max(_colWidthValue, port->value().asString(true,true).size());
         _colWidthUnit = std::max(_colWidthUnit, port->unit().size());
     }
 }
 
-QStringList help::portsHelp(PortAccess access) {
+QStringList help::portsHelp(PortType type) {
     QStringList list;
     for (const Port *port : _box->findMany<Port*>(".[*]")) {
-        if (port->access() == access) {
+        if (port->type() == type) {
             QString item;
             item = "." + port->objectName().leftJustified(_colWidthName);
-            QString value =  showValue(port) ? port->valueAsString() : "";
+            QString value =  showValue(port) ? port->value().asString(true, true) : "";
             item += "|" + value.rightJustified(_colWidthValue);
             if (_colWidthUnit > 0)
                 item += " " + port->unit().leftJustified(_colWidthUnit);

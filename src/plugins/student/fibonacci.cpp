@@ -7,7 +7,7 @@ namespace student {
 
 PUBLISH(Fibonacci)
 
-Fibonacci::Fibonacci(QString name, QObject *parent)
+Fibonacci::Fibonacci(QString name, Box *parent)
     : Box(name, parent)
 {
     help("generates a Fibonacci sequence");

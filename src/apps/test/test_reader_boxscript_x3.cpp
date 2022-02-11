@@ -30,12 +30,12 @@ namespace {
 
 void TestReaderBoxScriptX3::testAuxAllTypes() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/aux_all_types.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 
@@ -136,12 +136,12 @@ void TestReaderBoxScriptX3::testAuxAllTypes() {
 
 void TestReaderBoxScriptX3::testConstructAmend() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/construct_amend.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
     //
@@ -189,12 +189,12 @@ void TestReaderBoxScriptX3::testConstructAmend() {
 
 void TestReaderBoxScriptX3::testInitialize() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/initialize.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
         root->initializeFamily();
     }
     UNEXPECTED_EXCEPTION;
@@ -215,12 +215,12 @@ void TestReaderBoxScriptX3::testInitialize() {
 
 void TestReaderBoxScriptX3::testInitializePortMissing() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/initialize_port_missing.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 
@@ -237,12 +237,12 @@ void TestReaderBoxScriptX3::testInitializePortMissing() {
 
 void TestReaderBoxScriptX3::testCondition() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/conditional.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 
@@ -256,12 +256,12 @@ void TestReaderBoxScriptX3::testCondition() {
 
 void TestReaderBoxScriptX3::testMultipleMatches() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/multiple_matches.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 
@@ -304,12 +304,12 @@ void TestReaderBoxScriptX3::testMultipleMatches() {
 void TestReaderBoxScriptX3::testParentheses() {
     using Type = Value::Type;
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/parentheses.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 

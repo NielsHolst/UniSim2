@@ -19,7 +19,7 @@ namespace command {
 PUBLISH(clear)
 HELP(clear, "clear", "clears console window")
 
-clear::clear(QString name, QObject *parent)
+clear::clear(QString name, Box *parent)
     : Command(name, parent)
 {
 }

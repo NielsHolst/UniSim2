@@ -11,7 +11,7 @@ namespace command {
 class write : public base::Command
 {
 public:
-    write(QString name, QObject *parent);
+    write(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

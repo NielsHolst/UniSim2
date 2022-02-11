@@ -68,27 +68,20 @@ QStringList SaveGrammarBase::classNames() {
 }
 
 QStringList SaveGrammarBase::portNames() {
-    // Collect port names of current root
-    QSet<QString> names = collectPortNames(Box::root());
+    // Set of port names of all classes
+    QSet<QString> names;
 
     // Create an object of each class
-    auto root = std::unique_ptr<Box>( new Box("root", nullptr) );
+    std::unique_ptr<Node> node;
     for (FactoryPlugIn *factory : MegaFactory::factories()) {
         if (factory->id() != "command") {
-            for (QString className : factory->inventory()) {
-                QString qualifiedClassName = factory->id()+ "::" + className;
-                try {
-                    MegaFactory::create<Box>(qualifiedClassName, className.toLower(), root.get());
-                }
-                catch (Exception &ex) {
-                    dialog().information("Class not included in grammar (error in its constructor): " + qualifiedClassName);
-                    dialog().error(ex.what());
-                }
+            for (auto className : factory->inventory()) {
+                node = std::unique_ptr<Node>( factory->create(className, className.toLower(), nullptr) );
+                names |= collectPortNames(dynamic_cast<Box *>(node.get()));
             }
         }
     }
     // Pool port names
-    names |= collectPortNames(root.get());
 
     // Sort port names
     #if QT_VERSION >= 0x050E00
@@ -100,11 +93,10 @@ QStringList SaveGrammarBase::portNames() {
     return sorted;
 }
 
-QSet<QString> SaveGrammarBase::collectPortNames(Box *root) {
+QSet<QString> SaveGrammarBase::collectPortNames(Box *box) {
     QSet<QString> names;
-    if (root) {
-        QVector<Port*> ports = Path("Port::*").findMany<Port*>(root);
-        for (Port *port : ports)
+    if (box) {
+        for (auto port : box->portsInOrder())
             names << port->objectName();
     }
     return names;

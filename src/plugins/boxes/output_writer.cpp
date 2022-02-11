@@ -33,12 +33,12 @@ OutputWriter::OutputWriter(QString name, Box *parent)
 }
 
 void OutputWriter::amend() {
-    BoxBuilder builder(this);
-    if (!findMaybeOne<Box*>("OutputSelector::*"))
-//        MegaFactory::create("OutputSelector", "selector", this);
+    // If it does not exist, create an OutputSelector as a child box
+    if (!findMaybeOne<Box*>("OutputSelector::*")) {
+        BoxBuilder builder(this);
         builder.
         box("OutputSelector").name("selector").endbox();
-
+        findOne<Box*>("./OutputSelector::selector")->amendFamily(false);    }
 }
 
 void OutputWriter::initialize() {
@@ -103,7 +103,8 @@ void OutputWriter::writeColumnLabels() {
 
 void OutputWriter::writeColumnFormats() {
     QStringList list;
-    for (auto port : ports.findMany<Port*>())
+    auto test = ports.findMany<Port*>();
+    for (auto port : test)
         list << port->format();
     _stream << list.join("\t") << "\n";
 }
@@ -112,7 +113,8 @@ void OutputWriter::writeValues() {
     // To collect values to be written
     QStringList values;
     // Loop through ports
-    for (auto port : ports.findMany<Port*>())
+    auto test = ports.findMany<Port*>();
+    for (auto port : test)
         values << port->value().asString(true, false);
     _stream << values.join("\t") << "\n";
 }

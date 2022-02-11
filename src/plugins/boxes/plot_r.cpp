@@ -4,7 +4,6 @@
 */
 #include <base/environment.h>
 #include <base/path.h>
-#include <base/port.h>
 #include <base/publish.h>
 #include "layout_r.h"
 #include "page_r.h"
@@ -21,7 +20,7 @@ PlotR::PlotR(QString name, Box *parent)
     : Box(name, parent)
 {
     help("produces an R plot");
-    Input(hide).equals(false).help("Hide this plot?");
+    Input(ports).help("Port(s) on y-axis");
     Input(layout).equals("facetted").help("Either \"merged\" or \"facetted\"");
     Input(type).equals("default").help("Type of plot").unit("default|density|histogram(nbins)|SobolConvergence|SobolIndices");
     Input(guideTitle).help("Title of guide legends");
@@ -33,34 +32,27 @@ PlotR::PlotR(QString name, Box *parent)
     Input(maxData).help("Max. number of data rows to plot; ignored if zero");
     Input(ncol).equals(-1).help("Number of columns in arrangement of plots; -1 keeps default");
     Input(nrow).equals(-1).help("Number of rows in arrangement of plots; -1 keeps default");
-    Input(iteration).imports("/*[iteration]");
-    Input(width).imports("..[width]").help("May be used to spawn additional pages");
-    Input(height).imports("..[height]").help("May be used to spawn additional pages");
-    Input(xAxis).imports("..[xAxis]");
-    Output(plotAsList).noClear().help("Is the plot a list of plots?");
+    Input(iteration) .imports("/*[iteration]");
+    Input(xAxis)     .imports("..[xAxis]");
+    Input(width)     .imports("..[width]");
+    Input(height)    .imports("..[height]");
+    Input(plotAsList).imports("..[plotAsList]");
 }
 
 void PlotR::initialize() {
     // Validate
-    convert<LayoutR>(layout);
+    if (layout!="facetted" && layout!="merged")
+        ThrowException("Layout must be either \"facetted\" or \"merged\"")
+                .value(layout).context(this);
+
     if (transform!="" && transform!="log10")
-        ThrowException("Only valid value for 'transform' is 'log10'")
+        ThrowException("Only valid value for transform is \"log10\"")
                 .value(transform).context(this);
+
     // Set flag for list output
-    plotAsList = (type.toLower()=="sobolindices");
-}
+    _doPlotAsList = plotAsList || (type.toLower()=="sobolindices");
 
-void PlotR::reset() {
-    if (ncol==-1 && nrow==-1)
-        ncol = 1;
 }
-
-//QString PlotR::toString() {
-//    QString s = "Plot: " + objectName() + "\n";
-//    for (const Track *track : tracks())
-//        s += "  Port: " + track->uniqueName() + "\n";
-//    return s;
-//}
 
 inline QString apostrophed(QString s) {
     return "\"" + s + "\"";
@@ -74,23 +66,23 @@ inline QStringList apostrophed(QStringList list) {
 }
 
 QString PlotR::toScript() {
-    if (hide)
-        return QString();
+    // Find ports for x- and y-axis
+    auto xPorts = xAxis.findMany<Port*>(),
+         yPorts = ports.findMany<Port*>();
 
-    QStringList xLabels;
-    for (auto port : xAxis.findMany<base::Port*>())
-        xLabels << port->outputNames();
-
-    QStringList yLabels;
-    for (auto port : ports.findMany<base::Port*>())
-        yLabels << port->outputNames();
+    // Collect labels for x- and y-axis ports
+    QStringList xLabels, yLabels;
+    for (auto port : xPorts)
+        xLabels << apostrophed(port->outputName());
+    for (auto port : yPorts)
+        yLabels << apostrophed(port->outputName());
 
     // Write function call
     QString string,
             typeId = type.toLower();
     QTextStream s(&string);
     if (typeId=="default")
-        s << scriptForDefaultPlot(xLabels, yLabels, "iteration");
+        s << scriptForDefaultPlot(xLabels, yLabels);
     else if (typeId=="density")
         s << scriptForDensityPlot(yLabels);
     else if (typeId.startsWith("histogram"))
@@ -108,7 +100,7 @@ QString PlotR::toScript() {
         s << "+" << environment().inputFileContent(end).trimmed();
     if (!endCode.isEmpty())
         s << "+" << endCode;
-    if (fontSize > 0 && !plotAsList )
+    if (fontSize > 0 && !_doPlotAsList )
         s << "+ggplot_theme(" << fontSize << ")";
     s << ",\n";
     return string;
@@ -118,7 +110,7 @@ inline QString df(int maxData) {
     return (maxData==0) ? "df" : ("df[1:" + QString::number(maxData) + ",]");
 }
 
-QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QString iterationLabel) const {
+QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels) const {
     QString string;
     QTextStream s(&string);
     s << "    "
@@ -127,15 +119,15 @@ QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels, QS
       << ", "
       << "c(" << xLabels.join(", ") << ")"
       << ", "
-      << (iteration > 2 ? ("\""+iterationLabel+"\"") : "NULL")
+      << (iteration > 2 ? ("\"iteration\"") : "NULL")
       << ", "
       << "c(" << yLabels.join(", ") << ")"
       << ", "
       << "ytrans=" << apostrophed(transform)
       << ", "
-      << "ncol=" << dim("ncol")
+      << "ncol=" << ncolString()
       << ", "
-      << "nrow=" << dim("nrow")
+      << "nrow=" << nrowString()
       << ")";
     return string;
 }
@@ -149,9 +141,9 @@ QString PlotR::scriptForDensityPlot(QStringList yLabels) const {
       << ", "
       << "c(" << yLabels.join(", ") << ")"
       << ", "
-      << "ncol=" << dim("ncol")
+      << "ncol=" << ncolString()
       << ", "
-      << "nrow=" << dim("nrow")
+      << "nrow=" << nrowString()
       << ")";
     return string;
 }
@@ -177,9 +169,9 @@ QString PlotR::scriptForHistogramPlot(QStringList yLabels, QString geom) const {
       << ", "
       << "bins=" << bins
       << ", "
-      << "ncol=" << dim("ncol")
+      << "ncol=" << ncolString()
       << ", "
-      << "nrow=" << dim("nrow")
+      << "nrow=" << nrowString()
       << ")";
     return string;
 }
@@ -200,9 +192,13 @@ QString PlotR::scriptForSobolIndicesPlot() {
     return string;
 }
 
-QString PlotR::dim(QString portName) const {
-    int value = port(portName)->value<int>();
-    return (value == -1) ? QString("NULL") : QString::number(value);
+QString PlotR::nrowString() const {
+    return (nrow == -1) ? QString("NULL") : QString::number(nrow);
+}
+
+QString PlotR::ncolString() const {
+    int n = (ncol==-1 && nrow==-1) ? 1 : ncol;
+    return (n == -1) ? QString("NULL") : QString::number(n);
 }
 
 void PlotR::appendGgplot(QTextStream &s) {

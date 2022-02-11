@@ -17,14 +17,14 @@ namespace command {
 PUBLISH(set)
 HELP(set_any, "set", "shows what can be set")
 
-set::set(QString name, QObject *parent)
+set::set(QString name, Box *parent)
     : Command(name, parent)
 {
     setClassName("set");
 }
 
 void set::doExecute() {
-    Command *command(0);
+    std::unique_ptr<Command> command;
     int n = _args.size();
     if (n == 1) {
         dialog().error("Write: 'set folder' or 'set font'");
@@ -34,9 +34,9 @@ void set::doExecute() {
         Q_ASSERT(n > 1);
         QString a1 = _args.at(1);
         if (a1 == "font")
-            command = new set_font("set_font", this);
+            command = std::unique_ptr<Command>( new set_font("set_font", nullptr) );
         else if (a1 == "folder")
-            command = new set_folder("set_folder", this);
+            command = std::unique_ptr<Command>( new set_folder("set_font", nullptr) );
         else
             ThrowException("Unknown command").value(_args.join(" "));
     }

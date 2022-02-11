@@ -12,7 +12,7 @@ namespace command {
 class find : public base::Command
 {
 public:
-    find(QString name, QObject *parent);
+    find(QString name, base::Box *parent);
 private:
     // methods
     void doExecute();

@@ -260,7 +260,8 @@ const Path::Objects& Path::Alternative::matches(base::Box *parent) {
             // loop through all its ports and test if they match _port
             else {
                 auto *parentBox = dynamic_cast<base::Box*>(candidate);
-                Q_ASSERT(parentBox);
+                if (!parentBox)
+                    Q_ASSERT(parentBox);
                 for (auto basePort : parentBox->children<base::Port*>()) {
                     if (_port->matches(basePort))
                         ports << dynamic_cast<base::Node*>(basePort);
@@ -274,12 +275,11 @@ const Path::Objects& Path::Alternative::matches(base::Box *parent) {
 }
 
 void Path::Alternative::initiateMatches(const Node &node, base::Node *parentNode) {
-    // Find root and parent
+    // Find root
     Object *root = Box::root();
 
     // Check that root or parent exists, if need
     enum {NeedsRoot, NeedsParent} need;
-//    need = (_hasRoot || node._directive==Directive::Any) ? NeedsRoot : NeedsParent;
     need = (node._objectName.contains(".") || node._directive!=Directive::Any) ? NeedsParent : NeedsRoot;
 
     // Check root
@@ -290,16 +290,20 @@ void Path::Alternative::initiateMatches(const Node &node, base::Node *parentNode
     if (need==NeedsParent && !parentNode)
         ThrowException("No parent found for path").value(toString()).context(parentNode);
 
-    // Set up initial nodes for seach
+    // Set up initial nodes for search
+    Object *match;
+    _matches.clear();
     if (_hasRoot)
         // Search from the root's children
         _matches << children(root, node._className, node._objectName);
     else if (node._objectName == ".")
         // Search from parent node
         _matches << parentNode;
-    else if (node._objectName == "..")
+    else if (node._objectName == "..") {
         // Search from grandparent node
-        _matches << parent(parentNode, "", "*");
+        match = parent(parentNode, "", "*");
+        if (match) _matches << match;
+    }
     else if (node._objectName == "...")
         // Search from nearest nodes
         _matches << parentNode << ancestors(parentNode, "", "*");
@@ -327,11 +331,13 @@ void Path::Alternative::initiateMatches(const Node &node, base::Node *parentNode
             break;
         case Directive::Preceding:
             // Search from parent's preceding sibling
-            _matches << preceding(parentNode, node._className, node._objectName);
+            match = preceding(parentNode, node._className, node._objectName);
+            if (match) _matches << match;
             break;
         case Directive::Following:
             // Replace each match with its following sibling
-            _matches << following(parentNode, node._className, node._objectName);
+            match = following(parentNode, node._className, node._objectName);
+            if (match) _matches << match;
             break;
         }
     }

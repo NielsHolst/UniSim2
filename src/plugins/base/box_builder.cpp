@@ -21,16 +21,6 @@ BoxBuilder::BoxBuilder(Box *parent)
     }
 }
 
-BoxBuilder::~BoxBuilder() {
-    if (_content && _hasParent)
-        content(BoxBuilder::Amend::Descendants, _exceptionCount==Exception::count());
-}
-
-// Unused?
-//void BoxBuilder::clear() {
-//    environment().computationStep(ComputationStep::Construct);
-//}
-
 BoxBuilder& BoxBuilder::box(Box *box) {
     box->setParent(_currentBox);
     _currentPort = nullptr;
@@ -117,10 +107,10 @@ const Port* BoxBuilder::currentPort() const {
     return _currentPort;
 }
 
-Box* BoxBuilder::content(Amend amendOption, bool allowException) {
+Box* BoxBuilder::content(Amend amendOption) {
     if (_hasParent) {
         endbox();
-        if (allowException && !_stack.isEmpty())
+        if (!_stack.isEmpty())
             ThrowException("BoxBuilder: unclosed box(es) at end")
                     .hint("Possibly missing endbox() call").value(_stack.size())
                     .context(_stack.top());
@@ -128,11 +118,11 @@ Box* BoxBuilder::content(Amend amendOption, bool allowException) {
     if (_content) {
         switch (amendOption) {
         case Amend::Family:
-            _content->amendFamily();
+            _content->amendFamily(false);
             break;
         case Amend::Descendants:
             for (Box *child : _content->findMany<Box*>("./*"))
-                child->amendFamily();
+                child->amendFamily(false);
             break;
         case Amend::None:
             break;

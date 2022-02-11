@@ -9,12 +9,12 @@
 
 void TestSimulation::testGrowth() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/simulation.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     catch(const base::Exception &ex) {
         QString s = "Unexpected exception: " + ex.what();

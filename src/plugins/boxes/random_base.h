@@ -23,7 +23,6 @@ public:
     void initialize() final;
     void reset() final;
     void update() final;
-    void import() final;
     RandomiserBase* randomiser();
 protected:
     // Inputs

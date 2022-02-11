@@ -17,11 +17,10 @@ namespace command {
 PUBLISH(what)
 HELP(what, "what", "shows name of current script")
 
-what::what(QString name, QObject *parent)
+what::what(QString name, Box *parent)
     : Command(name, parent)
 {
 }
-
 
 void what::doExecute() {
     if (_args.size() > 1)

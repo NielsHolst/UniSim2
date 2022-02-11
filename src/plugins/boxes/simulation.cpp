@@ -5,6 +5,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <QFile>
 #include <QTextStream>
+#include <base/computation.h>
 #include <base/convert.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -15,6 +16,7 @@
 #include <base/timer.h>
 #include "simulation.h"
 
+#include <base/dialog.h>
 using namespace base;
 
 namespace boxes {
@@ -24,6 +26,7 @@ PUBLISH(Simulation)
 Simulation::Simulation(QString name, Box *parent)
     : Box(name, parent)
 {
+//    dialog().information("Create Simulation");
     help("runs a simulation");
     Input(iterations).equals(1).help("Number of iterations to run");
     Input(steps).equals(1).help("Number of steps in one iteration");
@@ -39,6 +42,10 @@ Simulation::Simulation(QString name, Box *parent)
     Output(executionTime).help("Duration of simulation run (ms)");
     Output(hasError).help("Did an error occur during simulation run?");
     Output(errorMsg).help("Error message");
+}
+
+Simulation::~Simulation() {
+//    dialog().information("Delete Simulation");
 }
 
 void Simulation::initialize() {
@@ -77,6 +84,7 @@ void Simulation::run() {
         {
             resetFamily();
             ResolvedReferences::check();
+            Computation::changeStep(Computation::Step::Update);
             for (step = 1;
                  (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
                  (useStopSteps && !stopSteps && step<=steps) || // apply both flag and count
@@ -84,7 +92,7 @@ void Simulation::run() {
                  ++step)
             {
                 show(time);
-                updateFamily();
+                updateFamily(false);
                 ResolvedReferences::check();
             }
             cleanupFamily();

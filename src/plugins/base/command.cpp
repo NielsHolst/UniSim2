@@ -12,7 +12,7 @@ namespace base {
 
 QStringList Command::_help;
 
-Command::Command(QString name, Node *parent)
+Command::Command(QString name, Box *parent)
     : Node(name, parent), _error(false)
 {
     setClassName("Command");

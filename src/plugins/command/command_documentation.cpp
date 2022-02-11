@@ -10,7 +10,7 @@ namespace command {
 
 PUBLISH(commandDocumentation)
 
-commandDocumentation::commandDocumentation(QString name, QObject *parent)
+commandDocumentation::commandDocumentation(QString name, Box *parent)
     : Documentation(name, parent)
 {
     title = "Commands for the prompt";

@@ -16,7 +16,7 @@ namespace command {
 class run : public base::Command
 {
 public:
-    run(QString name, QObject *parent);
+    run(QString name, base::Box *parent);
 private:
     // Data
     base::Box *_root;

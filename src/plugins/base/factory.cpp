@@ -6,14 +6,12 @@
 #include <base/node.h>
 #include <base/publish.h>
 
-#define APOSTROPHED(x) #x
-
 using namespace base;
 
 namespace BOXES_PLUGIN_NAME {
 
 QString Factory::id() const {
-    return APOSTROPHED(BOXES_PLUGIN_NAME);
+    return BOXES_PLUGIN_NAME_TEXT;
 }
 
 QList<QString> Factory::inventory() const{

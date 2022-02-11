@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     base::environment().checkInstallation();
 }
 
+void MainWindow::init() {
+    _dialog->init();
+}
 
 void MainWindow::restore() {
     QSettings settings;

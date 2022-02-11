@@ -37,6 +37,9 @@ public:
     void currentLoadArg(QString arg);
     QString currentLoadArg() const;
 
+    void current(Box *box);
+    Box *current() const;
+
     void isSilent(bool silent);
     bool isSilent() const;
 
@@ -75,7 +78,7 @@ public:
     QVariant option(QString name);
 private:
     // Data
-    Box *_root, *_current;
+    Box *_current;
     QMap<Folder, QDir> _dir;
     QMap<QString,QString> _latestOutputFilePath;
     QString _latestLoadArg, _currentLoadArg, _latestInputFilePath;

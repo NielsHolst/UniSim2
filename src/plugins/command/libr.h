@@ -11,7 +11,7 @@ namespace command {
 class libr : public base::Command
 {
 public:
-    libr(QString name, QObject *parent);
+    libr(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

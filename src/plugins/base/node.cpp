@@ -82,7 +82,10 @@ QString Node::fullName(const Node *object) {
         p = p->parent();
     }
     while (p) {
-        names.prepend(p->objectName());
+        QString name = p->objectName();
+        if (name.isEmpty())
+            name = p->className() + "::*";
+        names.prepend(name);
         p = p->parent();
     }
     return names.join("/") + portName;

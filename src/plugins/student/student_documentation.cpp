@@ -7,7 +7,7 @@ namespace student {
 
 PUBLISH(studentDocumentation)
 
-studentDocumentation::studentDocumentation(QString name, QObject *parent)
+studentDocumentation::studentDocumentation(QString name, Box *parent)
     : Documentation(name, parent)
 {
     title = "Student playing ground";

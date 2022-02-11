@@ -115,7 +115,7 @@ public:
     template <class U> U as() const;
     // Get value in compatible type U
 
-    QString asString(bool apostrophed, bool vectorized) const;
+    QString asString(bool apostrophed=true, bool vectorized=true) const;
     // Get value converted to string
     // -apostroped: a string it will be apostrophed
     // -vectorized: vectors will be shown on c(...) form

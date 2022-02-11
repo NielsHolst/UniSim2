@@ -17,7 +17,7 @@ namespace command {
 PUBLISH(edit)
 HELP(edit, "edit", "opens box script in editor")
 
-edit::edit(QString name, QObject *parent)
+edit::edit(QString name, Box *parent)
     : Command(name, parent)
 {
 }

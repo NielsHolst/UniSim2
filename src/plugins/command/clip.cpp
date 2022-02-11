@@ -17,7 +17,7 @@ namespace command {
 PUBLISH(clip)
 HELP(clip, "clip", "repeats latest output to clipboard")
 
-clip::clip(QString name, QObject *parent)
+clip::clip(QString name, Box *parent)
     : Command(name, parent)
 {
 }

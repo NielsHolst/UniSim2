@@ -7,7 +7,7 @@ namespace student {
 class Fibonacci : public base::Box
 {
 public:
-    Fibonacci(QString name, QObject *parent);
+    Fibonacci(QString name, Box *parent);
     void reset();
     void update();
 private:

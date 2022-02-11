@@ -18,7 +18,7 @@ namespace command {
 PUBLISH(reset)
 HELP(reset, "reset [boxscript]", "reset simulation")
 
-reset::reset(QString name, QObject *parent)
+reset::reset(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -42,20 +42,17 @@ void reset::doLoad() {
     case 2:
         com << _args[1];
     }
-    Command::submit(com, this);
+    Command::submit(com);
 }
 
 void reset::doReset() {
-    Box *sim = environment().root();
+    Box *sim = Box::root();
     if (!sim) {
         dialog().error("Nothing to reset");
         return;
     }
-    environment().computationStep(ComputationStep::Initialize);
     sim->initializeFamily();
-    environment().computationStep(ComputationStep::Reset);
     sim->resetFamily();
-    environment().computationStep(ComputationStep::Ready);
 }
 
 

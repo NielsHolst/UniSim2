@@ -5,7 +5,7 @@
 #ifndef HELP_H
 #define HELP_H
 #include <base/command.h>
-#include <base/port_access.h>
+#include <base/port_type.h>
 
 namespace base {
     class Box;
@@ -17,11 +17,12 @@ namespace command {
 class help : public base::Command
 {
 public:
-    help(QString name, QObject *parent);
+    help(QString name, base::Box *parent);
+    ~help();
 private:
     // data
     const base::FactoryPlugIn* _plugIn;
-    base::Box *_box;
+    base::Box *_box, *_parent;
     #if QT_VERSION < 0x060000
         int       _colWidthName, _colWidthValue, _colWidthUnit;
     #else
@@ -39,7 +40,7 @@ private:
     void showPlugin();
     void showClass();
     void setColWidths();
-    QStringList portsHelp(base::PortAccess access);
+    QStringList portsHelp(base::PortType type);
     QString sideEffects();
 };
 

@@ -11,32 +11,27 @@
 namespace boxes {
 
 class PlotR;
-class Port;
 
 class PageR : public base::Box
 {
 public:
-    PageR(QString name, Box *parent);
-    void amend();
-    void reset();
+    PageR(QString name, base::Box *parent);
     void initialize();
-//    QString toString();
+    void reset();
     QString toScript();
     QString functionName();
 private:
     // Inputs
     base::Path xAxis;
-    bool show, plotAsList;
     double width, height;
-    int ncol, nrow;
+    int ncol, nrow, numPages;
     QString title;
-
+    bool plotAsList, popUp, keepPages;
     // Data
-    bool _popUp;
     QVector<PlotR*> _plots;
     static int _commonPageNumber;
     int _myPageNumber;
-
+    bool _doPopUp;
     // Methods
     QString dim(QString portName);
 };

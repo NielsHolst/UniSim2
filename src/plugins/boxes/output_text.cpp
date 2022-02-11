@@ -2,6 +2,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include <base/box_builder.h>
 #include <base/publish.h>
 #include "output_text.h"
 
@@ -16,7 +17,14 @@ OutputText::OutputText(QString name, Box *parent)
 {
     help("defines output written to text file");
     Input(ports).help("Path to port(s) to output");
-    Input(skipFormats).equals(false).help("Skip line with column formats?");
+}
+
+void OutputText::amend() {
+    // If it does not exist, create an OutputWriter as a sibling box
+    Box *p = parent<Box*>();
+    if (!findMaybeOne<Box*>("OutputWriter::*"))
+        BoxBuilder(p).
+        box("OutputWriter").name("outputWriter").endbox();
 }
 
 }

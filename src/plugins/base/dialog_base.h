@@ -25,13 +25,7 @@ class DialogBase : public QObject
 public:
     DialogBase(QObject *parent);
 
-    struct ProgressInfo{
-        QElapsedTimer time;
-        int step, steps, iteration, iterations;
-    };
-    void resetProgress();
-    void updateProgress(const ProgressInfo &info);
-
+    virtual void init() = 0;
     virtual QProgressBar* progressBar() = 0;
     virtual QWinTaskbarProgress* winProgressTaskbar() = 0;
     virtual void finishProgress() = 0;
@@ -46,6 +40,13 @@ public:
     void message(QString s);
     void pushMessage();
     void popMessage();
+
+    struct ProgressInfo{
+        QElapsedTimer time;
+        int step, steps, iteration, iterations;
+    };
+    void resetProgress();
+    void updateProgress(const ProgressInfo &info);
 
     void error(QString s);
     friend DialogBase& dialog();

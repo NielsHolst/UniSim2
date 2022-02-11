@@ -11,7 +11,7 @@ namespace command {
 class prep : public base::Command
 {
 public:
-    prep(QString name, QObject *parent);
+    prep(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

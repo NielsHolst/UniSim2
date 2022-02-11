@@ -14,6 +14,7 @@ class DialogQuiet : public DialogBase
 {
 public:
     DialogQuiet(QObject *parent);
+    void init();
     void progress(int current, int total);
     void finished();
     QProgressBar* progressBar();

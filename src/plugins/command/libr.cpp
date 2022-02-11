@@ -16,7 +16,7 @@ namespace command {
 PUBLISH(libr)
 HELP(libr, "libr", "shows the needed R libraries")
 
-libr::libr(QString name, QObject *parent)
+libr::libr(QString name, Box *parent)
     : Command(name, parent)
 {
 }

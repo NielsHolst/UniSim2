@@ -3,7 +3,6 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <base/box.h>
-#include <base/box_output.h>
 #include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -21,7 +20,7 @@ namespace command {
 PUBLISH(list)
 HELP(list, "list", "lists boxes, ports and plugins")
 
-list::list(QString name, QObject *parent)
+list::list(QString name, Box *parent)
     : Command(name, parent)
 {
 }

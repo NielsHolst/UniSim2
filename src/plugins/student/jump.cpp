@@ -7,7 +7,7 @@ namespace student {
 
 PUBLISH(Jump)
 
-Jump::Jump(QString name, QObject *parent)
+Jump::Jump(QString name, Box *parent)
     : Box(name, parent)
 {
     help("generates the 3n+1 sequence");

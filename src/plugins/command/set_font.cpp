@@ -22,7 +22,7 @@ HELP(set_font_name, "set font <font-name>", "sets console font name")
 HELP(set_font_size, "set font <integer>", "sets console font size")
 HELP(set_font_name_size, "set font <font-name> <integer>", "sets console font name and size")
 
-set_font::set_font(QString name, QObject *parent)
+set_font::set_font(QString name, Box *parent)
     : set(name, parent)
 {
     setClassName("set_font");

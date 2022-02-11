@@ -5,6 +5,7 @@
 #include <QTime>
 #include <base/box.h>
 #include <base/command_help.h>
+#include <base/computation.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -21,7 +22,7 @@ namespace command {
 PUBLISH(run)
 HELP(run, "run", "runs simulation")
 
-run::run(QString name, QObject *parent)
+run::run(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -45,11 +46,11 @@ void run::doLoad() {
     case 2:
         com << _args[1];
     }
-    Command::submit(com, this);
+    Command::submit(com);
 }
 
 void run::doRun() {
-    _root = environment().root();
+    _root = Box::root();
     if (!_root) {
         dialog().error("Nothing to run");
         return;
@@ -70,7 +71,7 @@ void run::doRun() {
         dialog().information(msg);
     else
         dialog().error(msg + errorMessage());
-    environment().computationStep(ComputationStep::Ready);
+    Computation::changeStep(Computation::Step::Ready);
 }
 
 QString run::messageTime() const {
@@ -94,7 +95,7 @@ QString run::message(QString counter, QString total, QString in) const {
         return "";
 
     QString s = " in " + in + " %1/%2";
-    return s. arg(i->value<int>()-1). arg(n->value<int>());
+    return s. arg(i->value<int>()). arg(n->value<int>());
 }
 
 QString run::errorMessage() const {

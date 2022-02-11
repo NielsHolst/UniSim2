@@ -14,7 +14,7 @@ namespace command {
 class clip : public base::Command
 {
 public:
-    clip(QString name, QObject *parent);
+    clip(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

@@ -617,7 +617,7 @@ Expression::Stack::iterator Expression::replaceElement(Stack::iterator at, const
 }
 
 void Expression::resolveReferences() {
-//    Box *box = boxAncestor();
+    _importPorts.clear();
     auto end0 = _stack.end(), end1=end0;
     auto element=_stack.begin();
     while (element!=_stack.end()) {
@@ -627,6 +627,7 @@ void Expression::resolveReferences() {
             Path &path = get<Path>(*element);
             path.setParent(_parent);
             auto matches = path.findMany<Port*>();
+            _importPorts.append(matches);
             ResolvedReferences::add(_parent, matches);
 
             switch (matches.size()) {
@@ -684,6 +685,10 @@ QString Expression::originalAsString() const {
 
 QString Expression::stackAsString() const {
     return toString(stack());
+}
+
+const QVector<Port*> &Expression::importPorts() const {
+    return _importPorts;
 }
 
 QString Expression::toString(const Stack &stack) {

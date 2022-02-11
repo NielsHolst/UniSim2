@@ -11,7 +11,7 @@ namespace command {
 class latest : public base::Command
 {
 public:
-    latest(QString name, QObject *parent);
+    latest(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

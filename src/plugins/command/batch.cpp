@@ -22,7 +22,7 @@ namespace command {
 PUBLISH(batch)
 HELP(batch, "batch", "runs a batch of box scripts and writes plots to PNG files")
 
-batch::batch(QString name, QObject *parent)
+batch::batch(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -89,7 +89,7 @@ void batch::runFiles() {
         _clipboardStream
             << "print('batch " << com.join(" ") << "')\n"
             << "figures = function(x) NULL\n";
-        Command::submit(com, this);
+        Command::submit(com);
         streamClipboard(filePath);
     }
 }

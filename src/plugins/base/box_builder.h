@@ -20,8 +20,6 @@ class BoxBuilder
 {
 public:
     BoxBuilder(Box *parent=nullptr);
-    ~BoxBuilder();
-//    void clear();
     // Box
     BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
@@ -40,7 +38,7 @@ public:
     const Box* currentBox() const;
     const Port* currentPort() const;
     enum class Amend {Family, Descendants, None} ;
-    Box* content(Amend amendOption=Amend::Family, bool allowException=true);
+    Box* content(Amend amendOption=Amend::Family);
 private:
     // Data
     bool _hasParent;

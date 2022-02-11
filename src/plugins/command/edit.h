@@ -14,7 +14,7 @@ namespace command {
 class edit : public base::Command
 {
 public:
-    edit(QString name, QObject *parent);
+    edit(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

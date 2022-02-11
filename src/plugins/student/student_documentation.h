@@ -7,7 +7,7 @@ namespace student {
 class studentDocumentation : public base::Documentation
 {
 public:
-    studentDocumentation(QString name, QObject *parent);
+    studentDocumentation(QString name, Box *parent);
 };
 
 } //namespace

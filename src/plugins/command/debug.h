@@ -11,7 +11,7 @@ namespace command {
 class debug : public base::Command
 {
 public:
-    debug(QString name, QObject *parent);
+    debug(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

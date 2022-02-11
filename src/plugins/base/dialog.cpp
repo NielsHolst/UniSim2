@@ -19,6 +19,9 @@ Dialog::Dialog(QObject *parent)
     if (!wParent)
         ThrowException("Parent must be a QWidget");
     _widget = new DialogWidget(wParent);
+}
+
+void Dialog::init() {
     _widget->init();
 }
 

@@ -21,15 +21,12 @@ namespace {
 void TestReferences::testForward() {
     using Type = Value::Type;
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/reference_forward.box"));
-        root = std::unique_ptr<Box>( builder.content() );
-//        std::cout << "A[a] A[b] "
-//                  << str(root->findOne<Port*>("A[a]")->value().typeName()) << " "
-//                  << str(root->findOne<Port*>("A[b]")->value().typeName()) << std::endl;
+        root = Box::root(builder.content());
         root->initializeFamily();
     }
     UNEXPECTED_EXCEPTION;
@@ -103,12 +100,12 @@ void TestReferences::testForward() {
 void TestReferences::testUpdate() {
     using Type = Value::Type;
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
         reader.parse(inputFilePath("box_script/reference_update.box"));
-        root = std::unique_ptr<Box>( builder.content() );
+        root = Box::root(builder.content());
     }
     UNEXPECTED_EXCEPTION;
 
@@ -135,4 +132,21 @@ void TestReferences::testUpdate() {
     QCOMPARE(root->findOne<Port*>("B[c]"  )->value<int>(), 140);
     QCOMPARE(root->findOne<Port*>("B[b]"  )->value<int>(), 140);
     QCOMPARE(root->findOne<Port*>("B[a]"  )->value<int>(), 120);
+}
+
+void TestReferences::testDots() {
+    bool excepted(false);
+    Box *root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/reference_dots.box"));
+        root = Box::root(builder.content());
+    }
+    UNEXPECTED_EXCEPTION;
+
+    QCOMPARE(root->findOne<Port*>("A[a]")->value<double>(), 3.12);
+    QCOMPARE(root->findOne<Port*>("A[b]")->value<double>(), 3.12);
+    QCOMPARE(root->findOne<Port*>("B[c]")->value<double>(), 3.12);
+
 }

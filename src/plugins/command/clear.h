@@ -11,7 +11,7 @@ namespace command {
 class clear : public base::Command
 {
 public:
-    clear(QString name, QObject *parent);
+    clear(QString name, base::Box *parent);
 private:
     void doExecute();
 };

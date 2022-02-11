@@ -17,7 +17,7 @@ namespace command {
 class doc : public base::Command
 {
 public:
-    doc(QString name, QObject *parent);
+    doc(QString name, base::Box *parent);
 private:
     // data
     QFile _file;

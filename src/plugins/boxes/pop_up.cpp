@@ -20,7 +20,7 @@ PopUp::PopUp(QString name, Box *parent)
     Input(title).help("Title");
     Input(text).help("Short informative text");
     Input(details).help("Further details");
-    Input(buttons).equals("OK").help("Vector of buttons to show: (OK Yes No)");
+    Input(buttons).computes("c(\"OK\")").help("Vector of buttons to show: (OK Yes No)");
     Input(defaultButton).equals("OK").help("Button assumed when Return is typed");
     Input(escapeButton).equals("OK").help("Button assumed when Esc is typed");
     Input(icon).equals("information").help("Icon to show");

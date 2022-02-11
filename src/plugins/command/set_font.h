@@ -11,7 +11,7 @@ namespace command {
 class set_font : public set
 {
 public:
-    set_font(QString name, QObject *parent);
+    set_font(QString name, base::Box *parent);
 private:
     // Data
     QString _previousFamily;

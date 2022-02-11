@@ -17,6 +17,7 @@ class Dialog : public DialogBase
 {
 public:
     Dialog(QObject *parent);
+    void init();
     QProgressBar* progressBar();
     QWinTaskbarProgress* winProgressTaskbar();
     void finishProgress();

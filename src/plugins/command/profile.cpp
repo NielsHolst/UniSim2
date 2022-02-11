@@ -17,13 +17,13 @@ namespace command {
 PUBLISH(profile)
 HELP(profile, "profile", "writes execution profile to output file")
 
-profile::profile(QString name, QObject *parent)
+profile::profile(QString name, Box *parent)
     : Command(name, parent)
 {
 }
 
 void profile::doExecute() {
-    Box *root = environment().root();
+    Box *root = Box::root();
     if (_args.size() > 2) {
         throw Exception("Command 'profile' takes no arguments");
     }

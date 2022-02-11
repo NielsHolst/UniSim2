@@ -14,7 +14,6 @@
 #include <base/dialog_minimal.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/object_pool.h>
 #include <base/organisation.h>
 #include "main_window.h"
 
@@ -29,6 +28,7 @@ void myMsgHandler(QtMsgType, const QMessageLogContext &, const QString &msg)
 int runWithDialog() {
     MainWindow window;
     window.show();
+    window.init();
     return qApp->exec();
 }
 
@@ -115,16 +115,16 @@ int runWithoutDialog(int argc, char *argv[]) {
 
         QString translatedFilePath = translateInputXml(inputFilePath);
 
-        Command::submit(QStringList() << "set" << "folder" << "work" << "HOME", nullptr);
-        Command::submit(QStringList() << "set" << "folder" << "input" << "input", nullptr);
-        Command::submit(QStringList() << "set" << "folder" << "output" << "output", nullptr);
+        Command::submit(QStringList() << "set" << "folder" << "work" << "HOME");
+        Command::submit(QStringList() << "set" << "folder" << "input" << "input");
+        Command::submit(QStringList() << "set" << "folder" << "output" << "output");
 
         dialog->resetErrorCount();
-        Command::submit(QStringList() << command << translatedFilePath, nullptr);
+        Command::submit(QStringList() << command << translatedFilePath);
         if (dialog->errorCount() > 0)
             ThrowException(dialog->getError());
 
-        Box *sim = environment().current();
+        Box *sim = Box::root();
         if (!sim)
             ThrowException("No XML script loaded");
         Box *outputText = sim->findOne<Box*>("output/text");
@@ -144,7 +144,6 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMsgHandler);
     QApplication app(argc, argv);
     app.setObjectName("application");
-    new base::ObjectPool(&app);
 
     bool hasArguments = (argc > 1);
     int result;
@@ -155,5 +154,9 @@ int main(int argc, char *argv[])
         result = 1;
         QMessageBox::warning(nullptr, "Error", ex.what());
     }
+    catch (...) {
+        QMessageBox::warning(nullptr, "Error", "Unknown exception");
+    }
+
     return result;
 }

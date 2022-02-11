@@ -15,12 +15,13 @@
 
 namespace base {
 
+std::unique_ptr<Box> Box::_root;
 Box *Box::_latest = nullptr;
 bool Box::_debugOn = false;
 bool Box::_traceOn = false;
 
 Box::Box(QString name, Box *parent)
-    : Node(name, parent), _amended(false), _cloned(false), _timer(this)
+    : Node(name, parent), _amended(false), _initialized(false), _cloned(false), _timer(this)
 {
     help("has no documented functionality");
     if (!_latest || parent)
@@ -86,13 +87,33 @@ QString Box::sideEffects() const {
     return _sideEffects;
 }
 
-Box *Box::findRoot() {
-    Box *p = parent<Box*>();
-    return p ? p->findRoot() : this;
+bool Box::hasRoot() {
+    return _root.get();
 }
 
-Box *Box::root() {
-    return _latest ? _latest->findRoot() : nullptr;
+Box* Box::root(Box *box) {
+    if (!box)
+        _root.reset();
+    else {
+        auto newRoot = std::unique_ptr<Box>(box);
+        _root = std::move(newRoot);
+        environment().current(_root.get());
+    }
+    return _root.get();
+}
+
+Box* Box::root() {
+    if (Computation::currentStep() <= Computation::Step::Amend ||
+        Computation::currentStep() == Computation::Step::Scratch)
+        return _latest ? _latest->latestRoot() : nullptr;
+    else if (!_root)
+        ThrowException("Missing root box");
+    return _root.get();
+}
+
+Box *Box::latestRoot() {
+    Box *p = parent<Box*>();
+    return p ? p->latestRoot() : this;
 }
 
 QString Box::profileReport() {
@@ -109,21 +130,17 @@ void Box::run() {
 
 void Box::amendFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Amend);
-    try {
-        if (_amended) return;
-        createTimers();
-        _timer.start("amend");
-        for (auto box : children<Box*>())
-            box->amendFamily(false);
-        if (_traceOn) trace("amend");
-        amend();
-        touchPorts();
-        _amended = true;
-        _timer.stop("amend");
-    }
-    catch (Exception &ex) {
-        dialog().error(ex.what());
-    }
+    if (_amended)
+        ThrowException("Box already amended").context(this);
+    _amended = true;
+    createTimers();
+    _timer.start("amend");
+    for (auto box : children<Box*>())
+        box->amendFamily(false);
+    if (_traceOn) trace("amend");
+    amend();
+    touchPorts();
+    _timer.stop("amend");
 }
 
 void Box::createTimers() {
@@ -131,8 +148,6 @@ void Box::createTimers() {
     createTimer("initialize");
     createTimer("reset");
     createTimer("update");
-    createTimer("updateImports");
-    createTimer("updateSelfImports");
     createTimer("cleanup");
     createTimer("debrief");
 }
@@ -151,6 +166,12 @@ void Box::stopTimer(QString name) {
 
 void Box::initializeFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Initialize);
+    if (!_amended)
+        ThrowException("Box must be amended before initialisation").context(this);
+    if (_initialized)
+        ThrowException("Box already initialized").context(this);
+    _initialized = true;
+
     _timer.reset();
     _timer.start("initialize");
     for (auto box : children<Box*>())
@@ -208,7 +229,6 @@ void Box::debriefFamily(bool announce) {
     debrief();
     verifyPorts();
     _timer.stop("debrief");
-    if (announce) Computation::changeStep(Computation::Step::Ready);
 }
 
 const QVector<Port*> &Box::portsInOrder() {
@@ -235,6 +255,13 @@ void Box::verifyPorts() {
         for (Port *port : _portsInOrder)
             port->verifyValue();
     }
+}
+
+void Box::registerImportPortsFamily() {
+    for (Box *box : children<Box*>())
+        box->registerImportPortsFamily();
+    for (Port *port : _portsInOrder)
+        port->registerImportPorts();
 }
 
 Box* Box::clone(QString name, Box *parent) {

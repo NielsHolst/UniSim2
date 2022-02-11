@@ -13,7 +13,7 @@ namespace command {
 class batch : public base::Command
 {
 public:
-    batch(QString name, QObject *parent);
+    batch(QString name, base::Box *parent);
 private:
     // Data
     QString _relativePath, _fileMask;

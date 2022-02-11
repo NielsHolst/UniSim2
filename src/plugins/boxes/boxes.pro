@@ -48,9 +48,9 @@ HEADERS +=  \
     output_selector.h \
     output_text.h \
     output_writer.h \
-#    page_r.h \
+    page_r.h \
     parasite.h \
-#    plot_r.h \
+    plot_r.h \
     pop_up.h \
     population.h \
     predator.h \
@@ -129,9 +129,9 @@ SOURCES +=  \
     output_selector.cpp \
     output_text.cpp \
     output_writer.cpp \
-#    page_r.cpp \
+    page_r.cpp \
     parasite.cpp \
-#    plot_r.cpp \
+    plot_r.cpp \
     pop_up.cpp \
     population.cpp \
     predator.cpp \

@@ -11,7 +11,7 @@ namespace command {
 class location : public base::Command
 {
 public:
-    location(QString name, QObject *parent);
+    location(QString name, base::Box *parent);
 private:
     // Methods
     void doExecute();

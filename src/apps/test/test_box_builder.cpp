@@ -10,11 +10,10 @@ using namespace base;
 
 void TestBoxBuilder::testBuild1() {
     bool excepted(false);
-    std::unique_ptr<Box> root;
+    Box *root;
 
     try {
-        TestBoxCases::case1();
-        root = std::unique_ptr<Box>( Box::root() );
+        root = Box::root(TestBoxCases::case1());
         root->initializeFamily();
     }
     catch(const base::Exception &ex) {

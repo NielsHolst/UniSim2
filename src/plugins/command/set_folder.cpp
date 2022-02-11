@@ -24,7 +24,7 @@ HELP(set_folder_type, "set folder <folder type>", "shows path for this folder ty
 HELP(set_folder_type_path, "set folder <folder type> <path>", "changes the path for this folder type")
 HELP(set_folder_default, "set folder DEFAULT", "changes all paths to their default value")
 
-set_folder::set_folder(QString name, QObject *parent)
+set_folder::set_folder(QString name, Box *parent)
     : Command(name, parent)
 {
     setClassName("set_folder");
@@ -33,7 +33,7 @@ set_folder::set_folder(QString name, QObject *parent)
 void set_folder::doExecute() {
     switch (_args.size()) {
     case 2:
-        if (_args.at(2)=="DEFAULT")
+        if (_args.at(1)=="DEFAULT")
             setToDefault();
         else
             showAllFolders();

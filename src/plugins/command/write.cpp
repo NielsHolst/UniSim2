@@ -11,7 +11,6 @@
 #include <base/dialog_base.h>
 #include <base/environment.h>
 #include <base/exception.h>
-#include <base/general.h>
 #include <base/publish.h>
 #include "write.h"
 
@@ -23,7 +22,7 @@ namespace command {
 PUBLISH(write)
 HELP(write, "write", "writes box script")
 
-write::write(QString name, QObject *parent)
+write::write(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -36,17 +35,16 @@ void write::doExecute() {
 }
 
 void write::writeFile() {
-    Box *root =  environment().root();
+    Box *root =  Box::root();
     if (!root)
         dialog().error("No box script loaded");
     else {
         QFile file;
         environment().openOutputFile(file, ".box");
         QTextStream text(&file);
+        text << root->toText("I");
 
-        root->toText(text, "I");
         _filePath = environment().outputFilePath(".box");
-
         QString info("Box script written to '%1'");
         dialog().information(info.arg(_filePath));
         environment().incrementFileCounter();

@@ -18,7 +18,7 @@ namespace command {
 PUBLISH(reconfigure)
 HELP(reconfigure, "reconfigure", "reconfigures all standard folders and files")
 
-reconfigure::reconfigure(QString name, QObject *parent)
+reconfigure::reconfigure(QString name, Box *parent)
     : Command(name, parent)
 {
 }

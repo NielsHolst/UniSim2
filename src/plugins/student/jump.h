@@ -7,7 +7,7 @@ namespace student {
 class Jump : public base::Box
 {
 public:
-    Jump(QString name, QObject *parent);
+    Jump(QString name, Box *parent);
     void reset();
     void update();
 private:

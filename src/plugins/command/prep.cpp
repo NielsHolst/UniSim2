@@ -5,7 +5,7 @@
 #include <QDesktopServices>
 #include <QFile>
 #include <QUrl>
-#include <base/box_preprocessor.h>
+#include <base/boxscript_preprocessor.h>
 #include <base/command_help.h>
 #include <base/dialog.h>
 #include <base/environment.h>
@@ -21,7 +21,7 @@ namespace command {
 PUBLISH(prep)
 HELP(prep, "prep", "writes preprocessed box script")
 
-prep::prep(QString name, QObject *parent)
+prep::prep(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -51,7 +51,7 @@ QString prep::inputFilePath() {
 
 void prep::preprocess() {
     QString inputFilePath = prep::inputFilePath();
-    BoxPreprocessor preprocessor;
+    BoxScriptPreprocessor preprocessor;
     QString output = preprocessor.preprocess(inputFilePath);
     environment().latestLoadArg(inputFilePath);
 

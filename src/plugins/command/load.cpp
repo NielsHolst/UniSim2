@@ -2,18 +2,18 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <memory>
-#include <stdio.h>
+#include <string>
+#include <sstream>
 #include <QFileInfo>
-#include "base/box.h"
-#include "base/box_builder.h"
-#include "base/box_reader_boxes.h"
-#include "base/box_reader_xml.h"
+#include <base/box.h>
+#include <base/box_builder.h>
 #include <base/command_help.h>
+#include <base/computation.h>
 #include <base/dialog.h>
 #include <base/environment.h>
 #include <base/exception.h>
 #include <base/publish.h>
+#include <base/reader_boxscript.h>
 #include "load.h"
 
 using std::unique_ptr;
@@ -22,9 +22,9 @@ using namespace base;
 namespace command {
 
 PUBLISH(load)
-HELP(load, "load", "loads a box script")
+HELP(load, "load", "loads a boxscript")
 
-load::load(QString name, QObject *parent)
+load::load(QString name, Box *parent)
     : Command(name, parent)
 {
 }
@@ -35,14 +35,14 @@ void load::doExecute() {
     switch (_args.size()) {
     case 1:
           fileName = env.latestLoadArg();
-//        dialog().loadWithFilePicker();
         break;
     case 2:
         fileName = _args.at(1);
         break;
     default:
-        ThrowException("Too many arguments. Write 'load <file-name>'."
-                        "\nIf the file name contains spaces then enclose it in apostrophes").value(_args.join(" "));
+        ThrowException("Too many arguments. Write 'load <file-name>'.").
+                hint("If the file name contains spaces then enclose it in apostrophes").
+                value(_args.join(" "));
     }
     env.currentLoadArg(fileName);
     readFile(fileName);
@@ -50,36 +50,28 @@ void load::doExecute() {
 }
 
 void load::readFile(QString fileName) {
-    BoxReaderBase *reader{nullptr};
+    // Builder and reader collaborate to create model
     BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+
+    // Delete current model
+    Box::root(nullptr);
+
+    // Create a new model
     try {
-        switch(fileType(fileName)) {
-        case Boxes:
-            reader = new BoxReaderBoxes(&builder);
-            break;
-        case Xml:
-            reader = new BoxReaderXml(&builder);
-            break;
-        }
-        reader->parse(environment().filePath(Environment::Input, fileName));
-        environment().computationStep(ComputationStep::Amend);
-        environment().root(builder.content());
-        dialog().information(QString("%1 boxes created").arg(environment().root()->count()));
+        reader.parse(environment().inputFileNamePath(fileName));
+        Computation::changeStep(Computation::Step::Amend);
+        Box::root(builder.content());
     }
-    catch (Exception &ex) {
-        dialog().error(QString("Load failed\n") + ex.what());
+    catch (const Exception &ex) {
+        dialog().error(ex.what());
+        Computation::changeStep(Computation::Step::Ready);
     }
-    delete reader;
+
+    // Report on created model
+    int n = Box::root()->findMany<Box*>("*").size();
+    dialog().information(QString("%1 boxes created").arg(n));
 }
 
-load::FileType load::fileType(QString fileName) {
-    QString suffix = QFileInfo(fileName).suffix().toLower();
-    if (suffix == "box")
-        return Boxes;
-    else if (suffix == "xml")
-        return Xml;
-    QString s = suffix.isEmpty() ? "Missing" : "Wrong";
-    ThrowException(s + " file type. Must be '.box' or '.xml'").value(fileName);
-}
 
 }
