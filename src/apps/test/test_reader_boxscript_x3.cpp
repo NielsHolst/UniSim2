@@ -9,6 +9,7 @@
 #include <base/reader_boxscript.h>
 #include "exception_expectation.h"
 #include "input_file_path.h"
+#include "output_file.h"
 #include "test_reader_boxscript_x3.h"
 
 #define STR(X) qPrintable(convert<QString>(X))
@@ -336,3 +337,53 @@ void TestReaderBoxScriptX3::testParentheses() {
 
 }
 
+void TestReaderBoxScriptX3::testDoubleError() {
+    bool excepted(false);
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/double_error.box"));
+        Box::root(builder.content());
+    }
+    UNEXPECTED_EXCEPTION;
+}
+
+void TestReaderBoxScriptX3::testOnOffByDate() {
+    bool excepted(false);
+    BoxBuilder builder;
+    Box *root;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/on_off_by_date.box"));
+        root = Box::root(builder.content());
+        root->run();
+    }
+    UNEXPECTED_EXCEPTION;
+    if (root->port("hasError")->value<bool>()) {
+        QFAIL(qPrintable(root->port("errorMsg")->value<QString>()));
+    }
+
+    OutputFile f;
+    QVector<int>
+        isOn = f.column<int>("time.isOn"),
+        expected = {0,0,0,0,1,1,1,1,0,0,0},
+        isOn2 = f.column<int>("time2.isOn"),
+        expected2  = {1,1,1,0,0,0,0,0,0,0,0};
+    QCOMPARE(isOn, expected);
+    QCOMPARE(isOn2, expected2);
+
+}
+
+void TestReaderBoxScriptX3::testMissingReference() {
+    bool excepted(false);
+    BoxBuilder builder;
+    Box *root;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/missing_reference.box"));
+        root = Box::root(builder.content());
+        root->run();
+    }
+    UNEXPECTED_EXCEPTION;
+    QVERIFY(root->port("hasError")->value<bool>());
+}

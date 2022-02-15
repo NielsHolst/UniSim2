@@ -39,8 +39,8 @@ void TestSimulation::testGrowth() {
         QFAIL(qPrintable(root->port("errorMsg")->value<QString>()));
 
     OutputFile f;
-    QCOMPARE(f.columnLabels(), QStringList()<<"iteration"<<"sim/step"<<"comp/step"<<"r"<<"density");
-    QCOMPARE(f.cell<int>(3,"sim/step"), 3);
+    QCOMPARE(f.columnLabels(), QStringList()<<"iteration"<<"sim.step"<<"comp.step"<<"r"<<"density");
+    QCOMPARE(f.cell<int>(3,"sim.step"), 3);
     QCOMPARE(f.cell<double>(3,"density"), 115.763);
 }
 

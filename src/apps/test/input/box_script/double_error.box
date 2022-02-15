@@ -1,4 +1,4 @@
-// egg2.box
+// egg1.box
 Simulation sim {
   .steps = 14
   Stage egg {
@@ -7,14 +7,12 @@ Simulation sim {
   }
   OutputR {
     PageR {
-      .xAxis = sim[step]
-      .width = 5
+      .width = 4.0
       .height = 2.5
+      .xAxis = sim[step]
       PlotR {
-        .ports = egg[content] | egg[outflowTotal]
-        .ncol = 2
+        .ports = egg[content]
       }
     }
   }
 }
-

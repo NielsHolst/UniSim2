@@ -13,6 +13,9 @@ private slots:
     void testMultipleMatches();
     void testCondition();
     void testParentheses();
+    void testDoubleError();
+    void testOnOffByDate();
+    void testMissingReference();
 };
 
 DECLARE_TEST(TestReaderBoxScriptX3)

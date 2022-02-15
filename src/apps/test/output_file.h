@@ -13,14 +13,15 @@ public:
     QStringList columnLabels();
     QStringList columnFormats();
     int numRows();
-    template <class T=QString> T cell(int i, QString col);
     QStringList row(int i);
     QStringList row(int i, QStringList columns);
-    QStringList column(int i);
-    QStringList column(QString label);
+    template <class T=QString> T cell(int i, QString col);
+    template <class T> QVector<T> column(int i);
+    template <class T> QVector<T> column(QString label);
 private:
     void open();
     void close();
+    QStringList columnAsStrings(int i);
     QFile file;
 };
 
@@ -29,6 +30,15 @@ T OutputFile::cell(int i, QString col) {
     int j = columnLabels().indexOf(col);
     QString s = (j == -1) ? QString() : row(i).at(j);
     return base::convert<T>(s);
+}
+
+template <class T> QVector<T> OutputFile::column(int i) {
+    return base::convert<T, QVector>(columnAsStrings(i));
+}
+
+template <class T> QVector<T>  OutputFile::column(QString label) {
+    int i = columnLabels().indexOf(label);
+    return (i == -1) ? QVector<T>() : column<T>(i);
 }
 
 #endif

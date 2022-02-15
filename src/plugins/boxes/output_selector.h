@@ -20,7 +20,7 @@ public:
 private:
     // Inputs
     int skipRows, period;
-    bool final, useLocalDecimalChar;
+    bool final, useLocalDecimalChar, skipFormats;
     // Outputs
     bool isActive, isSkipping;
     // Data

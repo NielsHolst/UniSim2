@@ -32,14 +32,12 @@ void add(const Node *referee, QVector<Port *> ports) {
             ThrowException("Table of resolved references not cleared");
         return;
     }
-    dump("addResolvedReferences A");
     for (const Port *port : ports) {
         if (!port->value().isNull()) {
             auto ref = ResolvedReference {referee, port};
             _table[ref] = Computation::currentStep();
         }
     }
-    dump("addResolvedReferences Z");
 }
 
 void check() {

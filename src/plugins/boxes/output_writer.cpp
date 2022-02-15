@@ -30,15 +30,16 @@ OutputWriter::OutputWriter(QString name, Box *parent)
     Input(useLocalDecimalChar).imports("OutputSelector::*[useLocalDecimalChar]");
     Input(isActive).imports("OutputSelector::*[isActive]");
     Output(filePath).noClear().help("Name of output file including absolute path");
+    Output(decimalChar).noClear().help("Decimal character used in output");
 }
 
 void OutputWriter::amend() {
-    // If it does not exist, create an OutputSelector as a child box
+    // If it does not exist, create an OutputSelector as a child
     if (!findMaybeOne<Box*>("OutputSelector::*")) {
-        BoxBuilder builder(this);
-        builder.
+        BoxBuilder(this).
         box("OutputSelector").name("selector").endbox();
-        findOne<Box*>("./OutputSelector::selector")->amendFamily(false);    }
+        findOne<Box*>("OutputSelector::selector")->amendFamily(false);
+    }
 }
 
 void OutputWriter::initialize() {
@@ -48,6 +49,8 @@ void OutputWriter::initialize() {
     // Set decimal character
     if (useLocalDecimalChar)
         QLocale::setDefault(QLocale::system());
+    auto ch = QLocale().decimalPoint();
+    decimalChar = ch;
 
     // Open output file and write column headings and formats
     openFileStream();

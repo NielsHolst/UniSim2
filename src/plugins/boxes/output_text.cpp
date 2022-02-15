@@ -20,11 +20,12 @@ OutputText::OutputText(QString name, Box *parent)
 }
 
 void OutputText::amend() {
-    // If it does not exist, create an OutputWriter as a sibling box
-    Box *p = parent<Box*>();
-    if (!findMaybeOne<Box*>("OutputWriter::*"))
-        BoxBuilder(p).
+    // If it does not exist, create an OutputWriter on the root
+    if (!findMaybeOne<Box*>("OutputWriter::*")) {
+        BoxBuilder(Box::root()).
         box("OutputWriter").name("outputWriter").endbox();
+        findOne<Box*>("/OutputWriter::outputWriter")->amendFamily(false);
+    }
 }
 
 }

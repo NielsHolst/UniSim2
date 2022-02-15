@@ -31,10 +31,10 @@ public:
 
 private:
     // Input
-    QString begin;
-    QVector<QString> end;
-    bool popUp, keepPages, keepVariables, saveAsDataFrame, plotAsList;
+    bool showPlots, clearPlots, popUp, saveDataFrame, plotAsList;
+    int showLines;
     double width, height;
+    QVector<QString> scripts;
 
     // Output
     base::Path ports;
@@ -45,17 +45,14 @@ private:
     QVector<PageR*> _pages;
     QFile _file;
     QString _filePathR, _filePathTxt;
-    QStringList _RCodes;
+    QStringList _RCode;
 
     // Methods
     QString popUpCode();
     void openFile();
     void writeScript();
     void copyToClipboard();
-//    void copyFileToDestination(QString filePath);
-    QString makeOutputRCode();
     QString toFigureListElement(PageR *page);
-    QStringList endScripts();
 };
 
 } // boxes

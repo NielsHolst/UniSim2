@@ -111,11 +111,10 @@ void ListOutput::toString(base::Port *port, int level) {
 
     if (!_listExportsOnly || !port->exportPorts().isEmpty()) {
         QString assignment = port->value().asString();
-        if (port->value().type() == Value::Type::String) {
+//        if (port->value().type() == Value::Type::String) {
 //            if (assignment.size() > 13)
 //                assignment = assignment.left(10) + "...";
-            assignment = "\"" + assignment + "\"";
-        }
+//        }
         if (!_listShort) {
             if (!port->unit().isEmpty())
                 assignment += " " + port->unit();

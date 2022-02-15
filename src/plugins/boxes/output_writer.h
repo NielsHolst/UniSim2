@@ -34,7 +34,7 @@ private:
          isActive;
 
     // Outputs
-    QString filePath;
+    QString filePath, decimalChar;
 
     // Data
     QFile _file;

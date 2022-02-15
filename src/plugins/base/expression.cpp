@@ -602,6 +602,16 @@ Value Expression::evaluate() {
         _stack.clear();
         _stack = savedStack;
     }
+
+    if (_parent->name() == "T") {
+        QString s = toString(result), t = typeName(result);
+
+        Value v = isValue   (result) ?  get<Value>(result) :
+                  isValuePtr(result) ? *get<ValuePtr>(result) :
+                  Value::null();
+        std::cout << qPrintable(s+" "+t+" "+v.typeName()) << std::endl;
+    }
+
     // Return result or null
     return isValue   (result) ?  get<Value>(result) :
            isValuePtr(result) ? *get<ValuePtr>(result) :

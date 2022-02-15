@@ -47,7 +47,7 @@ Result parse(std::string source, std::string fileNamePath) {
 Expression parseExpression(Port *parent, QString s) {
     Computation::pushStep(Computation::Step::Scratch);
     BoxBuilder builder;
-    auto ast = parse("Box{&x=" + s.toStdString() + "}");
+    auto ast = parse("Box{\n  &x=" + s.toStdString() + "\n}");
     ast->root.build(&builder);
     auto root = std::unique_ptr<Box>( builder.content(BoxBuilder::Amend::None) );
     Expression e = root->port("x")->expression();

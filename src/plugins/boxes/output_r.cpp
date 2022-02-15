@@ -30,27 +30,25 @@ OutputR::OutputR(QString name, Box *parent)
 {
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\ncopies an R script to the clipboard");
-    Input(begin).equals("scripts/begin.R").help("Name of R script run before auto-generated R script");
-    Input(end).computes("c(\"scripts/end.R\")").help("Name of R script(s) run after auto-generated R script");
-    Input(keepPages).equals(false).help("Keep previous pages in R?");
-    Input(keepVariables).equals(false).help("Keep previous variables in R?");
-    Input(saveAsDataFrame).equals(false).help("Save output as R data frame too?");
-    Input(popUp).equals(false).help("Show pages in pop-up windows?");
+    Input(showPlots).equals(true).help("Show plots in R?");
+    Input(clearPlots).equals(false).help("Clear previous plots before showing new plots in R?");
+    Input(showLines).equals(0).help("Number of lines to show at the prompt");
+    Input(popUp).equals(false).help("Show plots in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
     Input(plotAsList).equals(false).help("Put plots into an R list?");
-
+    Input(saveDataFrame).equals(false).help("Save output as R data frame?");
+    Input(scripts).computes("c(\"scripts/begin.R\", \"scripts/end.R\")").help("R scripts run after the auto-generated R script");
     Output(ports).computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
     Output(numPages).help("Number of pages in this output");
 }
 
 void OutputR::amend() {
-    // If it does not exist, create an OutputWriter as a sibling box
+    // If it does not exist, create an OutputWriter on the root
     if (!findMaybeOne<Box*>("OutputWriter::*")) {
-        BoxBuilder builder(Node::parent<Box*>());
-        builder.
+        BoxBuilder(Box::root()).
         box("OutputWriter").name("outputWriter").endbox();
-        findOne<Box*>("../OutputWriter::outputWriter")->amendFamily(false);
+        findOne<Box*>("/OutputWriter::outputWriter")->amendFamily(false);
     }
 }
 
@@ -96,8 +94,6 @@ QString OutputR::toScript() {
     }
     s += ")\n}\n";
 
-    if (!_RCodes.isEmpty()) s += _RCodes.join("\n") + "\n";
-
     return s;
 }
 
@@ -112,7 +108,7 @@ QString OutputR::toFigureListElement(PageR *page) {
 }
 
 void OutputR::addRCode(QString s) {
-    _RCodes << s;
+    _RCode << s;
 }
 
 //
@@ -125,9 +121,20 @@ void OutputR::debrief() {
     copyToClipboard();
 }
 
+inline QString boolToR(bool x) {
+    return x ? "TRUE" : "FALSE";
+}
+
 void OutputR::writeScript() {
     QTextStream script(&_file);
-    script << toScript();
+    if (!_RCode.isEmpty())
+        script << _RCode.join("\n") + "\n";
+    script << "show_plots        = " + boolToR(showPlots)     << "\n"
+           << "clear_plots       = " + boolToR(clearPlots)    << "\n"
+           << "save_data_frame   = " + boolToR(saveDataFrame) << "\n"
+           << "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() << "\"\n"
+           << "output_file_name  = \"" + _filePathTxt << "\"\n"
+           << toScript();
     _file.close();
 }
 
@@ -142,43 +149,14 @@ void OutputR::openFile() {
 }
 
 void OutputR::copyToClipboard() {
-    QString output = makeOutputRCode();
-    environment().copyToClipboard(output);
-}
-
-QString OutputR::makeOutputRCode() {
-    // Put together R code
     QString s;
-    s += "saveAsDataFrame = " + convert<QString>(saveAsDataFrame) + "; ";
-    s += "keepPages = " + convert<QString>(keepPages) + "; ";
-    s += "keepVariables = " + convert<QString>(keepVariables) + "\n";
-    s += "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() +  "\"\n";
-    s += "output_file_name  = \"" + _filePathTxt  + "\"\n";
-    s += "source(\"" + environment().inputFileNamePath(begin) + "\")\n";
+    // Source the generated R script
     if (numPages>0) s += "source(\"" + _filePathR + "\")\n";
-    s += endScripts().join("");
-    return s;
-}
-
-//void OutputR::copyFileToDestination(QString sourceFilePath) {
-//    QString fileName = QFileInfo(sourceFilePath).fileName(),
-//            destFilePath = _destinationDir.absolutePath() + "/" + fileName;
-//    if (QFile::exists(destFilePath))
-//        QFile::remove(destFilePath);
-//    bool ok = QFile::copy(sourceFilePath, destFilePath);
-//    if (!ok) {
-//        ThrowException("Could not copy file to destination").
-//            value(sourceFilePath + " -> " + destFilePath);
-//    }
-//}
-
-QStringList OutputR::endScripts() {
-    QStringList scripts;
-    for (QString script : end) {
-        QString s = "source(\"" + environment().inputFileNamePath(script) + "\")\n";
-        scripts << s;
-    }
-    return scripts;
+    // Source other scripts
+    for (QString script : scripts)
+        s += ("source(\"" + environment().inputFileNamePath(script) + "\")\n");
+    // Copy source statements to clipboard
+    environment().copyToClipboard(s);
 }
 
 }

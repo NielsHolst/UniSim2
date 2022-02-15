@@ -22,7 +22,11 @@ OnOffByDate::OnOffByDate(QString name, Box *parent)
 
 void OnOffByDate::setSwitch() {
     BareDate date(x.month(), x.day());
-    isOn = (date >= xOn && date <= xOff);
+    isOn = (xOn < xOff) ?
+            // If xOn precedes xOff (within-year interval)
+            date >= xOn && date <= xOff :
+            // The other way round (between-year interval)
+            date >= xOn || date <= xOff; // simple and surprising!
 }
 
 void OnOffByDate::setValue() {

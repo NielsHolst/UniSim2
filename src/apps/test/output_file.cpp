@@ -63,7 +63,7 @@ QStringList OutputFile::row(int i, QStringList columns) {
     return list;
 }
 
-QStringList OutputFile::column(int i) {
+QStringList OutputFile::columnAsStrings(int i) {
     if (i>=columnLabels().size())
         return QStringList();
     open();
@@ -78,11 +78,6 @@ QStringList OutputFile::column(int i) {
     }
     close();
     return list;
-}
-
-QStringList OutputFile::column(QString label) {
-    int col = columnLabels().indexOf(label);
-    return (col == -1) ? QStringList() : column(col);
 }
 
 void OutputFile::open() {

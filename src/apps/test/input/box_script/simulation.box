@@ -6,7 +6,7 @@ Simulation sim {
     &r = 1.05
     &density = if    (comp[step]=="reset" ) then 100.0 
                elsif (comp[step]=="update") then .[r] * .[density]
-               else .[aaa]
+               else .[density]
   }
   OutputText output {
     .ports = pop[*] | sim[step] | comp[step]

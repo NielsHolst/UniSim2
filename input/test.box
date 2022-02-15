@@ -1,5 +1,0 @@
-// butterfly1.box
-Simulation sim {
-  .steps = 273
-}
-

@@ -125,7 +125,7 @@ Ports are referred to by way of path expressions (\iref{ch:path-expressions}). I
 
 You can set an input port equal to another input or output port. However, you can never in a box script set the value of an output port. Output ports are governed strictly by their \CPP\ implementation. For brevity we may call input ports simply \concept{inputs} and output ports, simply \concept{outputs}.
 
-As the port name \code{ports} of the \code{PlotR} class suggests, this input port accepts more than one input. We supply this on vector form, simply by separating elements with spaces and embracing the whole vector with parentheses. Here, we have changed the value of \code{ports} to take two inputs. By default plots inside a page will be stacked. Here we have set the \code{ncol} input to 2 to set the plots side by side:
+As the port name \code{ports} of the \code{PlotR} class suggests, this input port accepts more than one input. We supply this on vector form, simply by separating elements with spaces and embracing the whole vector with parentheses. Here, we have changed the value of \code{ports} to take two inputs; you stick ports together with the pipe symbol \code{|}. By default plots inside a page will be stacked. Here we have set the \code{ncol} input to 2 to set the plots side by side:
 
 \lstset{numbers=left}
 \begin{boxscript}
@@ -138,7 +138,7 @@ Simulation sim {
 :
 :
       PlotR {
-        .ports = (egg[content] egg[outflowTotal])
+        .ports = egg[content] | egg[outflowTotal]
         .ncol = 2
       }
     }
@@ -242,7 +242,7 @@ Simulation sim {
 :
     .xAxis = calendar[date]
       PlotR {
-        .ports = (egg[content] egg[outflowTotal])   
+        .ports = egg[content] | egg[outflowTotal]
         .ncol = 2
       }
       PlotR {

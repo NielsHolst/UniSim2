@@ -9,15 +9,6 @@ library(scales)
 library(splines)
 library(stringr)
 
-
-skip_formats = exists("output_skip_formats")
-if (exists("keepPages") && !keepPages) graphics.off ()
-if (exists("keepVariables") && !keepVariables) {
-  del = ls(all=TRUE) 
-  del = del[!(del %in% c("box_script_folder", "output_file_name", "saveAsDataFrame","skip_formats"))]
-  rm(list=del)
-}
-
 theme_set(theme_bw())
 
 # See https://data-se.netlify.com/2018/12/12/changing-the-default-color-scheme-in-ggplot2/
@@ -399,12 +390,3 @@ plot_histogram = function(df, ports, bins, ncol, nrow) {
     facet_wrap(~Variable, scales="free", ncol=ncol, nrow=nrow) +
     theme(legend.position="none")    
 }
-
-# Convert text output to data frame
-if (exists("saveAsDataFrame") && saveAsDataFrame) {
-  sim = read_output(output_file_name)
-  file_name_R = paste0(output_file_folder(), "/", output_file_base_name(), ".Rdata")
-  print(paste("Writing sim data frame to", file_name_R))
-  save(sim, file=file_name_R)
-}
-

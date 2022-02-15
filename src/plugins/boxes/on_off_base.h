@@ -19,12 +19,11 @@ public:
         Input(valueOn).equals(1).help("Value inside [xOn,xOff] interval");
         Input(valueOff).equals(0).help("Value outside [xOn,xOff] interval");;
         Input(isSticky).equals(false).help("Should remain on when switched on?");
-        Input(onAtReset).equals(false).help("Switch on at reset?");
         Output(value).help("Current on or off value");
         Output(isOn).help("Is switch on?");
     }
     void reset() {
-        isOn = onAtReset;
+        setSwitch();
         setValue();
     }
     void update() {
@@ -38,7 +37,7 @@ protected:
     X x;
     Limits xOn, xOff;
     double valueOn, valueOff;
-    bool onAtReset, isSticky;
+    bool isSticky;
     // Output
     double value;
     bool isOn;

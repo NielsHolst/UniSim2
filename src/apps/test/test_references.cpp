@@ -80,11 +80,6 @@ void TestReferences::testForward() {
     UNEXPECTED_EXCEPTION;
 
     try {
-        root->initializeFamily();
-    }
-    UNEXPECTED_EXCEPTION;
-
-    try {
         root->resetFamily();
     }
     UNEXPECTED_EXCEPTION;

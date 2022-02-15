@@ -16,7 +16,7 @@ Simulation sim {
       .width = 5
       .height = 2.5
       PlotR {
-        .ports = (egg[content] egg[outflowTotal])   
+        .ports = egg[content] | egg[outflowTotal]
         .ncol = 2
       }
     }

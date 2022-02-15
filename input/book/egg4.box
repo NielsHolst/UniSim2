@@ -19,13 +19,11 @@ Simulation sim {
       .width = 7
       .height = 7
       PlotR {
-        .ports = (egg[content] egg[outflowTotal])   
+        .ports = egg[content] | egg[outflowTotal]
         .ncol = 2
-        .fontSize = 13    
       }
       PlotR {
         .ports = weather[Tavg]
-        .fontSize = 13
       }
     }
   }

@@ -21,6 +21,7 @@ OutputSelector::OutputSelector(QString name, Box *parent)
     Input(period).equals(1).help("If >1: A row of summary output will be produced with this period");
     Input(final).equals(false).help("Overrules 'period'");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
+    Input(skipFormats).equals(false).help("Skip line with column formats?");
     Output(isActive).help("Should output be written?");
     Output(isSkipping).help("Are lines being skipped?");
 }

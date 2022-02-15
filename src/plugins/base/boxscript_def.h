@@ -44,7 +44,6 @@ namespace boxscript { namespace parser
 {
     namespace x3 = boost::spirit::x3;
     using x3::char_;
-//    using x3::double_;
     using x3::int_;
     using x3::digit;
     using x3::eol;
@@ -166,17 +165,17 @@ namespace boxscript { namespace parser
     };
 
     auto const assignment_def = (port_prefix > +name) >> (char_('=')|char_('~')) >> (if_expression|expression);
-    auto const bare_date_def = (integer >> '/' >> integer) [dm] |
-                        ('/' >> integer >> '/' >> integer) [md];
+    auto const bare_date_def = lexeme[integer >> '/' >> integer] [dm] |
+                        lexeme['/' >> integer >> '/' >> integer] [md];
     auto const bare_date_time_def = bare_date >> (lit("T")|lit(" ")) >> time;
     auto const bool__def = lexeme[x3::string("TRUE") | x3::string("FALSE")];
     auto const box_def = class_name >> -name >> '{' >> *assignment >> *box > '}';
     auto const boxscript_def = box;
     auto const class_name_def = lexeme[name >> -(x3::string("::") >> name)];
-    auto const date_def = (integer >> '/' >> integer >> '/' > integer) [dmy_ymd] |
-                          (integer >> '.' >> integer >> '.' > integer) [dmy_ymd] |
-                          (integer >> '-' >> integer >> '-' > integer) [dmy_ymd] |
-                   ('/' >> integer >> '/' >> integer >> '/' > integer) [mdy];
+    auto const date_def = lexeme[integer >> '/' >> integer >> '/' > integer] [dmy_ymd] |
+                          lexeme[integer >> '.' >> integer >> '.' > integer] [dmy_ymd] |
+                          lexeme[integer >> '-' >> integer >> '-' > integer] [dmy_ymd] |
+                   lexeme['/' >> integer >> '/' >> integer >> '/' > integer] [mdy];
     auto const date_time_def = date >> lit("T") >> time;
     auto const dots_def = lexeme[x3::repeat(1,3)[x3::string(".")]];
     auto const expression_def = -sign >> operand >> *operation;
@@ -189,7 +188,7 @@ namespace boxscript { namespace parser
     auto const joker_def = lexeme[x3::string("*")];
     auto const joker_name_def = name | joker | dots;
     auto const name_def = lexeme[char_("a-zA-Z") >> *char_("a-zA-Z0-9_")];
-    auto const number_def = double_ | int_;
+    auto const number_def = lexeme[double_ | int_];
     auto const operand_def = bool_ | function_call | date_time | date | bare_date | time | number |
                              path | quoted_string | grouped_expression;
     auto const operation_def = operator_ >> operand;
@@ -205,7 +204,7 @@ namespace boxscript { namespace parser
     auto const port_prefix_def = char_('.')|char_('&');
     auto const quoted_string_def = lexeme['"' >> *(char_ - '"') >> '"'];
     auto const sign_def = char_("+")|char_("-")|char_("!");
-    auto const time_def = integer >> ':' > integer >> -(':' > integer);
+    auto const time_def = lexeme[integer >> ':' > integer >> -(':' > integer)];
 
 
     BOOST_SPIRIT_DEFINE(

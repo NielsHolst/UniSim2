@@ -10,13 +10,13 @@ Simulation sim {
   Box butterfly {
     Stage egg {
       .initial = 100 
-      .inflow = ../adult/oviposition[outflow]  //!
+      .inflow = ../adult/oviposition[outflow] 
       .duration = 140
       .timeStep = ./time[value] //!
-      OnOff time { //!
+      OnOffByDate time { //!
         .x = calendar[dayOfYear]
-        .xOn = 107    // 17 April
-        .xOff = 152   //  1 June
+        .xOn = 17/4    // 17 April
+        .xOff = 1/6   //  1 June
         .valueOn = ./dayDegrees[step]
         .valueOff = 0
         DayDegrees dayDegrees {
@@ -65,11 +65,11 @@ Simulation sim {
   OutputR {
     PageR {
       .xAxis = calendar[date]
-      .ncol = 3 //!
-      +monthBreaks = "scale_x_datetime(
+      .ncol = 3 
+      &monthBreaks = "scale_x_datetime(
                         breaks = date_breaks('3 months'),
                         labels = date_format('%b')
-                      )" //!
+                      )" 
       PlotR {
         .ports = *[content]
         .ggplot = ..[monthBreaks]
@@ -78,8 +78,8 @@ Simulation sim {
         .ports = *[outflowTotal]
         .ggplot = ..[monthBreaks]
       }
-      PlotR { //!
-        .ports = (calendar[dayOfYear] weather[Tavg] egg/time/dayDegrees[step] egg/time[isOn] egg[timeStep])
+      PlotR {
+        .ports = calendar[dayOfYear] | weather[Tavg] | egg/time/dayDegrees[step] | egg/time[isOn] | egg[timeStep]
         .ggplot = ..[monthBreaks]
       }
     }

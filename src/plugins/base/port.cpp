@@ -174,17 +174,28 @@ void Port::evaluate() {
             // Overwrite value's type, as an auxillary port may change type:  Its expression
             // is evaluated again and again, and additional references (with other types) may have been resolved
             _value.overwrite(_expression.evaluate());
-        else
+        else {
             // Update value, keeping its type, which for inputs and outputs were defined
             // in the C++ code; the expression's type will be converted to the value's types
             // For aux ports, all references have now been resolved and the value's type thereby fixed
-            _value = _expression.evaluate();
+            Value evaluation = _expression.evaluate();
+            if (name() == "T") {
+                QString s = Expression::toString(evaluation);;
+                std::cout << "T = " << qPrintable(s) << " " << ResolvedReferences::fixed() << std::endl;
+            }
+            if (evaluation.isNull() && ResolvedReferences::fixed()) {
+                QString s = _expression.originalAsString();
+                QString s2 = fullName();
+                std::cout << "Port throws exception" << std::endl;
+                ThrowException("Unknown reference in expression").
+                        value(s).context(this);
+            }
+            _value = evaluation;
+        }
     }
     s1 = _expression.originalAsString(),
     s2 = _expression.stackAsString(),
     s3 = "Value = " + _value.asString(true, true) + "{"+_value.typeName()+"}" ;
-    if (name()=="xxx" || name()=="aaa")
-        std::cout << "Port:: evaluate x a\n";
 
     // Register if the value will remain constant after reset
     if (Computation::currentStep() == Computation::Step::Reset)

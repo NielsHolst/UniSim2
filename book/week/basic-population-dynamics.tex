@@ -96,7 +96,7 @@ OutputR {
   PageR {
     .xAxis = calendar[date]
     .ncol = 2
-    +monthBreaks = "scale_x_datetime(
+    &monthBreaks = "scale_x_datetime(
                       breaks = date_breaks('months'), 
                       labels = date_format('%\%%b')
                     )" 
@@ -113,7 +113,7 @@ OutputR {
 \end{boxscript}
 \lstset{numbers=none}
 
-It turns out that we are allowed to create new ports in box scripts. They are called \concept{blind ports} because you cannot see them in the original \CPP\ code. You declare a blind port by preceeding it with a plus (\code{+}) rather than a dot (\code{.}). Here we declared \code{monthBreaks} (lines 5-8) to hold the common code and then refer to that port when setting the two \code{ggplot} inputs (lines 11 and 15); the double-dots (\code{..}) refer to the parent box (\iref{ch:path-expressions-double-dot}). Programmers will recognise that blind ports can work like local variables, as found in many other programming languages. In contrast to local variables, however, blind ports -- like other ports -- can be read from any box in the script by reference to the box containing the port. So, all ports have a local anchorage by the box owning them but can be used globally.
+It turns out that we are allowed to create new ports in box scripts. They are called \concept{blind ports} because you cannot see them in the original \CPP\ code. You declare a blind port by preceeding it with an ampesand (\code{&}) rather than a dot (\code{.}). Here we declared \code{monthBreaks} (lines 5-8) to hold the common code and then refer to that port when setting the two \code{ggplot} inputs (lines 11 and 15); the double-dots (\code{..}) refer to the parent box (\iref{ch:path-expressions-double-dot}). Programmers will recognise that blind ports can work like local variables, as found in many other programming languages. In contrast to local variables, however, blind ports -- like other ports -- can be read from any box in the script by reference to the box containing the port. So, all ports have a local anchorage by the box owning them but can be used globally.
 
 \begin{figure} [ht]
 \centering
@@ -228,7 +228,7 @@ To be prepared for the large numbers expected, when we run the model for more th
 \lstset{numbers=left}
 \begin{boxscript}
 // From butterfly5.box
-+monthBreaks = "scale_x_datetime(
+&monthBreaks = "scale_x_datetime(
                   breaks = date_breaks('3 months'), 
                   labels = date_format('%\%%b')
                 ) + 
@@ -314,9 +314,9 @@ Simulation {
   }
   OutputR {
     Box p {
-      +dayLength  = dayLength[value]
-      +eggsPerDay = fecundity[value]
-      +dottedLine = "geom_point(size=2)"
+      &dayLength  = dayLength[value]
+      &eggsPerDay = fecundity[value]
+      &dottedLine = "geom_point(size=2)"
     }
     PageR {
       .width = 4
@@ -427,14 +427,14 @@ Simulation sim {
   }
   OutputR {
     Box p {
-      +eggsPerDay = queen/fecundity[value]
+      &eggsPerDay = queen/fecundity[value]
     }
     PageR {
       .xAxis = calendar[date]
       PlotR {
-        .ports = (sun[dayLength] 
-                   p[eggsPerDay] 
-                   *[content] )
+        .ports = sun[dayLength] |
+                   p[eggsPerDay] |
+                   *[content] 
         .ggplot = "scale_x_datetime( 
                      breaks = date_breaks('months'), 
                      labels = date_format('%\%%b') 
