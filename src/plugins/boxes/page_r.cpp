@@ -32,7 +32,6 @@ PageR::PageR(QString name, Box *parent)
     Input(plotAsList).imports("..[plotAsList]");
     Input(popUp)     .imports("..[popUp]");
     Input(numPages)  .imports("..[numPages]");
-    Input(keepPages) .imports("..[keepPages]");
 }
 
 void PageR::initialize() {
@@ -40,7 +39,7 @@ void PageR::initialize() {
     _plots = findMany<PlotR*>("./*");
 
 
-    bool showPages = (numPages>1 || keepPages);
+    bool showPages = (numPages>1);
     bool dimChanged = (TestNum::ne(width, 7.) || TestNum::ne(height, 7.));
 
     // Raise pop-up anyway?

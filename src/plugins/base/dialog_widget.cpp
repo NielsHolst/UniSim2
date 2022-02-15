@@ -482,7 +482,7 @@ void DialogWidget:: submitCommand() {
     setTextCursor(cursor);
     QString line = DialogWidget::line();
     QStringList items = lineItems();
-    if (!items.isEmpty()) {
+    if (!line.isEmpty() && !items.isEmpty()) {
         _history.add(line);
         try {
             Command::submit(items);

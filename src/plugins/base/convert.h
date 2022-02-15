@@ -113,7 +113,7 @@ template<> inline double convert(QDate x)  {return x.dayOfYear();}
 template<> inline double convert(QTime x)  {return x.hour() + x.minute()/60. + x.second()/3600.;}
 template<> inline double convert(QDateTime x)   {return convert<double>(x.date()) +
                                                         convert<double>(x.time());}
-template<> inline double convert(BareDate x)    {return convert<double>(x);}
+template<> inline double convert(BareDate x)    {return x.date().dayOfYear();}
 template<> inline double convert(const char *x) {return convert<double>(QString(x));}
 
 // Conversions to QString

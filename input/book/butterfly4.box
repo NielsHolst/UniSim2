@@ -2,7 +2,7 @@
 Simulation sim {
   .steps = 365
   Calendar calendar {
-    .initialDateTime = 1/1/2009  //!
+    .initialDateTime = 1/1/2009  
   }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"
@@ -12,9 +12,9 @@ Simulation sim {
       .initial = 100 
       .inflow = ../adult/oviposition[outflow] 
       .duration = 140
-      .timeStep = ./time[value] //!
-      OnOffByDate time { //!
-        .x = calendar[dayOfYear]
+      .timeStep = ./time[value] 
+      OnOffByDate time { 
+        .x = calendar[date]
         .xOn = 17/4    // 17 April
         .xOff = 1/6   //  1 June
         .valueOn = ./dayDegrees[step]

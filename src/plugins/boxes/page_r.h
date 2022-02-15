@@ -26,7 +26,7 @@ private:
     double width, height;
     int ncol, nrow, numPages;
     QString title;
-    bool plotAsList, popUp, keepPages;
+    bool plotAsList, popUp;
     // Data
     QVector<PlotR*> _plots;
     static int _commonPageNumber;
