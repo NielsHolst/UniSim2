@@ -2,7 +2,6 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <iostream>
 #include <limits>
 #include <sstream>
 #include "box.h"
@@ -132,12 +131,7 @@ inline int precedence(Expression::Element element) {
 void Expression::toPostfix() {
     // After: https://www.tutorialspoint.com/Convert-Infix-to-Postfix-Expression
     Stack postfix, myStack;
-    QString s0 = toString(_stack),
-            s1, s2, s3;
     for (auto &element : _stack) {
-        s1 = toString(element);
-        s2 = toString(myStack);
-        s3 = toString(postfix);
         switch (type(element)) {
         case Type::Value:
         case Type::ValuePtr:
@@ -174,9 +168,6 @@ void Expression::toPostfix() {
                     postfix.push_back( myStack.back() );
                     myStack.pop_back();
                 }
-                s1 = toString(element);
-                s2 = toString(myStack);
-                s3 = toString(postfix);
                 if (myStack.empty())
                     ThrowException("No matching left parenthesis").context(_parent);
                 myStack.pop_back(); // pop left parenthesis
@@ -190,7 +181,6 @@ void Expression::toPostfix() {
             postfix.push_back(element);
             break;
         case Type::FunctionCall:
-//            myStack.push_back(registerFunctionCall(element));
             myStack.push_back(element);
             break;
         case Type::FunctionCallEnd:
@@ -206,8 +196,6 @@ void Expression::toPostfix() {
         postfix.push_back( myStack.back() );
         myStack.pop_back();
     }
-    s2 = toString(myStack);
-    s3 = toString(postfix);
     // Copy result
     _stack.clear();
     _stack = postfix;
@@ -386,11 +374,6 @@ void Expression::reduceByFunctionCall(Stack &stack) {
     using Type = Value::Type;
     func.type = argumentsType(stack, func.arity);
     Type &type(func.type);
-    QString s1 = toString(stack),
-            s2 = Value::typeName(type);
-//    std::cout << "reduceByFunctionCall\n"
-//              << "stack " << qPrintable(s1) << std::endl
-//              << "common type" << qPrintable(s2) << std::endl;
 
     // Functions that accepts null type
     if (func.name == "sum") {
@@ -510,9 +493,6 @@ bool Expression::reduceByCondition(Stack &stack) {
 }
 
 Value Expression::evaluate() {
-    QString s0, s1, s2, s3;
-    s0 = stackAsString();
-
     if (_stack.size() == 0)
         ThrowException("Expression stack is empty").context(_parent);
 
@@ -533,9 +513,6 @@ Value Expression::evaluate() {
     // First time ::fixed() turns true _isResolved turns true and remains true.
     _isResolved = ResolvedReferences::fixed();
 
-    s1 = stackAsString();
-//    std::cout << "\nExpression::evaluate " << qPrintable(s0+"\n"+s1) << std::endl;
-
     enum class ConditionalPhase {FinishUponThen, SkipUntilThen, SkipUntilElse, Done};
     auto phase = ConditionalPhase::Done;
 
@@ -546,12 +523,6 @@ Value Expression::evaluate() {
     }
     else {
         for (Element &element : _stack) {
-            s2 = toString(myStack);
-            s3 = toString(element);
-//            std::cout << "Reduce\n"
-//                      << "My stack " << qPrintable(s2) << std::endl
-//                      << "Element "  << qPrintable(s3) << std::endl;
-
             if (phase == ConditionalPhase::SkipUntilThen) {
                 if (isConditionalThen(element))
                     phase = ConditionalPhase::Done;
@@ -595,21 +566,11 @@ Value Expression::evaluate() {
             ThrowException("Too few operators in expression").value(stackAsString()).context(_parent);
         result = myStack.front();
     }
-    s2 = toString(myStack);
 
     // Restore stack if references were not yet fixed
     if (keepStack) {
         _stack.clear();
         _stack = savedStack;
-    }
-
-    if (_parent->name() == "T") {
-        QString s = toString(result), t = typeName(result);
-
-        Value v = isValue   (result) ?  get<Value>(result) :
-                  isValuePtr(result) ? *get<ValuePtr>(result) :
-                  Value::null();
-        std::cout << qPrintable(s+" "+t+" "+v.typeName()) << std::endl;
     }
 
     // Return result or null
@@ -631,8 +592,6 @@ void Expression::resolveReferences() {
     auto end0 = _stack.end(), end1=end0;
     auto element=_stack.begin();
     while (element!=_stack.end()) {
-        QString s0 = toString(_stack),
-                s1 = toString(*element);
         if (type(*element) == Type::Path) {
             Path &path = get<Path>(*element);
             path.setParent(_parent);

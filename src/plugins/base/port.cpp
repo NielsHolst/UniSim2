@@ -8,7 +8,6 @@
 #include "path.h"
 #include "port.h"
 #include "resolved_references.h"
-#include <iostream>
 
 namespace base {
 
@@ -156,12 +155,6 @@ void Port::touch() {
 }
 
 void Port::evaluate() {
-    QString s1 = _expression.originalAsString(),
-            s2 = _expression.stackAsString(),
-            s3 = _value.asString(true, true) + "{"+_value.typeName()+"}" ;
-    if (name()=="xxx" || name()=="aaa")
-        std::cout << "Port:: evaluate x a\n";
-
     // A constant port or a port to path needs no evaluation
     if (_isConstant || _value.type() == Value::Type::Path)
         return;
@@ -179,24 +172,13 @@ void Port::evaluate() {
             // in the C++ code; the expression's type will be converted to the value's types
             // For aux ports, all references have now been resolved and the value's type thereby fixed
             Value evaluation = _expression.evaluate();
-            if (name() == "T") {
-                QString s = Expression::toString(evaluation);;
-                std::cout << "T = " << qPrintable(s) << " " << ResolvedReferences::fixed() << std::endl;
-            }
             if (evaluation.isNull() && ResolvedReferences::fixed()) {
-                QString s = _expression.originalAsString();
-                QString s2 = fullName();
-                std::cout << "Port throws exception" << std::endl;
                 ThrowException("Unknown reference in expression").
-                        value(s).context(this);
+                        value(_expression.originalAsString()).context(this);
             }
             _value = evaluation;
         }
     }
-    s1 = _expression.originalAsString(),
-    s2 = _expression.stackAsString(),
-    s3 = "Value = " + _value.asString(true, true) + "{"+_value.typeName()+"}" ;
-
     // Register if the value will remain constant after reset
     if (Computation::currentStep() == Computation::Step::Reset)
         _isConstant = _expression.isConstant();
@@ -312,12 +294,12 @@ QString Port::format() const {
 // Housekeeping
 //
 
-void Port::registerImportPorts() {
+void Port::registerExports() {
     for (auto port : _expression.importPorts())
-        port->registerExportPort(this);
+        port->registerExport(this);
 }
 
-void Port::registerExportPort(Port *importer) {
+void Port::registerExport(Port *importer) {
     if (!_exportPorts.contains(importer))
         _exportPorts << importer;
 }

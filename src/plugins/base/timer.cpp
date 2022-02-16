@@ -2,13 +2,21 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
+#include "box.h"
 #include "exception.h"
-#include "node.h"
 #include "timer.h"
 
 namespace base {
 
-Timer::Timer(Node *parent)
+inline auto now() {
+    return std::chrono::steady_clock::now();
+}
+
+inline auto zero() {
+    return std::chrono::steady_clock::time_point::duration::zero();
+}
+
+Timer::Timer(Box *parent)
     : _parent(parent)
 {
 }
@@ -16,14 +24,13 @@ Timer::Timer(Node *parent)
 void Timer::addProfile(QString name) {
     if (_lookup.contains(name))
         ThrowException("Timer already present").value(name).context(_parent);
-    _lookup[name] = Watch{QElapsedTimer(), 0};
-    _ordered << name;
+    _lookup[name] = Watch{TimePoint(), zero()};
 }
 
 void Timer::reset() {
     for (auto it = _lookup.begin(); it != _lookup.end(); ++it) {
         Watch &watch(*it);
-        watch.second = 0;
+        watch.total = zero();
     }
 }
 
@@ -31,27 +38,32 @@ void Timer::start(QString name) {
     if (!_lookup.contains(name))
         ThrowException("No timer with that name").value(name)
                 .value2(QStringList(_lookup.keys()).join(", ")).context(_parent);
-    _lookup[name].first.start();
+    _lookup[name].startedAt = now();
 }
 
 void Timer::stop(QString name) {
-    Q_ASSERT(_lookup.contains(name));
+    using namespace std::chrono;
+    auto stoppedAt = steady_clock::now();
     Watch &watch(_lookup[name]);
-    watch.second += watch.first.elapsed();
+    auto timeSpan = stoppedAt - watch.startedAt;
+    watch.total += timeSpan;
 }
 
-QString Timer::report(QString separator) const {
-    QString rep;
-    for (QString name : _ordered)
-        rep += _parent->fullName() + "\t" +
-               name + "\t" +
-               QString::number(_lookup.value(name).second) +
-               separator ;
-    return rep;
+double Timer::duration(QString name) const {
+    // Duration in milliseconds
+    const Watch &watch(_lookup[name]);
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(watch.total).count()*1e-6;
 }
 
-QString Timer::Report::asString() const {
-    return name + "\t" + QString::number(time);
+Timer::Report Timer::report() const {
+    Timer::Report result;
+    auto it = _lookup.constBegin();
+    while (it != _lookup.constEnd()) {
+        result << ReportItem{_parent, it.key(), duration(it.key()) };
+        ++it;
+    }
+    return result;
 }
+
 
 }

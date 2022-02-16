@@ -117,11 +117,24 @@ Box *Box::latestRoot() {
 }
 
 QString Box::profileReport() {
-    QString rep = _timer.report();
-    for (auto box : children<Box*>()) {
-        rep += box->profileReport();
+    QString result;
+    auto report = collectTimerReport();
+    std::sort(report.begin(), report.end(),
+              [](Timer::ReportItem a, Timer::ReportItem b) { return a.duration > b.duration; });
+    for (auto item : report) {
+        result +=
+                item.parent->fullName() + "\t" +
+                item.name + "\t" +
+                QString::number(item.duration) + "\n";
     }
-    return rep;
+    return result;
+}
+
+Timer::Report Box::collectTimerReport() {
+    Timer::Report result = _timer.report();
+    for (auto box : children<Box*>())
+        result.append(box->collectTimerReport());
+    return result;
 }
 
 void Box::run() {
@@ -150,6 +163,7 @@ void Box::createTimers() {
     createTimer("update");
     createTimer("cleanup");
     createTimer("debrief");
+    createTimer("evaluatePorts");
 }
 
 void Box::createTimer(QString name) {
@@ -173,23 +187,23 @@ void Box::initializeFamily(bool announce) {
     _initialized = true;
 
     _timer.reset();
-    _timer.start("initialize");
     for (auto box : children<Box*>())
         box->initializeFamily(false);
     if (_traceOn) trace("initialize");
     evaluatePorts();
+    _timer.start("initialize");
     initialize();
     _timer.stop("initialize");
 }
 
 void Box::resetFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Reset);
-    _timer.start("reset");
     for (auto box : children<Box*>())
         box->resetFamily(false);
     if (_traceOn) trace("reset");
     clearPorts();
     evaluatePorts();
+    _timer.start("reset");
     reset();
     verifyPorts();
     _timer.stop("reset");
@@ -197,11 +211,11 @@ void Box::resetFamily(bool announce) {
 
 void Box::updateFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Update);
-    _timer.start("update");
     for (auto box : children<Box*>())
         box->updateFamily(false);
     if (_traceOn) trace("update");
     evaluatePorts();
+    _timer.start("update");
     update();
     verifyPorts();
     _timer.stop("update");
@@ -209,11 +223,11 @@ void Box::updateFamily(bool announce) {
 
 void Box::cleanupFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Cleanup);
-    _timer.start("cleanup");
     for (auto box : children<Box*>())
         box->cleanupFamily(false);
     if (_traceOn) trace("cleanup");
     evaluatePorts();
+    _timer.start("cleanup");
     cleanup();
     verifyPorts();
     _timer.stop("cleanup");
@@ -221,11 +235,11 @@ void Box::cleanupFamily(bool announce) {
 
 void Box::debriefFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Debrief);
-    _timer.start("debrief");
     for (auto box : children<Box*>())
         box->debriefFamily(false);
     if (_traceOn) trace("debrief");
     evaluatePorts();
+    _timer.start("debrief");
     debrief();
     verifyPorts();
     _timer.stop("debrief");
@@ -246,8 +260,10 @@ void Box::touchPorts() {
 }
 
 void Box::evaluatePorts() {
+    _timer.start("evaluatePorts");
     for (Port *port : _portsInOrder)
         port->evaluate();
+    _timer.stop("evaluatePorts");
 }
 
 void Box::verifyPorts() {
@@ -257,11 +273,11 @@ void Box::verifyPorts() {
     }
 }
 
-void Box::registerImportPortsFamily() {
+void Box::registerPorts() {
     for (Box *box : children<Box*>())
-        box->registerImportPortsFamily();
+        box->registerPorts();
     for (Port *port : _portsInOrder)
-        port->registerImportPorts();
+        port->registerExports();
 }
 
 Box* Box::clone(QString name, Box *parent) {

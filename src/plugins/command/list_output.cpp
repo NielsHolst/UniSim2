@@ -27,20 +27,20 @@ ListOutput::ListOutput(QVector<Box*> boxes, ListOptionSet options)
     _recurse     = _options.contains(ListOption::Recurse);
     _listExportsOnly = _listExports && !(_listInputs || _listOutputs || _listImports);
 
-    try {
-        if (Computation::currentStep() == Computation::Step::Amend) {
-            Box::root()->initializeFamily();
-            Box::root()->resetFamily();
-            Box::root()->registerImportPortsFamily();
-            dialog().message("Ready");
-        }
-    }
-    catch (Exception &ex) {
-        dialog().error(ex.what());
-    }
-    catch (...) {
-        dialog().error("Something went wrong in command::ListOutput::ListOutput");
-    }
+//    try {
+//        if (Computation::currentStep() == Computation::Step::Amend) {
+//            Box::root()->initializeFamily();
+//            Box::root()->resetFamily();
+//            Box::root()->registerImportPortsFamily();
+//            dialog().message("Ready");
+//        }
+//    }
+//    catch (Exception &ex) {
+//        dialog().error(ex.what());
+//    }
+//    catch (...) {
+//        dialog().error("Something went wrong in command::ListOutput::ListOutput");
+//    }
 }
 
 QString ListOutput::toString() {

@@ -91,13 +91,13 @@ public:
     QString format() const;
 
     // Housekeeping
-    void registerImportPorts();
-    void registerExportPort(Port *importer);
+    void registerExports();
 
     // Output
     void toText(QTextStream &text, int indentation = 0);
 private:
     void define();
+    void registerExport(Port *importer);
 };
 
 template <class T> Port& Port::initialize(T *variable) {

@@ -69,7 +69,7 @@ public:
     void touchPorts();
     void evaluatePorts();
     void verifyPorts();
-    void registerImportPortsFamily();
+    void registerPorts();
 
     Box* clone(QString name, Box *parent);
     Box* cloneFamily(QString name, Box *parent);
@@ -101,6 +101,7 @@ private:
     void clearPorts();
     void trace(QString id) const;
     void toText(QTextStream &text, QString options, int indentation) const;
+    Timer::Report collectTimerReport();
 };
 
 template<class T> inline T Box::findOne(QString path) {

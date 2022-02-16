@@ -43,7 +43,13 @@ void OutputWriter::amend() {
 }
 
 void OutputWriter::initialize() {
-    // Find all ports in output and set their output names
+    // Find all ports in output
+    for (auto port : ports.findMany<Port*>()) {
+       _ports << port;
+       _values << port->valuePtr<Value>();
+    }
+
+    // Set their output names
     setColumnNames();
 
     // Set decimal character
@@ -72,10 +78,9 @@ inline bool isNumberLike(const Port *port) {
 }
 
 void OutputWriter::setColumnNames() {
-    auto portPtrs = ports.findMany<Port*>();
-    QStringList uniqueNames = UniqueName(portPtrs).resolved();
+    QStringList uniqueNames = UniqueName(_ports).resolved();
     auto name = uniqueNames.begin();
-    auto port = portPtrs.begin();
+    auto port = _ports.begin();
     for (; name != uniqueNames.end(); ++name, ++port)
         (*port)->outputName(*name);
 }
@@ -99,15 +104,14 @@ void OutputWriter::update() {
 
 void OutputWriter::writeColumnLabels() {
     QStringList list;
-    for (auto port : ports.findMany<Port*>())
+    for (auto port : _ports)
         list << port->outputName();
     _stream << list.join("\t") << "\n";
 }
 
 void OutputWriter::writeColumnFormats() {
     QStringList list;
-    auto test = ports.findMany<Port*>();
-    for (auto port : test)
+    for (auto port : _ports)
         list << port->format();
     _stream << list.join("\t") << "\n";
 }
@@ -115,10 +119,9 @@ void OutputWriter::writeColumnFormats() {
 void OutputWriter::writeValues() {
     // To collect values to be written
     QStringList values;
-    // Loop through ports
-    auto test = ports.findMany<Port*>();
-    for (auto port : test)
-        values << port->value().asString(true, false);
+    // Loop through values
+    for (auto value : _values)
+        values << value->asString(true, false);
     _stream << values.join("\t") << "\n";
 }
 

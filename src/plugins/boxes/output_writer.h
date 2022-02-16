@@ -11,7 +11,8 @@
 #include <base/path.h>
 
 namespace base {
-    class Track;
+    class Port;
+    class Value;
 }
 
 namespace boxes {
@@ -37,6 +38,8 @@ private:
     QString filePath, decimalChar;
 
     // Data
+    QVector<base::Port*> _ports;
+    QVector<const base::Value*> _values;
     QFile _file;
     QTextStream _stream;
 

@@ -4,37 +4,40 @@
 */
 #ifndef BASE_TIMER_H
 #define BASE_TIMER_H
+#include <chrono>
 #include <QMap>
-#include <QPair>
 #include <QString>
 #include <QStringList>
-#include <QElapsedTimer>
-#include <QVector>
 
 namespace base {
 
-class Node;
+class Box;
 
 class Timer
 {
 public:
-    Timer(Node *parent);
+    Timer(Box *parent);
     void addProfile(QString name);
     void reset();
     void start(QString name);
     void stop(QString name);
+    double duration(QString name) const;
 
-    struct Report {
+    struct ReportItem {
+        Box *parent;
         QString name;
-        int time;
-        QString asString() const;
+        double duration;
     };
-    QString report(QString separator="\n") const;
+    using Report = QVector<ReportItem>;
+    Report report() const;
 private:
-    Node *_parent;
-    typedef QPair<QElapsedTimer,int> Watch;
+    Box *_parent;
+    using TimePoint = std::chrono::steady_clock::time_point;
+    struct Watch {
+        TimePoint startedAt;
+        std::chrono::steady_clock::time_point::duration total;
+    };
     QMap<QString, Watch> _lookup;
-    QStringList _ordered;
 };
 
 }
