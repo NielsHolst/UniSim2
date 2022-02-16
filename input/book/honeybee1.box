@@ -15,9 +15,9 @@ Simulation {
   }
   OutputR {
     Box p {
-      +dayLength  = dayLength[value]
-      +eggsPerDay = fecundity[value]
-      +dottedLine = "geom_point(size=2)"
+      &dayLength  = dayLength[value]
+      &eggsPerDay = fecundity[value]
+      &dottedLine = "geom_point(size=2)"
     }
     PageR {
       .width = 4

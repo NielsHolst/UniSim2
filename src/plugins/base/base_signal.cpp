@@ -17,8 +17,8 @@ BaseSignal::BaseSignal(QString name, Box *parent)
     help("is a base class classes that compute signal");
     Input(initialSignal).help("The value that signal is set to at reset");
     Input(initialFlag).equals(false).help("The value that flag is set to at reset");
-    Input(maxChange).equals(infinity()).help("Maximum rate of change from previous step [per minute]");
-    Input(timeStepSecs).imports("calendar[timeStepSecs]");
+//    Input(maxChange).equals(infinity()).help("Maximum rate of change from previous step [per minute]");
+//    Input(timeStepSecs).imports("calendar[timeStepSecs]");
     Output(signal).help("Value of the signal");
     Output(flagIsUp).help("Is the signal different from zero?");
     Output(flagJustRaised).help("Did the signal change from false to true during the latest update?");
@@ -42,20 +42,20 @@ void BaseSignal::update() {
 
     // Update signal
     signal = computeSignal(flagIsUp);
-    if (timeStepSecs > 0.)
-        limitSignal();
+//    if (timeStepSecs > 0.)
+//        limitSignal();
     _prevSignal = signal;
 
 }
 
-void BaseSignal::limitSignal() {
-    double dt = timeStepSecs/60.,
-           change = (signal - _prevSignal)/dt;
-    if (fabs(change) > maxChange) {
-        double sign = (change < 0.) ? -1. : 1.;
-        signal = _prevSignal + sign*maxChange*dt;
-    }
-}
+//void BaseSignal::limitSignal() {
+//    double dt = timeStepSecs/60.,
+//           change = (signal - _prevSignal)/dt;
+//    if (fabs(change) > maxChange) {
+//        double sign = (change < 0.) ? -1. : 1.;
+//        signal = _prevSignal + sign*maxChange*dt;
+//    }
+//}
 
 } //namespace
 

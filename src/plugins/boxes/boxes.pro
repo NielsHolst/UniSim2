@@ -17,6 +17,7 @@ HEADERS +=  \
     briere.h \
     buffer.h \
     calendar.h \
+    combinations.h \
     computation.h \
     date.h \
     date_split.h \
@@ -76,6 +77,9 @@ HEADERS +=  \
     sandy.h \
     scenarios.h \
     select_file.h \
+    sequence_base.h \
+    sequence_by_iteration.h \
+    sequence_by_step.h \
     simulation.h \
     sine_wave_temperature.h \
     sliding_signal.h \
@@ -89,6 +93,7 @@ HEADERS +=  \
     super_functional_response.h \
     supply_budget.h \
     threshold_signal.h \
+    values_base.h \
     vector_scaled.h \
     vector_sum.h
 	
@@ -99,6 +104,7 @@ SOURCES +=  \
     briere.cpp \
     buffer.cpp \
     calendar.cpp \
+    combinations.cpp \
     computation.cpp \
     date.cpp \
     date_split.cpp \
@@ -156,6 +162,9 @@ SOURCES +=  \
     sandy.cpp \
     scenarios.cpp \
     select_file.cpp \
+    sequence_base.cpp \
+    sequence_by_iteration.cpp \
+    sequence_by_step.cpp \
     simulation.cpp \
     sine_wave_temperature.cpp \
     sliding_signal.cpp \
@@ -169,6 +178,7 @@ SOURCES +=  \
     super_functional_response.cpp \
     supply_budget.cpp \
     threshold_signal.cpp \
+    values_base.cpp \
     vector_scaled.cpp \
     vector_sum.cpp
 

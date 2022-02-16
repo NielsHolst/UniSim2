@@ -36,14 +36,12 @@ Simulation sim {
   }
   OutputR {
     Box p {
-      +eggsPerDay = queen/fecundity[value]
+      &eggsPerDay = queen/fecundity[value]
     }
     PageR {
       .xAxis = calendar[date]
       PlotR {
-        .ports = (sun[dayLength] 
-                   p[eggsPerDay] 
-                   *[content] )
+        .ports = sun[dayLength] | p[eggsPerDay] | *[content] 
         .ggplot = "scale_x_datetime( 
                       breaks = date_breaks('months'), 
                       labels = date_format('%b') 

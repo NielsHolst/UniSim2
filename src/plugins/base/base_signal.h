@@ -20,7 +20,7 @@ public:
     virtual bool computeFlag() = 0;
 private:
     // Input
-    double initialSignal, maxChange, timeStepSecs;
+    double initialSignal; //, maxChange, timeStepSecs;
     bool initialFlag;
     // Output
     double signal;
@@ -28,7 +28,7 @@ private:
     // Data
     double _prevSignal;
     // Methods
-    void limitSignal();
+//    void limitSignal();
 };
 } //namespace
 
