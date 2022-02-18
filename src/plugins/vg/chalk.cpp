@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(Chalk)
 
-Chalk::Chalk(QString name, QObject *parent)
+Chalk::Chalk(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models reflection caused by whitening");

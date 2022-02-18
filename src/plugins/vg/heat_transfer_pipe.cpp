@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(HeatTransferPipe)
 
-HeatTransferPipe::HeatTransferPipe(QString name, QObject *parent)
+HeatTransferPipe::HeatTransferPipe(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the heat pipes");

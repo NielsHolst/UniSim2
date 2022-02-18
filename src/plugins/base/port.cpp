@@ -15,6 +15,7 @@ Port::Port(QString name, PortType type, Node *parent)
     : Node(name, parent),
       _type(type),
       _hasBeenRedefined(false),
+      _acceptNull(false),
       _isConstant(false),
       _expression(this)
 {
@@ -32,6 +33,11 @@ Port& Port::doClear() {
 
 Port& Port::noClear() {
     _clearAtReset = false;
+    return *this;
+}
+
+Port& Port::acceptNull() {
+    _acceptNull = true;
     return *this;
 }
 
@@ -172,7 +178,7 @@ void Port::evaluate() {
             // in the C++ code; the expression's type will be converted to the value's types
             // For aux ports, all references have now been resolved and the value's type thereby fixed
             Value evaluation = _expression.evaluate();
-            if (evaluation.isNull() && ResolvedReferences::fixed()) {
+            if (evaluation.isNull() && !_acceptNull && ResolvedReferences::fixed()) {
                 ThrowException("Unknown reference in expression").
                         value(_expression.originalAsString()).context(this);
             }

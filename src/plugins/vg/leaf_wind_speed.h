@@ -15,7 +15,7 @@ namespace vg {
 class LeafWindSpeed : public base::Box
 {
 public:
-    LeafWindSpeed(QString name, QObject *parent);
+    LeafWindSpeed(QString name, Box *parent);
     void reset();
     void update();
 

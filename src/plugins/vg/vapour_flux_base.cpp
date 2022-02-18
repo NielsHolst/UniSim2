@@ -11,7 +11,7 @@ using namespace base;
 
 namespace vg {
 
-VapourFluxBase::VapourFluxBase(QString name, QObject *parent)
+VapourFluxBase::VapourFluxBase(QString name, Box *parent)
     : Box(name, parent)
 {
     help("base class for vapour flux computations");

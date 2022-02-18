@@ -15,7 +15,7 @@ namespace vg {
 class LeafRespiration : public base::Box
 {
 public:
-    LeafRespiration(QString name, QObject *parent);
+    LeafRespiration(QString name, Box *parent);
     void reset();
     void update();
 

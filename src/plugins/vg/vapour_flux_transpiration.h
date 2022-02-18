@@ -16,7 +16,7 @@ namespace vg {
 class VapourFluxTranspiration : public VapourFluxBase
 {
 public:
-    VapourFluxTranspiration(QString name, QObject *parent);
+    VapourFluxTranspiration(QString name, Box *parent);
 };
 
 } //namespace

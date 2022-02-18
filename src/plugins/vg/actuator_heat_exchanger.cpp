@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(ActuatorHeatExchanger)
 
-ActuatorHeatExchanger::ActuatorHeatExchanger(QString name, QObject *parent)
+ActuatorHeatExchanger::ActuatorHeatExchanger(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a heat exchanger");

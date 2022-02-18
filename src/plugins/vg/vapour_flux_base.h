@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxBase : public base::Box
 {
 public:
-    VapourFluxBase(QString name, QObject *parent);
+    VapourFluxBase(QString name, Box *parent);
 protected:
     // Outputs
     double conductance, gain, vapourFlux;

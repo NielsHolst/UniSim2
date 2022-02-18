@@ -15,7 +15,7 @@ namespace vg {
 class Chalk : public base::Box
 {
 public: 
-    Chalk(QString name, QObject *parent);
+    Chalk(QString name, Box *parent);
     void reset();
     void update();
 private:

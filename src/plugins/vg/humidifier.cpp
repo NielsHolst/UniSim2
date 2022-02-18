@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(Humidifier)
 
-Humidifier::Humidifier(QString name, QObject *parent)
+Humidifier::Humidifier(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a humidifier (fogging)");

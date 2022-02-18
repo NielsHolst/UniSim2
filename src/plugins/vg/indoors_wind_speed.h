@@ -15,7 +15,7 @@ namespace vg {
 class IndoorsWindSpeed : public base::Box
 {
 public:
-    IndoorsWindSpeed(QString name, QObject *parent);
+    IndoorsWindSpeed(QString name, Box *parent);
     void reset();
     void update();
 

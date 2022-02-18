@@ -23,13 +23,13 @@ namespace vg {
 
 PUBLISH(LeafTemperature)
 
-LeafTemperature::LeafTemperature(QString name, QObject *parent)
+LeafTemperature::LeafTemperature(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("models leaf temperature");
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(indoorsRh).imports("indoors/humidity[rh]",CA).unit("[0;100]");
-    Input(rsH2O).imports("../photosynthesis/*/stomatalResistance[rH2O]",CA).transform(Mean).unit("s/m2");
+    Input(rsH2O).computes("mean(../photosynthesis/*/stomatalResistance[rH2O])").unit("s/m2");
     Input(rbH2O).imports("../boundaryLayerResistance[rH2O]",CA).unit("s/m2");
     Input(radiationAbsorbed).imports("energyBudget/crop[absorbed]",CA).unit("W/m2");
     Input(lai).imports("/*/crop[lai]", CA);

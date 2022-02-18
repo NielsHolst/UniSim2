@@ -12,7 +12,7 @@ using namespace base;
 
 namespace vg {
 
-PhysiologicalTime::PhysiologicalTime(QString name, QObject *parent)
+PhysiologicalTime::PhysiologicalTime(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("PhysiologicalTime");

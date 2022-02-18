@@ -26,7 +26,7 @@ chrysanthemum     48.949 800  56.522 0.290
         wheat     41.272 800 109.295 0.487
 */
 
-LeafPhotosynthesisAc::LeafPhotosynthesisAc(QString name, QObject *parent)
+LeafPhotosynthesisAc::LeafPhotosynthesisAc(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes leaf photosynthetic rate (CO2-limited)");

@@ -11,7 +11,7 @@ using namespace base;
 
 namespace vg {
 
-HeatTransferScreenBase::HeatTransferScreenBase(QString name, QObject *parent, QString path)
+HeatTransferScreenBase::HeatTransferScreenBase(QString name, Box *parent, QString path)
     : HeatTransferShelter(name, parent, path, "Net")
 {
     help("updates energy budget averaged over all shelter faces");

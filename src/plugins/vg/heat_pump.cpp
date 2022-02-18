@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(HeatPump)
 
-HeatPump::HeatPump(QString name, QObject *parent)
+HeatPump::HeatPump(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a heat pump");

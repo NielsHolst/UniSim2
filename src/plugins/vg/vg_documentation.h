@@ -15,7 +15,7 @@ namespace vg {
 class vgDocumentation : public base::Documentation
 {
 public:
-    vgDocumentation(QString name, QObject *parent);
+    vgDocumentation(QString name, Box *parent);
 };
 
 } //namespace

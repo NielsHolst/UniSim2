@@ -18,7 +18,7 @@ PUBLISH(TransmissionCover)
  * \brief Greenhouse light and energy transmission through cover
  */
 
-TransmissionCover::TransmissionCover(QString name, QObject *parent)
+TransmissionCover::TransmissionCover(QString name, Box *parent)
     : TransmissionBase(name, parent)
 {
 }

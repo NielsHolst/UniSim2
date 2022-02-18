@@ -15,7 +15,7 @@ namespace vg {
 class Geometry : public base::Box
 {
 public:
-    Geometry(QString name, QObject *parent);
+    Geometry(QString name, Box *parent);
     void reset();
 private:
     // Input

@@ -18,7 +18,7 @@ namespace vg {
 
 PUBLISH(Shelter)
 
-Shelter::Shelter(QString name, QObject *parent)
+Shelter::Shelter(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models the greenhouse shelter");

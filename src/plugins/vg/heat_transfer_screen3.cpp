@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(HeatTransferScreen3)
 
-HeatTransferScreen3::HeatTransferScreen3(QString name, QObject *parent)
+HeatTransferScreen3::HeatTransferScreen3(QString name, Box *parent)
     : HeatTransferScreenBase(name, parent, "shelter/*/screens/layer3")
 {
 }

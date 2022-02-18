@@ -14,7 +14,7 @@ namespace vg {
 
 class GrowthLight : public HeatTransferLayerBase {
 public:
-    GrowthLight(QString name, QObject *parent);
+    GrowthLight(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

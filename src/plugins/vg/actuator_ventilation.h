@@ -15,7 +15,7 @@ namespace vg {
 class ActuatorVentilation : public base::Box
 {
 public:
-    ActuatorVentilation(QString name, QObject *parent);
+    ActuatorVentilation(QString name, Box *parent);
     void reset();
     void update();
     double getFlux() const;

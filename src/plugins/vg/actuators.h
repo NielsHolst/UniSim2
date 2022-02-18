@@ -15,7 +15,7 @@ namespace vg {
 class Actuators : public base::Box
 {
 public:
-    Actuators(QString name, QObject *parent);
+    Actuators(QString name, Box *parent);
     void amend();
 };
 } //namespace

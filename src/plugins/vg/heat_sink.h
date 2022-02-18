@@ -17,7 +17,7 @@ class IndoorsTemperature;
 class HeatSink : public base::Box
 {
 public: 
-    HeatSink(QString name, QObject *parent);
+    HeatSink(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

@@ -33,7 +33,7 @@ constexpr double
 5         Wheat 0.2830 0.49 41.18 193.71
 */
 
-LeafPhotosynthesisAj::LeafPhotosynthesisAj(QString name, QObject *parent)
+LeafPhotosynthesisAj::LeafPhotosynthesisAj(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes leaf photosynthetic rate (CO2- and light-limited)");

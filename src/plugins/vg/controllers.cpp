@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(Controllers)
 
-Controllers::Controllers(QString name, QObject *parent)
+Controllers::Controllers(QString name, Box *parent)
     : Box(name, parent)
 {
     help("contains sub-models to control actuators");
@@ -56,7 +56,7 @@ void Controllers::amend() {
                 port("thresholdBand").imports("setpoints[screenShadeThresholdBand]").
             endbox().
             box().name("fixed1").
-                newPort("value").imports("setpoints[screenFixed1]").
+                aux("value").imports("setpoints[screenFixed1]").
             endbox().
         endbox();
 

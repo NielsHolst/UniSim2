@@ -15,7 +15,7 @@ namespace vg {
 class PidController : public base::Box
 {
 public:
-    PidController(QString name, QObject *parent);
+    PidController(QString name, Box *parent);
     void reset();
     void update();
 private:

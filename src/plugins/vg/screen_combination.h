@@ -19,7 +19,7 @@ namespace vg {
 class ScreenCombination : public base::Box
 {
 public: 
-    ScreenCombination(QString name, QObject *parent=0);
+    ScreenCombination(QString name, Box *parent);
     // standard methods
     void reset();
     void update();

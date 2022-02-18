@@ -18,7 +18,7 @@ namespace vg {
 	
 PUBLISH(LeafPhotosynthesis)
 
-LeafPhotosynthesis::LeafPhotosynthesis(QString name, QObject *parent)
+LeafPhotosynthesis::LeafPhotosynthesis(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes canopy photosynthetic rate");

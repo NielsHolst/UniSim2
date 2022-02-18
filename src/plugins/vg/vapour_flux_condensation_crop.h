@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxCondensationCrop : public VapourFluxBase
 {
 public:
-    VapourFluxCondensationCrop(QString name, QObject *parent);
+    VapourFluxCondensationCrop(QString name, Box *parent);
     void update();
 private:
     double cropTemperature, indoorsTemperature, indoorsAh, lai;

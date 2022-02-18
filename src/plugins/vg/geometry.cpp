@@ -18,7 +18,7 @@ namespace vg {
 	
 PUBLISH(Geometry)
 
-Geometry::Geometry(QString name, QObject *parent)
+Geometry::Geometry(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("defines the greenhouse geometry");

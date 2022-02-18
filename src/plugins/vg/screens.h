@@ -15,7 +15,7 @@ namespace vg {
 class Screens : public base::Box
 {
 public:
-    Screens(QString name, QObject *parent);
+    Screens(QString name, Box *parent);
     void amend();
 };
 

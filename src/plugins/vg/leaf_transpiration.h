@@ -16,7 +16,7 @@ namespace vg {
 class LeafTranspiration : public VapourFluxBase
 {
 public:
-    LeafTranspiration(QString name, QObject *parent);
+    LeafTranspiration(QString name, Box *parent);
     void reset();
     void update();
 

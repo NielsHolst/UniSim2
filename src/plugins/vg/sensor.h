@@ -14,7 +14,7 @@ namespace vg {
 class Sensor : public base::Box
 {
 public: 
-    Sensor(QString name, QObject *parent=0);
+    Sensor(QString name, Box *parent);
     void reset();
     void update();
 private:

@@ -13,7 +13,7 @@ using namespace phys_math;
 
 namespace vg {
 
-StomatalResistanceBase::StomatalResistanceBase(QString name, QObject *parent)
+StomatalResistanceBase::StomatalResistanceBase(QString name, Box *parent)
 	: Box(name, parent)
 {
     setClassName("StomatalResistanceBase");

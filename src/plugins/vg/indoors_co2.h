@@ -15,7 +15,7 @@ namespace vg {
 class IndoorsCo2 : public base::Box
 {
 public:
-    IndoorsCo2(QString name, QObject *parent);
+    IndoorsCo2(QString name, Box *parent);
     void reset();
     void update();
 

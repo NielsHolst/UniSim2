@@ -14,7 +14,7 @@ namespace vg {
 class GrowthLightController : public base::BaseSignal
 {
 public:
-    GrowthLightController(QString name, QObject *parent);
+    GrowthLightController(QString name, Box *parent);
     bool computeFlag();
     double computeSignal(bool flag);
 private:

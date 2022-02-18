@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(Outputs)
 
-Outputs::Outputs(QString name, QObject *parent)
+Outputs::Outputs(QString name, Box *parent)
     : Box(name, parent)
 {
     help("defines all model outputs");
@@ -27,9 +27,9 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(outdoorsWindSpeed).imports("outdoors[windSpeed]");
     Output(soilT).imports("outdoors[soilTemperature]");
     Output(coverT).imports("energyBudget/cover[temperature]");
-    Output(screen1T).importsMaybe("energyBudget/screen1[temperature]");
-    Output(screen2T).importsMaybe("energyBudget/screen2[temperature]");
-    Output(screen3T).importsMaybe("energyBudget/screen3[temperature]");
+    Output(screen1T).imports("energyBudget/screen1[temperature]").acceptNull();
+    Output(screen2T).imports("energyBudget/screen2[temperature]").acceptNull();
+    Output(screen3T).imports("energyBudget/screen3[temperature]").acceptNull();
     Output(pipeT).imports("energyBudget/pipe[temperature]");
     Output(leafT).imports("energyBudget/crop[temperature]");
     Output(floorT).imports("energyBudget/floor[temperature]");
@@ -61,20 +61,20 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(airFluxLeakage).imports("indoors/ventilation[fluxLeakage]");
     Output(airFluxVentilation).imports("indoors/ventilation[fluxVentilation]");
     Output(airFluxPower).imports("indoors/temperature[advectiveEnergyFlux]");
-    Output(actLight1).importsMaybe("actuators/growthLights/growthLight1[on]");
-    Output(actLight2).importsMaybe("actuators/growthLights/growthLight2[on]");
-    Output(actLight3).importsMaybe("actuators/growthLights/growthLight3[on]");
+    Output(actLight1).imports("actuators/growthLights/growthLight1[on]").acceptNull();
+    Output(actLight2).imports("actuators/growthLights/growthLight2[on]").acceptNull();
+    Output(actLight3).imports("actuators/growthLights/growthLight3[on]").acceptNull();
     Output(actLightPower).imports("actuators/growthLights[powerUsage]");
     Output(actLightPar).imports("actuators/growthLights[parFluxDown]");
-    Output(actPipeTempIn1).importsMaybe("actuators/heating/pipes/pipe1[inflowTemperature]");
-    Output(actPipeTempIn2).importsMaybe("actuators/heating/pipes/pipe2[inflowTemperature]");
-    Output(actPipeTempOut1).importsMaybe("actuators/heating/pipes/pipe1[outflowTemperature]");
-    Output(actPipeTempOut2).importsMaybe("actuators/heating/pipes/pipe2[outflowTemperature]");
-    Output(actHeatSink).importsMaybe("heatSink[value]");
-    Output(actScreen1).importsMaybe("actuators/screens/layer1[value]");
-    Output(actScreen2).importsMaybe("actuators/screens/layer2[value]");
-    Output(actScreen3).importsMaybe("actuators/screens/layer3[value]");
-    Output(actScreen1HeatCapacity).importsMaybe("energyBudget/screen1[heatCapacity]");
+    Output(actPipeTempIn1).imports("actuators/heating/pipes/pipe1[inflowTemperature]").acceptNull();
+    Output(actPipeTempIn2).imports("actuators/heating/pipes/pipe2[inflowTemperature]").acceptNull();
+    Output(actPipeTempOut1).imports("actuators/heating/pipes/pipe1[outflowTemperature]").acceptNull();
+    Output(actPipeTempOut2).imports("actuators/heating/pipes/pipe2[outflowTemperature]").acceptNull();
+    Output(actHeatSink).imports("heatSink[value]").acceptNull();
+    Output(actScreen1).imports("actuators/screens/layer1[value]").acceptNull();
+    Output(actScreen2).imports("actuators/screens/layer2[value]").acceptNull();
+    Output(actScreen3).imports("actuators/screens/layer3[value]").acceptNull();
+    Output(actScreen1HeatCapacity).imports("energyBudget/screen1[heatCapacity]").acceptNull();
     Output(actCo2).imports("actuators/co2Injection[value]");
     Output(vapourFluxTranspiration).imports("waterBudget/transpiration[vapourFlux]");
     Output(vapourFluxCondensationCrop).imports("waterBudget/condensationCrop[vapourFlux]");
@@ -97,7 +97,7 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(totalConvectionEnergy).imports("budget[convectionEnergy]");
     Output(totalSoilEnergy).imports("budget[soilEnergy]");
     Output(totalHeatingEnergy).imports("budget[heatingEnergy]");
-    Output(totalHeatSink).importsMaybe("budget[heatSinkEnergy]");
+    Output(totalHeatSink).imports("budget[heatSinkEnergy]").acceptNull();
     Output(totalGrowthLightEnergy).imports("budget[growthLightEnergy]");
     Output(totalParAbsorbed).imports("budget[parAbsorbedTotal]");
     Output(totalCo2).imports("budget[co2Total]");

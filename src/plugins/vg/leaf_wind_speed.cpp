@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(LeafWindSpeed)
 
-LeafWindSpeed::LeafWindSpeed(QString name, QObject *parent)
+LeafWindSpeed::LeafWindSpeed(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes leaf wind speed");

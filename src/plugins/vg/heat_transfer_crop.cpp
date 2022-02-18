@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(HeatTransferCrop)
 
-HeatTransferCrop::HeatTransferCrop(QString name, QObject *parent)
+HeatTransferCrop::HeatTransferCrop(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the crop layer");

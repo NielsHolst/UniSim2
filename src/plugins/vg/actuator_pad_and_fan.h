@@ -15,7 +15,7 @@ namespace vg {
 class ActuatorPadAndFan : public base::Box
 {
 public: 
-    ActuatorPadAndFan(QString name, QObject *parent);
+    ActuatorPadAndFan(QString name, Box *parent);
     void reset();
     void update();
 private:

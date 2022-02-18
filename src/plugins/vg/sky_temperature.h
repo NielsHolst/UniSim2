@@ -15,7 +15,7 @@ namespace vg {
 class SkyTemperature : public base::Box
 {
 public:
-    SkyTemperature(QString name, QObject *parent);
+    SkyTemperature(QString name, Box *parent);
     void reset();
     void update();
 private:

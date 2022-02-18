@@ -20,7 +20,7 @@ namespace vg {
 
 PUBLISH(ScreensAirTransmissivity)
 
-ScreensAirTransmissivity::ScreensAirTransmissivity(QString name, QObject *parent)
+ScreensAirTransmissivity::ScreensAirTransmissivity(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes total air transmissivity through screens");

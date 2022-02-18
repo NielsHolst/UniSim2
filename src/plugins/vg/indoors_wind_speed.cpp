@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(IndoorsWindSpeed)
 
-IndoorsWindSpeed::IndoorsWindSpeed(QString name, QObject *parent)
+IndoorsWindSpeed::IndoorsWindSpeed(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("models indoors wind speed");

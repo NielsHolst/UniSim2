@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(GrowthLights)
 
-GrowthLights::GrowthLights(QString name, QObject *parent)
+GrowthLights::GrowthLights(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("sums power use and radiation from growth light");

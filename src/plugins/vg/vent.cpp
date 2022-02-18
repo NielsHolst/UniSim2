@@ -14,7 +14,7 @@ namespace vg {
 	
 PUBLISH(Vent)
 
-Vent::Vent(QString name, QObject *parent)
+Vent::Vent(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes effective area of a set of vents");

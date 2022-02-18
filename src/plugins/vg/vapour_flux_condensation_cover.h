@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxCondensationCover : public VapourFluxBase
 {
 public:
-    VapourFluxCondensationCover(QString name, QObject *parent);
+    VapourFluxCondensationCover(QString name, Box *parent);
     void update();
 private:
     // Inputs

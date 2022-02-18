@@ -17,7 +17,7 @@ using namespace phys_math;
 
 namespace vg {
 
-HeatTransferLayerBase::HeatTransferLayerBase(QString name, QObject *parent)
+HeatTransferLayerBase::HeatTransferLayerBase(QString name, Box *parent)
     : HeatTransferLayerParameters(name, parent)
 {
     help("holds the radiative parameters of a layer, e.g., cover or screen");

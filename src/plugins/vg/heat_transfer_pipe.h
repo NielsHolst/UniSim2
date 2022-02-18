@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferPipe : public HeatTransferLayerBase
 {
 public:
-    HeatTransferPipe(QString name, QObject *parent);
+    HeatTransferPipe(QString name, Box *parent);
     void reset();
     void update();
 private:

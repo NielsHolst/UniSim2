@@ -18,7 +18,7 @@ namespace vg {
 	
 PUBLISH(LeafPhotosynthesisDeprecated)
 
-LeafPhotosynthesisDeprecated::LeafPhotosynthesisDeprecated(QString name, QObject *parent)
+LeafPhotosynthesisDeprecated::LeafPhotosynthesisDeprecated(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes single-leaf light capture and photosynthetic rate");

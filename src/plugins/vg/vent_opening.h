@@ -15,7 +15,7 @@ namespace vg {
 class VentOpening : public base::Box
 {
 public:
-    VentOpening(QString name, QObject *parent);
+    VentOpening(QString name, Box *parent);
     void update();
 private:
     // Inputs;

@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferScreen1 : public HeatTransferScreenBase
 {
 public:
-    HeatTransferScreen1(QString name, QObject *parent);
+    HeatTransferScreen1(QString name, Box *parent);
 };
 
 } //namespace

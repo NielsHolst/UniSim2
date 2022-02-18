@@ -14,11 +14,11 @@ namespace vg {
 
 PUBLISH(AnyFlag)
 
-AnyFlag::AnyFlag(QString name, QObject *parent)
+AnyFlag::AnyFlag(QString name, Box *parent)
     : Box(name, parent)
 {
     help("flags whether any child has flag true");
-    Output(flag).imports("./*[flag]").transform(Any);
+    Output(flag).computes("any(./*[flag])");
 }
 
 } //namespace

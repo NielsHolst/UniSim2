@@ -30,7 +30,8 @@ private:
     bool
         _hasBeenRedefined,  // Has the default value been overridden in the BoxScript?
         _clearAtReset,      // Is value set to T() at reset()? Defaults to true for output and aux ports
-        _isConstant;           // Does the value remain fixed following its first evaluation?
+        _acceptNull,        // Accept evaluation yielding Null?
+        _isConstant;        // Does the value remain fixed following its first evaluation?
     QString
         _unit,              // Unit text
         _help;              // Help text
@@ -51,6 +52,7 @@ public:
     Port(QString name, PortType type, Node *parent);
     Port& doClear();
     Port& noClear();
+    Port& acceptNull();
     Port& unit(QString value);
     Port& help(QString value);
     void outputName(QString name);

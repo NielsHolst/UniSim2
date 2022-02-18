@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(ShelterFaceArea)
 
-ShelterFaceArea::ShelterFaceArea(QString name, QObject *parent)
+ShelterFaceArea::ShelterFaceArea(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a shelter face area");
@@ -24,9 +24,9 @@ ShelterFaceArea::ShelterFaceArea(QString name, QObject *parent)
     Input(gablesArea).imports("geometry[gablesArea]").unit("m2");
     Input(groundArea).imports("geometry[groundArea]").unit("m2");
 
-    Output(value).noReset().help("Surface area").unit("m2").noReset();
-    Output(relativeArea).noReset().help("Proportion of this surface area out of the total surface area").unit("[0;1]").noReset();
-    Output(areaPerGround).noReset().help("Surface area relative to the ground area").unit("m2/m2").noReset();
+    Output(value).noClear().help("Surface area").unit("m2");
+    Output(relativeArea).noClear().help("Proportion of this surface area out of the total surface area").unit("[0;1]");
+    Output(areaPerGround).noClear().help("Surface area relative to the ground area").unit("m2/m2");
 }
 
 void ShelterFaceArea::reset() {

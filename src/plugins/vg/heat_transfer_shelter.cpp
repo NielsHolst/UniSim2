@@ -17,10 +17,10 @@ using vector_op::weightedAverage;
 namespace vg {
 
 // See also the simpler definition of Input
-#define InputShelter(X)  (*new base::Port(#X "Shelter", this)).data(& X##Shelter).access(base::PortAccess::Input) \
+#define InputShelter(X) (*new base::Port(#X "Shelter", base::PortType::Input, this)).initialize(& X##Shelter) \
     .imports(path + "[" + QString(#X) + suffix + "]")
 
-HeatTransferShelter::HeatTransferShelter(QString name, QObject *parent, QString path, QString suffix)
+HeatTransferShelter::HeatTransferShelter(QString name, Box *parent, QString path, QString suffix)
     : HeatTransferLayerBase(name, parent)
 {
     InputShelter(swReflectivityTop);

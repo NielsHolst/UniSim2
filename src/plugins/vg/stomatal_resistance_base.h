@@ -15,7 +15,7 @@ namespace vg {
 class StomatalResistanceBase : public base::Box
 {
 public:
-    StomatalResistanceBase(QString name, QObject *parent);
+    StomatalResistanceBase(QString name, Box *parent);
     void reset() final;
     void update() final;
 

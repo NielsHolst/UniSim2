@@ -15,7 +15,7 @@ namespace vg {
 class RandomJmax : public base::Box
 {
 public: 
-    RandomJmax(QString name, QObject *parent);
+    RandomJmax(QString name, Box *parent);
     void reset();
     void update();
 private:

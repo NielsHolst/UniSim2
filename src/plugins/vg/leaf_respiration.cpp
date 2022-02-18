@@ -26,7 +26,7 @@ PUBLISH(LeafRespiration)
 5         Wheat 0.2830 0.49 41.18 193.71
 */
 
-LeafRespiration::LeafRespiration(QString name, QObject *parent)
+LeafRespiration::LeafRespiration(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models leaf light and dark respiration");

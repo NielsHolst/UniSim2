@@ -15,7 +15,7 @@ namespace vg {
 class HeatTransferShelter : public HeatTransferLayerBase
 {
 public:
-    HeatTransferShelter(QString name, QObject *parent, QString path, QString suffix="");
+    HeatTransferShelter(QString name, Box *parent, QString path, QString suffix="");
     void reset() final;
 private:
     // Inputs

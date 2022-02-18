@@ -14,7 +14,7 @@ namespace vg {
 	
 PUBLISH(ControllerVentilationCombined)
 
-ControllerVentilationCombined::ControllerVentilationCombined(QString name, QObject *parent)
+ControllerVentilationCombined::ControllerVentilationCombined(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("combines controllers for ventilation");

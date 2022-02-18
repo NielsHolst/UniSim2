@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(BoundaryLayerResistanceMonteithUnsworth)
 
-BoundaryLayerResistanceMonteithUnsworth::BoundaryLayerResistanceMonteithUnsworth(QString name, QObject *parent)
+BoundaryLayerResistanceMonteithUnsworth::BoundaryLayerResistanceMonteithUnsworth(QString name, Box *parent)
         : BoundaryLayerResistanceBase(name, parent)
 {
     help("computes boundary layer resistance from Monteith and Unsworth (1990)");

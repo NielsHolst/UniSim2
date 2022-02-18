@@ -15,7 +15,7 @@ namespace vg {
 class DiffuseIrradiationBase : public base::Box
 {
 public:
-    DiffuseIrradiationBase(QString name, QObject *parent);
+    DiffuseIrradiationBase(QString name, Box *parent);
     void updateClearness();
 
 protected:

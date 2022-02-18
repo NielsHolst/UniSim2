@@ -18,7 +18,7 @@ PUBLISH(Setpoints)
 #define ELEMENT(x) Input(x).imports("elementary/" #x "[value]")
 #define LIGHT(x,v,i) Input(x##i).imports("elementary/growthLights/growthLight" #i "/" #v "[value], CA")
 
-Setpoints::Setpoints(QString name, QObject *parent)
+Setpoints::Setpoints(QString name, Box *parent)
     : Box(name, parent)
 {
     help("holds all setpoints");
@@ -74,7 +74,7 @@ void Setpoints::amend() {
         port("initial").imports("indoors/humidity[rh]",CA).
         port("input").imports("indoors/humidity[rh]",CA).
         port("timeWindow").equals(20.).
-        port("timeUnit").equals('m').
+        port("timeUnit").equals("m").
     endbox().
     box("ProportionalSignal").name("heatingTemperatureHighRhIncrement").
         port("input").imports("../avgRh[value]",CA).

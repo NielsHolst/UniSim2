@@ -17,7 +17,7 @@ namespace vg {
 class SimulationPeriod : public base::Box
 {
 public:
-    SimulationPeriod(QString name, QObject *parent);
+    SimulationPeriod(QString name, Box *parent);
     void reset();
 private:
     // Input
@@ -25,7 +25,7 @@ private:
     QDate beginDate, endDate;
     QTime beginTime, endTime;
     int timeStep;
-    char timeUnit;
+    QString timeUnit;
     // Output
     QDateTime beginDateTime;
     int steps;

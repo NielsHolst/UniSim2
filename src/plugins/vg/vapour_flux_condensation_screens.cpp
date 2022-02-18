@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(VapourFluxCondensationScreens)
 
-VapourFluxCondensationScreens::VapourFluxCondensationScreens(QString name, QObject *parent)
+VapourFluxCondensationScreens::VapourFluxCondensationScreens(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("sums the vapour fluxes over all child boxes");

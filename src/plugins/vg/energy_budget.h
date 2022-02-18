@@ -18,7 +18,7 @@ class IndoorsTemperature;
 class EnergyBudget : public base::Box
 {
 public:
-    EnergyBudget(QString name, QObject *parent);
+    EnergyBudget(QString name, Box *parent);
     void amend();
     void reset();
     void update();

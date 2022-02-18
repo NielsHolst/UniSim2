@@ -15,7 +15,7 @@ namespace vg {
 class StomatalResistanceBallBerryOptiFull : public StomatalResistanceBase
 {
 public:
-    StomatalResistanceBallBerryOptiFull(QString name, QObject *parent);
+    StomatalResistanceBallBerryOptiFull(QString name, Box *parent);
 
 private:
     // Inputs

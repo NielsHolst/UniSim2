@@ -15,7 +15,7 @@ namespace vg {
 class LeafPhotosynthesisAj : public base::Box
 {
 public:
-    LeafPhotosynthesisAj(QString name, QObject *parent);
+    LeafPhotosynthesisAj(QString name, Box *parent);
     void update();
 private:
     // Inputs

@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(HeatBuffer)
 
-HeatBuffer::HeatBuffer(QString name, QObject *parent)
+HeatBuffer::HeatBuffer(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a heat buffer");

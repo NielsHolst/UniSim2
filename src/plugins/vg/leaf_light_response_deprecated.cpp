@@ -17,7 +17,7 @@ namespace vg {
 	
 PUBLISH(LeafLightResponseDeprecated)
 
-LeafLightResponseDeprecated::LeafLightResponseDeprecated(QString name, QObject *parent)
+LeafLightResponseDeprecated::LeafLightResponseDeprecated(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes the light response curve");

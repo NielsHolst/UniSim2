@@ -18,7 +18,7 @@ namespace vg {
 
 PUBLISH(VentOpening)
 
-VentOpening::VentOpening(QString name, QObject *parent)
+VentOpening::VentOpening(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes supply of air flux to cool greenhouse");

@@ -4,7 +4,7 @@
 */
 #include <boost/numeric/conversion/cast.hpp>
 #include <base/publish.h>
-#include <base/time_with_units.h>
+#include <base/time_unit.h>
 #include <base/vector_op.h>
 #include "running_average_timed.h"
 
@@ -30,8 +30,7 @@ RunningAverageTimed::RunningAverageTimed(QString name, Box *parent)
 }
 
 void RunningAverageTimed::reset() {
-    TimeUnit timeUnitWindow = TimeWithUnits::charToUnit(timeUnit.at(0).toLatin1(), this);
-    double timeWindowSecs = timeWindow*TimeWithUnits::conversionFactor(timeUnitWindow, Seconds);
+    double timeWindowSecs = timeWindow * Time::toSeconds(timeUnit);
     count = numeric_cast<int>(std::floor(timeWindowSecs/timeStepSecs + 0.5));
 
     if (count<1) count = 1;

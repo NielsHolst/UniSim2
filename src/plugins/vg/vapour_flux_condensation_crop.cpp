@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(VapourFluxCondensationCrop)
 
-VapourFluxCondensationCrop::VapourFluxCondensationCrop(QString name, QObject *parent)
+VapourFluxCondensationCrop::VapourFluxCondensationCrop(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux by condensation on crop");

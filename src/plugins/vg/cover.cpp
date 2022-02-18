@@ -5,11 +5,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <QMap>
-#include <base/data_grid.h>
 #include <base/environment.h>
-#include <base/exception.h>
-#include <base/interpolate.h>
 #include <base/publish.h>
 #include "cover.h"
 
@@ -19,7 +15,7 @@ namespace vg {
 
 PUBLISH(Cover)
 
-Cover::Cover(QString name, QObject *parent)
+Cover::Cover(QString name, Box *parent)
     : HeatTransferLayerParameters(name, parent)
 {
     help("computes cover light and heat characteristics");

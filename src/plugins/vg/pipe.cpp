@@ -21,7 +21,7 @@ namespace vg {
 	
 PUBLISH(Pipe)
 
-Pipe::Pipe(QString name, QObject *parent)
+Pipe::Pipe(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes outflow temperature and effect");

@@ -21,7 +21,7 @@ PUBLISH(StomatalResistanceBallBerryOptiFull)
           wheat       0.343   -1.332   10.158
 */
 
-StomatalResistanceBallBerryOptiFull::StomatalResistanceBallBerryOptiFull(QString name, QObject *parent)
+StomatalResistanceBallBerryOptiFull::StomatalResistanceBallBerryOptiFull(QString name, Box *parent)
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance after Ball et al. (1987), Medlyn et al. (2011) and Duursma et al. (2013)");

@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(RandomJmax)
 
-RandomJmax::RandomJmax(QString name, QObject *parent)
+RandomJmax::RandomJmax(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes random Jmax from Vcmax");

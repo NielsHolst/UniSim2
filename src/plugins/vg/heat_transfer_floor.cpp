@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(HeatTransferFloor)
 
-HeatTransferFloor::HeatTransferFloor(QString name, QObject *parent)
+HeatTransferFloor::HeatTransferFloor(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the floor");

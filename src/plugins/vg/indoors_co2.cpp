@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(IndoorsCo2)
 
-IndoorsCo2::IndoorsCo2(QString name, QObject *parent)
+IndoorsCo2::IndoorsCo2(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("models indoors CO2 concentration");

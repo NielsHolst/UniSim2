@@ -15,7 +15,7 @@ namespace vg {
 class BigLeafPhotosynthesis : public base::Box
 {
 public:
-    BigLeafPhotosynthesis(QString name, QObject *parent);
+    BigLeafPhotosynthesis(QString name, Box *parent);
     void amend();
     void update();
 private:

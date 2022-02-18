@@ -8,7 +8,6 @@
 #include <QDateTime>
 #include <QTime>
 #include <base/box.h>
-#include <base/time_with_units.h>
 
 namespace boxes {
 
@@ -27,7 +26,6 @@ private:
     QDateTime initialDateTime;
     int timeStep, timeZone, sample;
     QString timeUnit;
-    base::TimeUnit _timeUnit;
 
     // outputs
     QDate date;

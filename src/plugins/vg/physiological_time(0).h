@@ -15,7 +15,7 @@ namespace vg {
 class PhysiologicalTime : public base::Box
 {
 public: 
-    PhysiologicalTime(QString name, QObject *parent);
+    PhysiologicalTime(QString name, Box *parent);
     void update();
     virtual double calcDailyTimeStep() = 0;
 

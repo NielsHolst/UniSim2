@@ -27,7 +27,7 @@ PUBLISH(StomatalResistanceBallBerry)
 */
 
 
-StomatalResistanceBallBerry::StomatalResistanceBallBerry(QString name, QObject *parent)
+StomatalResistanceBallBerry::StomatalResistanceBallBerry(QString name, Box *parent)
     : StomatalResistanceBase(name, parent)
 {
     help("computes stomatal resistance after Ball et al. (1987)");

@@ -15,7 +15,7 @@ namespace vg {
 class HeatExchanger : public base::Box
 {
 public: 
-    HeatExchanger(QString name, QObject *parent);
+    HeatExchanger(QString name, Box *parent);
     void reset();
     void update();
 private:

@@ -15,7 +15,7 @@ class HeatTransferLayerParameters : public base::Box
 {
     friend class EnergyBudget;
 public:
-    HeatTransferLayerParameters(QString name, QObject *parent);
+    HeatTransferLayerParameters(QString name, Box *parent);
     void updateAbsorptivities();
 protected:
     // Inputs

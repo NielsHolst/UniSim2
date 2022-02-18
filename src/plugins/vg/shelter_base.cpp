@@ -11,7 +11,7 @@ using namespace base;
 
 namespace vg {
 
-ShelterBase::ShelterBase(QString name, QObject *parent)
+ShelterBase::ShelterBase(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("ShelterBase");

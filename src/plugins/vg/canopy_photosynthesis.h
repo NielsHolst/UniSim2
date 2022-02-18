@@ -15,7 +15,7 @@ namespace vg {
 class CanopyPhotosynthesis : public base::Box
 {
 public:
-    CanopyPhotosynthesis(QString name, QObject *parent);
+    CanopyPhotosynthesis(QString name, Box *parent);
     void amend();
     void update();
 private:

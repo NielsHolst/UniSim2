@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(VapourFluxCondensationCover)
 
-VapourFluxCondensationCover::VapourFluxCondensationCover(QString name, QObject *parent)
+VapourFluxCondensationCover::VapourFluxCondensationCover(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux by condensation on inside greenhouse surface");

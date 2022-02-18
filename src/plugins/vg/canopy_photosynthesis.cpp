@@ -16,7 +16,7 @@ namespace vg {
 	
 PUBLISH(CanopyPhotosynthesis)
 
-CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, QObject *parent)
+CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes canopy photosynthetic rate");
@@ -36,7 +36,7 @@ CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, QObject *parent)
 
 void CanopyPhotosynthesis::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./top"))
+    if (!findMaybeOne<Box*>("./top"))
         builder.
         box().name("top").
             box("IntercellularCo2").name("intercellularCo2").endbox().

@@ -15,7 +15,7 @@ namespace vg {
 	
 PUBLISH(IntercellularCo2)
 
-IntercellularCo2::IntercellularCo2(QString name, QObject *parent)
+IntercellularCo2::IntercellularCo2(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes intercellular CO2 concentration");

@@ -15,7 +15,7 @@ class IndoorsTemperature : public base::Box
 {
     friend class EnergyBudget;
 public:
-    IndoorsTemperature(QString name, QObject *parent);
+    IndoorsTemperature(QString name, Box *parent);
     void reset() final;
     void update() final;
     double getTemperature() const;

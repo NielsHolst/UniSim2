@@ -15,7 +15,7 @@ namespace vg {
 class Humidifier : public base::Box
 {
 public: 
-    Humidifier(QString name, QObject *parent);
+    Humidifier(QString name, Box *parent);
     void reset();
     void update();
 private:

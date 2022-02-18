@@ -5,7 +5,7 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#include <base/time_with_units.h>
+#include <base/time_unit.h>
 #include <base/publish.h>
 #include "simulation_period.h"
 
@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(SimulationPeriod)
 
-SimulationPeriod::SimulationPeriod(QString name, QObject *parent)
+SimulationPeriod::SimulationPeriod(QString name, Box *parent)
     : Box(name, parent)
 {
     help("defines a time interval for the simulation");
@@ -25,7 +25,7 @@ SimulationPeriod::SimulationPeriod(QString name, QObject *parent)
     Input(beginTime).equals(QTime(0,0,0)).help("Simulation start time").unit("Time");
     Input(endTime).equals(QTime(0,0,0)).help("Simulation end time").unit("Time");
     Input(timeStep).equals(2).help("Time step length").unit("-");
-    Input(timeUnit).equals('m').help("Time step unit").unit("y|d|h|m|s");
+    Input(timeUnit).equals("m").help("Time step unit").unit("y|d|h|m|s");
     Output(steps).help("Number of steps in simulation").unit("-");
     Output(beginDateTime).help("Date and time to begin simulation").unit("DateTime");
 }
@@ -56,8 +56,7 @@ int SimulationPeriod::secsInterval() {
 }
 
 int SimulationPeriod::secsTimeStep() {
-    TimeUnit timeUnit_ = TimeWithUnits::charToUnit(timeUnit, this);
-    return static_cast<int>(timeStep*TimeWithUnits::conversionFactor(timeUnit_, Seconds));
+    return timeStep*Time::toSeconds(timeUnit);
 }
 
 } //namespace

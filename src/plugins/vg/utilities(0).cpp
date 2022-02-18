@@ -100,7 +100,7 @@ void scale(QVector<double> &x, double factor) {
 }
 
 //! Power function that tolerates x equal to zero
-double pow0(double x, double c, QObject *context) {
+double pow0(double x, double c, Box *context) {
     if (x == 0) {
         if (c >= 0) return 0.;
         QString msg = "Cannot raise zero to power of '%1'";
@@ -158,7 +158,7 @@ int toDayOfYear(int day, int month) {
 }
 
 //! Convert time from one unit to another
-double convertTime(double time, char fromUnit, char toUnit, QObject *context) {
+double convertTime(double time, char fromUnit, char toUnit, Box *context) {
     static QMap<char, int> u;
     if (u.isEmpty()) {
         u['s'] = 1;
@@ -175,7 +175,7 @@ double convertTime(double time, char fromUnit, char toUnit, QObject *context) {
     return time*u.value(fromUnit)/u.value(toUnit);
 }
 
-QString fullName(const QObject *object) {
+QString fullName(const Box *object) {
     if (!object) return QString();
     QString name = object->objectName();
     if (name.isEmpty() || name.toLower() == "anonymous")
@@ -197,7 +197,7 @@ void splitAtNamespace(QString s, QString *namespacePart, QString *ownNamePart) {
     }
 }
 
-//QStringList splitParentChildExpression(QString expression_, QObject *context) {
+//QStringList splitParentChildExpression(QString expression_, Box *context) {
 //    QString expression = expression_.trimmed();
 //    int begin = expression.indexOf('[');
 //    int end = expression.indexOf(']');
@@ -232,14 +232,14 @@ void splitAtNamespace(QString s, QString *namespacePart, QString *ownNamePart) {
     \param root		the root of the tree to be written
     \param level	indentation (spaces) written before the object's name
 */
-void writeObjectTree(QObject *obj, int level) {
+void writeObjectTree(Box *obj, int level) {
 	if (level > 0) cout << setw(2*level) << " ";
 	
 	cout
 		<< obj->metaObject()->className() 
 		<< " '" << qPrintable(obj->objectName()) << "'\n";
 		
-	for (QList<QObject*>::const_iterator ch = obj->children().begin(); ch != obj->children().end(); ++ch) {
+	for (QList<Box*>::const_iterator ch = obj->children().begin(); ch != obj->children().end(); ++ch) {
 		writeObjectTree(*ch, level+1);
 	}
 }	

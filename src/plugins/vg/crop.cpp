@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(Crop)
 
-Crop::Crop(QString name, QObject *parent)
+Crop::Crop(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("holds crop parameters and sub-models");

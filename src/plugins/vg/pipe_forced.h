@@ -15,7 +15,7 @@ namespace vg {
 class PipeForced : public base::Box
 {
 public:
-    PipeForced(QString name, QObject *parent);
+    PipeForced(QString name, Box *parent);
     void reset();
     void update();
 private:

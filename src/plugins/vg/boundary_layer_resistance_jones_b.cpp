@@ -19,7 +19,7 @@ namespace vg {
 
 PUBLISH(BoundaryLayerResistanceJonesB)
 
-BoundaryLayerResistanceJonesB::BoundaryLayerResistanceJonesB(QString name, QObject *parent)
+BoundaryLayerResistanceJonesB::BoundaryLayerResistanceJonesB(QString name, Box *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
     help("computes boundary layer resistance from Jones (1992, eq. A.8.1)");

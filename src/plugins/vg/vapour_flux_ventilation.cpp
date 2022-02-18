@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(VapourFluxVentilation)
 
-VapourFluxVentilation::VapourFluxVentilation(QString name, QObject *parent)
+VapourFluxVentilation::VapourFluxVentilation(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("models vapour flux by air exchange");

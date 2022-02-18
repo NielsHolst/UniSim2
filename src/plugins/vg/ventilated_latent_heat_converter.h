@@ -15,7 +15,7 @@ namespace vg {
 class VentilatedLatentHeatConverter : public VapourFluxBase
 {
 public:
-    VentilatedLatentHeatConverter(QString name, QObject *parent);
+    VentilatedLatentHeatConverter(QString name, Box *parent);
     void update();
 private:
     double indoorsAh, groundArea, volumeFlowRate;

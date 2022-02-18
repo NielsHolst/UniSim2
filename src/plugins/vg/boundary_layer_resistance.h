@@ -15,7 +15,7 @@ namespace vg {
 class BoundaryLayerResistance : public base::Box
 {
 public:
-    BoundaryLayerResistance(QString name, QObject *parent);
+    BoundaryLayerResistance(QString name, Box *parent);
     void reset();
     void update();
 

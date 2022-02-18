@@ -14,7 +14,7 @@ namespace vg {
 class WaterBudget : public base::Box
 {
 public:
-    WaterBudget(QString name, QObject *parent);
+    WaterBudget(QString name, Box *parent);
     void amend();
     void reset();
     void update();

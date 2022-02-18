@@ -15,7 +15,7 @@ using namespace phys_math;
 
 namespace vg {
 
-Screen::Screen(QString name, QObject *parent)
+Screen::Screen(QString name, Box *parent)
     : HeatTransferLayerParameters(name, parent)
 {
     help("models the impact on light and air fluxes of a screen");

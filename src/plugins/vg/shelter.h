@@ -19,7 +19,7 @@ namespace vg {
 class Shelter : public base::Box
 {
 public:
-    Shelter(QString name, QObject *parent);
+    Shelter(QString name, Box *parent);
     void amend();
     void update();
 private:

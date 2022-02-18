@@ -19,7 +19,7 @@ namespace vg {
 class AnyFlag : public base::Box
 {
 public: 
-    AnyFlag(QString name, QObject *parent=0);
+    AnyFlag(QString name, Box *parent=0);
 private:
     bool flag;
 };

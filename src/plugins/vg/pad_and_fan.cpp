@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(PadAndFan)
 
-PadAndFan::PadAndFan(QString name, QObject *parent)
+PadAndFan::PadAndFan(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a pad-and-fan cooling system");

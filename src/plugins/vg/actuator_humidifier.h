@@ -15,7 +15,7 @@ namespace vg {
 class ActuatorHumidifier : public base::Box
 {
 public: 
-    ActuatorHumidifier(QString name, QObject *parent);
+    ActuatorHumidifier(QString name, Box *parent);
     void reset();
     void update();
 private:

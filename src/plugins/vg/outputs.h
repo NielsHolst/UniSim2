@@ -16,7 +16,7 @@ namespace vg {
 class Outputs : public base::Box
 {
 public:
-    Outputs(QString name, QObject *parent);
+    Outputs(QString name, Box *parent);
     void amend();
 private:
     // Inputs

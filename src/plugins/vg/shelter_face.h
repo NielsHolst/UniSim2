@@ -15,7 +15,7 @@ namespace vg {
 class ShelterFace : public base::Box
 {
 public:
-    ShelterFace(QString name, QObject *parent);
+    ShelterFace(QString name, Box *parent);
     void amend();
 };
 } //namespace

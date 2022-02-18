@@ -15,7 +15,7 @@ namespace vg {
 class IndoorsHumidity : public base::Box
 {
 public:
-    IndoorsHumidity(QString name, QObject *parent);
+    IndoorsHumidity(QString name, Box *parent);
     void reset();
     void update();
 private:

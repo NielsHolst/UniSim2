@@ -102,7 +102,7 @@ QString EnergyBudget::toString() const {
 }
 
 
-EnergyBudget::EnergyBudget(QString name, QObject *parent)
+EnergyBudget::EnergyBudget(QString name, Box *parent)
     : Box(name, parent)
 {
     help("distributes radiation among layers");

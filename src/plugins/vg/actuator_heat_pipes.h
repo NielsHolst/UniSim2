@@ -15,7 +15,7 @@ namespace vg {
 class ActuatorHeatPipes : public base::Box
 {
 public:
-    ActuatorHeatPipes(QString name, QObject *parent);
+    ActuatorHeatPipes(QString name, Box *parent);
     void reset();
     void update();
     double getTemperature() const;

@@ -18,7 +18,7 @@ namespace vg {
 
 PUBLISH(DiffuseIrradiationRE)
 
-DiffuseIrradiationRE::DiffuseIrradiationRE(QString name, QObject *parent)
+DiffuseIrradiationRE::DiffuseIrradiationRE(QString name, Box *parent)
     : DiffuseIrradiationBase(name, parent)
 {
     help("computes diffuse fraction of global irradiation");

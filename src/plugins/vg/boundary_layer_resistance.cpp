@@ -30,7 +30,7 @@ PUBLISH(BoundaryLayerResistance)
  * - _rbCO2_ is the boundary layer resistance against CO<SUB>2</SUB> [s/m]
  */
 
-BoundaryLayerResistance::BoundaryLayerResistance(QString name, QObject *parent)
+BoundaryLayerResistance::BoundaryLayerResistance(QString name, Box *parent)
 	: Box(name, parent)
 {
     Input(leafDimension, 25./1000.);

@@ -14,7 +14,7 @@ namespace vg {
 class SetpointVentilation : public base::Box
 {
 public:
-    SetpointVentilation(QString name, QObject *parent);
+    SetpointVentilation(QString name, Box *parent);
     void reset();
     void update();
 private:

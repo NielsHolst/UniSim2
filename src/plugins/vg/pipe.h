@@ -16,7 +16,7 @@ namespace vg {
 class Pipe : public base::Box
 {
 public:
-    Pipe(QString name, QObject *parent);
+    Pipe(QString name, Box *parent);
     void reset();
     void update();
 private:

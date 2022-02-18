@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(HeatTransferGrowthLight)
 
-HeatTransferGrowthLight::HeatTransferGrowthLight(QString name, QObject *parent)
+HeatTransferGrowthLight::HeatTransferGrowthLight(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the growth lights");

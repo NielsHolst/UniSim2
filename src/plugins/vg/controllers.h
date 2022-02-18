@@ -15,7 +15,7 @@ namespace vg {
 class Controllers : public base::Box
 {
 public:
-    Controllers(QString name, QObject *parent);
+    Controllers(QString name, Box *parent);
     void amend();
 };
 

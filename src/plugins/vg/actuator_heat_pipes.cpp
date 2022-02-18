@@ -21,7 +21,7 @@ namespace vg {
 
 PUBLISH(ActuatorHeatPipes)
 
-ActuatorHeatPipes::ActuatorHeatPipes(QString name, QObject *parent)
+ActuatorHeatPipes::ActuatorHeatPipes(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes energy flux from heat pipes");

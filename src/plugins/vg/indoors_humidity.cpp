@@ -18,7 +18,7 @@ namespace vg {
 	
 PUBLISH(IndoorsHumidity)
 
-IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
+IndoorsHumidity::IndoorsHumidity(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("models indoors humidity");

@@ -14,7 +14,7 @@ namespace vg {
 class ScreenWall : public Screen
 {
 public:
-    ScreenWall(QString name, QObject *parent);
+    ScreenWall(QString name, Box *parent);
 private:
     // Input
     double faceArea;

@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(LeakageVentilation)
 
-LeakageVentilation::LeakageVentilation(QString name, QObject *parent)
+LeakageVentilation::LeakageVentilation(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes air flux by leakage");

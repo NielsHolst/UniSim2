@@ -18,7 +18,7 @@ namespace vg {
 
 PUBLISH(ActuatorVentilation)
 
-ActuatorVentilation::ActuatorVentilation(QString name, QObject *parent)
+ActuatorVentilation::ActuatorVentilation(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("sets air flux through vents");
@@ -28,7 +28,7 @@ ActuatorVentilation::ActuatorVentilation(QString name, QObject *parent)
     Input(windSpeed).imports("outdoors[windSpeed]", CA);
     Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
     Input(indoorsTemperature).imports("indoors/temperature[value]", CA);
-    Input(effectiveVentArea).imports("shelter/*/vent[effectiveArea]").transform(Sum);
+    Input(effectiveVentArea).computes("sum(shelter/*/vent[effectiveArea])");
     Input(groundArea).imports("construction/geometry[groundArea]", CA);
     Output(flux).help("Current air flux through vents").unit("/h");
     Output(maxFlux).help("Maximum air flux through vents").unit("/h");

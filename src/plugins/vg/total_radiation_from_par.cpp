@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(TotalRadiationFromPar)
 
-TotalRadiationFromPar::TotalRadiationFromPar(QString name, QObject *parent)
+TotalRadiationFromPar::TotalRadiationFromPar(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes total radiation from par");

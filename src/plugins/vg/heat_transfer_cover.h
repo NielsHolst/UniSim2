@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferCover : public HeatTransferShelter
 {
 public:
-    HeatTransferCover(QString name, QObject *parent);
+    HeatTransferCover(QString name, Box *parent);
     void update();
 private:
     // Inputs

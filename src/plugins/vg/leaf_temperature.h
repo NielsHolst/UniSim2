@@ -15,7 +15,7 @@ namespace vg {
 class LeafTemperature : public base::Box
 {
 public:
-    LeafTemperature(QString name, QObject *parent);
+    LeafTemperature(QString name, Box *parent);
     void reset();
     void update();
 

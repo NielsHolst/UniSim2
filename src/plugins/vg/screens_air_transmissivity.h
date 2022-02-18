@@ -15,7 +15,7 @@ namespace vg {
 class ScreensAirTransmissivity : public base::Box
 {
 public:
-    ScreensAirTransmissivity(QString name, QObject *parent);
+    ScreensAirTransmissivity(QString name, Box *parent);
     void reset();
     void update();
 private:

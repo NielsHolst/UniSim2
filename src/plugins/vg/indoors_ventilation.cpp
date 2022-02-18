@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(IndoorsVentilation)
 
-IndoorsVentilation::IndoorsVentilation(QString name, QObject *parent)
+IndoorsVentilation::IndoorsVentilation(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes total air flux from outdoors to indoors");

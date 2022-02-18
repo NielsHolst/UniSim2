@@ -15,7 +15,7 @@ namespace vg {
 class LeafPhotosynthesisAc : public base::Box
 {
 public:
-    LeafPhotosynthesisAc(QString name, QObject *parent);
+    LeafPhotosynthesisAc(QString name, Box *parent);
     void reset();
     void update();
 private:

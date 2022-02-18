@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferCrop : public HeatTransferLayerBase
 {
 public:
-    HeatTransferCrop(QString name, QObject *parent);
+    HeatTransferCrop(QString name, Box *parent);
     void reset();
     void update();
 private:

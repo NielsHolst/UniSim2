@@ -15,7 +15,7 @@ namespace vg {
 	
 PUBLISH(BigLeafPhotosynthesis)
 
-BigLeafPhotosynthesis::BigLeafPhotosynthesis(QString name, QObject *parent)
+BigLeafPhotosynthesis::BigLeafPhotosynthesis(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes simplified, big-leaf photosynthetic rate");
@@ -34,7 +34,7 @@ BigLeafPhotosynthesis::BigLeafPhotosynthesis(QString name, QObject *parent)
 
 void BigLeafPhotosynthesis::amend() {
     BoxBuilder builder(this);
-    if (!findMaybeOne<Box>("./leaf"))
+    if (!findMaybeOne<Box*>("./leaf"))
         builder.
         box().name("leaf").
             box("IntercellularCo2").name("intercellularCo2").endbox().

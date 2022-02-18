@@ -15,7 +15,7 @@ namespace vg {
 class ActuatorHeatPump : public base::Box
 {
 public: 
-    ActuatorHeatPump(QString name, QObject *parent);
+    ActuatorHeatPump(QString name, Box *parent);
     void reset();
     void update();
 private:

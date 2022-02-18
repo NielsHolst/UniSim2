@@ -13,7 +13,7 @@ namespace vg {
 
 PUBLISH(vgDocumentation)
 
-vgDocumentation::vgDocumentation(QString name, QObject *parent)
+vgDocumentation::vgDocumentation(QString name, Box *parent)
     : Documentation(name, parent)
 {
     title = "Virtual Greenhouse";

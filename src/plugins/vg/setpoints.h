@@ -14,7 +14,7 @@ namespace vg {
 class Setpoints : public base::Box
 {
 public:
-    Setpoints(QString name, QObject *parent);
+    Setpoints(QString name, Box *parent);
     void amend();
     void reset();
     void update();

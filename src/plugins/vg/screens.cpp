@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(Screens)
 
-Screens::Screens(QString name, QObject *parent)
+Screens::Screens(QString name, Box *parent)
     : Box(name, parent)
 {
     help("holds Screen children");

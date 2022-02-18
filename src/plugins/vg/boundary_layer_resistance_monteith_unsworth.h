@@ -15,7 +15,7 @@ namespace vg {
 class BoundaryLayerResistanceMonteithUnsworth : public BoundaryLayerResistanceBase
 {
 public:
-    BoundaryLayerResistanceMonteithUnsworth(QString name, QObject *parent);
+    BoundaryLayerResistanceMonteithUnsworth(QString name, Box *parent);
     void reset();
     void setRbH2O();
 private:

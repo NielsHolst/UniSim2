@@ -15,7 +15,7 @@ class HeatTransferGrowthLight : public HeatTransferLayerBase
 {
 friend class RadiationLayers;
 public:
-    HeatTransferGrowthLight(QString name, QObject *parent);
+    HeatTransferGrowthLight(QString name, Box *parent);
     void initialize();
 };
 

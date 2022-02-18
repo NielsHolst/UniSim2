@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(WaterBudget)
 
-WaterBudget::WaterBudget(QString name, QObject *parent)
+WaterBudget::WaterBudget(QString name, Box *parent)
     : Box(name, parent)
 {
     help("holds all water vapour fluxes");

@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(AhFromRh)
 
-AhFromRh::AhFromRh(QString name, QObject *parent)
+AhFromRh::AhFromRh(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes absolute humidity from relative humidity");

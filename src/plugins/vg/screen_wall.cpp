@@ -15,7 +15,7 @@ namespace vg {
 PUBLISH(ScreenWall)
 
 
-ScreenWall::ScreenWall(QString name, QObject *parent)
+ScreenWall::ScreenWall(QString name, Box *parent)
     : Screen(name, parent)
 {
     help("models a screen on wall side or end");

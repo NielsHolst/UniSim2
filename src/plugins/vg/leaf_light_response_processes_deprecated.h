@@ -15,7 +15,7 @@ namespace vg {
 class LeafLightResponseProcessesDeprecated : public base::Box
 {
 public:
-    LeafLightResponseProcessesDeprecated(QString name, QObject *parent);
+    LeafLightResponseProcessesDeprecated(QString name, Box *parent);
     void reset();
     void update();
 

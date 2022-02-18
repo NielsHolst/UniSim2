@@ -15,7 +15,7 @@ namespace vg {
 class LeafPhotosynthesisDeprecated : public base::Box
 {
 public:
-    LeafPhotosynthesisDeprecated(QString name, QObject *parent);
+    LeafPhotosynthesisDeprecated(QString name, Box *parent);
     void amend();
     void update();
 private:

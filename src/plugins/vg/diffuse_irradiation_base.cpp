@@ -12,7 +12,7 @@ using namespace base;
 namespace vg {
 
 
-DiffuseIrradiationBase::DiffuseIrradiationBase(QString name, QObject *parent)
+DiffuseIrradiationBase::DiffuseIrradiationBase(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("DiffuseIrradiationBase");

@@ -16,7 +16,7 @@ namespace vg {
 	
 PUBLISH(GrowthLightController)
 
-GrowthLightController::GrowthLightController(QString name, QObject *parent)
+GrowthLightController::GrowthLightController(QString name, Box *parent)
     : BaseSignal(name, parent), _isOn(false)
 {
     help("control lights on/off according to setting");

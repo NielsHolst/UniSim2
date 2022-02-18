@@ -18,7 +18,7 @@ PUBLISH(LeafLightResponseProcessesDeprecated)
 
 const double O2i = 210;     // [G94, p.80] O2 partial pressure inside stomata [ppm], [mbar], [ml/l]
 
-LeafLightResponseProcessesDeprecated::LeafLightResponseProcessesDeprecated(QString name, QObject *parent)
+LeafLightResponseProcessesDeprecated::LeafLightResponseProcessesDeprecated(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("models various processes of leaf light response");

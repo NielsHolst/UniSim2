@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(VapourFluxTranspiration)
 
-VapourFluxTranspiration::VapourFluxTranspiration(QString name, QObject *parent)
+VapourFluxTranspiration::VapourFluxTranspiration(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("computes vapour flux by transpiration");

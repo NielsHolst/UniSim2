@@ -15,7 +15,7 @@ namespace vg {
 class LeafParAbsorbed : public base::Box
 {
 public:
-    LeafParAbsorbed(QString name, QObject *parent);
+    LeafParAbsorbed(QString name, Box *parent);
     void initialize();
     void update();
 private:

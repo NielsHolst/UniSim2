@@ -93,7 +93,7 @@ HEADERS +=  \
     table.h \
     test_num.h \
     to_q_string_list.h \
-    time_with_units.h \
+    time_unit.h \
     timer.h \
     unique_name.h \
     value.h \
@@ -161,7 +161,7 @@ SOURCES +=  \
 #    save_graph_graphviz.cpp \
     table.cpp \
     test_num.cpp \
-    time_with_units.cpp \
+    time_unit.cpp \
     timer.cpp \
     unique_name.cpp \
     value.cpp \

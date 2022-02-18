@@ -15,7 +15,7 @@ namespace vg {
 class Indoors : public base::Box
 {
 public:
-    Indoors(QString name, QObject *parent);
+    Indoors(QString name, Box *parent);
     void amend();
 };
 } //namespace

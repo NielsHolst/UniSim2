@@ -22,7 +22,7 @@ namespace vg {
 
 PUBLISH(IndoorsTemperature)
 
-IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
+IndoorsTemperature::IndoorsTemperature(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models indoors temperature");

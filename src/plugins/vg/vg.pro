@@ -95,7 +95,6 @@ HEADERS +=  \
     stomatal_resistance_ball_berry_opti_full.h \
     stomatal_resistance_base.h \
     total_radiation_from_par.h \
-    utilities.h \
     vapour_flux_base.h \
     vapour_flux_condensation_cover.h \
     vapour_flux_condensation_crop.h \
@@ -198,7 +197,6 @@ SOURCES += \
     stomatal_resistance_ball_berry_opti_full.cpp \
     stomatal_resistance_base.cpp \
     total_radiation_from_par.cpp \
-    utilities.cpp \
     vapour_flux_base.cpp \
     vapour_flux_condensation_cover.cpp \
     vapour_flux_condensation_crop.cpp \

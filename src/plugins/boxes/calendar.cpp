@@ -11,6 +11,7 @@
 #include <base/phys_math.h>
 #include <base/publish.h>
 #include <base/test_num.h>
+#include <base/time_unit.h>
 #include "calendar.h"
 
 using namespace std;
@@ -54,9 +55,8 @@ void Calendar::reset() {
         ThrowException("Sample frequency ('sample') must be larger than zero").value(sample);
     if (timeStep < 1)
         ThrowException("Time step ('timeStep') must be larger than zero").value(timeStep);
-    _timeUnit = TimeWithUnits::charToUnit(timeUnit.at(0).toLatin1(), this);
-    timeStepSecs = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Seconds);
-    timeStepDays = timeStep*TimeWithUnits::conversionFactor(_timeUnit, Days);
+    timeStepSecs = timeStep * Time::toSeconds(timeUnit);
+    timeStepDays = timeStep * Time::toDays(timeUnit);
     dateTime = initialDateTime;
     dateTime.setTimeSpec(Qt::UTC);
     totalTimeSteps = 0;
@@ -65,7 +65,7 @@ void Calendar::reset() {
 
 void Calendar::update() {
     ++totalTimeSteps;
-    dateTime = dateTime + TimeWithUnits(timeStep, _timeUnit);
+    dateTime = dateTime + Time::Period(timeStep, timeUnit);
     updateDerived();
 }
 
@@ -74,7 +74,7 @@ void Calendar::updateDerived() {
     time = dateTime.time();
     dayOfYear = date.dayOfYear();
     totalTime = totalTimeSteps*timeStep;
-    totalDays = totalTime*TimeWithUnits::conversionFactor(_timeUnit, Days);
+    totalDays = totalTime*Time::toDays(timeUnit);
 }
 
 } //namespace

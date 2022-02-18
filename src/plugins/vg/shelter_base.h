@@ -15,7 +15,7 @@ namespace vg {
 class ShelterBase : public base::Box
 {
 public:
-    ShelterBase(QString name, QObject *parent);
+    ShelterBase(QString name, Box *parent);
 protected:
     // Outputs
     double haze, U;

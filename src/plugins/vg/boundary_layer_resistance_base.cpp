@@ -13,7 +13,7 @@ using namespace base;
 
 namespace vg {
 
-BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, QObject *parent)
+BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, Box *parent)
     : Box(name, parent)
 {
     setClassName("BoundaryLayerResistanceBase");

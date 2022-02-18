@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferScreenBase : public HeatTransferShelter
 {
 public:
-    HeatTransferScreenBase(QString name, QObject *parent, QString path);
+    HeatTransferScreenBase(QString name, Box *parent, QString path);
     void update() final;
 private:
     double coverArea;

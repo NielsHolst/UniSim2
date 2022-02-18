@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(Budget)
 
-Budget::Budget(QString name, QObject *parent)
+Budget::Budget(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes greenhouse energy and CO2 budgets");
@@ -27,7 +27,7 @@ Budget::Budget(QString name, QObject *parent)
     Input(skyLwRadiationAbsorbedRate).imports("energyBudget/sky[lwAbsorbed]", CA);
     Input(ventilationEnergyRate).imports("indoors/temperature[advectiveEnergyFlux]", CA);
     Input(convectionEnergyRate).imports("energyBudget/cover[convectiveInflux]", CA);
-    Input(heatSinkEnergyRate).importsMaybe("heatSink[value]");
+    Input(heatSinkEnergyRate).computes("if exists(heatSink[value]) then heatSink[value] else 0");
     Input(groundArea).imports("geometry[groundArea]", CA);
     Input(indoorsAh).imports("indoors/humidity[ah]", CA);
     Input(outdoorsAh).imports("outdoors[ah]", CA);

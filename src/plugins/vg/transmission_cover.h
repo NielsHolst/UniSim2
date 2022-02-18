@@ -15,7 +15,7 @@ namespace vg {
 class TransmissionCover : public TransmissionBase
 {
 public:
-    TransmissionCover(QString name, QObject *parent);
+    TransmissionCover(QString name, Box *parent);
     bool applyScreens() const;
 };
 } //namespace

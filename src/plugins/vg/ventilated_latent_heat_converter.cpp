@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(VentilatedLatentHeatConverter)
 
-VentilatedLatentHeatConverter::VentilatedLatentHeatConverter(QString name, QObject *parent)
+VentilatedLatentHeatConverter::VentilatedLatentHeatConverter(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("models a latent heat converter used for humidity reduction");

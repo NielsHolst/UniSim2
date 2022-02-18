@@ -19,7 +19,7 @@ namespace vg {
 
 PUBLISH(LeafTranspiration)
 
-LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
+LeafTranspiration::LeafTranspiration(QString name, Box *parent)
     : VapourFluxBase(name, parent)
 {
     help("models leaf transpiration");
@@ -28,7 +28,7 @@ LeafTranspiration::LeafTranspiration(QString name, QObject *parent)
     Input(indoorsAh).imports("indoors/humidity[ah]",CA).unit("kg/m3");
     Input(radiationAbsorbed).imports("energyBudget/crop[absorbed]",CA).unit("W/m2");
     Input(leafTemperature).imports("../temperature[value]",CA).unit("oC");
-    Input(rsH2O).imports("../photosynthesis/*/stomatalResistance[rH2O]",CA).transform(Mean).unit("s/m2");
+    Input(rsH2O).computes("mean(../photosynthesis/*/stomatalResistance[rH2O])").unit("s/m2");
     Input(rbH2O).imports("../boundaryLayerResistance[rH2O]").unit("s/m2");
     Output(leafAh).help("Leaf absolute humidity").unit("kg/m3");
 }

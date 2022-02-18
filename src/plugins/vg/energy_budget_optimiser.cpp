@@ -29,7 +29,7 @@ namespace vg {
 
 PUBLISH(EnergyBudgetOptimiser)
 
-EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, QObject *parent)
+EnergyBudgetOptimiser::EnergyBudgetOptimiser(QString name, Box *parent)
     : Box(name, parent)
 {
     help("optimises energy budget control");
@@ -238,9 +238,9 @@ void EnergyBudgetOptimiser::tooCold() {
 void EnergyBudgetOptimiser::updateDependents() {
     indoorsTemperature->setTemperature(_currentIndoorsTemperature);
     actuatorHeatPipes->updateFamily();
-    energyBudget->updateImports();
+//    energyBudget->evaluatePorts();
     energyBudget->updateFamily();
-    indoorsTemperature->updateImports();
+//    indoorsTemperature->evaluatePorts();
     indoorsTemperature->updateFamily();
     ++numUpdates;
 }

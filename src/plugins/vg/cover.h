@@ -15,7 +15,7 @@ namespace vg {
 class Cover : public HeatTransferLayerParameters
 {
 public:
-    Cover(QString name, QObject *parent);
+    Cover(QString name, Box *parent);
     void reset();
     void update();
 private:

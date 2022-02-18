@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(HeatSink)
 
-HeatSink::HeatSink(QString name, QObject *parent)
+HeatSink::HeatSink(QString name, Box *parent)
     : Box(name, parent)
 {
     help("provides an artificial sink for excess heat");

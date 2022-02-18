@@ -16,7 +16,7 @@ namespace vg {
 	
 PUBLISH(SkyTemperature)
 
-SkyTemperature::SkyTemperature(QString name, QObject *parent)
+SkyTemperature::SkyTemperature(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes sky temperature from temperature and RH");

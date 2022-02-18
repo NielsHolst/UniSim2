@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(VapourFluxCondensationScreen3)
 
-VapourFluxCondensationScreen3::VapourFluxCondensationScreen3(QString name, QObject *parent)
+VapourFluxCondensationScreen3::VapourFluxCondensationScreen3(QString name, Box *parent)
     : VapourFluxCondensationScreenBase(name, parent, 3)
 {
     help("models vapour flux by condensation on screen layer 3");

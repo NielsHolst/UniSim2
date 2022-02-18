@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(HeatTransferCover)
 
-HeatTransferCover::HeatTransferCover(QString name, QObject *parent)
+HeatTransferCover::HeatTransferCover(QString name, Box *parent)
     : HeatTransferShelter(name, parent, "shelter/*/cover")
 {
     help("holds the radiative parameters of the greenhouse cover averaged for all shelter faces");

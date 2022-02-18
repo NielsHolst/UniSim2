@@ -14,7 +14,7 @@ namespace vg {
 class TotalRadiationFromPar : public base::Box
 {
 public: 
-    TotalRadiationFromPar(QString name, QObject *parent);
+    TotalRadiationFromPar(QString name, Box *parent);
     void reset();
     void update();
 private:

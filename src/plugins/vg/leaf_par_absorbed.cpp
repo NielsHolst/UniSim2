@@ -18,7 +18,7 @@ namespace vg {
 	
 PUBLISH(LeafParAbsorbed)
 
-LeafParAbsorbed::LeafParAbsorbed(QString name, QObject *parent)
+LeafParAbsorbed::LeafParAbsorbed(QString name, Box *parent)
     : Box(name, parent)
 {
     help("computes PAR absorbed by leaf in canopy layer");

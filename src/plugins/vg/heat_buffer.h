@@ -15,7 +15,7 @@ namespace vg {
 class HeatBuffer : public base::Box
 {
 public: 
-    HeatBuffer(QString name, QObject *parent);
+    HeatBuffer(QString name, Box *parent);
     void reset();
     void update();
 private:

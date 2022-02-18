@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(BoundaryLayerResistanceStanghellini)
 
-BoundaryLayerResistanceStanghellini::BoundaryLayerResistanceStanghellini(QString name, QObject *parent)
+BoundaryLayerResistanceStanghellini::BoundaryLayerResistanceStanghellini(QString name, Box *parent)
     : BoundaryLayerResistanceBase(name, parent)
 {
     help("computes boundary layer resistance from Stanghellini (1987, p. 32)");

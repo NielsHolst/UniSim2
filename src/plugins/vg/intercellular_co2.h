@@ -15,7 +15,7 @@ namespace vg {
 class IntercellularCo2 : public base::Box
 {
 public:
-    IntercellularCo2(QString name, QObject *parent);
+    IntercellularCo2(QString name, Box *parent);
     void reset();
     void update();
 private:

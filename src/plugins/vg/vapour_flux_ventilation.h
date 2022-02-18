@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxVentilation : public VapourFluxBase
 {
 public:
-    VapourFluxVentilation(QString name, QObject *parent);
+    VapourFluxVentilation(QString name, Box *parent);
     void update();
 private:
     // Inputs

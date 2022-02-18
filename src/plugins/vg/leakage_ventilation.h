@@ -15,7 +15,7 @@ namespace vg {
 class LeakageVentilation : public base::Box
 {
 public:
-    LeakageVentilation(QString name, QObject *parent);
+    LeakageVentilation(QString name, Box *parent);
     void reset();
     void update();
 private:

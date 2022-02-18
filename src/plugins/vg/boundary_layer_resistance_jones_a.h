@@ -15,7 +15,7 @@ namespace vg {
 class BoundaryLayerResistanceJonesA : public BoundaryLayerResistanceBase
 {
 public:
-    BoundaryLayerResistanceJonesA(QString name, QObject *parent);
+    BoundaryLayerResistanceJonesA(QString name, Box *parent);
     void setRbH2O();
 };
 } //namespace

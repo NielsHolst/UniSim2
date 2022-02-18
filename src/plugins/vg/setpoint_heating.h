@@ -14,7 +14,7 @@ namespace vg {
 class SetpointHeating : public base::Box
 {
 public:
-    SetpointHeating(QString name, QObject *parent);
+    SetpointHeating(QString name, Box *parent);
     void reset();
     void update();
 private:

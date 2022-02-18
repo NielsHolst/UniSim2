@@ -15,7 +15,7 @@ namespace vg {
 class Screen : public HeatTransferLayerParameters
 {
 public:
-    Screen(QString name, QObject *parent);
+    Screen(QString name, Box *parent);
     void reset();
     void update();
 private:

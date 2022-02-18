@@ -14,7 +14,7 @@ namespace vg {
 class DayDegrees : public PhysiologicalTime
 {
 public: 
-    DayDegrees(QString name, QObject *parent=0);
+    DayDegrees(QString name, Box *parent);
     double calcDailyTimeStep();
 protected:
     // Inputs

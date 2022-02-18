@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(HeatTransferSky)
 
-HeatTransferSky::HeatTransferSky(QString name, QObject *parent)
+HeatTransferSky::HeatTransferSky(QString name, Box *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("holds the radiative parameters of the sky layer");

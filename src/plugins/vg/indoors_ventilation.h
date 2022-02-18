@@ -15,7 +15,7 @@ namespace vg {
 class IndoorsVentilation : public base::Box
 {
 public:
-    IndoorsVentilation(QString name, QObject *parent);
+    IndoorsVentilation(QString name, Box *parent);
     void reset();
     void update();
 

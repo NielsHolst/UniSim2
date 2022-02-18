@@ -15,7 +15,7 @@ namespace vg {
 class ControllerVentilationCombined : public base::Box
 {
 public:
-    ControllerVentilationCombined(QString name, QObject *parent);
+    ControllerVentilationCombined(QString name, Box *parent);
     void reset();
     void update();
 private:

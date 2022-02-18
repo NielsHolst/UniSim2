@@ -16,7 +16,7 @@ namespace vg {
 
 PUBLISH(ShelterFace)
 
-ShelterFace::ShelterFace(QString name, QObject *parent)
+ShelterFace::ShelterFace(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models a shelter face");

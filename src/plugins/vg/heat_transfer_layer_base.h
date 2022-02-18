@@ -15,7 +15,7 @@ class HeatTransferLayerBase : public HeatTransferLayerParameters
 {
     friend class EnergyBudget;
 public:
-    HeatTransferLayerBase(QString name, QObject *parent);
+    HeatTransferLayerBase(QString name, Box *parent);
 protected:
     // Inputs
     double

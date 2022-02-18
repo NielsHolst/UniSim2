@@ -10,7 +10,7 @@
 
 #include <limits>
 #include <QDir>
-#include <QObject>
+#include <Box>
 #include <base/phys_math.h>
 
 using std::numeric_limits;
@@ -37,25 +37,25 @@ void increment(double *x, const double *toAdd, int n);
 QVector<double> add(const QVector<double> &x, const QVector<double> &y);
 void scale(QVector<double> &x, double factor);
 
-double pow0(double x, double c, QObject *context = nullptr);
+double pow0(double x, double c, Box *context = nullptr);
 double negExp(double x);
 double divBounded(double x, double y, double bound = std::numeric_limits<double>::max());
 double GBFuncResp(double demand, double resource);
 int toDayOfYear(int day, int month);
-double convertTime(double time, char fromUnit, char toUnit, QObject *context = nullptr);
+double convertTime(double time, char fromUnit, char toUnit, Box *context = nullptr);
 //@}
 
 //! @name String handling
 //@{
-QString fullName(const QObject *object);
+QString fullName(const Box *object);
 void splitAtNamespace(QString s, QString *namespacePart, QString *ownNamePart);
-//QStringList splitParentChildExpression(QString expression, QObject *context = 0);
+//QStringList splitParentChildExpression(QString expression, Box *context = 0);
 
 //@}
 
 //! @name Testing
 //@{
-void writeObjectTree(QObject *root, int level = 0);
+void writeObjectTree(Box *root, int level = 0);
 void writeStandardTestFile(QString filePath);
 //@}
 

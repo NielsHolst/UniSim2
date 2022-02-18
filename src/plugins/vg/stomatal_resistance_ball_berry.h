@@ -15,7 +15,7 @@ namespace vg {
 class StomatalResistanceBallBerry : public StomatalResistanceBase
 {
 public:
-    StomatalResistanceBallBerry(QString name, QObject *parent);
+    StomatalResistanceBallBerry(QString name, Box *parent);
 
 private:
     // Inputs

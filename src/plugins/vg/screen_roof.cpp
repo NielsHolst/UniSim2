@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(ScreenRoof)
 
-ScreenRoof::ScreenRoof(QString name, QObject *parent)
+ScreenRoof::ScreenRoof(QString name, Box *parent)
     : Screen(name, parent)
 {
     help("models a screen towards the roof");

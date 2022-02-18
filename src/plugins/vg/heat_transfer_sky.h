@@ -14,7 +14,7 @@ namespace vg {
 class HeatTransferSky : public HeatTransferLayerBase
 {
 public:
-    HeatTransferSky(QString name, QObject *parent);
+    HeatTransferSky(QString name, Box *parent);
     void reset();
     void update();
 private:

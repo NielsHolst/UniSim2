@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(Actuators)
 
-Actuators::Actuators(QString name, QObject *parent)
+Actuators::Actuators(QString name, Box *parent)
     : Box(name, parent)
 {
     help("contains sub-models for actuators");

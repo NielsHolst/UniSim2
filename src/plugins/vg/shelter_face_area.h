@@ -15,7 +15,7 @@ namespace vg {
 class ShelterFaceArea : public base::Box
 {
 public:
-    ShelterFaceArea(QString name, QObject *parent);
+    ShelterFaceArea(QString name, Box *parent);
     void reset();
 
 private:

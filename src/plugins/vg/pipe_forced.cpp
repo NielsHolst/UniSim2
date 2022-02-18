@@ -20,7 +20,7 @@ namespace vg {
 	
 PUBLISH(PipeForced)
 
-PipeForced::PipeForced(QString name, QObject *parent)
+PipeForced::PipeForced(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("computes outflow temperature and effect (simplified for IG)");

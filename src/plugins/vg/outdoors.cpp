@@ -18,10 +18,12 @@ namespace vg {
 	
 PUBLISH(Outdoors)
 
-Outdoors::Outdoors(QString name, QObject *parent)
+Outdoors::Outdoors(QString name, Box *parent)
 	: Box(name, parent)
 {
     help("delivers readings of outdoors weather");
+    QString Tsky = "if exists(./records[Tsky]) then ./records[Tsky] else skyTemperatureEstimate[temperature]";
+
     Input(co2).equals(400.).help("Outdoors CO2 concentration").unit("ppm");
     Input(temperature).imports("./records[Tair]").help("Outdoors ambient temperature").unit("oC");
     Input(rh).imports("./records[Rhair]").help("Outdoors ambient relative humidity").unit("[0;100]");
@@ -29,7 +31,7 @@ Outdoors::Outdoors(QString name, QObject *parent)
     Input(propPar).equals(0.45).help("Proportion of PAR in radiation").unit("[0;1]");
     Input(propUv).equals(0.07).help("Proportion of UV in radiation").unit("[0;1]");
     Input(windSpeed).imports("./records[Windspeed]").help("Outdoors wind speed").unit("m/s");
-    Input(skyTemperature).imports("skyTemperatureEstimate[temperature]").help("Sky temperature").unit("oC");
+    Input(skyTemperature).computes(Tsky).help("Sky temperature").unit("oC");
     Output(par).help("Sunlight PAR").unit("mymole PAR/m2/s");
     Output(ah).help("Absolute humidity").unit("kg/m3");
     Output(sh).help("Specific humidity").unit("kg/kg");
@@ -65,15 +67,6 @@ void Outdoors::amend() {
                 port("Kprop").equals(0.5e-4).
             endbox().
         endbox();
-}
-
-void Outdoors::initialize() {
-    Box *records = findOne<Box*>("./records");
-    bool hasTsky = records->peakPort("Tsky");
-    if (hasTsky) {
-        port("skyTemperature")->imports("./records[Tsky]");
-        port("skyTemperature")->resolveImportsAgain();
-    }
 }
 
 void Outdoors::reset() {

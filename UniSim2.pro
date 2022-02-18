@@ -62,11 +62,11 @@ unisim.depends = student
 #saccharina.subdir = src/plugins/saccharina
 #saccharina.depends = base
 #unisim.depends = saccharina
-#
-#SUBDIRS += vg
-#vg.subdir = src/plugins/vg
-#vg.depends = base
-#unisim.depends = vg
+
+SUBDIRS += vg
+vg.subdir = src/plugins/vg
+vg.depends = base
+unisim.depends = vg
 
 #
 # Modules under (re-)construction

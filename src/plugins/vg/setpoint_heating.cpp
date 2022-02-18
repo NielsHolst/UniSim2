@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(SetpointHeating)
 
-SetpointHeating::SetpointHeating(QString name, QObject *parent)
+SetpointHeating::SetpointHeating(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models the temperature setpoint for heating");

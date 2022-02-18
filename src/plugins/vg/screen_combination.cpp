@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(ScreenCombination)
 
-ScreenCombination::ScreenCombination(QString name, QObject *parent)
+ScreenCombination::ScreenCombination(QString name, Box *parent)
     : Box(name, parent)
 {
     help("combines states of screens");

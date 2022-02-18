@@ -15,7 +15,7 @@ namespace vg {
 class Crop : public base::Box
 {
 public:
-    Crop(QString name, QObject *parent);
+    Crop(QString name, Box *parent);
     void amend();
 private:
     // Inputs

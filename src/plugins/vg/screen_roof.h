@@ -14,7 +14,7 @@ namespace vg {
 class ScreenRoof : public Screen
 {
 public:
-    ScreenRoof(QString name, QObject *parent);
+    ScreenRoof(QString name, Box *parent);
 private:
     // Input
     double groundArea;

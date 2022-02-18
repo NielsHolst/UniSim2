@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxCondensationScreen2 : public VapourFluxCondensationScreenBase
 {
 public:
-    VapourFluxCondensationScreen2(QString name, QObject *parent);
+    VapourFluxCondensationScreen2(QString name, Box *parent);
 };
 } //namespace
 

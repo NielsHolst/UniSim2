@@ -17,7 +17,7 @@ using namespace TestNum;
 
 namespace vg {
 
-HeatTransferLayerParameters::HeatTransferLayerParameters(QString name, QObject *parent)
+HeatTransferLayerParameters::HeatTransferLayerParameters(QString name, Box *parent)
     : Box(name, parent)
 {
     help("holds the radiative parameters of a layer, e.g., cover or screen");

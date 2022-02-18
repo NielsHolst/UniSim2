@@ -14,7 +14,7 @@ namespace vg {
 
 PUBLISH(DayDegrees)
 
-DayDegrees::DayDegrees(QString name, QObject *parent)
+DayDegrees::DayDegrees(QString name, Box *parent)
     : PhysiologicalTime(name, parent)
 {
     Input(T0).equals(0);

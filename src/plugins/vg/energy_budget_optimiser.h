@@ -24,7 +24,7 @@ class IndoorsTemperature;
 class EnergyBudgetOptimiser : public base::Box
 {
 public: 
-    EnergyBudgetOptimiser(QString name, QObject *parent);
+    EnergyBudgetOptimiser(QString name, Box *parent);
     void amend();
     void initialize();
     void update();

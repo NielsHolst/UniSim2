@@ -15,7 +15,7 @@ namespace vg {
 class HeatPump : public base::Box
 {
 public: 
-    HeatPump(QString name, QObject *parent);
+    HeatPump(QString name, Box *parent);
     void reset();
     void update();
 private:

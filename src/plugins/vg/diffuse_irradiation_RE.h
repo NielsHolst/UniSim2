@@ -15,7 +15,7 @@ namespace vg {
 class DiffuseIrradiationRE : public DiffuseIrradiationBase
 {
 public:
-    DiffuseIrradiationRE(QString name, QObject *parent);
+    DiffuseIrradiationRE(QString name, Box *parent);
     void reset();
     void update();
 

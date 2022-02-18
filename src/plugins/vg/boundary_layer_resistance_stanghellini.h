@@ -15,7 +15,7 @@ namespace vg {
 class BoundaryLayerResistanceStanghellini : public BoundaryLayerResistanceBase
 {
 public:
-    BoundaryLayerResistanceStanghellini(QString name, QObject *parent);
+    BoundaryLayerResistanceStanghellini(QString name, Box *parent);
     void reset();
     void setRbH2O();
     // Inputs

@@ -16,7 +16,7 @@ using namespace phys_math;
 
 namespace vg {
 
-VapourFluxCondensationScreenBase::VapourFluxCondensationScreenBase(QString name, QObject *parent, int layer)
+VapourFluxCondensationScreenBase::VapourFluxCondensationScreenBase(QString name, Box *parent, int layer)
     : VapourFluxBase(name, parent)
 {
     QString number = QString::number(layer);

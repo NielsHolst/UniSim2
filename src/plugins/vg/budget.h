@@ -15,7 +15,7 @@ namespace vg {
 class Budget : public base::Box
 {
 public:
-    Budget(QString name, QObject *parent);
+    Budget(QString name, Box *parent);
     void initialize();
     void reset();
     void update();

@@ -23,7 +23,7 @@ PUBLISH(PidController)
 const double doubleMin = std::numeric_limits<double>::lowest();
 const double doubleMax = std::numeric_limits<double>::max();
 
-PidController::PidController(QString name, QObject *parent)
+PidController::PidController(QString name, Box *parent)
     : Box(name, parent)
 {
     help("delivers PID control of a control variable");

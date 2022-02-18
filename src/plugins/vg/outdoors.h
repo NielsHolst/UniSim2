@@ -15,9 +15,8 @@ namespace vg {
 class Outdoors : public base::Box
 {
 public:
-    Outdoors(QString name, QObject *parent);
+    Outdoors(QString name, Box *parent);
     void amend();
-    void initialize();
     void reset();
     void update();
 private:

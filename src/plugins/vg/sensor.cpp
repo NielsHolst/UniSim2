@@ -17,7 +17,7 @@ namespace vg {
 
 PUBLISH(Sensor)
 
-Sensor::Sensor(QString name, QObject *parent)
+Sensor::Sensor(QString name, Box *parent)
     : Box(name, parent)
 {
     help("provides sensor inputs");

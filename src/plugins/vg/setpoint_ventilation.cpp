@@ -15,7 +15,7 @@ namespace vg {
 
 PUBLISH(SetpointVentilation)
 
-SetpointVentilation::SetpointVentilation(QString name, QObject *parent)
+SetpointVentilation::SetpointVentilation(QString name, Box *parent)
     : Box(name, parent)
 {
     help("models the temperature setpoint for ventilation");

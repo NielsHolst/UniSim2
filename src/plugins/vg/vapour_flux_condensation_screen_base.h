@@ -15,7 +15,7 @@ namespace vg {
 class VapourFluxCondensationScreenBase : public VapourFluxBase
 {
 public:
-    VapourFluxCondensationScreenBase(QString name, QObject *parent, int layer);
+    VapourFluxCondensationScreenBase(QString name, Box *parent, int layer);
     void update();
 private:
     double screenTemperature, indoorsTemperature, indoorsAh,

@@ -16,7 +16,7 @@ namespace vg {
 class AhFromRh : public base::Box
 {
 public: 
-    AhFromRh(QString name, QObject *parent);
+    AhFromRh(QString name, Box *parent);
     void reset();
     void update();
 private:
