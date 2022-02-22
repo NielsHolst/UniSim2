@@ -49,7 +49,9 @@ QStringList OutputFile::row(int i) {
         ++j;
     }
     close();
-    return (file.atEnd() && j<i) ? QStringList() : s.split("\t");
+    if (file.atEnd() && j<i)
+        ThrowException("Read past end of file for row number").value(i);
+    return s.split("\t");
 }
 
 QStringList OutputFile::row(int i, QStringList columns) {

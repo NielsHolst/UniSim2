@@ -36,3 +36,25 @@ void TestConvertDateTime::testFromString() {
     }
     EXPECTED_EXCEPTION;
 }
+
+void TestConvertDateTime::testMidnight() {
+    bool excepted (false);
+    QDate date;
+    QDateTime dt;
+
+    try {
+        date = convert<QDate>("24/12/2021");
+        dt = convert<QDateTime>(date);
+    }
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(dt.date(), QDate(2021,12,24));
+    QCOMPARE(dt.time(), QTime(0,0,0));
+
+    try {
+        dt = convert<QDateTime>("24/12/2021T00:00:00");
+    }
+    UNEXPECTED_EXCEPTION;
+    QCOMPARE(dt.date(), QDate(2021,12,24));
+    QCOMPARE(dt.time(), QTime(0,0,0));
+}
+

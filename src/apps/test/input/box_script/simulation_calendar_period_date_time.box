@@ -1,0 +1,8 @@
+Simulation sim {
+  Calendar {
+    .begin = 24/02/2022T12:00:00
+    .end   = 28/02/2022T08:00:00
+    .timeStep = 4
+    .unit = "h"
+  }
+}

@@ -8,6 +8,7 @@ class TestConvertDateTime : public QObject
     Q_OBJECT
 private slots:
     void testFromString();
+    void testMidnight();
 };
 
 DECLARE_TEST(TestConvertDateTime)

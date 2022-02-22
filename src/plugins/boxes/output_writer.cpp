@@ -25,7 +25,7 @@ OutputWriter::OutputWriter(QString name, Box *parent)
     : Box(name, parent)
 {
     help("writes the output text file");
-    Input(ports).computes("/*[iteration] | OutputText::*[ports] | OutputR::*[ports]");
+    Input(ports).computes("/*[iteration] | /*[step] | OutputText::*[ports] | OutputR::*[ports]");
     Input(skipFormats).imports("OutputSelector::*[skipFormats]");
     Input(useLocalDecimalChar).imports("OutputSelector::*[useLocalDecimalChar]");
     Input(isActive).imports("OutputSelector::*[isActive]");

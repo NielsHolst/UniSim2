@@ -81,10 +81,9 @@ QDateTime operator+(const QDateTime &dateTime, Period period) {
     return QDateTime();
 }
 
-QDateTime operator+(Period period, const QDateTime &dateTime) {
-    return dateTime + period;
+QDateTime operator-(const QDateTime &dateTime, Period period) {
+    return dateTime + Period(-period.time, period.unit);
 }
-
 
 }
 

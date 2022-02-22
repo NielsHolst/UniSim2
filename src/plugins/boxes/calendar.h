@@ -23,11 +23,12 @@ public:
 private:
     // inputs
     double latitude, longitude;
-    QDateTime initialDateTime;
-    int timeStep, timeZone, sample;
+    QDateTime begin, end;
+    int timeStep, timeZone, skipSteps;
     QString timeUnit;
 
     // outputs
+    int steps;
     QDate date;
     QTime time;
     QDateTime dateTime;

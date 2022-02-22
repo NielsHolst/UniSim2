@@ -29,11 +29,9 @@ Simulation::Simulation(QString name, Box *parent)
 //    dialog().information("Create Simulation");
     help("runs a simulation");
     Input(iterations).equals(1).help("Number of iterations to run");
-    Input(steps).equals(1).help("Number of steps in one iteration");
-    Input(stopIterations).equals(false).help("Stop running after this iteration?");
-    Input(stopSteps).equals(false).help("Stop running after this step?");
-    Input(useStopIterations).equals(false).help("Use the stopIterations flag?");
-    Input(useStopSteps).equals(false).help("Use the stopSteps flag?");
+    Input(steps).computes("if exists(Calendar::*[steps]) then Calendar::*[steps] else 1");
+    Input(stopIteration).equals(false).help("Stop running after this iteration?");
+    Input(stopStep).equals(false).help("Stop running after this step?");
     Input(silent).equals(false).help("Run without scrolling progress messages?");
     Input(unattended).equals(false).help("An unattended run will finish without accessing clipboard");
     Output(iteration).noClear().help("Iteration number (1,2,...)");
@@ -76,21 +74,11 @@ void Simulation::run() {
         ResolvedReferences::clear();
         initializeFamily();
         ResolvedReferences::check();
-        for (iteration = 1;
-             (useStopIterations && !stopIterations && iterations==1) ||         // apply flag only
-             (useStopIterations && !stopIterations && iteration<=iterations) || // apply both lag and count
-             (!useStopIterations && iteration<=iterations);                     // apply count only
-              ++iteration)
-        {
+        for (iteration = 1; !stopIteration && iteration<=iterations; ++iteration) {
             resetFamily();
             ResolvedReferences::check();
             Computation::changeStep(Computation::Step::Update);
-            for (step = 1;
-                 (useStopSteps && !stopSteps && steps==1) ||    // apply flag only
-                 (useStopSteps && !stopSteps && step<=steps) || // apply both flag and count
-                 (!useStopSteps && step<=steps);                // apply count only
-                 ++step)
-            {
+            for (step = 1; !stopStep && step<=steps; ++step) {
                 show(time);
                 updateFamily(false);
                 ResolvedReferences::check();

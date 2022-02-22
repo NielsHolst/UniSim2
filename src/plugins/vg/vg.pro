@@ -89,7 +89,6 @@ HEADERS +=  \
     shelter.h \
     shelter_face.h \
     shelter_face_area.h \
-    simulation_period.h \
     sky_temperature.h \
     stomatal_resistance_ball_berry.h \
     stomatal_resistance_ball_berry_opti_full.h \
@@ -191,7 +190,6 @@ SOURCES += \
     shelter.cpp \
     shelter_face.cpp \
     shelter_face_area.cpp \
-    simulation_period.cpp \
     sky_temperature.cpp \
     stomatal_resistance_ball_berry.cpp \
     stomatal_resistance_ball_berry_opti_full.cpp \

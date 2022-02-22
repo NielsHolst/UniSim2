@@ -24,11 +24,13 @@ OutputSelector::OutputSelector(QString name, Box *parent)
     Input(skipFormats).equals(false).help("Skip line with column formats?");
     Output(isActive).help("Should output be written?");
     Output(isSkipping).help("Are lines being skipped?");
+    Output(skipSteps).help("Number of simulation steps skipped");
 }
 
 void OutputSelector::initialize() {
     isSkipping = (skipRows > 0);
     isActive = false;
+    skipSteps = skipRows*period;
 }
 
 void OutputSelector::reset() {

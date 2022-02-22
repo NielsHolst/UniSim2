@@ -29,11 +29,13 @@ Calendar::Calendar(QString name, Box *parent)
     Input(latitude).equals(52).help("Latitude").unit("[-90,90]");
     Input(longitude).equals(11).help("Longitiude").unit("[-180,180]");
     Input(timeZone).equals(1).help("Time zone").unit("h");
-    Input(initialDateTime).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("Date and time when calendar starts").unit("d/m/y h:m:s");
+    Input(begin).equals(QDateTime(QDate(2000,1,1), QTime(0,0,0), Qt::UTC)).help("When simulation begins").unit("DateTime");
+    Input(end).equals(QDateTime()).help("When simulation ends (optional)").unit("DateTime");
     Input(timeStep).equals(1).help("Time step in units of timeUnit").unit("int>0");
     Input(timeUnit).equals("d").help("Unit of time step").unit("y|d|h|m|s");
-    Input(sample).equals(1).help("The frequency at which output is sampled").unit("int>0");
+    Input(skipSteps).computes("if exists(OutputSelector::*[skipSteps]) then OutputSelector::*[skipSteps] else 0");
 
+    Output(steps).help("Number of steps from begin to end + any skip steps; optional on definition of end");
     Output(date).help("Current date").unit("d/m/y");
     Output(time).help("Current time of the day").unit("h:m:s");
     Output(dateTime).help("Current date and time").unit("d/m/y h:m:s");
@@ -51,14 +53,23 @@ void Calendar::initialize() {
 }
 
 void Calendar::reset() {
-    if (sample < 1)
-        ThrowException("Sample frequency ('sample') must be larger than zero").value(sample);
     if (timeStep < 1)
         ThrowException("Time step ('timeStep') must be larger than zero").value(timeStep);
     timeStepSecs = timeStep * Time::toSeconds(timeUnit);
     timeStepDays = timeStep * Time::toDays(timeUnit);
-    dateTime = initialDateTime;
-    dateTime.setTimeSpec(Qt::UTC);
+    Time::Period skipPeriod = Time::Period(skipSteps*timeStep, timeUnit);
+    dateTime = begin - skipPeriod;
+    if (end.isValid()) {
+        if (begin >= end)
+            ThrowException("Begin date must be before end data").
+                    value(convert<QString>(begin)).value2(convert<QString>(end)).
+                    context(this);
+        auto totalSecs = begin.secsTo(end);
+        steps = totalSecs/timeStepSecs;
+    }
+    else {
+        steps = 1;
+    }
     totalTimeSteps = 0;
     updateDerived();
 }

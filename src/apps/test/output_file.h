@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QStringList>
 #include <base/convert.h>
+#include <base/exception.h>
 
 class OutputFile
 {
@@ -28,6 +29,8 @@ private:
 template <class T>
 T OutputFile::cell(int i, QString col) {
     int j = columnLabels().indexOf(col);
+    if (j == -1)
+        ThrowException("Unknown column name").value(col);
     QString s = (j == -1) ? QString() : row(i).at(j);
     return base::convert<T>(s);
 }

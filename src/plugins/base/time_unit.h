@@ -30,7 +30,7 @@ struct Period {
 };
 
 QDateTime operator+(const QDateTime &dateTime, Period period);
-QDateTime operator+(Period period, const QDateTime &dateTime);
+QDateTime operator-(const QDateTime &dateTime, Period period);
 
 } //namespace
 

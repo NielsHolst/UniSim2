@@ -12,27 +12,25 @@
 #include <QTime>
 #include <base/box.h>
 
-namespace vg {
+namespace boxes {
 	
 class SimulationPeriod : public base::Box
 {
 public:
     SimulationPeriod(QString name, Box *parent);
+    void initialize();
     void reset();
 private:
     // Input
-    QDateTime weatherFirstDateTime;
-    QDate beginDate, endDate;
-    QTime beginTime, endTime;
+    QDateTime begin, end, recordsBegin;
+    bool alignWithRecordsYear;
     int timeStep;
     QString timeUnit;
     // Output
     QDateTime beginDateTime;
     int steps;
-    // Methods
-    QDate alignYear(QDate date);
-    int secsInterval();
-    int secsTimeStep();
+    // Data
+    QDateTime _beginAdjusted, _endAdjusted;
 };
 
 } //namespace

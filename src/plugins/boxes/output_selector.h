@@ -4,6 +4,7 @@
 */
 #ifndef OUTPUT_SELECTOR_H
 #define OUTPUT_SELECTOR_H
+#include <QTime>
 #include <base/box.h>
 
 namespace boxes {
@@ -23,6 +24,7 @@ private:
     bool final, useLocalDecimalChar, skipFormats;
     // Outputs
     bool isActive, isSkipping;
+    int skipSteps;
     // Data
     int _totalRowCount,
         _periodCount;
