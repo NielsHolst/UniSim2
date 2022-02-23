@@ -133,6 +133,7 @@ Port& Port::equals(const Expression &expression) {
 
 Port& Port::imports(QString pathToPort, Caller caller) {
     _importCaller = caller;
+    _expression.clear();
     _expression.push(Path(pathToPort, this));
     define();
     return help("Defaults to " + pathToPort);

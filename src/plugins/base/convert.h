@@ -43,31 +43,6 @@ template <class T, class U> T convert(U ) {
             .value2(QString("To  : ") + typeid(T).name());
 }
 
-// Vectors are converted element-by-element
-template <class T, class U> QVector<T> convertVec(U x) {
-    auto source = x.data();
-    int n = x.size();
-    QVector<T> result(n);
-    auto dest = result.data();
-    for (int i=0; i<n; ++i)
-        *dest++ = convert<T>(*source++);
-    return result;
-}
-
-template <class T> inline QVector<T> convertVec(QVector<T> x) {
-    return x;
-}
-
-#define CONVERT_VECTOR(TYPE, VTYPE) \
-template<> inline VTYPE convert(vbool x)      {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vint x)       {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vdouble x)    {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vQString x)   {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vQDate x)     {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vQTime x)     {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vQDateTime x) {return convertVec<TYPE>(x);} \
-template<> inline VTYPE convert(vBareDate x)  {return convertVec<TYPE>(x);}
-
 // Needed forward declarations
 template<> inline QString convert(QDate x);
 template<> inline QString convert(QTime x);
@@ -211,7 +186,33 @@ template<> inline Path convert(QString x)          {return Path(x); }
 template<> inline Path convert(const Path &x)      {return x; }
 template<> inline Path convert(Path x)             {return x; }
 
-// Conversions to vector
+// Vectors are converted element-by-element
+template <class T, class U> QVector<T> convertVec(U x) {
+    auto source = x.data();
+    int n = x.size();
+    QVector<T> result(n);
+    auto dest = result.data();
+    for (int i=0; i<n; ++i)
+        *dest++ = convert<T>(*source++);
+    return result;
+}
+
+// Identical vectors need no conversion
+template <class T> inline QVector<T> convertVec(QVector<T> x) {
+    return x;
+}
+
+#define CONVERT_VECTOR(TYPE, VTYPE) \
+template<> inline VTYPE convert(vbool x)      {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vint x)       {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vdouble x)    {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQString x)   {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQDate x)     {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQTime x)     {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vQDateTime x) {return convertVec<TYPE>(x);} \
+template<> inline VTYPE convert(vBareDate x)  {return convertVec<TYPE>(x);}
+
+// Conversions from vector to vector
 CONVERT_VECTOR(bool     , vbool)
 CONVERT_VECTOR(int      , vint)
 CONVERT_VECTOR(double   , vdouble)
@@ -230,6 +231,32 @@ template<> vQDate     convert(vValuePtr values);
 template<> vQTime     convert(vValuePtr values);
 template<> vQDateTime convert(vValuePtr values);
 template<> vBareDate  convert(vValuePtr values);
+
+// A scalar is converted to a vector with one element
+template <class T, class U> QVector<T> convertVecScalar(U x) {
+    return QVector<T>(1, convert<T>(x));
+}
+
+#define CONVERT_VECTOR_SCALAR(TYPE, VTYPE) \
+template<> inline VTYPE convert(bool x)      {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(int x)       {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(double x)    {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(QString x)   {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(QDate x)     {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(QTime x)     {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(QDateTime x) {return convertVecScalar<TYPE>(x);} \
+template<> inline VTYPE convert(BareDate x)  {return convertVecScalar<TYPE>(x);}
+
+// Conversions from scalar to vector
+CONVERT_VECTOR_SCALAR(bool     , vbool)
+CONVERT_VECTOR_SCALAR(int      , vint)
+CONVERT_VECTOR_SCALAR(double   , vdouble)
+CONVERT_VECTOR_SCALAR(QString  , vQString)
+CONVERT_VECTOR_SCALAR(QDate    , vQDate)
+CONVERT_VECTOR_SCALAR(QTime    , vQTime)
+CONVERT_VECTOR_SCALAR(QDateTime, vQDateTime)
+CONVERT_VECTOR_SCALAR(BareDate , vBareDate)
+
 
 // Vector conversions from QStringList to container
 template<class T, template<class> class C> C<T> convert(QStringList list) {

@@ -155,15 +155,5 @@ CONV_VALUE_VECTOR(vQTime, QTime)
 CONV_VALUE_VECTOR(vQDateTime, QDateTime)
 CONV_VALUE_VECTOR(vBareDate, BareDate)
 
-//template<> vbool convert(vValuePtr values) {
-//    int n = values.size();
-//    vbool result(n);
-//    const Value **source = values.data();
-//    bool *dest           = result.data();
-//    for (int i=0; i<n; ++i)
-//        *dest++ = (*source++)->as<bool>();
-//    return result;
-//}
-
 
 }

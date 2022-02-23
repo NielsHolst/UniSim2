@@ -20,7 +20,7 @@ HeatTransferCrop::HeatTransferCrop(QString name, Box *parent)
 {
     help("holds the radiative parameters of the crop layer");
     Input(lai).imports("/*/crop[lai]",CA);
-    Input(swK).imports("crop[k],CA");
+    Input(swK).imports("crop[k]",CA);
     Input(swScatteringCoef).equals(0.2);
     Input(lwK).equals(0.80);
     Input(lwScatteringCoef).equals(0.05);

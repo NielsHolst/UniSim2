@@ -16,7 +16,7 @@ namespace vg {
 PUBLISH(Setpoints)
 
 #define ELEMENT(x) Input(x).imports("elementary/" #x "[value]")
-#define LIGHT(x,v,i) Input(x##i).imports("elementary/growthLights/growthLight" #i "/" #v "[value], CA")
+#define LIGHT(x,v,i) Input(x##i).imports("elementary/growthLights/growthLight" #i "/" #v "[value]", CA)
 
 Setpoints::Setpoints(QString name, Box *parent)
     : Box(name, parent)

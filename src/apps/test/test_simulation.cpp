@@ -127,13 +127,13 @@ void TestSimulation::testCalendarPeriodDateTime() {
 }
 
 
-void TestSimulation::testOutputSelectorSkipStep() {
+void TestSimulation::testOutputSelectorBeginStep() {
     bool excepted(false);
     Box *root;
     BoxBuilder builder;
     ReaderBoxScript reader(&builder);
     try {
-        reader.parse(inputFilePath("box_script/simulation_output_selector_skip_step.box"));
+        reader.parse(inputFilePath("box_script/simulation_output_selector_begin_step.box"));
         root = Box::root(builder.content());
         root->run();
     }
