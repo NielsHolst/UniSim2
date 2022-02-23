@@ -118,11 +118,11 @@ Box* BoxBuilder::content(Amend amendOption) {
     if (_content) {
         switch (amendOption) {
         case Amend::Family:
-            _content->amendFamily(false);
+            _content->amendFamily();
             break;
         case Amend::Descendants:
             for (Box *child : _content->findMany<Box*>("./*"))
-                child->amendFamily(false);
+                child->amendFamily();
             break;
         case Amend::None:
             break;

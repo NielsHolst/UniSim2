@@ -38,7 +38,7 @@ void OutputWriter::amend() {
     if (!findMaybeOne<Box*>("OutputSelector::*")) {
         BoxBuilder(this).
         box("OutputSelector").name("selector").endbox();
-        findOne<Box*>("OutputSelector::selector")->amendFamily(false);
+        findOne<Box*>("OutputSelector::selector")->amendFamily();
     }
 }
 

@@ -24,7 +24,7 @@ void OutputText::amend() {
     if (!findMaybeOne<Box*>("OutputWriter::*")) {
         BoxBuilder(Box::root()).
         box("OutputWriter").name("outputWriter").endbox();
-        findOne<Box*>("/OutputWriter::outputWriter")->amendFamily(false);
+        findOne<Box*>("/OutputWriter::outputWriter")->amendFamily();
     }
 }
 

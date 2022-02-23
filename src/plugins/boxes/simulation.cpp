@@ -72,19 +72,23 @@ void Simulation::run() {
     try {
         time.start();
         ResolvedReferences::clear();
+        Computation::changeStep(Computation::Step::Initialize);
         initializeFamily();
         ResolvedReferences::check();
         for (iteration = 1; !stopIteration && iteration<=iterations; ++iteration) {
+            Computation::changeStep(Computation::Step::Reset);
             resetFamily();
             ResolvedReferences::check();
             Computation::changeStep(Computation::Step::Update);
             for (step = 1; !stopStep && step<=steps; ++step) {
                 show(time);
-                updateFamily(false);
+                updateFamily();
                 ResolvedReferences::check();
             }
+            Computation::changeStep(Computation::Step::Cleanup);
             cleanupFamily();
         }
+        Computation::changeStep(Computation::Step::Debrief);
         debriefFamily();
     }
     catch (Exception &ex) {

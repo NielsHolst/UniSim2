@@ -141,16 +141,14 @@ void Box::run() {
     ThrowException("Method 'run' not defined for this class").value(className()).context(this);
 }
 
-void Box::amendFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Amend);
-    std::cout << "amendFamily " << _amended << " " << qPrintable(fullName()) << std::endl;
+void Box::amendFamily() {
     if (_amended)
         ThrowException("Box already amended").context(this);
     _amended = true;
     createTimers();
     _timer.start("amend");
     for (auto box : children<Box*>())
-        box->amendFamily(false);
+        box->amendFamily();
     if (_traceOn) trace("amend");
     amend();
     touchPorts();
@@ -179,8 +177,7 @@ void Box::stopTimer(QString name) {
     _timer.stop(name);
 }
 
-void Box::initializeFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Initialize);
+void Box::initializeFamily() {
     if (!_amended)
         ThrowException("Box must be amended before initialisation").context(this);
     if (_initialized)
@@ -189,7 +186,7 @@ void Box::initializeFamily(bool announce) {
 
     _timer.reset();
     for (auto box : children<Box*>())
-        box->initializeFamily(false);
+        box->initializeFamily();
     if (_traceOn) trace("initialize");
     evaluatePorts();
     _timer.start("initialize");
@@ -197,10 +194,9 @@ void Box::initializeFamily(bool announce) {
     _timer.stop("initialize");
 }
 
-void Box::resetFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Reset);
+void Box::resetFamily() {
     for (auto box : children<Box*>())
-        box->resetFamily(false);
+        box->resetFamily();
     if (_traceOn) trace("reset");
     clearPorts();
     evaluatePorts();
@@ -210,10 +206,9 @@ void Box::resetFamily(bool announce) {
     _timer.stop("reset");
 }
 
-void Box::updateFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Update);
+void Box::updateFamily() {
     for (auto box : children<Box*>())
-        box->updateFamily(false);
+        box->updateFamily();
     if (_traceOn) trace("update");
     evaluatePorts();
     _timer.start("update");
@@ -222,10 +217,9 @@ void Box::updateFamily(bool announce) {
     _timer.stop("update");
 }
 
-void Box::cleanupFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Cleanup);
+void Box::cleanupFamily() {
     for (auto box : children<Box*>())
-        box->cleanupFamily(false);
+        box->cleanupFamily();
     if (_traceOn) trace("cleanup");
     evaluatePorts();
     _timer.start("cleanup");
@@ -234,10 +228,9 @@ void Box::cleanupFamily(bool announce) {
     _timer.stop("cleanup");
 }
 
-void Box::debriefFamily(bool announce) {
-    if (announce) Computation::changeStep(Computation::Step::Debrief);
+void Box::debriefFamily() {
     for (auto box : children<Box*>())
-        box->debriefFamily(false);
+        box->debriefFamily();
     if (_traceOn) trace("debrief");
     evaluatePorts();
     _timer.start("debrief");

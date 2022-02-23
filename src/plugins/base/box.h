@@ -58,12 +58,12 @@ public:
     virtual void debrief() {}
     virtual void run();
 
-    void amendFamily(bool announce=true);
-    void initializeFamily(bool announce=true);
-    void resetFamily(bool announce=true);
-    void updateFamily(bool announce=true);
-    void cleanupFamily(bool announce=true);
-    void debriefFamily(bool announce=true);
+    void amendFamily();
+    void initializeFamily();
+    void resetFamily();
+    void updateFamily();
+    void cleanupFamily();
+    void debriefFamily();
 
     const QVector<Port*> &portsInOrder();
     void touchPorts();
