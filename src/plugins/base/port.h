@@ -43,7 +43,6 @@ private:
         _outputName;        // Unique name labelling of the column for this port in the output text file;
                             // empty if not included in output
     QVector<Port *>
-        _importPorts,       // Ports imported by this port
         _exportPorts;       // Ports which imports this port
     Caller _importCaller;   // Latest object calling for an import of this port (for error message)
 

@@ -293,9 +293,14 @@ void Path::Alternative::initiateMatches(const Node &node, base::Node *parentNode
     // Set up initial nodes for search
     Object *match;
     _matches.clear();
-    if (_hasRoot)
-        // Search from the root's children
-        _matches << children(root, node._className, node._objectName);
+    if (_hasRoot) {
+        if (node._objectName == ".")
+            // Search from the root==node
+            _matches << root;
+        else
+            // Search from the root's children
+            _matches << children(root, node._className, node._objectName);
+    }
     else if (node._objectName == ".")
         // Search from parent node
         _matches << parentNode;

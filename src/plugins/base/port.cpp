@@ -182,6 +182,10 @@ void Port::evaluate() {
                 ThrowException("Unknown reference in expression").
                         value(_expression.originalAsString()).context(this);
             }
+            QString s1 = _value.typeName(),
+                    s2 = _value.asString(),
+                    s3 = evaluation.typeName(),
+                    s4 = evaluation.asString();
             _value = evaluation;
         }
     }

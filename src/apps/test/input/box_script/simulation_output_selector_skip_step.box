@@ -7,5 +7,9 @@ Simulation sim {
   }
   OutputText output {
     .ports = calendar[date] | calendar[time]| calendar[dateTime]
+    OutputSelector {
+      .beginStep = 3
+    }
   }
+  
 }

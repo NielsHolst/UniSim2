@@ -19,8 +19,8 @@ RandomiserBase::RandomiserBase(QString name, Box *parent)
     : Box(name, parent), matricesFilled(false)
 {
     setClassName("RandomiserBase");
-    Input(iteration).imports("/*[iteration]");
-    Input(iterations).imports("/*[iterations]");
+    Input(iteration).imports("/.[iteration]");
+    Input(iterations).imports("/.[iterations]");
     Input(useFixed).equals(false).help("Used fixed value instead of random values?");
     Input(doSensitivityAnalysis).equals(false).help("Carry out a sensitivity analysis?");
     Input(bootstrapSize).equals(1000).help("Size of bootstrap sample (cheap in computation time); only used in sensitivity analysis");

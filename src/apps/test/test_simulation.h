@@ -11,6 +11,8 @@ private slots:
     void testCalendarSteps();
     void testCalendarPeriodDateDayStep();
     void testCalendarPeriodDateHourStep();
+    void testCalendarPeriodDateTime();
+    void testOutputSelectorSkipStep();
 };
 
 DECLARE_TEST(TestSimulation)

@@ -20,7 +20,7 @@ SensitivityAnalysisSimple::SensitivityAnalysisSimple(QString name, Box *parent)
 {
     help("runs a simple sensitivity analysis");
     Input(method).help("Not used");
-    Input(simIterations).imports("/*[iterations]");
+    Input(simIterations).imports("/.[iterations]");
 }
 
 void SensitivityAnalysisSimple::reset() {

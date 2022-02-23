@@ -143,6 +143,7 @@ void Box::run() {
 
 void Box::amendFamily(bool announce) {
     if (announce) Computation::changeStep(Computation::Step::Amend);
+    std::cout << "amendFamily " << _amended << " " << qPrintable(fullName()) << std::endl;
     if (_amended)
         ThrowException("Box already amended").context(this);
     _amended = true;

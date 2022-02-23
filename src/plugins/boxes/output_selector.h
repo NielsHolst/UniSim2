@@ -4,7 +4,7 @@
 */
 #ifndef OUTPUT_SELECTOR_H
 #define OUTPUT_SELECTOR_H
-#include <QTime>
+#include <QDateTime>
 #include <base/box.h>
 
 namespace boxes {
@@ -20,14 +20,16 @@ public:
     void debrief();
 private:
     // Inputs
-    int skipRows, period;
+    int step, beginStep, period;
+    QDateTime dateTime, beginDateTime;
     bool final, useLocalDecimalChar, skipFormats;
     // Outputs
     bool isActive, isSkipping;
-    int skipSteps;
     // Data
     int _totalRowCount,
         _periodCount;
+    // Methods
+    void updateSkipping();
 };
 
 } // boxes

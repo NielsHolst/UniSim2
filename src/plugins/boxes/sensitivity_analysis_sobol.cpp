@@ -26,7 +26,7 @@ SensitivityAnalysisSobol::SensitivityAnalysisSobol(QString name, Box *parent)
 {
     help("runs a Sobol sensitivity analysis");
     Input(bootstrapSize).equals(1000).help("Size of bootstrap sample (cheap in computation time)");
-    Input(iteration).imports("/*[iteration]");
+    Input(iteration).imports("/.[iteration]");
     Output(phase).help("Matrix used in this iteration (A, B or C)");
 }
 

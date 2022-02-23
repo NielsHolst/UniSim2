@@ -18,8 +18,8 @@ PUBLISH(GeneFrequencies)
 GeneFrequencies::GeneFrequencies(QString name, QObject *parent)
     : Box(name, parent){
     Input(N).help("Population size vector (ss, sr, rr)");
-    Input(step).imports("/*[step]");
-    Input(maxStep).imports("*[steps]");
+    Input(step).imports("/.[step]");
+    Input(maxStep).imports("Simulation::*[steps]");
     Input(rThreshold).help("Threshold at which to register r frequenyc");
     Output(ss).help("Frequency ss genotype [0;1]");
     Output(sr).help("Frequency ss genotype [0;1]");

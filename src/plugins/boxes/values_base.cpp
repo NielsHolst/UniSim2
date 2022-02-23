@@ -36,13 +36,13 @@ void ValuesBase::setCounterByIteration() {
         _offset = 0;
     }
     else {
-        port("counter")->imports("/*[iteration]");
+        port("counter")->imports("/.[iteration]");
         _offset = 1;
     }
 }
 
 void ValuesBase::setCounterByStep() {
-    port("counter")->imports("/*[step]");
+    port("counter")->imports("/.[step]");
 }
 
 void ValuesBase::resetByIteration() {

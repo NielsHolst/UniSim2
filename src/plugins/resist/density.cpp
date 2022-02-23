@@ -20,8 +20,8 @@ Density::Density(QString name, QObject *parent)
     Input(immigration).help("Immigrants vector (ss,sr,rr)");
     Input(reproduction).help("Reproduction vector (ss,sr,rr)");
     Input(survival).help("Survival vector by genotype (ss,sr,rr)");
-    Input(step).imports("/*[step]");
-    Input(maxStep).imports("*[steps]");
+    Input(step).imports("/.[step]");
+    Input(maxStep).imports("Simulation::*[steps]");
     Input(densityThreshold).help("Threshold at which to register density");
     Output(ss).help("Density of ss genotype");
     Output(sr).help("Density of sr genotype");

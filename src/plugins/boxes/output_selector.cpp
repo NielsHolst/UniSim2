@@ -17,20 +17,21 @@ OutputSelector::OutputSelector(QString name, Box *parent)
     : Box(name, parent)
 {
     help("selects what to output");
-    Input(skipRows).equals(0).help("The initial `skipRows` steps in every iteration will be ignored");
-    Input(period).equals(1).help("If >1: A row of summary output will be produced with this period");
-    Input(final).equals(false).help("Overrules 'period'");
-    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
-    Input(skipFormats).equals(false).help("Skip line with column formats?");
-    Output(isActive).help("Should output be written?");
-    Output(isSkipping).help("Are lines being skipped?");
-    Output(skipSteps).help("Number of simulation steps skipped");
+    Input(beginStep).equals(0).help("Output is written then this step is reached").unit("int");
+    Input(beginDateTime).equals(QDateTime()).help("Output is written then this time point is reached (optional)").unit("DateTime");
+    Input(step).imports("/.[step]");
+    Input(dateTime).computes("if exists(Calendar::*[dateTime]) then Calendar::*[dateTime] else .[beginDateTime]");
+    Input(period).equals(1).help("If >1: A row of summary output will be produced with this period").unit("int>0");
+    Input(final).equals(false).help("Overrules 'period'").unit("bool");
+    Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?").unit("bool");
+    Input(skipFormats).equals(false).help("Skip line with column formats?").unit("bool");
+    Output(isActive).help("Should output be written?").unit("bool");
+    Output(isSkipping).help("Are lines being skipped?").unit("bool");
 }
 
 void OutputSelector::initialize() {
-    isSkipping = (skipRows > 0);
+    updateSkipping();
     isActive = false;
-    skipSteps = skipRows*period;
 }
 
 void OutputSelector::reset() {
@@ -40,7 +41,7 @@ void OutputSelector::reset() {
 }
 
 void OutputSelector::update() {
-    isSkipping = (++_totalRowCount < skipRows);
+    updateSkipping();
     isActive = !(isSkipping || final) ? (++_periodCount % period == 0) : false;
 }
 
@@ -52,6 +53,11 @@ void OutputSelector::cleanup() {
 void OutputSelector::debrief() {
     isSkipping = false;
     isActive = false;
+}
+
+void OutputSelector::updateSkipping() {
+    bool dateReached = beginDateTime.isValid() && dateTime < beginDateTime;
+    isSkipping = (step < beginStep && !dateReached);
 }
 
 }

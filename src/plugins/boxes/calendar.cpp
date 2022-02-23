@@ -33,7 +33,6 @@ Calendar::Calendar(QString name, Box *parent)
     Input(end).equals(QDateTime()).help("When simulation ends (optional)").unit("DateTime");
     Input(timeStep).equals(1).help("Time step in units of timeUnit").unit("int>0");
     Input(timeUnit).equals("d").help("Unit of time step").unit("y|d|h|m|s");
-    Input(skipSteps).computes("if exists(OutputSelector::*[skipSteps]) then OutputSelector::*[skipSteps] else 0");
 
     Output(steps).help("Number of steps from begin to end + any skip steps; optional on definition of end");
     Output(date).help("Current date").unit("d/m/y");
@@ -57,8 +56,7 @@ void Calendar::reset() {
         ThrowException("Time step ('timeStep') must be larger than zero").value(timeStep);
     timeStepSecs = timeStep * Time::toSeconds(timeUnit);
     timeStepDays = timeStep * Time::toDays(timeUnit);
-    Time::Period skipPeriod = Time::Period(skipSteps*timeStep, timeUnit);
-    dateTime = begin - skipPeriod;
+    dateTime = begin;
     if (end.isValid()) {
         if (begin >= end)
             ThrowException("Begin date must be before end data").

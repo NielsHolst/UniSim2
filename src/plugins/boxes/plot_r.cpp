@@ -32,7 +32,7 @@ PlotR::PlotR(QString name, Box *parent)
     Input(maxData).help("Max. number of data rows to plot; ignored if zero");
     Input(ncol).equals(-1).help("Number of columns in arrangement of plots; -1 keeps default");
     Input(nrow).equals(-1).help("Number of rows in arrangement of plots; -1 keeps default");
-    Input(iteration) .imports("/*[iteration]");
+    Input(iteration) .imports("/.[iteration]");
     Input(xAxis)     .imports("..[xAxis]");
     Input(width)     .imports("..[width]");
     Input(height)    .imports("..[height]");

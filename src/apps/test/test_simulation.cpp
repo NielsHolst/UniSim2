@@ -96,11 +96,54 @@ void TestSimulation::testCalendarPeriodDateHourStep() {
         root->run();
     }
     UNEXPECTED_EXCEPTION;
+    const int n = 17;
     OutputFile f;
-    QCOMPARE(f.numRows(), 17);
-    QCOMPARE(f.cell<QDate>( 0,"date"), QDate(2022,2,24));
-    QCOMPARE(f.cell<QDate>(16,"date"), QDate(2022,2,28));
-    QCOMPARE(f.cell<QTime>( 0,"time"), QTime( 0,0,0));
-    QCOMPARE(f.cell<QTime>(15,"time"), QTime(18,0,0));
-    QCOMPARE(f.cell<QTime>(16,"time"), QTime( 0,0,0));
+    QCOMPARE(f.numRows(), n);
+    QCOMPARE(f.cell<QDate>(  0,"date"), QDate(2022,2,24));
+    QCOMPARE(f.cell<QDate>(n-1,"date"), QDate(2022,2,28));
+    QCOMPARE(f.cell<QTime>(  0,"time"), QTime( 0,0,0));
+    QCOMPARE(f.cell<QTime>(n-2,"time"), QTime(18,0,0));
+    QCOMPARE(f.cell<QTime>(n-1,"time"), QTime( 0,0,0));
 }
+
+void TestSimulation::testCalendarPeriodDateTime() {
+    bool excepted(false);
+    Box *root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/simulation_calendar_period_date_time.box"));
+        root = Box::root(builder.content());
+        root->run();
+    }
+    UNEXPECTED_EXCEPTION;
+    const int n = 24;
+    OutputFile f;
+    QCOMPARE(f.numRows(), n);
+    QCOMPARE(f.cell<QDate>(  0,"date"), QDate(2022,2,24));
+    QCOMPARE(f.cell<QDate>(n-1,"date"), QDate(2022,2,28));
+    QCOMPARE(f.cell<QTime>(  0,"time"), QTime(12,0,0));
+    QCOMPARE(f.cell<QTime>(n-1,"time"), QTime( 8,0,0));
+}
+
+
+void TestSimulation::testOutputSelectorSkipStep() {
+    bool excepted(false);
+    Box *root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/simulation_output_selector_skip_step.box"));
+        root = Box::root(builder.content());
+        root->run();
+    }
+    UNEXPECTED_EXCEPTION;
+    const int n = 21;
+    OutputFile f;
+    QCOMPARE(f.numRows(), n);
+    QCOMPARE(f.cell<QDate>(  0,"date"), QDate(2022,2,25));
+    QCOMPARE(f.cell<QDate>(n-1,"date"), QDate(2022,2,28));
+    QCOMPARE(f.cell<QTime>(  0,"time"), QTime( 0,0,0));
+    QCOMPARE(f.cell<QTime>(n-1,"time"), QTime( 8,0,0));
+}
+

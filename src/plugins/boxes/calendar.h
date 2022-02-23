@@ -24,7 +24,7 @@ private:
     // inputs
     double latitude, longitude;
     QDateTime begin, end;
-    int timeStep, timeZone, skipSteps;
+    int timeStep, timeZone;
     QString timeUnit;
 
     // outputs

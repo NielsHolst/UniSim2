@@ -28,14 +28,14 @@ Sequence::Sequence(QString name, QObject *parent)
 
 void Sequence::amend() {
     if (by == "reset") {
-        port("counter")->imports("/*[iteration]");
-        port("counterMax")->imports("/*[iterations]");
+        port("counter")->imports("/.[iteration]");
+        port("counterMax")->imports("/.[iterations]");
         port("value")->noReset();
         offset = 1;
     }
     else if (by == "update") {
-        port("counter")->imports("/*[step]");
-        port("counterMax")->imports("/*[steps]");
+        port("counter")->imports("/.[step]");
+        port("counterMax")->imports("/.[steps]");
         offset = 0;
     }
     else

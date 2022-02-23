@@ -25,7 +25,7 @@ Output::Output(QString name, Box *parent)
     help("creates an output text file");
     Input(skipFormats).equals(false).help("Skip line with column formats?");
     Input(useLocalDecimalChar).equals(false).help("Use local decimal character in output?");
-    Input(step).imports("/*[step]");
+    Input(step).imports("/.[step]");
     Input(isActive).imports("./*[isActive] | ../*[isActive]"); // look in child and sibling
     Input(summary) .imports("./*[summary]  | ../*[summary]");  // look in child and sibling
     Output(filePath).noClear().help("Name of output file including absolute path");
@@ -59,7 +59,7 @@ void Output::initialize() {
 }
 void Output::complementPorts() {
     // Always output Simulation iteration (if present)
-    ports.add(Path("/*[iteration]", this).alternatives().at(0));
+    ports.add(Path("/.[iteration]", this).alternatives().at(0));
 
     // Add x-axis of any pages
     ports.add(Path("PageR::*[xAxis]", this).alternatives().at(0));
