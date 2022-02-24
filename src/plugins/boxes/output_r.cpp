@@ -38,7 +38,7 @@ OutputR::OutputR(QString name, Box *parent)
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
     Input(plotAsList).equals(false).help("Put plots into an R list?");
     Input(saveDataFrame).equals(false).help("Save output as R data frame?");
-    Input(scripts).computes("c(\"scripts/begin.R\", \"scripts/end.R\")").help("R scripts run after the auto-generated R script");
+    Input(scripts).help("R scripts to be run at the end");
     Output(ports).computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
     Output(numPages).help("Number of pages in this output");
 }
@@ -134,7 +134,23 @@ void OutputR::writeScript() {
            << "save_data_frame   = " + boolToR(saveDataFrame) << "\n"
            << "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() << "\"\n"
            << "output_file_name  = \"" + _filePathTxt << "\"\n"
-           << toScript();
+           <<
+           "clear_plots     = exists(\"clear_plots\")     && clear_plots\n"
+           "show_plots      = exists(\"show_plots\")      && show_plots && exists(\"plot_all\")\n"
+           "skip_formats    = exists(\"skip_formats\")    && skip_formats\n"
+           "save_data_frame = exists(\"save_data_frame\") && save_data_frame\n"
+           "sim             = read_output(output_file_name)\n"
+           "if (save_data_frame) {\n"
+           "  file_name_R = paste0(output_file_folder(), \"/\", output_file_base_name(), \".Rdata\")\n"
+           "  print(paste(\"Writing sim data frame to\", file_name_R))\n"
+           "  save(sim, file=file_name_R)\n"
+           "}\n"
+           << "\n"
+           << toScript()
+           << "\n"
+           <<
+           "if (clear_plots) graphics.off()\n"
+           "if (show_plots)  plot_all(sim)\n";
     _file.close();
 }
 
@@ -148,13 +164,22 @@ void OutputR::openFile() {
         ThrowException("Cannot open file for output").value(_filePathR).context(this);
 }
 
+inline QString wrap(QString script) {
+    return "source(\"" + environment().inputFileNamePath(script) + "\")\n";
+}
+
 void OutputR::copyToClipboard() {
     QString s;
+    // Source the default first script
+    s += wrap("scripts/begin.R");
+
     // Source the generated R script
-    if (numPages>0) s += "source(\"" + _filePathR + "\")\n";
+    s += "source(\"" + _filePathR + "\")\n";
+
     // Source other scripts
     for (QString script : scripts)
-        s += ("source(\"" + environment().inputFileNamePath(script) + "\")\n");
+        s += wrap(script);
+
     // Copy source statements to clipboard
     environment().copyToClipboard(s);
 }

@@ -80,6 +80,9 @@ HEADERS +=  \
     sequence_base.h \
     sequence_by_iteration.h \
     sequence_by_step.h \
+    series_base.h \
+    series_by_iteration.h \
+    series_by_step.h \
     simulation.h \
     sine_wave_temperature.h \
     sliding_signal.h \
@@ -165,6 +168,9 @@ SOURCES +=  \
     sequence_base.cpp \
     sequence_by_iteration.cpp \
     sequence_by_step.cpp \
+    series_base.cpp \
+    series_by_iteration.cpp \
+    series_by_step.cpp \
     simulation.cpp \
     sine_wave_temperature.cpp \
     sliding_signal.cpp \

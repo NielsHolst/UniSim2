@@ -1,8 +1,8 @@
 // butterfly3.box
 Simulation sim {
-  .steps = 180
   Calendar calendar {
-    .initialDateTime = 1/5/2009
+    .begin = 01/05/2009
+    .end  = 30/09/2009
   }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"

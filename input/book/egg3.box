@@ -4,7 +4,7 @@ Simulation sim {
   Calendar calendar {
     .timeStep = 1
     .timeUnit = "d"
-    .initialDateTime = 1/5/2009
+    .begin = 1/5/2009
   }
   Stage egg {
     .initial = 100 

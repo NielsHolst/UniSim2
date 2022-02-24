@@ -4,7 +4,7 @@ Simulation sim {
   Calendar calendar {
     .timeStep = 1
     .timeUnit = "d"
-    .initialDateTime = 1/5/2009
+    .begin = 1/5/2009
   }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"

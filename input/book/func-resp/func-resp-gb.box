@@ -3,10 +3,10 @@ Simulation {
   .iterations = predator[iterations]
   .steps = prey[steps]
   SeriesByIteration predator {
-    .numbers = (1 2 5)
+    .numbers = c(1, 2, 5)
   }
   SeriesByIteration demand {
-    .numbers = (10 20 50)
+    .numbers = c(10, 20, 50)
   }
   SequenceByStep prey {
     .min = 0
@@ -20,8 +20,8 @@ Simulation {
     .attackRate = 0.8
   }
   OutputR {
-    .end = "func-resp-gb-end.R"
-    OutputText {
+    .scripts = "func-resp-gb-end.R"
+    OutputText text {
       .ports = funcResp[*]
     }
   }

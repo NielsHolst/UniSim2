@@ -15,7 +15,7 @@ SeriesByStep::SeriesByStep(QString name, Box *parent)
     : SeriesBase(name, parent)
 {
     help("produces a series of numbers changing by every step");
-    Output(steps).noReset().help("The number of steps needed to run through all values");
+    Output(steps).noClear().help("The number of steps needed to run through all values");
 }
 
 void SeriesByStep::setCounter() {

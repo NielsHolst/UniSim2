@@ -1,5 +1,3 @@
-sim = read_output(output_file_name)
-
 my_plot = function(sim) {
   attacker = unique(sim$attacker)
   sim$lv = sim$hostsAttacked #sim$attackRate*sim$host*sim$attacker

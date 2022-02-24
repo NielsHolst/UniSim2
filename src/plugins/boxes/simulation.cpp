@@ -88,6 +88,8 @@ void Simulation::run() {
             Computation::changeStep(Computation::Step::Cleanup);
             cleanupFamily();
         }
+        if (iteration > iterations)
+            --iteration;
         Computation::changeStep(Computation::Step::Debrief);
         debriefFamily();
     }

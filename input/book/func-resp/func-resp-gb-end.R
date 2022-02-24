@@ -1,5 +1,3 @@
-sim = read_output(output_file_name)
-
 my_plot = function(sim) {
   sim$s = sim$searchEfficacy*sim$prey
   searchEfficacy = round(unique(sim$searchEfficacy), 2)
