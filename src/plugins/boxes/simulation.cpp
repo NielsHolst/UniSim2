@@ -75,12 +75,18 @@ void Simulation::run() {
         Computation::changeStep(Computation::Step::Initialize);
         initializeFamily();
         ResolvedReferences::check();
-        for (iteration = 1; !stopIteration && iteration<=iterations; ++iteration) {
+
+        iteration = 0;
+        while (!stopIteration && iteration < iterations) {
+            ++iteration;
             Computation::changeStep(Computation::Step::Reset);
             resetFamily();
             ResolvedReferences::check();
             Computation::changeStep(Computation::Step::Update);
-            for (step = 1; !stopStep && step<=steps; ++step) {
+
+            step = 0;
+            while (!stopStep && step < steps) {
+                ++step;
                 show(time);
                 updateFamily();
                 ResolvedReferences::check();
@@ -88,8 +94,6 @@ void Simulation::run() {
             Computation::changeStep(Computation::Step::Cleanup);
             cleanupFamily();
         }
-        if (iteration > iterations)
-            --iteration;
         Computation::changeStep(Computation::Step::Debrief);
         debriefFamily();
     }
@@ -112,7 +116,7 @@ void Simulation::show(QElapsedTimer time) {
 }
 
 void Simulation::cleanup() {
-    finalStep = (step > steps) ? steps : step;
+    finalStep = step;
     step = 0;
 }
 

@@ -42,7 +42,7 @@ void OutputSelector::reset() {
 
 void OutputSelector::update() {
     updateSkipping();
-    isActive = !(isSkipping || final) ? (++_periodCount % period == 0) : false;
+    isActive = !(isSkipping || final) ? (_periodCount++ % period == 0) : false;
 }
 
 void OutputSelector::cleanup() {

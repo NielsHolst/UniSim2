@@ -29,6 +29,7 @@ HEADERS +=  \
     test_expression_parser.h \
     test_functions.h \
     test_operate.h \
+    test_output_selector.h \
     test_path.h \
     test_reader_boxscript_x3.h \
     test_references.h \
@@ -52,6 +53,7 @@ SOURCES +=  \
     test_expression_parser.cpp \
     test_functions.cpp \
     test_operate.cpp \
+    test_output_selector.cpp \
     test_path.cpp \
     test_reader_boxscript_x3.cpp \
     test_references.cpp \
