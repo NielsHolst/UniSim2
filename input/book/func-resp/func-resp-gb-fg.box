@@ -1,12 +1,12 @@
 // func-resp-gb-fg.box
 Simulation {
   .iterations = attacker[iterations]
-  .steps = 200
+  .steps = resource[steps]
   SeriesByIteration attacker {
-    .numbers = (1 2 5)
+    .numbers = c(1, 2, 5)
   }
   SeriesByIteration demand {
-    .numbers = (10 20 50)
+    .numbers = c(10, 20, 50)
   }
   SequenceByStep resource {
     .min = 0
@@ -26,9 +26,9 @@ Simulation {
     .attackRate = 0.8
   }
   OutputR {
-    .end = "func-resp-gb-fg-end.R"
+    .scripts = "func-resp-gb-fg-end.R"
     OutputText {
-      .ports = (gb[*] fg[*])
+      .ports = gb[*] | fg[*]
     }
   }
 }

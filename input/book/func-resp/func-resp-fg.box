@@ -1,12 +1,12 @@
 // func-resp-fg.box
 Simulation {
   .iterations = attacker[iterations]
-  .steps = 100
+  .steps = host[steps]
   SeriesByIteration attacker {
-    .numbers = (1 2 5)
+    .numbers = c(1, 2, 5)
   }
   SeriesByIteration demand {
-    .numbers = (10 20 50)
+    .numbers = c(10, 20, 50)
   }
   SequenceByStep host {
     .min = 0
@@ -20,7 +20,7 @@ Simulation {
     .attackRate = 0.8
   }
   OutputR {
-    .end = "func-resp-fg-end.R"
+    .scripts = "func-resp-fg-end.R"
     OutputText {
       .ports = funcResp[*]
     }

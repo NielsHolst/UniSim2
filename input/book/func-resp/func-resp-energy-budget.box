@@ -3,13 +3,13 @@ Simulation {
   .iterations = predator[iterations]
   .steps = prey[steps]
   SeriesByIteration predator {
-    .numbers = (1 2 5)
+    .numbers = c(1, 2, 5)
   }
   SeriesByIteration demand {
-    .numbers = (10 20 50)
+    .numbers = c(10, 20, 50)
   }
   SeriesByIteration respiration {
-    .numbers = (1 2 5)
+    .numbers = c(1, 2, 5)
   }
   SequenceByStep prey {
     .min = 0
@@ -17,8 +17,8 @@ Simulation {
     .by = 1
   }
   Box param {
-    +conversionCost = 0.15
-    +egested = 0.2
+    &conversionCost = 0.15
+    &egested = 0.2
   }
   DemandBudget demandBudget {
     .demandNet = demand[value]
@@ -40,9 +40,9 @@ Simulation {
     .egested = param[egested]
   }
   OutputR {
-    .end = "func-resp-energy-budget-end.R"
+    .scripts = "func-resp-energy-budget-end.R"
     OutputText {
-      .ports = (funcResp[attacker] funcResp[prey] funcResp[demandGross] supplyBudget[*])
+      .ports = funcResp[attacker] | funcResp[prey] | funcResp[demandGross] | supplyBudget[*]
     }
   }
 }

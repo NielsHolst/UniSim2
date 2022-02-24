@@ -1,5 +1,3 @@
-sim = read_output(output_file_name)
-
 my_plot = function(sim) {
 
   sim$iteration = factor(sim$iteration)
@@ -20,7 +18,7 @@ my_plot = function(sim) {
     )
 }
 
-x11(5,7)
+open_plot_window(5,7)
 print(my_plot(sim))
 
 figures <- function(df) {
