@@ -31,7 +31,6 @@ QWinTaskbarProgress* DialogStub::winProgressTaskbar() {
 }
 
 void DialogStub::finishProgress() {
-    std::cout << "Finished\n";
 }
 
 void DialogStub::information(QString s) {

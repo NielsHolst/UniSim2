@@ -16,7 +16,7 @@ namespace vg {
 StomatalResistanceBase::StomatalResistanceBase(QString name, Box *parent)
 	: Box(name, parent)
 {
-    setClassName("StomatalResistanceBase");
+    setClassName("vg", "StomatalResistanceBase");
     help("base class for computing stomatal resistance");
     Output(rH2O).help("Stomatal resistance against water vapour").unit("s/m2");
     Output(rCo2).help("Stomatal resistance against CO2").unit("s/m2");

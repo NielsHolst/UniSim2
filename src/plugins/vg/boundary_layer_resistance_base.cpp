@@ -16,7 +16,7 @@ namespace vg {
 BoundaryLayerResistanceBase::BoundaryLayerResistanceBase(QString name, Box *parent)
     : Box(name, parent)
 {
-    setClassName("BoundaryLayerResistanceBase");
+    setClassName("vg", "BoundaryLayerResistanceBase");
     help("base class to compute bounday layer resistance");
     Input(leafDimension).equals(25./1000.).help("Description of leaf geometry").unit("mm");
     Input(leafWindSpeed).imports("../leafWindSpeed[value]",CA).unit("oC");

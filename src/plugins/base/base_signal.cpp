@@ -13,7 +13,7 @@ namespace base {
 BaseSignal::BaseSignal(QString name, Box *parent)
     : Box(name, parent)
 {
-    setClassName("BaseSignal");
+    setClassName("base", "BaseSignal");
     help("is a base class classes that compute signal");
     Input(initialSignal).help("The value that signal is set to at reset");
     Input(initialFlag).equals(false).help("The value that flag is set to at reset");

@@ -8,7 +8,7 @@
 
 using namespace base;
 
-auto str(QString s) { return qPrintable(s); }
+inline auto str(QString s) { return qPrintable(s); }
 
 void TestOutputSelector::testPeriod1Iter() {
     bool excepted(false);

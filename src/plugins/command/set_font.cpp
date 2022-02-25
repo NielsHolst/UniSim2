@@ -25,7 +25,7 @@ HELP(set_font_name_size, "set font <font-name> <integer>", "sets console font na
 set_font::set_font(QString name, Box *parent)
     : set(name, parent)
 {
-    setClassName("set_font");
+    setClassName("command", "set_font");
     _previousFamily = currentFamily();
     _previousPointSize = currentPointSize();
 }

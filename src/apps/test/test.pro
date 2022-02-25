@@ -28,6 +28,7 @@ HEADERS +=  \
     test_expression.h \
     test_expression_parser.h \
     test_functions.h \
+    test_node.h \
     test_operate.h \
     test_output_selector.h \
     test_path.h \
@@ -52,6 +53,7 @@ SOURCES +=  \
     test_expression.cpp \
     test_expression_parser.cpp \
     test_functions.cpp \
+    test_node.cpp \
     test_operate.cpp \
     test_output_selector.cpp \
     test_path.cpp \

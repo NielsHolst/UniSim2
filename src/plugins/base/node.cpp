@@ -12,7 +12,7 @@
 namespace base {
 
 Node::Node(QString name, Node *parent)
-    : _name(name), _parent(parent), _order(-1)
+    : _objectName(name), _parent(parent), _order(-1)
 {
     if (parent)
         parent->addChild(this);
@@ -36,15 +36,14 @@ void Node::setParent(Node *parent) {
         parent->addChild(this);
 }
 
-void Node::setClassName(QString name) {
-    auto list = name.split("::");
-    if (list.size() > 2)
-        ThrowException("Invalid class name").value(name).context(this);
-    _class = list.last();
+void Node::setClassName(QString namespaceName, QString className) {
+    const auto type = Type{namespaceName, className};
+    if (!_pedigree.contains(type))
+        _pedigree.append(type);
 }
 
 void Node::setObjectName(QString name) {
-    _name = name;
+    _objectName = name;
 }
 
 void Node::setOrder(int order) {
@@ -63,10 +62,6 @@ void Node::enumerate(int &i) {
     for (auto *box : children<Node*>())
         box->enumerate(i);
     _order = i++;
-}
-
-QString Node::objectName() const {
-    return _name;
 }
 
 QString Node::fullName() const {
@@ -92,26 +87,42 @@ QString Node::fullName(const Node *object) {
 }
 
 QString Node::className(Namespace ns) const {
-    return (ns == Namespace::Include) ? (namespaceName() + "::" + _class) : _class;
+    return _pedigree.isEmpty() ?
+            ( (ns == Namespace::Include) ? "base::Node" : "Node" ) :
+            _pedigree.last().toText(ns);
 }
 
-//QStringList Node::pedigree(Namespace ns) const {
-//    QStringList result;
-//    auto parentNode = parent();
-//    if (parentNode)
-//        result = parentNode->pedigree(ns) + result;
-//    else
-//        result << className(ns);
-//    return result;
-//}
+QString Node::Type::toText(Namespace ns) const {
+    return (ns == Namespace::Include) ? (namespaceName + "::" + className) : className;
+}
+
+QString Node::pedigreeAsString(Namespace ns) const {
+    QStringList list;
+    for (auto type : _pedigree)
+        list << type.toText(ns);
+    return list.join(" -> ");
+}
 
 bool Node::isType(QString name) const {
-    bool ok = name==className(Namespace::Include) || name==className(Namespace::Exclude);
-    return ok;
-
-//    Namespace ns = name.contains("::") ? Namespace::Include : Namespace::Exclude;
-//    QStringList test = pedigree(ns);
-//    return pedigree(ns).contains(name);
+    if (name=="OutputWriter")
+        std::cout << std::endl;
+    QStringList names = name.split("::");
+    bool found = false;
+    auto it = _pedigree.begin();
+    const auto end = _pedigree.end();
+    if (names.size() == 1) {
+        while (!found && it!=end) {
+            found = (it->className == name);
+            ++it;
+        }
+    }
+    else if (names.size() == 2) {
+        while (!found && it!=end) {
+            found = (it->namespaceName == names.at(0) && it->className == names.at(1));
+            ++it;
+        }
+    }
+    return found;
 }
 
 template <> QVector<Box*> Node::children() {

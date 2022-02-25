@@ -15,7 +15,7 @@ QStringList Command::_help;
 Command::Command(QString name, Box *parent)
     : Node(name, parent), _error(false)
 {
-    setClassName("Command");
+    setClassName("base", "Command");
 }
 
 void Command::arguments(QStringList args) {

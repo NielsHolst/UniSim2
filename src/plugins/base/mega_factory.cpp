@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <iostream>
 #include <QPluginLoader>
 #include <QSettings>
 #include <QStringList>
@@ -66,16 +67,12 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
 {
     FactoryPlugIn *factory;
     Node *creation;
-
-    QStringList test;
-    for (QString s : me().productIndex.keys()) {
-        test << s;
-    }
-
+    QString namespaceName;
 
     // Box objects are not created by a factory, because the Box class is defined in the base plug-in
     if (className == "Box" || className == "base::Box") {
         creation = new Box(objectName, parent);
+        namespaceName = "base";
     }
     else {
         switch (me().productIndex.count(className)) {
@@ -87,12 +84,13 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
             // Success: Create object
             factory = me().productIndex.value(className);
             creation = factory->create(className, objectName, parent);
+            namespaceName = factory->id();
             break;
         default:
             // Too many candidate factories: Try again with 'using' plugin name as a qualifier
-            QString pluginName = _usingPluginName;
-            if (!className.contains("::") && !pluginName.isEmpty())
-                creation = createObject(pluginName+"::"+className, objectName, parent);
+            namespaceName = _usingPluginName;
+            if (!className.contains("::") && !namespaceName.isEmpty())
+                creation = createObject(namespaceName+"::"+className, objectName, parent);
             else {
                 QString msg = "Qualify class name with plug-in name as in:\n" +
                         qualifiedClassNames(className).join("\n");
@@ -101,14 +99,9 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
         }
     }
 
-// Unused?
-//    ConstructionStep *step = dynamic_cast<ConstructionStep*>(creation);
-//    if (step)
-//        step->finishConstruction();
-
     Node *node = dynamic_cast<Node*>(creation);
     if (node)
-        node->setClassName(className);
+        node->setClassName(namespaceName, className);
 
     return creation;
 }

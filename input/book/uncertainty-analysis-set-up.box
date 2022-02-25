@@ -55,21 +55,24 @@ Simulation sim {
     }
   }
   OutputR {
+    OutputSelector selector {
+      .final = TRUE
+    }
     PageR {
       .width = 8
       .height = 6
       PlotR {
-        .ports = monteCarlo/*[value]|end
+        .ports = monteCarlo/*[value]
         .type = "histogram(8)"
         .ncol = 3
       }
       PlotR {
-        .ports = stratified/*[value]|end
+        .ports = stratified/*[value]
         .type = "histogram(8)"
         .ncol = 3
       }
       PlotR {
-        .ports = sobolSequence/*[value]|end
+        .ports = sobolSequence/*[value]
         .type = "histogram(8)"
         .ncol = 3
       }

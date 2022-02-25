@@ -19,7 +19,7 @@ Port::Port(QString name, PortType type, Node *parent)
       _isConstant(false),
       _expression(this)
 {
-    setClassName("Port");
+    setClassName("base", "Port");
     Box *boxParent = dynamic_cast<Box*>(parent);
     if (boxParent)
         boxParent->addPort(this);

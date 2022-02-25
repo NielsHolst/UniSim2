@@ -7,8 +7,6 @@
 #include <QString>
 #include <QVector>
 
-#define APOSTROPHED(x) #x
-
 namespace base {
 
 class Box;
@@ -16,12 +14,18 @@ class Box;
 class Node 
 {
 public:
-    enum class Namespace {Include, Exclude};
+    enum class Namespace{Include, Exclude};
+
+    struct Type {
+        QString namespaceName, className;
+        QString toText(Namespace ns = Namespace::Exclude) const;
+    };
+    using Pedigree = QVector<Type>;
 
     Node(QString name, Node *parent);
     virtual ~Node();
     void setParent(Node *parent);
-    void setClassName(QString name);
+    void setClassName(QString nameSpaceName, QString className);
     void setObjectName(QString name);
     void setOrder(int order);
     static void enumerate();
@@ -30,23 +34,21 @@ public:
     template <class T=Node*> QVector<T> children();
     template <class T=Node*> QVector<T> descendants();
 
-    QString objectName() const;
-    QString className(Namespace ns = Namespace::Exclude) const;
-
+    QString name()       const { return _objectName; }
+    QString objectName() const { return _objectName; }
     QString fullName() const;
     static QString fullName(const Node *object);
 
-//    QStringList pedigree(Namespace ns = Namespace::Exclude) const;
+    QString className(Namespace ns = Namespace::Exclude) const;
+    const Pedigree & pedigree() const { return _pedigree; };
+    QString pedigreeAsString(Namespace ns = Namespace::Exclude) const;
     bool isType(QString name) const;
 
-    QString name() const    { return objectName(); }
     int order() const       { return _order; }
 
-    // Namespace is defined by BOXES_PLUGIN_NAME in project file
-    QString namespaceName() const { return APOSTROPHED(BOXES_PLUGIN_NAME); }
-
 private:
-    QString _name, _class;
+    Pedigree _pedigree;
+    QString _objectName;
     Node *_parent;
     QVector<Node*> _children;
     int _order;
@@ -91,6 +93,10 @@ template <class T> QVector<T> Node::descendants(bool includeMe) {
 
 inline bool operator<(const Node &a, const Node &b) {
     return a.order() < b.order();
+}
+
+inline bool operator==(const Node::Type &a, const Node::Type &b) {
+    return a.namespaceName==b.namespaceName && a.className==b.className;
 }
 
 }

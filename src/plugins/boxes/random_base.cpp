@@ -18,12 +18,12 @@ namespace boxes {
 RandomBase::RandomBase(QString name, Box *parent)
     : Box(name, parent), _randomiser(nullptr)
 {
-    setClassName("RandomBase");
+    setClassName("boxes", "RandomBase");
     Input(P).equals(0.95).help("Range of the distribution covered by the [minValue;maxValue] range").unit("[0;1]");
-    Input(useFixed).imports("ancestors::*/RandomiserBase::*[useFixed]").help("Used fixed value instead of random values");
+    Input(useFixed).        imports("ancestors::*/RandomiserBase::*[useFixed]");
     Input(drawAtInitialize).imports("ancestors::*/RandomiserBase::*[drawAtInitialize]");
-    Input(drawAtReset).imports("ancestors::*/RandomiserBase::*[drawAtReset]");
-    Input(drawAtUpdate).imports("ancestors::*/RandomiserBase::*[drawAtUpdate]");
+    Input(drawAtReset).     imports("ancestors::*/RandomiserBase::*[drawAtReset]");
+    Input(drawAtUpdate).    imports("ancestors::*/RandomiserBase::*[drawAtUpdate]");
 }
 
 void RandomBase::amend() {
@@ -37,7 +37,7 @@ void RandomBase::amend() {
 
 void RandomBase::initialize() {
     // Find randomiser to use
-    _randomiser = findOne<RandomiserBase*>("ancestors::*/RandomiserBase::*");
+    _randomiser = findOne<RandomiserBase*>("ancestors::*/*");
     // Get number of strata
     _number->resize(_randomiser->numStrata());
     // Potential first draw

@@ -20,7 +20,7 @@ HELP(set_any, "set", "shows what can be set")
 set::set(QString name, Box *parent)
     : Command(name, parent)
 {
-    setClassName("set");
+    setClassName("command", "set");
 }
 
 void set::doExecute() {

@@ -24,6 +24,7 @@ Box::Box(QString name, Box *parent)
     : Node(name, parent), _amended(false), _initialized(false), _cloned(false), _timer(this)
 {
     help("has no documented functionality");
+    setClassName("base", "Box");
     if (!_latest || parent)
         _latest = this;
 }

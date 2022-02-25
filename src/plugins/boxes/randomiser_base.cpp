@@ -18,7 +18,7 @@ namespace boxes {
 RandomiserBase::RandomiserBase(QString name, Box *parent)
     : Box(name, parent), matricesFilled(false)
 {
-    setClassName("RandomiserBase");
+    setClassName("boxes", "RandomiserBase");
     Input(iteration).imports("/.[iteration]");
     Input(iterations).imports("/.[iterations]");
     Input(useFixed).equals(false).help("Used fixed value instead of random values?");
@@ -128,7 +128,7 @@ void RandomiserBase::reset() {
 
 void RandomiserBase::findRandomVariables(){
     randomVariables.clear();
-    QVector<RandomBase*> candidates = findMany<RandomBase*>("../*<RandomBase>");
+    QVector<RandomBase*> candidates = findMany<RandomBase*>("../RandomBase::*");
     for (RandomBase *candidate : candidates) {
         if (!candidate->port("useFixed")->value<bool>())
             randomVariables << candidate;
