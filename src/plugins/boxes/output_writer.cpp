@@ -11,7 +11,7 @@
 #include <base/environment.h>
 #include <base/port.h>
 #include <base/publish.h>
-#include <base/unique_name.h>
+#include <base/unique_names.h>
 #include "output_r.h"
 #include "output_writer.h"
 
@@ -79,7 +79,7 @@ inline bool isNumberLike(const Port *port) {
 }
 
 void OutputWriter::setColumnNames() {
-    QStringList uniqueNames = UniqueName(_ports).resolved();
+    QStringList uniqueNames = UniqueNames(_ports).resolved();
     auto name = uniqueNames.begin();
     auto port = _ports.begin();
     for (; name != uniqueNames.end(); ++name, ++port)

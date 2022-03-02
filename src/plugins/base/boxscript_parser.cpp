@@ -46,8 +46,6 @@ Result parse(std::string source, std::string fileNamePath) {
 }
 
 Expression parseExpression(Port *parent, QString s) {
-    if (s.startsWith("elementary"))
-        std::cout << qPrintable(s) << std::endl;
     Computation::pushStep(Computation::Step::Scratch);
     BoxBuilder builder;
     auto ast = parse("Box{\n  &x=" + s.toStdString() + "\n}");

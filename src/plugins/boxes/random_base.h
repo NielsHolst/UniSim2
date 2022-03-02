@@ -24,6 +24,9 @@ public:
     void reset() final;
     void update() final;
     RandomiserBase* randomiser();
+
+    void setUseFixed   (bool value) { useFixed    = value; }
+    void setDrawAtReset(bool value) { drawAtReset = value; }
 protected:
     // Inputs
     double P;

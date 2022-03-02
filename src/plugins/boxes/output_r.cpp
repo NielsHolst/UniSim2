@@ -30,15 +30,18 @@ OutputR::OutputR(QString name, Box *parent)
 {
     help("creates output and scripts for R");
     sideEffects("writes an R script to the output folder\ncopies an R script to the clipboard");
-    Input(showPlots).equals(true).help("Show plots in R?");
+    Input(clearMemory).equals(false).help("Clear R memory?");
     Input(clearPlots).equals(false).help("Clear previous plots before showing new plots in R?");
+    Input(showPlots).equals(true).help("Show plots in R?");
     Input(showLines).equals(0).help("Number of lines to show at the prompt");
     Input(popUp).equals(false).help("Show plots in pop-up windows?");
     Input(width).equals(7).help("Width of pop-up windows (only used if popUp is set)");
     Input(height).equals(7).help("Height of pop-up windows (only used if popUp is set)");
     Input(plotAsList).equals(false).help("Put plots into an R list?");
     Input(saveDataFrame).equals(false).help("Save output as R data frame?");
+    Input(skipFormats).imports("OutputWriter::*[skipFormats]");
     Input(scripts).help("R scripts to be run at the end");
+    Input(plotTypes).computes("PlotR::*[type]");
     Output(ports).computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
     Output(numPages).help("Number of pages in this output");
 }
@@ -132,14 +135,11 @@ void OutputR::writeScript() {
     script << "show_plots        = " + boolToR(showPlots)     << "\n"
            << "clear_plots       = " + boolToR(clearPlots)    << "\n"
            << "save_data_frame   = " + boolToR(saveDataFrame) << "\n"
+           << "skip_formats      = " + boolToR(skipFormats)   << "\n"
            << "box_script_folder = \"" + environment().currentBoxScriptFolder().absolutePath() << "\"\n"
            << "output_file_name  = \"" + _filePathTxt << "\"\n"
            <<
-           "clear_plots     = exists(\"clear_plots\")     && clear_plots\n"
-           "show_plots      = exists(\"show_plots\")      && show_plots && exists(\"plot_all\")\n"
-           "skip_formats    = exists(\"skip_formats\")    && skip_formats\n"
-           "save_data_frame = exists(\"save_data_frame\") && save_data_frame\n"
-           "sim             = read_output(output_file_name)\n"
+           "sim = read_output(output_file_name)\n"
            "if (save_data_frame) {\n"
            "  file_name_R = paste0(output_file_folder(), \"/\", output_file_base_name(), \".Rdata\")\n"
            "  print(paste(\"Writing sim data frame to\", file_name_R))\n"
@@ -170,8 +170,24 @@ inline QString wrap(QString script) {
 
 void OutputR::copyToClipboard() {
     QString s;
+
+    // Clear memory?
+    if (clearMemory)
+        s += "rm(list=ls(all=TRUE))\n";
+
     // Source the default first script
     s += wrap("scripts/begin.R");
+
+    // Source Sobol scripts?
+    bool useSobol = false;
+    for (auto plotType : plotTypes) {
+        if (plotType.toLower().contains("sobol")) {
+            useSobol = true;
+            break;
+        }
+    }
+    if (useSobol)
+        s += wrap("scripts/begin-sobol.R");
 
     // Source the generated R script
     s += "source(\"" + _filePathR + "\")\n";

@@ -23,7 +23,7 @@ PageR::PageR(QString name, Box *parent)
     : Box(name, parent)
 {
     help("produces a page of plots for R");
-    Input(xAxis).equals("/.[step]");
+    Input(xAxis).computes("/.[step]");
     Input(title).help("Title shown on page");
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");

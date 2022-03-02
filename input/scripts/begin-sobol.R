@@ -1,15 +1,9 @@
-library(stringr)
-
-reorder_levels = function(the_factor, new_order) {
-  factor(the_factor,levels(the_factor)[new_order])
-}
-
 colour_first_order = "#66c2a5"
 colour_total       = "#fc8d62"
 colour_effects = c(colour_first_order, colour_total)
 
 input_columns = function() {
-  2:(sobol_k+1)
+  3:(sobol_k+2)
 }
 
 input_names = function() {
@@ -19,7 +13,7 @@ input_names = function() {
 }
 
 output_column = function(ix_output) {
-  sobol_k + ix_output + 1
+  sobol_k + ix_output + 2
 }
 
 output_names = function() {
@@ -150,8 +144,6 @@ plot_against_sample_size = function() {
   effect_ordering = order(totals$Effect, decreasing=TRUE)
   M$Input = reorder_levels(factor(M$Input), effect_ordering)
   M$Output = factor(M$Output)
-  levels(M$Input)  = unique_names(levels(M$Input))
-  levels(M$Output) = unique_names(levels(M$Output))
   
   ggplot(M, aes(x=N, y=Effect, colour=Measure)) +
     geom_line() +
@@ -211,7 +203,7 @@ plot_effects = function(stats) {
       legend.position = "bottom",
       legend.title = element_blank()
     ) +
-    labs(x="", title=paste("Sensitivity of", unique_names(unique(stats$Output)))) +
+    labs(x="", title=paste("Sensitivity of", unique(stats$Output))) +
     coord_flip() 
 }
 

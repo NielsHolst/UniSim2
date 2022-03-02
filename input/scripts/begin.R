@@ -1,13 +1,13 @@
-library(ggplot2)
-library(ggpubr)
-library(grid)
-library(gridExtra)
-library(lubridate)
-library(plyr)
-library(reshape2)
-library(scales)
-library(splines)
-library(stringr)
+library("colorspace")
+library("ggplot2")
+library("ggpubr")
+library("gridExtra")
+library("lubridate")
+library("plyr")
+library("reshape2")
+library("scales")
+library("splines")
+library("stringr")
 
 theme_set(theme_bw())
 
@@ -44,16 +44,23 @@ scale_linetype_discrete = function(...) {
   scale_linetype_manual(..., values = rep(c(rep(1, n), rep(7, n)), 5))
 }
 
-check_num_colours = function(list_of_names) {
-  unique_names = unique(unlist(list_of_names))
-  n = length(unique_names)
-  nmax = n_rep_colours*length(unisim_colours)
-  if (n > nmax) {
-    stop(paste0("Too many variables in plot(",n," > ", nmax, ")\n", unique_names))
+update_geom_defaults("line", list(size=1))
+
+ggplot_theme = function(fontSize) {
+  if (fontSize==0) {
+    NULL
+  } else {
+    sz = element_text(size = fontSize)
+    sz1 = element_text(size = fontSize+1)
+    theme(axis.text    = sz,
+          axis.title   = sz,
+          strip.text.x = sz,
+          strip.text.y = sz,
+          legend.title = sz1,
+          legend.text  = sz
+          )
   }
 }
-
-update_geom_defaults("line", list(size=1))
 
 last_occurence = function(s, needle) {
   tail(str_locate_all(s, needle)[[1]], 1)[1]
@@ -86,54 +93,6 @@ open_plot_window = function(width=7, height=7) {
     # if (is_windows) windows(width=width, height=height) else
     # X11(width=width, height=height, type="cairo") 
   # }
-}
-
-unique_names = function(col_names) {
-
-  f = function(x) {
-    n = nrow(x)
-    if (n>0) x[n,1] else NA
-  }
-  
-  g = function(x) {
-    if (is.na(x$LastDot)) {
-      name = col_names[x$Row]
-      suffix = NA
-    } else {
-      name = substring(col_names[x$Row], 1, x$LastDot-1)
-      suffix = substring(col_names[x$Row], x$LastDot+1)
-    }
-    data.frame(Name=name, Suffix=as.character(suffix))
-  }
-
-  h = function(x) {
-    data.frame(Count = sum(x$Name==M$Name))
-  }
-  
-  F = function(x) {
-    do_shorten = is.na(x$Suffix) | 
-                 (x$Count==1 & x$Suffix %in% c("end", "value", "content"))  
-    data.frame(
-      UniqueName = 
-        if (do_shorten) x$Name else paste(x$Name, x$Suffix, sep=".")
-    )
-  }
-  
-  locations = str_locate_all(col_names, "[.]")
-  M = ldply(locations, f)
-  colnames(M) = "LastDot"
-  M$Row = 1:nrow(M)
-  M = adply(M, 1, g)
-  
-  M = adply(M, 1, h)
-  M = adply(M, 1, F)
-  changed = any(as.character(col_names) != as.character(M$UniqueName))
-  if (changed) unique_names(M$UniqueName) else M$UniqueName
-}
-
-simplify_col_names = function(M) {
-  colnames(M) = unique_names(colnames(M))
-  M
 }
 
 read_output = function(file_path) {
@@ -190,26 +149,30 @@ remove_character_columns = function(df, cols) {
   if (length(ix)==0) cols else cols[-ix]
 }
 
-melted = function(df, id_x, id_iteration, cols) {
-  cols = remove_character_columns(df, cols)
-  df = convert_factors(df, cols)
-  cols_id = c(id_x, id_iteration)
-  cols_final = union(cols, cols_id)
-  M = melt(convert_logical(df)[ ,cols_final], id.vars=cols_id, value.name="Value", variable.name="Variable")
-  if (!is.null(id_iteration)) M$iter = factor(M[,id_iteration])
+
+melt_y = function(df, x, y) {
+  # Output columns: iteration <x1> <x2> <x...> Variable Value
+  y = remove_character_columns(df, y)
+  df = convert_factors(df, y)
+  x  = union(c("iteration", "step"), x)
+  xy = union(x, y)
+  M = melt(convert_logical(df)[ ,xy], id.vars=x, value.name="Value", variable.name="Variable")
+  M$iteration = factor(M$iteration)
   M
 }
 
-has_iterations = function(M) {
-  !is.null(M$iter) && length(unique(M$iter))>1
-}
-
-has_end = function(M) {
-  any(endsWith(colnames(M), ".end"))
-}
-
-geom_deduced = function(M) {
-  if (has_end(M)) geom_point() else geom_line()
+melt_xy = function(df, x, y) {
+  if (length(x)==length(y) && all(x==y)) {
+    print("x is equal to y:")
+    print(x)
+    stop("stopped")
+  }
+  # Produce columns: iteration step <y1> <y2> <y...> xVariable xValue
+  M = melt(convert_logical(df), measure.vars=x, value.name="xValue", variable.name="xVariable")
+  # Produce columns: iteration step xValue xVariable Response ResponseValue
+  M = melt(M, id.vars=c("iteration","step","xValue","xVariable"), measure.vars=y, value.name="ResponseValue", variable.name="Response")
+  M$iteration = factor(M$iteration)
+  M
 }
 
 Log10 = function(x) {
@@ -218,157 +181,160 @@ Log10 = function(x) {
   y
 }
 
-ggplot_theme = function(fontSize) {
-  if (fontSize==0) {
-    NULL
+# df = data.frame(
+  # iteration = c(rep(1,3), rep(2,4)),
+  # step = c(1:3, 1:4),
+  # x1 = c(1:3,11:14),
+  # y1 = c(51:53,61:64)
+# )
+# df$x2 = 10*df$x1
+# df$y2 = 10*df$y1
+# x = c("x1","x2")
+# y = c("y1","y2")
+
+
+plot_one_x = function(df, x, y, ytrans, ncol, nrow, layout) {
+  # Produce columns: iteration <x> Variable Value
+  # Note: length(x)==1, length(y)>=1
+  M = melt_y(df, x, y)
+
+  # Transform Value column?
+  if (ytrans=="log10") M$Value = Log10(M$Value)
+
+  # Colour by iteration if there are many iterations and only one variable;
+  # otherwise, colour by Variable
+  many_iterations = length(levels(M$iteration)) > 1
+  one_variable = (length(y) == 1)
+  color = if (many_iterations & one_variable) "iteration" else "Variable"
+
+  # If there is more than one step, it means the plot is a time series
+  is_time_series = length(unique(df$step)) > 1
+  
+  # Put the one x column on the x-axis
+  # and the Value column on the y-axis
+  P = ggplot(M, aes_string(x=x, y="Value", color=color))
+  
+  # Use lines for time series otherwise points
+  if (is_time_series) {
+    P = P + geom_line()
   } else {
-    sz = element_text(size = fontSize)
-    sz1 = element_text(size = fontSize+1)
-    theme(axis.text    = sz,
-          axis.title   = sz,
-          strip.text.x = sz,
-          strip.text.y = sz,
-          legend.title = sz1,
-          legend.text  = sz
-          )
+    P = P + geom_point()
+  }
+
+  # Plot in facets
+  if (layout == "facetted") {
+    # Show no legends for colours, as plot will be facetted
+    P = P + theme(legend.position="none")
+      
+    # If there are many iterations then facet by iteration and Variable
+    if (many_iterations) {
+      P + facet_grid(iteration~Variable, scales="free_y") + xlab("") + ylab("")
+    # If there is only one iteration and many variables then facet by Variable only
+    } else if (!one_variable) { 
+      P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") + xlab("") + ylab("")
+    # If there is only one iteration and only one Variable then produce a simple (x,y) plot
+    # Note: x and y both have length 1
+    } else {
+      P + xlab(x) + ylab(y)
+    }
+  }
+  # Otherwise (keep colour legend)
+  else {
+    # If there is only one Variable then produce a simple (x,y) plot
+    # Note: x and y both have length 1; many iterations will produce many colours
+    if (one_variable) {
+      P = P + xlab(x) + ylab(y)
+    # If there are many variables, the legend will describe them - no y-axis label needed
+    } else {
+      P = P + xlab(x) + ylab("")
+    }
+    # If there are many iterations and many variables then facet them by iterations
+    # Note: Each facet will be coloured by Variables (hence variables are merged in eacg facet)
+    if (many_iterations & !one_variable) { 
+      P + facet_wrap(~iteration, ncol=ncol, nrow=nrow)
+    } else {
+      P
+    }
   }
 }
 
-plot_facetted_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  M = melted(df, id_x, id_iteration, cols)
+plot_many_x = function(df, x, y, ytrans, ncol, nrow, layout) {
+  # Produce columns: iteration step xValue xVariable Response ResponseValue
+  # Note: length(x)>1, length(y)>=1
+  M = melt_xy(df, x, y)
+
+  # Transform Value column?
   if (ytrans=="log10") M$Value = Log10(M$Value)
-  hasIterations = has_iterations(M)
-  onlyOneVariable = (length(cols) == 1)
-  levels(M$Variable)  = unique_names(levels(M$Variable))
 
-  color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
-  check_num_colours(M[color])
-  P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
-    geom_deduced(df) +
-    theme(legend.position="none")
-  if (hasIterations | !onlyOneVariable) {
-    P = P + xlab("") + ylab("")
-  }
+  # Colour by iteration if there are many iterations nad we've got time seriues;
+  # otherwise, colour by Response
+  many_iterations = length(levels(M$iteration)) > 1
+  is_time_series = length(unique(df$step)) > 1
+  color = if (many_iterations & is_time_series) "iteration" else "Response"
   
-  if (hasIterations) {
-    P + facet_grid(iter~Variable, scales="free_y") 
-  } else if (!onlyOneVariable) { 
-    P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y")
-  } else {
-    P + ylab(cols[1])
-  }
-}
-
-plot_merged_one_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  M = melted(df, id_x, id_iteration, cols)
-  if (ytrans=="log10") M$Value = Log10(M$Value)
-  hasIterations = has_iterations(M)
-  onlyOneVariable = (length(cols) == 1)
-  levels(M$Variable)  = unique_names(levels(M$Variable))
-
-  color = if (hasIterations & onlyOneVariable) "iter" else "Variable"
-  check_num_colours(M[color])
-  P = ggplot(M, aes_string(x=id_x, y="Value", color=color)) +
-    geom_deduced(df) 
-  if (onlyOneVariable) {
-    P = P + xlab(id_x) + ylab(cols)
-  } else {
-    P = P + xlab("") + ylab("")
-  }
+  # Put  xValue on the x-axis and ResponseValue on the y-axis
+  P = ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
+        xlab("") + ylab("")
   
-  if (hasIterations & !onlyOneVariable) P = P + facet_wrap(~iter, ncol=ncol, nrow=nrow)
+  # Use lines for time series otherwise points
+  if (is_time_series) {
+    P = P + geom_line(aes(group=iteration))
+  } else {
+    P = P + geom_point()
+  }
+
+  # Plot in facets with one iteration per facet,
+  # or if many facets, merge iterations (coloured) into each facet
+  if (layout == "facetted" | many_iterations) {
+    P = P + facet_grid(Response~xVariable, scales="free") 
+  # Otherwise, if only iteration merge Response ((coloured)) into each facet
+  } else {
+    P = P + facet_wrap(~xVariable, scales="free") 
+  }
   P
 }
 
-meltxy = function(df, xvars, id_iteration, yvars) {
-  if (length(xvars)==length(yvars) && all(xvars==yvars)) {
-    print("xvars are equal to yvars:")
-    print(xvars)
-    stop("stopped")
+# plot_facetted_filtered = function(df, x, y, ytrans, ncol, nrow) {
+  # M = melt_xy(df, x, y)
+  # if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
+  # ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
+    # geom_deduced(df) +
+    # xlab("") + ylab("") +
+    # theme(legend.position="none") +
+    # facet_grid(Response~xVariable, scales="free")
+# }
+
+# plot_merged_filtered = function(df, x, y, ytrans, ncol, nrow) {
+  # M = melt_xy(df, x, y)
+  # if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
+  # ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
+    # geom_deduced(df) +
+    # xlab("") + ylab("") +
+    # facet_wrap(~xVariable, scales="free")
+# }
+
+plot_facetted = function(df, x, y, ytrans, ncol, nrow) {
+  # if (has_iterations())
+    # plot_facetted_filtered(df, x, y, ytrans, ncol, nrow) else
+  if (length(x) == 1) {
+    plot_one_x( df, x, y, ytrans, ncol, nrow, "facetted") 
+  } else {
+    plot_many_x(df, x, y, ytrans, ncol, nrow, "facetted")
   }
-  M = melt(convert_logical(df), measure.vars=xvars, value.name="xValue", variable.name="xVariable")
-  M = melt(M, id.vars=c(id_iteration,"xValue","xVariable"), measure.vars=yvars, value.name="ResponseValue", variable.name="Response")
-  if (!is.null(id_iteration)) M$iter = factor(M[,id_iteration])
-  M
 }
 
-plot_facetted_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  M = meltxy(df, id_x, id_iteration, cols)
-  if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
-  hasIterations = has_iterations(M)
-  levels(M$Response)  = unique_names(levels(M$Response))
-
-  color = if (hasIterations) "iter" else "Response"
-  check_num_colours(M[color])
-  ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
-    geom_deduced(df) +
-    xlab("") + ylab("") +
-    facet_grid(Response~xVariable, scales="free") 
-}
-
-plot_merged_many_x = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  M = meltxy(df, id_x, id_iteration, cols)
-  if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
-  hasIterations = has_iterations(M)
-  onlyOneVariable = (length(cols) == 1)
-  useIter = (hasIterations & onlyOneVariable) 
-  levels(M$Response)  = unique_names(levels(M$Response))
-
-  color = if (useIter) "iter" else "Response"
-  check_num_colours(M[color])
-  p = ggplot(M, aes_string(x="xValue", y="ResponseValue", color=color)) +
-    geom_deduced(df) +
-    xlab("")  + ylab("")
-  p = p + if (useIter) facet_grid(Response~xVariable, scales="free") else facet_wrap(~xVariable, scales="free") 
-  p
-}
-
-plot_facetted_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
-  M = meltxy(df, id_x, NULL, cols)
-  levels(M$Response)  = unique_names(levels(M$Response))
-  levels(M$xVariable) = unique_names(levels(M$xVariable))
-  if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
-  check_num_colours(M$Response)
-  ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
-    geom_deduced(df) +
-    xlab("") + ylab("") +
-    theme(legend.position="none") +
-    facet_grid(Response~xVariable, scales="free")
-}
-
-plot_merged_filtered = function(df, id_x, cols, ytrans, ncol, nrow) {
-  M = meltxy(df, id_x, NULL, cols)
-  if (ytrans=="log10") M$ResponseValue = Log10(M$ResponseValue)
-  levels(M$Response)  = unique_names(levels(M$Response))
-  check_num_colours(M$Response)
-  ggplot(M, aes(x=xValue, y=ResponseValue, color=Response)) +
-    geom_deduced(df) +
-    xlab("") + ylab("") +
-    facet_wrap(~xVariable, scales="free")
-}
-
-plot_facetted = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  if (!is.null(id_iteration) && id_iteration == "iteration.end")
-  # if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
-    plot_facetted_filtered(df, id_x, cols, ytrans, ncol, nrow) else
-    if (length(id_x) == 1) 
-      plot_facetted_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else
-      plot_facetted_many_x(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
-}
-
-plot_merged = function(df, id_x, id_iteration, cols, ytrans, ncol, nrow) {
-  if (!is.null(id_iteration) && id_iteration == "iteration.end")
-  # if (!is.null(id_iteration) && max(df[id_iteration]) > 1)
-    plot_merged_filtered(df, id_x, cols, ncol, nrow) else
-    if (length(id_x) == 1) 
-      plot_merged_one_x( df, id_x, id_iteration, cols, ytrans, ncol, nrow) else
-      plot_merged_many_x(df, id_x, id_iteration, cols, ytrans, ncol, nrow)
+plot_merged = function(df, x, y, ytrans, ncol, nrow) {
+  # if (has_iterations())
+    # plot_merged_filtered(df, x, y, ncol, nrow) else
+  if (length(x) == 1) {
+    plot_one_x( df, x, y, ytrans, ncol, nrow, "merged") 
+  } else {
+    plot_many_x(df, x, y, ytrans, ncol, nrow, "merged")
+  }
 }
 
 plot_density = function(df, ports, ncol, nrow) {
-  M = df[ports]
-  colnames(M) = unique_names(colnames(M))
-  M = melt(M, value.name="Value", variable.name="Variable")
+  M = melt(df[ports], value.name="Value", variable.name="Variable")
   ggplot(M, aes(x=Value, colour=Variable, fill=Variable)) +
     geom_density(alpha=0.3) +
     labs(y="") + 
@@ -381,9 +347,7 @@ plot_density = function(df, ports, ncol, nrow) {
 }
 
 plot_histogram = function(df, ports, bins, ncol, nrow) {
-  M = df[ports]
-  colnames(M) = unique_names(colnames(M))
-  M = melt(M, value.name="Value", variable.name="Variable")
+  M = melt(df[ports], value.name="Value", variable.name="Variable")
   ggplot(M, aes(x=Value, colour=Variable, fill=Variable)) +
     geom_histogram(alpha=0.3, bins=bins) +
     labs(y="") + 

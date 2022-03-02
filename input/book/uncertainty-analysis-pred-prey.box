@@ -1,10 +1,11 @@
 // uncertainty-analysis-pred-prey.box
 Simulation sim {
-  .iterations = 128
-  .steps = 365
+  .iterations = 1792 // 112 // 7168
   .silent = TRUE
   Box random {
     RandomiserSobolSequence randomiser {
+      .doSensitivityAnalysis = TRUE
+      .bootstrapSize = 1000
     }
     RandomUniform attackRate {
       .min = 0.1
@@ -28,7 +29,8 @@ Simulation sim {
     }
   }
   Calendar calendar {
-    .initialDateTime = 1/1/2009 
+    .begin = 01/01/2009 
+    .end   = 31/12/2009 
   }
   Records weather {
     .fileName = "weather/flakkebjerg 2009.txt"
@@ -149,7 +151,7 @@ Simulation sim {
     }
     Box predation {
       Box budget {
-        +demandNet = ../../ovipositionDemand[outflow]
+        &demandNet = ../../ovipositionDemand[outflow]
       }
       DemandBudget demandBudget {
         .demandNet = ../budget[demandNet]
@@ -168,13 +170,18 @@ Simulation sim {
       }
     }
   }
-  OutputR {
+  OutputR output {
+    .clearPlots = TRUE
+    // &ports = "*/egg[value]"
+    OutputSelector {
+      .final = TRUE
+    }
     PageR {
       .xAxis = random/*[value]
       .width = 10
       .height = 4
       PlotR {
-        .ports = */egg[content]|end
+        .ports = */egg[value]
         .ggplot = "geom_smooth(colour='yellow')"
       }
     }
@@ -182,11 +189,29 @@ Simulation sim {
       .width = 6
       .height = 3
       PlotR {
-        .ports = */egg[content]|end
+        .ports = */egg[value]
         .type = "histogram(10)"
         .ncol = 5
       }
     }
+    PageR {
+      .width = 10
+      .height = 4
+      PlotR {
+        .ports = */egg[value]
+        .type = "SobolConvergence"
+        .fontSize = 11
+      }
+    }    
+    PageR {
+      .xAxis = random/*[value]
+      .width = 5
+      .height = 7
+      PlotR {
+        .ports = */egg[value]
+        .type = "SobolIndices"
+      }
+    }  
   }
 }
 

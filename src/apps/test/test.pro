@@ -27,6 +27,7 @@ HEADERS +=  \
     test_convert_vector.h \
     test_expression.h \
     test_expression_parser.h \
+    test_flags.h \
     test_functions.h \
     test_node.h \
     test_operate.h \
@@ -35,6 +36,7 @@ HEADERS +=  \
     test_reader_boxscript_x3.h \
     test_references.h \
     test_simulation.h \
+    test_unique_names.h \
     test_value.h \
     test_value_collection.h \
 
@@ -52,6 +54,7 @@ SOURCES +=  \
     test_convert_vector.cpp \
     test_expression.cpp \
     test_expression_parser.cpp \
+    test_flags.cpp \
     test_functions.cpp \
     test_node.cpp \
     test_operate.cpp \
@@ -60,5 +63,6 @@ SOURCES +=  \
     test_reader_boxscript_x3.cpp \
     test_references.cpp \
     test_simulation.cpp \
+    test_unique_names.cpp \
     test_value.cpp \
     test_value_collection.cpp \

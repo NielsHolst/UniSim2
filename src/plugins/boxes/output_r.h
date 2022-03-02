@@ -31,10 +31,10 @@ public:
 
 private:
     // Input
-    bool showPlots, clearPlots, popUp, saveDataFrame, plotAsList;
+    bool showPlots, clearPlots, clearMemory, popUp, saveDataFrame, plotAsList, skipFormats;
     int showLines;
     double width, height;
-    QVector<QString> scripts;
+    QVector<QString> plotTypes, scripts;
 
     // Output
     base::Path ports;

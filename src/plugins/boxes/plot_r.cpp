@@ -119,8 +119,6 @@ QString PlotR::scriptForDefaultPlot(QStringList xLabels, QStringList yLabels) co
       << ", "
       << "c(" << xLabels.join(", ") << ")"
       << ", "
-      << (iteration > 2 ? ("\"iteration\"") : "NULL")
-      << ", "
       << "c(" << yLabels.join(", ") << ")"
       << ", "
       << "ytrans=" << apostrophed(transform)

@@ -104,8 +104,6 @@ QString Node::pedigreeAsString(Namespace ns) const {
 }
 
 bool Node::isType(QString name) const {
-    if (name=="OutputWriter")
-        std::cout << std::endl;
     QStringList names = name.split("::");
     bool found = false;
     auto it = _pedigree.begin();

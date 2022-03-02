@@ -58,6 +58,7 @@ HEADERS +=  \
     exception_context_class.h \
     expression.h \
     factory_plug_in.h \
+    flags.h \
 #    food_web_box_base.h \
 #    general.h \
     history.h \
@@ -95,7 +96,7 @@ HEADERS +=  \
     to_q_string_list.h \
     time_unit.h \
     timer.h \
-    unique_name.h \
+    unique_names.h \
     value.h \
     value_collection.h \
     value_typed.h \
@@ -163,7 +164,7 @@ SOURCES +=  \
     test_num.cpp \
     time_unit.cpp \
     timer.cpp \
-    unique_name.cpp \
+    unique_names.cpp \
     value.cpp \
     value_collection.cpp \
     vector_op.cpp \

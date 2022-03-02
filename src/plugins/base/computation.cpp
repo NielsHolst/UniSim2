@@ -4,6 +4,7 @@
 */
 #include <QMap>
 #include "dialog.h"
+#include "environment.h"
 #include "exception.h"
 #include "computation.h"
 #include "resolved_references.h"
@@ -63,7 +64,7 @@ void Computation::changeStep(Step step) {
         {Step::Debrief   , "Debriefing..."  },
         {Step::Scratch   , "Scratch..."   }
     };
-    if (step != Step::Ready)
+    if (step != Step::Ready && !environment().isSilent())
         dialog().information(map.value(step));
     _currentStep = step;
     if (step <= Step::Amend)

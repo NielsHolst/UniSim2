@@ -78,8 +78,9 @@ void Port::define() {
     if (!box)
         ThrowException("Port is missing a parent box").context(this);
 
-    // Check that (re-) definition is legal in this step
-    if (step >= Computation::Step::Initialize)
+    // Check that (re-) definition is legal in this step;
+    // From Initialization and onwards, only re-definition to a constant expression is valid
+    if (step >= Computation::Step::Initialize && !_expression.isConstant())
         ThrowException("Change of port definition only allowed until amend step").
                 value(Computation::toString(step)).context(this);
 
