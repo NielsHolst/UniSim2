@@ -169,7 +169,7 @@ void TestReaderBoxScriptX3::testConstructAmend() {
     UNEXPECTED_EXCEPTION;
     try {
         QVERIFY2(root->port("e")->value().type() == Value::Type::Int, qPrintable(root->port("e")->value().typeName()));
-        QVERIFY2(root->port("e")->value<int>() == 5, qPrintable(root->port("e")->value().asString(true,true)));
+        QVERIFY2(root->port("e")->value<int>() == 5, qPrintable(root->port("e")->value().asString()));
     }
     UNEXPECTED_EXCEPTION;
     try {

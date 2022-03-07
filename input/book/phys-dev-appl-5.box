@@ -1,9 +1,9 @@
 // phys-dev-appl-5.box
 Simulation sim {
   .steps = 30
-  +k = 25
-  +duration = 13
-  +growthFactor = 30
+  &k = 25
+  &duration = 13
+  &growthFactor = 30
   Stage S {
     .initial = 10
     .k = sim[k]
@@ -37,7 +37,7 @@ Simulation sim {
     .end = "phys-dev-appl-5-end.R"
     PageR {
       .ncol = 1
-      +ggplot = "geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(5))"
+      &ggplot = "geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(5))"
       PlotR {
         .layout = "merged"
         .ports = (S[outflow] E[outflowSum] I[outflowSum] R[outflow])

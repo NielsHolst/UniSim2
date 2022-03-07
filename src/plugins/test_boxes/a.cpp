@@ -11,11 +11,12 @@ A::A(QString name, Box *parent)
     : Box(name, parent)
 {
     Input(pbool).equals(false);
-    Input(pint).imports("..[pint]");
-    Input(pdouble).imports("../*[pint]");
-    Input(pstring).imports(".../*[pstring]");
+    Input(pint).imports("../*[pint]");
+    Input(pdouble).imports("../*[pdouble]");
+    Input(pstring).imports("../*[pstring]");
     Input(ppath);
-
+    Input(ints);
+    Input(strings).computes("../*[x]");
 }
 
 }

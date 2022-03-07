@@ -671,8 +671,8 @@ QString Expression::toString(const Element &element) {
     Expression::FunctionCall func;
     QString s;
     switch (type(element)) {
-    case Type::Value:       s = get<Value   >(element). asString(true, true); break;
-    case Type::ValuePtr:    s = get<ValuePtr>(element)->asString(true, true); break;
+    case Type::Value:       s = get<Value   >(element). asString(); break;
+    case Type::ValuePtr:    s = get<ValuePtr>(element)->asString(); break;
     case Type::Operator:    s = convert<QString>( get<Operator>   (element) ); break;
     case Type::Parenthesis: s = convert<QString>( get<Parenthesis>(element) ); break;
     case Type::Path:        s = get<Path>(element).toString(); break;

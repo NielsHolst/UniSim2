@@ -25,8 +25,8 @@ private:
     base::Path xAxis;
     double width, height;
     int ncol, nrow, numPages;
-    QString title;
-    bool plotAsList, popUp;
+    QString title, legendPosition;
+    bool plotAsList, popUp, commonLegend;
     // Data
     QVector<PlotR*> _plots;
     static int _commonPageNumber;

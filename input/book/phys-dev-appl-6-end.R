@@ -1,4 +1,3 @@
-sim = read_output(output_file_name)
 plot_all(sim)
 
 ix = which(colnames(sim)=="initHostJuvenile") - 1

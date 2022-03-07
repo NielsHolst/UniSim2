@@ -90,6 +90,9 @@ void Port::define() {
     // Set me as parent of the expression and of any paths in the expression
     _expression.setParent(this);
 
+    // Vector type ports accept null values
+    _acceptNull = _value.isVector();
+
     // Port to a path can only be defined by a simple expression
     if (_value.type() == Value::Type::Path) {
         if (_expression.size() != 1)
@@ -288,6 +291,10 @@ const Expression& Port::expression() const {
 QString Port::format() const {
     using Type = Value::Type;
     switch (_value.baseType()) {
+        case Type::String:
+        case Type::BareDate:
+            return "character";
+            break;
         case Type::Date:
             return "ymd";
             break;

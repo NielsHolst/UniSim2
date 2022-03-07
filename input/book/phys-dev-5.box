@@ -14,19 +14,19 @@ Simulation sim {
   OutputR {
     PageR {
       .ncol = 1
-      +ggplot = "geom_vline(xintercept=c(13,10), colour=brewer_pal('qual',6)(2), linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6)) +  scale_color_manual(values=brewer_pal('qual',6)(5))"
-      PlotR {
-        .layout = "merged"
-        .ports = (distDelay[stageOutflowSum] distDelay[phaseOutflowSum])
-        .ggplot = ..[ggplot]
-      }
+      &ggplot = "geom_vline(xintercept=c(13,10), colour=unisim_colours[1:2], linetype='longdash') + geom_point() + geom_line() + scale_x_continuous(breaks=5*(0:6))"
       PlotR {
         .ports = distDelay[content]
-        .ggplot = ..[ggplot]
+        .ggplot = ..[ggplot] + "+ labs(x='') + theme(legend.position='right')"
       }
       PlotR {
         .layout = "merged"
-        .ports = (distDelay[outflowTotal] distDelay[phaseOutflowTotal])
+        .ports = distDelay[outflowSum] | distDelay[phaseOutflowSum]
+        .ggplot = ..[ggplot] + "+ labs(x='')"
+      }
+      PlotR {
+        .layout = "merged"
+        .ports = distDelay[outflowTotal] |distDelay[phaseOutflowTotal]
         .ggplot = ..[ggplot]
       }
     }

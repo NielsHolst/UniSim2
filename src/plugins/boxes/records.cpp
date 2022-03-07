@@ -46,8 +46,7 @@ Records::Records(QString name, Box *parent)
 void Records::amend() {
     ExceptionContext(this);
     // Allow imports defined in amend step
-//    resolvePortImports();
-//    updateImports();
+    evaluatePorts();
     // Create outputs
     readColumnNames();
     createColumnOutputs();

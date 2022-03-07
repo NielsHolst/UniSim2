@@ -7,10 +7,10 @@ Simulation sim {
   // Host
   //
   Box host {
-    +juvenileDuration = 10
-    +adultDuration = 30
-    +juvenileInfectionRate = 0.04 // Should be dynamic
-    +adultInfectionRate    = 0.01 // Should be dynamic
+    &juvenileDuration = 10
+    &adultDuration = 30
+    &juvenileInfectionRate = 0.04 // Should be dynamic
+    &adultInfectionRate    = 0.01 // Should be dynamic
     Box S {
       Stage juvenile {
         .initial = 80
@@ -72,11 +72,11 @@ Simulation sim {
   // Vector
   //
   Box vector {
-    +offspringDuration = 7
-    +juvenileDuration = 14
-    +adultDuration = 14
-    +fecundity = 5
-    +infectionRate = 0.04
+    &offspringDuration = 7
+    &juvenileDuration = 14
+    &adultDuration = 14
+    &fecundity = 5
+    &infectionRate = 0.04
     Box S {
       Stage offspring {
         .initial = 100
@@ -101,7 +101,7 @@ Simulation sim {
       }
     }
     Box E {
-      +phaseDuration = 3
+      &phaseDuration = 3
       Box adult {
         StageAndPhase individuals {
           .duration = vector[adultDuration]
@@ -141,46 +141,46 @@ Simulation sim {
     }
   }
   OutputR output {
-    .end = "phys-dev-appl-6-end.R"
+    .scripts = "phys-dev-appl-6-end.R"
     Box initial {
-      +initHostJuvenile = host/S/juvenile[initial]
-      +initHostAdult = host/S/adult[initial]
-      +initVectorOffspring = vector/S/offspring[initial]
+      &initHostJuvenile = host/S/juvenile[initial]
+      &initHostAdult = host/S/adult[initial]
+      &initVectorOffspring = vector/S/offspring[initial]
     }
     Box fecundity {
       +hostFecundity = host/S/reproduction[growthFactor]
       +vectorFecundity = vector/S/adult/reproduction[growthFactor]
     }
     Box flows {
-      +e = host/E/juvenile[phaseInflowTotal]
-      +f = host/I/juvenile[phaseInflowTotal]
-      +g = host/R/juvenile[phaseInflowTotal]
-      +h = host/S/adult[inflowTotal]
-      +i = host/E/adult[inflowTotal]
-      +j = host/I/adult[inflowTotal]
-      +k = host/R/adult[inflowTotal]
-      +l = host/E/adult[phaseInflowTotal]
-      +m = host/I/adult[phaseInflowTotal]
-      +n = host/R/adult[phaseInflowTotal]
-      +o = host/S/reproduction[outflowTotal]
-      +p = host/S/adult[outflowTotal]
-      +q = host/E/adult[outflowTotal]
-      +r = host/I/adult[outflowTotal]
-      +s = host/R/adult[outflowTotal]
-      +e_ = vector/S/juvenile[inflowTotal]
-      +f_ = vector/I/juvenile[inflowTotal]
-      +g_ = vector/S/adult/individuals[inflowTotal]
-      +h_ = vector/I/adult/individuals[inflowTotal]
-      +i_ = vector/E/adult/individuals[phaseInflowTotal]
-      +j_ = vector/E/adult/reproduction[phaseInflowTotal]
-      +k_ = vector/I/adult/individuals[phaseInflowTotal]
-      +l_ = vector/I/adult/reproduction[phaseInflowTotal]
-      +m_ = vector/S/adult/individuals[outflowTotal]
-      +n_ = vector/E/adult/individuals[outflowTotal]
-      +o_ = vector/I/adult/individuals[outflowTotal]
-      +p_ = vector/S/adult/reproduction[outflowTotal]
-      +q_ = vector/E/adult/reproduction[outflowTotal]
-      +r_ = vector/I/adult/reproduction[outflowTotal]
+      &e = host/E/juvenile[phaseInflowTotal]
+      &f = host/I/juvenile[phaseInflowTotal]
+      &g = host/R/juvenile[phaseInflowTotal]
+      &h = host/S/adult[inflowTotal]
+      &i = host/E/adult[inflowTotal]
+      &j = host/I/adult[inflowTotal]
+      &k = host/R/adult[inflowTotal]
+      &l = host/E/adult[phaseInflowTotal]
+      &m = host/I/adult[phaseInflowTotal]
+      &n = host/R/adult[phaseInflowTotal]
+      &o = host/S/reproduction[outflowTotal]
+      &p = host/S/adult[outflowTotal]
+      &q = host/E/adult[outflowTotal]
+      &r = host/I/adult[outflowTotal]
+      &s = host/R/adult[outflowTotal]
+      &e_ = vector/S/juvenile[inflowTotal]
+      &f_ = vector/I/juvenile[inflowTotal]
+      &g_ = vector/S/adult/individuals[inflowTotal]
+      &h_ = vector/I/adult/individuals[inflowTotal]
+      &i_ = vector/E/adult/individuals[phaseInflowTotal]
+      &j_ = vector/E/adult/reproduction[phaseInflowTotal]
+      &k_ = vector/I/adult/individuals[phaseInflowTotal]
+      &l_ = vector/I/adult/reproduction[phaseInflowTotal]
+      &m_ = vector/S/adult/individuals[outflowTotal]
+      &n_ = vector/E/adult/individuals[outflowTotal]
+      &o_ = vector/I/adult/individuals[outflowTotal]
+      &p_ = vector/S/adult/reproduction[outflowTotal]
+      &q_ = vector/E/adult/reproduction[outflowTotal]
+      &r_ = vector/I/adult/reproduction[outflowTotal]
     }
     PageR {
       PlotR {

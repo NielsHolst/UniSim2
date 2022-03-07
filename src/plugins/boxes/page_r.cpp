@@ -27,6 +27,8 @@ PageR::PageR(QString name, Box *parent)
     Input(title).help("Title shown on page");
     Input(ncol).equals(-1).help("No. of columns to arrange plots in");
     Input(nrow).equals(-1).help("No. of rows to arrange plots in");
+    Input(commonLegend).equals(false).help("Collate legends of blots into one common legend");
+    Input(legendPosition).equals("bottom").help("If 'commonLegend' then place legend here");
     Input(width)     .imports("..[width]");
     Input(height)    .imports("..[height]");
     Input(plotAsList).imports("..[plotAsList]");
@@ -38,14 +40,6 @@ void PageR::initialize() {
     // Find my plots
     _plots = findMany<PlotR*>("./*");
 
-
-    bool showPages = (numPages>1);
-    bool dimChanged = (TestNum::ne(width, 7.) || TestNum::ne(height, 7.));
-
-    // Raise pop-up anyway?
-    _doPopUp = popUp ||
-               (!environment().isMac() && (showPages || dimChanged));
-
     // Check for list output
     if (plotAsList && _plots.size() != 1)
         ThrowException("Plots of these types cannot be combined in one page")
@@ -54,6 +48,12 @@ void PageR::initialize() {
 
 void PageR::reset() {
     _commonPageNumber = _myPageNumber = 0;
+
+    // Raise pop-up anyway?
+    bool showPages = (numPages>1);
+    bool dimChanged = (TestNum::ne(width, 7.) || TestNum::ne(height, 7.));
+    _doPopUp = popUp ||
+               (!environment().isMac() && (showPages || dimChanged));
 }
 
 QString PageR::dim(QString portName) {
@@ -77,7 +77,7 @@ QString PageR::toScript() {
           << _plots.at(0)->toScript();
     }
     else {
-        s << "  grid.arrange(\n" ;
+        s << "  print(ggarrange(\n" ;
         bool skipDefaultPlot = (_plots.size() > 1);
         for (PlotR *plot : _plots) {
             if (skipDefaultPlot && plot->name() == "default")
@@ -87,10 +87,14 @@ QString PageR::toScript() {
     }
     if (!title.isEmpty())
         s << "    top = \"" << title << "\",\n";
+    if (commonLegend)
+        s << "    common.legend = TRUE,\n"
+          << "    legend = \"" << qPrintable(legendPosition) << "\",\n";
     s << "    ...,\n"
+      << "    align = \"hv\",\n"
       << "    nrow = " << dim("nrow") << ",\n"
-      << "    ncol = " << dim("ncol") << "\n  )";
-    s << "\n}\n";
+      << "    ncol = " << dim("ncol") << "\n  ))"
+      << "\n}\n";
     return string;
 }
 

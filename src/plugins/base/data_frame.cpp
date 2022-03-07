@@ -46,10 +46,10 @@ void DataFrame::read(QString fileName, Labelling labelling) {
             line = QString(file.readLine().simplified());
         }
         if (file.atEnd() && line.isEmpty()) break;
-        QStringList items = line.split(" ");
+        QStringList items = line.split("\t");
         int n2 = items.size();
         if (n>-1 && n!=n2) {
-            QString msg{"Different number of items in this line (%1) compared to previous line (%2)"};
+            QString msg{"Different number of items (%1) in this line compared to that (%2) in the previous line"};
             ThrowException(msg.arg(n2).arg(n)).value(line).context(this);
         }
         n = n2;

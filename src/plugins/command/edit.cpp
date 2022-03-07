@@ -3,6 +3,7 @@
 ** See: www.gnu.org/licenses/lgpl.html
 */
 #include <QDesktopServices>
+#include <QFileInfo>
 #include <QUrl>
 #include <base/command_help.h>
 #include <base/environment.h>
@@ -24,9 +25,13 @@ edit::edit(QString name, Box *parent)
 
 void edit::doExecute() {
     Environment &env(environment());
-    if (_args.size() > 1)
-        ThrowException("The 'edit' command takes no arguments");
-    QString url = "file:///" + env.inputFileNamePath(env.latestLoadArg());
+    if (_args.size() > 2)
+        ThrowException("The 'edit' command takes 0 or 1 argument");
+    QString fileName = (_args.size() == 1) ? env.latestLoadArg() : _args.at(1),
+            fileNamePath = env.inputFileNamePath(fileName),
+            url = "file:///" + fileNamePath;
+    if (!QFileInfo(fileNamePath).exists())
+        ThrowException("Cannot find file").value(fileNamePath);
     bool ok = QDesktopServices::openUrl(QUrl(url));
     if (!ok)
         ThrowException("Could not open editor");

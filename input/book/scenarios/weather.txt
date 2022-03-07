@@ -1,5 +1,5 @@
 FileName
-"scenarios/flakkebjerg 2009 Tavg.txt"
-"scenarios/braunschweig 2009 Tavg.txt"
-"scenarios/geneva 2009 Tavg.txt"
-"scenarios/ljubljana 2009 Tavg.txt"
+scenarios/flakkebjerg 2009 Tavg.txt
+scenarios/braunschweig 2009 Tavg.txt
+scenarios/geneva 2009 Tavg.txt
+scenarios/ljubljana 2009 Tavg.txt

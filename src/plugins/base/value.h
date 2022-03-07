@@ -115,10 +115,11 @@ public:
     template <class U> U as() const;
     // Get value in compatible type U
 
-    QString asString(bool apostrophed=true, bool vectorized=true) const;
-    // Get value converted to string
-    // -apostroped: a string it will be apostrophed
-    // -vectorized: vectors will be shown on c(...) form
+    QString asString() const;
+    // Get value converted to string for easy reading
+
+    QString asStringentString() const;
+    // Get value converted to string for stringent output
 
     void clear();
     // Reset value to default according to its type
@@ -192,6 +193,7 @@ private:
     >
     _variant; // Starts out uninitialised (= monostate)
     void assign(const Value &x);
+    QString asString(bool stringent) const;
 };
 
 template <class U> void Value::changeValue(U value)
@@ -380,8 +382,6 @@ template <class U> U Value::as() const
 inline uint qHash(const Value::Type &key) {
     return static_cast<uint>(key);
 }
-
-
 
 }
 

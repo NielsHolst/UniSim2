@@ -1,7 +1,5 @@
-sim = read_output(output_file_name)
-plot_all(sim)
 
-sim = sim[,2:4]
+sim = sim[,3:5]
 colnames(sim) = c("Temperature", "DayDegrees", "Briere")
 sim$DayDegrees = sim$DayDegrees/472.1
 
@@ -27,12 +25,12 @@ duration = 1/slope
 open_plot_window(6,3.5)
 M = melt(sim, id.vars="Temperature", value.name="DevRate", variable.name="Model")
 P = ggplot(M, aes(x=Temperature, y=DevRate, colour=Model)) +
-  geom_abline(intercept=icept, slope=slope, colour="blue", size=3) +
+  geom_abline(intercept=icept, slope=slope, colour=brown, size=3, alpha=0.6) +
   geom_line(size=1) +
-  geom_point(data=obs, colour="red", size=3) +
+  geom_point(data=obs, colour=red, size=3) +
   geom_vline(xintercept=T0) +
   geom_hline(yintercept=0) +
-  scale_color_manual(values=c("orange","yellow")) +
+  scale_color_manual(values=c(green,blue)) +
   scale_x_continuous(breaks=c(T0,20,25,30,35), labels=c(round(T0,1), 20,25,30,35)) +
   labs(x="Temperature (C)", y="1/L (per day)")
 print(P)

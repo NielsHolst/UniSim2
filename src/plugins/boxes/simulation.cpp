@@ -63,6 +63,8 @@ void Simulation::reset() {
 }
 
 void Simulation::run() {
+    QString test = port("iterations")->value().asString();
+
     dialog().resetProgress();
     environment().isSilent(silent);
     if (silent)

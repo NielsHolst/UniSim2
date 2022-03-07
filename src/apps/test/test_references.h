@@ -9,6 +9,7 @@ private slots:
     void testForward();
     void testUpdate();
     void testDots();
+    void testEmptyVector();
 };
 
 DECLARE_TEST(TestReferences)

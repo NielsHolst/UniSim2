@@ -67,7 +67,9 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
 {
     FactoryPlugIn *factory;
     Node *creation;
-    QString namespaceName;
+    QStringList classNameParts = className.split("::");
+    QString classNameProper = (classNameParts.size() == 1) ? className : classNameParts.at(1),
+            namespaceName;
 
     // Box objects are not created by a factory, because the Box class is defined in the base plug-in
     if (className == "Box" || className == "base::Box") {
@@ -83,13 +85,13 @@ Node *MegaFactory::createObject(QString className, QString objectName, Box *pare
         case 1:
             // Success: Create object
             factory = me().productIndex.value(className);
-            creation = factory->create(className, objectName, parent);
+            creation = factory->create(classNameProper, objectName, parent);
             namespaceName = factory->id();
             break;
         default:
             // Too many candidate factories: Try again with 'using' plugin name as a qualifier
             namespaceName = _usingPluginName;
-            if (!className.contains("::") && !namespaceName.isEmpty())
+            if (!className.contains("::"))
                 creation = createObject(namespaceName+"::"+className, objectName, parent);
             else {
                 QString msg = "Qualify class name with plug-in name as in:\n" +

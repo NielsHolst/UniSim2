@@ -1,7 +1,7 @@
 // phys-dev-appl-5a.box
 Simulation sim {
   .steps = 100
-  +growthFactor = 30
+  &growthFactor = 30
   StageAndPhase pop {
     .initial = 10
     .k = 25

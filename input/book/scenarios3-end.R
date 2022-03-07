@@ -1,4 +1,3 @@
-sim = read_output(output_file_name)
 sim$Location = factor(sim$iteration)
 levels(sim$Location) = c("Flakkebjerg", "Braunschweig", "Geneva", "Ljubljana")
 
@@ -26,7 +25,7 @@ P = ggplot(A) +
   xlab("Butterflies flying") + ylab("") +
   theme(legend.position="none")
 
-x11(5,3)
+open_plot_window(5,3)
 print(P)
 
 figures <- function(df) {

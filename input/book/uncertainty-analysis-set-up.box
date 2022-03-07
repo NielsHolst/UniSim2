@@ -61,6 +61,7 @@ Simulation sim {
     PageR {
       .width = 8
       .height = 6
+      .ncol = 1
       PlotR {
         .ports = monteCarlo/*[value]
         .type = "histogram(8)"

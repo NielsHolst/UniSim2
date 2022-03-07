@@ -19,7 +19,7 @@ struct EnableBitMaskOperators
 };
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+inline typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
 operator |(Enum lhs, Enum rhs)
 {
     using underlying = typename std::underlying_type<Enum>::type;
@@ -30,7 +30,7 @@ operator |(Enum lhs, Enum rhs)
 }
 
 template<typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::enable, bool>::type
+inline typename std::enable_if<EnableBitMaskOperators<Enum>::enable, bool>::type
 operator &(Enum lhs, Enum rhs)
 {
     using underlying = typename std::underlying_type<Enum>::type;

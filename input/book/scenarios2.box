@@ -1,11 +1,12 @@
 // scenarios2.box
 Simulation sim {
   .steps = 180
+  .iterations = scenarios[iterations]
   Scenarios scenarios {
     .fileName = "scenarios/weather.txt"
   }
   Calendar calendar {
-    .initialDateTime = 1/5/2009
+    .begin = 1/5/2009
   }
   Records weather {
     .fileName = scenarios[FileName]
@@ -45,7 +46,7 @@ Simulation sim {
     }
   }
   OutputR {
-    .end = "scenarios/end-locations.R"
+    .scripts = "scenarios2-end.R"
     PageR {
       .xAxis = calendar[date]
       .width = 12

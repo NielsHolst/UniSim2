@@ -145,3 +145,23 @@ void TestReferences::testDots() {
     QCOMPARE(root->findOne<Port*>("B[c]")->value<double>(), 3.12);
 
 }
+
+
+void TestReferences::testEmptyVector() {
+    bool excepted(false);
+    Box *root;
+    BoxBuilder builder;
+    ReaderBoxScript reader(&builder);
+    try {
+        reader.parse(inputFilePath("box_script/empty_vector.box"));
+        root = Box::root(builder.content());
+    }
+    UNEXPECTED_EXCEPTION;
+
+    QVector<QString> expected = {"abc", "xyz"};
+    QCOMPARE(root->findOne<Port*>("a[strings]")->value<QVector<QString>>(), expected);
+    QVector<int> expectedInt = {13,7};
+    QCOMPARE(root->findOne<Port*>("b[ints]")->value<QVector<int>>(), expectedInt);
+    QCOMPARE(root->findOne<Port*>("b[strings]")->value<QVector<QString>>(), QVector<QString>());
+    QCOMPARE(root->findOne<Port*>("c[ints]")->value<QVector<int>>(), QVector<int>());
+}

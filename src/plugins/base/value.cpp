@@ -9,16 +9,31 @@
 
 namespace base {
 
-inline QString aph(bool apostrophed, QString s) {
-    return apostrophed ? "\"" + s + "\"" : s;
+inline QString str(bool stringent, QString s) {
+    return stringent ? s : "\"" + s + "\"";
 }
 
-QString Value::asString(bool apostrophed, bool vectorized) const {
+inline QString str(bool stringent, bool x) {
+    return stringent ? convert<QString>(x) : x ? "TRUE" : "FALSE";
+}
+
+QString Value::asString() const {
+    return asString(false);
+}
+
+QString Value::asStringentString() const {
+    return asString(true);
+}
+
+QString Value::asString(bool stringent) const {
     QStringList slist;
     switch(type()) {
     case Type::Uninitialized: slist += "uninitialized"; break;
     case Type::Null         : slist += "null"; break;
-    case Type::VecBool      : for (auto x : as<vbool     >()) slist += convert<QString>(x);; break;
+    case Type::Bool         : slist += str(stringent, as<bool>()); break;
+    case Type::VecBool      : for (auto x : as<vbool     >())
+                                slist += str(stringent, x);
+                              break;
     case Type::VecInt       : for (auto x : as<vint      >()) slist += convert<QString>(x);; break;
     case Type::VecDouble    : for (auto x : as<vdouble   >()) slist += convert<QString>(x);; break;
     case Type::VecDate      : for (auto x : as<vQDate    >()) slist += convert<QString>(x);; break;
@@ -26,10 +41,10 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
     case Type::VecDateTime  : for (auto x : as<vQDateTime>()) slist += convert<QString>(x);; break;
     case Type::VecBareDate  : for (auto x : as<vBareDate >()) slist += convert<QString>(x);; break;
 
-    case Type::String       : slist += aph(apostrophed, as<QString>());
+    case Type::String       : slist += str(stringent, as<QString>());
                               break;
     case Type::VecString    : for (QString x : as<vQString  >())
-                                slist += aph(apostrophed, x);
+                                slist += str(stringent, x);
                               break;
     case Type::Path         : slist += as<Path>().toString();
                               break;
@@ -37,7 +52,7 @@ QString Value::asString(bool apostrophed, bool vectorized) const {
                               break;
     }
     if (isVector()) {
-       return vectorized ?  "c(" + slist.join(",") +")" : slist.join("\t");
+       return "c(" + slist.join(",") +")";
     }
     else {
        return slist.at(0);

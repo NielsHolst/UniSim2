@@ -1,3 +1,5 @@
+BEGIN = TRUE
+
 library("colorspace")
 library("ggplot2")
 library("ggpubr")
@@ -154,10 +156,10 @@ melt_y = function(df, x, y) {
   # Output columns: iteration <x1> <x2> <x...> Variable Value
   y = remove_character_columns(df, y)
   df = convert_factors(df, y)
-  x  = union(c("iteration", "step"), x)
+  x  = union(colnames(df)[1:2], x)
   xy = union(x, y)
   M = melt(convert_logical(df)[ ,xy], id.vars=x, value.name="Value", variable.name="Variable")
-  M$iteration = factor(M$iteration)
+  M[,1] = factor(M[,1])
   M
 }
 
@@ -170,8 +172,8 @@ melt_xy = function(df, x, y) {
   # Produce columns: iteration step <y1> <y2> <y...> xVariable xValue
   M = melt(convert_logical(df), measure.vars=x, value.name="xValue", variable.name="xVariable")
   # Produce columns: iteration step xValue xVariable Response ResponseValue
-  M = melt(M, id.vars=c("iteration","step","xValue","xVariable"), measure.vars=y, value.name="ResponseValue", variable.name="Response")
-  M$iteration = factor(M$iteration)
+  M = melt(M, id.vars=c(colnames(df)[1:2],"xValue","xVariable"), measure.vars=y, value.name="ResponseValue", variable.name="Response")
+  M[,1] = factor(M[,1])
   M
 }
 
@@ -203,12 +205,12 @@ plot_one_x = function(df, x, y, ytrans, ncol, nrow, layout) {
 
   # Colour by iteration if there are many iterations and only one variable;
   # otherwise, colour by Variable
-  many_iterations = length(levels(M$iteration)) > 1
+  many_iterations = length(levels(M[,1])) > 1
   one_variable = (length(y) == 1)
-  color = if (many_iterations & one_variable) "iteration" else "Variable"
+  color = if (many_iterations & one_variable) colnames(M)[1] else "Variable"
 
   # If there is more than one step, it means the plot is a time series
-  is_time_series = length(unique(df$step)) > 1
+  is_time_series = length(unique(M[,2])) > 1
   
   # Put the one x column on the x-axis
   # and the Value column on the y-axis
@@ -228,10 +230,11 @@ plot_one_x = function(df, x, y, ytrans, ncol, nrow, layout) {
       
     # If there are many iterations then facet by iteration and Variable
     if (many_iterations) {
-      P + facet_grid(iteration~Variable, scales="free_y") + xlab("") + ylab("")
+      form = paste(colnames(M)[1], "Variable", sep="~")
+      P + facet_grid(as.formula(form), scales="free_y") + xlab("") + ylab("")
     # If there is only one iteration and many variables then facet by Variable only
     } else if (!one_variable) { 
-      P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") + xlab("") + ylab("")
+      P + facet_wrap(~Variable, ncol=ncol, nrow=nrow, scales="free_y") + xlab(x) + ylab("")
     # If there is only one iteration and only one Variable then produce a simple (x,y) plot
     # Note: x and y both have length 1
     } else {
@@ -251,7 +254,8 @@ plot_one_x = function(df, x, y, ytrans, ncol, nrow, layout) {
     # If there are many iterations and many variables then facet them by iterations
     # Note: Each facet will be coloured by Variables (hence variables are merged in eacg facet)
     if (many_iterations & !one_variable) { 
-      P + facet_wrap(~iteration, ncol=ncol, nrow=nrow)
+      form = paste0("~", colnames(M)[1])
+      P + facet_wrap(as.formula(form), ncol=ncol, nrow=nrow)
     } else {
       P
     }
@@ -268,8 +272,8 @@ plot_many_x = function(df, x, y, ytrans, ncol, nrow, layout) {
 
   # Colour by iteration if there are many iterations nad we've got time seriues;
   # otherwise, colour by Response
-  many_iterations = length(levels(M$iteration)) > 1
-  is_time_series = length(unique(df$step)) > 1
+  many_iterations = length(levels(M[,1])) > 1
+  is_time_series = length(unique(M[,2])) > 1
   color = if (many_iterations & is_time_series) "iteration" else "Response"
   
   # Put  xValue on the x-axis and ResponseValue on the y-axis
@@ -278,7 +282,7 @@ plot_many_x = function(df, x, y, ytrans, ncol, nrow, layout) {
   
   # Use lines for time series otherwise points
   if (is_time_series) {
-    P = P + geom_line(aes(group=iteration))
+    P = P + geom_line(aes_string(group=colnames(M)[1]))
   } else {
     P = P + geom_point()
   }

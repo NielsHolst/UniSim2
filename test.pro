@@ -20,3 +20,7 @@ test.depends = boxes
 SUBDIRS += test_boxes
 test_boxes.subdir = src/plugins/test_boxes
 test_boxes.depends = base
+
+SUBDIRS += test_boxes2
+test_boxes2.subdir = src/plugins/test_boxes2
+test_boxes2.depends = base

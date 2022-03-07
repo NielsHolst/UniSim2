@@ -7,10 +7,10 @@ Simulation sim {
   // Host
   //
   Box host {
-    +juvenileDuration = 10
-    +adultDuration = 30
-    +juvenileInfectionRate = 0.04 // Should be dynamic
-    +adultInfectionRate    = 0.01 // Should be dynamic
+    &juvenileDuration = 10
+    &adultDuration = 30
+    &juvenileInfectionRate = 0.04 // Should be dynamic
+    &adultInfectionRate    = 0.01 // Should be dynamic
     Box S {
       Stage juvenile {
         .initial = 80
@@ -73,16 +73,15 @@ Simulation sim {
   // Vector
   //
   Box vector {
-    +offspringDuration = 7
-    +juvenileDuration = 14
-    +adultDuration = 14
-    +fecundity = 5
-    +infectionRate = 0.04
+    &offspringDuration = 7
+    &juvenileDuration = 14
+    &adultDuration = 14
+    &fecundity = 5
+    &infectionRate = 0.04
     Box S {
       Stage offspring {
         .initial = 100
-         .inflow|sum = vector/S/adult/reproduction[outflow] | 
-                        vector/E/adult/reproduction[outflowSum]
+        .inflow = sum(vector/S/adult/reproduction[outflow] | vector/E/adult/reproduction[outflowSum])
         .duration = vector[offspringDuration]
       }
       Stage juvenile {
@@ -104,7 +103,7 @@ Simulation sim {
       }
     }
     Box E {
-      +phaseDuration = 3
+      &phaseDuration = 3
       Box adult {
         StageAndPhase individuals {
           .duration = vector[adultDuration]

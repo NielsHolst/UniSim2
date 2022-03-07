@@ -42,8 +42,8 @@ OutputR::OutputR(QString name, Box *parent)
     Input(skipFormats).imports("OutputWriter::*[skipFormats]");
     Input(scripts).help("R scripts to be run at the end");
     Input(plotTypes).computes("PlotR::*[type]");
-    Output(ports).computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
-    Output(numPages).help("Number of pages in this output");
+    Output(ports).noClear().computes("./PageR::*[xAxis] | ./*/PlotR::*[ports]").help("Path to all ports used by my pages and plots");
+    Output(numPages).noClear().help("Number of pages in this output");
 }
 
 void OutputR::amend() {
@@ -64,6 +64,7 @@ void OutputR::initialize() {
 
     // Find my pages
     _pages = findMany<PageR*>("./*");
+    numPages = _pages.size();
 
     // Open file for R script
     openFile();
@@ -71,10 +72,6 @@ void OutputR::initialize() {
     // Get the output path for .txt output
     _filePathTxt = environment().outputFilePath(".txt");
     _filePathTxt.replace("\\", "/");
-}
-
-void OutputR::reset() {
-    numPages = _pages.size();
 }
 
 QString OutputR::toScript() {
@@ -176,7 +173,7 @@ void OutputR::copyToClipboard() {
         s += "rm(list=ls(all=TRUE))\n";
 
     // Source the default first script
-    s += wrap("scripts/begin.R");
+    s += "if (!exists(\"BEGIN\")) " + wrap("scripts/begin.R");
 
     // Source Sobol scripts?
     bool useSobol = false;

@@ -22,11 +22,12 @@ Simulation sim {
   }
   
   OutputR {
-    .end = "phys-dev-scale-end.R"
+    .scripts = "phys-dev-scale-end.R"
     PageR {
       .xAxis = temperature[value]
       PlotR {
-        .ports = (dayDegrees[step] briere[step])
+        .layout = "facetted"
+        .ports = dayDegrees[step] | briere[step]
       }
     }
   }

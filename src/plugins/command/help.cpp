@@ -93,7 +93,7 @@ void help::showPlugins() {
     for (int i=0; i < plugins.size(); ++i) {
         QString name = plugins.at(i)->id(),
                 desc = createBox(name + "Documentation") ?
-                       _box->port("title")->value().asString(true,true) : "undescribed";
+                       _box->port("title")->value().asString() : "undescribed";
         info.addLine(name, desc);
     }
     dialog().information(info.combined().join("\n"));
@@ -135,7 +135,7 @@ void help::showPlugin() {
     QStringList headerLines;
     QString name = _plugIn->id();
     if (createBox(name+"Documentation")) {
-        QString title = _box->port("title")->value().asString(true,true);
+        QString title = _box->port("title")->value().asString();
         int length = title.length();
         QVector<QString>
                 authorNames = _box->port("authorNames")->value<QVector<QString>>(),
@@ -198,7 +198,7 @@ void help::setColWidths() {
     for (const Port *port : _box->findMany<Port*>(".[*]")) {
         _colWidthName = std::max(_colWidthName, port->objectName().size());
         if (showValue(port))
-            _colWidthValue = std::max(_colWidthValue, port->value().asString(true,true).size());
+            _colWidthValue = std::max(_colWidthValue, port->value().asString().size());
         _colWidthUnit = std::max(_colWidthUnit, port->unit().size());
     }
 }
@@ -209,7 +209,7 @@ QStringList help::portsHelp(PortType type) {
         if (port->type() == type) {
             QString item;
             item = "." + port->objectName().leftJustified(_colWidthName);
-            QString value =  showValue(port) ? port->value().asString(true, true) : "";
+            QString value =  showValue(port) ? port->value().asString() : "";
             item += "|" + value.rightJustified(_colWidthValue);
             if (_colWidthUnit > 0)
                 item += " " + port->unit().leftJustified(_colWidthUnit);

@@ -21,41 +21,28 @@ Scenarios::Scenarios(QString name, Box *parent)
     help("runs scenarios from a text file");
     Input(fileName).help("Text file with columns, one for each output produced. One iteration is run for each line").equals("scenarios.txt");
     Input(title).help("Name of column that holds title of scenario (optional)");
-    Output(atEnd).help("Has last iteration run?");
+    Output(iterations).help("Number of iterations needed to run scenarios").noClear();
 }
 
 void Scenarios::amend() {
     ExceptionContext(this);
     readDataFrame();
     createColumnOutputs();
-    atEnd = false;
     _ixRow = 0;
     copyValues();
 }
 
 void Scenarios::initialize() {
-    // Set simulation to stop after last scenario
-    Box *sim = findMaybeOne<Box*>("/*<Simulation>");
-    if (sim) {
-        Port *useStopIterations = sim->port("useStopIterations"),
-             *stopIterations = sim->port("stopIterations");
-        if (!useStopIterations->value<bool>()) {
-            useStopIterations->equals(true);
-            stopIterations->imports(fullName() + "[atEnd]");
-        }
-    }
+    _ixRow = 0;
+    iterations = _df.numRow();
 }
 
 void Scenarios::reset() {
-    Q_ASSERT(!atEnd);
     copyValues();
-    atEnd = (++_ixRow == _df.numRow());
-
+    ++_ixRow;
     if (!environment().isSilent()) {
         QString titleName = port("title")->value<QString>(),
                 title = titleName.isEmpty() ? "" : port(titleName)->value<QString>();
-
-        dialog().information(QString::number(_ixRow) + " " + title);
     }
 }
 
@@ -67,10 +54,9 @@ void Scenarios::readDataFrame() {
 
 void Scenarios::createColumnOutputs() {
     values.fill(QString(), _df.numCol());
-    for (QString colname : _df.colNames().toVector()) {
-        Port *port = new Port(colname, PortType::Input, this);
+    for (QString colname : _df.colNames()) {
         int ixCol = _df.ixCol(colname);
-        port->equals(&values[ixCol]);
+        NamedOutput(colname, values[ixCol]).noClear();
     }
 }
 

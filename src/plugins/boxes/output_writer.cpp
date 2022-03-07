@@ -122,7 +122,7 @@ void OutputWriter::writeValues() {
     QStringList values;
     // Loop through values
     for (auto value : _values)
-        values << value->asString(true, false);
+        values << value->asStringentString();
     _stream << values.join("\t") << "\n";
 }
 

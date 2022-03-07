@@ -22,7 +22,6 @@ class OutputR : public base::Box
 public:
     OutputR(QString name, Box *parent);
     void amend();
-    void reset();
     void initialize();
     void debrief();
 

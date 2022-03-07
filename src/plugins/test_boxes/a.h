@@ -15,6 +15,8 @@ private:
     double pdouble;
     QString pstring;
     base::Path ppath;
+    QVector<int> ints;
+    QVector<QString> strings;
 };
 
 }

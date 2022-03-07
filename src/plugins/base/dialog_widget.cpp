@@ -223,6 +223,13 @@ void DialogWidget::handleCtrlKey(QKeyEvent *event) {
         insertText("clear");
         submitCommand();
         break;
+    case Qt::Key_R:
+        insertText("run");
+        submitCommand();
+        break;
+    case Qt::Key_O:
+        insertText("load");
+        // fall through
     case Qt::Key_Space:
         s = selectFile();
         if (!s.isEmpty()) {

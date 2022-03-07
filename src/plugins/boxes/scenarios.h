@@ -24,11 +24,11 @@ public:
     void reset();
 
 private:
-    // inputs
+    // Inputs
     QString fileName, title;
-    // outputs
+    // Outputs
     QVector<QString> values;
-    bool atEnd;
+    int iterations;
     // methods
     void readDataFrame();
     void createColumnOutputs();
