@@ -38,8 +38,8 @@ void OutputWriter::amend() {
     if (!findMaybeOne<Box*>("OutputSelector::*")) {
         BoxBuilder(this).
         box("OutputSelector").name("selector").endbox();
-        auto test = findOne<Box*>("OutputSelector::selector");
-        test->amendFamily();
+//        auto test = findOne<Box*>("OutputSelector::selector");
+//        test->amendFamily();
     }
 }
 

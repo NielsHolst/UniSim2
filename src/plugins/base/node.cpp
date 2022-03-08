@@ -50,6 +50,10 @@ void Node::setOrder(int order) {
     _order = order;
 }
 
+void Node::addAttribute(QString name, QString value) {
+    _attributes[name] = value;
+}
+
 void Node::enumerate() {
     Box *root = Box::root();
     if (!root)

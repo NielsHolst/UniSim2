@@ -14,6 +14,7 @@
 #include <base/exception.h>
 #include <base/publish.h>
 #include <base/reader_boxscript.h>
+#include <base/reader_xml.h>
 #include "load.h"
 
 using std::unique_ptr;
@@ -52,16 +53,18 @@ void load::doExecute() {
 void load::readFile(QString fileName) {
     // Builder and reader collaborate to create model
     BoxBuilder builder;
-    ReaderBoxScript reader(&builder);
+    auto reader = fileName.endsWith("box") ?
+            unique_ptr<ReaderBase>( new ReaderBoxScript(&builder) ) :
+            unique_ptr<ReaderBase>( new ReaderXml      (&builder) );
 
     // Delete current model
     Box::root(nullptr);
 
     // Create a new model
     try {
-        reader.parse(environment().inputFileNamePath(fileName));
+        reader->parse(environment().inputFileNamePath(fileName));
         Computation::changeStep(Computation::Step::Amend);
-        Box::root(builder.content());
+        Box::root(builder.root());
     }
     catch (const Exception &ex) {
         dialog().error(ex.what());

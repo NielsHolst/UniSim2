@@ -93,13 +93,12 @@ private:
     Timer _timer;
     static std::unique_ptr<Box> _root;
     static Box *_latest;
-    static bool _debugOn, _traceOn;
+    static bool _debugOn;
     // Methods
     Box *latestRoot();
     void createTimers();
     void addPort(QMap<QString,Port*> &ports, Port *port);
     void clearPorts();
-    void trace(QString id) const;
     void toText(QTextStream &text, QString options, int indentation) const;
     Timer::Report collectTimerReport();
 };

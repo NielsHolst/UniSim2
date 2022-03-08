@@ -485,14 +485,14 @@
   <box name="default">
       <xsl:choose>
         <xsl:when test="string-length($climateSetpointName)=0">
-          <newPort name="signal" value="0.0"/>
-          <newPort name="flagIsUp" value="FALSE"/>
+          <aux name="signal" value="0.0"/>
+          <aux name="flagIsUp" value="FALSE"/>
         </xsl:when>
         
         <xsl:otherwise>
           <xsl:variable name="signalSrc" 
                         select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
-          <newPort name="signal">
+          <aux name="signal">
             <xsl:attribute name="externalName">
               <xsl:value-of select="$climateSetpointName"/>
             </xsl:attribute>
@@ -513,14 +513,14 @@
                 <!-- <xsl:with-param name="correction" select="$correction"/> -->
               </xsl:call-template>
             </xsl:if>
-          </newPort>
+          </aux>
           
           <xsl:choose>
             <xsl:when test="$defaultValue=0">
-              <newPort name="flagIsUp" value="FALSE"/>
+              <aux name="flagIsUp" value="FALSE"/>
             </xsl:when>
             <xsl:otherwise>
-              <newPort name="flagIsUp" value="TRUE"/>
+              <aux name="flagIsUp" value="TRUE"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
@@ -1045,22 +1045,24 @@
 <xsl:template match="/"> <box class="Simulation" name="greenhouse">
   <port name="steps" ref="./period[steps]"/>
   <port name="unattended" value="TRUE"/>
-  <xsl:comment> *** SimulationPeriod *** </xsl:comment>
-  <box class="SimulationPeriod" name="period">
+
+  <xsl:comment> *** Calendar *** </xsl:comment>
+  <xsl:variable name="latitude"  select="DVV_SETUP/Latitude"/>
+  <xsl:variable name="longitude" select="DVV_SETUP/Longitude"/>
+  <box class="Calendar" name="calendar">
     <xsl:variable name="beginDate" select="DVV_SETUP/StartTime"/>
     <xsl:variable name="endDate"   select="DVV_SETUP/StopTime"/>
-    <xsl:variable name="beginTime" select="concat('00',$colon,'00',$colon,'00')"/>
-    <xsl:variable name="endTime"   select="concat('00',$colon,'00',$colon,'00')"/>
     <xsl:variable name="timeStep"  select="DVV_SETUP/TimeStep"/>
-    <port name="beginDate" externalName="None">
+
+    <port name="begin" externalName="StartTime">
       <xsl:attribute name="source">
         <xsl:value-of select="ecolmod:generateXPath($beginDate)"/>
       </xsl:attribute>
-      <xsl:attribute name="value">
-        <xsl:value-of select="$beginDate"/>
+      <xsl:attribute name="compute">
+        <xsl:value-of select="concat($beginDate, ' - 1')"/>
       </xsl:attribute>
     </port>
-    <port name="endDate" externalName="None">
+    <port name="end" externalName="StopTime">
       <xsl:attribute name="source">
         <xsl:value-of select="ecolmod:generateXPath($endDate)"/>
       </xsl:attribute>
@@ -1068,17 +1070,7 @@
         <xsl:value-of select="$endDate"/>
       </xsl:attribute>
     </port>
-    <port name="beginTime" externalName="None" source="Fixed">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$beginTime"/>
-      </xsl:attribute>
-    </port>
-    <port name="endTime" externalName="None" source="Fixed">
-      <xsl:attribute name="value">
-        <xsl:value-of select="$endTime"/>
-      </xsl:attribute>
-    </port>
-    <port name="timeStep" externalName="None">
+    <port name="timeStep" externalName="TimeStep">
       <xsl:attribute name="source">
         <xsl:value-of select="ecolmod:generateXPath($timeStep)"/>
       </xsl:attribute>
@@ -1087,14 +1079,8 @@
       </xsl:attribute>
     </port>
     <port name="timeUnit" value="m" externalName="None" source="Fixed"/>
-  </box>
-  <xsl:comment> *** Calendar *** </xsl:comment>
-  <xsl:variable name="latitude"  select="DVV_SETUP/Latitude"/>
-  <xsl:variable name="longitude" select="DVV_SETUP/Longitude"/>
-  <box class="Calendar" name="calendar">
-    <port name="initialDateTime" ref="../period[beginDateTime]"/>
-    <port name="timeStep" ref="../period[timeStep]"/>
-    <port name="timeUnit" ref="../period[timeUnit]"/>
+
+    
     <port name="latitude" externalName="None">
       <xsl:attribute name="source">
           <xsl:value-of select="ecolmod:generateXPath($latitude)"/>
@@ -1352,7 +1338,7 @@
       </box>
     </box>
     <box name="floor">
-      <newPort name="reflectivity">
+      <aux name="reflectivity">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$floorReflectivityName"/>
         </xsl:attribute>
@@ -1362,8 +1348,8 @@
         <xsl:attribute name="value">
           <xsl:value-of select="$floorReflectivityValue"/>
         </xsl:attribute>
-      </newPort>
-      <newPort name="Utop">
+      </aux>
+      <aux name="Utop">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$floorUtopName"/>
         </xsl:attribute>
@@ -1373,8 +1359,8 @@
         <xsl:attribute name="value">
           <xsl:value-of select="$floorUtopValue"/>
         </xsl:attribute>
-      </newPort>
-      <newPort name="Ubottom">
+      </aux>
+      <aux name="Ubottom">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$floorUbottomName"/>
         </xsl:attribute>
@@ -1384,8 +1370,8 @@
         <xsl:attribute name="value">
           <xsl:value-of select="$floorUbottomValue"/>
         </xsl:attribute>
-      </newPort>
-      <newPort name="heatCapacity">
+      </aux>
+      <aux name="heatCapacity">
         <xsl:attribute name="externalName">
           <xsl:value-of select="$floorHeatCapacityName"/>
         </xsl:attribute>
@@ -1395,7 +1381,7 @@
         <xsl:attribute name="value">
           <xsl:value-of select="$floorHeatCapacityValue"/>
         </xsl:attribute>
-      </newPort>
+      </aux>
     </box>
   
   </box>
@@ -1628,7 +1614,7 @@
   <xsl:comment> *** Controllers *** </xsl:comment>
   <box class="vg::Controllers" name="controllers">
     <box name="co2Injection">
-      <newPort name="value" ref="./controller[controlVariable]"/>
+      <aux name="value" ref="./controller[controlVariable]"/>
       <box class="PidController" name="controller">
         <port name="sensedValue" ref="indoors/co2[value]"/>
         <port name="desiredValue" ref="setpoints[co2Setpoint]"/>
@@ -1961,16 +1947,25 @@
         <port name="ports" value="output/p[*]"/>
       </box>
     </box>
-    <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
-    <box class="OutputText" name="text">
+    <box class="OutputSelector" name="selector">
+      <xsl:variable name="beginDate" select="DVV_SETUP/StartTime"/>
+      <xsl:variable name="TimeStep" select="DVV_SETUP/TimeStep"/>
       <port name="skipFormats" value="TRUE"/>
       <port name="useLocalDecimalChar" value="TRUE"/>
-      <port name="skipInitialRows">
+      <!-- <port name="skipInitialRows"> -->
+        <!-- <xsl:attribute name="value"> -->
+          <!-- <xsl:value-of select="1440 div number($TimeStep)"/> -->
+        <!-- </xsl:attribute> -->
+      <!-- </port> -->
+      <port name="beginDateTime" externalName="StartTime">
+        <xsl:attribute name="source">
+          <xsl:value-of select="ecolmod:generateXPath($beginDate)"/>
+        </xsl:attribute>
         <xsl:attribute name="value">
-          <xsl:value-of select="1440 div number($TimeStep)"/>
+          <xsl:value-of select="$beginDate"/>
         </xsl:attribute>
       </port>
-      <port name="averageN">
+      <port name="period">
         <xsl:attribute name="value">
           <xsl:value-of select="60 div number($TimeStep)"/>
         </xsl:attribute>

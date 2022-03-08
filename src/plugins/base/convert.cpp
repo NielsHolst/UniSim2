@@ -90,11 +90,11 @@ template<> QTime convert(QString x) {
 template<> QDateTime convert(QString x) {
     QDateTime result;
     QStringList strings = x.split("T");
-    if (strings.size() != 2)
+    if (strings.size() > 2)
         ThrowException("Illegal date-time format").value(x).
-                hint("Put a 'T' beween the date and the time");
-    result = QDateTime(convert<QDate>(strings.at(0)),
-                       convert<QTime>(strings.at(1)), Qt::UTC);
+        hint("Put one 'T' beween the date and the time");
+    QTime time = (strings.size() == 1) ? QTime(0,0,0) : convert<QTime>(strings.at(1));
+    result = QDateTime(convert<QDate>(strings.at(0)), time, Qt::UTC);
     if (!result.isValid())
         ThrowException("Invalid date-time").value(x);
     return result;

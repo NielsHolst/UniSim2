@@ -4,6 +4,7 @@
 */
 #ifndef BASE_NODE_H
 #define BASE_NODE_H
+#include <QMap>
 #include <QString>
 #include <QVector>
 
@@ -28,6 +29,8 @@ public:
     void setClassName(QString nameSpaceName, QString className);
     void setObjectName(QString name);
     void setOrder(int order);
+    void addAttribute(QString name, QString value);
+
     static void enumerate();
 
     template <class T=Node*> T parent() const;
@@ -45,13 +48,17 @@ public:
     bool isType(QString name) const;
 
     int order() const       { return _order; }
+    const QMap<QString, QString> & attributes() const { return _attributes; }
 
 private:
+    // Data
     Pedigree _pedigree;
     QString _objectName;
     Node *_parent;
     QVector<Node*> _children;
     int _order;
+    QMap<QString, QString> _attributes;
+    // Methods
     void addChild(Node *child);
     void enumerate(int &i);
     template <class T=Node*> QVector<T> descendants(bool includeMe);

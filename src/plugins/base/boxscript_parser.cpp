@@ -50,7 +50,7 @@ Expression parseExpression(Port *parent, QString s) {
     BoxBuilder builder;
     auto ast = parse("Box{\n  &x=" + s.toStdString() + "\n}");
     ast->root.build(&builder);
-    auto root = std::unique_ptr<Box>( builder.content(BoxBuilder::Amend::None) );
+    auto root = std::unique_ptr<Box>( builder.root() );
     Expression e = root->port("x")->expression();
     e.setParent(parent);
     Computation::popStep();

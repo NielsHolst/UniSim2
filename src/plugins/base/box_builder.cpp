@@ -12,11 +12,11 @@ namespace base {
 
 BoxBuilder::BoxBuilder(Box *parent)
     : _hasParent(parent!=nullptr),
-      _content(nullptr), _currentBox(nullptr), _currentPort(nullptr),
+      _root(nullptr), _currentBox(nullptr), _currentPort(nullptr),
       _exceptionCount(Exception::count())
 {
     if (_hasParent) {
-        _content = _currentBox = parent;
+        _root = _currentBox = parent;
         _stack.push(_currentBox);
     }
 }
@@ -28,7 +28,7 @@ BoxBuilder& BoxBuilder::box(Box *box) {
 }
 
 BoxBuilder& BoxBuilder::box(QString className) {
-    if (_content && _stack.isEmpty())
+    if (_root && _stack.isEmpty())
         ThrowException("BoxBuilder: Boxes miss a common root");
     Box *newBox = MegaFactory::create<Box>(className, "", _currentBox);
     _stack.push(_currentBox);
@@ -39,8 +39,8 @@ BoxBuilder& BoxBuilder::moveToBox(Box *box) {
     if (!box)
         ThrowException("BoxBuilder cannot move to non-existing box");
     _currentBox =  box;
-    if (!_content)
-        _content = _currentBox; // set _content on first call of box
+    if (!_root)
+        _root = _currentBox; // set _content on first call of box
     _currentPort = nullptr;
     return *this;
 }
@@ -55,6 +55,9 @@ BoxBuilder& BoxBuilder::endbox() {
         ThrowException("BoxBuilder: box body ended twice");
     _currentBox = _stack.pop();
     _currentPort = nullptr;
+    // Amend children of root
+    if (_currentBox && _currentBox->parent()==_root)
+        _currentBox->amendFamily();
     return *this;
 }
 
@@ -83,6 +86,13 @@ BoxBuilder& BoxBuilder::imports(QString pathToPort, Caller caller) {
     return *this;
 }
 
+BoxBuilder& BoxBuilder::computes(QString expression) {
+    if (!_currentBox)
+        ThrowException("BoxBuilder: 'computes' out of context");
+    _currentPort->computes(expression);
+    return *this;
+}
+
 // Set value
 
 BoxBuilder& BoxBuilder::equals(const char *value) {
@@ -99,43 +109,47 @@ BoxBuilder& BoxBuilder::equals(Expression expression) {
 
 // State
 
-const Box* BoxBuilder::currentBox() const {
+Box* BoxBuilder::currentBox() const {
     return _currentBox;
 }
 
-const Port* BoxBuilder::currentPort() const {
+Port* BoxBuilder::currentPort() const {
     return _currentPort;
 }
 
-Box* BoxBuilder::content(Amend amendOption) {
-    if (_hasParent) {
-        endbox();
-        if (!_stack.isEmpty())
-            ThrowException("BoxBuilder: unclosed box(es) at end")
-                    .hint("Possibly missing endbox() call").value(_stack.size())
-                    .context(_stack.top());
-    }
-    if (_content) {
-        switch (amendOption) {
-        case Amend::Family:
-            _content->amendFamily();
-            break;
-        case Amend::Descendants:
-            for (Box *child : _content->findMany<Box*>("./*"))
-                child->amendFamily();
-            break;
-        case Amend::None:
-            break;
-        }
-    }
-    else
-        ThrowException("Construction failed");
-    // If we are returning a root box then enumerate it
-    if (!_hasParent) {
-        Node::enumerate();
-//        Expression::resetNumReferencesResolved();
-    }
-    return _content;
+Box* BoxBuilder::root() const {
+    return _root;
 }
+
+//Box* BoxBuilder::content(Amend amendOption) {
+//    if (_hasParent) {
+//        endbox();
+//        if (!_stack.isEmpty())
+//            ThrowException("BoxBuilder: unclosed box(es) at end")
+//                    .hint("Possibly missing endbox() call").value(_stack.size())
+//                    .context(_stack.top());
+//    }
+//    if (_root) {
+//        switch (amendOption) {
+//        case Amend::Family:
+//            _root->amendFamily();
+//            break;
+//        case Amend::Descendants:
+//            for (Box *child : _root->findMany<Box*>("./*"))
+//                child->amendFamily();
+//            break;
+//        case Amend::None:
+//            break;
+//        }
+//    }
+//    else
+//        ThrowException("Construction failed");
+//    // If we are returning a root box then enumerate it
+//    if (!_hasParent) {
+//        Node::enumerate();
+////        Expression::resetNumReferencesResolved();
+//    }
+//    return _root;
+//}
 
 }

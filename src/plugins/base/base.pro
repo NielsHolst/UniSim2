@@ -25,7 +25,6 @@ HEADERS +=  \
     base_signal.h \
     box.h \
     box_builder.h \
-#    box_reader_xml.h \
     boxscript.h \
     boxscript_ast.h \
     boxscript_ast_adapted.h \
@@ -44,8 +43,6 @@ HEADERS +=  \
     computation.h \
     copy_folder.h \
     data_frame.h \
-#    data_grid.h \
-#    date_time.h \
     dialog.h \
     dialog_base.h \
     dialog_minimal.h \
@@ -60,7 +57,6 @@ HEADERS +=  \
     factory_plug_in.h \
     flags.h \
 #    food_web_box_base.h \
-#    general.h \
     history.h \
     interpolate.h \
     matrix.h \
@@ -80,6 +76,7 @@ HEADERS +=  \
     phys_math.h \
     reader_base.h \
     reader_boxscript.h \
+    reader_xml.h \
     resolved_references.h \
     proportions.h \
     psychrolib.h \
@@ -110,7 +107,6 @@ SOURCES +=  \
     bare_date.cpp \
     box.cpp \
     box_builder.cpp \
-#    box_reader_xml.cpp \
     boxscript.cpp \
     boxscript_ast.cpp \
     boxscript_parser.cpp \
@@ -123,8 +119,6 @@ SOURCES +=  \
     computation.cpp \
     copy_folder.cpp \
     data_frame.cpp \
-#    data_grid.cpp \
-#    date_time.cpp \
     dialog.cpp \
     dialog_base.cpp \
     dialog_minimal.cpp \
@@ -136,7 +130,6 @@ SOURCES +=  \
     exception.cpp \
     exception_context_class.cpp \
     expression.cpp \
-#    general.cpp \
     history.cpp \
     mega_factory.cpp \
     node.cpp \
@@ -149,6 +142,7 @@ SOURCES +=  \
     port_type.cpp \
     reader_base.cpp \
     reader_boxscript.cpp \
+    reader_xml.cpp \
     product_base.cpp \
     proportions.cpp \
     psychrolib.c \

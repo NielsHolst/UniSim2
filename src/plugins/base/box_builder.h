@@ -30,19 +30,21 @@ public:
     BoxBuilder& port(QString name);
     BoxBuilder& aux(QString name, QString type=QString());
     BoxBuilder& imports(QString pathToPort, Caller caller=Caller());
+    BoxBuilder& computes(QString expression);
     // Set value
     template <class T> BoxBuilder& equals(T value);
     BoxBuilder& equals(const char *value);
     BoxBuilder& equals(Expression expression);
     // State
-    const Box* currentBox() const;
-    const Port* currentPort() const;
-    enum class Amend {Family, Descendants, None} ;
-    Box* content(Amend amendOption=Amend::Family);
+    Box* currentBox() const;
+    Port* currentPort() const;
+//    enum class Amend {Family, Descendants, None} ;
+//    Box* content(Amend amendOption=Amend::Family);
+    Box* root() const;
 private:
     // Data
     bool _hasParent;
-    Box *_content, *_currentBox;
+    Box *_root, *_currentBox;
     Port *_currentPort;
     int _exceptionCount;
     QStack<Box*> _stack;

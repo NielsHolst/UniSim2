@@ -18,7 +18,6 @@ namespace base {
 std::unique_ptr<Box> Box::_root;
 Box *Box::_latest = nullptr;
 bool Box::_debugOn = false;
-bool Box::_traceOn = false;
 
 Box::Box(QString name, Box *parent)
     : Node(name, parent), _amended(false), _initialized(false), _cloned(false), _timer(this)
@@ -143,17 +142,16 @@ void Box::run() {
 }
 
 void Box::amendFamily() {
-    if (_amended)
-        ThrowException("Box already amended").context(this);
-    _amended = true;
-    createTimers();
+    if (!_amended)
+        createTimers();
     _timer.start("amend");
     for (auto box : children<Box*>())
         box->amendFamily();
-    if (_traceOn) trace("amend");
-    amend();
+    if (!_amended)
+        amend();
     touchPorts();
     _timer.stop("amend");
+    _amended = true;
 }
 
 void Box::createTimers() {
@@ -188,7 +186,6 @@ void Box::initializeFamily() {
     _timer.reset();
     for (auto box : children<Box*>())
         box->initializeFamily();
-    if (_traceOn) trace("initialize");
     evaluatePorts();
     _timer.start("initialize");
     initialize();
@@ -198,7 +195,6 @@ void Box::initializeFamily() {
 void Box::resetFamily() {
     for (auto box : children<Box*>())
         box->resetFamily();
-    if (_traceOn) trace("reset");
     clearPorts();
     evaluatePorts();
     _timer.start("reset");
@@ -210,7 +206,6 @@ void Box::resetFamily() {
 void Box::updateFamily() {
     for (auto box : children<Box*>())
         box->updateFamily();
-    if (_traceOn) trace("update");
     evaluatePorts();
     _timer.start("update");
     update();
@@ -221,7 +216,6 @@ void Box::updateFamily() {
 void Box::cleanupFamily() {
     for (auto box : children<Box*>())
         box->cleanupFamily();
-    if (_traceOn) trace("cleanup");
     evaluatePorts();
     _timer.start("cleanup");
     cleanup();
@@ -232,7 +226,6 @@ void Box::cleanupFamily() {
 void Box::debriefFamily() {
     for (auto box : children<Box*>())
         box->debriefFamily();
-    if (_traceOn) trace("debrief");
     evaluatePorts();
     _timer.start("debrief");
     debrief();
@@ -304,7 +297,7 @@ bool Box::cloned() const {
 }
 
 void Box::debug(bool on) {
-    _traceOn = _debugOn = on;
+    _debugOn = on;
 }
 
 bool Box::debug() {
@@ -353,10 +346,6 @@ QString Box::toText(QString options) const {
     QTextStream text(&s);
     toText(text, options, 0);
     return s;
-}
-
-void Box::trace(QString id) const {
-    dialog().information(id + " " + fullName());
 }
 
 }
