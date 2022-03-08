@@ -78,6 +78,7 @@ public:
     QString originalAsString() const;
     QString stackAsString() const;
     const QVector<Port*> &importPorts() const;
+    QStringList importPortNames() const;
     static QString toString(const Stack &stack);
     static QString toString(const Element &element);
 private:

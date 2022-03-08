@@ -191,6 +191,12 @@ void Port::evaluate() {
                     s2 = _value.asString(),
                     s3 = evaluation.typeName(),
                     s4 = evaluation.asString();
+            if (evaluation.isVector() && !_value.isVector()) {
+                ThrowException("Cannot assign vector to scalar").
+                        value(_expression.originalAsString()).
+                        hint("Ports used by the expression:\n" + _expression.importPortNames().join("\n")).
+                        context(this);
+            }
             _value = evaluation;
         }
     }

@@ -162,159 +162,159 @@
 			<box class="PrioritySignal" name="heatingTemperatureNormalRh">
 				<port name="initialSignal" value="20"/>
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="25.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="HeatingTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="25.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="heatingTemperatureHighRhMargin">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="MaxHeatAddHighRH" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="MaxHeatAddHighRH" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="heatingTemperatureLowRhMargin">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="MaxHeatAddLowRH" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="MaxHeatAddLowRH" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="minPipeTemperature1">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="minPipeTemperature1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="minPipeTemperature1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="minPipeTemperature2">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="minPipeTemperature2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="minPipeTemperature2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="rhMax">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="MaxRelHmd" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="75.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="MaxRelHmd" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="75.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="rhMaxBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="rhMaxBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="rhMaxBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="rhMin">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="MinRelHmd" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="MinRelHmd" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="rhMinBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="rhMinBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="2.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="rhMinBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="2.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="ventilationTemperatureMargin">
 				<port name="initialSignal" value="5"/>
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="VentTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="VentTemp" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="crackVentilationNormalTemperature">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackVentilation" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackVentilation" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="crackVentilationTemperatureMin">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackVentilationTemperatureMin" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="-5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackVentilationTemperatureMin" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="-5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="crackVentilationTemperatureMinBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackVentilationTemperatureMinBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="1.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackVentilationTemperatureMinBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="1.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenCrackAtHighRh">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackScreenHighHumidity" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackScreenHighHumidity" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenCrackAtHighTemperature">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackScreenHighTemperature" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackScreenHighTemperature" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.05"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenCrackAtHighTemperatureBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="crackScreenHighTemperatureBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="crackScreenHighTemperatureBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="co2Capacity">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="CO2Capacity" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="50.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="CO2Capacity" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="50.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="co2Setpoint">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="CO2Setpoint" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="380.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="CO2Setpoint" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="380.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="co2VentilationThreshold">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="CO2VentilationThreshold" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.1"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="CO2VentilationThreshold" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.1"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="co2VentilationBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="CO2VentilationBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.2"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="CO2VentilationBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.2"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="chalk">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="ShadingAgentReduction" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="ShadingAgentReduction" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box name="growthLights">
 				<box name="growthLight1">
 					<box class="PrioritySignal" name="thresholdLow">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOn1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOn1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 						<box class="DateTimeSignal">
 							<port name="beginDate" externalName="AssLightOn1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2021"/>
@@ -333,9 +333,9 @@
 					</box>
 					<box class="PrioritySignal" name="thresholdHigh">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOff1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOff1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 						<box class="DateTimeSignal">
 							<port name="beginDate" externalName="AssLightOff1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2021"/>
@@ -354,9 +354,9 @@
 					</box>
 					<box class="PrioritySignal" name="setting">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightActive1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-							<aux name="flagIsUp" value="FALSE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightActive1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+							<port name="initialFlag" value="FALSE"/>
 						</box>
 						<box class="DateTimeSignal">
 							<port name="beginDate" externalName="AssLightActive1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/ModSetpoint/ModSetpoint/FromDay" value="01-01-2021"/>
@@ -377,132 +377,132 @@
 				<box name="growthLight2">
 					<box class="PrioritySignal" name="thresholdLow">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOn2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOn2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 					</box>
 					<box class="PrioritySignal" name="thresholdHigh">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOff2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOff2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 					</box>
 					<box class="PrioritySignal" name="setting">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightActive2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-							<aux name="flagIsUp" value="FALSE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightActive2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+							<port name="initialFlag" value="FALSE"/>
 						</box>
 					</box>
 				</box>
 				<box name="growthLight3">
 					<box class="PrioritySignal" name="thresholdLow">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOn3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOn3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="40.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 					</box>
 					<box class="PrioritySignal" name="thresholdHigh">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightOff3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
-							<aux name="flagIsUp" value="TRUE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightOff3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="600.0"/>
+							<port name="initialFlag" value="TRUE"/>
 						</box>
 					</box>
 					<box class="PrioritySignal" name="setting">
 						<port name="reverseOrder" value="TRUE"/>
-						<box name="default">
-							<aux name="signal" externalName="AssLightActive3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-							<aux name="flagIsUp" value="FALSE"/>
+						<box class="FixedSignal" name="default">
+							<port name="initialSignal" externalName="AssLightActive3" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+							<port name="initialFlag" value="FALSE"/>
 						</box>
 					</box>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenEnergyThreshold1">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenEnergyThreshold1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenEnergyThreshold1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenEnergyThreshold2">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenEnergyThreshold2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenEnergyThreshold2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenEnergyThresholdBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenEnergyThresholdBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenEnergyThresholdBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="5.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenShadeThreshold1">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenShadeThreshold1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="500.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenShadeThreshold1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="500.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenShadeThreshold2">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenShadeThreshold2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="500.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenShadeThreshold2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="500.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenShadeThresholdBand">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenShadeThresholdBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="50.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenShadeThresholdBand" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="50.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenFixed1">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenFixed1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenFixed1" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="screenFixed2">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="screenFixed2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
-					<aux name="flagIsUp" value="FALSE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="screenFixed2" source="/DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters/Value" value="0.0"/>
+					<port name="initialFlag" value="FALSE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="heatExchangersOn">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="HeatExchangersOn" source="Missing" value="0.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="HeatExchangersOn" source="Missing" value="0.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="heatPumpsOn">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="HeatPumpsOn" source="Missing" value="0.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="HeatPumpsOn" source="Missing" value="0.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="humidifiersOn">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="FogsOn" source="Missing" value="0.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="FogsOn" source="Missing" value="0.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 			<box class="PrioritySignal" name="padAndFansOn">
 				<port name="reverseOrder" value="TRUE"/>
-				<box name="default">
-					<aux name="signal" externalName="PadAndFansOn" source="Missing" value="0.0"/>
-					<aux name="flagIsUp" value="TRUE"/>
+				<box class="FixedSignal" name="default">
+					<port name="initialSignal" externalName="PadAndFansOn" source="Missing" value="0.0"/>
+					<port name="initialFlag" value="TRUE"/>
 				</box>
 			</box>
 		</box>

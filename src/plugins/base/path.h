@@ -125,6 +125,7 @@ public:
     template<class T> T findOne(base::Node *anchor = nullptr) const;
     template<class T> T findMaybeOne(base::Node *anchor = nullptr) const;
     template<class T> QVector<T> findMany(base::Node *anchor = nullptr) const;
+    template<class T> QStringList findManyNames(base::Node *anchor = nullptr) const;
     static bool isValid(QString path);
 private:
     // Data
@@ -137,8 +138,11 @@ private:
 
 template<class T> T Path::findOne(base::Node *anchor) const {
     QVector<T> result = findMany<T>(anchor);
-    if (result.size() != 1)
-        ThrowException("Expected exactly one match").value1(toString()).value2(result.size()).context(_parent);
+    if (result.size() != 1) {
+        ThrowException("Expected exactly one match").value(toString()).
+                hint("Nodes found:\n" + findManyNames<T>(anchor).join("\n")).
+                context(_parent);
+    }
     return result[0];
 }
 
@@ -147,7 +151,9 @@ template<class T> T Path::findMaybeOne(base::Node *anchor) const {
     switch (result.size()) {
     case 0: return nullptr;
     case 1: return result[0];
-    default: ThrowException("Expected at most one match").value1(toString()).value2(result.size()).context(_parent);
+    default: ThrowException("Expected at most one match").value(toString()).
+                hint("Nodes found:\n" + findManyNames<T>(anchor).join("\n")).
+                context(_parent);
     }
 }
 
@@ -160,6 +166,14 @@ template<class T> QVector<T> Path::findMany(base::Node *anchor) const {
     }
     std::sort(result.begin(), result.end(),  [](T a, T b) { return a->order() < b->order(); });
     return result;
+}
+
+template<class T> QStringList Path::findManyNames(base::Node *anchor) const {
+    QVector<T> results = findMany<T>(anchor);
+    QStringList names;
+    for (auto result : results)
+        names << result->fullName();
+    return names;
 }
 
 template<> QVector<base::Port*> Path::findMany(base::Node *anchor) const;

@@ -21,9 +21,8 @@ class BoxBuilder
 public:
     BoxBuilder(Box *parent=nullptr);
     // Box
-    BoxBuilder& box(Box *box);
+//    BoxBuilder& box(Box *box);
     BoxBuilder& box(QString className="Box");
-    BoxBuilder& moveToBox(Box *box);
     BoxBuilder& name(QString boxName);
     BoxBuilder& endbox();
     // Port
@@ -36,27 +35,26 @@ public:
     BoxBuilder& equals(const char *value);
     BoxBuilder& equals(Expression expression);
     // State
-    Box* currentBox() const;
-    Port* currentPort() const;
-//    enum class Amend {Family, Descendants, None} ;
-//    Box* content(Amend amendOption=Amend::Family);
-    Box* root() const;
+    Box* currentBox() const { return _stack.isEmpty() ? nullptr : _stack.top(); }
+    Port* currentPort() const { return _currentPort; }
+    Box* root() const { return _root; }
 private:
     // Data
-    bool _hasParent;
-    Box *_root, *_currentBox;
+    bool _finished;
+    Box *_parent, *_root;
     Port *_currentPort;
-    int _exceptionCount;
     QStack<Box*> _stack;
 };
 
 template <class T> BoxBuilder& BoxBuilder::equals(T value) {
-    // We need a current to assign value to
+    // We need a current port to assign the value to
     if (!_currentPort)
-        ThrowException("BoxBuilder: 'equals' must follow 'port'");
+        ThrowException("'equals' out of context");
+
     // For an auxillary port, we did not know its type until now
     if (_currentPort->type() == PortType::Auxiliary)
         _currentPort->initialize(value);
+
     // Assign the value to the port we are currently defining
     _currentPort->equals(value);
     return *this;

@@ -19,6 +19,8 @@ public:
     double computeSignal(bool flag);
 private:
     // Inputs
+    QVector<bool> myFlags;
+    QVector<double> mySignals;
     bool reverseOrder;
     // Data
     struct FlaggedSignal {

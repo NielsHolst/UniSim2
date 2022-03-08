@@ -660,6 +660,13 @@ const QVector<Port*> &Expression::importPorts() const {
     return _importPorts;
 }
 
+QStringList Expression::importPortNames() const {
+    QStringList names;
+    for (auto import : _importPorts)
+        names << import->fullName();
+    return names;
+}
+
 QString Expression::toString(const Stack &stack) {
     QStringList str;
     for (auto &element : stack)

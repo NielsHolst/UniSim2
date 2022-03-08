@@ -482,17 +482,17 @@
   
   <port name="reverseOrder" value="TRUE"/>
 
-  <box name="default">
+  <box class="FixedSignal" name="default">
       <xsl:choose>
         <xsl:when test="string-length($climateSetpointName)=0">
-          <aux name="signal" value="0.0"/>
-          <aux name="flagIsUp" value="FALSE"/>
+          <port name="initialSignal" value="0.0"/>
+          <port name="initialFlag" value="FALSE"/>
         </xsl:when>
         
         <xsl:otherwise>
           <xsl:variable name="signalSrc" 
                         select="DVV_SETUP/Greenhouse/Climate/Setpoint/Constants/Parameters[ParameterName=$climateSetpointName]/Value"/>
-          <aux name="signal">
+          <port name="initialSignal">
             <xsl:attribute name="externalName">
               <xsl:value-of select="$climateSetpointName"/>
             </xsl:attribute>
@@ -513,14 +513,14 @@
                 <!-- <xsl:with-param name="correction" select="$correction"/> -->
               </xsl:call-template>
             </xsl:if>
-          </aux>
+          </port>
           
           <xsl:choose>
             <xsl:when test="$defaultValue=0">
-              <aux name="flagIsUp" value="FALSE"/>
+              <port name="initialFlag" value="FALSE"/>
             </xsl:when>
             <xsl:otherwise>
-              <aux name="flagIsUp" value="TRUE"/>
+              <port name="initialFlag" value="TRUE"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>

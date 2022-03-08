@@ -14,22 +14,19 @@ PUBLISH(PrioritySignal)
 PrioritySignal::PrioritySignal(QString name, Box *parent)
     : BaseSignal(name, parent){
     help("selects signal among child signals");
+    Input(myFlags).imports("./BaseSignal::*[flagIsUp]");
+    Input(mySignals).imports("./BaseSignal::*[signal]");
     Input(reverseOrder).equals(false).help("Find first signal!=0 from top (false) or bottom (true)?").unit("y|n");
 }
 
 void PrioritySignal::initialize() {
-    QVector<Box*> children = findMany<Box*>("./*");
-    for (Box *child : children) {
-        const Port *flag = child->peakPort("flagIsUp"),
-                   *signal = child->peakPort("signal");
-        if (flag && signal) {
-            FlaggedSignal fs{flag->valuePtr<bool>(),
-                             signal->valuePtr<double>()};
-            if (reverseOrder)
-                _flaggedSignals.prepend(fs);
-            else
-                _flaggedSignals.append(fs);
-        }
+    int n = myFlags.size();
+    for (int i=0; i<n; ++i) {
+        FlaggedSignal fs{&myFlags[i], &mySignals[i]};
+        if (reverseOrder)
+            _flaggedSignals.prepend(fs);
+        else
+            _flaggedSignals.append(fs);
     }
 }
 

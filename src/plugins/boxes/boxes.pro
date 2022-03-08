@@ -27,6 +27,7 @@ HEADERS +=  \
     distributed_delay_base.h \
     distributed_delay.h \
     distributed_delay_2d.h \
+    fixed_signal.h \
     food_web.h \
     food_web_calc_base.h \
     food_web_calc_parasite_host.h \
@@ -117,6 +118,7 @@ SOURCES +=  \
     distributed_delay_base.cpp \
     distributed_delay.cpp \
     distributed_delay_2d.cpp \
+    fixed_signal.cpp \
     food_web.cpp \
     food_web_calc_base.cpp \
     food_web_calc_parasite_host.cpp \

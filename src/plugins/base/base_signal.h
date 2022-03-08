@@ -18,10 +18,11 @@ public:
     virtual void localReset() {}
     virtual double computeSignal(bool flag) = 0;
     virtual bool computeFlag() = 0;
-private:
+protected:
     // Input
     double initialSignal; //, maxChange, timeStepSecs;
     bool initialFlag;
+private:
     // Output
     double signal;
     bool flagIsUp, flagJustRaised, flagJustLowered;

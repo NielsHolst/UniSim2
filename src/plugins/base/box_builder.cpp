@@ -4,6 +4,7 @@
 */
 #include "box.h"
 #include "box_builder.h"
+#include "computation.h"
 #include "mega_factory.h"
 #include "value.h"
 
@@ -11,68 +12,70 @@
 namespace base {
 
 BoxBuilder::BoxBuilder(Box *parent)
-    : _hasParent(parent!=nullptr),
-      _root(nullptr), _currentBox(nullptr), _currentPort(nullptr),
-      _exceptionCount(Exception::count())
+    : _finished(false),
+      _parent(parent),
+      _root(nullptr),
+      _currentPort(nullptr)
 {
-    if (_hasParent) {
-        _root = _currentBox = parent;
-        _stack.push(_currentBox);
-    }
 }
 
-BoxBuilder& BoxBuilder::box(Box *box) {
-    box->setParent(_currentBox);
-    _currentPort = nullptr;
-    return *this;
-}
+//BoxBuilder& BoxBuilder::box(Box *box) {
+//    box->setParent(currentBox());
+//    _currentPort = nullptr;
+//    return *this;
+//}
 
 BoxBuilder& BoxBuilder::box(QString className) {
-    if (_root && _stack.isEmpty())
-        ThrowException("BoxBuilder: Boxes miss a common root");
-    Box *newBox = MegaFactory::create<Box>(className, "", _currentBox);
-    _stack.push(_currentBox);
-    return moveToBox(newBox);
-}
+    // The parent of the new box is the current box if such exists,
+    // otherwise is is the parent given to BoxBuilder
+    Box *parentToNewBox = currentBox() ? currentBox() : _parent;
+    _stack.push( MegaFactory::create<Box>(className, "", parentToNewBox) );
 
-BoxBuilder& BoxBuilder::moveToBox(Box *box) {
-    if (!box)
-        ThrowException("BoxBuilder cannot move to non-existing box");
-    _currentBox =  box;
-    if (!_root)
-        _root = _currentBox; // set _content on first call of box
+    // The first box constructed becomes the root
+    if (_finished || !_root) {
+        _finished = false;
+        _root = currentBox();
+    }
     _currentPort = nullptr;
     return *this;
 }
 
 BoxBuilder& BoxBuilder::name(QString boxName) {
-    _currentBox->setObjectName(boxName);
+    currentBox()->setObjectName(boxName);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::endbox() {
+    // Check stack
     if (_stack.isEmpty())
         ThrowException("BoxBuilder: box body ended twice");
-    _currentBox = _stack.pop();
+
+    // Pop current box
+    _stack.pop();
     _currentPort = nullptr;
-    // Amend children of root
-    if (_currentBox && _currentBox->parent()==_root)
-        _currentBox->amendFamily();
+
+    // Finished?
+    _finished = !currentBox();
+
+    // Amend tree when finished
+    // Note: This will never amend _parent
+    if (_finished && Computation::currentStep()!=Computation::Step::Scratch)
+        _root->amendFamily();
     return *this;
 }
 
 BoxBuilder& BoxBuilder::port(QString name) {
-    if (!_currentBox)
-        ThrowException("BoxBuilder: port declaration outside of box context");
-    _currentPort = _currentBox->port(name);
+    if (!currentBox())
+        ThrowException("Port declaration outside of box context");
+    _currentPort = currentBox()->port(name);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::aux(QString name, QString type) {
-    if (!_currentBox) {
-        ThrowException("BoxBuilder: new port declaration out of context");
-    }
-    _currentPort = new Port(name, PortType::Auxiliary, _currentBox);
+    if (!currentBox())
+        ThrowException("'aux' port out of context");
+
+    _currentPort = new Port(name, PortType::Auxiliary, currentBox());
     if (!type.isEmpty())
         _currentPort->initialize(Value::create(type));
     return *this;
@@ -80,15 +83,15 @@ BoxBuilder& BoxBuilder::aux(QString name, QString type) {
 
 
 BoxBuilder& BoxBuilder::imports(QString pathToPort, Caller caller) {
-    if (!_currentBox)
-        ThrowException("BoxBuilder: import out of context");
+    if (!_currentPort)
+        ThrowException("'imports' out of context");
     _currentPort->imports(pathToPort, caller);
     return *this;
 }
 
 BoxBuilder& BoxBuilder::computes(QString expression) {
-    if (!_currentBox)
-        ThrowException("BoxBuilder: 'computes' out of context");
+    if (!_currentPort)
+        ThrowException("'computes' out of context");
     _currentPort->computes(expression);
     return *this;
 }
@@ -101,55 +104,10 @@ BoxBuilder& BoxBuilder::equals(const char *value) {
 
 BoxBuilder& BoxBuilder::equals(Expression expression) {
     if (!_currentPort)
-        ThrowException("BoxBuilder: 'equals' must follow 'port'");
+        ThrowException("'equals' out of context");
     // Assign the value to the port we are currently defining
     _currentPort->equals(expression);
     return *this;
 }
-
-// State
-
-Box* BoxBuilder::currentBox() const {
-    return _currentBox;
-}
-
-Port* BoxBuilder::currentPort() const {
-    return _currentPort;
-}
-
-Box* BoxBuilder::root() const {
-    return _root;
-}
-
-//Box* BoxBuilder::content(Amend amendOption) {
-//    if (_hasParent) {
-//        endbox();
-//        if (!_stack.isEmpty())
-//            ThrowException("BoxBuilder: unclosed box(es) at end")
-//                    .hint("Possibly missing endbox() call").value(_stack.size())
-//                    .context(_stack.top());
-//    }
-//    if (_root) {
-//        switch (amendOption) {
-//        case Amend::Family:
-//            _root->amendFamily();
-//            break;
-//        case Amend::Descendants:
-//            for (Box *child : _root->findMany<Box*>("./*"))
-//                child->amendFamily();
-//            break;
-//        case Amend::None:
-//            break;
-//        }
-//    }
-//    else
-//        ThrowException("Construction failed");
-//    // If we are returning a root box then enumerate it
-//    if (!_hasParent) {
-//        Node::enumerate();
-////        Expression::resetNumReferencesResolved();
-//    }
-//    return _root;
-//}
 
 }
