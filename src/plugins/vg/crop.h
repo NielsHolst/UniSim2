@@ -21,7 +21,8 @@ private:
     // Inputs
     double lai, coverage,
         k, gammaStar, Jmax, lightRespiration,
-        ballBerryIntercept, ballBerrySlope;
+        ballBerryIntercept, ballBerrySlope,
+        Vcmax, alpha;
 };
 } //namespace
 

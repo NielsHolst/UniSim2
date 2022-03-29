@@ -4,6 +4,7 @@
 #include <QJsonParseError >
 #include <base/convert.h>
 #include <base/exception.h>
+#include <base/test_num.h>
 #include "query_reader_json.h"
 
 const ig::Variable NullVariable = ig::Variable{0, ig::NotAvailable};
@@ -137,8 +138,17 @@ void QueryReaderJson::parseGreenHouse(QJsonObject object) {
     _query.greenhouse.direction = findDouble(object, "Direction");
 }
 
-void QueryReaderJson::parseCulture(QJsonObject) {
-    // Not used
+void QueryReaderJson::parseCulture(QJsonObject object) {
+    _query.culture.lai      = findVariable(object, "lai");
+    _query.culture.coverage = findDouble(object, "coverage");
+    _query.culture.k        = findDouble(object, "k");
+    _query.culture.Jmax25   = findDouble(object, "Jmax25");
+    _query.culture.Vcmax25  = findDouble(object, "Vcmax25");
+    _query.culture.g0       = findDouble(object, "g0");
+    _query.culture.g1       = findDouble(object, "g1");
+    _query.culture.Gs25     = findDouble(object, "Gs25");
+    _query.culture.Rl25     = findDouble(object, "Rl25");
+    _query.culture.alpha    = findDouble(object, "Alpha");
 }
 
 void QueryReaderJson::parseConstruction(QJsonObject object) {
@@ -191,6 +201,8 @@ void QueryReaderJson::parseHeatPipes(QJsonArray objects) {
 void QueryReaderJson::parseHeatPipe(QJsonObject object) {
     ig::HeatPipe hp;
     hp.material = static_cast<ig::HeatPipeMaterial>(findInt(object, "Material"));
+    hp.b = findDouble(object, "b");
+    hp.k = findDouble(object, "k");
     hp.innerDiameter = findDouble(object, "InnerDiameter");
     hp.waterVolume  = findDouble(object, "WaterVolume");
     hp.flowRate  = findVariable(object, "FlowRate");

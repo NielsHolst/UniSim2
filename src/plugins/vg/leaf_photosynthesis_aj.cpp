@@ -39,7 +39,7 @@ LeafPhotosynthesisAj::LeafPhotosynthesisAj(QString name, QObject *parent)
     help("computes leaf photosynthetic rate (CO2- and light-limited)");
     Input(gammaStar).imports("crop[gammaStar]",CA);
     Input(Jmax).imports("crop[Jmax]",CA);
-    Input(k).imports("crop[k],CA");
+    Input(k).imports("crop[k]",CA);
     Input(leafTemperature).imports("crop/temperature[value]",CA);
     Input(intercellularCo2).imports("../intercellularCo2[value]",CA);
     Input(parAbsorbed).imports("../parAbsorbed[value]",CA);

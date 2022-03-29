@@ -13,8 +13,9 @@
 using namespace ig;
 using namespace std;
 
-const QString filePath = "/Users/au152367/Documents/QDev/UniSim2/input/projects/ig/"
-                         "2020-10-14-igdata-no-light.json";
+const QString filePath = "D:/Documents/QDev/UniSim2/input/projects/ig/"
+                         "2022-03-25-light-error-amended.json";
+//                       "2020-10-14-igdata-no-light.json";
 //                       "2020-10-14-igdata.json";
 //                       "UnisimInput 2020-02.json";
 using namespace base;

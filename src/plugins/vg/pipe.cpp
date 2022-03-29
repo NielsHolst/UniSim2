@@ -31,15 +31,14 @@ Pipe::Pipe(QString name, QObject *parent)
     Input(flowRate).equals(5.).help("Water flow rate").unit("L/s");
     Input(minTemperature).equals(20.).help("Minimum inflow temperature").unit("oC");
     Input(maxTemperature).equals(80.).help("Maximum inflow temperature").unit("oC");
+    Input(k).equals(1.5e-4).help("Heat pipe effect coefficient").unit("K/mm/s");
+    Input(b).equals(1.4).help("Heat pipe effect coefficient").unit("!=1");
 
     Input(inflowTemperature).imports("actuators/heating[temperature]",CA).unit("oC");
     Input(indoorsTemperature).imports("indoors/temperature[value]",CA).unit("oC");
     Input(groundArea).imports("geometry[groundArea]",CA).unit("m2");
     Input(numSpans).imports("geometry[numSpans]",CA);
 
-    Output(a).help("Heat pipe effect coefficient").unit("W/m/mm");
-    Output(b).help("Heat pipe effect coefficient").unit("!=1");
-    Output(k).help("Heat pipe effect coefficient").unit("K/mm/s");
     Output(emissivity).help("Emissivity of pipe").unit("[0;1]");
     Output(length).help("Total pipe length").unit("m");
     Output(volume).help("Total pipe water volume").unit("m3");
@@ -50,10 +49,10 @@ Pipe::Pipe(QString name, QObject *parent)
     Output(temperatureDrop).help("Drop in water temperature from entry to exit").unit("oC");
     Output(energyFlux).help("Energy flux").unit("W/m2");
 
-    materialInputs["carbon steel"] = MaterialInputs{0.0225, 1.3, 0.8};  // Calibrated a for Nordlys
-    materialInputs["polyethylene"] = MaterialInputs{0.0123, 1.281, 0.1};
-    materialInputs["copper"]       = MaterialInputs{0.0154, 1.253, 0.2};
-    materialInputs["aluminium"]    = MaterialInputs{0.0154, 1.253, 0.2};
+    materialInputs["carbon steel"] = MaterialInputs{0.8};
+    materialInputs["polyethylene"] = MaterialInputs{0.1};
+    materialInputs["copper"]       = MaterialInputs{0.2};
+    materialInputs["aluminium"]    = MaterialInputs{0.2};
     parseMaterial();
 }
 
@@ -63,8 +62,6 @@ void Pipe::reset() {
     volume = PI/4.*sqr(diameter/1000.)*length;
     lengthPerSpan = length/numSpans;
     volumePerSpan = volume/numSpans;
-    double Vpipe = PI/4.*sqr(diameter/10.)*100;  // cm3/m
-    k = a / (CpWater/1000.) / Vpipe; // K/mm/s
     _k = k*diameter; // K/s
     update();
 }
@@ -89,8 +86,6 @@ void Pipe::parseMaterial() {
     if (!materialInputs.contains(s))
         ThrowException("Unknown pipe material").value(material).
                 hint(QStringList(materialInputs.keys()).join(",")).context(this);
-    a = materialInputs.value(s).a;
-    b = materialInputs.value(s).b;
     emissivity = materialInputs.value(s).emissivity;
 }
 

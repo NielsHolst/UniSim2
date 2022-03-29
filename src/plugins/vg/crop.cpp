@@ -27,6 +27,8 @@ Crop::Crop(QString name, QObject *parent)
     Input(lightRespiration).equals(0.29).unit("μmol CO2/m2/s").help("Day respiration rate at 25 oC");
     Input(ballBerryIntercept).equals(0.106).help("Minimum stomatal conductance for CO2 (g0)");
     Input(ballBerrySlope).equals(1.64).help("Slope og stomatal conductance for CO2 (g1)");
+    Input(Vcmax).equals(98.).help("Not used");
+    Input(alpha).equals(0.84).help("Not used");
 }
 
 void Crop::amend() {

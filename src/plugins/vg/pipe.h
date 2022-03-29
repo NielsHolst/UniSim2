@@ -23,10 +23,11 @@ private:
     // Inputs
     QString material;
     double density, diameter, flowRate, minTemperature, maxTemperature,
+        b, k,
         inflowTemperature, indoorsTemperature, groundArea;
     int numSpans;
     // Outputs
-    double a, b, k, emissivity,
+    double emissivity,
         length, volume, lengthPerSpan, volumePerSpan, transitTime,
         outflowTemperature, temperatureDrop, energyFlux;
     // Methods
@@ -34,7 +35,7 @@ private:
     // Data
     double _k;
     struct MaterialInputs {
-        double a, b, emissivity;
+        double emissivity;
     };
     QMap<QString, MaterialInputs> materialInputs;
 };

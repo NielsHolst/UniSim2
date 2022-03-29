@@ -257,6 +257,8 @@ void buildPipe(Box *parent, const HeatPipe *pipe) {
             port("flowRate").equals(value(pipe->flowRate)).
             port("Tinflow").equals(value(pipe->temperatureInflow)).
             port("knownToutflow").equals(value(pipe->temperatureOutflow)).
+            port("b").equals(pipe->b).
+            port("k").equals(pipe->k).
         endbox();}
 
 void buildPipes(Box *parent, const HeatPipes pipes) {
@@ -316,10 +318,11 @@ void buildActuators(Box *parent, const Query &q) {
     buildGrowthLights(actuators, q.growthLights);
 }
 
-void buildEnergyBudget(Box *parent) {
+void buildEnergyBudget(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
     builder.
     box("vg::EnergyBudget").name("energyBudget").
+        port("roomTemperature").equals(value(q.indoors.temperature)).
     endbox();
 }
 
@@ -333,6 +336,8 @@ void buildEnergyBudgetIndoors(Box *parent, const Query &q) {
             endbox().
         endbox().
         box("vg::IndoorsTemperature").name("temperature").
+            port("keepConstant").equals(true).
+            port("initTemperature").equals(value(q.indoors.temperature)).
         endbox().
     endbox();
 }
@@ -368,10 +373,22 @@ void buildIndoors(Box *parent, const Query &q) {
     endbox();
 }
 
-void buildCrop(Box *parent) {
+void buildCrop(Box *parent, const Query &q) {
     BoxBuilder builder(parent);
+    double lai = (q.culture.lai.origin==ig::Origin::NotAvailable || TestNum::eqZero(q.culture.lai.value)) ?
+                  1. : q.culture.lai.value;
     builder.
     box("vg::Crop").name("crop").
+        port("lai").equals(lai).
+        port("coverage").equals(q.culture.coverage).
+        port("k").equals(q.culture.k).
+        port("gammaStar").equals(q.culture.Gs25).
+        port("Jmax").equals(q.culture.Jmax25).
+        port("lightRespiration").equals(q.culture.Rl25).
+        port("ballBerryIntercept").equals(q.culture.g0).
+        port("ballBerrySlope").equals(q.culture.g1).
+        port("Vcmax").equals(q.culture.Vcmax25).
+        port("alpha").equals(q.culture.alpha).
     endbox();
 }
 
@@ -392,11 +409,11 @@ Box* build(const Query &q) {
         buildOutdoors(sim);
         buildConstruction(sim, q);
         buildActuators(sim, q);
-        buildEnergyBudget(sim);
+        buildEnergyBudget(sim, q);
         buildEnergyBudgetIndoors(sim->findOne<Box>("energyBudget"), q);
         buildWaterBudget(sim);
         buildIndoors(sim, q);
-        buildCrop(sim);
+        buildCrop(sim, q);
     }
     catch (Exception &ex) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
@@ -412,9 +429,6 @@ Box* build(const Query &q) {
 Response testConstant(const Query &q) {
     Response r;
     r.timeStamp = q.timeStamp;
-    r.indoorsCo2 = 3.5;
-    r.indoorsRh = 7.11;
-    r.indoorsTemperature = 13.17;
     r.growthLight = 19.23;
     r.heating = 29.31;
     r.photosynthesis = 37.41;
@@ -424,31 +438,37 @@ Response testConstant(const Query &q) {
 
 Response testMultiplum(const Query &q) {
     Response r;
-    r.timeStamp = q.timeStamp;
-    r.indoorsCo2 = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
-    r.indoorsRh = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
+    r.timeStamp   = q.timeStamp;
+    r.growthLight = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
+    r.heating     = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
     return r;
 }
 
+inline double snap(double x) {
+    snapToZero(x);
+    return x;
+}
+
 Response compute(const Query &q) {
-    const bool debug = false;
-    const bool run = true;
     bool excepted(false);
     Response r;
 
     init();
 
+    // TEST
+    const QString filePath = "D:/Documents/QDev/UniSim2/output/ud.box";
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        ThrowException("Cannot open output file").value(filePath);
+    QTextStream stream(&file);
+
+
     // Build model from root, (write script) and run
     Box *root(nullptr);
     try {
         root = build(q);
-        if (debug) {
-            environment().latestLoadArg("igclient.box");
-            Command::submit(QStringList() << "write", nullptr);
-        }
-        if (run) {
-            root->run();
-        }
+        root->toText(stream, "io");
+        root->run();
     }
     catch (Exception &ex) {
         _errorString = ex.what().toStdString();
@@ -466,21 +486,14 @@ Response compute(const Query &q) {
 
     // Extract response from model state
     try {
-        r.timeStamp = q.timeStamp;
-        r.indoorsCo2 = root->findOne<Box>("indoors/co2")->port("value")->value<double>();
-        r.indoorsRh = root->findOne<Box>("indoors/humidity")->port("rh")->value<double>();
-        r.indoorsTemperature = root->findOne<Box>("indoors/temperature")->port("value")->value<double>();
-        r.indoorsPar = root->findOne<Box>("energyBudget")->port("cropParFluxFromAbove")->value<double>();
-        snapToZero(r.indoorsPar);
-        r.heating = root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>();
-        snapToZero(r.heating);
-        r.photosynthesis = root->findOne<Box>("crop/photosynthesis")->port("Pg")->value<double>();
-        snapToZero(r.photosynthesis);
-        r.growthLight = root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>();
-        snapToZero(r.growthLight);
+        r.timeStamp       = q.timeStamp;
+        r.indoorsPar      = snap( root->findOne<Box>("energyBudget")->port("cropParFluxFromAbove")->value<double>() );
+        r.growthLight     = snap( root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>() );
+        r.heating         = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() );
+        r.leafTemperature = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
+        r.photosynthesis  = snap( root->findOne<Box>("crop/photosynthesis")->port("Pg")->value<double>() );
         double E = r.heating + r.growthLight;
-        snapToZero(E);
-        r.costEfficiency = (E==0.) ? 0. : r.photosynthesis/E*1000./3600.;
+        r.costEfficiency = (E==0.) ? 0. : snap( r.photosynthesis/E*1000./3600. );
     }
     catch (Exception &ex) {
         std::cout << ex.what().toStdString() << "\n";
@@ -491,16 +504,14 @@ Response compute(const Query &q) {
 
 Response blankResponse() {
     Response r;
-    r.indoorsCo2 = 100.1;
-    r.indoorsRh = 100.2;
-    r.indoorsTemperature = 100.3;
+    r.timeStamp.dayOfYear = 99;
+    r.timeStamp.timeOfDay = 12.13;
+    r.timeStamp.timeZone  = 1.;
     r.indoorsPar = 100.4;
     r.growthLight = 100.5;
     r.heating = 100.6;
     r.photosynthesis = 100.7;
     r.costEfficiency = 100.8;
-    r.grayMoldRisk = 100.9;
-    r.daysToHarvest = 100.10;
     return r;
 }
 
@@ -512,13 +523,12 @@ const char * responseToString(const Response &r) {
     RESP(timeStamp.dayOfYear);
     RESP(timeStamp.timeOfDay);
     RESP(timeStamp.timeZone);
-    RESP(indoorsCo2);
-    RESP(indoorsRh);
-    RESP(indoorsTemperature);
     RESP(indoorsPar);
     RESP(growthLight);
     RESP(heating);
+    RESP(leafTemperature);
     RESP(photosynthesis);
+    RESP(maxPhotosynthesis);
     RESP(costEfficiency);
     if (r.hasError)
         text << "ERROR:\n" << qPrintable(QString::fromStdString(r.error)) << "\n\n";

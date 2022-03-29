@@ -41,8 +41,11 @@ void HeatTransferSky::reset() {
 void HeatTransferSky::update() {
     // W/m2 ground
     swFluxDown = irradiation;
-    // Anticipate that all UV light will be reflected by the cover (glass); this will increase the proportion of PAR inside
-    parFluxDown = 4.57*swFluxDown*propPar/(1. - propUv);
+////     Anticipate that all UV light will be reflected by the cover (glass); this will increase the proportion of PAR inside
+////     parFluxDown = 4.57*swFluxDown*propPar/(1. - propUv);
+    // That seemed wrong; this should be correct:
+    parFluxDown = 4.57*swFluxDown*propPar;
+
     // Radiation from sky is only downwards
     updateLwEmission();
     lwFluxUp = 0.;

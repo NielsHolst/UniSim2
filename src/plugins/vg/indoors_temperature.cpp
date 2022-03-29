@@ -33,6 +33,7 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     Input(volume).imports("geometry[volume]", CA);
     Input(airInflux).imports("indoors/ventilation[flux]", CA);
     Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
+    Input(keepConstant).equals(false).help("Keep constant fixed at 'initTemperature'?");
     Output(value).help("Current air temperature").unit("oC");
     Output(advectiveEnergyFlux).help("Energy exchanged with outdoors by air exchange").unit("W/m2");
 }
@@ -46,6 +47,8 @@ inline double y(double y0, double z, double v, double dt) {
 }
 
 void IndoorsTemperature::update() {
+    if (keepConstant)
+        return;
     LOG(convectiveInflux);
     // First, adjust air temperature for convective heat
     double mass = RhoAir*volume,  // kg = kg/m3 * m3
@@ -69,7 +72,8 @@ double IndoorsTemperature::getTemperature() const {
 }
 
 void IndoorsTemperature::setTemperature(double newValue) {
-    value = newValue;
+    if (!keepConstant)
+        value = newValue;
 }
 
 } //namespace

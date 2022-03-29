@@ -25,6 +25,7 @@ protected:
     double initTemperature, convectiveInflux,
         airInflux, outdoorsTemperature,
         timeStep, groundArea, volume;
+    bool keepConstant;
     // Outputs
     double value, advectiveEnergyFlux;
 private:

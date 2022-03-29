@@ -32,6 +32,17 @@ enum CultureType {PotRose, PotChrysanthemum, Cucumber, Tomato, Lettuce, SweetPep
 struct Culture {
     CultureType type;
     Variable lai;
+    double
+        coverage,   // Proportion of greenhouse area that is cultivated (0..1)
+        k,          // Light extinction coefficient
+        // Photosynthesis model parameters:
+        Jmax25,
+        Vcmax25,
+        g0,
+        g1,
+        Gs25,
+        Rl25,
+        alpha;
 };
 
 struct CoverMaterial {
@@ -79,7 +90,9 @@ struct HeatPipe {
     HeatPipeMaterial material;
     double
         innerDiameter,      // mm
-        waterVolume;        // m3
+        waterVolume,        // m3
+        b,                  // model parameter
+        k;                  // model parameter
     Variable
         flowRate,             // m3/h
         temperatureInflow,    // oC
@@ -194,18 +207,15 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        indoorsCo2 = 0,         // Not used
-        indoorsRh = 0,          // Not used
-        indoorsTemperature = 0, // Not used
-        indoorsPar = 500,         // PAR at plant height (micromole/m2/s)
-        growthLight = 20,        // Current expenditure (W/m2)
-        heating = 30,            // Current expenditure (W/m2)
-        photosynthesis = 1.234,     // Current rate (g/h/m2)
-        costEfficiency = 4.321,     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
-        grayMoldRisk = 0,       // Not used
-        daysToHarvest = 0;      // Not used
-    bool hasError=false;        // Computation unsuccessful?
-    const char *error;          // Error message if unsuccessful
+        indoorsPar,         // PAR at plant height (micromole/m2/s)
+        growthLight,        // Current expenditure (W/m2)
+        heating,            // Current expenditure (W/m2)
+        leafTemperature,    // Average leaf temperature (oC)
+        photosynthesis,     // Current rate (g/h/m2)
+        maxPhotosynthesis,  // Maximum rate (g/h/m2)
+        costEfficiency;     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
+    bool hasError=false;    // Computation unsuccessful?
+    const char *error;      // Error message if unsuccessful
 };
 
 // Compute response variables from query
