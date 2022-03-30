@@ -4,6 +4,7 @@
 #include <string>
 #include <QFileInfo>
 #include <QString>
+#include <base/box.h>
 #include <base/command.h>
 #include <base/environment.h>
 #include <base/exception.h>
@@ -43,11 +44,7 @@ int main(int, char **)
         cout << ex.what();
         result = 2;
     }
-//    Command::submit(QStringList() << "write", nullptr);
-//    cout << "Box script written to file:\n"
-//         << qPrintable(environment().outputFilePath(".box"))
-//         << "\n\nDone!\nHit <Enter>";
-//    char s[8];
-//    cin.getline(s,7);
+
+
     return result;
 }

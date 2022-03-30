@@ -19,6 +19,7 @@
 #include <base/mega_factory.h>
 #include <base/phys_math.h>
 #include <base/test_num.h>
+#include <base/vector_op.h>
 #include "iglib.h"
 
 using namespace std;
@@ -312,6 +313,9 @@ void buildActuators(Box *parent, const Query &q) {
                 port("minFlux").equals(0.).
                 port("indoorsTemperature").imports("sensor[indoorsTemperature]").
             endbox().
+            box().name("co2Injection").
+                newPort("value").equals(0.).
+            endbox().
     endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
     buildPipes(actuators, q.heatPipes);
@@ -336,6 +340,7 @@ void buildEnergyBudgetIndoors(Box *parent, const Query &q) {
             endbox().
         endbox().
         box("vg::IndoorsTemperature").name("temperature").
+            port("scanTemperatures").equals(true).
             port("keepConstant").equals(true).
             port("initTemperature").equals(value(q.indoors.temperature)).
         endbox().
@@ -357,18 +362,27 @@ void buildWaterBudget(Box *parent) {
 }
 
 void buildIndoors(Box *parent, const Query &q) {
-    Variable var = q.indoors.co2;
-    double co2 = (var.origin!=NotAvailable) ? var.value : 900.;
+    double co2 = (q.indoors.co2.origin!=NotAvailable) ? q.indoors.co2.value : 900.;
     if (TestNum::eqZero(co2))
         co2 = 900.;
+
+    double rh = (q.indoors.rh.origin!=NotAvailable) ? q.indoors.rh.value : 70.;
+    if (TestNum::eqZero(rh))
+        rh = 70.;
+
     BoxBuilder builder(parent);
     builder.
     box("vg::Indoors").name("indoors").
-        box("vg::IndoorsCo2").name("co2").
-            port("outdoorsCo2").equals(co2).
-            port("airFlux").equals(0.).
-            port("injectionRate").equals(0.).
-            port("timeStep").equals(0.).
+        box("ThresholdSignal").name("co2").
+            port("input").imports("greenhouse[step]").
+            port("threshold").equals(49.5).
+            port("initialSignal").equals(2000.0).
+            port("signalFlagged").equals(co2).
+            port("signalUnflagged").equals(2000.0).
+        endbox().
+        box("vg::IndoorsHumidity").name("humidity").
+            port("initRh").equals(rh).
+            port("keepConstant").equals(true).
         endbox().
     endbox();
 }
@@ -389,6 +403,7 @@ void buildCrop(Box *parent, const Query &q) {
         port("ballBerrySlope").equals(q.culture.g1).
         port("Vcmax").equals(q.culture.Vcmax25).
         port("alpha").equals(q.culture.alpha).
+        port("trackPn").equals(true).
     endbox();
 }
 
@@ -401,7 +416,7 @@ Box* build(const Query &q) {
     try {
         builder.
             box("Simulation").name("greenhouse").
-                port("steps").equals(5).
+                port("steps").equals(54).
             endbox();
         sim = builder.content();
         buildCalendar(sim, q);
@@ -419,10 +434,6 @@ Box* build(const Query &q) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
     }
     environment().root(sim);
-//    Box *crop = sim->findOne<Box>("greenhouse/crop");
-//    std::cout << qPrintable(crop->name()) << "\n";
-//    QVector<Box*> children = crop->findMany<Box>("./*");
-//    std::cout << children.size() << " children\n";
     return sim;
 }
 
@@ -484,6 +495,11 @@ Response compute(const Query &q) {
         r.error = _errorString.c_str();
     }
 
+    // Extract max. photosynthesis
+    auto *photosynthesis = environment().root()->findOne<Box>("crop/photosynthesis");
+    auto *trackedPn = photosynthesis->port("trackedPn")->valuePtr<QVector<double>>();
+    double maxPn = vector_op::max(*trackedPn);
+
     // Extract response from model state
     try {
         r.timeStamp       = q.timeStamp;
@@ -491,7 +507,8 @@ Response compute(const Query &q) {
         r.growthLight     = snap( root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>() );
         r.heating         = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() );
         r.leafTemperature = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
-        r.photosynthesis  = snap( root->findOne<Box>("crop/photosynthesis")->port("Pg")->value<double>() );
+        r.photosynthesis  = snap( root->findOne<Box>("crop/photosynthesis")->port("Pn")->value<double>() );
+        r.maxPhotosynthesis = snap(maxPn);
         double E = r.heating + r.growthLight;
         r.costEfficiency = (E==0.) ? 0. : snap( r.photosynthesis/E*1000./3600. );
     }

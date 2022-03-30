@@ -22,12 +22,14 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 	: Box(name, parent)
 {
     help("models indoors humidity");
+    Input(initRh).equals(70.).help("Initial relative humidity").unit("[0;100]");
     Input(conductance).imports("waterBudget[conductanceSum]",CA);
     Input(vapourFlux).imports("waterBudget[vapourFluxSum]",CA);
     Input(gain).imports("waterBudget[gainSum]",CA);
     Input(temperature).imports("indoors/temperature[value]",CA);
     Input(height).imports("geometry[averageHeight]",CA);
     Input(timeStep).imports("calendar[timeStepSecs]");
+    Input(keepConstant).equals(false).help("Keep absolute humidity fixed at initial value?");
 
     Output(rh).help("Indoors relative humidity").unit("[0;100]");
     Output(ah).help("Indoors absolute humidity").unit("kg/m3");
@@ -39,12 +41,16 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 
 void IndoorsHumidity::reset() {
     tick = 0;
-    rh = 70.;
+    rh = initRh;
     ah = ahEq = ahFromRh(temperature, rh);
     netVapourFlux = timeConstant = surplusAh = 0.;
 }
 
 void IndoorsHumidity::update() {
+    if (keepConstant) {
+        ah = ahEq = ahFromRh(temperature, rh);
+        return;
+    }
     // Keep humidity constant for the first few time steps to stabilise overall model state
     if (tick++ < 10) return;
     double prevAh = ah;

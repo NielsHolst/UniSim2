@@ -1,6 +1,6 @@
 Simulation greenhouse {
   .iterations = 1
-  .steps = 5
+  .steps = 54
   .stopIterations = FALSE
   .stopSteps = FALSE
   .useStopIterations = FALSE
@@ -531,11 +531,14 @@ Simulation greenhouse {
       .windSpeed = outdoors[windSpeed]
       .outdoorsTemperature = outdoors[temperature]
       .indoorsTemperature = sensor[indoorsTemperature]
-      .effectiveVentArea = shelter/*/vent[effectiveArea]
+      .effectiveVentArea|sum = shelter/*/vent[effectiveArea]
       .groundArea = construction/geometry[groundArea]
       //~flux == 0.0
       //~maxFlux == 0.0
       //~relative == 0.0
+    }
+    Box co2Injection {
+      +value = 0.0
     }
     ActuatorHeatPipes heating {
       .temperature = 0.0
@@ -1033,6 +1036,7 @@ Simulation greenhouse {
         .airInflux = indoors/ventilation[flux]
         .outdoorsTemperature = outdoors[temperature]
         .keepConstant = TRUE
+        .scanTemperatures = TRUE
         //~value == 0.0
         //~advectiveEnergyFlux == 0.0
       }
@@ -1090,22 +1094,22 @@ Simulation greenhouse {
     }
   }
   vg::Indoors indoors {
-    vg::IndoorsCo2 co2 {
-      .outdoorsCo2 = 1136.0
-      .airFlux = 0.0
-      .injectionRate = 0.0
-      .assimilation = crop/photosynthesis[Pg]
-      .averageHeight = geometry[averageHeight]
-      .timeStep = 0.0
-      //~value == 0.0
+    ThresholdSignal co2 {
+      .input = greenhouse[step]
+      .threshold = 49.5
+      .initialSignal = 2000.0
+      .signalFlagged = 1136.0
+      .signalUnflagged = 2000.0
     }
     vg::IndoorsHumidity humidity {
+      .initRh = 76.0
       .conductance = waterBudget[conductanceSum]
       .vapourFlux = waterBudget[vapourFluxSum]
       .gain = waterBudget[gainSum]
       .temperature = indoors/temperature[value]
       .height = geometry[averageHeight]
       .timeStep = calendar[timeStepSecs]
+      .keepConstant = TRUE
       //~rh == 0.0
       //~ah == 0.0
       //~ahEq == 0.0
@@ -1150,7 +1154,7 @@ Simulation greenhouse {
       .indoorsAh = indoors/humidity[ah]
       .radiationAbsorbed = energyBudget/crop[absorbed]
       .leafTemperature = ../temperature[value]
-      .rsH2O = ../photosynthesis/*/stomatalResistance[rH2O]
+      .rsH2O|sum = ../photosynthesis/*/stomatalResistance[rH2O]
       .rbH2O = ../boundaryLayerResistance[rH2O]
       //~conductance == 0.0
       //~vapourFlux == 0.0
@@ -1160,7 +1164,7 @@ Simulation greenhouse {
     vg::LeafTemperature temperature {
       .indoorsTemperature = indoors/temperature[value]
       .indoorsRh = indoors/humidity[rh]
-      .rsH2O = ../photosynthesis/*/stomatalResistance[rH2O]
+      .rsH2O|sum = ../photosynthesis/*/stomatalResistance[rH2O]
       .rbH2O = ../boundaryLayerResistance[rH2O]
       .radiationAbsorbed = energyBudget/crop[absorbed]
       .lai = /*/crop[lai]

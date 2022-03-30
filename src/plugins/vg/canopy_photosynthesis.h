@@ -17,13 +17,16 @@ class CanopyPhotosynthesis : public base::Box
 public:
     CanopyPhotosynthesis(QString name, QObject *parent);
     void amend();
+    void reset();
     void update();
 private:
     // Inputs
     double lai, growthRespiration;
     QVector<double> leafAn, leafAg;
+    bool trackPn;
     // Outputs
     double An, Ag, Ar, Pg, Pn, Pr;
+    QVector<double> trackedPn;
 };
 } //namespace
 

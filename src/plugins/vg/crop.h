@@ -23,6 +23,7 @@ private:
         k, gammaStar, Jmax, lightRespiration,
         ballBerryIntercept, ballBerrySlope,
         Vcmax, alpha;
+    bool trackPn;
 };
 } //namespace
 

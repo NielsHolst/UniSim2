@@ -33,13 +33,15 @@ IndoorsTemperature::IndoorsTemperature(QString name, QObject *parent)
     Input(volume).imports("geometry[volume]", CA);
     Input(airInflux).imports("indoors/ventilation[flux]", CA);
     Input(outdoorsTemperature).imports("outdoors[temperature]", CA);
-    Input(keepConstant).equals(false).help("Keep constant fixed at 'initTemperature'?");
+    Input(keepConstant).equals(false).help("Keep temperature fixed at 'initTemperature'?");
+    Input(scanTemperatures).equals(false).help("Scan a range of temperatures?");
     Output(value).help("Current air temperature").unit("oC");
     Output(advectiveEnergyFlux).help("Energy exchanged with outdoors by air exchange").unit("W/m2");
 }
 
 void IndoorsTemperature::reset() {
-    value = initTemperature;
+    _tick = 0;
+    value = scanTemperatures ? scannedTemperature() : initTemperature;
 }
 
 inline double y(double y0, double z, double v, double dt) {
@@ -47,6 +49,10 @@ inline double y(double y0, double z, double v, double dt) {
 }
 
 void IndoorsTemperature::update() {
+    if (scanTemperatures) {
+        ++_tick;
+        value = scannedTemperature();
+    }
     if (keepConstant)
         return;
     LOG(convectiveInflux);
@@ -74,6 +80,17 @@ double IndoorsTemperature::getTemperature() const {
 void IndoorsTemperature::setTemperature(double newValue) {
     if (!keepConstant)
         value = newValue;
+}
+
+double IndoorsTemperature::scannedTemperature() const {
+    // With sim[step]==54, offset will become -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 0
+    int offset = _tick/5 - 5;
+    if (offset > -1) {
+        ++offset;
+        if (offset == 6)
+            offset = 0;
+    }
+    return initTemperature - offset;
 }
 
 } //namespace

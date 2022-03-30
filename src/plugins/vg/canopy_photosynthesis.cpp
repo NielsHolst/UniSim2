@@ -24,6 +24,7 @@ CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, QObject *parent)
     Input(leafAn).imports("./*/leafPhotosynthesis[An]",CA);
     Input(leafAg).imports("./*/leafPhotosynthesis[Ag]",CA);
     Input(growthRespiration).equals(0.3).unit("[0;1]").help("Relative growth respiration");
+    Input(trackPn).imports("..[trackPn]");
 
     Output(An).help("Net canopy assimilation rate").unit("μmol CO2/m2 leaf/s");
     Output(Ag).help("Gross canopy assimilation rate").unit("μmol CO2/m2 leaf/s");
@@ -32,6 +33,8 @@ CanopyPhotosynthesis::CanopyPhotosynthesis(QString name, QObject *parent)
     Output(Pn).help("Net canopy growth rate").unit("g dry mass/ground m2/h");
     Output(Pg).help("Gross canopy growth rate").unit("g dry mass/ground m2/h");
     Output(Pr).help("Canopy respiration rate").unit("g dry mass/ground m2/h");
+
+    Output(trackedPn).help("Pn values if 'trackPn' is true");
 }
 
 void CanopyPhotosynthesis::amend() {
@@ -64,6 +67,10 @@ void CanopyPhotosynthesis::amend() {
         endbox();
 }
 
+void CanopyPhotosynthesis::reset() {
+    trackedPn.clear();
+}
+
 void CanopyPhotosynthesis::update() {
     // μmol CO2/m2 leaf/s
     An = vector_op::sum(leafAn);
@@ -83,6 +90,9 @@ void CanopyPhotosynthesis::update() {
     Pn *= b;
     Pg *= b;
     Pr *= b;
+    // Track?
+    if (trackPn)
+        trackedPn << Pn;
 }
 
 } //namespace

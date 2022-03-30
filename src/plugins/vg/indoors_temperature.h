@@ -25,12 +25,15 @@ protected:
     double initTemperature, convectiveInflux,
         airInflux, outdoorsTemperature,
         timeStep, groundArea, volume;
-    bool keepConstant;
+    bool keepConstant, scanTemperatures;
     // Outputs
     double value, advectiveEnergyFlux;
+    // Data
+    int _tick;
 private:
     // Methods
     void updateByAdvection(double influxVolume, double influxTemperature);
+    double scannedTemperature() const;
 };
 
 } //namespace

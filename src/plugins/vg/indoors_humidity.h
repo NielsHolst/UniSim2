@@ -20,8 +20,9 @@ public:
     void update();
 private:
     // Inputs
-    double conductance, gain, vapourFlux,
+    double initRh, conductance, gain, vapourFlux,
         temperature, timeStep, height;
+    bool keepConstant;
     // Outputs
     double ah, rh, ahEq,
            netVapourFlux, timeConstant, surplusAh;

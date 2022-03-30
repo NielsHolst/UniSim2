@@ -29,6 +29,7 @@ Crop::Crop(QString name, QObject *parent)
     Input(ballBerrySlope).equals(1.64).help("Slope og stomatal conductance for CO2 (g1)");
     Input(Vcmax).equals(98.).help("Not used");
     Input(alpha).equals(0.84).help("Not used");
+    Input(trackPn).equals(false).help("Track Pn values?");
 }
 
 void Crop::amend() {
