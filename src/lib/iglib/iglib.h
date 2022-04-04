@@ -1,4 +1,4 @@
-// Version 2.3.55
+// Version 2.3.59
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -207,9 +207,11 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        indoorsPar,         // PAR at plant height (micromole/m2/s)
-        growthLight,        // Current expenditure (W/m2)
-        heating,            // Current expenditure (W/m2)
+        indoorsPar,         // PAR at plant height (micromole/m2 cultivated area/s)
+        sunPar,             // PAR at plant height originating from the sun (micromole/m2 cultivated area/s)
+        growthLightPar,     // PAR at plant height originating from growth light (micromole/m2 cultivated area/s)
+        growthLight,        // Current expenditure (W/m2 total area)
+        heating,            // Current expenditure (W/m2 total area)
         leafTemperature,    // Average leaf temperature (oC)
         photosynthesis,     // Current rate (g/h/m2)
         maxPhotosynthesis,  // Maximum rate (g/h/m2)

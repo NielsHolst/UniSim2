@@ -1,6 +1,6 @@
 Simulation greenhouse {
   .iterations = 1
-  .steps = 54
+  .steps = 59
   .stopIterations = FALSE
   .stopSteps = FALSE
   .useStopIterations = FALSE
@@ -1096,7 +1096,7 @@ Simulation greenhouse {
   vg::Indoors indoors {
     ThresholdSignal co2 {
       .input = greenhouse[step]
-      .threshold = 49.5
+      .threshold = 54.5
       .initialSignal = 2000.0
       .signalFlagged = 1136.0
       .signalUnflagged = 2000.0

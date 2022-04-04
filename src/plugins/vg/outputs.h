@@ -18,9 +18,12 @@ class Outputs : public base::Box
 public:
     Outputs(QString name, QObject *parent);
     void amend();
+    void reset();
+    void update();
 private:
     // Inputs
     bool onlyNumbers;
+    double sunPar, growthLightsPar, cropCoverage;
     // Outputs
     double
         skyT,
@@ -40,6 +43,8 @@ private:
         indoorsT,
         indoorsRh,
         indoorsTotalPar,
+        indoorsGrowthLightsPar,
+        indoorsSunPar,
         indoorsCo2,
         Uinside,
         Uoutside,

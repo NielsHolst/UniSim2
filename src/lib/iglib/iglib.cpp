@@ -407,6 +407,13 @@ void buildCrop(Box *parent, const Query &q) {
     endbox();
 }
 
+void buildParBudget(Box *parent) {
+    BoxBuilder builder(parent);
+    builder.
+    box("vg::ParBudget").name("parBudget").
+    endbox();
+}
+
 
 Box* build(const Query &q) {
     init();
@@ -416,7 +423,7 @@ Box* build(const Query &q) {
     try {
         builder.
             box("Simulation").name("greenhouse").
-                port("steps").equals(54).
+                port("steps").equals(59).
             endbox();
         sim = builder.content();
         buildCalendar(sim, q);
@@ -429,6 +436,7 @@ Box* build(const Query &q) {
         buildWaterBudget(sim);
         buildIndoors(sim, q);
         buildCrop(sim, q);
+        buildParBudget(sim);
     }
     catch (Exception &ex) {
         std::cout << "EXCEPTION\n" << qPrintable(ex.what()) << "\n";
@@ -466,19 +474,19 @@ Response compute(const Query &q) {
 
     init();
 
-    // TEST
-    const QString filePath = "D:/Documents/QDev/UniSim2/output/ud.box";
-    QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-        ThrowException("Cannot open output file").value(filePath);
-    QTextStream stream(&file);
+//    // TEST
+//    const QString filePath = "D:/Documents/QDev/UniSim2/output/ud.box";
+//    QFile file(filePath);
+//    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+//        ThrowException("Cannot open output file").value(filePath);
+//    QTextStream stream(&file);
 
 
     // Build model from root, (write script) and run
     Box *root(nullptr);
     try {
         root = build(q);
-        root->toText(stream, "io");
+//        root->toText(stream, "io");
         root->run();
     }
     catch (Exception &ex) {
@@ -503,7 +511,9 @@ Response compute(const Query &q) {
     // Extract response from model state
     try {
         r.timeStamp       = q.timeStamp;
-        r.indoorsPar      = snap( root->findOne<Box>("energyBudget")->port("cropParFluxFromAbove")->value<double>() );
+        r.indoorsPar      = snap( root->findOne<Box>("parBudget")->port("indoorsTotalPar")->value<double>() );
+        r.sunPar          = snap( root->findOne<Box>("parBudget")->port("indoorsSunPar")->value<double>() );
+        r.growthLightPar  = snap( root->findOne<Box>("parBudget")->port("indoorsGrowthLightPar")->value<double>() );
         r.growthLight     = snap( root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>() );
         r.heating         = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() );
         r.leafTemperature = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
@@ -541,6 +551,8 @@ const char * responseToString(const Response &r) {
     RESP(timeStamp.timeOfDay);
     RESP(timeStamp.timeZone);
     RESP(indoorsPar);
+    RESP(sunPar);
+    RESP(growthLightPar);
     RESP(growthLight);
     RESP(heating);
     RESP(leafTemperature);

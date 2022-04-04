@@ -40,19 +40,19 @@ IndoorsHumidity::IndoorsHumidity(QString name, QObject *parent)
 }
 
 void IndoorsHumidity::reset() {
-    tick = 0;
+    _tick = 0;
     rh = initRh;
-    ah = ahEq = ahFromRh(temperature, rh);
+    ah = ahEq = _constantAh = ahFromRh(temperature, rh);
     netVapourFlux = timeConstant = surplusAh = 0.;
 }
 
 void IndoorsHumidity::update() {
     if (keepConstant) {
-        ah = ahEq = ahFromRh(temperature, rh);
+        rh = rhFromAh(temperature, _constantAh);
         return;
     }
     // Keep humidity constant for the first few time steps to stabilise overall model state
-    if (tick++ < 10) return;
+    if (_tick++ < 10) return;
     double prevAh = ah;
     if (conductance > 0. && gain > 0.) {
         ahEq = gain/conductance;

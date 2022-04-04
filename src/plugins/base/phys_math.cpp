@@ -122,7 +122,7 @@ double svpSlope(double temperature) {
     \return relative humidity [0;100]
  */
 double rhFromAh(double temperature, double ah) {
-    return 100*ah/sah(temperature);
+    return min(100*ah/sah(temperature), 100.);
 }
 
 //! Compute relative humidity from temperature and specific humidity
@@ -131,7 +131,7 @@ double rhFromAh(double temperature, double ah) {
     \return relative humidity [0;100]
  */
 double rhFromSh(double temperature, double sh) {
-    return 100*sh/ssh(temperature);
+    return min(100*sh/ssh(temperature), 100.);
 }
 
 //! Compute relative humidity from temperature and vapour pressure
@@ -140,7 +140,7 @@ double rhFromSh(double temperature, double sh) {
     \return relative humidity [0;100]
  */
 double rhFromVp(double temperature, double vp) {
-    return 100*vp/svp(temperature);
+    return min(100*vp/svp(temperature), 100.);
 }
 
 //! Compute absolute humidity from temperature and relative humidity

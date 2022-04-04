@@ -72,6 +72,7 @@ HEADERS +=  \
     leakage_ventilation.h \
     outdoors.h \
     outputs.h \
+    par_budget.h \
     pid_controller.h \
     pipe.h \
     pipe_forced.h \
@@ -175,6 +176,7 @@ SOURCES += \
     leakage_ventilation.cpp \
     outdoors.cpp \
     outputs.cpp \
+    par_budget.cpp \
     pid_controller.cpp \
     pipe.cpp \
     pipe_forced.cpp \

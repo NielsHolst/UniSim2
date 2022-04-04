@@ -1,11 +1,12 @@
 echo on
-cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig
+D:
+cd \Documents\QDev\UniSim2\ship\cmd\ig
 
-set VERSION=2.3.55
-REM set QT_PATH=C:\Qt\Qt5.11.2\5.11.2\mingw53_32
-REM set QT_PATH=C:\Qt\5.9.2\mingw53_32
+# Set version and target platform (32 or 64 bits)
+set VERSION=2.3.59
 set QT_PATH=C:\Qt\5.15.1\mingw81_32
-set PATH=C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\ig\
+
+set PATH=D:\Documents\QDev\UniSim2\ship\cmd\ig\
 
 set IGLIB_BIN=iglib\bin
 set IGLIB_BIN_IMAGEFORMATS=iglib\bin\imageformats

@@ -19,6 +19,9 @@ Outputs::Outputs(QString name, QObject *parent)
 {
     help("defines all model outputs");
     Input(onlyNumbers).equals(true).unit("bool").help("Include only number outputs?");
+    Input(sunPar).imports("sky[parFluxDown]");
+    Input(growthLightsPar).imports("growthLights[parFluxDown]");
+    Input(cropCoverage).imports("crop[coverage]");
     Output(skyT).imports("outdoors[skyTemperature]");
     Output(outdoorsT).imports("outdoors[temperature]");
     Output(outdoorsRh).imports("outdoors[rh]");
@@ -35,7 +38,9 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(floorT).imports("energyBudget/floor[temperature]");
     Output(indoorsT).imports("indoors/temperature[value]");
     Output(indoorsRh).imports("indoors/humidity[rh]");
-    Output(indoorsTotalPar).imports("energyBudget[cropParFluxFromAbove]");
+    Output(indoorsTotalPar).imports("parBudget[indoorsTotalPar]");
+    Output(indoorsSunPar).imports("parBudget[indoorsSunPar]");
+    Output(indoorsGrowthLightsPar).imports("parBudget[indoorsGrowthLightsPar]");
     Output(indoorsCo2).imports("indoors/co2[value]");
     Output(Uinside).imports("energyBudget[Uinside]");
     Output(Uoutside).imports("energyBudget[Uoutside]");
@@ -108,6 +113,24 @@ void Outputs::amend() {
         Output(thermostatState).imports("energyBudgetOptimiser[state]");
         Output(thermostatAction).imports("energyBudgetOptimiser[action]");
         Output(thermostatSolution).imports("energyBudgetOptimiser[solution]");
+    }
+}
+
+void Outputs::reset() {
+    update();
+}
+
+void Outputs::update() {
+    // Total par hitting the crop (ideally)
+    double cropTotalPar = sunPar + growthLightsPar/cropCoverage;
+    if (cropTotalPar > 1e-6) {
+        // Sun proportion of ideal total
+        double propSun = sunPar/cropTotalPar;
+        indoorsSunPar          = propSun     *indoorsTotalPar;
+        indoorsGrowthLightsPar = (1.-propSun)*indoorsTotalPar;
+    }
+    else {
+        indoorsSunPar = indoorsGrowthLightsPar = 0.;
     }
 }
 

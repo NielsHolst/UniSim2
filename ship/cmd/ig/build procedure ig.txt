@@ -2,7 +2,7 @@
 ========================
 1. Edit C:\data\QDev\UniSim2\ship\cmd\win\build.bat.
 - Update SUB version number.
-- Run.
+- Run. Why??
 
 2. Run clean.bat.
 

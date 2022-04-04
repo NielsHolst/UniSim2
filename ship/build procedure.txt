@@ -22,7 +22,7 @@
 
 7. If unisim(d).exe is running, access will be denied to clear the UniSim2/bin folder: Close unisim(d).exe before building.
 
-8.Execute batch file ***as administrator***.
+8.Execute batch file, *** not as administrator***; this produces errors (?!)
 
 9. Copy installer to sites\ecolmod2\static\download. 
 

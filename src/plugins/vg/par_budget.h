@@ -5,24 +5,27 @@
 ** Released under the terms of the GNU Lesser General Public License version 3.0 or later.
 ** See: www.gnu.org/licenses/lgpl.html
 */
-#ifndef HEAT_TRANSFER_FLOOR_H
-#define HEAT_TRANSFER_FLOOR_H
-#include "heat_transfer_layer_base.h"
+#ifndef PAR_BUDGET_H
+#define PAR_BUDGET_H
+
+#include <base/box.h>
+
 
 namespace vg {
 
-class HeatTransferFloor : public HeatTransferLayerBase
+class ParBudget : public base::Box
 {
 public:
-    HeatTransferFloor(QString name, QObject *parent);
+    ParBudget(QString name, QObject *parent);
     void reset();
     void update();
 private:
-    // Inputs;
-    double keepConstant;
+    // Inputs
+    double sunPar, growthLightsPar, indoorsTotalPar, cropCoverage;
+    // Outputs
+    double indoorsGrowthLightPar, indoorsSunPar;
 };
 
 } //namespace
-
 
 #endif

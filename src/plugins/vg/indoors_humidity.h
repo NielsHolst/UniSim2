@@ -28,7 +28,8 @@ private:
            netVapourFlux, timeConstant, surplusAh;
 
     // Data
-    int tick;
+    int _tick;
+    double _constantAh;
 };
 
 } //namespace

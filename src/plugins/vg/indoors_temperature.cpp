@@ -83,14 +83,38 @@ void IndoorsTemperature::setTemperature(double newValue) {
 }
 
 double IndoorsTemperature::scannedTemperature() const {
-    // With sim[step]==54, offset will become -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 0
-    int offset = _tick/5 - 5;
-    if (offset > -1) {
-        ++offset;
-        if (offset == 6)
-            offset = 0;
+    // With sim[step]==59, offset will become
+    // 0, 5, 4, 3, 2, 1, -5, -4, -3, -2, -1, 0
+    // Starts at 0 to set initial ah
+    // Ends at 0 to achieve final values corresponding to 0 scenario
+    const int j = _tick/5;
+    int k;
+    if (j==0)
+      k = 0;
+    else if (j<6)
+      k = 6-j;
+    else if (j<11)
+      k = j-11;
+    else
+      k = 0;
+    return initTemperature - k;
+    /*
+    for (i in 0:59) {
+      j = floor(i/5)
+      if (j==0) {
+        k = 0
+      } else if (j<6) {
+        k = 6-j
+      }
+      else if (j<11) {
+        k = j-11
+      }
+      else {
+        k = 0
+      }
+      print(k)
     }
-    return initTemperature - offset;
+    */
 }
 
 } //namespace
