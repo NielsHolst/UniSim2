@@ -1,14 +1,9 @@
 [
  {
-   "CompartmentId":14,
+  "CompartmentId":14,
   "BaseUtcOffset":1.0,
-          "TimeStamp": {
-          "DayOfYear": 47,
-          "TimeOfDay": 0.354,
-          "TimeZone": 1.0
-        },
+  "TimeStamp":"2022-02-16T08:31:25.949124Z",
   "GreenHouse":{"Latitude":55.3,"Longitude":10.23,"Direction":97.0},
-  
   "Culture": {
     "CultureType" :"Tomato",
     "lai"         : {"Value":0,"Origin":"UserDefined"},

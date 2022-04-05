@@ -21,9 +21,9 @@ public:
     void update();
 private:
     // Inputs
-    double sunPar, growthLightsPar, indoorsTotalPar, cropCoverage;
+    double sunPar, growthLightsPar, indoorsTotalPar, Pn, cropCoverage;
     // Outputs
-    double indoorsGrowthLightPar, indoorsSunPar;
+    double indoorsGrowthLightPar, indoorsSunPar, photosynthesis;
 };
 
 } //namespace

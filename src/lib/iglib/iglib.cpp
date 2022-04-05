@@ -274,27 +274,31 @@ void buildPipes(Box *parent, const HeatPipes pipes) {
         buildPipe(pipesBox, &pipes.array[i]);
 }
 
-void buildGrowthLight(Box *parent, const GrowthLight *g) {
+void buildGrowthLight(Box *parent, const GrowthLight *g, double coverage) {
+    if (coverage<0. || coverage>1.)
+        ThrowException("Culture coverage must be in the interval [0;1]").value(coverage);
     double propLw = (g->type == Led) ? 0.1 : 0.5;
+
     BoxBuilder builder(parent);
     builder.
         box("vg::GrowthLight").name("growthLight").
             port("parPhotonCoef").equals(g->parEfficiency).
             port("propLw").equals(propLw).
-            port("intensity").equals(g->powerUsage).
+            port("intensity").equals(g->lampPower/coverage).
+            port("ballast").equals((g->lampAndBallastPower - g->lampPower)/coverage).
             port("ageCorrectedEfficiency").equals(g->ageCorrectedEfficiency).
-            port("on").equals(g->powerUsage>0.).
+            port("on").equals(g->lampPower>0.).
         endbox();
 }
 
-void buildGrowthLights(Box *parent, GrowthLights lights) {
+void buildGrowthLights(Box *parent, GrowthLights lights, double coverage) {
     BoxBuilder builder(parent);
     builder.
         box("vg::GrowthLights").name("growthLights").
         endbox();
     Box *growthLights =  parent->findChild<Box*>("growthLights");
     for (int i=0; i < lights.size; ++i)
-        buildGrowthLight(growthLights, &lights.array[i]);
+        buildGrowthLight(growthLights, &lights.array[i], coverage);
 }
 
 void buildActuators(Box *parent, const Query &q) {
@@ -319,7 +323,7 @@ void buildActuators(Box *parent, const Query &q) {
     endbox();
     Box *actuators = parent->findChild<Box*>("actuators");
     buildPipes(actuators, q.heatPipes);
-    buildGrowthLights(actuators, q.growthLights);
+    buildGrowthLights(actuators, q.growthLights, q.culture.coverage);
 }
 
 void buildEnergyBudget(Box *parent, const Query &q) {
@@ -448,7 +452,7 @@ Box* build(const Query &q) {
 Response testConstant(const Query &q) {
     Response r;
     r.timeStamp = q.timeStamp;
-    r.growthLight = 19.23;
+    r.sunPar = 19.23;
     r.heating = 29.31;
     r.photosynthesis = 37.41;
     r.costEfficiency = 43.47;
@@ -458,9 +462,17 @@ Response testConstant(const Query &q) {
 Response testMultiplum(const Query &q) {
     Response r;
     r.timeStamp   = q.timeStamp;
-    r.growthLight = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
+    r.sunPar = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
     r.heating     = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
     return r;
+}
+
+double growthLightPower(const Query &q) {
+    double power = 0.;
+    const GrowthLights &lights = q.growthLights;
+    for (int i=0; i < lights.size; ++i)
+        power += lights.array[i].lampAndBallastPower;
+    return power;
 }
 
 inline double snap(double x) {
@@ -504,9 +516,10 @@ Response compute(const Query &q) {
     }
 
     // Extract max. photosynthesis
+    auto cropCoverage = environment().root()->findOne<Box>("greenhouse/crop")->port("coverage")->value<double>();
     auto *photosynthesis = environment().root()->findOne<Box>("crop/photosynthesis");
     auto *trackedPn = photosynthesis->port("trackedPn")->valuePtr<QVector<double>>();
-    double maxPn = vector_op::max(*trackedPn);
+    double maxPn = vector_op::max(*trackedPn)/cropCoverage;
 
     // Extract response from model state
     try {
@@ -514,12 +527,11 @@ Response compute(const Query &q) {
         r.indoorsPar      = snap( root->findOne<Box>("parBudget")->port("indoorsTotalPar")->value<double>() );
         r.sunPar          = snap( root->findOne<Box>("parBudget")->port("indoorsSunPar")->value<double>() );
         r.growthLightPar  = snap( root->findOne<Box>("parBudget")->port("indoorsGrowthLightPar")->value<double>() );
-        r.growthLight     = snap( root->findOne<Box>("actuators/growthLights")->port("powerUsage")->value<double>() );
         r.heating         = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() );
         r.leafTemperature = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
-        r.photosynthesis  = snap( root->findOne<Box>("crop/photosynthesis")->port("Pn")->value<double>() );
+        r.photosynthesis  = snap( root->findOne<Box>("parBudget")->port("photosynthesis")->value<double>() );
         r.maxPhotosynthesis = snap(maxPn);
-        double E = r.heating + r.growthLight;
+        double E = r.heating + growthLightPower(q);
         r.costEfficiency = (E==0.) ? 0. : snap( r.photosynthesis/E*1000./3600. );
     }
     catch (Exception &ex) {
@@ -535,7 +547,6 @@ Response blankResponse() {
     r.timeStamp.timeOfDay = 12.13;
     r.timeStamp.timeZone  = 1.;
     r.indoorsPar = 100.4;
-    r.growthLight = 100.5;
     r.heating = 100.6;
     r.photosynthesis = 100.7;
     r.costEfficiency = 100.8;
@@ -553,7 +564,6 @@ const char * responseToString(const Response &r) {
     RESP(indoorsPar);
     RESP(sunPar);
     RESP(growthLightPar);
-    RESP(growthLight);
     RESP(heating);
     RESP(leafTemperature);
     RESP(photosynthesis);

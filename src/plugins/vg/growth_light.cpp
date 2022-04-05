@@ -20,7 +20,8 @@ GrowthLight::GrowthLight(QString name, QObject *parent)
     : HeatTransferLayerBase(name, parent)
 {
     help("models power use and radiation from growth light");
-    Input(on).help("Is light currently switched on?").unit("y|n");
+    Input(on).help("Is light currently switched on?").unit("bool");
+    Input(ballast).help("Power used by lamp ballast").unit("W/m2");
     Input(intensity).help("Power of installed lamps per greenhouse area").unit("W/m2");
     Input(parPhotonCoef).equals(1.6).help("Number of PAR photons per spent lamp energy").unit("micromole/J");
     Input(propLw).equals(0.1).help("Proportion of power emitted as long-wave radiation").unit("[0;1]");
@@ -47,9 +48,10 @@ void GrowthLight::update() {
     currentlyOn = on || ( currentlyOn && (periodOn < minPeriodOn) );
     if (currentlyOn) {
         periodOn += timeStep/60.;
-        parFluxDown = intensity*parPhotonCoef;
+        parFluxDown = intensity*parPhotonCoef*ageCorrectedEfficiency;
         swFluxDown  = intensity*(1. - propLw);
-        lwFluxDown  = intensity*propLw;
+        lwFluxDown  = intensity*propLw + 0.5*ballast;
+        lwFluxUp    = 0.5*ballast;
         powerUsage  = intensity;
     }
     else
@@ -59,7 +61,7 @@ void GrowthLight::update() {
 void GrowthLight::noLight() {
     periodOn = 0.;
     currentlyOn = false;
-    parFluxDown = swFluxDown = lwFluxDown = powerUsage = 0.;
+    parFluxDown = swFluxDown = lwFluxDown = lwFluxUp = powerUsage = 0.;
 }
 
 } //namespace

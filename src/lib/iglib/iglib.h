@@ -1,4 +1,4 @@
-// Version 2.3.59
+// Version 2.3.60
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -123,9 +123,10 @@ enum GrowthLightType {Hpsl, Led};
 struct GrowthLight {
     GrowthLightType type;
     double
-        powerUsage,                 // W/m2(power used)
-        parEfficiency,              // micromole PAR per Joule
-        ageCorrectedEfficiency;     //0..1; default = 1 means there is no reduction due to lamp age
+        lampAndBallastPower,        // W/m2 cultivated area
+        lampPower,                  // W/m2 cultivated area
+        parEfficiency,              // micromole PAR emitted by lamp per Joule
+        ageCorrectedEfficiency;     // 0..1; default = 1 means there is no reduction due to lamp age
 };
 struct GrowthLights {
     const GrowthLight *array;
@@ -207,14 +208,13 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        indoorsPar,         // PAR at plant height (micromole/m2 cultivated area/s)
-        sunPar,             // PAR at plant height originating from the sun (micromole/m2 cultivated area/s)
+        indoorsPar,         // PAR at plant height                               (micromole/m2 cultivated area/s)
+        sunPar,             // PAR at plant height originating from the sun      (micromole/m2 cultivated area/s)
         growthLightPar,     // PAR at plant height originating from growth light (micromole/m2 cultivated area/s)
-        growthLight,        // Current expenditure (W/m2 total area)
-        heating,            // Current expenditure (W/m2 total area)
+        heating,            // Current expenditure (W/m2 floor)
         leafTemperature,    // Average leaf temperature (oC)
-        photosynthesis,     // Current rate (g/h/m2)
-        maxPhotosynthesis,  // Maximum rate (g/h/m2)
+        photosynthesis,     // Current rate (g/h/m2 cultivated area)
+        maxPhotosynthesis,  // Maximum rate (g/h/m2 cultivated area)
         costEfficiency;     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
     bool hasError=false;    // Computation unsuccessful?
     const char *error;      // Error message if unsuccessful

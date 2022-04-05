@@ -17,6 +17,7 @@ class Crop : public base::Box
 public:
     Crop(QString name, QObject *parent);
     void amend();
+    void reset();
 private:
     // Inputs
     double lai, coverage,

@@ -33,11 +33,11 @@ unisim.depends = command
 # Modules required for end-user release
 #
 
-#SUBDIRS += aphid
-#aphid.subdir = src/plugins/aphid
-#aphid.depends = base
-#unisim.depends = aphid
-#
+SUBDIRS += aphid
+aphid.subdir = src/plugins/aphid
+aphid.depends = base
+unisim.depends = aphid
+
 #SUBDIRS += cmbp
 #cmbp.subdir = src/plugins/cmbp
 #cmbp.depends = base
@@ -63,11 +63,11 @@ unisim.depends = command
 #saccharina.depends = base
 #unisim.depends = saccharina
 #
-SUBDIRS += vg
-vg.subdir = src/plugins/vg
-vg.depends = base
-unisim.depends = vg
-
+#SUBDIRS += vg
+#vg.subdir = src/plugins/vg
+#vg.depends = base
+#unisim.depends = vg
+#
 #
 # Modules under (re-)construction
 #

@@ -34,7 +34,6 @@ Crop::Crop(QString name, QObject *parent)
 
 void Crop::amend() {
     BoxBuilder builder(this);
-
     if (!findMaybeOne<Box>("./leafWindSpeed"))
         builder.box("vg::LeafWindSpeed").name("leafWindSpeed").
         endbox();
@@ -53,6 +52,11 @@ void Crop::amend() {
     if (!findMaybeOne<Box>("./bigLeaf"))
         builder.box("vg::BigLeafPhotosynthesis").name("bigLeaf").
         endbox();
+}
+
+void Crop::reset() {
+    if (coverage<0. || coverage>1.)
+        ThrowException("Crop coverage must be in the interval [0;1]").value(coverage).context(this);
 }
 
 } //namespace

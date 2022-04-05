@@ -20,10 +20,12 @@ ParBudget::ParBudget(QString name, QObject *parent)
     help("defines all model outputs");
     Input(sunPar).imports("sky[parFluxDown]");
     Input(growthLightsPar).imports("growthLights[parFluxDown]");
-    Input(cropCoverage).imports("crop[coverage]");
     Input(indoorsTotalPar).imports("energyBudget[cropParFluxFromAbove]");
+    Input(Pn).imports("crop/photosynthesis[Pn]");
+    Input(cropCoverage).imports("crop[coverage]");
     Output(indoorsSunPar).help("Sun contribution to total PAR");
     Output(indoorsGrowthLightPar).help("Growth light contribution to total PAR");
+    Output(photosynthesis).unit("g dry mass/cultivated m2/h").help("Net crop growth rate");
 }
 
 void ParBudget::reset() {
@@ -42,6 +44,8 @@ void ParBudget::update() {
     else {
         indoorsSunPar = indoorsGrowthLightPar = 0.;
     }
+    // Crop growth rate scaled to cultivated area
+    photosynthesis = Pn/cropCoverage;
 }
 
 

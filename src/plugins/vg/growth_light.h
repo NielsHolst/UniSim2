@@ -20,13 +20,12 @@ public:
     void update();
 private:
     // Inputs
-    double intensity, parPhotonCoef, propLw,
+    double ballast, intensity, parPhotonCoef, propLw,
         ageCorrectedEfficiency,
         minPeriodOn;
     bool on;
     // Outputs
-    double
-        periodOn, powerUsage;
+    double periodOn, powerUsage;
     bool currentlyOn;
     // Methods
     void noLight();

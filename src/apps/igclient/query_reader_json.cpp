@@ -242,7 +242,8 @@ void QueryReaderJson::parseGrowthLight(QJsonObject object) {
     ig::GrowthLight gl;
     gl.type = static_cast<ig::GrowthLightType>(findInt(object, "Type"));
     gl.parEfficiency = findDouble(object, "ParEfficiency");
-    gl.powerUsage = findDouble(object, "PowerUsage");
+    gl.lampAndBallastPower = findDouble(object, "LampAndBallastPower");
+    gl.lampPower = findDouble(object, "LampPower");
     gl.ageCorrectedEfficiency = findDouble(object, "AgeCorrectedEfficiency");
     _growthLights.push_back(gl);
 }

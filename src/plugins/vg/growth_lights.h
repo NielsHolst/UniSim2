@@ -24,6 +24,7 @@ private:
         lightsParFluxDown,
         lightsSwFluxDown,
         lightsLwFluxDown,
+        lightsLwFluxUp,
         lightsPowerUsage;
     // Outputs
     bool currentlyOn;
