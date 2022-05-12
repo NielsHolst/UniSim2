@@ -3,7 +3,7 @@ D:
 cd \Documents\QDev\UniSim2\ship\cmd\ig
 
 # Set version and target platform (32 or 64 bits)
-set VERSION=2.3.60
+set VERSION=2.3.61
 set QT_PATH=C:\Qt\5.15.1\mingw81_32
 
 set PATH=D:\Documents\QDev\UniSim2\ship\cmd\ig\

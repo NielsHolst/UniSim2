@@ -453,7 +453,7 @@ Response testConstant(const Query &q) {
     Response r;
     r.timeStamp = q.timeStamp;
     r.sunPar = 19.23;
-    r.heating = 29.31;
+    r.heatingPowerUse = 29.31;
     r.photosynthesis = 37.41;
     r.costEfficiency = 43.47;
     return r;
@@ -463,7 +463,7 @@ Response testMultiplum(const Query &q) {
     Response r;
     r.timeStamp   = q.timeStamp;
     r.sunPar = r.timeStamp.dayOfYear*r.timeStamp.timeOfDay;
-    r.heating     = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
+    r.heatingPowerUse     = r.timeStamp.timeOfDay*r.timeStamp.timeZone;
     return r;
 }
 
@@ -523,15 +523,16 @@ Response compute(const Query &q) {
 
     // Extract response from model state
     try {
-        r.timeStamp       = q.timeStamp;
-        r.indoorsPar      = snap( root->findOne<Box>("parBudget")->port("indoorsTotalPar")->value<double>() );
-        r.sunPar          = snap( root->findOne<Box>("parBudget")->port("indoorsSunPar")->value<double>() );
-        r.growthLightPar  = snap( root->findOne<Box>("parBudget")->port("indoorsGrowthLightPar")->value<double>() );
-        r.heating         = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() );
-        r.leafTemperature = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
-        r.photosynthesis  = snap( root->findOne<Box>("parBudget")->port("photosynthesis")->value<double>() );
-        r.maxPhotosynthesis = snap(maxPn);
-        double E = r.heating + growthLightPower(q);
+        r.timeStamp          = q.timeStamp;
+        r.indoorsPar         = snap( root->findOne<Box>("parBudget")->port("indoorsTotalPar")->value<double>() );
+        r.sunPar             = snap( root->findOne<Box>("parBudget")->port("indoorsSunPar")->value<double>() );
+        r.growthLightPar     = snap( root->findOne<Box>("parBudget")->port("indoorsGrowthLightPar")->value<double>() );
+        r.growthLightPowerUse = snap( growthLightPower(q) );
+        r.heatingPowerUse    = snap( root->findOne<Box>("actuators/heating")->port("energyFluxTotal")->value<double>() )/cropCoverage;
+        r.leafTemperature    = snap( root->findOne<Box>("crop/temperature")->port("value")->value<double>() );
+        r.photosynthesis     = snap( root->findOne<Box>("parBudget")->port("photosynthesis")->value<double>() );
+        r.maxPhotosynthesis  = snap(maxPn);
+        double E = r.heatingPowerUse + growthLightPower(q);
         r.costEfficiency = (E==0.) ? 0. : snap( r.photosynthesis/E*1000./3600. );
     }
     catch (Exception &ex) {
@@ -547,7 +548,7 @@ Response blankResponse() {
     r.timeStamp.timeOfDay = 12.13;
     r.timeStamp.timeZone  = 1.;
     r.indoorsPar = 100.4;
-    r.heating = 100.6;
+    r.heatingPowerUse = 100.6;
     r.photosynthesis = 100.7;
     r.costEfficiency = 100.8;
     return r;
@@ -564,7 +565,8 @@ const char * responseToString(const Response &r) {
     RESP(indoorsPar);
     RESP(sunPar);
     RESP(growthLightPar);
-    RESP(heating);
+    RESP(growthLightPowerUse);
+    RESP(heatingPowerUse);
     RESP(leafTemperature);
     RESP(photosynthesis);
     RESP(maxPhotosynthesis);

@@ -4,12 +4,5 @@
     <file>boxes_head.cson</file>
     <file>notepad_grammar_template.xml</file>
     <file>version.txt</file>
-    <file>data/input/scripts/begin-sobol.R</file>
-    <file>data/input/scripts/begin.R</file>
-    <file>data/input/scripts/end-batch.R</file>
-    <file>data/input/scripts/end.R</file>
-    <file>data/input/scripts/excel-to-vg.xsl</file>
-    <file>data/input/scripts/install_packages.R</file>
-    <file>data/input/scripts/profile.R</file>
   </qresource>
 </RCC>

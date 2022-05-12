@@ -1,4 +1,4 @@
-// Version 2.3.60
+// Version 2.3.61
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -208,16 +208,17 @@ struct Query {
 struct Response {
     TimeStamp timeStamp;
     double
-        indoorsPar,         // PAR at plant height                               (micromole/m2 cultivated area/s)
-        sunPar,             // PAR at plant height originating from the sun      (micromole/m2 cultivated area/s)
-        growthLightPar,     // PAR at plant height originating from growth light (micromole/m2 cultivated area/s)
-        heating,            // Current expenditure (W/m2 floor)
-        leafTemperature,    // Average leaf temperature (oC)
-        photosynthesis,     // Current rate (g/h/m2 cultivated area)
-        maxPhotosynthesis,  // Maximum rate (g/h/m2 cultivated area)
-        costEfficiency;     // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
-    bool hasError=false;    // Computation unsuccessful?
-    const char *error;      // Error message if unsuccessful
+        indoorsPar,           // PAR at plant height                               (micromole/m2 cultivated area/s)
+        sunPar,               // PAR at plant height originating from the sun      (micromole/m2 cultivated area/s)
+        growthLightPar,       // PAR at plant height originating from growth light (micromole/m2 cultivated area/s)
+        growthLightPowerUse,  // Current expenditure to growth light (W/m2 cultivated area)
+        heatingPowerUse,      // Current expenditure to heating (W/m2 cultivated area)
+        leafTemperature,      // Average leaf temperature (oC)
+        photosynthesis,       // Current rate (g/h/m2 cultivated area)
+        maxPhotosynthesis,    // Maximum rate (g/h/m2 cultivated area)
+        costEfficiency;       // Current photosynthesis/expenditure (g photosynthesis per kJ expenditure)
+    bool hasError=false;      // Computation unsuccessful?
+    const char *error;        // Error message if unsuccessful
 };
 
 // Compute response variables from query

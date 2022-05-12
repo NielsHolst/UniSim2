@@ -1,10 +1,22 @@
 echo on
-cd C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
+if exist D:\Documents\QDev\UniSim2\ship\cmd\win goto :d_drive
+if exist C:\Users\au152367\Documents\QDev\UniSim2\ship\cmd\win goto :c_drive
+echo Could not find ship\cmd\win folder
+goto :end_fail
+:d_drive
+D:
+cd \Documents\QDev\UniSim2\ship\cmd\win
+goto :ok_cmd_folder
+:c_drive
+C:
+cd \Users\au152367\Documents\QDev\UniSim2\ship\cmd\win
+:ok_cmd_folder
+pause
 
 rem Set up version
 set MAJOR=2
 set MINOR=3
-set SUB=59
+set SUB=61
 set VERSION=release
 echo Building version %MAJOR%.%MINOR%.%SUB% %VERSION%
 

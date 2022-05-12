@@ -7,8 +7,8 @@
 #-------------------------------------------------
 
 # AUTO-CONFIG-BEGIN
-CONFIG += debug
-VERSION = 2.3.60
+CONFIG += release
+VERSION = 2.3.61
 CONFIG += skip_target_version_ext
 # AUTO-CONFIG-END
 CONFIG += skip_target_version_ext   # Simplify suffix on Mac
