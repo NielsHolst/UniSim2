@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <box xmlns:ecolmod="http://www.ecolmod.org" class="Simulation" name="greenhouse">
 	<port name="steps" ref="./period[steps]"/>
-	<port name="unattended" value="TRUE"/>
 	<!-- *** SimulationPeriod *** -->
 	<box class="SimulationPeriod" name="period">
 		<port name="beginDate" externalName="None" source="/DVV_SETUP/StartTime" value="01-01-2021"/>
@@ -686,14 +685,8 @@
 		<box class="vg::Outputs" name="p"/>
 		<box class="PageR">
 			<port name="xAxis" value="calendar[dateTime]"/> 
-			<box class="PlotR">
-				<port name="ports" value="(actuators/growthLights/growthLight1[powerUsage] 
-actuators/heating/pipes/*[energyFlux]
-actuators/ventilation[relative]
-budget[heatingEnergy] 
-budget[ventilationEnergy]
-indoors/temperature[value] 
-)"/>
+			<box class="PlotR"> 
+				<port name="ports" value="(p[outdoorsLight] p[outdoorsT] p[indoorsT] p[indoorsRh] p[airFluxVentilation] p[actHeatingPower] p[airFluxPower])"/>
 			</box>
 		</box>
 		<box class="OutputText" name="text">

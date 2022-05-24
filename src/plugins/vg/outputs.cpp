@@ -38,9 +38,9 @@ Outputs::Outputs(QString name, QObject *parent)
     Output(floorT).imports("energyBudget/floor[temperature]");
     Output(indoorsT).imports("indoors/temperature[value]");
     Output(indoorsRh).imports("indoors/humidity[rh]");
-    Output(indoorsTotalPar).imports("parBudget[indoorsTotalPar]");
-    Output(indoorsSunPar).imports("parBudget[indoorsSunPar]");
-    Output(indoorsGrowthLightsPar).imports("parBudget[indoorsGrowthLightsPar]");
+//    Output(indoorsTotalPar).imports("parBudget[indoorsTotalPar]");
+//    Output(indoorsSunPar).imports("parBudget[indoorsSunPar]");
+//    Output(indoorsGrowthLightsPar).imports("parBudget[indoorsGrowthLightsPar]");
     Output(indoorsCo2).imports("indoors/co2[value]");
     Output(Uinside).imports("energyBudget[Uinside]");
     Output(Uoutside).imports("energyBudget[Uoutside]");
@@ -59,7 +59,7 @@ Outputs::Outputs(QString name, QObject *parent)
 //    Output(spScreenShadeThresholdBand).imports("setpoints[screenShadeThresholdBand]");
 //    Output(spScreenCrack).imports("setpoints/screenCrack[value]");
 //    Output(spCo2).imports("setpoints[co2Setpoint]");
-//    Output(actHeatingPower).imports("actuators/heating[energyFluxTotal]");
+    Output(actHeatingPower).imports("actuators/heating[energyFluxTotal]");
 //    Output(actVentilation).imports("actuators/ventilation[relative]");
 //    Output(actLight1).importsMaybe("actuators/growthLights/growthLight1[on]");
 //    Output(actLight2).importsMaybe("actuators/growthLights/growthLight2[on]");
