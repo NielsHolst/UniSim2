@@ -15,10 +15,10 @@ using namespace ig;
 using namespace std;
 
 const QString filePath = "D:/Documents/QDev/UniSim2/input/projects/ig/"
-                         "2022-03-25-light-error-amended.json";
-//                       "2020-10-14-igdata-no-light.json";
-//                       "2020-10-14-igdata.json";
-//                       "UnisimInput 2020-02.json";
+                         "2022-05-31-ver-2-3-61.json"
+                         ;
+//                       "2022-03-25-light-error-amended.json"
+
 using namespace base;
 
 int main(int, char **)
@@ -28,8 +28,11 @@ int main(int, char **)
     try {
         Response r;
         if (QFileInfo::exists(filePath)) {
+            cout << "\nParsing...\n";
             Query q = reader.parse(filePath);
+            cout << "Computing...\n";
             r = compute(q);
+            cout << "Done!\n";
         }
         else {
             r = blankResponse();

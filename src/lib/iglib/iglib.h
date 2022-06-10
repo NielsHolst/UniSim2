@@ -1,4 +1,4 @@
-// Version 2.3.61
+// Version 2.3.62
 // To use with iglib.dll, remember to define IGLIB_DLL as follows:
 // #define IGLIB_DLL dllimport
 
@@ -30,7 +30,6 @@ struct Greenhouse {
 
 enum CultureType {PotRose, PotChrysanthemum, Cucumber, Tomato, Lettuce, SweetPepper};
 struct Culture {
-    CultureType type;
     Variable lai;
     double
         coverage,   // Proportion of greenhouse area that is cultivated (0..1)
